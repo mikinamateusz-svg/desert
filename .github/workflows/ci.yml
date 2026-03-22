@@ -58,13 +58,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Deploy API to Railway
-        run: |
-          npm install -g @railway/cli
-          railway deploy --service desert
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-
       - name: Deploy web to Vercel
         run: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --yes
         working-directory: apps/web

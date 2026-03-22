@@ -59,13 +59,13 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Deploy web to Vercel
-        run: npx vercel apps/web --token ${{ secrets.VERCEL_TOKEN }} --prod --yes
+        run: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --yes
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_PROJECT_ID }}
 
       - name: Deploy admin to Vercel
-        run: npx vercel apps/admin --token ${{ secrets.VERCEL_TOKEN }} --prod --yes
+        run: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --yes
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_ADMIN_PROJECT_ID }}

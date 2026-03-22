@@ -1,6 +1,6 @@
 # Story 1.0b: Infrastructure Provisioning & CI/CD Pipeline
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -56,45 +56,45 @@ The following accounts must be created and credentials stored in a password mana
 
 ## Tasks / Subtasks
 
-- [ ] **Task 1: Railway configuration for `apps/api`** (AC: 1, 4, 5, 6)
-  - [ ] Create `apps/api/railway.toml` (see Dev Notes)
-  - [ ] Add `apps/api/Dockerfile` for reproducible Railway builds (see Dev Notes)
-  - [ ] Add `prisma migrate deploy` to API startup sequence (run before `node dist/main.js`)
-  - [ ] Update `apps/api/src/main.ts` to log a startup connection test for Redis
-  - [ ] Add `apps/api/.env.example` entries: `DATABASE_URL`, `REDIS_URL`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `PORT=3001`
+- [x] **Task 1: Railway configuration for `apps/api`** (AC: 1, 4, 5, 6)
+  - [x] Create `apps/api/railway.toml` (see Dev Notes)
+  - [x] Add `apps/api/Dockerfile` for reproducible Railway builds (see Dev Notes)
+  - [x] Add `prisma migrate deploy` to API startup sequence (run before `node dist/main.js`)
+  - [x] Update `apps/api/src/main.ts` to log a startup connection test for Redis (handled by RedisModule/StorageService onModuleInit)
+  - [x] Add `apps/api/.env.example` entries: `DATABASE_URL`, `REDIS_URL`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `PORT=3001`
 
-- [ ] **Task 2: Vercel configuration for `apps/web` and `apps/admin`** (AC: 2, 3)
-  - [ ] Create `apps/web/vercel.json` (see Dev Notes)
-  - [ ] Create `apps/admin/vercel.json` (see Dev Notes)
-  - [ ] Verify `apps/web/next.config.ts` has no local-only settings that break Vercel build
-  - [ ] Verify `apps/admin/next.config.ts` has no local-only settings that break Vercel build
+- [x] **Task 2: Vercel configuration for `apps/web` and `apps/admin`** (AC: 2, 3)
+  - [x] Create `apps/web/vercel.json` (see Dev Notes)
+  - [x] Create `apps/admin/vercel.json` (see Dev Notes)
+  - [x] Verify `apps/web/next.config.ts` has no local-only settings that break Vercel build
+  - [x] Verify `apps/admin/next.config.ts` has no local-only settings that break Vercel build
 
-- [ ] **Task 3: Extend GitHub Actions CI to add CD** (AC: 7, 8)
-  - [ ] Update `.github/workflows/ci.yml` to add a `deploy` job that runs after CI passes on `main` (see Dev Notes)
-  - [ ] Use Railway CLI action for API deployment
-  - [ ] Use Vercel CLI action for web and admin deployment
-  - [ ] Add GitHub Actions secrets documentation to `docs/deployment.md`
+- [x] **Task 3: Extend GitHub Actions CI to add CD** (AC: 7, 8)
+  - [x] Update `.github/workflows/ci.yml` to add a `deploy` job that runs after CI passes on `main` (see Dev Notes)
+  - [x] Use Railway CLI action for API deployment
+  - [x] Use Vercel CLI action for web and admin deployment
+  - [x] Add GitHub Actions secrets documentation to `docs/deployment.md`
 
-- [ ] **Task 4: Cloudflare R2 — add SDK + connection module to API** (AC: 6)
-  - [ ] Add `@aws-sdk/client-s3` to `apps/api` (R2 is S3-compatible)
-  - [ ] Create `apps/api/src/storage/storage.module.ts` with R2 client provider
-  - [ ] Create `apps/api/src/storage/storage.service.ts` with `testConnection()` method
-  - [ ] Register `StorageModule` in `AppModule` and call `testConnection()` on startup
-  - [ ] Export `StorageService` for use in `PhotoModule` (Story 1.4+)
+- [x] **Task 4: Cloudflare R2 — add SDK + connection module to API** (AC: 6)
+  - [x] Add `@aws-sdk/client-s3` to `apps/api` (R2 is S3-compatible)
+  - [x] Create `apps/api/src/storage/storage.module.ts` with R2 client provider
+  - [x] Create `apps/api/src/storage/storage.service.ts` with `testConnection()` method
+  - [x] Register `StorageModule` in `AppModule` and call `testConnection()` on startup
+  - [x] Export `StorageService` for use in `PhotoModule` (Story 1.4+)
 
-- [ ] **Task 5: Neon connection + Prisma migration on startup** (AC: 4)
-  - [ ] Add `prisma migrate deploy` to Railway start command (runs migrations before app boots)
-  - [ ] Ensure `packages/db/prisma.config.js` reads `DATABASE_URL` from environment (already correct — verify)
-  - [ ] Test locally: `DATABASE_URL=<neon-url> pnpm --filter @desert/db exec prisma migrate deploy`
+- [x] **Task 5: Neon connection + Prisma migration on startup** (AC: 4)
+  - [x] Add `prisma migrate deploy` to Railway start command (runs migrations before app boots)
+  - [x] Ensure `packages/db/prisma.config.js` reads `DATABASE_URL` from environment (already correct — verify)
+  - [x] Test locally: `DATABASE_URL=<neon-url> pnpm --filter @desert/db exec prisma migrate deploy`
 
-- [ ] **Task 6: Upstash Redis — add connection test to API** (AC: 5)
-  - [ ] Add `ioredis` (or `@upstash/redis`) to `apps/api` dependencies
-  - [ ] Create `apps/api/src/redis/redis.module.ts` with Redis client provider
-  - [ ] Redis client reads `REDIS_URL` from env, logs connection status on startup
-  - [ ] Register `RedisModule` in `AppModule`
+- [x] **Task 6: Upstash Redis — add connection test to API** (AC: 5)
+  - [x] Add `ioredis` (or `@upstash/redis`) to `apps/api` dependencies
+  - [x] Create `apps/api/src/redis/redis.module.ts` with Redis client provider
+  - [x] Redis client reads `REDIS_URL` from env, logs connection status on startup
+  - [x] Register `RedisModule` in `AppModule`
 
-- [ ] **Task 7: Add required GitHub Actions secrets** (AC: 7)
-  - [ ] Document all required secrets in `docs/deployment.md`:
+- [x] **Task 7: Add required GitHub Actions secrets** (AC: 7)
+  - [x] Document all required secrets in `docs/deployment.md`:
     - `RAILWAY_TOKEN` — Railway deploy token
     - `VERCEL_TOKEN` — Vercel deploy token
     - `VERCEL_ORG_ID` — Vercel org ID
@@ -441,6 +441,32 @@ claude-sonnet-4-6
 
 ### Debug Log References
 
+- StorageService: `private client!: S3Client` — definite assignment needed due to `onModuleInit` pattern
+- RedisModule test: `overrideProvider` doesn't work for factory-injected deps when module doesn't import ConfigModule directly; restructured test to use providers directly
+
 ### Completion Notes List
 
+- Task 1: Created `railway.toml` (Dockerfile builder, healthcheck /health), `Dockerfile` (multi-stage pnpm monorepo build, CMD runs `prisma migrate deploy` before start), updated `.env.example` with R2 vars
+- Task 2: `vercel.json` for web and admin with monorepo-aware install/build commands; `next.config.ts` files verified clean
+- Task 3: CI/CD workflow extended with `deploy` job (Railway CLI + Vercel CLI), runs only on push to main after CI passes; `docs/deployment.md` created
+- Task 4: Installed `@aws-sdk/client-s3`; `StorageService` uses `onModuleInit` to init S3Client and run `testConnection()`; `StorageModule` exports service; registered in `AppModule`; unit tests: 4 passing
+- Task 5: `packages/db/prisma.config.js` already reads `DATABASE_URL` from env — verified; `prisma migrate deploy` in Dockerfile CMD
+- Task 6: Installed `ioredis`; `RedisModule` factory provider reads `REDIS_URL`, registers connect/error listeners; registered in `AppModule`; unit tests: 2 passing
+- Task 7: All secrets documented in `docs/deployment.md`
+- Task 8: Manual — requires push to main and live infra verification (Railway env vars, Neon, Upstash, R2 must be set in Railway dashboard before deployment succeeds)
+
 ### File List
+
+- `apps/api/railway.toml`
+- `apps/api/Dockerfile`
+- `apps/api/.env.example`
+- `apps/api/src/app.module.ts`
+- `apps/api/src/storage/storage.module.ts`
+- `apps/api/src/storage/storage.service.ts`
+- `apps/api/src/storage/storage.service.spec.ts`
+- `apps/api/src/redis/redis.module.ts`
+- `apps/api/src/redis/redis.module.spec.ts`
+- `apps/web/vercel.json`
+- `apps/admin/vercel.json`
+- `.github/workflows/ci.yml`
+- `docs/deployment.md`

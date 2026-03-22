@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Litro — Colour Palette</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #e0e0e0;
+    font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+    padding: 48px 28px 72px;
+    color: #1a1a1a;
+  }
+
+  header { text-align: center; margin-bottom: 48px; }
+  header h1 { font-size: 11px; font-weight: 700; color: #aaa; letter-spacing: 4px; text-transform: uppercase; }
+  header p  { font-size: 13px; color: #999; margin-top: 6px; }
+
+  .wrap { max-width: 940px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+
+  /* Section cards */
+  .section {
+    background: white;
+    border-radius: 20px;
+    padding: 28px 28px 22px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  }
+  .section-title {
+    font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+    text-transform: uppercase; color: #ccc; margin-bottom: 18px;
+  }
+
+  /* Swatch row */
+  .swatches { display: flex; gap: 10px; flex-wrap: wrap; }
+  .swatch {
+    display: flex; flex-direction: column;
+    min-width: 88px; flex: 1;
+  }
+  .swatch-block {
+    height: 72px; border-radius: 10px;
+    margin-bottom: 9px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+  }
+  .swatch-name  { font-size: 11px; font-weight: 600; color: #333; line-height: 1.3; }
+  .swatch-hex   { font-size: 10px; color: #999; font-family: 'Courier New', monospace; margin-top: 2px; }
+  .swatch-role  { font-size: 10px; color: #bbb; margin-top: 3px; line-height: 1.3; }
+
+  /* Price spectrum bar */
+  .spectrum {
+    height: 14px; border-radius: 7px;
+    background: linear-gradient(to right, #22c55e, #f59e0b, #ef4444);
+    margin-bottom: 18px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+  }
+
+  /* Pin examples */
+  .pins { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
+  .pin-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .pin {
+    display: flex; flex-direction: column; align-items: center;
+    position: relative;
+  }
+  .pin-body {
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.20);
+  }
+  .pin-body.standard { width: 32px; height: 32px; }
+  .pin-body.promoted { width: 40px; height: 40px; }
+  .pin-price {
+    transform: rotate(45deg);
+    font-size: 8px; font-weight: 800;
+    color: white; line-height: 1;
+    text-align: center;
+  }
+  .pin-price.large { font-size: 10px; }
+  .pin-label { font-size: 10px; color: #999; text-align: center; line-height: 1.3; }
+  .pin-badge {
+    position: absolute; top: -4px; right: -4px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #f59e0b; border: 2px solid white;
+    transform: rotate(45deg);
+  }
+
+  /* Freshness dot */
+  .freshness-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    border: 1.5px solid white;
+  }
+
+  /* Estimated indicator — hollow ring, no fill */
+  .estimated-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    border: 1.5px solid #94a3b8;
+    background: transparent;
+    flex-shrink: 0;
+  }
+
+  /* UI elements */
+  .ui-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .btn {
+    padding: 10px 20px; border-radius: 10px;
+    font-size: 13px; font-weight: 700;
+    border: none; cursor: default;
+  }
+  .btn-primary   { background: #1a1a1a; color: white; }
+  .btn-secondary { background: #f59e0b; color: white; }
+  .btn-outline   { background: transparent; color: #1a1a1a; border: 2px solid #1a1a1a; }
+  .chip {
+    padding: 6px 14px; border-radius: 99px;
+    font-size: 12px; font-weight: 600;
+    background: #1a1a1a; color: white;
+  }
+  .chip.inactive { background: #e5e7eb; color: #6b7280; }
+
+  /* Note on amber overlap */
+  .note-box {
+    background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px;
+    padding: 12px 16px; font-size: 12px; color: #92400e; line-height: 1.5;
+    margin-top: 16px;
+  }
+
+  /* Two-column layout for some sections */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* Mock bottom sheet */
+  .sheet {
+    background: white; border-radius: 16px; padding: 16px 18px;
+    box-shadow: 0 -2px 16px rgba(0,0,0,0.12);
+    max-width: 280px;
+  }
+  .sheet-handle {
+    width: 36px; height: 4px; background: #e5e7eb;
+    border-radius: 2px; margin: 0 auto 12px;
+  }
+  .sheet-station { font-size: 13px; font-weight: 700; color: #1a1a1a; margin-bottom: 2px; }
+  .sheet-brand   { font-size: 11px; color: #9ca3af; margin-bottom: 12px; }
+  .sheet-price-row {
+    display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px;
+  }
+  .sheet-fuel  { font-size: 11px; font-weight: 600; color: #6b7280; }
+  .sheet-price { font-size: 22px; font-weight: 900; color: #1a1a1a; }
+  .sheet-unit  { font-size: 11px; color: #9ca3af; }
+  .sheet-fresh { font-size: 10px; color: #22c55e; font-weight: 600; margin-bottom: 14px; }
+  .sheet-fresh.stale { color: #f59e0b; }
+  .sheet-fresh.old   { color: #94a3b8; }
+  .sheet-actions { display: flex; gap: 8px; }
+  .sheet-btn {
+    flex: 1; padding: 10px 0; border-radius: 10px;
+    font-size: 12px; font-weight: 700; text-align: center; cursor: default;
+  }
+  .sheet-btn.nav    { background: #1a1a1a; color: white; }
+  .sheet-btn.update { background: #f0fdf4; color: #22c55e; border: 1.5px solid #86efac; }
+
+  /* Dark surface demo */
+  .dark-surface {
+    background: #111; border-radius: 14px; padding: 20px;
+  }
+  .dark-surface .sheet { background: #1e1e1e; }
+  .dark-surface .sheet-station { color: #f5f5f5; }
+  .dark-surface .sheet-price   { color: #f5f5f5; }
+  .dark-surface .sheet-handle  { background: #333; }
+  .dark-surface .sheet-btn.nav { background: #f5f5f5; color: #1a1a1a; }
+
+  /* Neutral ramp */
+  .neutral-ramp { display: flex; gap: 0; border-radius: 10px; overflow: hidden; }
+  .neutral-step {
+    flex: 1; height: 48px;
+    display: flex; align-items: flex-end; justify-content: center; padding-bottom: 6px;
+    font-size: 9px; font-family: 'Courier New', monospace; font-weight: 600;
+  }
+
+  /* Divider */
+  hr { border: none; border-top: 1px solid #f0f0f0; margin: 18px 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Litro · Colour Palette</h1>
+  <p>Derived from logo concept B — gauge "o" with green→amber→red arc</p>
+</header>
+
+<div class="wrap">
+
+  <!-- ── 1. Price Spectrum ── -->
+  <div class="section">
+    <div class="section-title">01 · Price Spectrum — fixed across all surfaces</div>
+    <div class="spectrum"></div>
+    <div class="swatches">
+      <div class="swatch">
+        <div class="swatch-block" style="background:#22c55e;"></div>
+        <div class="swatch-name">Cheap</div>
+        <div class="swatch-hex">#22c55e</div>
+        <div class="swatch-role">green-500 · cheapest nearby</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#f59e0b;"></div>
+        <div class="swatch-name">Mid</div>
+        <div class="swatch-hex">#f59e0b</div>
+        <div class="swatch-role">amber-500 · average price</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#ef4444;"></div>
+        <div class="swatch-name">Expensive</div>
+        <div class="swatch-hex">#ef4444</div>
+        <div class="swatch-role">red-500 · most expensive nearby</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#94a3b8;"></div>
+        <div class="swatch-name">No data</div>
+        <div class="swatch-hex">#94a3b8</div>
+        <div class="swatch-role">slate-400 · unverified / estimated</div>
+      </div>
+    </div>
+    <div class="note-box">
+      ⚠ Amber <strong>#f59e0b</strong> appears both as the mid-price pin and as the brand accent in the logo gauge.
+      In the UI, amber used on a button or chip always means <em>brand action</em>, not price.
+      Amber on a map pin always means <em>mid price</em>. Context separates them cleanly.
+    </div>
+  </div>
+
+  <!-- ── 2. Brand ── -->
+  <div class="section">
+    <div class="section-title">02 · Brand</div>
+    <div class="swatches">
+      <div class="swatch">
+        <div class="swatch-block" style="background:#1a1a1a;"></div>
+        <div class="swatch-name">Ink</div>
+        <div class="swatch-hex">#1a1a1a</div>
+        <div class="swatch-role">Wordmark · primary text · nav chrome</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#f59e0b;"></div>
+        <div class="swatch-name">Amber</div>
+        <div class="swatch-hex">#f59e0b</div>
+        <div class="swatch-role">Brand accent · CTA highlight · streak badge</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#ffffff; border: 1px solid #e5e7eb;"></div>
+        <div class="swatch-name">White</div>
+        <div class="swatch-hex">#ffffff</div>
+        <div class="swatch-role">Light surface · card background · pin labels</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 3. Neutral ramp ── -->
+  <div class="section">
+    <div class="section-title">03 · Neutral Ramp</div>
+    <div class="neutral-ramp">
+      <div class="neutral-step" style="background:#111111; color:#444;">111</div>
+      <div class="neutral-step" style="background:#1a1a1a; color:#555;">1a1a</div>
+      <div class="neutral-step" style="background:#2a2a2a; color:#666;">2a2a</div>
+      <div class="neutral-step" style="background:#6b7280; color:#ccc;">6b72</div>
+      <div class="neutral-step" style="background:#9ca3af; color:#e0e0e0;">9ca3</div>
+      <div class="neutral-step" style="background:#e5e7eb; color:#aaa;">e5e7</div>
+      <div class="neutral-step" style="background:#f4f4f4; color:#aaa;">f4f4</div>
+      <div class="neutral-step" style="background:#ffffff; color:#bbb; border-right:1px solid #eee;">ffff</div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+      <div style="flex:1;min-width:160px;">
+        <div style="font-size:11px;font-weight:600;color:#333;margin-bottom:4px;">Dark surfaces</div>
+        <div style="font-size:11px;color:#999;line-height:1.6;">
+          #111 — map chrome, dark mode bg<br>
+          #1a1a1a — wordmark, primary text<br>
+          #2a2a2a — dark card, bottom sheet dark
+        </div>
+      </div>
+      <div style="flex:1;min-width:160px;">
+        <div style="font-size:11px;font-weight:600;color:#333;margin-bottom:4px;">Mid tones</div>
+        <div style="font-size:11px;color:#999;line-height:1.6;">
+          #6b7280 — secondary text, labels<br>
+          #9ca3af — placeholder, subtle text
+        </div>
+      </div>
+      <div style="flex:1;min-width:160px;">
+        <div style="font-size:11px;font-weight:600;color:#333;margin-bottom:4px;">Light surfaces</div>
+        <div style="font-size:11px;color:#999;line-height:1.6;">
+          #e5e7eb — dividers, borders<br>
+          #f4f4f4 — page bg, input fill<br>
+          #ffffff — cards, sheets
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 4. Pin States ── -->
+  <div class="section">
+    <div class="section-title">04 · Map Pins — in context</div>
+    <div class="pins">
+
+      <div class="pin-wrap">
+        <div class="pin">
+          <div class="pin-body standard" style="background:#22c55e;">
+            <div class="pin-price">6.42</div>
+          </div>
+        </div>
+        <div class="pin-label">Cheap<br>standard</div>
+      </div>
+
+      <div class="pin-wrap">
+        <div class="pin">
+          <div class="pin-body standard" style="background:#f59e0b;">
+            <div class="pin-price">6.61</div>
+          </div>
+        </div>
+        <div class="pin-label">Mid<br>standard</div>
+      </div>
+
+      <div class="pin-wrap">
+        <div class="pin">
+          <div class="pin-body standard" style="background:#ef4444;">
+            <div class="pin-price">6.89</div>
+          </div>
+        </div>
+        <div class="pin-label">Expensive<br>standard</div>
+      </div>
+
+      <!-- Estimated: colored outline, gray fill -->
+      <div class="pin-wrap">
+        <div class="pin">
+          <div class="pin-body standard" style="background:#e5e7eb; box-shadow: 0 0 0 2.5px #22c55e, 0 2px 8px rgba(0,0,0,0.12);">
+            <div class="pin-price" style="font-size:7px; color:#22c55e;">~6.3</div>
+          </div>
+        </div>
+        <div class="pin-label">Est. cheap</div>
+      </div>
+
+      <div class="pin-wrap">
+        <div class="pin">
+          <div class="pin-body standard" style="background:#e5e7eb; box-shadow: 0 0 0 2.5px #f59e0b, 0 2px 8px rgba(0,0,0,0.12);">
+            <div class="pin-price" style="font-size:7px; color:#f59e0b;">~6.6</div>
+          </div>
+        </div>
+        <div class="pin-label">Est. mid</div>
+      </div>
+
+      <div class="pin-wrap">
+        <div class="pin">
+          <div class="pin-body standard" style="background:#e5e7eb; box-shadow: 0 0 0 2.5px #ef4444, 0 2px 8px rgba(0,0,0,0.12);">
+            <div class="pin-price" style="font-size:7px; color:#ef4444;">~6.9</div>
+          </div>
+        </div>
+        <div class="pin-label">Est. expensive</div>
+      </div>
+
+      <div style="width:1px;background:#e5e7eb;height:64px;align-self:center;"></div>
+
+      <!-- Best nearby pin — halo ring -->
+      <div class="pin-wrap">
+        <div class="pin">
+          <div class="pin-body standard" style="background:#16a34a; box-shadow: 0 0 0 3px white, 0 0 0 5.5px #16a34a, 0 3px 10px rgba(22,163,74,0.40);">
+            <div class="pin-price">6.29</div>
+          </div>
+        </div>
+        <div class="pin-label">Best nearby<br>halo ring</div>
+      </div>
+
+      <div style="width:1px;background:#e5e7eb;height:64px;align-self:center;"></div>
+
+      <div class="pin-wrap">
+        <div class="pin">
+          <div class="pin-body promoted" style="background:#22c55e;">
+            <div class="pin-price large">6.29</div>
+          </div>
+          <div class="pin-badge"></div>
+        </div>
+        <div class="pin-label">Cheap<br>promoted ★</div>
+      </div>
+
+      <div class="pin-wrap">
+        <div class="pin">
+          <div class="pin-body promoted" style="background:#f59e0b;">
+            <div class="pin-price large">6.55</div>
+          </div>
+          <div class="pin-badge"></div>
+        </div>
+        <div class="pin-label">Mid<br>promoted ★</div>
+      </div>
+
+      <div style="width:1px;background:#e5e7eb;height:64px;align-self:center;"></div>
+
+      <div class="pin-wrap" style="gap:4px;">
+        <div style="display:flex;gap:6px;align-items:center;">
+          <div class="freshness-dot" style="background:#22c55e;"></div>
+          <div style="font-size:11px;color:#555;">Updated 1d ago</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <div class="freshness-dot" style="background:#f59e0b;"></div>
+          <div style="font-size:11px;color:#555;">Updated 5d ago</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <div class="freshness-dot" style="background:#94a3b8;"></div>
+          <div style="font-size:11px;color:#555;">Updated 10d ago</div>
+        </div>
+        <div style="height:6px;"></div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <div class="estimated-dot"></div>
+          <div style="font-size:11px;color:#94a3b8;font-style:italic;">~6.40–6.70 · never reported</div>
+        </div>
+        <div class="pin-label" style="text-align:left;margin-top:4px;">Freshness dot (●)<br>Estimated ring (○)</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 5. UI Elements ── -->
+  <div class="section">
+    <div class="section-title">05 · UI Elements</div>
+    <div class="ui-row" style="margin-bottom:16px;">
+      <button class="btn btn-primary">Navigate →</button>
+      <button class="btn btn-secondary">Update prices</button>
+      <button class="btn btn-outline">See all stations</button>
+    </div>
+    <div class="ui-row">
+      <div class="chip">PB95</div>
+      <div class="chip inactive">PB98</div>
+      <div class="chip inactive">ON</div>
+      <div class="chip inactive">LPG</div>
+      <div style="font-size:11px;color:#999;margin-left:4px;">Fuel type chips — active state uses Ink</div>
+    </div>
+  </div>
+
+  <!-- ── 6. Station sheet — light + dark ── -->
+  <div class="section">
+    <div class="section-title">06 · Station Detail Sheet — light &amp; dark</div>
+    <div class="two-col">
+
+      <!-- Light -->
+      <div>
+        <div style="font-size:10px;color:#ccc;margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;font-weight:600;">Light surface</div>
+        <div class="sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-station">Orlen Kraków Grodzka</div>
+          <div class="sheet-brand">ORLEN · ul. Grodzka 14</div>
+          <div class="sheet-price-row">
+            <div class="sheet-fuel">PB95</div>
+            <div class="sheet-price">6.42</div>
+            <div class="sheet-unit">PLN/l</div>
+          </div>
+          <div class="sheet-fresh">● Updated 2h ago</div>
+          <div class="sheet-actions">
+            <div class="sheet-btn nav">Navigate →</div>
+            <div class="sheet-btn update">Update prices</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dark -->
+      <div>
+        <div style="font-size:10px;color:#ccc;margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;font-weight:600;">Dark surface</div>
+        <div class="dark-surface">
+          <div class="sheet">
+            <div class="sheet-handle"></div>
+            <div class="sheet-station">Orlen Kraków Grodzka</div>
+            <div class="sheet-brand" style="color:#555;">ORLEN · ul. Grodzka 14</div>
+            <div class="sheet-price-row">
+              <div class="sheet-fuel" style="color:#555;">PB95</div>
+              <div class="sheet-price">6.42</div>
+              <div class="sheet-unit" style="color:#555;">PLN/l</div>
+            </div>
+            <div class="sheet-fresh">● Updated 2h ago</div>
+            <div class="sheet-actions">
+              <div class="sheet-btn nav">Navigate →</div>
+              <div class="sheet-btn update">Update prices</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Stale / estimated variants -->
+    <hr>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
+
+      <!-- Freshness states -->
+      <div>
+        <div style="font-size:10px;color:#ccc;margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;font-weight:600;">Freshness states — reported prices</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="font-size:12px;display:flex;align-items:center;gap:8px;">
+            <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#22c55e;flex-shrink:0;"></span>
+            <span style="color:#555;">Updated 1d ago — fresh <span style="color:#bbb">(&lt; 2 days)</span></span>
+          </div>
+          <div style="font-size:12px;display:flex;align-items:center;gap:8px;">
+            <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#f59e0b;flex-shrink:0;"></span>
+            <span style="color:#555;">Updated 5d ago — recent <span style="color:#bbb">(2–7 days)</span></span>
+          </div>
+          <div style="font-size:12px;display:flex;align-items:center;gap:8px;">
+            <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#94a3b8;flex-shrink:0;"></span>
+            <span style="color:#555;">Updated 10d ago — may be outdated <span style="color:#bbb">(&gt; 7 days)</span></span>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#bbb;max-width:260px;line-height:1.5;margin-top:8px;">
+          Thresholds: &lt;2d fresh · 2–7d recent · &gt;7d may be outdated. System can flag stale earlier via market signal detection (Story 2.7).
+        </div>
+      </div>
+
+      <!-- Estimated state -->
+      <div>
+        <div style="font-size:10px;color:#ccc;margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;font-weight:600;">Estimated — never user-reported</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="font-size:12px;display:flex;align-items:center;gap:8px;">
+            <span style="display:inline-block;width:9px;height:9px;border-radius:50%;border:1.5px solid #94a3b8;background:transparent;flex-shrink:0;"></span>
+            <span style="color:#94a3b8;font-style:italic;">~6.40–6.70 PLN · estimated range</span>
+          </div>
+          <div style="font-size:11px;color:#bbb;max-width:240px;line-height:1.5;">
+            Hollow ring (○) replaces filled dot (●) when no community submission exists. Price is an algorithm estimate, not a report.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 7. Complete token summary ── -->
+  <div class="section">
+    <div class="section-title">07 · Token Summary — packages/config</div>
+    <div style="font-family:'Courier New',monospace;font-size:11.5px;line-height:1.9;color:#555;background:#f8f8f8;padding:18px;border-radius:10px;">
+      <span style="color:#9ca3af;">// Price spectrum</span><br>
+      color.price.cheap:     <span style="color:#22c55e;font-weight:700;">#22c55e</span>  <span style="color:#ccc;">// green-500</span><br>
+      color.price.mid:       <span style="color:#f59e0b;font-weight:700;">#f59e0b</span>  <span style="color:#ccc;">// amber-500</span><br>
+      color.price.expensive: <span style="color:#ef4444;font-weight:700;">#ef4444</span>  <span style="color:#ccc;">// red-500</span><br>
+      color.price.nodata:    <span style="color:#94a3b8;font-weight:700;">#94a3b8</span>  <span style="color:#ccc;">// slate-400</span><br>
+      <br>
+      <span style="color:#9ca3af;">// Brand</span><br>
+      color.brand.ink:       <span style="color:#1a1a1a;font-weight:700;">#1a1a1a</span>  <span style="color:#ccc;">// wordmark, primary text</span><br>
+      color.brand.accent:    <span style="color:#f59e0b;font-weight:700;">#f59e0b</span>  <span style="color:#ccc;">// amber, CTA, streak</span><br>
+      <br>
+      <span style="color:#9ca3af;">// Neutrals</span><br>
+      color.neutral.900:     <span style="font-weight:700;">#111111</span><br>
+      color.neutral.800:     <span style="font-weight:700;">#1a1a1a</span><br>
+      color.neutral.700:     <span style="font-weight:700;">#2a2a2a</span><br>
+      color.neutral.500:     <span style="font-weight:700;">#6b7280</span><br>
+      color.neutral.400:     <span style="font-weight:700;">#9ca3af</span><br>
+      color.neutral.200:     <span style="font-weight:700;">#e5e7eb</span><br>
+      color.neutral.100:     <span style="font-weight:700;">#f4f4f4</span><br>
+      color.neutral.0:       <span style="font-weight:700;">#ffffff</span><br>
+      <br>
+      <span style="color:#9ca3af;">// Freshness dots — reported prices only (filled ●)</span><br>
+      color.fresh.recent:    → color.price.cheap  <span style="color:#ccc;">// &lt; 2 days</span><br>
+      color.fresh.stale:     → color.price.mid    <span style="color:#ccc;">// 2–7 days</span><br>
+      color.fresh.old:       → color.price.nodata <span style="color:#ccc;">// &gt; 7 days — "may be outdated" warning</span><br>
+      <br>
+      <span style="color:#9ca3af;">// Estimated indicator — never user-reported (hollow ○)</span><br>
+      indicator.estimated.ring:  <span style="color:#94a3b8;font-weight:700;">#94a3b8</span>  <span style="color:#ccc;">// border only, no fill — distinct from freshness dot</span><br>
+      indicator.estimated.prefix: <span style="font-weight:700;">"~"</span>           <span style="color:#ccc;">// prepended to price on pin + sheet</span><br>
+      <br>
+      <span style="color:#9ca3af;">// Best nearby pin</span><br>
+      color.pin.best:        <span style="color:#16a34a;font-weight:700;">#16a34a</span>  <span style="color:#ccc;">// green-600 — slightly deeper than cheap, halo ring</span><br>
+      effect.pin.best:       <span style="font-weight:700;">white 3px ring + green-600 5px ring + green glow</span><br>
+      <br>
+      <span style="color:#9ca3af;">// Pin sizes</span><br>
+      size.pin.standard:     <span style="font-weight:700;">32 × 32</span> dp<br>
+      size.pin.promoted:     <span style="font-weight:700;">40 × 40</span> dp
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

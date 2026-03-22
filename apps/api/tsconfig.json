@@ -1,0 +1,26 @@
+{
+  "extends": "@desert/config/tsconfig/base.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "composite": false,
+    "declaration": false,
+    "declarationMap": false,
+    "incremental": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "paths": {
+      "@desert/db": ["../../packages/db/src/index.ts"],
+      "@desert/types": ["../../packages/types/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

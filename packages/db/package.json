@@ -1,0 +1,32 @@
+{
+  "name": "@desert/db",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio",
+    "type-check": "tsc --noEmit",
+    "lint": "echo \"No lint configured for db package\"",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "7.2.0",
+    "@prisma/client": "7.2.0",
+    "pg": "^8.14.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.11",
+    "prisma": "7.2.0",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>desert — Color Theme Exploration</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f1f5f9; padding: 40px 24px; }
+  h1 { text-align: center; font-size: 22px; color: #1e293b; margin-bottom: 8px; font-weight: 700; }
+  .subtitle { text-align: center; color: #64748b; font-size: 14px; margin-bottom: 40px; }
+
+  .themes { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; }
+
+  .theme-card { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .theme-label { font-size: 13px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.08em; }
+  .theme-sublabel { font-size: 12px; color: #94a3b8; margin-top: -12px; }
+
+  /* Phone frame */
+  .phone { width: 260px; height: 520px; border-radius: 36px; position: relative; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.25), 0 0 0 8px #1e293b; }
+  .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 80px; height: 22px; border-radius: 0 0 16px 16px; z-index: 10; }
+
+  /* Map background */
+  .map-bg { position: absolute; inset: 0; }
+
+  /* Map grid lines */
+  .map-grid { position: absolute; inset: 0; opacity: 0.15; }
+
+  /* Status bar */
+  .status-bar { position: absolute; top: 0; left: 0; right: 0; height: 44px; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 20px 6px; font-size: 11px; font-weight: 600; z-index: 5; }
+
+  /* Fuel type chip */
+  .fuel-chip { position: absolute; top: 52px; left: 50%; transform: translateX(-50%); padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; z-index: 5; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+
+  /* Map pins */
+  .pins-area { position: absolute; top: 80px; left: 0; right: 0; bottom: 160px; }
+  .pin { position: absolute; display: flex; flex-direction: column; align-items: center; }
+  .pin-bubble { padding: 5px 10px; border-radius: 16px; font-size: 12px; font-weight: 700; color: white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); white-space: nowrap; }
+  .pin-bubble.green { background: #22c55e; }
+  .pin-bubble.amber { background: #f59e0b; }
+  .pin-bubble.red { background: #ef4444; }
+  .pin-bubble.gray { background: #94a3b8; font-size: 10px; }
+  .pin-tail { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; margin-top: -1px; }
+  .pin-tail.green { border-top: 7px solid #22c55e; }
+  .pin-tail.amber { border-top: 7px solid #f59e0b; }
+  .pin-tail.red { border-top: 7px solid #ef4444; }
+  .pin-tail.gray { border-top: 7px solid #94a3b8; }
+
+  /* Bottom sheet */
+  .bottom-sheet { position: absolute; bottom: 0; left: 0; right: 0; border-radius: 20px 20px 0 0; padding: 12px 16px 20px; z-index: 6; }
+  .sheet-handle { width: 36px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.3); margin: 0 auto 12px; }
+  .station-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .station-meta { font-size: 11px; opacity: 0.6; margin-bottom: 10px; }
+  .price-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .price-row:last-of-type { border-bottom: none; }
+  .fuel-name { font-size: 12px; font-weight: 500; }
+  .price-val { font-size: 14px; font-weight: 700; }
+  .freshness { font-size: 10px; opacity: 0.5; }
+  .btn-row { display: flex; gap: 8px; margin-top: 10px; }
+  .btn { flex: 1; padding: 9px 0; border-radius: 12px; font-size: 12px; font-weight: 700; text-align: center; border: none; cursor: pointer; }
+  .btn-nav { color: white; }
+  .btn-submit { background: rgba(255,255,255,0.12); }
+
+  /* Tab bar */
+  .tab-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 56px; display: flex; align-items: center; justify-content: space-around; padding: 0 20px; z-index: 7; border-top: 1px solid rgba(255,255,255,0.08); }
+  .tab-icon { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+
+  /* Color palette swatches */
+  .swatches { display: flex; gap: 6px; margin-top: 4px; }
+  .swatch { width: 28px; height: 28px; border-radius: 8px; border: 2px solid rgba(0,0,0,0.1); }
+  .swatch-label { font-size: 10px; color: #94a3b8; text-align: center; margin-top: 2px; }
+
+  /* ===== THEME A: Dark + Amber ===== */
+  .theme-a .phone { background: #0a0a0a; }
+  .theme-a .notch { background: #0a0a0a; }
+  .theme-a .map-bg { background: #1a1a2e; }
+  .theme-a .map-grid { background: repeating-linear-gradient(0deg, transparent, transparent 29px, rgba(255,255,255,0.04) 30px), repeating-linear-gradient(90deg, transparent, transparent 29px, rgba(255,255,255,0.04) 30px); }
+  .theme-a .status-bar { color: rgba(255,255,255,0.7); }
+  .theme-a .fuel-chip { background: #171717; color: #f59e0b; border: 1.5px solid #f59e0b; }
+  .theme-a .bottom-sheet { background: #171717; color: white; }
+  .theme-a .btn-nav { background: #f59e0b; color: #000; }
+  .theme-a .btn-submit { color: rgba(255,255,255,0.8); }
+  .theme-a .tab-bar { background: #0f0f0f; }
+  .theme-a .tab-icon.active { color: #f59e0b; }
+  .theme-a .tab-icon { color: rgba(255,255,255,0.3); }
+
+  /* ===== THEME B: Light + Blue ===== */
+  .theme-b .phone { background: #ffffff; }
+  .theme-b .notch { background: #ffffff; }
+  .theme-b .map-bg { background: #e8f4f8; }
+  .theme-b .map-grid { background: repeating-linear-gradient(0deg, transparent, transparent 29px, rgba(0,0,0,0.04) 30px), repeating-linear-gradient(90deg, transparent, transparent 29px, rgba(0,0,0,0.04) 30px); }
+  .theme-b .status-bar { color: rgba(0,0,0,0.6); }
+  .theme-b .fuel-chip { background: white; color: #2563eb; border: 1.5px solid #2563eb; box-shadow: 0 2px 8px rgba(37,99,235,0.2); }
+  .theme-b .bottom-sheet { background: white; color: #0f172a; box-shadow: 0 -4px 24px rgba(0,0,0,0.12); }
+  .theme-b .sheet-handle { background: #cbd5e1; }
+  .theme-b .price-row { border-bottom-color: #f1f5f9; }
+  .theme-b .btn-nav { background: #2563eb; }
+  .theme-b .btn-submit { background: #f1f5f9; color: #475569; }
+  .theme-b .tab-bar { background: white; border-top-color: #e2e8f0; }
+  .theme-b .tab-icon.active { color: #2563eb; }
+  .theme-b .tab-icon { color: #94a3b8; }
+
+  /* ===== THEME C: Light + Orange ===== */
+  .theme-c .phone { background: #ffffff; }
+  .theme-c .notch { background: #ffffff; }
+  .theme-c .map-bg { background: #fdf6ee; }
+  .theme-c .map-grid { background: repeating-linear-gradient(0deg, transparent, transparent 29px, rgba(0,0,0,0.03) 30px), repeating-linear-gradient(90deg, transparent, transparent 29px, rgba(0,0,0,0.03) 30px); }
+  .theme-c .status-bar { color: rgba(0,0,0,0.6); }
+  .theme-c .fuel-chip { background: white; color: #ea580c; border: 1.5px solid #ea580c; box-shadow: 0 2px 8px rgba(234,88,12,0.2); }
+  .theme-c .bottom-sheet { background: white; color: #1c1917; box-shadow: 0 -4px 24px rgba(0,0,0,0.10); }
+  .theme-c .sheet-handle { background: #d6d3d1; }
+  .theme-c .price-row { border-bottom-color: #fafaf9; }
+  .theme-c .btn-nav { background: #ea580c; }
+  .theme-c .btn-submit { background: #fef3c7; color: #78350f; }
+  .theme-c .tab-bar { background: white; border-top-color: #e7e5e4; }
+  .theme-c .tab-icon.active { color: #ea580c; }
+  .theme-c .tab-icon { color: #a8a29e; }
+
+  /* Road lines on map */
+  .road-h { position: absolute; height: 5px; border-radius: 2px; opacity: 0.18; }
+  .road-v { position: absolute; width: 5px; border-radius: 2px; opacity: 0.18; }
+  .theme-a .road-h, .theme-a .road-v { background: #fff; }
+  .theme-b .road-h, .theme-b .road-v { background: #94a3b8; }
+  .theme-c .road-h, .theme-c .road-v { background: #a8a29e; }
+
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #64748b; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+</style>
+</head>
+<body>
+
+<h1>desert — Color Theme Exploration</h1>
+<p class="subtitle">Three visual directions for the map screen. Price pin colours (green / amber / red) are fixed across all themes.</p>
+
+<div class="themes">
+
+  <!-- THEME A -->
+  <div class="theme-card theme-a">
+    <div class="theme-label">Option A</div>
+    <div class="theme-sublabel">Dark chrome · Amber accent</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="map-bg">
+        <div class="map-grid"></div>
+        <!-- Roads -->
+        <div class="road-h" style="top:45%; left:0; right:0;"></div>
+        <div class="road-h" style="top:62%; left:0; right:0;"></div>
+        <div class="road-v" style="left:35%; top:0; bottom:0;"></div>
+        <div class="road-v" style="left:68%; top:0; bottom:0;"></div>
+      </div>
+      <div class="status-bar">
+        <span>9:41</span><span>●●● 100%</span>
+      </div>
+      <!-- Fuel type chip -->
+      <div class="fuel-chip">⛽ PB 95</div>
+      <!-- Pins -->
+      <div class="pins-area">
+        <div class="pin" style="top:20%; left:55%">
+          <div class="pin-bubble green">6.42</div>
+          <div class="pin-tail green"></div>
+        </div>
+        <div class="pin" style="top:40%; left:20%">
+          <div class="pin-bubble amber">6.61</div>
+          <div class="pin-tail amber"></div>
+        </div>
+        <div class="pin" style="top:15%; left:18%">
+          <div class="pin-bubble red">6.79</div>
+          <div class="pin-tail red"></div>
+        </div>
+        <div class="pin" style="top:55%; left:60%">
+          <div class="pin-bubble gray">—</div>
+          <div class="pin-tail gray"></div>
+        </div>
+        <div class="pin" style="top:35%; left:70%">
+          <div class="pin-bubble amber">6.58</div>
+          <div class="pin-tail amber"></div>
+        </div>
+      </div>
+      <!-- Bottom sheet -->
+      <div class="bottom-sheet" style="height:172px">
+        <div class="sheet-handle"></div>
+        <div class="station-name">BP Łódź Śródmieście</div>
+        <div class="station-meta">ul. Piotrkowska 120 · Updated 2h ago ✓</div>
+        <div class="price-row">
+          <span class="fuel-name">PB 95</span>
+          <span class="price-val" style="color:#22c55e">6.42 PLN</span>
+        </div>
+        <div class="price-row">
+          <span class="fuel-name">ON</span>
+          <span class="price-val">6.58 PLN</span>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-nav">🧭 Navigate</button>
+          <button class="btn btn-submit">📷 Update</button>
+        </div>
+      </div>
+    </div>
+    <div class="swatches">
+      <div>
+        <div class="swatch" style="background:#0a0a0a;border-color:#333"></div>
+        <div class="swatch-label">Chrome</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#f59e0b"></div>
+        <div class="swatch-label">Accent</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#22c55e"></div>
+        <div class="swatch-label">Cheap</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#f59e0b"></div>
+        <div class="swatch-label">Mid</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#ef4444"></div>
+        <div class="swatch-label">Expensive</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THEME B -->
+  <div class="theme-card theme-b">
+    <div class="theme-label">Option B</div>
+    <div class="theme-sublabel">Light chrome · Blue accent</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="map-bg">
+        <div class="map-grid"></div>
+        <div class="road-h" style="top:45%; left:0; right:0;"></div>
+        <div class="road-h" style="top:62%; left:0; right:0;"></div>
+        <div class="road-v" style="left:35%; top:0; bottom:0;"></div>
+        <div class="road-v" style="left:68%; top:0; bottom:0;"></div>
+      </div>
+      <div class="status-bar">
+        <span>9:41</span><span>●●● 100%</span>
+      </div>
+      <div class="fuel-chip">⛽ PB 95</div>
+      <div class="pins-area">
+        <div class="pin" style="top:20%; left:55%">
+          <div class="pin-bubble green">6.42</div>
+          <div class="pin-tail green"></div>
+        </div>
+        <div class="pin" style="top:40%; left:20%">
+          <div class="pin-bubble amber">6.61</div>
+          <div class="pin-tail amber"></div>
+        </div>
+        <div class="pin" style="top:15%; left:18%">
+          <div class="pin-bubble red">6.79</div>
+          <div class="pin-tail red"></div>
+        </div>
+        <div class="pin" style="top:55%; left:60%">
+          <div class="pin-bubble gray">—</div>
+          <div class="pin-tail gray"></div>
+        </div>
+        <div class="pin" style="top:35%; left:70%">
+          <div class="pin-bubble amber">6.58</div>
+          <div class="pin-tail amber"></div>
+        </div>
+      </div>
+      <div class="bottom-sheet" style="height:172px">
+        <div class="sheet-handle"></div>
+        <div class="station-name">BP Łódź Śródmieście</div>
+        <div class="station-meta">ul. Piotrkowska 120 · Updated 2h ago ✓</div>
+        <div class="price-row">
+          <span class="fuel-name">PB 95</span>
+          <span class="price-val" style="color:#16a34a">6.42 PLN</span>
+        </div>
+        <div class="price-row">
+          <span class="fuel-name">ON</span>
+          <span class="price-val">6.58 PLN</span>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-nav">🧭 Navigate</button>
+          <button class="btn btn-submit">📷 Update</button>
+        </div>
+      </div>
+    </div>
+    <div class="swatches">
+      <div>
+        <div class="swatch" style="background:#ffffff;border-color:#cbd5e1"></div>
+        <div class="swatch-label">Chrome</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#2563eb"></div>
+        <div class="swatch-label">Accent</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#22c55e"></div>
+        <div class="swatch-label">Cheap</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#f59e0b"></div>
+        <div class="swatch-label">Mid</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#ef4444"></div>
+        <div class="swatch-label">Expensive</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THEME C -->
+  <div class="theme-card theme-c">
+    <div class="theme-label">Option C</div>
+    <div class="theme-sublabel">Light chrome · Orange accent</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="map-bg">
+        <div class="map-grid"></div>
+        <div class="road-h" style="top:45%; left:0; right:0;"></div>
+        <div class="road-h" style="top:62%; left:0; right:0;"></div>
+        <div class="road-v" style="left:35%; top:0; bottom:0;"></div>
+        <div class="road-v" style="left:68%; top:0; bottom:0;"></div>
+      </div>
+      <div class="status-bar">
+        <span>9:41</span><span>●●● 100%</span>
+      </div>
+      <div class="fuel-chip">⛽ PB 95</div>
+      <div class="pins-area">
+        <div class="pin" style="top:20%; left:55%">
+          <div class="pin-bubble green">6.42</div>
+          <div class="pin-tail green"></div>
+        </div>
+        <div class="pin" style="top:40%; left:20%">
+          <div class="pin-bubble amber">6.61</div>
+          <div class="pin-tail amber"></div>
+        </div>
+        <div class="pin" style="top:15%; left:18%">
+          <div class="pin-bubble red">6.79</div>
+          <div class="pin-tail red"></div>
+        </div>
+        <div class="pin" style="top:55%; left:60%">
+          <div class="pin-bubble gray">—</div>
+          <div class="pin-tail gray"></div>
+        </div>
+        <div class="pin" style="top:35%; left:70%">
+          <div class="pin-bubble amber">6.58</div>
+          <div class="pin-tail amber"></div>
+        </div>
+      </div>
+      <div class="bottom-sheet" style="height:172px">
+        <div class="sheet-handle"></div>
+        <div class="station-name">BP Łódź Śródmieście</div>
+        <div class="station-meta">ul. Piotrkowska 120 · Updated 2h ago ✓</div>
+        <div class="price-row">
+          <span class="fuel-name">PB 95</span>
+          <span class="price-val" style="color:#16a34a">6.42 PLN</span>
+        </div>
+        <div class="price-row">
+          <span class="fuel-name">ON</span>
+          <span class="price-val">6.58 PLN</span>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-nav">🧭 Navigate</button>
+          <button class="btn btn-submit">📷 Update</button>
+        </div>
+      </div>
+    </div>
+    <div class="swatches">
+      <div>
+        <div class="swatch" style="background:#ffffff;border-color:#d6d3d1"></div>
+        <div class="swatch-label">Chrome</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#ea580c"></div>
+        <div class="swatch-label">Accent</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#22c55e"></div>
+        <div class="swatch-label">Cheap</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#f59e0b"></div>
+        <div class="swatch-label">Mid</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#ef4444"></div>
+        <div class="swatch-label">Expensive</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="legend" style="margin-top:32px">
+  <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>Cheapest in view</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Mid-range</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>Most expensive</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#94a3b8"></div>No data</div>
+</div>
+
+<p style="text-align:center; margin-top:24px; font-size:12px; color:#94a3b8">Pin colours are fixed functional signals — not affected by theme choice</p>
+
+</body>
+</html>

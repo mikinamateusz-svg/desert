@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "incremental": true
+  },
+  "include": ["eslint/**/*.js"],
+  "exclude": ["node_modules"]
+}

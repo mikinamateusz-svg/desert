@@ -1,0 +1,18 @@
+// This is your Prisma schema file.
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+//
+// Placeholder schema — real models added in Story 1.2+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Placeholder model — real schema added in Story 1.2+
+model User {
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+}

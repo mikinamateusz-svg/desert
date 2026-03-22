@@ -1,0 +1,31 @@
+{
+  "name": "@desert/mobile",
+  "version": "0.0.1",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "dev": "expo start",
+    "build": "tsc --noEmit",
+    "lint": "echo 'Mobile lint skipped (no eslint config yet)'",
+    "type-check": "tsc --noEmit",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
+  },
+  "dependencies": {
+    "@desert/types": "workspace:*",
+    "@expo/metro-runtime": "~55.0.6",
+    "expo": "~55.0.8",
+    "expo-router": "~4.0.20",
+    "expo-status-bar": "~2.0.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-native": "0.76.9",
+    "react-native-web": "~0.19.13"
+  },
+  "devDependencies": {
+    "@desert/config": "workspace:*",
+    "@babel/core": "^7.25.2",
+    "@types/react": "~18.3.12",
+    "typescript": "^5.8.3"
+  }
+}

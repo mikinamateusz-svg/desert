@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Litro — Logo Concepts</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #d8d8d8;
+    padding: 52px 28px 64px;
+    font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+    min-height: 100vh;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  header h1 {
+    font-size: 11px;
+    font-weight: 700;
+    color: #aaa;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+  header p {
+    font-size: 13px;
+    color: #999;
+    margin-top: 6px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: white;
+    border-radius: 22px;
+    padding: 32px 28px 26px;
+    box-shadow: 0 2px 24px rgba(0,0,0,0.09);
+  }
+
+  .card-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #d0d0d0;
+    margin-bottom: 6px;
+  }
+
+  .card-desc {
+    font-size: 12.5px;
+    color: #888;
+    line-height: 1.55;
+    margin-bottom: 22px;
+    min-height: 38px;
+  }
+
+  .stages {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .stage {
+    flex: 1;
+    border-radius: 12px;
+    height: 108px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .bg-light { background: #f4f4f4; }
+  .bg-dark  { background: #111111; }
+  .bg-warm  { background: #fdf6ee; }
+
+  .swatches {
+    display: flex;
+    gap: 5px;
+    margin-top: 4px;
+  }
+  .swatch {
+    height: 5px;
+    flex: 1;
+    border-radius: 99px;
+  }
+
+  .stage-label {
+    font-size: 10px;
+    color: #ccc;
+    text-align: center;
+    margin-top: 6px;
+  }
+
+  .concept-note {
+    font-size: 11px;
+    color: #bbb;
+    margin-top: 10px;
+    line-height: 1.4;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Litro · Logo Concepts</h1>
+  <p>Four directions — each shown on light and dark background</p>
+</header>
+
+<div class="grid">
+
+  <!-- ─────────────────────────────────────────── -->
+  <!-- CONCEPT A: i-dot as location pin           -->
+  <!-- ─────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-tag">Concept A — Pin</div>
+    <div class="card-desc">
+      The <em>i</em>'s dot becomes a location pin.<br>
+      Map and fuel merged in one lettermark.
+    </div>
+
+    <div class="stages">
+      <!-- Light -->
+      <div class="stage bg-light">
+        <svg viewBox="0 0 210 72" width="195" height="67">
+          <!-- Wordmark: litro, i-dot will be covered -->
+          <text x="30" y="64"
+                font-family="Arial Black, Arial, sans-serif"
+                font-weight="900"
+                font-size="52"
+                fill="#1a1a1a"
+                letter-spacing="-1">litro</text>
+          <!-- Cover i-dot with bg colour -->
+          <rect x="53" y="2" width="20" height="20" fill="#f4f4f4"/>
+          <!-- Location pin: circle body + downward point -->
+          <circle cx="63" cy="11" r="9.5" fill="#f59e0b"/>
+          <polygon points="54.5,17 71.5,17 63,31" fill="#f59e0b"/>
+          <!-- Pin hole -->
+          <circle cx="63" cy="10" r="3.5" fill="#f4f4f4"/>
+        </svg>
+      </div>
+      <!-- Dark -->
+      <div class="stage bg-dark">
+        <svg viewBox="0 0 210 72" width="195" height="67">
+          <text x="30" y="64"
+                font-family="Arial Black, Arial, sans-serif"
+                font-weight="900"
+                font-size="52"
+                fill="#ffffff"
+                letter-spacing="-1">litro</text>
+          <rect x="53" y="2" width="20" height="20" fill="#111"/>
+          <circle cx="63" cy="11" r="9.5" fill="#f59e0b"/>
+          <polygon points="54.5,17 71.5,17 63,31" fill="#f59e0b"/>
+          <circle cx="63" cy="10" r="3.5" fill="#111"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="swatches">
+      <div class="swatch" style="background:#1a1a1a"></div>
+      <div class="swatch" style="background:#f59e0b"></div>
+      <div class="swatch" style="background:#f4f4f4"></div>
+    </div>
+    <div class="concept-note">Pin accent doubles as app icon mark. Works at small size.</div>
+  </div>
+
+
+  <!-- ─────────────────────────────────────────── -->
+  <!-- CONCEPT B: o as gauge dial                 -->
+  <!-- ─────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-tag">Concept B — Gauge</div>
+    <div class="card-desc">
+      The <em>o</em> is a price gauge — needle on green<br>
+      means this station is the cheap one.
+    </div>
+
+    <div class="stages">
+      <!-- Light -->
+      <div class="stage bg-light">
+        <svg id="gaugeLight" viewBox="0 0 230 72" width="210" height="66">
+          <defs>
+            <linearGradient id="gA" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%"   stop-color="#22c55e"/>
+              <stop offset="48%"  stop-color="#f59e0b"/>
+              <stop offset="100%" stop-color="#ef4444"/>
+            </linearGradient>
+          </defs>
+          <!-- "litr" — gauge will be snapped to its right edge by JS -->
+          <text id="litrLight" x="18" y="62"
+                font-family="Arial Black, Arial, sans-serif"
+                font-weight="900" font-size="52" fill="#1a1a1a" letter-spacing="-1">litr</text>
+          <!-- Gauge elements positioned by JS -->
+          <circle id="gCircleLight" fill="#f4f4f4" stroke="#e0e0e0" stroke-width="1"/>
+          <path  id="gTrackLight"  fill="none" stroke="#e0e0e0" stroke-linecap="round"/>
+          <path  id="gArcLight"    fill="none" stroke="url(#gA)" stroke-linecap="round"/>
+          <line  id="gNeedleLight" stroke="#1a1a1a" stroke-linecap="round"/>
+          <circle id="gPivotLight" fill="#1a1a1a"/>
+        </svg>
+      </div>
+      <!-- Dark -->
+      <div class="stage bg-dark">
+        <svg id="gaugeDark" viewBox="0 0 230 72" width="210" height="66">
+          <defs>
+            <linearGradient id="gB" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%"   stop-color="#22c55e"/>
+              <stop offset="48%"  stop-color="#f59e0b"/>
+              <stop offset="100%" stop-color="#ef4444"/>
+            </linearGradient>
+          </defs>
+          <text id="litrDark" x="18" y="62"
+                font-family="Arial Black, Arial, sans-serif"
+                font-weight="900" font-size="52" fill="#ffffff" letter-spacing="-1">litr</text>
+          <circle id="gCircleDark" fill="#111111" stroke="#2a2a2a" stroke-width="1"/>
+          <path  id="gTrackDark"  fill="none" stroke="#2a2a2a" stroke-linecap="round"/>
+          <path  id="gArcDark"    fill="none" stroke="url(#gB)" stroke-linecap="round"/>
+          <line  id="gNeedleDark" stroke="#ffffff" stroke-linecap="round"/>
+          <circle id="gPivotDark" fill="#ffffff"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="swatches">
+      <div class="swatch" style="background:#22c55e"></div>
+      <div class="swatch" style="background:#f59e0b"></div>
+      <div class="swatch" style="background:#ef4444"></div>
+      <div class="swatch" style="background:#1a1a1a"></div>
+    </div>
+    <div class="concept-note">Gauge arc mirrors the green→amber→red pin colour system.</div>
+  </div>
+
+  <script>
+  // Position the gauge "o" flush to the measured end of the "litr" text.
+  // Runs after fonts are loaded so getBBox() returns accurate values.
+  function buildGauge(textId, ids, textColor, bgFill) {
+    const textEl = document.getElementById(textId);
+    const bbox   = textEl.getBBox();
+
+    // The "o" in this font sits between baseline and x-height.
+    // x-height ≈ 60% of font-size (Arial Black is a tall-x-height face).
+    const fontSize  = 52;
+    const xHeight   = fontSize * 0.60;          // ≈ 31 px
+    const r         = xHeight / 2;              // outer radius of gauge circle
+    const trackW    = r * 0.28;                 // stroke width proportional to radius
+
+    // Letter-spacing between "r" and "o": match the -1 kern used in the text
+    const kern = -1;
+    const cx = bbox.x + bbox.width + kern + r + 1;  // +1 for optical gap
+    const cy = 62 - xHeight / 2;                     // baseline minus half x-height
+
+    // Arc endpoints: lower-left (150°) → lower-right (30°) going clockwise over top
+    // In SVG: 30° = lower-right, 150° = lower-left
+    const toRad = d => d * Math.PI / 180;
+    const ax1 = cx + r * Math.cos(toRad(150));
+    const ay1 = cy + r * Math.sin(toRad(150));
+    const ax2 = cx + r * Math.cos(toRad(30));
+    const ay2 = cy + r * Math.sin(toRad(30));
+    const arcD = `M ${ax1.toFixed(1)} ${ay1.toFixed(1)} A ${r} ${r} 0 1 1 ${ax2.toFixed(1)} ${ay2.toFixed(1)}`;
+
+    // Needle points into the green zone (≈ 210° in SVG = upper-left from center)
+    const needleLen = r * 0.72;
+    const nx = cx + needleLen * Math.cos(toRad(210));
+    const ny = cy + needleLen * Math.sin(toRad(210));
+
+    // Update SVG elements
+    const set = (id, attrs) => {
+      const el = document.getElementById(id);
+      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    };
+
+    set(ids.circle, { cx, cy, r });
+    set(ids.track,  { d: arcD, 'stroke-width': trackW });
+    set(ids.arc,    { d: arcD, 'stroke-width': trackW });
+    set(ids.needle, { x1: cx, y1: cy, x2: nx.toFixed(1), y2: ny.toFixed(1), 'stroke-width': trackW * 0.55 });
+    set(ids.pivot,  { cx, cy, r: trackW * 0.75 });
+
+    // Expand the SVG viewBox so the gauge fits without clipping
+    const svg = document.getElementById(ids.svg);
+    const rightEdge = cx + r + 4;
+    const vbW = Math.max(230, rightEdge + 10);
+    svg.setAttribute('viewBox', `0 0 ${vbW.toFixed(0)} 72`);
+  }
+
+  // Wait for fonts before measuring
+  document.fonts.ready.then(() => {
+    buildGauge('litrLight', {
+      svg: 'gaugeLight', circle: 'gCircleLight', track: 'gTrackLight',
+      arc: 'gArcLight', needle: 'gNeedleLight', pivot: 'gPivotLight'
+    });
+    buildGauge('litrDark', {
+      svg: 'gaugeDark', circle: 'gCircleDark', track: 'gTrackDark',
+      arc: 'gArcDark', needle: 'gNeedleDark', pivot: 'gPivotDark'
+    });
+  });
+  </script>
+
+
+  <!-- ─────────────────────────────────────────── -->
+  <!-- CONCEPT C: L as measuring scale            -->
+  <!-- ─────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-tag">Concept C — Measure</div>
+    <div class="card-desc">
+      The <em>L</em> wears graduated price-scale marks —<br>
+      precision and volume in one letter.
+    </div>
+
+    <div class="stages">
+      <!-- Light -->
+      <div class="stage bg-light">
+        <svg viewBox="0 0 210 72" width="195" height="67">
+          <text x="30" y="64"
+                font-family="Arial Black, Arial, sans-serif"
+                font-weight="900"
+                font-size="52"
+                fill="#1a1a1a"
+                letter-spacing="-1">litro</text>
+          <!-- Tick marks on the L's vertical stroke -->
+          <!-- L stroke: left edge ≈ x=30, right edge of stroke ≈ x=48 -->
+          <!-- Marks go from top to bottom: expensive (red) → mid (amber) → cheap (green) -->
+          <!-- Matching the map pin colour logic -->
+          <line x1="30" y1="16" x2="44" y2="16" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="30" y1="25" x2="40" y2="25" stroke="#ef4444" stroke-width="2"   stroke-linecap="round"/>
+          <line x1="30" y1="34" x2="44" y2="34" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="30" y1="43" x2="40" y2="43" stroke="#f59e0b" stroke-width="2"   stroke-linecap="round"/>
+          <line x1="30" y1="52" x2="44" y2="52" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <!-- Dark -->
+      <div class="stage bg-dark">
+        <svg viewBox="0 0 210 72" width="195" height="67">
+          <text x="30" y="64"
+                font-family="Arial Black, Arial, sans-serif"
+                font-weight="900"
+                font-size="52"
+                fill="#ffffff"
+                letter-spacing="-1">litro</text>
+          <line x1="30" y1="16" x2="44" y2="16" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="30" y1="25" x2="40" y2="25" stroke="#ef4444" stroke-width="2"   stroke-linecap="round"/>
+          <line x1="30" y1="34" x2="44" y2="34" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="30" y1="43" x2="40" y2="43" stroke="#f59e0b" stroke-width="2"   stroke-linecap="round"/>
+          <line x1="30" y1="52" x2="44" y2="52" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="swatches">
+      <div class="swatch" style="background:#ef4444"></div>
+      <div class="swatch" style="background:#f59e0b"></div>
+      <div class="swatch" style="background:#22c55e"></div>
+      <div class="swatch" style="background:#1a1a1a"></div>
+    </div>
+    <div class="concept-note">Scale marks echo the price pin spectrum. Very legible at small sizes.</div>
+  </div>
+
+
+  <!-- ─────────────────────────────────────────── -->
+  <!-- CONCEPT D: t crossbar as fuel nozzle       -->
+  <!-- ─────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-tag">Concept D — Nozzle</div>
+    <div class="card-desc">
+      The <em>t</em> crossbar extends into a fuel nozzle —<br>
+      the product is literally in the letterform.
+    </div>
+
+    <div class="stages">
+      <!-- Light -->
+      <div class="stage bg-light">
+        <svg viewBox="0 0 210 80" width="195" height="74">
+          <text x="30" y="64"
+                font-family="Arial Black, Arial, sans-serif"
+                font-weight="900"
+                font-size="52"
+                fill="#1a1a1a"
+                letter-spacing="-1">litro</text>
+          <!-- t crossbar is at approximately y=27, right edge ≈ x=100 -->
+          <!-- Nozzle path: extends right, curves down, ends in nozzle tip -->
+          <path d="M 100 27 L 120 27 Q 128 27 128 35 L 128 50 Q 128 56 121 56 L 112 56"
+                fill="none"
+                stroke="#f59e0b"
+                stroke-width="5.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <!-- Nozzle tip: rounded pill -->
+          <rect x="106" y="53" width="16" height="7" rx="3.5" fill="#f59e0b"/>
+          <!-- Fuel drop -->
+          <ellipse cx="117" cy="67" rx="3.5" ry="4.5" fill="#f59e0b" opacity="0.55"/>
+        </svg>
+      </div>
+      <!-- Dark -->
+      <div class="stage bg-dark">
+        <svg viewBox="0 0 210 80" width="195" height="74">
+          <text x="30" y="64"
+                font-family="Arial Black, Arial, sans-serif"
+                font-weight="900"
+                font-size="52"
+                fill="#ffffff"
+                letter-spacing="-1">litro</text>
+          <path d="M 100 27 L 120 27 Q 128 27 128 35 L 128 50 Q 128 56 121 56 L 112 56"
+                fill="none"
+                stroke="#f59e0b"
+                stroke-width="5.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <rect x="106" y="53" width="16" height="7" rx="3.5" fill="#f59e0b"/>
+          <ellipse cx="117" cy="67" rx="3.5" ry="4.5" fill="#f59e0b" opacity="0.55"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="swatches">
+      <div class="swatch" style="background:#1a1a1a"></div>
+      <div class="swatch" style="background:#f59e0b"></div>
+      <div class="swatch" style="background:#f4f4f4"></div>
+    </div>
+    <div class="concept-note">Most literal concept — nozzle is unambiguous. Risk: overplayed in fuel apps.</div>
+  </div>
+
+</div>
+
+<!-- ─────────────────────────────────────────── -->
+<!-- Comparison: all four at small/icon scale   -->
+<!-- ─────────────────────────────────────────── -->
+<div style="max-width:920px; margin: 28px auto 0; background:white; border-radius:22px; padding:28px 28px 20px; box-shadow:0 2px 24px rgba(0,0,0,0.09);">
+  <div style="font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#d0d0d0; margin-bottom:16px;">Icon scale · 48 × 48</div>
+  <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
+
+    <!-- A icon -->
+    <div style="text-align:center">
+      <div style="width:48px; height:48px; background:#f59e0b; border-radius:12px; display:flex; align-items:center; justify-content:center; margin:0 auto 6px;">
+        <svg viewBox="0 0 32 32" width="28" height="28">
+          <!-- stylised "L" + pin dot -->
+          <rect x="6" y="5" width="5" height="22" rx="2" fill="white"/>
+          <rect x="6" y="22" width="14" height="5" rx="2" fill="white"/>
+          <!-- pin dot above L -->
+          <circle cx="23" cy="10" r="5" fill="white" opacity="0.9"/>
+          <polygon points="18.5,14 27.5,14 23,21" fill="white" opacity="0.9"/>
+          <circle cx="23" cy="9.5" r="2" fill="#f59e0b"/>
+        </svg>
+      </div>
+      <div style="font-size:10px; color:#bbb;">A</div>
+    </div>
+
+    <!-- B icon -->
+    <div style="text-align:center">
+      <div style="width:48px; height:48px; background:#1a1a1a; border-radius:12px; display:flex; align-items:center; justify-content:center; margin:0 auto 6px;">
+        <svg viewBox="0 0 32 32" width="28" height="28">
+          <defs>
+            <linearGradient id="gi" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%"   stop-color="#22c55e"/>
+              <stop offset="50%"  stop-color="#f59e0b"/>
+              <stop offset="100%" stop-color="#ef4444"/>
+            </linearGradient>
+          </defs>
+          <circle cx="16" cy="16" r="11" fill="none" stroke="#333" stroke-width="2"/>
+          <path d="M 7 21 A 11 11 0 1 1 25 21"
+                fill="none" stroke="url(#gi)" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="16" y1="16" x2="10" y2="11"
+                stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="16" cy="16" r="2.5" fill="white"/>
+        </svg>
+      </div>
+      <div style="font-size:10px; color:#bbb;">B</div>
+    </div>
+
+    <!-- C icon -->
+    <div style="text-align:center">
+      <div style="width:48px; height:48px; background:#1a1a1a; border-radius:12px; display:flex; align-items:center; justify-content:center; margin:0 auto 6px;">
+        <svg viewBox="0 0 32 32" width="28" height="28">
+          <rect x="6"  y="5"  width="4.5" height="22" rx="2" fill="white"/>
+          <rect x="6"  y="23" width="14"  height="4.5" rx="2" fill="white"/>
+          <line x1="6"  y1="9"  x2="15" y2="9"  stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+          <line x1="6"  y1="14" x2="13" y2="14" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+          <line x1="6"  y1="19" x2="15" y2="19" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div style="font-size:10px; color:#bbb;">C</div>
+    </div>
+
+    <!-- D icon -->
+    <div style="text-align:center">
+      <div style="width:48px; height:48px; background:#1a1a1a; border-radius:12px; display:flex; align-items:center; justify-content:center; margin:0 auto 6px;">
+        <svg viewBox="0 0 32 32" width="28" height="28">
+          <!-- stylised nozzle icon -->
+          <rect x="7" y="5" width="4.5" height="20" rx="2" fill="white"/>
+          <rect x="7" y="13" width="14"  height="4"  rx="2" fill="white"/>
+          <path d="M 18 15 L 24 15 Q 26 15 26 17 L 26 23 Q 26 25 24 25 L 20 25"
+                fill="none" stroke="#f59e0b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="18" y="24" width="8" height="3.5" rx="1.75" fill="#f59e0b"/>
+        </svg>
+      </div>
+      <div style="font-size:10px; color:#bbb;">D</div>
+    </div>
+
+    <div style="margin-left:auto; font-size:12px; color:#bbb; max-width:280px; line-height:1.5;">
+      The icon mark matters — it lives on the home screen at 48×48 and in the app store at 1024×1024.
+      Concept B (gauge) and C (measure) isolate most cleanly at small scale.
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

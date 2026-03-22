@@ -1,30 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Redirect } from 'expo-router';
+import { useAuth } from '../src/store/auth.store';
 
-export default function Index() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>desert</Text>
-      <Text style={styles.subtitle}>Mobile app (coming soon)</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+export default function RootIndex() {
+  const { accessToken, isLoading } = useAuth();
+
+  if (isLoading) return null;
+
+  return accessToken ? <Redirect href="/(app)" /> : <Redirect href="/(auth)/login" />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginTop: 8,
-  },
-});

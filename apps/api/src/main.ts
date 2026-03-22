@@ -3,12 +3,21 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module.js';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter({ logger: true }),
+  );
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,       // strip unknown fields
+      forbidNonWhitelisted: true,
+      transform: true,       // enable @Transform() decorators
+    }),
   );
 
   const port = process.env['PORT'] ? parseInt(process.env['PORT'], 10) : 3001;

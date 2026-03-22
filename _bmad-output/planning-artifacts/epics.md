@@ -305,7 +305,7 @@ So that every subsequent story ships to real users from day one with no deployme
 - **Upstash** — Managed Redis
 - **Cloudflare R2** — Object storage for price submission photos
 
-**Why:** Deploying a walking skeleton to production on day one means every feature built from Story 1.2 onwards is immediately shippable. Leaving infra provisioning until later creates a risky big-bang deployment that is hard to debug and delays user feedback.
+**Why:** Deploying a walking skeleton to production on day one means every feature built from Story 1.1 onwards is immediately shippable. Leaving infra provisioning until later creates a risky big-bang deployment that is hard to debug and delays user feedback.
 
 **Acceptance Criteria:**
 
@@ -326,7 +326,7 @@ So that every subsequent story ships to real users from day one with no deployme
 **Then** the deployment completes without manual intervention
 **And** a failed deployment triggers an alert to the team channel (Slack or email)
 
-### Story 1.2: Driver Email/Password Registration & Login
+### Story 1.1: Driver Email/Password Registration & Login
 
 As a **driver**,
 I want to create an account with my email and password and sign back in,
@@ -361,7 +361,7 @@ So that I can access the app and my contributions are tracked to my identity.
 **When** their device language is set to Polish, English, or Ukrainian
 **Then** all text on the screen is displayed in that language
 
-### Story 1.3: Google Sign-In
+### Story 1.2: Google Sign-In
 
 As a **driver**,
 I want to sign up and sign in using my Google account,
@@ -392,7 +392,7 @@ So that I can get started without creating a new password.
 **When** their device language is set to Polish, English, or Ukrainian
 **Then** all app-controlled text on the screen is displayed in that language
 
-### Story 1.4: Apple Sign-In
+### Story 1.3: Apple Sign-In
 
 As a **driver**,
 I want to sign up and sign in using my Apple account,
@@ -427,7 +427,7 @@ So that I can get started privately without sharing my email if I choose not to.
 **When** their device language is set to Polish, English, or Ukrainian
 **Then** all app-controlled text on the screen is displayed in that language
 
-### Story 1.5: RBAC & Role Enforcement
+### Story 1.4: RBAC & Role Enforcement
 
 As a **developer**,
 I want all API routes protected by role-based access control,
@@ -461,7 +461,7 @@ So that each actor type can only access the resources they are authorised for.
 **When** any route is defined
 **Then** it has an explicit `@Roles()` decorator — no route is inadvertently left unprotected
 
-### Story 1.6: Submission History
+### Story 1.5: Submission History
 
 As a **driver**,
 I want to view a list of my past price submissions,
@@ -491,7 +491,7 @@ So that I can see my contribution history and track my activity on the platform.
 **When** their selected language is Polish, English, or Ukrainian
 **Then** all text on the screen is displayed in that language
 
-### Story 1.7: Notification Preferences
+### Story 1.6: Notification Preferences
 
 As a **driver**,
 I want to manage which notifications I receive from the app,
@@ -525,7 +525,7 @@ So that I only get alerts that are relevant and useful to me.
 **When** their selected language is Polish, English, or Ukrainian
 **Then** all text on the screen is displayed in that language
 
-### Story 1.8: Account Deletion & Right to Erasure
+### Story 1.7: Account Deletion & Right to Erasure
 
 As a **driver**,
 I want to permanently delete my account,
@@ -565,7 +565,7 @@ So that my personal data is removed from the platform in compliance with my GDPR
 **When** their selected language is Polish, English, or Ukrainian
 **Then** all text including confirmation prompts and warnings is displayed in that language
 
-### Story 1.9: Personal Data Export
+### Story 1.8: Personal Data Export
 
 As a **driver**,
 I want to download a copy of all my personal data held by the platform,
@@ -599,7 +599,7 @@ So that I can exercise my GDPR right to data portability.
 **When** their selected language is Polish, English, or Ukrainian
 **Then** all confirmation messages and emails are delivered in that language
 
-### Story 1.10: Consent Management
+### Story 1.9: Consent Management
 
 As a **driver**,
 I want to review and withdraw my consent for data uses independently of deleting my account,
@@ -630,7 +630,7 @@ So that I have control over how my data is used.
 **When** their selected language is Polish, English, or Ukrainian
 **Then** all text including consent descriptions and withdrawal warnings is displayed in that language
 
-### Story 1.11: Internationalisation (i18n) Foundation
+### Story 1.10: Internationalisation (i18n) Foundation
 
 As a **developer**,
 I want all user-facing text externalised into language files supporting Polish, English, and Ukrainian,
@@ -666,7 +666,7 @@ So that every screen in the app can be displayed in the user's preferred languag
 
 ---
 
-### Story 1.12: In-App Feedback & Feature Requests
+### Story 1.11: In-App Feedback & Feature Requests
 
 As a **driver**,
 I want to send feedback or suggest a feature directly from the app,
@@ -1527,7 +1527,7 @@ So that I have a dedicated surface for all operational tasks without risking exp
 **Then** the matching User record's role is updated to ADMIN if it exists, or an error is printed if no user with that email is found
 **And** the script is idempotent (re-running on an already-ADMIN user is a no-op with a confirmation message)
 
-**Given** the i18n foundation (Story 1.11)
+**Given** the i18n foundation (Story 1.10)
 **When** an ADMIN uses the dashboard
 **Then** the interface is available in Polish, English, and Ukrainian
 
@@ -1566,7 +1566,7 @@ So that low-confidence or disputed prices don't pollute the public map.
 **When** the action is saved
 **Then** the admin action is written to an audit log (admin user ID, action, timestamp, submission ID) — retained permanently even if the admin's account is later deleted
 
-**Given** the i18n foundation (Story 1.11)
+**Given** the i18n foundation (Story 1.10)
 **When** an ADMIN uses the review queue
 **Then** the interface is available in Polish, English, and Ukrainian
 
@@ -2341,7 +2341,7 @@ As a **driver**,
 I want a single place to configure all my price alerts and notification settings,
 So that I get only the alerts that are relevant to me without being overwhelmed.
 
-**Why:** By Phase 2 the notification surface has grown significantly beyond the MVP baseline in Story 1.7 — drivers now have price drop thresholds, rise alert opt-ins, radius settings, fuel type preferences, and per-alert-type toggles to manage. Without a coherent settings panel this becomes scattered and confusing. One well-organised screen keeps it manageable and reduces the chance of drivers disabling everything just to stop one alert they dislike.
+**Why:** By Phase 2 the notification surface has grown significantly beyond the MVP baseline in Story 1.6 — drivers now have price drop thresholds, rise alert opt-ins, radius settings, fuel type preferences, and per-alert-type toggles to manage. Without a coherent settings panel this becomes scattered and confusing. One well-organised screen keeps it manageable and reduces the chance of drivers disabling everything just to stop one alert they dislike.
 
 **Acceptance Criteria:**
 
@@ -2375,7 +2375,7 @@ So that I get only the alerts that are relevant to me without being overwhelmed.
 **When** they return to the panel later
 **Then** all settings are persisted exactly as configured — no resets on app update or re-login
 
-*Covers: FR20 (Phase 2 extension of Story 1.7 baseline). Story 1.7 handles MVP notification toggles and OS permission flow — this story extends it with Phase 2 alert configuration.*
+*Covers: FR20 (Phase 2 extension of Story 1.6 baseline). Story 1.6 handles MVP notification toggles and OS permission flow — this story extends it with Phase 2 alert configuration.*
 
 ---
 
@@ -2425,7 +2425,7 @@ As a **driver**,
 I want the app to remind me about the value of notifications at the right moment,
 So that I don't permanently miss out on alerts just because I dismissed the permission dialog at onboarding.
 
-**Why:** Notification permission granted at onboarding is the exception, not the rule — most users dismiss the cold OS dialog. But a driver who just submitted their first photo and got a "thank you" is primed to hear "want to know when prices drop near you?" Re-prompting at the right moment converts dismissers into subscribers without feeling pushy. Story 1.7 handles the onboarding flow; this story handles the contextual re-prompt triggers that fire later.
+**Why:** Notification permission granted at onboarding is the exception, not the rule — most users dismiss the cold OS dialog. But a driver who just submitted their first photo and got a "thank you" is primed to hear "want to know when prices drop near you?" Re-prompting at the right moment converts dismissers into subscribers without feeling pushy. Story 1.6 handles the onboarding flow; this story handles the contextual re-prompt triggers that fire later.
 
 **Acceptance Criteria:**
 

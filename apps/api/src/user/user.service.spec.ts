@@ -35,6 +35,11 @@ const mockPrismaService = {
   notificationPreference: {
     findFirst: jest.fn(),
   },
+  userConsent: {
+    upsert: jest.fn(),
+    findMany: jest.fn(),
+    updateMany: jest.fn(),
+  },
 };
 
 const mockStorageService = {
@@ -235,6 +240,80 @@ describe('UserService', () => {
 
       await expect(service.sendExportEmail(email, downloadUrl)).resolves.toBeUndefined();
       expect(Resend).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('createCoreServiceConsent', () => {
+    const userId = 'user-uuid';
+
+    it('should call prisma.userConsent.upsert with correct where and create args', async () => {
+      mockPrismaService.userConsent.upsert.mockResolvedValueOnce({});
+
+      await service.createCoreServiceConsent(userId);
+
+      expect(mockPrismaService.userConsent.upsert).toHaveBeenCalledWith({
+        where: { user_id_type: { user_id: userId, type: 'CORE_SERVICE' } },
+        update: {},
+        create: { user_id: userId, type: 'CORE_SERVICE' },
+      });
+    });
+
+    it('should be idempotent — second call also calls upsert without throwing', async () => {
+      mockPrismaService.userConsent.upsert.mockResolvedValue({});
+
+      await service.createCoreServiceConsent(userId);
+      await service.createCoreServiceConsent(userId);
+
+      expect(mockPrismaService.userConsent.upsert).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('getConsents', () => {
+    const userId = 'user-uuid';
+    const fakeConsents = [
+      { id: 'consent-1', user_id: userId, type: 'CORE_SERVICE', consented_at: new Date(), withdrawn_at: null, created_at: new Date(), updated_at: new Date() },
+    ];
+
+    it('should call prisma.userConsent.findMany with correct where and orderBy', async () => {
+      mockPrismaService.userConsent.findMany.mockResolvedValueOnce(fakeConsents);
+
+      await service.getConsents(userId);
+
+      expect(mockPrismaService.userConsent.findMany).toHaveBeenCalledWith({
+        where: { user_id: userId },
+        orderBy: { consented_at: 'asc' },
+      });
+    });
+
+    it('should return the result of findMany', async () => {
+      mockPrismaService.userConsent.findMany.mockResolvedValueOnce(fakeConsents);
+
+      const result = await service.getConsents(userId);
+
+      expect(result).toBe(fakeConsents);
+    });
+  });
+
+  describe('withdrawConsent', () => {
+    const userId = 'user-uuid';
+
+    it('should call prisma.userConsent.updateMany with correct where and data', async () => {
+      mockPrismaService.userConsent.updateMany.mockResolvedValueOnce({ count: 1 });
+
+      await service.withdrawConsent(userId, 'CORE_SERVICE' as import('@prisma/client').ConsentType);
+
+      expect(mockPrismaService.userConsent.updateMany).toHaveBeenCalledWith({
+        where: { user_id: userId, type: 'CORE_SERVICE' },
+        data: { withdrawn_at: expect.any(Date) },
+      });
+    });
+
+    it('should NOT throw when updateMany returns count: 0 (no matching record)', async () => {
+      mockPrismaService.userConsent.updateMany.mockResolvedValueOnce({ count: 0 });
+
+      await expect(
+        service.withdrawConsent(userId, 'CORE_SERVICE' as import('@prisma/client').ConsentType),
+      ).resolves.toBeUndefined();
     });
   });
 });

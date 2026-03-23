@@ -72,7 +72,12 @@ epics:
       - id: 1.10
         title: Consent Management
         file: 1-10-consent-management.md
-        status: backlog
+        status: review
+        ready_date: 2026-03-23
+        dev_completed: 2026-03-23
+        review_date: 2026-03-23
+        review_findings: "3 patch (P1 hardcoded Retry string not i18n'd, P2 hardcoded CORE_SERVICE in withdraw handler — extensibility regression risk, P3 Apple existing-user test missing not.toHaveBeenCalled assertion), 3 deferred, 1 rejected"
+        patches_applied: "2026-03-23 — P1-P3 all applied, 95/95 tests passing"
 
       - id: 1.11
         title: Internationalisation (i18n) Foundation

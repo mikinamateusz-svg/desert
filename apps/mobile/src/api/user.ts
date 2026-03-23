@@ -39,3 +39,27 @@ export async function apiRequestDataExport(accessToken: string): Promise<{ messa
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 }
+
+export type ConsentRecord = {
+  id: string;
+  type: string;
+  consented_at: string;
+  withdrawn_at: string | null;
+};
+
+export async function apiGetConsents(accessToken: string): Promise<ConsentRecord[]> {
+  return request<ConsentRecord[]>('/v1/me/consents', {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+}
+
+export async function apiWithdrawConsent(
+  accessToken: string,
+  type: string,
+): Promise<void> {
+  await request<void>(`/v1/me/consents/${type}/withdraw`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+}

@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { UserService } from '../user/user.service.js';
 
 // Mock supertokens-node recipes
 const mockSignUp = jest.fn();
@@ -74,6 +75,10 @@ const mockPrismaService = {
   },
 };
 
+const mockUserService = {
+  createCoreServiceConsent: jest.fn().mockResolvedValue(undefined),
+};
+
 describe('AuthService', () => {
   let service: AuthService;
 
@@ -86,6 +91,7 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         { provide: PrismaService, useValue: mockPrismaService },
+        { provide: UserService, useValue: mockUserService },
       ],
     }).compile();
 
@@ -116,6 +122,39 @@ describe('AuthService', () => {
           role: 'DRIVER',
         },
       });
+    });
+
+    it('should call userService.createCoreServiceConsent after successful user creation', async () => {
+      mockSignUp.mockResolvedValueOnce({
+        status: 'OK',
+        user: { id: 'st-user-id' },
+        recipeUserId: { getAsString: () => 'st-user-id' },
+      });
+      mockPrismaService.user.create.mockResolvedValueOnce(mockUser);
+      mockCreateSession.mockResolvedValueOnce({
+        getAccessToken: () => 'mock-access-token',
+      });
+
+      await service.register('test@example.com', 'password123', 'Test User');
+
+      expect(mockUserService.createCoreServiceConsent).toHaveBeenCalledWith(mockUser.id);
+    });
+
+    it('should still complete registration (session issued) if createCoreServiceConsent throws', async () => {
+      mockSignUp.mockResolvedValueOnce({
+        status: 'OK',
+        user: { id: 'st-user-id' },
+        recipeUserId: { getAsString: () => 'st-user-id' },
+      });
+      mockPrismaService.user.create.mockResolvedValueOnce(mockUser);
+      mockUserService.createCoreServiceConsent.mockRejectedValueOnce(new Error('DB error'));
+      mockCreateSession.mockResolvedValueOnce({
+        getAccessToken: () => 'mock-access-token',
+      });
+
+      const result = await service.register('test@example.com', 'password123', 'Test User');
+
+      expect(result.accessToken).toBe('mock-access-token');
     });
 
     it('should throw ConflictException when email already exists', async () => {
@@ -208,6 +247,39 @@ describe('AuthService', () => {
       });
     });
 
+    it('should call userService.createCoreServiceConsent for new Google user', async () => {
+      const newGoogleUser = { ...mockUser, supertokens_id: 'st-google-id', email: 'google@example.com' };
+      mockVerifyIdToken.mockResolvedValueOnce(mockTicket);
+      mockManuallyCreateOrUpdateUser.mockResolvedValueOnce({
+        status: 'OK',
+        user: { id: 'st-google-id' },
+        recipeUserId: { getAsString: () => 'st-google-id' },
+        createdNewRecipeUser: true,
+      });
+      mockPrismaService.user.create.mockResolvedValueOnce(newGoogleUser);
+      mockCreateSession.mockResolvedValueOnce({ getAccessToken: () => 'google-access-token' });
+
+      await service.googleSignIn('valid-id-token');
+
+      expect(mockUserService.createCoreServiceConsent).toHaveBeenCalledWith(newGoogleUser.id);
+    });
+
+    it('should NOT call createCoreServiceConsent for returning Google user (createdNewRecipeUser = false)', async () => {
+      mockVerifyIdToken.mockResolvedValueOnce(mockTicket);
+      mockManuallyCreateOrUpdateUser.mockResolvedValueOnce({
+        status: 'OK',
+        user: { id: 'st-google-id' },
+        recipeUserId: { getAsString: () => 'st-google-id' },
+        createdNewRecipeUser: false,
+      });
+      mockPrismaService.user.findUnique.mockResolvedValueOnce(mockUser);
+      mockCreateSession.mockResolvedValueOnce({ getAccessToken: () => 'google-access-token' });
+
+      await service.googleSignIn('valid-id-token');
+
+      expect(mockUserService.createCoreServiceConsent).not.toHaveBeenCalled();
+    });
+
     it('should find existing user and return accessToken for returning Google user', async () => {
       mockVerifyIdToken.mockResolvedValueOnce(mockTicket);
       mockManuallyCreateOrUpdateUser.mockResolvedValueOnce({
@@ -291,6 +363,23 @@ describe('AuthService', () => {
       });
     });
 
+    it('should call userService.createCoreServiceConsent for new Apple user', async () => {
+      const newAppleUser = { ...mockUser, supertokens_id: 'st-apple-id', email: 'user@privaterelay.appleid.com', display_name: 'Jane Doe' };
+      mockVerifyAppleToken.mockResolvedValueOnce(mockApplePayload);
+      mockManuallyCreateOrUpdateUser.mockResolvedValueOnce({
+        status: 'OK',
+        user: { id: 'st-apple-id' },
+        recipeUserId: { getAsString: () => 'st-apple-id' },
+        createdNewRecipeUser: true,
+      });
+      mockPrismaService.user.create.mockResolvedValueOnce(newAppleUser);
+      mockCreateSession.mockResolvedValueOnce({ getAccessToken: () => 'apple-access-token' });
+
+      await service.appleSignIn('valid-identity-token', { givenName: 'Jane', familyName: 'Doe' });
+
+      expect(mockUserService.createCoreServiceConsent).toHaveBeenCalledWith(newAppleUser.id);
+    });
+
     it('should find existing user on returning sign-in (fullName is null)', async () => {
       mockVerifyAppleToken.mockResolvedValueOnce(mockApplePayload);
       mockManuallyCreateOrUpdateUser.mockResolvedValueOnce({
@@ -311,6 +400,7 @@ describe('AuthService', () => {
       expect(mockPrismaService.user.findUnique).toHaveBeenCalledWith({
         where: { supertokens_id: 'st-apple-id' },
       });
+      expect(mockUserService.createCoreServiceConsent).not.toHaveBeenCalled();
     });
 
     it('should throw UnauthorizedException when Apple identity token is invalid', async () => {

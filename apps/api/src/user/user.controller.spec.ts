@@ -8,6 +8,9 @@ const mockUserService = {
   deleteAccount: jest.fn(),
   exportMyData: jest.fn(),
   sendExportEmail: jest.fn(),
+  getConsents: jest.fn(),
+  withdrawConsent: jest.fn(),
+  createCoreServiceConsent: jest.fn(),
 };
 
 const mockUser: Partial<User> = {
@@ -84,6 +87,37 @@ describe('UserController', () => {
       const deletedUser = { ...mockUser, email: null } as User;
 
       await expect(controller.requestDataExport(deletedUser)).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe('getConsents', () => {
+    it('should call userService.getConsents with user.id and return the result', async () => {
+      const fakeConsents = [
+        { id: 'consent-1', type: 'CORE_SERVICE', consented_at: new Date(), withdrawn_at: null },
+      ];
+      mockUserService.getConsents.mockResolvedValueOnce(fakeConsents);
+
+      const result = await controller.getConsents(mockUser as User);
+
+      expect(mockUserService.getConsents).toHaveBeenCalledWith('user-uuid');
+      expect(result).toBe(fakeConsents);
+    });
+  });
+
+  describe('withdrawConsent', () => {
+    it('should call userService.withdrawConsent with user.id and CORE_SERVICE and return void (204)', async () => {
+      mockUserService.withdrawConsent.mockResolvedValueOnce(undefined);
+
+      const result = await controller.withdrawConsent(mockUser as User, 'CORE_SERVICE');
+
+      expect(mockUserService.withdrawConsent).toHaveBeenCalledWith('user-uuid', 'CORE_SERVICE');
+      expect(result).toBeUndefined();
+    });
+
+    it('should throw BadRequestException when :type param is not a valid ConsentType', async () => {
+      await expect(
+        controller.withdrawConsent(mockUser as User, 'INVALID_TYPE'),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 });

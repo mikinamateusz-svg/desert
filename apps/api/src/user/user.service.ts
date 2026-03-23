@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Session from 'supertokens-node/recipe/session/index.js';
+import { ConsentType, UserConsent } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
 
@@ -101,6 +102,28 @@ export class UserService {
 
     await this.storage.uploadBuffer(key, buffer, 'application/json');
     return this.storage.getPresignedUrl(key, 86400);
+  }
+
+  async createCoreServiceConsent(userId: string): Promise<void> {
+    await this.prisma.userConsent.upsert({
+      where: { user_id_type: { user_id: userId, type: 'CORE_SERVICE' } },
+      update: {},
+      create: { user_id: userId, type: 'CORE_SERVICE' },
+    });
+  }
+
+  async getConsents(userId: string): Promise<UserConsent[]> {
+    return this.prisma.userConsent.findMany({
+      where: { user_id: userId },
+      orderBy: { consented_at: 'asc' },
+    });
+  }
+
+  async withdrawConsent(userId: string, type: ConsentType): Promise<void> {
+    await this.prisma.userConsent.updateMany({
+      where: { user_id: userId, type },
+      data: { withdrawn_at: new Date() },
+    });
   }
 
   async sendExportEmail(email: string, downloadUrl: string): Promise<void> {

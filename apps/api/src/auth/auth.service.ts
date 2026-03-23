@@ -1,6 +1,7 @@
 import {
   Injectable,
   ConflictException,
+  Logger,
   UnauthorizedException,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -11,12 +12,17 @@ import EmailPassword from 'supertokens-node/recipe/emailpassword/index.js';
 import Session from 'supertokens-node/recipe/session/index.js';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { UserService } from '../user/user.service.js';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
   private readonly googleClient = new OAuth2Client();
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly userService: UserService,
+  ) {}
 
   async register(email: string, password: string, displayName: string) {
     const result = await EmailPassword.signUp('public', email, password);
@@ -42,6 +48,13 @@ export class AuthService {
         role: 'DRIVER',
       },
     });
+
+    // Consent creation — best effort (non-fatal if it fails)
+    try {
+      await this.userService.createCoreServiceConsent(user.id);
+    } catch (err) {
+      this.logger.warn(`Failed to create consent for user ${user.id}: ${err}`);
+    }
 
     const session = await Session.createNewSessionWithoutRequestResponse(
       'public',
@@ -179,6 +192,13 @@ export class AuthService {
           throw e;
         }
       }
+
+      // Consent creation — best effort (non-fatal if it fails)
+      try {
+        await this.userService.createCoreServiceConsent(user.id);
+      } catch (err) {
+        this.logger.warn(`Failed to create consent for user ${user.id}: ${err}`);
+      }
     } else {
       const found = await this.prisma.user.findUnique({
         where: { supertokens_id: stUser.id },
@@ -286,6 +306,13 @@ export class AuthService {
         } else {
           throw e;
         }
+      }
+
+      // Consent creation — best effort (non-fatal if it fails)
+      try {
+        await this.userService.createCoreServiceConsent(user.id);
+      } catch (err) {
+        this.logger.warn(`Failed to create consent for user ${user.id}: ${err}`);
       }
     } else {
       const found = await this.prisma.user.findUnique({

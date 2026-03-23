@@ -19,10 +19,5 @@
     "turbo": "2.8.20",
     "typescript": "^5.8.3",
     "prettier": "^3.5.3"
-  },
-  "pnpm": {
-    "overrides": {
-      "@types/react": "~18.3.12"
-    }
   }
 }

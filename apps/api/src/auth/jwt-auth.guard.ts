@@ -3,12 +3,15 @@ import {
   CanActivate,
   ExecutionContext,
   UnauthorizedException,
+  Logger,
 } from '@nestjs/common';
 import Session from 'supertokens-node/recipe/session/index.js';
 import { FastifyRequest } from 'fastify';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
+  private readonly logger = new Logger(JwtAuthGuard.name);
+
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<FastifyRequest>();
     const authHeader = req.headers['authorization'];
@@ -36,7 +39,10 @@ export class JwtAuthGuard implements CanActivate {
         sessionInfo.sessionHandle;
 
       return true;
-    } catch {
+    } catch (err) {
+      if (!(err instanceof UnauthorizedException)) {
+        this.logger.error('JwtAuthGuard unexpected error', err);
+      }
       throw new UnauthorizedException();
     }
   }

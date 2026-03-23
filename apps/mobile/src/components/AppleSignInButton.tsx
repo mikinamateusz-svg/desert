@@ -29,7 +29,10 @@ export function AppleSignInButton({ onError }: Props) {
         ],
       });
 
-      if (!credential.identityToken) return;
+      if (!credential.identityToken) {
+        onError?.('INVALID_APPLE_TOKEN');
+        return;
+      }
 
       await auth.appleSignIn(credential.identityToken, credential.fullName);
     } catch (err: unknown) {

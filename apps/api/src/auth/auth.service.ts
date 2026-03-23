@@ -2,12 +2,14 @@ import {
   Injectable,
   ConflictException,
   UnauthorizedException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { OAuth2Client, type LoginTicket } from 'google-auth-library';
 import appleSignin from 'apple-signin-auth';
 import ThirdParty from 'supertokens-node/recipe/thirdparty/index.js';
 import EmailPassword from 'supertokens-node/recipe/emailpassword/index.js';
 import Session from 'supertokens-node/recipe/session/index.js';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 @Injectable()
@@ -66,9 +68,16 @@ export class AuthService {
 
     const { user: stUser, recipeUserId } = result;
 
-    const user = await this.prisma.user.findUniqueOrThrow({
+    const user = await this.prisma.user.findUnique({
       where: { supertokens_id: stUser.id },
     });
+    if (!user) {
+      throw new UnauthorizedException({
+        statusCode: 401,
+        error: 'WRONG_CREDENTIALS',
+        message: 'Invalid email or password',
+      });
+    }
 
     const session = await Session.createNewSessionWithoutRequestResponse(
       'public',
@@ -84,21 +93,27 @@ export class AuthService {
   }
 
   async getMe(userId: string) {
-    return this.prisma.user.findUniqueOrThrow({ where: { id: userId } });
+    return this.prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: { id: true, email: true, display_name: true, role: true },
+    });
   }
 
   async googleSignIn(idToken: string) {
     // 1. Verify Google ID token
+    const audience = [
+      process.env['GOOGLE_WEB_CLIENT_ID'],
+      process.env['GOOGLE_ANDROID_CLIENT_ID'],
+      process.env['GOOGLE_IOS_CLIENT_ID'],
+    ].filter(Boolean) as string[];
+
+    if (audience.length === 0) {
+      throw new InternalServerErrorException('No Google client IDs configured');
+    }
+
     let ticket: LoginTicket;
     try {
-      ticket = await this.googleClient.verifyIdToken({
-        idToken,
-        audience: [
-          process.env['GOOGLE_WEB_CLIENT_ID'],
-          process.env['GOOGLE_ANDROID_CLIENT_ID'],
-          process.env['GOOGLE_IOS_CLIENT_ID'],
-        ].filter(Boolean) as string[],
-      });
+      ticket = await this.googleClient.verifyIdToken({ idToken, audience });
     } catch {
       throw new UnauthorizedException({
         statusCode: 401,
@@ -152,18 +167,37 @@ export class AuthService {
     // 3. Find or create our User record
     let user;
     if (createdNewRecipeUser) {
-      user = await this.prisma.user.create({
-        data: {
-          supertokens_id: stUser.id,
-          email: payload.email,
-          display_name: payload.name ?? null,
-          role: 'DRIVER',
-        },
-      });
+      try {
+        user = await this.prisma.user.create({
+          data: {
+            supertokens_id: stUser.id,
+            email: payload.email,
+            display_name: payload.name ?? null,
+            role: 'DRIVER',
+          },
+        });
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
+          // Concurrent sign-in already created the record
+          user = await this.prisma.user.findUniqueOrThrow({
+            where: { supertokens_id: stUser.id },
+          });
+        } else {
+          throw e;
+        }
+      }
     } else {
-      user = await this.prisma.user.findUniqueOrThrow({
+      const found = await this.prisma.user.findUnique({
         where: { supertokens_id: stUser.id },
       });
+      if (!found) {
+        throw new UnauthorizedException({
+          statusCode: 401,
+          error: 'INVALID_GOOGLE_TOKEN',
+          message: 'User record not found',
+        });
+      }
+      user = found;
     }
 
     // 4. Create SuperTokens session
@@ -181,10 +215,15 @@ export class AuthService {
     fullName?: { givenName?: string | null; familyName?: string | null } | null,
   ) {
     // 1. Verify Apple identity token
+    const appleBundleId = process.env['APPLE_APP_BUNDLE_ID'];
+    if (!appleBundleId) {
+      throw new InternalServerErrorException('APPLE_APP_BUNDLE_ID is not configured');
+    }
+
     let applePayload: { sub: string; email?: string };
     try {
       applePayload = (await appleSignin.verifyIdToken(identityToken, {
-        audience: process.env['APPLE_APP_BUNDLE_ID'] ?? 'com.desert.app',
+        audience: appleBundleId,
         ignoreExpiration: false,
       })) as { sub: string; email?: string };
     } catch {
@@ -236,18 +275,37 @@ export class AuthService {
         [fullName?.givenName, fullName?.familyName].filter(Boolean).join(' ') ||
         null;
 
-      user = await this.prisma.user.create({
-        data: {
-          supertokens_id: stUser.id,
-          email: applePayload.email,
-          display_name: displayName,
-          role: 'DRIVER',
-        },
-      });
+      try {
+        user = await this.prisma.user.create({
+          data: {
+            supertokens_id: stUser.id,
+            email: applePayload.email,
+            display_name: displayName,
+            role: 'DRIVER',
+          },
+        });
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
+          // Concurrent sign-in already created the record
+          user = await this.prisma.user.findUniqueOrThrow({
+            where: { supertokens_id: stUser.id },
+          });
+        } else {
+          throw e;
+        }
+      }
     } else {
-      user = await this.prisma.user.findUniqueOrThrow({
+      const found = await this.prisma.user.findUnique({
         where: { supertokens_id: stUser.id },
       });
+      if (!found) {
+        throw new UnauthorizedException({
+          statusCode: 401,
+          error: 'INVALID_APPLE_TOKEN',
+          message: 'User record not found',
+        });
+      }
+      user = found;
     }
 
     // 4. Create SuperTokens session

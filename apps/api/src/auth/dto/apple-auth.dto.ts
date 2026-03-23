@@ -1,4 +1,17 @@
-import { IsString, IsNotEmpty, IsOptional, IsObject } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, MaxLength, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+
+class FullNameDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  givenName?: string | null;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  familyName?: string | null;
+}
 
 export class AppleAuthDto {
   @IsString()
@@ -6,9 +19,7 @@ export class AppleAuthDto {
   identityToken!: string;
 
   @IsOptional()
-  @IsObject()
-  fullName?: {
-    givenName?: string | null;
-    familyName?: string | null;
-  } | null;
+  @ValidateNested()
+  @Type(() => FullNameDto)
+  fullName?: FullNameDto | null;
 }

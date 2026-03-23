@@ -69,6 +69,7 @@ const mockUser = {
 const mockPrismaService = {
   user: {
     create: jest.fn(),
+    findUnique: jest.fn(),
     findUniqueOrThrow: jest.fn(),
   },
 };
@@ -78,6 +79,8 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
+    process.env['GOOGLE_WEB_CLIENT_ID'] = 'test-google-client-id';
+    process.env['APPLE_APP_BUNDLE_ID'] = 'com.desert.app.test';
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -131,7 +134,7 @@ describe('AuthService', () => {
         user: { id: 'st-user-id' },
         recipeUserId: { getAsString: () => 'st-user-id' },
       });
-      mockPrismaService.user.findUniqueOrThrow.mockResolvedValueOnce(mockUser);
+      mockPrismaService.user.findUnique.mockResolvedValueOnce(mockUser);
       mockCreateSession.mockResolvedValueOnce({
         getAccessToken: () => 'mock-access-token',
       });
@@ -170,6 +173,7 @@ describe('AuthService', () => {
       expect(result).toEqual(mockUser);
       expect(mockPrismaService.user.findUniqueOrThrow).toHaveBeenCalledWith({
         where: { id: 'user-uuid' },
+        select: { id: true, email: true, display_name: true, role: true },
       });
     });
   });
@@ -226,7 +230,7 @@ describe('AuthService', () => {
         recipeUserId: { getAsString: () => 'st-google-id' },
         createdNewRecipeUser: false,
       });
-      mockPrismaService.user.findUniqueOrThrow.mockResolvedValueOnce(mockUser);
+      mockPrismaService.user.findUnique.mockResolvedValueOnce(mockUser);
       mockCreateSession.mockResolvedValueOnce({
         getAccessToken: () => 'google-access-token',
       });
@@ -235,7 +239,7 @@ describe('AuthService', () => {
 
       expect(result.accessToken).toBe('google-access-token');
       expect(mockPrismaService.user.create).not.toHaveBeenCalled();
-      expect(mockPrismaService.user.findUniqueOrThrow).toHaveBeenCalledWith({
+      expect(mockPrismaService.user.findUnique).toHaveBeenCalledWith({
         where: { supertokens_id: 'st-google-id' },
       });
     });
@@ -309,7 +313,7 @@ describe('AuthService', () => {
         recipeUserId: { getAsString: () => 'st-apple-id' },
         createdNewRecipeUser: false,
       });
-      mockPrismaService.user.findUniqueOrThrow.mockResolvedValueOnce(mockUser);
+      mockPrismaService.user.findUnique.mockResolvedValueOnce(mockUser);
       mockCreateSession.mockResolvedValueOnce({
         getAccessToken: () => 'apple-access-token',
       });
@@ -318,7 +322,7 @@ describe('AuthService', () => {
 
       expect(result.accessToken).toBe('apple-access-token');
       expect(mockPrismaService.user.create).not.toHaveBeenCalled();
-      expect(mockPrismaService.user.findUniqueOrThrow).toHaveBeenCalledWith({
+      expect(mockPrismaService.user.findUnique).toHaveBeenCalledWith({
         where: { supertokens_id: 'st-apple-id' },
       });
     });

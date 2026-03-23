@@ -43,7 +43,7 @@ export function GoogleSignInButton({ onError }: Props) {
         onError?.(code);
       })
       .finally(() => setLoading(false));
-  }, [response]);
+  }, [response, auth]);
 
   return (
     <TouchableOpacity

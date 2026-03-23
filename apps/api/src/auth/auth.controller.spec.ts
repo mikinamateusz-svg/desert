@@ -3,13 +3,23 @@ import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
 
+const mockFullUser = {
+  id: 'user-uuid',
+  supertokens_id: 'st-user-id',
+  email: 'test@example.com',
+  display_name: 'Test User',
+  role: 'DRIVER' as const,
+  fleet_id: null,
+  trust_score: 0,
+  shadow_banned: false,
+  deleted_at: null,
+  deletion_reason: null,
+  created_at: new Date(),
+  updated_at: new Date(),
+};
+
 const mockAuthResponse = {
-  user: {
-    id: 'user-uuid',
-    email: 'test@example.com',
-    display_name: 'Test User',
-    role: 'DRIVER',
-  },
+  user: mockFullUser,
   accessToken: 'mock-token',
 };
 
@@ -107,13 +117,17 @@ describe('AuthController', () => {
   });
 
   describe('me', () => {
-    it('should call authService.getMe with userId', async () => {
-      mockAuthService.getMe.mockResolvedValueOnce(mockAuthResponse.user);
+    it('should return the current user from request context directly', () => {
+      const result = controller.me(mockFullUser);
 
-      const result = await controller.me('user-uuid');
-
-      expect(result).toEqual(mockAuthResponse.user);
-      expect(mockAuthService.getMe).toHaveBeenCalledWith('user-uuid');
+      expect(result).toEqual({
+        id: 'user-uuid',
+        email: 'test@example.com',
+        display_name: 'Test User',
+        role: 'DRIVER',
+      });
+      // getMe() service call is no longer used — User is loaded by JwtAuthGuard
+      expect(mockAuthService.getMe).not.toHaveBeenCalled();
     });
   });
 

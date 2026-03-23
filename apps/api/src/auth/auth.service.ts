@@ -92,13 +92,6 @@ export class AuthService {
     await Session.revokeSession(sessionHandle);
   }
 
-  async getMe(userId: string) {
-    return this.prisma.user.findUniqueOrThrow({
-      where: { id: userId },
-      select: { id: true, email: true, display_name: true, role: true },
-    });
-  }
-
   async googleSignIn(idToken: string) {
     // 1. Verify Google ID token
     const audience = [

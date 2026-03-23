@@ -164,20 +164,6 @@ describe('AuthService', () => {
     });
   });
 
-  describe('getMe', () => {
-    it('should return user by id', async () => {
-      mockPrismaService.user.findUniqueOrThrow.mockResolvedValueOnce(mockUser);
-
-      const result = await service.getMe('user-uuid');
-
-      expect(result).toEqual(mockUser);
-      expect(mockPrismaService.user.findUniqueOrThrow).toHaveBeenCalledWith({
-        where: { id: 'user-uuid' },
-        select: { id: true, email: true, display_name: true, role: true },
-      });
-    });
-  });
-
   describe('googleSignIn', () => {
     const mockGooglePayload = {
       sub: 'google-uid-123',

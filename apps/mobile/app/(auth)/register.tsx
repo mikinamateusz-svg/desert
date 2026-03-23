@@ -14,6 +14,7 @@ import '../../src/i18n';
 import { useAuth } from '../../src/store/auth.store';
 import { ApiError } from '../../src/api/auth';
 import { GoogleSignInButton } from '../../src/components/GoogleSignInButton';
+import { AppleSignInButton } from '../../src/components/AppleSignInButton';
 
 export default function RegisterScreen() {
   const { t } = useTranslation();
@@ -97,6 +98,7 @@ export default function RegisterScreen() {
       <Text style={styles.divider}>{t('auth.common.orDivider')}</Text>
 
       <GoogleSignInButton onError={handleGoogleError} />
+      <AppleSignInButton onError={handleGoogleError} />
 
       <Link href="/(auth)/login" style={styles.link}>
         {t('auth.register.loginLink')}

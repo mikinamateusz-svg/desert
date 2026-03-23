@@ -8,6 +8,9 @@ export default {
       invalidGoogleToken: 'Не вдалося увійти через Google. Спробуйте ще раз.',
       googleEmailMissing:
         'Ваш акаунт Google не має email-адреси. Скористайтесь входом через email.',
+      invalidAppleToken: 'Не вдалося увійти через Apple. Спробуйте ще раз.',
+      appleEmailMissing:
+        'Ваш акаунт Apple не має email-адреси. Скористайтесь входом через email.',
     },
     register: {
       title: 'Створити акаунт',

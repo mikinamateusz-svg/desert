@@ -8,6 +8,9 @@ export default {
       invalidGoogleToken: 'Google sign-in failed. Please try again.',
       googleEmailMissing:
         'Your Google account has no email address. Please use email sign-in.',
+      invalidAppleToken: 'Apple sign-in failed. Please try again.',
+      appleEmailMissing:
+        'Your Apple account has no email address. Please use email sign-in.',
     },
     register: {
       title: 'Create account',

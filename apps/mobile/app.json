@@ -10,7 +10,8 @@
     "scheme": "desert",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.desert.app"
+      "bundleIdentifier": "com.desert.app",
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {

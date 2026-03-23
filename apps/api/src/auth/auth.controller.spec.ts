@@ -19,6 +19,7 @@ const mockAuthService = {
   logout: jest.fn(),
   getMe: jest.fn(),
   googleSignIn: jest.fn(),
+  appleSignIn: jest.fn(),
 };
 
 describe('AuthController', () => {
@@ -133,6 +134,34 @@ describe('AuthController', () => {
 
       await expect(
         controller.googleAuth({ idToken: 'bad-token' }),
+      ).rejects.toThrow(UnauthorizedException);
+    });
+  });
+
+  describe('appleAuth', () => {
+    it('should call authService.appleSignIn with identityToken and fullName', async () => {
+      mockAuthService.appleSignIn.mockResolvedValueOnce(mockAuthResponse);
+      const dto = {
+        identityToken: 'apple-identity-token',
+        fullName: { givenName: 'Jane', familyName: 'Doe' },
+      };
+
+      const result = await controller.appleAuth(dto);
+
+      expect(result).toEqual(mockAuthResponse);
+      expect(mockAuthService.appleSignIn).toHaveBeenCalledWith(
+        'apple-identity-token',
+        { givenName: 'Jane', familyName: 'Doe' },
+      );
+    });
+
+    it('should propagate UnauthorizedException from service for invalid token', async () => {
+      mockAuthService.appleSignIn.mockRejectedValueOnce(
+        new UnauthorizedException({ error: 'INVALID_APPLE_TOKEN' }),
+      );
+
+      await expect(
+        controller.appleAuth({ identityToken: 'bad-token' }),
       ).rejects.toThrow(UnauthorizedException);
     });
   });

@@ -8,6 +8,9 @@ export default {
       invalidGoogleToken: 'Logowanie przez Google nie powiodło się. Spróbuj ponownie.',
       googleEmailMissing:
         'Twoje konto Google nie ma adresu e-mail. Użyj logowania przez e-mail.',
+      invalidAppleToken: 'Logowanie przez Apple nie powiodło się. Spróbuj ponownie.',
+      appleEmailMissing:
+        'Twoje konto Apple nie ma adresu e-mail. Użyj logowania przez e-mail.',
     },
     register: {
       title: 'Utwórz konto',

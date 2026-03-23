@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { apiGetMe, apiGoogleSignIn, apiLogin, apiLogout, apiRegister, type AuthUser } from '../api/auth';
+import { apiAppleSignIn, apiGetMe, apiGoogleSignIn, apiLogin, apiLogout, apiRegister, type AuthUser } from '../api/auth';
 import { deleteToken, getToken, saveToken } from '../lib/secure-storage';
 
 interface AuthState {
@@ -9,6 +9,10 @@ interface AuthState {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, displayName: string) => Promise<void>;
   googleSignIn: (idToken: string) => Promise<void>;
+  appleSignIn: (
+    identityToken: string,
+    fullName?: { givenName?: string | null; familyName?: string | null } | null,
+  ) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -63,6 +67,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(res.user);
   }, []);
 
+  const appleSignIn = useCallback(
+    async (
+      identityToken: string,
+      fullName?: { givenName?: string | null; familyName?: string | null } | null,
+    ) => {
+      const res = await apiAppleSignIn(identityToken, fullName);
+      await saveToken(res.accessToken);
+      setAccessToken(res.accessToken);
+      setUser(res.user);
+    },
+    [],
+  );
+
   const logout = useCallback(async () => {
     if (accessToken) {
       try {
@@ -77,7 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [accessToken]);
 
   return React.createElement(AuthContext.Provider, {
-    value: { user, accessToken, isLoading, login, register, googleSignIn, logout },
+    value: { user, accessToken, isLoading, login, register, googleSignIn, appleSignIn, logout },
     children,
   });
 }

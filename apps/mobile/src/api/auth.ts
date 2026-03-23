@@ -89,3 +89,13 @@ export async function apiGoogleSignIn(idToken: string): Promise<AuthResponse> {
     body: JSON.stringify({ idToken }),
   });
 }
+
+export async function apiAppleSignIn(
+  identityToken: string,
+  fullName?: { givenName?: string | null; familyName?: string | null } | null,
+): Promise<AuthResponse> {
+  return request<AuthResponse>('/v1/auth/apple', {
+    method: 'POST',
+    body: JSON.stringify({ identityToken, fullName }),
+  });
+}

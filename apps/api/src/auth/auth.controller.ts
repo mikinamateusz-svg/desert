@@ -12,6 +12,7 @@ import { CurrentUser } from './current-user.decorator.js';
 import { RegisterDto } from './dto/register.dto.js';
 import { LoginDto } from './dto/login.dto.js';
 import { GoogleAuthDto } from './dto/google-auth.dto.js';
+import { AppleAuthDto } from './dto/apple-auth.dto.js';
 
 @Controller('v1/auth')
 export class AuthController {
@@ -45,5 +46,11 @@ export class AuthController {
   @HttpCode(200)
   googleAuth(@Body() dto: GoogleAuthDto) {
     return this.authService.googleSignIn(dto.idToken);
+  }
+
+  @Post('apple')
+  @HttpCode(200)
+  appleAuth(@Body() dto: AppleAuthDto) {
+    return this.authService.appleSignIn(dto.identityToken, dto.fullName);
   }
 }

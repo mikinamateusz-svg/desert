@@ -10,6 +10,14 @@ const mockCreateSession = jest.fn();
 const mockRevokeSession = jest.fn();
 const mockManuallyCreateOrUpdateUser = jest.fn();
 const mockVerifyIdToken = jest.fn();
+const mockVerifyAppleToken = jest.fn();
+
+jest.mock('apple-signin-auth', () => ({
+  __esModule: true,
+  default: {
+    verifyIdToken: (...args: unknown[]) => mockVerifyAppleToken(...args),
+  },
+}));
 
 jest.mock('google-auth-library', () => ({
   __esModule: true,
@@ -248,6 +256,89 @@ describe('AuthService', () => {
       });
 
       await expect(service.googleSignIn('valid-id-token')).rejects.toThrow(
+        ConflictException,
+      );
+    });
+  });
+
+  describe('appleSignIn', () => {
+    const mockApplePayload = {
+      sub: 'apple-uid-456',
+      email: 'user@privaterelay.appleid.com',
+    };
+
+    it('should create a new user with display_name from fullName on first sign-in', async () => {
+      mockVerifyAppleToken.mockResolvedValueOnce(mockApplePayload);
+      mockManuallyCreateOrUpdateUser.mockResolvedValueOnce({
+        status: 'OK',
+        user: { id: 'st-apple-id' },
+        recipeUserId: { getAsString: () => 'st-apple-id' },
+        createdNewRecipeUser: true,
+      });
+      mockPrismaService.user.create.mockResolvedValueOnce({
+        ...mockUser,
+        supertokens_id: 'st-apple-id',
+        email: 'user@privaterelay.appleid.com',
+        display_name: 'Jane Doe',
+      });
+      mockCreateSession.mockResolvedValueOnce({
+        getAccessToken: () => 'apple-access-token',
+      });
+
+      const result = await service.appleSignIn('valid-identity-token', {
+        givenName: 'Jane',
+        familyName: 'Doe',
+      });
+
+      expect(result.accessToken).toBe('apple-access-token');
+      expect(mockPrismaService.user.create).toHaveBeenCalledWith({
+        data: {
+          supertokens_id: 'st-apple-id',
+          email: 'user@privaterelay.appleid.com',
+          display_name: 'Jane Doe',
+          role: 'DRIVER',
+        },
+      });
+    });
+
+    it('should find existing user on returning sign-in (fullName is null)', async () => {
+      mockVerifyAppleToken.mockResolvedValueOnce(mockApplePayload);
+      mockManuallyCreateOrUpdateUser.mockResolvedValueOnce({
+        status: 'OK',
+        user: { id: 'st-apple-id' },
+        recipeUserId: { getAsString: () => 'st-apple-id' },
+        createdNewRecipeUser: false,
+      });
+      mockPrismaService.user.findUniqueOrThrow.mockResolvedValueOnce(mockUser);
+      mockCreateSession.mockResolvedValueOnce({
+        getAccessToken: () => 'apple-access-token',
+      });
+
+      const result = await service.appleSignIn('valid-identity-token', null);
+
+      expect(result.accessToken).toBe('apple-access-token');
+      expect(mockPrismaService.user.create).not.toHaveBeenCalled();
+      expect(mockPrismaService.user.findUniqueOrThrow).toHaveBeenCalledWith({
+        where: { supertokens_id: 'st-apple-id' },
+      });
+    });
+
+    it('should throw UnauthorizedException when Apple identity token is invalid', async () => {
+      mockVerifyAppleToken.mockRejectedValueOnce(new Error('Invalid token'));
+
+      await expect(service.appleSignIn('bad-token')).rejects.toThrow(
+        UnauthorizedException,
+      );
+    });
+
+    it('should throw ConflictException with SOCIAL_EMAIL_CONFLICT when SuperTokens returns SIGN_IN_UP_NOT_ALLOWED', async () => {
+      mockVerifyAppleToken.mockResolvedValueOnce(mockApplePayload);
+      mockManuallyCreateOrUpdateUser.mockResolvedValueOnce({
+        status: 'SIGN_IN_UP_NOT_ALLOWED',
+        reason: 'Email already registered via email/password',
+      });
+
+      await expect(service.appleSignIn('valid-identity-token')).rejects.toThrow(
         ConflictException,
       );
     });

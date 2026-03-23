@@ -2,6 +2,7 @@
   "expo": {
     "name": "desert",
     "slug": "desert",
+    "owner": "mmikina",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,7 +23,9 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.desert.app",
-      "permissions": ["android.permission.POST_NOTIFICATIONS"]
+      "permissions": [
+        "android.permission.POST_NOTIFICATIONS"
+      ]
     },
     "web": {
       "bundler": "metro"
@@ -40,6 +43,12 @@
     ],
     "experiments": {
       "typedRoutes": false
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "945d66cd-fcc2-46ab-b9fa-076804320497"
+      }
     }
   }
 }

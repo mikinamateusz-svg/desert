@@ -19,6 +19,7 @@
     "expo-apple-authentication": "^55.0.9",
     "expo-auth-session": "^55.0.9",
     "expo-crypto": "^55.0.10",
+    "expo-dev-client": "~55.0.18",
     "expo-localization": "^55.0.9",
     "expo-notifications": "^55.0.13",
     "expo-router": "~55.0.7",

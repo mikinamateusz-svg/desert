@@ -9,6 +9,9 @@ out
 .next
 .expo
 
+# TypeScript incremental build cache
+*.tsbuildinfo
+
 # Turbo
 .turbo
 

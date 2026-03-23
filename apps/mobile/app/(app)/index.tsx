@@ -1,8 +1,14 @@
+import { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useAuth } from '../../src/store/auth.store';
+import { SoftSignUpSheet } from '../../src/components/SoftSignUpSheet';
 
 export default function MapScreen() {
-  const { user, logout } = useAuth();
+  const { user, accessToken, hasSeenOnboarding, logout } = useAuth();
+  const [sheetDismissed, setSheetDismissed] = useState(false);
+
+  // Show the soft sign-up sheet on first open (no token, never seen onboarding)
+  const showSheet = !accessToken && !hasSeenOnboarding && !sheetDismissed;
 
   return (
     <View style={styles.container}>
@@ -11,9 +17,16 @@ export default function MapScreen() {
       {user && (
         <Text style={styles.user}>Signed in as {user.display_name ?? user.email}</Text>
       )}
-      <TouchableOpacity style={styles.logoutButton} onPress={logout}>
-        <Text style={styles.logoutText}>Sign out</Text>
-      </TouchableOpacity>
+      {accessToken && (
+        <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+          <Text style={styles.logoutText}>Sign out</Text>
+        </TouchableOpacity>
+      )}
+
+      <SoftSignUpSheet
+        visible={showSheet}
+        onDismiss={() => setSheetDismissed(true)}
+      />
     </View>
   );
 }

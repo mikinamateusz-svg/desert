@@ -11,6 +11,7 @@ export default {
       invalidAppleToken: 'Apple sign-in failed. Please try again.',
       appleEmailMissing:
         'Your Apple account has no email address. Please use email sign-in.',
+      genericSignInError: 'Sign-in failed. Please try again.',
     },
     register: {
       title: 'Create account',
@@ -30,6 +31,18 @@ export default {
       registerLink: "Don't have an account? Create one",
       wrongCredentials: 'Invalid email or password',
       genericError: 'Something went wrong. Please try again.',
+    },
+    onboarding: {
+      title: 'Track your savings and streak',
+      subtitle: 'See which station near you is cheapest right now.',
+      useEmail: 'Use Email',
+      skip: 'Skip',
+    },
+    gate: {
+      title: 'Your photo is ready to submit',
+      subtitle: 'Create a free account to submit prices and track your savings.',
+      useEmail: 'Use Email',
+      discard: 'Discard and go back',
     },
   },
 } as const;

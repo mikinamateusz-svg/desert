@@ -1,13 +1,12 @@
-import { Stack, Redirect } from 'expo-router';
+import { Stack } from 'expo-router';
 import { useAuth } from '../../src/store/auth.store';
 
 export default function AppLayout() {
-  const { accessToken, isLoading } = useAuth();
+  const { isLoading } = useAuth();
 
   if (isLoading) return null;
 
-  // Not authenticated — go to login
-  if (!accessToken) return <Redirect href="/(auth)/login" />;
-
+  // No forced redirect — both authenticated users and guests can view the map.
+  // The SoftSignUpSheet in (app)/index.tsx handles the first-open prompt.
   return <Stack screenOptions={{ headerShown: false }} />;
 }

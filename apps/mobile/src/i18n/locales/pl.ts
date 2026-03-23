@@ -11,6 +11,7 @@ export default {
       invalidAppleToken: 'Logowanie przez Apple nie powiodło się. Spróbuj ponownie.',
       appleEmailMissing:
         'Twoje konto Apple nie ma adresu e-mail. Użyj logowania przez e-mail.',
+      genericSignInError: 'Logowanie nie powiodło się. Spróbuj ponownie.',
     },
     register: {
       title: 'Utwórz konto',
@@ -30,6 +31,18 @@ export default {
       registerLink: 'Nie masz konta? Utwórz je',
       wrongCredentials: 'Nieprawidłowy adres e-mail lub hasło',
       genericError: 'Coś poszło nie tak. Spróbuj ponownie.',
+    },
+    onboarding: {
+      title: 'Śledź swoje oszczędności',
+      subtitle: 'Zobacz, która stacja w pobliżu jest najtańsza.',
+      useEmail: 'Użyj e-maila',
+      skip: 'Pomiń',
+    },
+    gate: {
+      title: 'Twoje zdjęcie jest gotowe do wysłania',
+      subtitle: 'Utwórz bezpłatne konto, aby dodawać ceny i śledzić oszczędności.',
+      useEmail: 'Użyj e-maila',
+      discard: 'Odrzuć i wróć',
     },
   },
 } as const;

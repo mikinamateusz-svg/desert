@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet, Alert, Scr
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
-import { apiGetConsents, apiWithdrawConsent, ConsentRecord } from '../../src/api/user';
+import { apiGetConsents, apiWithdrawConsent } from '../../src/api/user';
+import type { ConsentRecord } from '../../src/api/user';
 
 export default function PrivacySettingsScreen() {
   const { t } = useTranslation();

@@ -63,7 +63,23 @@ export default {
     retry: 'Retry',
     signInPrompt: 'Sign in to see your submission history',
   },
+  map: {
+    comingSoon: 'Map (coming soon)',
+    signedInAs: 'Signed in as {{name}}',
+    signOut: 'Sign out',
+  },
+  fuelTypes: {
+    petrol_95: 'Petrol 95',
+    petrol_98: 'Petrol 98',
+    diesel: 'Diesel',
+    lpg: 'LPG',
+  },
   account: {
+    language: {
+      en: 'EN',
+      pl: 'PL',
+      uk: 'UK',
+    },
     signOut: 'Sign out',
     deleteAccountButton: 'Delete my account',
     exportDataButton: 'Download my data',

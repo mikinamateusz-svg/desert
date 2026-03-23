@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
 import { SoftSignUpSheet } from '../../src/components/SoftSignUpSheet';
 
 export default function MapScreen() {
   const { user, accessToken, hasSeenOnboarding, logout } = useAuth();
+  const { t } = useTranslation();
   const [sheetDismissed, setSheetDismissed] = useState(false);
 
   // Show the soft sign-up sheet on first open (no token, never seen onboarding)
@@ -13,13 +15,13 @@ export default function MapScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>desert</Text>
-      <Text style={styles.subtitle}>Map (coming soon)</Text>
+      <Text style={styles.subtitle}>{t('map.comingSoon')}</Text>
       {user && (
-        <Text style={styles.user}>Signed in as {user.display_name ?? user.email}</Text>
+        <Text style={styles.user}>{t('map.signedInAs', { name: user.display_name ?? user.email })}</Text>
       )}
       {accessToken && (
         <TouchableOpacity style={styles.logoutButton} onPress={logout}>
-          <Text style={styles.logoutText}>Sign out</Text>
+          <Text style={styles.logoutText}>{t('map.signOut')}</Text>
         </TouchableOpacity>
       )}
 

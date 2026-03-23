@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { Link } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import '../../src/i18n';
 import { useAuth } from '../../src/store/auth.store';
 import { ApiError } from '../../src/api/auth';
 import { GoogleSignInButton } from '../../src/components/GoogleSignInButton';

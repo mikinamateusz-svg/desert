@@ -63,7 +63,23 @@ export default {
     retry: 'Спробувати знову',
     signInPrompt: 'Увійдіть, щоб переглянути історію подань',
   },
+  map: {
+    comingSoon: 'Карта (скоро)',
+    signedInAs: 'Увійшли як {{name}}',
+    signOut: 'Вийти',
+  },
+  fuelTypes: {
+    petrol_95: 'Бензин 95',
+    petrol_98: 'Бензин 98',
+    diesel: 'Дизель',
+    lpg: 'СПГ',
+  },
   account: {
+    language: {
+      en: 'EN',
+      pl: 'PL',
+      uk: 'UK',
+    },
     signOut: 'Вийти',
     deleteAccountButton: 'Видалити акаунт',
     exportDataButton: 'Завантажити мої дані',

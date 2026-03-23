@@ -63,7 +63,23 @@ export default {
     retry: 'Spróbuj ponownie',
     signInPrompt: 'Zaloguj się, aby zobaczyć historię zgłoszeń',
   },
+  map: {
+    comingSoon: 'Mapa (wkrótce)',
+    signedInAs: 'Zalogowano jako {{name}}',
+    signOut: 'Wyloguj się',
+  },
+  fuelTypes: {
+    petrol_95: 'Benzyna 95',
+    petrol_98: 'Benzyna 98',
+    diesel: 'Diesel',
+    lpg: 'LPG',
+  },
   account: {
+    language: {
+      en: 'EN',
+      pl: 'PL',
+      uk: 'UK',
+    },
     signOut: 'Wyloguj się',
     deleteAccountButton: 'Usuń konto',
     exportDataButton: 'Pobierz moje dane',

@@ -13,17 +13,6 @@ import { apiGetSubmissions, type Submission } from '../../src/api/submissions';
 
 const LIMIT = 20;
 
-const FUEL_TYPE_KEYS: Record<string, string> = {
-  petrol_95: 'Petrol 95',
-  petrol_98: 'Petrol 98',
-  diesel: 'Diesel',
-  lpg: 'LPG',
-};
-
-function formatFuelType(fuelType: string): string {
-  return FUEL_TYPE_KEYS[fuelType] ?? fuelType;
-}
-
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString(undefined, {
     day: '2-digit',
@@ -32,12 +21,12 @@ function formatDate(iso: string): string {
   });
 }
 
-function SubmissionRow({ item, t }: { item: Submission; t: (k: string) => string }) {
+function SubmissionRow({ item, t }: { item: Submission; t: (k: string, opts?: Record<string, unknown>) => string }) {
   const stationName =
     item.station?.name ?? t('submissions.stationUnknown');
 
   const prices = item.price_data
-    .map((p) => `${formatFuelType(p.fuel_type)}: ${p.price_per_litre.toFixed(2)}`)
+    .map((p) => `${t(`fuelTypes.${p.fuel_type}`, { defaultValue: p.fuel_type })}: ${p.price_per_litre.toFixed(2)}`)
     .join('  ');
 
   return (

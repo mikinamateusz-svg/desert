@@ -1,4 +1,5 @@
 import SuperTokens from 'supertokens-node';
+import ThirdParty from 'supertokens-node/recipe/thirdparty/index.js';
 import EmailPassword from 'supertokens-node/recipe/emailpassword/index.js';
 import Session from 'supertokens-node/recipe/session/index.js';
 
@@ -13,6 +14,7 @@ export function initSuperTokens(connectionUri: string, apiKey: string) {
       apiBasePath: '/v1/auth',
     },
     recipeList: [
+      ThirdParty.init(), // no providers — uses manuallyCreateOrUpdateUser
       EmailPassword.init(),
       Session.init({ getTokenTransferMethod: () => 'header' }),
     ],

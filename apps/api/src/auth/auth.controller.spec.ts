@@ -18,6 +18,7 @@ const mockAuthService = {
   login: jest.fn(),
   logout: jest.fn(),
   getMe: jest.fn(),
+  googleSignIn: jest.fn(),
 };
 
 describe('AuthController', () => {
@@ -112,6 +113,27 @@ describe('AuthController', () => {
 
       expect(result).toEqual(mockAuthResponse.user);
       expect(mockAuthService.getMe).toHaveBeenCalledWith('user-uuid');
+    });
+  });
+
+  describe('googleAuth', () => {
+    it('should call authService.googleSignIn with idToken and return result', async () => {
+      mockAuthService.googleSignIn.mockResolvedValueOnce(mockAuthResponse);
+
+      const result = await controller.googleAuth({ idToken: 'google-id-token' });
+
+      expect(result).toEqual(mockAuthResponse);
+      expect(mockAuthService.googleSignIn).toHaveBeenCalledWith('google-id-token');
+    });
+
+    it('should propagate UnauthorizedException from service for invalid token', async () => {
+      mockAuthService.googleSignIn.mockRejectedValueOnce(
+        new UnauthorizedException({ error: 'INVALID_GOOGLE_TOKEN' }),
+      );
+
+      await expect(
+        controller.googleAuth({ idToken: 'bad-token' }),
+      ).rejects.toThrow(UnauthorizedException);
     });
   });
 });

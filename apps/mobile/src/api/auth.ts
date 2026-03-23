@@ -82,3 +82,10 @@ export async function apiGetMe(accessToken: string): Promise<AuthUser> {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 }
+
+export async function apiGoogleSignIn(idToken: string): Promise<AuthResponse> {
+  return request<AuthResponse>('/v1/auth/google', {
+    method: 'POST',
+    body: JSON.stringify({ idToken }),
+  });
+}

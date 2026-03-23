@@ -427,7 +427,56 @@ So that I can get started privately without sharing my email if I choose not to.
 **When** their device language is set to Polish, English, or Ukrainian
 **Then** all app-controlled text on the screen is displayed in that language
 
-### Story 1.4: RBAC & Role Enforcement
+### Story 1.4: First-Open Onboarding & Guest Mode
+
+As a **new driver**,
+I want to open the app and see the map immediately without being forced to register,
+So that I can explore fuel prices before deciding whether to create an account.
+
+**Why:** The no-registration-wall principle is central to desert's growth strategy — forcing sign-up before showing value kills conversion (the GasBuddy anti-pattern). The first-open experience must deliver immediate value (map with prices), offer a soft one-time sign-up prompt, and gate only the contribution action. Guest mode keeps the funnel wide open and lets the product speak for itself.
+
+**Acceptance Criteria:**
+
+**Given** a new user opens the app for the first time
+**When** the app finishes loading
+**Then** they see a splash screen briefly, followed by the map screen — no auth required
+**And** a one-time soft sign-up card is shown: "Track your savings and streak" with options: Continue with Google · Continue with Apple · Use Email · Skip
+
+**Given** a new user sees the soft sign-up card
+**When** they tap Skip
+**Then** they enter guest mode and land on the map
+**And** the sign-up card is never shown again on any subsequent app open
+
+**Given** a user who previously skipped the sign-up card
+**When** they open the app again
+**Then** they go directly to the map with no prompt shown
+
+**Given** a guest user on the soft sign-up card
+**When** they tap Use Email
+**Then** they are navigated to the email registration screen (Story 1.1)
+
+**Given** a guest user on the soft sign-up card
+**When** they tap Continue with Google
+**Then** they are navigated to the Google sign-in flow (Story 1.2)
+
+**Given** a guest user on the soft sign-up card
+**When** they tap Continue with Apple
+**Then** they are navigated to the Apple sign-in flow (Story 1.3)
+
+**Given** a guest user who completes the camera flow for their first price submission
+**When** the photo is ready to submit
+**Then** a contribution sign-up gate is shown: "Your photo is ready to submit" with Continue with Google · Continue with Apple · Use Email options
+**And** if they abandon, the photo is discarded and they return to the map with no nag or penalty
+
+**Given** a user viewing the soft sign-up card or the contribution sign-up gate
+**When** their device language is set to Polish, English, or Ukrainian
+**Then** all text is displayed in that language
+
+**Dependencies:** Stories 1.1 (email auth), 1.2 (Google sign-in), 1.3 (Apple sign-in) must exist before this story can be fully wired up.
+
+---
+
+### Story 1.5: RBAC & Role Enforcement
 
 As a **developer**,
 I want all API routes protected by role-based access control,
@@ -461,7 +510,7 @@ So that each actor type can only access the resources they are authorised for.
 **When** any route is defined
 **Then** it has an explicit `@Roles()` decorator — no route is inadvertently left unprotected
 
-### Story 1.5: Submission History
+### Story 1.6: Submission History
 
 As a **driver**,
 I want to view a list of my past price submissions,
@@ -491,7 +540,7 @@ So that I can see my contribution history and track my activity on the platform.
 **When** their selected language is Polish, English, or Ukrainian
 **Then** all text on the screen is displayed in that language
 
-### Story 1.6: Notification Preferences
+### Story 1.7: Notification Preferences
 
 As a **driver**,
 I want to manage which notifications I receive from the app,
@@ -525,7 +574,7 @@ So that I only get alerts that are relevant and useful to me.
 **When** their selected language is Polish, English, or Ukrainian
 **Then** all text on the screen is displayed in that language
 
-### Story 1.7: Account Deletion & Right to Erasure
+### Story 1.8: Account Deletion & Right to Erasure
 
 As a **driver**,
 I want to permanently delete my account,
@@ -565,7 +614,7 @@ So that my personal data is removed from the platform in compliance with my GDPR
 **When** their selected language is Polish, English, or Ukrainian
 **Then** all text including confirmation prompts and warnings is displayed in that language
 
-### Story 1.8: Personal Data Export
+### Story 1.9: Personal Data Export
 
 As a **driver**,
 I want to download a copy of all my personal data held by the platform,
@@ -599,7 +648,7 @@ So that I can exercise my GDPR right to data portability.
 **When** their selected language is Polish, English, or Ukrainian
 **Then** all confirmation messages and emails are delivered in that language
 
-### Story 1.9: Consent Management
+### Story 1.10: Consent Management
 
 As a **driver**,
 I want to review and withdraw my consent for data uses independently of deleting my account,
@@ -630,7 +679,7 @@ So that I have control over how my data is used.
 **When** their selected language is Polish, English, or Ukrainian
 **Then** all text including consent descriptions and withdrawal warnings is displayed in that language
 
-### Story 1.10: Internationalisation (i18n) Foundation
+### Story 1.11: Internationalisation (i18n) Foundation
 
 As a **developer**,
 I want all user-facing text externalised into language files supporting Polish, English, and Ukrainian,
@@ -666,7 +715,7 @@ So that every screen in the app can be displayed in the user's preferred languag
 
 ---
 
-### Story 1.11: In-App Feedback & Feature Requests
+### Story 1.12: In-App Feedback & Feature Requests
 
 As a **driver**,
 I want to send feedback or suggest a feature directly from the app,

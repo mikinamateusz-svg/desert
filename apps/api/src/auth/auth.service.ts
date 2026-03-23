@@ -3,12 +3,16 @@ import {
   ConflictException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { OAuth2Client, type LoginTicket } from 'google-auth-library';
+import ThirdParty from 'supertokens-node/recipe/thirdparty/index.js';
 import EmailPassword from 'supertokens-node/recipe/emailpassword/index.js';
 import Session from 'supertokens-node/recipe/session/index.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 @Injectable()
 export class AuthService {
+  private readonly googleClient = new OAuth2Client();
+
   constructor(private readonly prisma: PrismaService) {}
 
   async register(email: string, password: string, displayName: string) {
@@ -80,5 +84,94 @@ export class AuthService {
 
   async getMe(userId: string) {
     return this.prisma.user.findUniqueOrThrow({ where: { id: userId } });
+  }
+
+  async googleSignIn(idToken: string) {
+    // 1. Verify Google ID token
+    let ticket: LoginTicket;
+    try {
+      ticket = await this.googleClient.verifyIdToken({
+        idToken,
+        audience: [
+          process.env['GOOGLE_WEB_CLIENT_ID'],
+          process.env['GOOGLE_ANDROID_CLIENT_ID'],
+          process.env['GOOGLE_IOS_CLIENT_ID'],
+        ].filter(Boolean) as string[],
+      });
+    } catch {
+      throw new UnauthorizedException({
+        statusCode: 401,
+        error: 'INVALID_GOOGLE_TOKEN',
+        message: 'Invalid Google ID token',
+      });
+    }
+
+    const payload = ticket.getPayload();
+    if (!payload) {
+      throw new UnauthorizedException({
+        statusCode: 401,
+        error: 'INVALID_GOOGLE_TOKEN',
+        message: 'Invalid Google ID token',
+      });
+    }
+
+    if (!payload.email) {
+      throw new UnauthorizedException({
+        statusCode: 401,
+        error: 'GOOGLE_EMAIL_MISSING',
+        message: 'Google account has no email address',
+      });
+    }
+
+    // 2. Create or find SuperTokens ThirdParty user
+    const result = await ThirdParty.manuallyCreateOrUpdateUser(
+      'public',
+      'google',
+      payload.sub,
+      payload.email,
+      payload.email_verified ?? false,
+      undefined,
+      {},
+    );
+
+    if (result.status === 'SIGN_IN_UP_NOT_ALLOWED') {
+      throw new ConflictException({
+        statusCode: 409,
+        error: 'SOCIAL_EMAIL_CONFLICT',
+        message: result.reason,
+      });
+    }
+
+    if (result.status !== 'OK') {
+      throw new Error(`SuperTokens ThirdParty signInUp failed: ${result.status}`);
+    }
+
+    const { user: stUser, recipeUserId, createdNewRecipeUser } = result;
+
+    // 3. Find or create our User record
+    let user;
+    if (createdNewRecipeUser) {
+      user = await this.prisma.user.create({
+        data: {
+          supertokens_id: stUser.id,
+          email: payload.email,
+          display_name: payload.name ?? null,
+          role: 'DRIVER',
+        },
+      });
+    } else {
+      user = await this.prisma.user.findUniqueOrThrow({
+        where: { supertokens_id: stUser.id },
+      });
+    }
+
+    // 4. Create SuperTokens session
+    const session = await Session.createNewSessionWithoutRequestResponse(
+      'public',
+      recipeUserId,
+      { userId: user.id, role: user.role },
+    );
+
+    return { user, accessToken: session.getAccessToken() };
   }
 }

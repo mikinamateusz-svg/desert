@@ -775,6 +775,40 @@ Note: Branded premium names (Verva ON, Shell V-Power, Excellium) are stored and 
 
 ---
 
+#### `SoftSignUpSheet`
+
+**Purpose:** One-time soft sign-up prompt shown after the map loads on first open. Non-blocking — the map remains fully visible and interactive behind it. Never shown again once dismissed or completed.
+
+**Anatomy:**
+- Bottom sheet, slides up from bottom edge (not full screen — map visible above)
+- Drag handle pill at top
+- Headline: "Track your savings and streak"
+- Subtext: "See how much you've saved and keep your contribution streak alive"
+- "Continue with Google" — primary outlined button with Google logo
+- "Continue with Apple" — primary outlined button with Apple logo
+- "Use email" — secondary text button
+- "Skip for now" — ghost/text link, bottom-aligned, subdued colour
+- No close (×) button — Skip is the intentional exit
+
+**Behaviour:**
+- Shown automatically on first map load, with a 600ms delay (map settles first)
+- Slides up with 250ms ease animation
+- Tapping Google/Apple/Email → navigates to respective auth flow; sheet dismissed
+- Tapping "Skip for now" → sheet dismissed, guest mode activated
+- Tapping outside sheet (map area) → no dismiss (intentional — requires explicit choice)
+- Sheet state persisted to local storage: once dismissed or completed, never shown again
+
+**States:**
+- `idle` — fully rendered, awaiting tap
+- `loading` — one auth button tapped, spinner replaces its label, others disabled
+- `dismissed` — sheet slides down and off; never re-rendered
+
+**Shown once flag:** `onboarding.softSignUpSeen` — boolean stored in AsyncStorage. Set to `true` on any exit (Skip or auth tap).
+
+**First used in:** Story 1.4
+
+---
+
 ### Component Implementation Strategy
 
 **Build order principle:** Components are built inline with the first feature story that requires them — no separate component stories. The UX spec is the component contract.
@@ -791,6 +825,7 @@ Note: Branded premium names (Verva ON, Shell V-Power, Excellium) are stored and 
 
 | Component | Built in Story |
 |---|---|
+| SoftSignUpSheet | 1.4 |
 | MapPin (all states) | 2.2 |
 | FuelChipBar + OnboardingFuelPrompt | 2.4 |
 | StationSheet (collapsed + expanded) + ArrivalBanner | 2.5 |

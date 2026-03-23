@@ -1,5 +1,14 @@
 export default {
   auth: {
+    common: {
+      continueWithGoogle: 'Kontynuuj z Google',
+      orDivider: 'lub',
+      socialEmailConflict:
+        'Ten adres e-mail jest już zarejestrowany. Zaloguj się przy użyciu e-maila i hasła.',
+      invalidGoogleToken: 'Logowanie przez Google nie powiodło się. Spróbuj ponownie.',
+      googleEmailMissing:
+        'Twoje konto Google nie ma adresu e-mail. Użyj logowania przez e-mail.',
+    },
     register: {
       title: 'Utwórz konto',
       emailLabel: 'E-mail',

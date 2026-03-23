@@ -1,5 +1,14 @@
 export default {
   auth: {
+    common: {
+      continueWithGoogle: 'Продовжити з Google',
+      orDivider: 'або',
+      socialEmailConflict:
+        'Цей email вже зареєстровано. Будь ласка, увійдіть за допомогою email та пароля.',
+      invalidGoogleToken: 'Не вдалося увійти через Google. Спробуйте ще раз.',
+      googleEmailMissing:
+        'Ваш акаунт Google не має email-адреси. Скористайтесь входом через email.',
+    },
     register: {
       title: 'Створити акаунт',
       emailLabel: 'Електронна пошта',

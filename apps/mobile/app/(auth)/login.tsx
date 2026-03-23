@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import '../../src/i18n';
 import { useAuth } from '../../src/store/auth.store';
 import { ApiError } from '../../src/api/auth';
+import { GoogleSignInButton } from '../../src/components/GoogleSignInButton';
 
 export default function LoginScreen() {
   const { t } = useTranslation();
@@ -22,6 +23,14 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  function handleGoogleError(code: string) {
+    if (code === 'SOCIAL_EMAIL_CONFLICT') {
+      setError(t('auth.common.socialEmailConflict'));
+    } else {
+      setError(t('auth.common.invalidGoogleToken'));
+    }
+  }
 
   async function handleLogin() {
     setError(null);
@@ -77,6 +86,10 @@ export default function LoginScreen() {
         )}
       </TouchableOpacity>
 
+      <Text style={styles.divider}>{t('auth.common.orDivider')}</Text>
+
+      <GoogleSignInButton onError={handleGoogleError} />
+
       <Link href="/(auth)/register" style={styles.link}>
         {t('auth.login.registerLink')}
       </Link>
@@ -125,6 +138,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  divider: {
+    textAlign: 'center',
+    color: '#9ca3af',
+    fontSize: 14,
+    marginBottom: 16,
   },
   link: {
     textAlign: 'center',

@@ -1,0 +1,80 @@
+project: desert
+generated: 2026-03-23
+description: Sprint status for all stories in the implementation backlog
+
+epics:
+  - id: 1
+    name: User Registration & Authentication
+    stories:
+      - id: 1.0a
+        title: Turborepo Monorepo Scaffold & Local Dev Environment
+        file: 1-0a-turborepo-monorepo-scaffold.md
+        status: review
+
+      - id: 1.0b
+        title: Infrastructure Provisioning & CI/CD Pipeline
+        file: 1-0b-infrastructure-provisioning-cicd-pipeline.md
+        status: review
+
+      - id: 1.1
+        title: Driver Email/Password Registration & Login
+        file: 1-1-driver-email-password-registration-login.md
+        status: review
+
+      - id: 1.2
+        title: Google Sign-In
+        file: 1-2-google-sign-in.md
+        status: review
+
+      - id: 1.3
+        title: Apple Sign-In
+        file: 1-3-apple-sign-in.md
+        status: review
+
+      - id: 1.4
+        title: First-Open Onboarding & Guest Mode
+        file: 1-4-first-open-onboarding-guest-mode.md
+        status: review
+
+      - id: 1.5
+        title: RBAC & Role Enforcement
+        file: 1-5-rbac-role-enforcement.md
+        status: review
+
+      - id: 1.6
+        title: Submission History
+        file: 1-6-submission-history.md
+        status: review
+
+      - id: 1.7
+        title: Notification Preferences
+        file: 1-7-notification-preferences.md
+        status: review
+
+      - id: 1.8
+        title: Account Deletion & Right to Erasure
+        file: 1-8-account-deletion-right-to-erasure.md
+        status: review
+        review_date: 2026-03-23
+        review_findings: "4 patch (P1 missing 401 test, P2 dead successMessage no toast, P3 silent null accessToken, P4 no KeyboardAvoidingView), 1 deferred, 1 rejected"
+        patches_applied: "2026-03-23 — P1-P4 all applied, 67/67 tests passing"
+
+      - id: 1.9
+        title: Personal Data Export
+        file: 1-9-personal-data-export.md
+        status: backlog
+
+      - id: 1.10
+        title: Consent Management
+        file: 1-10-consent-management.md
+        status: backlog
+
+      - id: 1.11
+        title: Internationalisation (i18n) Foundation
+        file: 1-11-i18n-foundation.md
+        status: backlog
+
+      - id: 1.12
+        title: In-App Feedback & Feature Requests
+        file: 1-12-in-app-feedback.md
+        status: backlog

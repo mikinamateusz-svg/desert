@@ -63,6 +63,23 @@ export default {
     retry: 'Retry',
     signInPrompt: 'Sign in to see your submission history',
   },
+  account: {
+    signOut: 'Sign out',
+    deleteAccountButton: 'Delete my account',
+    deleteAccount: {
+      step1Title: 'Delete your account?',
+      step1Body: 'This will permanently remove your name, email address, and sign-in credentials.',
+      step1Retained: 'Your anonymous contribution records are retained for platform integrity — no personal information is recoverable.',
+      step1Continue: 'Continue',
+      step1Cancel: 'Cancel',
+      step2Title: 'Type DELETE to confirm',
+      typeToConfirm: 'Type DELETE in the box below to permanently delete your account. This cannot be undone.',
+      confirmPlaceholder: 'DELETE',
+      confirmButton: 'Delete my account',
+      errorDeleting: 'Failed to delete account. Please try again.',
+      successMessage: 'Your account has been deleted.',
+    },
+  },
   notifications: {
     valuePropTitle: 'Stay ahead of fuel prices',
     feature1: 'Price drop alerts near you',

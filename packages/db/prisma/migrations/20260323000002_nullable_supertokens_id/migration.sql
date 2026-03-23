@@ -1,0 +1,1 @@
+ALTER TABLE "User" ALTER COLUMN "supertokens_id" DROP NOT NULL;

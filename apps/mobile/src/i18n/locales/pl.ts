@@ -63,6 +63,23 @@ export default {
     retry: 'Spróbuj ponownie',
     signInPrompt: 'Zaloguj się, aby zobaczyć historię zgłoszeń',
   },
+  account: {
+    signOut: 'Wyloguj się',
+    deleteAccountButton: 'Usuń konto',
+    deleteAccount: {
+      step1Title: 'Usunąć konto?',
+      step1Body: 'Spowoduje to trwałe usunięcie Twojego imienia, adresu e-mail i danych logowania.',
+      step1Retained: 'Twoje anonimowe wpisy są zachowane dla integralności platformy — żadne dane osobowe nie są możliwe do odzyskania.',
+      step1Continue: 'Kontynuuj',
+      step1Cancel: 'Anuluj',
+      step2Title: 'Wpisz DELETE, aby potwierdzić',
+      typeToConfirm: 'Wpisz DELETE w poniższe pole, aby trwale usunąć konto. Tej operacji nie można cofnąć.',
+      confirmPlaceholder: 'DELETE',
+      confirmButton: 'Usuń konto',
+      errorDeleting: 'Nie udało się usunąć konta. Spróbuj ponownie.',
+      successMessage: 'Twoje konto zostało usunięte.',
+    },
+  },
   notifications: {
     valuePropTitle: 'Wyprzedź ceny paliwa',
     feature1: 'Alerty o spadkach cen w pobliżu',

@@ -8,6 +8,7 @@ import { PrismaModule } from './prisma/prisma.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { SubmissionsModule } from './submissions/submissions.module.js';
 import { NotificationsModule } from './notifications/notifications.module.js';
+import { UserModule } from './user/user.module.js';
 import { JwtAuthGuard } from './auth/jwt-auth.guard.js';
 import { RolesGuard } from './auth/guards/roles.guard.js';
 
@@ -24,6 +25,7 @@ import { RolesGuard } from './auth/guards/roles.guard.js';
     AuthModule,
     SubmissionsModule,
     NotificationsModule,
+    UserModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

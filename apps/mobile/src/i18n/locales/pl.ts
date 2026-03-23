@@ -66,6 +66,10 @@ export default {
   account: {
     signOut: 'Wyloguj się',
     deleteAccountButton: 'Usuń konto',
+    exportDataButton: 'Pobierz moje dane',
+    exportDataSuccess: 'Eksport danych został przygotowany. Sprawdź swój e-mail, aby pobrać plik.',
+    exportDataError: 'Nie udało się przygotować eksportu danych. Spróbuj ponownie.',
+    exportDataSignInRequired: 'Zaloguj się, aby wyeksportować dane.',
     deleteAccount: {
       step1Title: 'Usunąć konto?',
       step1Body: 'Spowoduje to trwałe usunięcie Twojego imienia, adresu e-mail i danych logowania.',

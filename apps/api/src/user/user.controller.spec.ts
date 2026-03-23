@@ -1,10 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { BadRequestException } from '@nestjs/common';
 import { UserController } from './user.controller.js';
 import { UserService } from './user.service.js';
 import { User } from '@prisma/client';
 
 const mockUserService = {
   deleteAccount: jest.fn(),
+  exportMyData: jest.fn(),
+  sendExportEmail: jest.fn(),
 };
 
 const mockUser: Partial<User> = {
@@ -62,6 +65,25 @@ describe('UserController', () => {
       // Calling with null supertokens_id still invokes the service (guard responsibility, not controller).
       await controller.deleteAccount(deletedUser);
       expect(mockUserService.deleteAccount).toHaveBeenCalledWith('user-uuid', null);
+    });
+  });
+
+  describe('requestDataExport', () => {
+    it('should call userService.exportMyData with userId and return 202 message', async () => {
+      mockUserService.exportMyData.mockResolvedValueOnce('https://r2.example.com/exports/user-uuid/12345.json');
+      mockUserService.sendExportEmail.mockResolvedValueOnce(undefined);
+
+      const result = await controller.requestDataExport(mockUser as User);
+
+      expect(mockUserService.exportMyData).toHaveBeenCalledWith('user-uuid');
+      expect(mockUserService.sendExportEmail).toHaveBeenCalledWith('driver@example.com', 'https://r2.example.com/exports/user-uuid/12345.json');
+      expect(result).toEqual({ message: 'Export prepared. Check your email.' });
+    });
+
+    it('should throw BadRequestException when user.email is null (deleted account)', async () => {
+      const deletedUser = { ...mockUser, email: null } as User;
+
+      await expect(controller.requestDataExport(deletedUser)).rejects.toThrow(BadRequestException);
     });
   });
 });

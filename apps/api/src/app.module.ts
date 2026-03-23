@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { HealthModule } from './health/health.module.js';
 import { StorageModule } from './storage/storage.module.js';
 import { RedisModule } from './redis/redis.module.js';
@@ -18,6 +19,7 @@ import { RolesGuard } from './auth/guards/roles.guard.js';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    ThrottlerModule.forRoot([{ ttl: 3600, limit: 3 }]),
     PrismaModule,
     HealthModule,
     StorageModule,

@@ -66,6 +66,10 @@ export default {
   account: {
     signOut: 'Sign out',
     deleteAccountButton: 'Delete my account',
+    exportDataButton: 'Download my data',
+    exportDataSuccess: 'Your data export has been prepared. Check your email for the download link.',
+    exportDataError: 'Failed to prepare data export. Please try again.',
+    exportDataSignInRequired: 'Sign in to export your data.',
     deleteAccount: {
       step1Title: 'Delete your account?',
       step1Body: 'This will permanently remove your name, email address, and sign-in credentials.',

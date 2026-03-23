@@ -62,7 +62,12 @@ epics:
       - id: 1.9
         title: Personal Data Export
         file: 1-9-personal-data-export.md
-        status: backlog
+        status: review
+        ready_date: 2026-03-23
+        dev_completed: 2026-03-23
+        review_date: 2026-03-23
+        review_findings: "3 patch (F1 no rate limit on export endpoint, F2 controller test missing sendExportEmail assertion, F3 no exportMyData error-path test), 2 intent_gap (F4 photo_r2_key+expo_push_token GDPR completeness, F5 fleet_id/shadow_banned/deletion_reason omitted), 3 deferred, 2 rejected"
+        patches_applied: "2026-03-23 — F1-F3 all applied, 81/81 tests passing"
 
       - id: 1.10
         title: Consent Management

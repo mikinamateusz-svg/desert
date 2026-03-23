@@ -6,6 +6,12 @@ const mockSend = jest.fn();
 jest.mock('@aws-sdk/client-s3', () => ({
   S3Client: jest.fn().mockImplementation(() => ({ send: mockSend })),
   HeadBucketCommand: jest.fn().mockImplementation((input) => input),
+  PutObjectCommand: jest.fn().mockImplementation((input) => ({ _type: 'PutObjectCommand', ...input })),
+  GetObjectCommand: jest.fn().mockImplementation((input) => ({ _type: 'GetObjectCommand', ...input })),
+}));
+
+jest.mock('@aws-sdk/s3-request-presigner', () => ({
+  getSignedUrl: jest.fn().mockResolvedValue('https://presigned.url/test'),
 }));
 
 describe('StorageService', () => {
@@ -71,6 +77,60 @@ describe('StorageService', () => {
       const errorSpy = jest.spyOn(service['logger'], 'error').mockImplementation();
       await service.testConnection();
       expect(errorSpy).toHaveBeenCalledWith('R2 bucket connection FAILED', error);
+    });
+  });
+
+  describe('uploadBuffer', () => {
+    beforeEach(async () => {
+      mockSend.mockResolvedValueOnce({});
+      await service.onModuleInit();
+      mockSend.mockReset();
+    });
+
+    it('should call mockSend with a PutObjectCommand with correct Bucket, Key, ContentType, and Body', async () => {
+      mockSend.mockResolvedValueOnce({});
+      const buffer = Buffer.from('{"test": true}');
+      await service.uploadBuffer('exports/user-123/12345.json', buffer, 'application/json');
+      expect(mockSend).toHaveBeenCalledTimes(1);
+      const callArg = mockSend.mock.calls[0][0];
+      expect(callArg).toMatchObject({
+        _type: 'PutObjectCommand',
+        Bucket: 'test-bucket',
+        Key: 'exports/user-123/12345.json',
+        ContentType: 'application/json',
+        Body: buffer,
+      });
+    });
+  });
+
+  describe('getPresignedUrl', () => {
+    beforeEach(async () => {
+      mockSend.mockResolvedValueOnce({});
+      await service.onModuleInit();
+      mockSend.mockReset();
+    });
+
+    it('should call getSignedUrl with the S3Client instance, a GetObjectCommand, and correct expiresIn', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { getSignedUrl } = require('@aws-sdk/s3-request-presigner') as { getSignedUrl: jest.Mock };
+      (getSignedUrl as jest.Mock).mockResolvedValueOnce('https://presigned.url/test');
+
+      await service.getPresignedUrl('exports/user-123/12345.json', 86400);
+
+      expect(getSignedUrl).toHaveBeenCalledWith(
+        expect.anything(), // S3Client instance
+        expect.objectContaining({ _type: 'GetObjectCommand', Bucket: 'test-bucket', Key: 'exports/user-123/12345.json' }),
+        { expiresIn: 86400 },
+      );
+    });
+
+    it('should return the presigned URL string', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { getSignedUrl } = require('@aws-sdk/s3-request-presigner') as { getSignedUrl: jest.Mock };
+      (getSignedUrl as jest.Mock).mockResolvedValueOnce('https://presigned.url/test');
+
+      const result = await service.getPresignedUrl('exports/user-123/12345.json', 86400);
+      expect(result).toBe('https://presigned.url/test');
     });
   });
 });

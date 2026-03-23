@@ -15,12 +15,14 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1014.0",
+    "@aws-sdk/s3-request-presigner": "^3.1015.0",
     "@desert/db": "workspace:*",
     "@desert/types": "workspace:*",
     "@nestjs/common": "11.1.17",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "11.1.17",
     "@nestjs/platform-fastify": "11.1.17",
+    "@nestjs/throttler": "^6.5.0",
     "@prisma/adapter-pg": "7.2.0",
     "@prisma/client": "7.2.0",
     "apple-signin-auth": "^2.0.0",
@@ -31,6 +33,7 @@
     "ioredis": "^5.10.1",
     "pg": "^8.14.0",
     "reflect-metadata": "^0.2.2",
+    "resend": "^6.9.4",
     "rxjs": "^7.8.2",
     "supertokens-node": "^24.0.1"
   },

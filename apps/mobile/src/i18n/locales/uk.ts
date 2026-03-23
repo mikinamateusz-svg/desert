@@ -66,6 +66,10 @@ export default {
   account: {
     signOut: 'Вийти',
     deleteAccountButton: 'Видалити акаунт',
+    exportDataButton: 'Завантажити мої дані',
+    exportDataSuccess: 'Експорт даних підготовлено. Перевірте свій email для отримання посилання.',
+    exportDataError: 'Не вдалося підготувати експорт даних. Спробуйте ще раз.',
+    exportDataSignInRequired: 'Увійдіть, щоб експортувати дані.',
     deleteAccount: {
       step1Title: 'Видалити акаунт?',
       step1Body: 'Це назавжди видалить ваше ім\'я, адресу електронної пошти та дані для входу.',

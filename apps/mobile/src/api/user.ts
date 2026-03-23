@@ -32,3 +32,10 @@ export async function apiDeleteAccount(accessToken: string): Promise<void> {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 }
+
+export async function apiRequestDataExport(accessToken: string): Promise<{ message: string }> {
+  return request<{ message: string }>('/v1/me/export', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+}

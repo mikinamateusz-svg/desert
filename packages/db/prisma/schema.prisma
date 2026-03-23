@@ -17,17 +17,50 @@ enum UserRole {
   DATA_BUYER
 }
 
+enum SubmissionStatus {
+  pending
+  verified
+  rejected
+  shadow_rejected
+}
+
 model User {
-  id               String    @id @default(uuid())
-  supertokens_id   String    @unique
-  email            String?   @unique
+  id               String       @id @default(uuid())
+  supertokens_id   String       @unique
+  email            String?      @unique
   display_name     String?
-  role             UserRole  @default(DRIVER)
+  role             UserRole     @default(DRIVER)
   fleet_id         String?
-  trust_score      Int       @default(0)
-  shadow_banned    Boolean   @default(false)
+  trust_score      Int          @default(0)
+  shadow_banned    Boolean      @default(false)
   deleted_at       DateTime?
   deletion_reason  String?
-  created_at       DateTime  @default(now())
-  updated_at       DateTime  @updatedAt
+  created_at       DateTime     @default(now())
+  updated_at       DateTime     @updatedAt
+  submissions      Submission[]
+}
+
+model Station {
+  id          String       @id @default(uuid())
+  name        String
+  address     String?
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+  submissions Submission[]
+}
+
+model Submission {
+  id                   String           @id @default(uuid())
+  user_id              String
+  station_id           String?
+  price_data           Json
+  photo_r2_key         String?
+  ocr_confidence_score Float?
+  status               SubmissionStatus @default(pending)
+  created_at           DateTime         @default(now())
+  updated_at           DateTime         @updatedAt
+  user                 User             @relation(fields: [user_id], references: [id])
+  station              Station?         @relation(fields: [station_id], references: [id])
+
+  @@index([user_id, created_at])
 }

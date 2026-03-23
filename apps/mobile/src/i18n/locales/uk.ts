@@ -45,4 +45,22 @@ export default {
       discard: 'Відхилити та повернутись',
     },
   },
+  nav: {
+    map: 'Карта',
+    activity: 'Активність',
+    alerts: 'Сповіщення',
+    account: 'Акаунт',
+  },
+  submissions: {
+    title: 'Активність',
+    emptyTitle: 'Немає подань',
+    emptySubtitle: 'Подайте ціну на пальне, щоб побачити тут свою історію',
+    statusPending: 'Обробляється',
+    statusRejected: 'Не опубліковано',
+    stationUnknown: 'Обробляється...',
+    loadMore: 'Завантажити ще',
+    errorLoading: 'Не вдалося завантажити подання',
+    retry: 'Спробувати знову',
+    signInPrompt: 'Увійдіть, щоб переглянути історію подань',
+  },
 } as const;

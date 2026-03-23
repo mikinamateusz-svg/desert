@@ -45,4 +45,22 @@ export default {
       discard: 'Discard and go back',
     },
   },
+  nav: {
+    map: 'Map',
+    activity: 'Activity',
+    alerts: 'Alerts',
+    account: 'Account',
+  },
+  submissions: {
+    title: 'Activity',
+    emptyTitle: 'No submissions yet',
+    emptySubtitle: 'Submit a fuel price to see your history here',
+    statusPending: 'Processing',
+    statusRejected: 'Not published',
+    stationUnknown: 'Processing...',
+    loadMore: 'Load more',
+    errorLoading: 'Failed to load submissions',
+    retry: 'Retry',
+    signInPrompt: 'Sign in to see your submission history',
+  },
 } as const;

@@ -45,4 +45,22 @@ export default {
       discard: 'Odrzuć i wróć',
     },
   },
+  nav: {
+    map: 'Mapa',
+    activity: 'Aktywność',
+    alerts: 'Alerty',
+    account: 'Konto',
+  },
+  submissions: {
+    title: 'Aktywność',
+    emptyTitle: 'Brak zgłoszeń',
+    emptySubtitle: 'Prześlij cenę paliwa, aby zobaczyć tutaj swoją historię',
+    statusPending: 'Przetwarzanie',
+    statusRejected: 'Nie opublikowano',
+    stationUnknown: 'Przetwarzanie...',
+    loadMore: 'Załaduj więcej',
+    errorLoading: 'Nie udało się załadować zgłoszeń',
+    retry: 'Spróbuj ponownie',
+    signInPrompt: 'Zaloguj się, aby zobaczyć historię zgłoszeń',
+  },
 } as const;

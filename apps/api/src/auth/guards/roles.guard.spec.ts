@@ -4,7 +4,7 @@ import { UserRole } from '@prisma/client';
 import { RolesGuard } from './roles.guard.js';
 import { ROLES_KEY } from '../decorators/roles.decorator.js';
 
-function makeContext(role: UserRole | null, handlerRoles?: UserRole[]): ExecutionContext {
+function makeContext(role: UserRole | null): ExecutionContext {
   return {
     getHandler: () => ({}),
     getClass: () => ({}),

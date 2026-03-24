@@ -84,6 +84,7 @@ export default {
     deleteAccountButton: 'Видалити акаунт',
     exportDataButton: 'Завантажити мої дані',
     privacySettings: 'Налаштування конфіденційності',
+    sendFeedback: 'Надіслати відгук',
     exportDataSuccess: 'Експорт даних підготовлено. Перевірте свій email для отримання посилання.',
     exportDataError: 'Не вдалося підготувати експорт даних. Спробуйте ще раз.',
     exportDataSignInRequired: 'Увійдіть, щоб експортувати дані.',
@@ -143,5 +144,13 @@ export default {
     errorLoading: 'Не вдалося завантажити налаштування',
     errorSaving: 'Не вдалося зберегти налаштування',
     retry: 'Спробувати знову',
+  },
+  feedback: {
+    label: 'Ваше повідомлення',
+    placeholder: 'Розкажіть, що ви думаєте, або запропонуйте функцію...',
+    submit: 'Надіслати відгук',
+    thankYou: 'Дякуємо — ми читаємо кожне повідомлення',
+    done: 'Готово',
+    errorSubmitting: 'Не вдалося надіслати відгук. Спробуйте ще раз.',
   },
 } as const;

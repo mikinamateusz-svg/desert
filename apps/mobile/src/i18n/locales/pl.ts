@@ -84,6 +84,7 @@ export default {
     deleteAccountButton: 'Usuń konto',
     exportDataButton: 'Pobierz moje dane',
     privacySettings: 'Ustawienia prywatności',
+    sendFeedback: 'Wyślij opinię',
     exportDataSuccess: 'Eksport danych został przygotowany. Sprawdź swój e-mail, aby pobrać plik.',
     exportDataError: 'Nie udało się przygotować eksportu danych. Spróbuj ponownie.',
     exportDataSignInRequired: 'Zaloguj się, aby wyeksportować dane.',
@@ -142,5 +143,13 @@ export default {
     errorLoading: 'Nie udało się załadować preferencji',
     errorSaving: 'Nie udało się zapisać preferencji',
     retry: 'Spróbuj ponownie',
+  },
+  feedback: {
+    label: 'Twoja wiadomość',
+    placeholder: 'Napisz, co myślisz, lub zaproponuj funkcję...',
+    submit: 'Wyślij opinię',
+    thankYou: 'Dzięki — czytamy każdą wiadomość',
+    done: 'Gotowe',
+    errorSubmitting: 'Nie udało się wysłać opinii. Spróbuj ponownie.',
   },
 } as const;

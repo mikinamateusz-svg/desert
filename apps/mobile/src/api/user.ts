@@ -63,3 +63,14 @@ export async function apiWithdrawConsent(
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 }
+
+export async function apiSubmitFeedback(
+  accessToken: string,
+  payload: { message: string; app_version: string; os: string },
+): Promise<{ message: string }> {
+  return request<{ message: string }>('/v1/feedback', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${accessToken}` },
+    body: JSON.stringify(payload),
+  });
+}

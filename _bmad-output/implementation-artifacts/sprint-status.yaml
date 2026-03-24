@@ -93,4 +93,10 @@ epics:
       - id: 1.12
         title: In-App Feedback & Feature Requests
         file: 1-12-in-app-feedback.md
-        status: backlog
+        status: review
+        ready_date: 2026-03-24
+        dev_started: 2026-03-24
+        dev_completed: 2026-03-24
+        review_date: 2026-03-24
+        review_findings: "3 patch (P1 DTO app_version/os missing MinLength(1), P2 no fetch timeout on Slack webhook, P3 guest silent no-op on Send tap — button not disabled when !accessToken), 2 deferred (D1 ThrottlerGuard not registered pre-existing, D2 whitespace-only message passes MinLength), 5 rejected"
+        patches_applied: "2026-03-24 — P1-P3 all applied, 106/106 tests passing, tsc clean"

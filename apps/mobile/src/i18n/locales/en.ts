@@ -84,6 +84,7 @@ export default {
     deleteAccountButton: 'Delete my account',
     exportDataButton: 'Download my data',
     privacySettings: 'Privacy settings',
+    sendFeedback: 'Send feedback',
     exportDataSuccess: 'Your data export has been prepared. Check your email for the download link.',
     exportDataError: 'Failed to prepare data export. Please try again.',
     exportDataSignInRequired: 'Sign in to export your data.',
@@ -141,5 +142,13 @@ export default {
     errorLoading: 'Failed to load preferences',
     errorSaving: 'Failed to save preferences',
     retry: 'Retry',
+  },
+  feedback: {
+    label: 'Your message',
+    placeholder: 'Tell us what you think or suggest a feature...',
+    submit: 'Send feedback',
+    thankYou: 'Thanks — we read every message',
+    done: 'Done',
+    errorSubmitting: 'Failed to send feedback. Please try again.',
   },
 } as const;

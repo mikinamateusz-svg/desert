@@ -66,6 +66,9 @@ export default function AccountScreen() {
       <TouchableOpacity style={styles.button} onPress={() => router.push('/(app)/privacy-settings')}>
         <Text style={styles.buttonText}>{t('account.privacySettings')}</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/(app)/feedback')}>
+        <Text style={styles.buttonText}>{t('account.sendFeedback')}</Text>
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.deleteRow}
         onPress={() => router.push('/(app)/delete-account')}

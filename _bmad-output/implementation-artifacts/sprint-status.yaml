@@ -119,7 +119,10 @@ epics:
       - id: 2.2
         title: Mobile Map View with Station Pins
         file: 2-2-mobile-map-view-station-pins.md
-        status: backlog
+        status: review
+        ready_date: 2026-03-24
+        dev_started: 2026-03-24
+        dev_completed: 2026-03-24
 
       - id: 2.3
         title: Colour-Coded Price Comparison

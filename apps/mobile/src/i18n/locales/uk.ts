@@ -64,9 +64,13 @@ export default {
     signInPrompt: 'Увійдіть, щоб переглянути історію подань',
   },
   map: {
-    comingSoon: 'Карта (скоро)',
     signedInAs: 'Увійшли як {{name}}',
     signOut: 'Вийти',
+    loadingMap: 'Завантаження карти...',
+    locationDenied: 'Доступ до місцезнаходження заборонено — показую стандартний район',
+    locationDeniedDismiss: 'OK',
+    offlineNotice: 'Офлайн — показую останні відомі станції',
+    stationsLoadError: 'Не вдалося завантажити станції',
   },
   fuelTypes: {
     petrol_95: 'Бензин 95',

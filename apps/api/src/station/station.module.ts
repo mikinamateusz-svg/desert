@@ -2,8 +2,10 @@ import { Module } from '@nestjs/common';
 import { StationService } from './station.service.js';
 import { StationSyncService } from './station-sync.service.js';
 import { StationSyncWorker } from './station-sync.worker.js';
+import { StationController } from './station.controller.js';
 
 @Module({
+  controllers: [StationController],
   providers: [StationService, StationSyncService, StationSyncWorker],
   exports: [StationService],
 })

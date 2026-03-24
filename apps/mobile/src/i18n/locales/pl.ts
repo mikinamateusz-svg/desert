@@ -64,9 +64,13 @@ export default {
     signInPrompt: 'Zaloguj się, aby zobaczyć historię zgłoszeń',
   },
   map: {
-    comingSoon: 'Mapa (wkrótce)',
     signedInAs: 'Zalogowano jako {{name}}',
     signOut: 'Wyloguj się',
+    loadingMap: 'Ładowanie mapy...',
+    locationDenied: 'Odmowa dostępu do lokalizacji — wyświetlam domyślny obszar',
+    locationDeniedDismiss: 'OK',
+    offlineNotice: 'Brak połączenia — wyświetlam ostatnio znane stacje',
+    stationsLoadError: 'Nie udało się załadować stacji',
   },
   fuelTypes: {
     petrol_95: 'Benzyna 95',

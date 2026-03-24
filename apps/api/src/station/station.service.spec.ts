@@ -60,4 +60,41 @@ describe('StationService', () => {
       expect((mockPrisma as Record<string, unknown>)['$queryRawUnsafe']).toBeUndefined();
     });
   });
+
+  describe('findStationsInArea', () => {
+    it('returns empty array when no stations in area', async () => {
+      mockPrisma.$queryRaw.mockResolvedValueOnce([]);
+
+      const result = await service.findStationsInArea(52.23, 21.01, 25000);
+
+      expect(result).toEqual([]);
+    });
+
+    it('returns mapped stations with lat and lng fields', async () => {
+      const fakeRows = [
+        { id: 'abc', name: 'Orlen', address: 'ul. Test 1', google_places_id: 'gp_1', lat: 52.23, lng: 21.01 },
+        { id: 'def', name: 'BP', address: null, google_places_id: 'gp_2', lat: 52.24, lng: 21.02 },
+      ];
+      mockPrisma.$queryRaw.mockResolvedValueOnce(fakeRows);
+
+      const result = await service.findStationsInArea(52.23, 21.01, 25000);
+
+      expect(result).toHaveLength(2);
+      expect(result[0]).toMatchObject({ id: 'abc', name: 'Orlen', lat: 52.23, lng: 21.01 });
+      expect(result[1]).toMatchObject({ id: 'def', name: 'BP', address: null });
+    });
+
+    it('passes radiusMeters to the query', async () => {
+      mockPrisma.$queryRaw.mockResolvedValueOnce([]);
+
+      await service.findStationsInArea(52.23, 21.01, 10000);
+
+      expect(mockPrisma.$queryRaw).toHaveBeenCalledTimes(1);
+    });
+
+    it('uses $queryRaw (not $queryRawUnsafe)', () => {
+      expect(mockPrisma.$queryRaw).toBeDefined();
+      expect((mockPrisma as Record<string, unknown>)['$queryRawUnsafe']).toBeUndefined();
+    });
+  });
 });

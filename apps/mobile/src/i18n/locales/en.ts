@@ -64,9 +64,13 @@ export default {
     signInPrompt: 'Sign in to see your submission history',
   },
   map: {
-    comingSoon: 'Map (coming soon)',
     signedInAs: 'Signed in as {{name}}',
     signOut: 'Sign out',
+    loadingMap: 'Loading map...',
+    locationDenied: 'Location access denied — showing default area',
+    locationDeniedDismiss: 'OK',
+    offlineNotice: 'Offline — showing last known stations',
+    stationsLoadError: 'Could not load stations',
   },
   fuelTypes: {
     petrol_95: 'Petrol 95',

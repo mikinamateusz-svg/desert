@@ -14,7 +14,8 @@
       "bundleIdentifier": "com.desert.app",
       "usesAppleSignIn": true,
       "infoPlist": {
-        "NSUserNotificationUsageDescription": "We'll alert you when fuel prices drop near you."
+        "NSUserNotificationUsageDescription": "We'll alert you when fuel prices drop near you.",
+        "NSLocationWhenInUseUsageDescription": "We use your location to show nearby fuel stations."
       }
     },
     "android": {
@@ -24,7 +25,8 @@
       },
       "package": "com.desert.app",
       "permissions": [
-        "android.permission.POST_NOTIFICATIONS"
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.ACCESS_FINE_LOCATION"
       ]
     },
     "web": {

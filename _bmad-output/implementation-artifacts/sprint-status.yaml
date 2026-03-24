@@ -100,3 +100,73 @@ epics:
         review_date: 2026-03-24
         review_findings: "3 patch (P1 DTO app_version/os missing MinLength(1), P2 no fetch timeout on Slack webhook, P3 guest silent no-op on Send tap — button not disabled when !accessToken), 2 deferred (D1 ThrottlerGuard not registered pre-existing, D2 whitespace-only message passes MinLength), 5 rejected"
         patches_applied: "2026-03-24 — P1-P3 all applied, 106/106 tests passing, tsc clean"
+
+  - id: 2
+    name: Station Map & Price Discovery
+    status: in-progress
+    stories:
+      - id: 2.1
+        title: Station Database & Google Places Sync
+        file: 2-1-station-database-google-places-sync.md
+        status: review
+        ready_date: 2026-03-24
+        dev_started: 2026-03-24
+        dev_completed: 2026-03-24
+        review_date: 2026-03-24
+        review_findings: "7 patch (P1 no per-point error isolation, P2 50km radius hits 60-result cap — reduce to 25km + tighter grid, P3 no inter-grid delay, P4 key in URL comment missing, P5 shared REDIS_CLIENT incompatible with BullMQ maxRetriesPerRequest, P6 defaultJobOptions missing on Queue, P7 no geometry null guard), 1 intent_gap, 6 deferred, 9 rejected"
+        patches_applied: "2026-03-24 — P1-P7 all applied, 145/145 tests passing, tsc clean"
+
+      - id: 2.2
+        title: Mobile Map View with Station Pins
+        file: 2-2-mobile-map-view-station-pins.md
+        status: backlog
+
+      - id: 2.3
+        title: Colour-Coded Price Comparison
+        file: 2-3-colour-coded-price-comparison.md
+        status: backlog
+
+      - id: 2.4
+        title: Fuel Type Filtering
+        file: 2-4-fuel-type-filtering.md
+        status: backlog
+
+      - id: 2.5
+        title: Station Detail Screen
+        file: 2-5-station-detail-screen.md
+        status: backlog
+
+      - id: 2.6
+        title: Price Freshness & Verified vs Estimated Display
+        file: 2-6-price-freshness-verified-vs-estimated.md
+        status: backlog
+
+      - id: 2.7
+        title: ORLEN Rack Price Ingestion
+        file: 2-7-orlen-rack-price-ingestion.md
+        status: backlog
+
+      - id: 2.8
+        title: Price Staleness Auto-Detection
+        file: 2-8-price-staleness-auto-detection.md
+        status: backlog
+
+      - id: 2.9
+        title: Redis Price Cache
+        file: 2-9-redis-price-cache.md
+        status: backlog
+
+      - id: 2.10
+        title: SSR Public Map
+        file: 2-10-ssr-public-map.md
+        status: backlog
+
+      - id: 2.11
+        title: Price History & Regional Aggregations
+        file: 2-11-price-history-regional-aggregations.md
+        status: backlog
+
+      - id: 2.12
+        title: Rack-Derived Estimated Price Range (Cold Start)
+        file: 2-12-rack-derived-estimated-price-range.md
+        status: backlog

@@ -47,12 +47,15 @@ model User {
 }
 
 model Station {
-  id          String       @id @default(uuid())
-  name        String
-  address     String?
-  created_at  DateTime     @default(now())
-  updated_at  DateTime     @updatedAt
-  submissions Submission[]
+  id               String       @id @default(uuid())
+  name             String
+  address          String?
+  google_places_id String?      @unique
+  location         Unsupported("geography(Point,4326)")?
+  last_synced_at   DateTime?
+  created_at       DateTime     @default(now())
+  updated_at       DateTime     @updatedAt
+  submissions      Submission[]
 }
 
 model Submission {

@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Linking,
 } from 'react-native';
+import { tokens } from '../../src/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
@@ -124,7 +125,7 @@ export default function AlertsScreen() {
   if (authLoading || isChecking) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#f59e0b" />
+        <ActivityIndicator size="large" color={tokens.brand.accent} />
       </View>
     );
   }
@@ -193,7 +194,7 @@ export default function AlertsScreen() {
   if (isLoadingPrefs) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#f59e0b" />
+        <ActivityIndicator size="large" color={tokens.brand.accent} />
       </View>
     );
   }
@@ -216,97 +217,107 @@ export default function AlertsScreen() {
           <Text style={styles.saveErrorText}>{saveError}</Text>
         </View>
       )}
-      <View style={styles.toggleRow}>
-        <Text style={styles.toggleLabel}>{t('notifications.priceDrop')}</Text>
-        <Switch
-          value={prefs?.price_drops ?? true}
-          onValueChange={(v) => void handleToggle('price_drops', v)}
-          trackColor={{ true: '#f59e0b' }}
-          thumbColor="#fff"
-        />
-      </View>
-      <View style={styles.divider} />
-      <View style={styles.toggleRow}>
-        <Text style={styles.toggleLabel}>{t('notifications.sharpRise')}</Text>
-        <Switch
-          value={prefs?.sharp_rise ?? true}
-          onValueChange={(v) => void handleToggle('sharp_rise', v)}
-          trackColor={{ true: '#f59e0b' }}
-          thumbColor="#fff"
-        />
-      </View>
-      <View style={styles.divider} />
-      <View style={styles.toggleRow}>
-        <Text style={styles.toggleLabel}>{t('notifications.monthlySummary')}</Text>
-        <Switch
-          value={prefs?.monthly_summary ?? true}
-          onValueChange={(v) => void handleToggle('monthly_summary', v)}
-          trackColor={{ true: '#f59e0b' }}
-          thumbColor="#fff"
-        />
+      <View style={styles.toggleCard}>
+        <View style={styles.toggleRow}>
+          <Text style={styles.toggleLabel}>{t('notifications.priceDrop')}</Text>
+          <Switch
+            value={prefs?.price_drops ?? true}
+            onValueChange={(v) => void handleToggle('price_drops', v)}
+            trackColor={{ true: tokens.brand.accent }}
+            thumbColor={tokens.neutral.n0}
+          />
+        </View>
+        <View style={styles.divider} />
+        <View style={styles.toggleRow}>
+          <Text style={styles.toggleLabel}>{t('notifications.sharpRise')}</Text>
+          <Switch
+            value={prefs?.sharp_rise ?? true}
+            onValueChange={(v) => void handleToggle('sharp_rise', v)}
+            trackColor={{ true: tokens.brand.accent }}
+            thumbColor={tokens.neutral.n0}
+          />
+        </View>
+        <View style={styles.divider} />
+        <View style={styles.toggleRow}>
+          <Text style={styles.toggleLabel}>{t('notifications.monthlySummary')}</Text>
+          <Switch
+            value={prefs?.monthly_summary ?? true}
+            onValueChange={(v) => void handleToggle('monthly_summary', v)}
+            trackColor={{ true: tokens.brand.accent }}
+            thumbColor={tokens.neutral.n0}
+          />
+        </View>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: { flex: 1, backgroundColor: tokens.surface.page },
   center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
-    backgroundColor: '#fff',
+    backgroundColor: tokens.surface.page,
   },
   valuePropTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#1a1a1a',
+    color: tokens.brand.ink,
     marginBottom: 20,
     textAlign: 'center',
   },
   featureList: { marginBottom: 32, alignSelf: 'flex-start' },
-  featureItem: { fontSize: 15, color: '#444', marginBottom: 10, lineHeight: 22 },
+  featureItem: { fontSize: 15, color: tokens.neutral.n500, marginBottom: 10, lineHeight: 22 },
   enableButton: {
-    backgroundColor: '#f59e0b',
+    backgroundColor: tokens.brand.accent,
     paddingHorizontal: 32,
     paddingVertical: 14,
     borderRadius: 10,
   },
-  enableButtonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+  enableButtonText: { color: tokens.neutral.n0, fontSize: 16, fontWeight: '600' },
   deniedTitle: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#1a1a1a',
+    color: tokens.brand.ink,
     marginBottom: 8,
     textAlign: 'center',
   },
-  deniedBody: { fontSize: 14, color: '#666', textAlign: 'center', marginBottom: 20, lineHeight: 20 },
+  deniedBody: { fontSize: 14, color: tokens.neutral.n500, textAlign: 'center', marginBottom: 20, lineHeight: 20 },
   openSettingsButton: {
     paddingHorizontal: 24,
     paddingVertical: 10,
-    borderRadius: 8,
+    borderRadius: tokens.radius.md,
     borderWidth: 1,
-    borderColor: '#f59e0b',
+    borderColor: tokens.brand.accent,
   },
-  openSettingsText: { color: '#f59e0b', fontSize: 14, fontWeight: '500' },
+  openSettingsText: { color: tokens.brand.accent, fontSize: 14, fontWeight: '500' },
   repromptBanner: {
     backgroundColor: '#fffbeb',
     borderBottomWidth: 1,
     borderBottomColor: '#fde68a',
     padding: 16,
   },
-  repromptTitle: { fontSize: 15, fontWeight: '600', color: '#1a1a1a', marginBottom: 4 },
-  repromptSubtitle: { fontSize: 13, color: '#555', marginBottom: 12 },
+  repromptTitle: { fontSize: 15, fontWeight: '600', color: tokens.brand.ink, marginBottom: 4 },
+  repromptSubtitle: { fontSize: 13, color: tokens.neutral.n500, marginBottom: 12 },
   repromptActions: { flexDirection: 'row', alignItems: 'center', gap: 16 },
   repromptEnableButton: {
-    backgroundColor: '#f59e0b',
+    backgroundColor: tokens.brand.accent,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 6,
   },
-  repromptEnableText: { color: '#fff', fontSize: 13, fontWeight: '600' },
-  repromptDismissText: { color: '#888', fontSize: 13 },
+  repromptEnableText: { color: tokens.neutral.n0, fontSize: 13, fontWeight: '600' },
+  repromptDismissText: { color: tokens.neutral.n400, fontSize: 13 },
+  toggleCard: {
+    margin: 16,
+    backgroundColor: tokens.surface.card,
+    borderRadius: tokens.radius.lg,
+    borderWidth: 1,
+    borderColor: tokens.neutral.n200,
+    overflow: 'hidden',
+  },
   toggleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -314,8 +325,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
-  toggleLabel: { fontSize: 15, color: '#1a1a1a', flex: 1, marginRight: 12 },
-  divider: { height: StyleSheet.hairlineWidth, backgroundColor: '#e5e5e5', marginHorizontal: 20 },
+  toggleLabel: { fontSize: 15, color: tokens.brand.ink, flex: 1, marginRight: 12 },
+  divider: { height: StyleSheet.hairlineWidth, backgroundColor: tokens.neutral.n200, marginHorizontal: 20 },
   saveErrorBanner: {
     backgroundColor: '#fef2f2',
     borderBottomWidth: 1,
@@ -323,15 +334,15 @@ const styles = StyleSheet.create({
     padding: 12,
     alignItems: 'center',
   },
-  saveErrorText: { color: '#dc2626', fontSize: 13 },
-  errorText: { fontSize: 14, color: '#ef4444', marginBottom: 16, textAlign: 'center' },
+  saveErrorText: { color: tokens.price.expensive, fontSize: 13 },
+  errorText: { fontSize: 14, color: tokens.price.expensive, marginBottom: 16, textAlign: 'center' },
   retryButton: {
     paddingHorizontal: 24,
     paddingVertical: 10,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#f59e0b',
+    borderColor: tokens.brand.accent,
   },
-  retryText: { color: '#f59e0b', fontSize: 14, fontWeight: '500' },
-  emptyTitle: { fontSize: 16, fontWeight: '600', color: '#333', textAlign: 'center' },
+  retryText: { color: tokens.brand.accent, fontSize: 14, fontWeight: '500' },
+  emptyTitle: { fontSize: 16, fontWeight: '600', color: tokens.neutral.n800, textAlign: 'center' },
 });

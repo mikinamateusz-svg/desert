@@ -101,6 +101,57 @@ epics:
         review_findings: "3 patch (P1 DTO app_version/os missing MinLength(1), P2 no fetch timeout on Slack webhook, P3 guest silent no-op on Send tap — button not disabled when !accessToken), 2 deferred (D1 ThrottlerGuard not registered pre-existing, D2 whitespace-only message passes MinLength), 5 rejected"
         patches_applied: "2026-03-24 — P1-P3 all applied, 106/106 tests passing, tsc clean"
 
+  - id: ui
+    name: UI Polish & Design System
+    stories:
+      - id: ui-1
+        title: Design Tokens — Shared Colour & Spacing System
+        file: ui-1-design-tokens.md
+        status: review
+        ready_date: 2026-03-25
+        dev_started: 2026-03-25
+        dev_completed: 2026-03-25
+        note: "Prerequisite for UI-2 through UI-5. Pure colour refactor — no behaviour change."
+
+      - id: ui-2
+        title: Navigation — Bottom Tab Bar & Route Structure
+        file: ui-2-navigation-tab-bar.md
+        status: review
+        ready_date: 2026-03-25
+        dev_started: 2026-03-25
+        dev_completed: 2026-03-25
+        depends_on: ui-1
+        note: "3 tabs: Map, Activity, Log. Bell→Alerts and Hamburger→Account are map chrome buttons (UI-4). Log is a placeholder screen."
+
+      - id: ui-3
+        title: Account Screen Redesign
+        file: ui-3-account-screen.md
+        status: review
+        ready_date: 2026-03-25
+        dev_started: 2026-03-25
+        dev_completed: 2026-03-25
+        depends_on: [ui-1, ui-2]
+        note: "Accessed via hamburger in map chrome (UI-4), not a tab. Gets native back button from UI-2 layout."
+
+      - id: ui-4
+        title: Map Chrome — Floating Controls & Consistent Overlays
+        file: ui-4-map-chrome.md
+        status: review
+        ready_date: 2026-03-25
+        dev_started: 2026-03-25
+        dev_completed: 2026-03-25
+        depends_on: [ui-1, ui-2]
+        note: "Top-right: bell (→Alerts) + hamburger (→Account). Bottom-right: GPS FAB. UI-2 must be complete so routes are registered."
+
+      - id: ui-5
+        title: Remaining Screens — Visual Alignment
+        file: ui-5-screen-alignment.md
+        status: review
+        ready_date: 2026-03-25
+        dev_started: 2026-03-25
+        dev_completed: 2026-03-25
+        depends_on: [ui-1, ui-2]
+
   - id: 2
     name: Station Map & Price Discovery
     status: in-progress
@@ -130,7 +181,8 @@ epics:
       - id: 2.3
         title: Colour-Coded Price Comparison
         file: 2-3-colour-coded-price-comparison.md
-        status: backlog
+        status: ready-for-dev
+        ready_date: 2026-03-25
 
       - id: 2.4
         title: Fuel Type Filtering

@@ -8,6 +8,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { tokens } from '../theme';
 import { useTranslation } from 'react-i18next';
 import { GoogleSignInButton } from './GoogleSignInButton';
 import { AppleSignInButton } from './AppleSignInButton';
@@ -85,9 +86,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.4)',
   },
   sheet: {
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    backgroundColor: tokens.surface.card,
+    borderTopLeftRadius: tokens.radius.lg,
+    borderTopRightRadius: tokens.radius.lg,
     paddingHorizontal: 24,
     paddingTop: 12,
     paddingBottom: 40,
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#e5e7eb',
+    backgroundColor: tokens.neutral.n200,
     alignSelf: 'center',
     marginBottom: 20,
   },
@@ -108,19 +109,19 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    color: '#6b7280',
+    color: tokens.neutral.n500,
     textAlign: 'center',
     marginBottom: 24,
   },
   error: {
-    color: '#e53e3e',
+    color: tokens.price.expensive,
     fontSize: 14,
     marginBottom: 12,
     textAlign: 'center',
   },
   emailButton: {
     borderWidth: 1,
-    borderColor: '#d1d5db',
+    borderColor: tokens.neutral.n200,
     borderRadius: 8,
     paddingVertical: 14,
     alignItems: 'center',
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
   },
   emailButtonText: {
     fontSize: 16,
-    color: '#374151',
+    color: tokens.brand.ink,
     fontWeight: '500',
   },
   discardButton: {
@@ -137,6 +138,6 @@ const styles = StyleSheet.create({
   },
   discardText: {
     fontSize: 14,
-    color: '#9ca3af',
+    color: tokens.neutral.n400,
   },
 });

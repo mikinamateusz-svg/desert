@@ -1,11 +1,19 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
+import { tokens } from '../../src/theme';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
 import { apiRequestDataExport } from '../../src/api/user';
 import { changeLanguage, SUPPORTED_LOCALES } from '../../src/i18n';
 import type { SupportedLocale } from '../../src/i18n';
+
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0]![0]! + parts[1]![0]!).toUpperCase();
+  return name.slice(0, 2).toUpperCase();
+}
 
 export default function AccountScreen() {
   const { user, logout, accessToken } = useAuth();
@@ -34,95 +42,184 @@ export default function AccountScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.name}>{user?.display_name ?? user?.email ?? 'Guest'}</Text>
-      <View style={styles.langRow}>
-        {SUPPORTED_LOCALES.map((lang) => (
-          <TouchableOpacity
-            key={lang}
-            style={[styles.langButton, currentLang === lang && styles.langButtonActive]}
-            onPress={() => void handleLanguageChange(lang)}
-          >
-            <Text style={[styles.langButtonText, currentLang === lang && styles.langButtonTextActive]}>
-              {t(`account.language.${lang}`)}
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.content}
+        alwaysBounceVertical={false}
+      >
+        {/* ── Avatar + identity ── */}
+        <View style={styles.identitySection}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarInitials}>
+              {getInitials(user?.display_name ?? user?.email ?? t('account.guest'))}
             </Text>
+          </View>
+          <Text style={styles.displayName}>
+            {user?.display_name ?? user?.email ?? t('account.guest')}
+          </Text>
+        </View>
+
+        {/* ── Language selector ── */}
+        <Text style={styles.sectionLabel}>{t('account.languageLabel')}</Text>
+        <View style={styles.langRow}>
+          {SUPPORTED_LOCALES.map((lang) => (
+            <TouchableOpacity
+              key={lang}
+              style={[styles.langButton, currentLang === lang && styles.langButtonActive]}
+              onPress={() => void handleLanguageChange(lang)}
+            >
+              <Text style={[styles.langButtonText, currentLang === lang && styles.langButtonTextActive]}>
+                {t(`account.language.${lang}`)}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {/* ── Actions ── */}
+        <View style={styles.actionsSection}>
+          <TouchableOpacity style={styles.button} onPress={logout}>
+            <Text style={styles.buttonText}>{t('account.signOut')}</Text>
           </TouchableOpacity>
-        ))}
-      </View>
-      <TouchableOpacity style={styles.button} onPress={logout}>
-        <Text style={styles.buttonText}>{t('account.signOut')}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.button, isExporting && styles.buttonDisabled]}
-        onPress={handleExportData}
-        disabled={isExporting}
-      >
-        {isExporting ? (
-          <ActivityIndicator size="small" color="#444" />
-        ) : (
-          <Text style={styles.buttonText}>{t('account.exportDataButton')}</Text>
-        )}
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/(app)/privacy-settings')}>
-        <Text style={styles.buttonText}>{t('account.privacySettings')}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/(app)/feedback')}>
-        <Text style={styles.buttonText}>{t('account.sendFeedback')}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.deleteRow}
-        onPress={() => router.push('/(app)/delete-account')}
-      >
-        <Text style={styles.deleteText}>{t('account.deleteAccountButton')}</Text>
-      </TouchableOpacity>
-    </View>
+
+          <TouchableOpacity
+            style={[styles.button, isExporting && styles.buttonDisabled]}
+            onPress={handleExportData}
+            disabled={isExporting}
+          >
+            {isExporting
+              ? <ActivityIndicator size="small" color={tokens.neutral.n500} />
+              : <Text style={styles.buttonText}>{t('account.exportDataButton')}</Text>
+            }
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={() => router.push('/(app)/privacy-settings')}>
+            <Text style={styles.buttonText}>{t('account.privacySettings')}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={() => router.push('/(app)/feedback')}>
+            <Text style={styles.buttonText}>{t('account.sendFeedback')}</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* ── Destructive zone ── */}
+        <TouchableOpacity
+          style={styles.deleteRow}
+          onPress={() => router.push('/(app)/delete-account')}
+        >
+          <Text style={styles.deleteText}>{t('account.deleteAccountButton')}</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' },
-  name: { fontSize: 16, color: '#333', marginBottom: 24 },
+  safeArea: {
+    flex: 1,
+    backgroundColor: tokens.surface.page,
+  },
+  scroll: {
+    flex: 1,
+  },
+  content: {
+    padding: 24,
+    paddingBottom: 48,
+  },
+
+  // Identity
+  identitySection: {
+    alignItems: 'center',
+    paddingVertical: 28,
+  },
+  avatar: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: tokens.brand.accent,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  avatarInitials: {
+    fontSize: 26,
+    fontWeight: '700',
+    color: tokens.neutral.n0,
+  },
+  displayName: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: tokens.brand.ink,
+  },
+
+  // Language
+  sectionLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 1.5,
+    textTransform: 'uppercase',
+    color: tokens.neutral.n400,
+    marginBottom: 10,
+  },
   langRow: {
     flexDirection: 'row',
-    marginBottom: 24,
     gap: 8,
+    marginBottom: 28,
   },
   langButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 6,
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: tokens.radius.md,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: tokens.neutral.n200,
+    alignItems: 'center',
+    backgroundColor: tokens.surface.card,
   },
   langButtonActive: {
-    borderColor: '#f59e0b',
+    borderColor: tokens.brand.accent,
     backgroundColor: '#fffbeb',
   },
   langButtonText: {
-    color: '#444',
     fontSize: 14,
+    color: tokens.neutral.n500,
+    fontWeight: '500',
   },
   langButtonTextActive: {
-    color: '#f59e0b',
-    fontWeight: '600',
+    color: tokens.brand.accent,
+    fontWeight: '700',
+  },
+
+  // Action buttons
+  actionsSection: {
+    gap: 12,
+    marginBottom: 32,
   },
   button: {
-    paddingHorizontal: 24,
-    paddingVertical: 10,
-    borderRadius: 8,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: tokens.radius.md,
     borderWidth: 1,
-    borderColor: '#ccc',
-    marginBottom: 16,
-    minWidth: 160,
+    borderColor: tokens.neutral.n200,
+    backgroundColor: tokens.surface.card,
     alignItems: 'center',
   },
   buttonDisabled: {
     opacity: 0.6,
   },
-  buttonText: { color: '#444', fontSize: 14 },
-  deleteRow: {
-    paddingHorizontal: 24,
-    paddingVertical: 10,
+  buttonText: {
+    fontSize: 15,
+    color: tokens.brand.ink,
+    fontWeight: '500',
   },
-  deleteText: { color: '#c0392b', fontSize: 14 },
+
+  // Destructive
+  deleteRow: {
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  deleteText: {
+    fontSize: 14,
+    color: tokens.price.expensive,
+    fontWeight: '500',
+  },
 });

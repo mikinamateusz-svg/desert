@@ -48,8 +48,16 @@ export default {
   nav: {
     map: 'Карта',
     activity: 'Активність',
+    log: 'Журнал',
     alerts: 'Сповіщення',
     account: 'Акаунт',
+    feedback: 'Відгук',
+    privacySettings: 'Конфіденційність',
+    deleteAccount: 'Видалити акаунт',
+  },
+  log: {
+    comingSoonTitle: 'Журнал пального — незабаром',
+    comingSoonSubtitle: 'Відстежуйте витрати та витрати на пальне.',
   },
   submissions: {
     title: 'Активність',
@@ -71,6 +79,9 @@ export default {
     locationDeniedDismiss: 'OK',
     offlineNotice: 'Офлайн — показую останні відомі станції',
     stationsLoadError: 'Не вдалося завантажити станції',
+    openAlerts: 'Відкрити сповіщення',
+    openMenu: 'Відкрити меню',
+    recentre: 'Повернутися до моєї локації',
   },
   fuelTypes: {
     petrol_95: 'Бензин 95',
@@ -79,6 +90,8 @@ export default {
     lpg: 'СПГ',
   },
   account: {
+    guest: 'Гість',
+    languageLabel: 'Мова',
     language: {
       en: 'EN',
       pl: 'PL',

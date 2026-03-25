@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet, Alert, ScrollView } from 'react-native';
 import { router } from 'expo-router';
+import { tokens } from '../../src/theme';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
 import { apiGetConsents, apiWithdrawConsent } from '../../src/api/user';
@@ -68,7 +69,7 @@ export default function PrivacySettingsScreen() {
   if (isLoading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color={tokens.brand.accent} />
       </View>
     );
   }
@@ -86,8 +87,6 @@ export default function PrivacySettingsScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>{t('privacy.title')}</Text>
-
       {consents.map((consent) => (
         <View key={consent.id} style={styles.consentCard}>
           <Text style={styles.consentType}>
@@ -121,32 +120,32 @@ export default function PrivacySettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  centered: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' },
-  container: { padding: 24, backgroundColor: '#fff' },
-  title: { fontSize: 20, fontWeight: '600', color: '#111', marginBottom: 24 },
+  centered: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: tokens.surface.page },
+  container: { padding: 24, backgroundColor: tokens.surface.page },
   consentCard: {
     borderWidth: 1,
-    borderColor: '#eee',
-    borderRadius: 8,
+    borderColor: tokens.neutral.n200,
+    borderRadius: tokens.radius.md,
     padding: 16,
-    marginBottom: 16,
-    backgroundColor: '#fafafa',
+    marginBottom: 12,
+    backgroundColor: tokens.surface.card,
   },
-  consentType: { fontSize: 16, fontWeight: '600', color: '#111', marginBottom: 4 },
-  consentDate: { fontSize: 13, color: '#666', marginBottom: 8 },
-  statusActive: { fontSize: 13, color: '#27ae60', marginBottom: 12 },
-  statusWithdrawn: { fontSize: 13, color: '#888' },
+  consentType: { fontSize: 16, fontWeight: '600', color: tokens.brand.ink, marginBottom: 4 },
+  consentDate: { fontSize: 13, color: tokens.neutral.n500, marginBottom: 8 },
+  statusActive: { fontSize: 13, color: tokens.price.cheap, marginBottom: 12 },
+  statusWithdrawn: { fontSize: 13, color: tokens.neutral.n400 },
   withdrawButton: { alignSelf: 'flex-start' },
-  withdrawButtonText: { color: '#c0392b', fontSize: 14 },
-  errorText: { color: '#c0392b', fontSize: 14, marginBottom: 12, textAlign: 'center' },
+  withdrawButtonText: { color: tokens.price.expensive, fontSize: 14 },
+  errorText: { color: tokens.price.expensive, fontSize: 14, marginBottom: 12, textAlign: 'center' },
   retryButton: {
     paddingHorizontal: 24,
     paddingVertical: 10,
-    borderRadius: 8,
+    borderRadius: tokens.radius.md,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: tokens.neutral.n200,
+    backgroundColor: tokens.surface.card,
     marginTop: 8,
   },
-  retryButtonText: { color: '#444', fontSize: 14 },
-  warningText: { fontSize: 13, color: '#888', marginTop: 8 },
+  retryButtonText: { color: tokens.brand.ink, fontSize: 14, fontWeight: '500' },
+  warningText: { fontSize: 13, color: tokens.neutral.n400, marginTop: 8 },
 });

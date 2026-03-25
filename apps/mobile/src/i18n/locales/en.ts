@@ -48,8 +48,16 @@ export default {
   nav: {
     map: 'Map',
     activity: 'Activity',
+    log: 'Log',
     alerts: 'Alerts',
     account: 'Account',
+    feedback: 'Feedback',
+    privacySettings: 'Privacy Settings',
+    deleteAccount: 'Delete Account',
+  },
+  log: {
+    comingSoonTitle: 'Fuel Log — Coming Soon',
+    comingSoonSubtitle: 'Track your consumption and fuel costs here.',
   },
   submissions: {
     title: 'Activity',
@@ -71,6 +79,9 @@ export default {
     locationDeniedDismiss: 'OK',
     offlineNotice: 'Offline — showing last known stations',
     stationsLoadError: 'Could not load stations',
+    openAlerts: 'Open alerts',
+    openMenu: 'Open menu',
+    recentre: 'Re-centre map',
   },
   fuelTypes: {
     petrol_95: 'Petrol 95',
@@ -79,6 +90,8 @@ export default {
     lpg: 'LPG',
   },
   account: {
+    guest: 'Guest',
+    languageLabel: 'Language',
     language: {
       en: 'EN',
       pl: 'PL',

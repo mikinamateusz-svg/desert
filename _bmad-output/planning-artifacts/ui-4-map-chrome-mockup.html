@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI-4 — Map Chrome Mockup</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+    background: #f1f5f9;
+    padding: 40px 24px 72px;
+    color: #1a1a1a;
+  }
+  h1 {
+    text-align: center; font-size: 13px; font-weight: 700;
+    color: #94a3b8; letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .subtitle { text-align: center; font-size: 12px; color: #94a3b8; margin-bottom: 48px; }
+
+  .frames { display: flex; gap: 36px; justify-content: center; flex-wrap: wrap; align-items: flex-start; }
+  .frame-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .frame-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; }
+  .frame-sublabel { font-size: 11px; color: #94a3b8; margin-top: -10px; text-align: center; max-width: 180px; }
+
+  /* Phone shell */
+  .phone {
+    width: 260px; height: 540px; border-radius: 38px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.28), 0 0 0 8px #1e293b;
+    position: relative; overflow: hidden;
+    background: #eef2e8;
+  }
+
+  /* Map */
+  .map-bg { position: absolute; inset: 0; background: #eef2e8; }
+  .road { position: absolute; border-radius: 2px; background: #d4cfc6; opacity: 0.9; }
+  .road.h { height: 5px; left: 0; right: 0; }
+  .road.v { width: 5px; top: 0; bottom: 0; }
+  .road.major { background: #c8b97a; opacity: 0.7; }
+  .water { position: absolute; background: #cde4ee; border-radius: 4px; }
+  .park  { position: absolute; background: #d5e8c8; border-radius: 8px; }
+
+  /* Status bar — sits inside the top bar space */
+  .status-bar {
+    position: absolute; top: 0; left: 0; right: 0; height: 28px;
+    z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 18px;
+    font-size: 11px; font-weight: 600; color: rgba(0,0,0,0.70);
+    background: #fff; /* part of top bar */
+  }
+  .status-icons { display: flex; gap: 5px; align-items: center; }
+
+  /* ── TOP BAR ── */
+  .top-bar {
+    position: absolute; top: 0; left: 0; right: 0;
+    z-index: 40;
+    background: #fff;
+    /* status bar area (28dp) + content (44dp) = 72dp total */
+    padding-top: 28px;
+    height: 72px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding-left: 16px; padding-right: 8px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+  }
+  .wordmark {
+    font-size: 20px; font-weight: 800; color: #1a1a1a; letter-spacing: -0.5px;
+  }
+  .wordmark-accent { color: #f59e0b; }
+  .top-bar-actions { display: flex; gap: 0; align-items: center; }
+  .top-bar-btn {
+    width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+
+  /* Bell badge */
+  .bell-badge {
+    position: absolute; top: 6px; right: 6px;
+    width: 9px; height: 9px; border-radius: 5px;
+    background: #ef4444; border: 1.5px solid #fff;
+  }
+
+  /* ── Map pins ── */
+  .pin { position: absolute; display: flex; flex-direction: column; align-items: center; z-index: 10; }
+  .pin-bubble { padding: 4px 9px; border-radius: 14px; font-size: 11px; font-weight: 700; color: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.22); white-space: nowrap; }
+  .pin-tail { width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; margin-top: -1px; }
+  .green .pin-bubble { background: #22c55e; } .green .pin-tail { border-top: 6px solid #22c55e; }
+  .amber .pin-bubble { background: #f59e0b; } .amber .pin-tail { border-top: 6px solid #f59e0b; }
+  .red   .pin-bubble { background: #ef4444; } .red   .pin-tail { border-top: 6px solid #ef4444; }
+  .gray  .pin-bubble { background: #94a3b8; } .gray  .pin-tail { border-top: 6px solid #94a3b8; }
+
+  .best-pin { position: absolute; z-index: 11; display: flex; flex-direction: column; align-items: center; }
+  .best-bubble { padding: 4px 9px; border-radius: 14px; font-size: 11px; font-weight: 700; color: #fff; background: #16a34a; box-shadow: 0 0 0 3px #fff, 0 0 0 5px #16a34a, 0 3px 8px rgba(22,163,74,0.40); white-space: nowrap; }
+  .best-tail { width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 6px solid #16a34a; margin-top: -1px; }
+
+  /* ── GPS FAB ── */
+  .gps-fab {
+    position: absolute; bottom: 70px; right: 14px; z-index: 30;
+    width: 48px; height: 48px; border-radius: 24px;
+    background: #f59e0b;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 3px 10px rgba(245,158,11,0.45), 0 1px 4px rgba(0,0,0,0.12);
+  }
+
+  /* ── Banners ── */
+  /* Location denied — below top bar */
+  .location-banner {
+    position: absolute; top: 80px; left: 14px; right: 14px; z-index: 35;
+    background: #fff; border-radius: 10px; border-left: 4px solid #f59e0b;
+    padding: 10px 12px;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  }
+  .location-banner-text { font-size: 11px; color: #1a1a1a; flex: 1; line-height: 1.4; }
+  .banner-dismiss {
+    width: 18px; height: 18px; border-radius: 9px;
+    background: #f4f4f4; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+
+  /* Error banner — above FAB */
+  .error-banner {
+    position: absolute; bottom: 130px; left: 14px; right: 14px; z-index: 35;
+    background: #fff; border-radius: 10px; border-left: 4px solid #ef4444;
+    padding: 10px 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  }
+  .error-banner-text { font-size: 11px; color: #1a1a1a; }
+
+  /* ── Loading overlay — starts BELOW top bar ── */
+  .loading-overlay {
+    position: absolute; top: 72px; bottom: 0; left: 0; right: 0; z-index: 35;
+    background: rgba(253,246,238,0.93);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  }
+  .spinner {
+    width: 32px; height: 32px; border-radius: 16px;
+    border: 3px solid #e5e7eb; border-top-color: #f59e0b;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 13px; font-weight: 500; color: #1a1a1a; }
+
+  /* ── Tab bar ── */
+  .tab-bar {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 58px;
+    background: #fff; border-top: 1px solid #e5e7eb;
+    display: flex; align-items: center; justify-content: space-around; padding: 0 16px 6px;
+    z-index: 40;
+  }
+  .tab { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
+  .tab-label { font-size: 9px; font-weight: 600; }
+  .tab.active .tab-label { color: #f59e0b; }
+  .tab.inactive .tab-label { color: #9ca3af; }
+
+  /* ── Spec section ── */
+  .spec-section {
+    background: #fff; border-radius: 16px; padding: 24px 28px;
+    max-width: 940px; margin: 52px auto 0;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  }
+  .spec-title { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #ccc; margin-bottom: 18px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { text-align: left; padding: 6px 10px; background: #f8f8f8; color: #9ca3af; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  td { padding: 8px 10px; color: #555; border-bottom: 1px solid #f4f4f4; vertical-align: top; }
+  td:first-child { font-weight: 600; color: #1a1a1a; white-space: nowrap; }
+  .sw { display: inline-block; width: 11px; height: 11px; border-radius: 3px; vertical-align: middle; margin-right: 4px; border: 1px solid rgba(0,0,0,0.08); }
+  code { font-family: 'Courier New', monospace; font-size: 11px; color: #6b7280; }
+
+  /* Comparison section */
+  .comparison {
+    max-width: 940px; margin: 52px auto 0;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  .comp-card {
+    background: #fff; border-radius: 14px; padding: 20px 22px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .comp-card.chosen { border: 2px solid #f59e0b; }
+  .comp-title { font-size: 12px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
+  .comp-badge {
+    display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; padding: 2px 7px; border-radius: 99px;
+    background: #fffbeb; color: #f59e0b; border: 1px solid #fde68a; margin-left: 6px;
+  }
+  .comp-body { font-size: 12px; color: #6b7280; line-height: 1.6; margin-top: 8px; }
+  .comp-pro { color: #22c55e; font-weight: 600; margin-right: 4px; }
+  .comp-con { color: #9ca3af; font-weight: 600; margin-right: 4px; }
+</style>
+</head>
+<body>
+
+<h1>Litro · UI-4 Map Chrome</h1>
+<p class="subtitle">Option B — Minimal top bar with wordmark · Four states</p>
+
+<div class="frames">
+
+  <!-- ══ FRAME 1: Default ══ -->
+  <div class="frame-wrap">
+    <div class="frame-label">Default</div>
+    <div class="frame-sublabel">GPS locked · all chrome visible</div>
+    <div class="phone">
+      <div class="map-bg"></div>
+      <div class="park"  style="top:34%;left:6%;width:55px;height:44px;"></div>
+      <div class="park"  style="top:60%;left:58%;width:38px;height:28px;opacity:.8;"></div>
+      <div class="water" style="top:68%;left:8%;width:48px;height:18px;"></div>
+      <div class="road h major" style="top:44%;"></div>
+      <div class="road h"       style="top:59%;"></div>
+      <div class="road v major" style="left:38%;"></div>
+      <div class="road v"       style="left:64%;"></div>
+      <div class="road h"       style="top:30%;height:3px;opacity:.35;"></div>
+
+      <!-- Top bar -->
+      <div class="top-bar">
+        <div class="wordmark">litr<span class="wordmark-accent">o</span></div>
+        <div class="top-bar-actions">
+          <div class="top-bar-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+          </div>
+          <div class="top-bar-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round">
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status bar text (inside top bar) -->
+      <div class="status-bar" style="background:transparent;">
+        <span>9:41</span>
+        <div class="status-icons">
+          <svg width="13" height="10" viewBox="0 0 13 10"><rect x="0" y="3.5" width="2.5" height="6.5" rx=".8" fill="rgba(0,0,0,.55)"/><rect x="3.5" y="2" width="2.5" height="8" rx=".8" fill="rgba(0,0,0,.55)"/><rect x="7" y=".5" width="2.5" height="9.5" rx=".8" fill="rgba(0,0,0,.55)"/><rect x="10.5" y="0" width="2.5" height="10" rx=".8" fill="rgba(0,0,0,.55)"/></svg>
+          <svg width="20" height="10" viewBox="0 0 20 10"><rect x=".5" y=".5" width="16" height="9" rx="1.8" stroke="rgba(0,0,0,.35)" stroke-width="1" fill="none"/><rect x="1.5" y="1.5" width="13" height="7" rx="1.2" fill="rgba(0,0,0,.6)"/><path d="M18 3v4c.8-.3 1.3-1 1.3-2S18.8 3.3 18 3z" fill="rgba(0,0,0,.35)"/></svg>
+        </div>
+      </div>
+
+      <!-- Pins -->
+      <div class="best-pin" style="top:32%;left:50%;"><div class="best-bubble">6.29</div><div class="best-tail"></div></div>
+      <div class="pin amber" style="top:48%;left:16%;"><div class="pin-bubble">6.61</div><div class="pin-tail"></div></div>
+      <div class="pin red"   style="top:22%;left:18%;"><div class="pin-bubble">6.84</div><div class="pin-tail"></div></div>
+      <div class="pin green" style="top:54%;left:66%;"><div class="pin-bubble">6.38</div><div class="pin-tail"></div></div>
+      <div class="pin gray"  style="top:38%;left:72%;"><div class="pin-bubble">—</div><div class="pin-tail"></div></div>
+      <div class="pin amber" style="top:62%;left:36%;"><div class="pin-bubble">6.55</div><div class="pin-tail"></div></div>
+
+      <!-- GPS FAB -->
+      <div class="gps-fab">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+      </div>
+
+      <!-- Tab bar -->
+      <div class="tab-bar">
+        <div class="tab active">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#f59e0b"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          <span class="tab-label">Map</span>
+        </div>
+        <div class="tab inactive">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span class="tab-label">Activity</span>
+        </div>
+        <div class="tab inactive">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span class="tab-label">Log</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FRAME 2: Location denied ══ -->
+  <div class="frame-wrap">
+    <div class="frame-label">Location Denied</div>
+    <div class="frame-sublabel">Banner flush below top bar</div>
+    <div class="phone">
+      <div class="map-bg"></div>
+      <div class="park"  style="top:34%;left:6%;width:55px;height:44px;"></div>
+      <div class="water" style="top:68%;left:8%;width:48px;height:18px;"></div>
+      <div class="road h major" style="top:44%;"></div>
+      <div class="road v major" style="left:38%;"></div>
+      <div class="road v"       style="left:64%;"></div>
+
+      <div class="top-bar">
+        <div class="wordmark">litr<span class="wordmark-accent">o</span></div>
+        <div class="top-bar-actions">
+          <div class="top-bar-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+          <div class="top-bar-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="status-bar" style="background:transparent;"><span>9:41</span></div>
+
+      <!-- Location denied banner -->
+      <div class="location-banner">
+        <span class="location-banner-text">Location access denied. Showing Warsaw instead.</span>
+        <div class="banner-dismiss">
+          <svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg>
+        </div>
+      </div>
+
+      <!-- Pins (faded — Warsaw fallback, no user location) -->
+      <div class="pin amber" style="top:48%;left:16%;opacity:.75;"><div class="pin-bubble">6.61</div><div class="pin-tail"></div></div>
+      <div class="pin green" style="top:40%;left:56%;opacity:.75;"><div class="pin-bubble">6.42</div><div class="pin-tail"></div></div>
+      <div class="pin red"   style="top:60%;left:68%;opacity:.75;"><div class="pin-bubble">6.79</div><div class="pin-tail"></div></div>
+
+      <!-- GPS FAB — faded -->
+      <div class="gps-fab" style="opacity:0.35;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+      </div>
+
+      <div class="tab-bar">
+        <div class="tab active"><svg width="22" height="22" viewBox="0 0 24 24" fill="#f59e0b"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span class="tab-label">Map</span></div>
+        <div class="tab inactive"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="tab-label">Activity</span></div>
+        <div class="tab inactive"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span class="tab-label">Log</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FRAME 3: Error banner ══ -->
+  <div class="frame-wrap">
+    <div class="frame-label">Error Banner</div>
+    <div class="frame-sublabel">Auto-dismiss 4s · bell badge shown</div>
+    <div class="phone">
+      <div class="map-bg"></div>
+      <div class="park"  style="top:34%;left:6%;width:55px;height:44px;"></div>
+      <div class="road h major" style="top:44%;"></div>
+      <div class="road v major" style="left:38%;"></div>
+      <div class="road v"       style="left:64%;"></div>
+
+      <div class="top-bar">
+        <div class="wordmark">litr<span class="wordmark-accent">o</span></div>
+        <div class="top-bar-actions">
+          <!-- Bell WITH badge -->
+          <div class="top-bar-btn" style="position:relative;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <div class="bell-badge"></div>
+          </div>
+          <div class="top-bar-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="status-bar" style="background:transparent;"><span>9:41</span></div>
+
+      <!-- Pins -->
+      <div class="best-pin" style="top:32%;left:50%;"><div class="best-bubble">6.29</div><div class="best-tail"></div></div>
+      <div class="pin amber" style="top:48%;left:16%;"><div class="pin-bubble">6.61</div><div class="pin-tail"></div></div>
+      <div class="pin red"   style="top:22%;left:18%;"><div class="pin-bubble">6.84</div><div class="pin-tail"></div></div>
+
+      <!-- GPS FAB -->
+      <div class="gps-fab">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+      </div>
+
+      <!-- Error banner -->
+      <div class="error-banner">
+        <div class="error-banner-text">Couldn't load station prices. Will retry automatically.</div>
+      </div>
+
+      <div class="tab-bar">
+        <div class="tab active"><svg width="22" height="22" viewBox="0 0 24 24" fill="#f59e0b"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span class="tab-label">Map</span></div>
+        <div class="tab inactive"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="tab-label">Activity</span></div>
+        <div class="tab inactive"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span class="tab-label">Log</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FRAME 4: Loading overlay ══ -->
+  <div class="frame-wrap">
+    <div class="frame-label">Loading</div>
+    <div class="frame-sublabel">Top bar always visible · warm overlay below</div>
+    <div class="phone">
+      <div class="map-bg"></div>
+      <div class="road h major" style="top:44%;opacity:.25;"></div>
+      <div class="road v major" style="left:38%;opacity:.25;"></div>
+
+      <!-- Top bar stays above overlay -->
+      <div class="top-bar">
+        <div class="wordmark">litr<span class="wordmark-accent">o</span></div>
+        <div class="top-bar-actions">
+          <div class="top-bar-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+          <div class="top-bar-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div>
+        </div>
+      </div>
+      <div class="status-bar" style="background:transparent;"><span>9:41</span></div>
+
+      <!-- Warm loading overlay — starts BELOW top bar -->
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading map…</div>
+      </div>
+
+      <div class="tab-bar">
+        <div class="tab active"><svg width="22" height="22" viewBox="0 0 24 24" fill="#f59e0b"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span class="tab-label">Map</span></div>
+        <div class="tab inactive"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="tab-label">Activity</span></div>
+        <div class="tab inactive"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span class="tab-label">Log</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Design rationale -->
+<div class="comparison">
+  <div class="comp-card">
+    <div class="comp-title">Option A — Floating buttons only</div>
+    <div class="comp-body">
+      <span class="comp-pro">+</span>Maximum map real estate.<br>
+      <span class="comp-pro">+</span>Immersive, map-first feel.<br>
+      <span class="comp-con">−</span>No brand presence in core experience.<br>
+      <span class="comp-con">−</span>Controls are less discoverable — no container to hint they're tappable.<br>
+      <span class="comp-con">−</span>Nowhere for future elements (fuel chip, search).<br>
+      <span class="comp-con">−</span>Looks unfinished on first open.
+    </div>
+  </div>
+  <div class="comp-card chosen">
+    <div class="comp-title">Option B — Minimal top bar <span class="comp-badge">CHOSEN</span></div>
+    <div class="comp-body">
+      <span class="comp-pro">+</span>Wordmark on every open — builds brand recall with early adopters.<br>
+      <span class="comp-pro">+</span>Bell + hamburger in a defined chrome area — instantly discoverable.<br>
+      <span class="comp-pro">+</span>Loading overlay stays below bar — chrome is always accessible.<br>
+      <span class="comp-pro">+</span>Natural home for fuel chip (Story 2.4) when it arrives.<br>
+      <span class="comp-con">−</span>~44dp of vertical map lost — acceptable on modern screen sizes.<br><br>
+      Bar is kept deliberately minimal: white bg, 1px shadow, no border, bare icon buttons.
+      The map is still the hero.
+    </div>
+  </div>
+</div>
+
+<!-- Spec table -->
+<div class="spec-section" style="margin-top:20px;">
+  <div class="spec-title">Element Spec</div>
+  <table>
+    <tr><th>Element</th><th>Position / Size</th><th>Colours</th><th>Notes</th></tr>
+    <tr>
+      <td>Top bar</td>
+      <td>Anchored top · full width · height = <code>insets.top + 44dp</code></td>
+      <td><span class="sw" style="background:#fff;border-color:#ccc;"></span><code>#ffffff</code> · shadow <code>rgba(0,0,0,0.08)</code></td>
+      <td><code>useSafeAreaInsets().top</code> for paddingTop. <code>zIndex: 40</code>. No border — shadow only.</td>
+    </tr>
+    <tr>
+      <td>Wordmark</td>
+      <td>Left of top bar · <code>paddingLeft: 16</code></td>
+      <td><code>#1a1a1a</code> · accent <span class="sw" style="background:#f59e0b;"></span><code>#f59e0b</code> on "o"</td>
+      <td><code>fontSize: 20, fontWeight: 800, letterSpacing: -0.5</code>. Text: <code>litr<Text style={{color:tokens.brand.accent}}>o</Text></code></td>
+    </tr>
+    <tr>
+      <td>Bell button</td>
+      <td>Right of top bar · 44×44dp hit area</td>
+      <td><code>#1a1a1a</code> icon · no background</td>
+      <td>Red badge (9dp, <span class="sw" style="background:#ef4444;"></span><code>#ef4444</code>) when unread alerts. Routes to <code>/(app)/alerts</code>.</td>
+    </tr>
+    <tr>
+      <td>Hamburger button</td>
+      <td>Right of bell · 44×44dp hit area</td>
+      <td><code>#1a1a1a</code> icon · no background</td>
+      <td>Routes to <code>/(app)/account</code>.</td>
+    </tr>
+    <tr>
+      <td>GPS FAB</td>
+      <td><code>bottom: 70, right: 14</code> · 48×48dp · radius 24</td>
+      <td><span class="sw" style="background:#f59e0b;"></span><code>#f59e0b</code> · white icon</td>
+      <td>40% opacity when GPS unavailable. 70 = 58 tab bar + 12 gap.</td>
+    </tr>
+    <tr>
+      <td>Location denied banner</td>
+      <td><code>top: insets.top + 44 + 8, left/right: 14</code></td>
+      <td><span class="sw" style="background:#fff;border-color:#ccc;"></span><code>#fff</code> · <span class="sw" style="background:#f59e0b;"></span><code>#f59e0b</code> left border 4dp</td>
+      <td>Dismissible with ✕. Sits flush below top bar.</td>
+    </tr>
+    <tr>
+      <td>Error banner</td>
+      <td><code>bottom: 130, left/right: 14</code></td>
+      <td><span class="sw" style="background:#fff;border-color:#ccc;"></span><code>#fff</code> · <span class="sw" style="background:#ef4444;"></span><code>#ef4444</code> left border 4dp</td>
+      <td>Auto-dismisses after 4s. <code>pointerEvents="none"</code>.</td>
+    </tr>
+    <tr>
+      <td>Loading overlay</td>
+      <td><code>top: insets.top + 44, bottom/left/right: 0</code></td>
+      <td><code>rgba(253,246,238,0.93)</code> · <span class="sw" style="background:#f59e0b;"></span>amber spinner · <code>#1a1a1a</code> text</td>
+      <td>Does NOT cover top bar — bar remains interactive during load.</td>
+    </tr>
+    <tr>
+      <td>Tab bar</td>
+      <td><code>bottom: 0</code> · height 58dp</td>
+      <td><span class="sw" style="background:#fff;border-color:#ccc;"></span><code>#fff</code> · <code>#e5e7eb</code> border · <span class="sw" style="background:#f59e0b;"></span>active · <span class="sw" style="background:#9ca3af;"></span>inactive</td>
+      <td>3 tabs: Map (map pin), Activity (clock), Log (bar-chart). Ionicons.</td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>

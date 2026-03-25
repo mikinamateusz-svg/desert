@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { router } from 'expo-router';
+import { tokens } from '../../src/theme';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
 import { apiDeleteAccount } from '../../src/api/user';
@@ -37,7 +38,6 @@ export default function DeleteAccountScreen() {
   if (step === 1) {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>{t('account.deleteAccount.step1Title')}</Text>
         <Text style={styles.body}>{t('account.deleteAccount.step1Body')}</Text>
         <Text style={styles.retained}>{t('account.deleteAccount.step1Retained')}</Text>
         <TouchableOpacity style={styles.primaryButton} onPress={() => setStep(2)}>
@@ -80,7 +80,7 @@ export default function DeleteAccountScreen() {
           disabled={!accessToken || confirmText !== 'DELETE' || isDeleting}
         >
           {isDeleting ? (
-            <ActivityIndicator color="#fff" />
+            <ActivityIndicator color={tokens.neutral.n0} />
           ) : (
             <Text style={styles.deleteButtonText}>{t('account.deleteAccount.confirmButton')}</Text>
           )}
@@ -91,42 +91,44 @@ export default function DeleteAccountScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24, backgroundColor: '#fff', justifyContent: 'center' },
-  title: { fontSize: 20, fontWeight: '600', color: '#111', marginBottom: 16 },
-  body: { fontSize: 15, color: '#444', marginBottom: 12 },
-  retained: { fontSize: 13, color: '#888', marginBottom: 32 },
+  container: { flexGrow: 1, padding: 24, backgroundColor: tokens.surface.page },
+  title: { fontSize: 20, fontWeight: '600', color: tokens.brand.ink, marginBottom: 16 },
+  body: { fontSize: 15, color: tokens.neutral.n500, marginBottom: 12 },
+  retained: { fontSize: 13, color: tokens.neutral.n400, marginBottom: 32 },
   primaryButton: {
     paddingVertical: 14,
     borderRadius: 8,
-    backgroundColor: '#111',
+    backgroundColor: tokens.brand.ink,
     alignItems: 'center',
     marginBottom: 12,
   },
-  primaryButtonText: { color: '#fff', fontSize: 15, fontWeight: '600' },
+  primaryButtonText: { color: tokens.neutral.n0, fontSize: 15, fontWeight: '600' },
   secondaryButton: {
     paddingVertical: 14,
-    borderRadius: 8,
+    borderRadius: tokens.radius.md,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: tokens.neutral.n200,
+    backgroundColor: tokens.surface.card,
     alignItems: 'center',
   },
-  secondaryButtonText: { color: '#444', fontSize: 15 },
+  secondaryButtonText: { color: tokens.brand.ink, fontSize: 15, fontWeight: '500' },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
+    borderColor: tokens.neutral.n200,
+    borderRadius: tokens.radius.md,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 15,
+    backgroundColor: tokens.surface.card,
     marginBottom: 20,
   },
-  error: { color: '#c0392b', fontSize: 14, marginBottom: 16 },
+  error: { color: tokens.price.expensive, fontSize: 14, marginBottom: 16 },
   deleteButton: {
     paddingVertical: 14,
     borderRadius: 8,
-    backgroundColor: '#c0392b',
+    backgroundColor: tokens.price.expensive,
     alignItems: 'center',
   },
-  deleteButtonDisabled: { backgroundColor: '#e0b0aa' },
-  deleteButtonText: { color: '#fff', fontSize: 15, fontWeight: '600' },
+  deleteButtonDisabled: { backgroundColor: '#fca5a5' },
+  deleteButtonText: { color: tokens.neutral.n0, fontSize: 15, fontWeight: '600' },
 });

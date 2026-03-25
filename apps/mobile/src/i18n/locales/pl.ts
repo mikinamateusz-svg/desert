@@ -48,8 +48,16 @@ export default {
   nav: {
     map: 'Mapa',
     activity: 'Aktywność',
+    log: 'Dziennik',
     alerts: 'Alerty',
     account: 'Konto',
+    feedback: 'Opinia',
+    privacySettings: 'Prywatność',
+    deleteAccount: 'Usuń konto',
+  },
+  log: {
+    comingSoonTitle: 'Dziennik paliwa — wkrótce',
+    comingSoonSubtitle: 'Śledź zużycie i koszty paliwa.',
   },
   submissions: {
     title: 'Aktywność',
@@ -71,6 +79,9 @@ export default {
     locationDeniedDismiss: 'OK',
     offlineNotice: 'Brak połączenia — wyświetlam ostatnio znane stacje',
     stationsLoadError: 'Nie udało się załadować stacji',
+    openAlerts: 'Otwórz alerty',
+    openMenu: 'Otwórz menu',
+    recentre: 'Wróć do mojej lokalizacji',
   },
   fuelTypes: {
     petrol_95: 'Benzyna 95',
@@ -79,6 +90,8 @@ export default {
     lpg: 'LPG',
   },
   account: {
+    guest: 'Gość',
+    languageLabel: 'Język',
     language: {
       en: 'EN',
       pl: 'PL',

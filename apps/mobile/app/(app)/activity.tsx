@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
+import { tokens } from '../../src/theme';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
 import { apiGetSubmissions, type Submission } from '../../src/api/submissions';
@@ -98,7 +99,7 @@ export default function ActivityScreen() {
   if (authLoading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#f59e0b" />
+        <ActivityIndicator size="large" color={tokens.brand.accent} />
       </View>
     );
   }
@@ -114,7 +115,7 @@ export default function ActivityScreen() {
   if (isLoading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#f59e0b" />
+        <ActivityIndicator size="large" color={tokens.brand.accent} />
       </View>
     );
   }
@@ -153,7 +154,7 @@ export default function ActivityScreen() {
             disabled={isLoadingMore}
           >
             {isLoadingMore ? (
-              <ActivityIndicator size="small" color="#f59e0b" />
+              <ActivityIndicator size="small" color={tokens.brand.accent} />
             ) : (
               <Text style={styles.loadMoreText}>{t('submissions.loadMore')}</Text>
             )}
@@ -165,20 +166,21 @@ export default function ActivityScreen() {
 }
 
 const styles = StyleSheet.create({
-  list: { flex: 1, backgroundColor: '#fff' },
+  list: { flex: 1, backgroundColor: tokens.surface.page },
   emptyContainer: { flex: 1 },
   center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
-    backgroundColor: '#fff',
+    backgroundColor: tokens.surface.page,
   },
   row: {
     paddingHorizontal: 16,
     paddingVertical: 12,
+    backgroundColor: tokens.surface.card,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#e5e5e5',
+    borderBottomColor: tokens.neutral.n200,
   },
   rowMain: {
     flexDirection: 'row',
@@ -186,29 +188,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 4,
   },
-  stationName: { flex: 1, fontSize: 15, fontWeight: '600', color: '#1a1a1a', marginRight: 8 },
-  date: { fontSize: 12, color: '#888' },
-  prices: { fontSize: 13, color: '#555', marginBottom: 4 },
-  rejectedBadge: { fontSize: 11, color: '#d97706', fontWeight: '500' },
-  pendingBadge: { fontSize: 11, color: '#888', fontStyle: 'italic' },
-  emptyTitle: { fontSize: 16, fontWeight: '600', color: '#333', marginBottom: 8, textAlign: 'center' },
-  emptySubtitle: { fontSize: 14, color: '#888', textAlign: 'center' },
-  errorText: { fontSize: 14, color: '#ef4444', marginBottom: 16, textAlign: 'center' },
+  stationName: { flex: 1, fontSize: 15, fontWeight: '600', color: tokens.brand.ink, marginRight: 8 },
+  date: { fontSize: 12, color: tokens.neutral.n400 },
+  prices: { fontSize: 13, color: tokens.neutral.n500, marginBottom: 4 },
+  rejectedBadge: { fontSize: 11, color: tokens.brand.accent, fontWeight: '500' },
+  pendingBadge: { fontSize: 11, color: tokens.neutral.n400, fontStyle: 'italic' },
+  emptyTitle: { fontSize: 16, fontWeight: '600', color: tokens.neutral.n800, marginBottom: 8, textAlign: 'center' },
+  emptySubtitle: { fontSize: 14, color: tokens.neutral.n400, textAlign: 'center' },
+  errorText: { fontSize: 14, color: tokens.price.expensive, marginBottom: 16, textAlign: 'center' },
   retryButton: {
     paddingHorizontal: 24,
     paddingVertical: 10,
-    borderRadius: 8,
+    borderRadius: tokens.radius.md,
     borderWidth: 1,
-    borderColor: '#f59e0b',
+    borderColor: tokens.brand.accent,
   },
-  retryText: { color: '#f59e0b', fontSize: 14, fontWeight: '500' },
+  retryText: { color: tokens.brand.accent, fontSize: 14, fontWeight: '500' },
   loadMoreButton: {
     margin: 16,
     paddingVertical: 12,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#e5e5e5',
-    borderRadius: 8,
+    borderColor: tokens.neutral.n200,
+    borderRadius: tokens.radius.md,
   },
-  loadMoreText: { color: '#f59e0b', fontSize: 14, fontWeight: '500' },
+  loadMoreText: { color: tokens.brand.accent, fontSize: 14, fontWeight: '500' },
 });

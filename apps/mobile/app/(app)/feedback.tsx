@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { router } from 'expo-router';
+import { tokens } from '../../src/theme';
 import { useTranslation } from 'react-i18next';
 import Constants from 'expo-constants';
 import { useAuth } from '../../src/store/auth.store';
@@ -58,7 +59,7 @@ export default function FeedbackScreen() {
           value={message}
           onChangeText={setMessage}
           placeholder={t('feedback.placeholder')}
-          placeholderTextColor="#aaa"
+          placeholderTextColor={tokens.neutral.n400}
           multiline
           maxLength={1000}
           textAlignVertical="top"
@@ -71,7 +72,7 @@ export default function FeedbackScreen() {
           disabled={isSubmitting || !message.trim() || !accessToken}
         >
           {isSubmitting ? (
-            <ActivityIndicator size="small" color="#fff" />
+            <ActivityIndicator size="small" color={tokens.neutral.n0} />
           ) : (
             <Text style={styles.submitButtonText}>{t('feedback.submit')}</Text>
           )}
@@ -82,37 +83,38 @@ export default function FeedbackScreen() {
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1, backgroundColor: '#fff' },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24, backgroundColor: '#fff' },
-  container: { padding: 24 },
-  label: { fontSize: 15, color: '#333', marginBottom: 12 },
+  flex: { flex: 1, backgroundColor: tokens.surface.page },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24, backgroundColor: tokens.surface.page },
+  container: { padding: 24, backgroundColor: tokens.surface.page },
+  label: { fontSize: 15, color: tokens.neutral.n800, marginBottom: 12 },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
+    borderColor: tokens.neutral.n200,
+    borderRadius: tokens.radius.md,
     padding: 12,
     fontSize: 15,
-    color: '#1a1a1a',
+    color: tokens.brand.ink,
+    backgroundColor: tokens.surface.card,
     minHeight: 140,
     marginBottom: 8,
   },
-  charCount: { fontSize: 12, color: '#999', textAlign: 'right', marginBottom: 16 },
-  errorText: { fontSize: 14, color: '#ef4444', marginBottom: 12 },
+  charCount: { fontSize: 12, color: tokens.neutral.n400, textAlign: 'right', marginBottom: 16 },
+  errorText: { fontSize: 14, color: tokens.price.expensive, marginBottom: 12 },
   submitButton: {
-    backgroundColor: '#f59e0b',
+    backgroundColor: tokens.brand.accent,
     paddingVertical: 14,
     borderRadius: 10,
     alignItems: 'center',
   },
   submitButtonDisabled: { opacity: 0.5 },
-  submitButtonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
-  thankYouText: { fontSize: 18, fontWeight: '600', color: '#1a1a1a', marginBottom: 24, textAlign: 'center' },
+  submitButtonText: { color: tokens.neutral.n0, fontSize: 16, fontWeight: '600' },
+  thankYouText: { fontSize: 18, fontWeight: '600', color: tokens.brand.ink, marginBottom: 24, textAlign: 'center' },
   doneButton: {
     paddingHorizontal: 32,
     paddingVertical: 12,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#f59e0b',
+    borderColor: tokens.brand.accent,
   },
-  doneButtonText: { color: '#f59e0b', fontSize: 15, fontWeight: '500' },
+  doneButtonText: { color: tokens.brand.accent, fontSize: 15, fontWeight: '500' },
 });

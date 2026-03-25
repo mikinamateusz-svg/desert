@@ -1,4 +1,5 @@
 import { View, StyleSheet } from 'react-native';
+import { tokens } from '../../theme';
 
 // MapPin: 32×32dp neutral circle marker.
 // Used as a MarkerView component in Story 2.5 (station detail sheet).
@@ -24,8 +25,8 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#94a3b8', // slate-400 — price-tier colour added in Story 2.3
+    backgroundColor: tokens.price.noData, // price-tier colour added in Story 2.3
     borderWidth: 1.5,
-    borderColor: '#ffffff',
+    borderColor: tokens.neutral.n0,
   },
 });

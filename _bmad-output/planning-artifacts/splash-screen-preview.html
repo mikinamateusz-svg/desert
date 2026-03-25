@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>litro — Splash Screen Preview</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #2a2a2a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      gap: 48px;
+      flex-wrap: wrap;
+      padding: 40px 20px;
+    }
+
+    .label {
+      color: #9ca3af;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    /* ── Phone frame ── */
+    .phone {
+      width: 320px;
+      height: 640px;
+      background: #fdf6ee;
+      border-radius: 40px;
+      box-shadow: 0 0 0 8px #1a1a1a, 0 32px 64px rgba(0,0,0,0.5);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Wordmark ── */
+    .wordmark {
+      font-size: 48px;
+      font-weight: 800;
+      color: #1a1a1a;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.2s;
+    }
+
+    .wordmark .accent {
+      color: #f59e0b;
+    }
+
+    /* ── Tagline ── */
+    .tagline {
+      font-size: 13px;
+      color: #9ca3af;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      margin-top: -32px;
+      margin-bottom: 52px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.45s;
+    }
+
+    /* ── Fuel drop SVG container ── */
+    .drop-wrap {
+      width: 90px;
+      height: 112px;
+      position: relative;
+      opacity: 0;
+      animation: fadeUp 0.4s ease forwards 0.6s;
+    }
+
+    .drop-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    /* Drop outline */
+    .drop-outline {
+      fill: none;
+      stroke: #e5e7eb;
+      stroke-width: 2.5;
+    }
+
+    /* Clip path for fill animation */
+    .drop-fill {
+      fill: #f59e0b;
+      clip-path: url(#dropClip);
+      animation: fillUp 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.9s;
+    }
+
+    /* ── Animated clip rect ── */
+    #clipRect {
+      animation: clipRise 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.9s;
+    }
+
+    /* ── Status bar simulation ── */
+    .status-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px 0;
+    }
+
+    .status-time {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .status-icons {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .status-icons span {
+      font-size: 12px;
+      color: #1a1a1a;
+    }
+
+    /* ── Progress dots (optional variant) ── */
+    .dots {
+      position: absolute;
+      bottom: 60px;
+      display: flex;
+      gap: 6px;
+      opacity: 0;
+      animation: fadeUp 0.4s ease forwards 1.0s;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #e5e7eb;
+    }
+
+    .dot.active {
+      background: #f59e0b;
+      animation: pulse 1.2s ease-in-out infinite 1.2s;
+    }
+
+    /* ── Keyframes ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes clipRise {
+      from { transform: translateY(80px); }
+      to   { transform: translateY(0px); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    /* ── Replay button ── */
+    .replay-btn {
+      margin-top: 16px;
+      padding: 8px 20px;
+      background: #f59e0b;
+      color: #1a1a1a;
+      border: none;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .replay-btn:hover { background: #d97706; }
+
+    /* ── Variant B — minimal ── */
+    .phone-b .wordmark {
+      font-size: 52px;
+      margin-bottom: 0;
+    }
+
+    .phone-b .wordmark-sub {
+      font-size: 13px;
+      color: #9ca3af;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.55s;
+    }
+
+    .phone-b .loading-bar-track {
+      margin-top: 48px;
+      width: 80px;
+      height: 3px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp 0.4s ease forwards 0.7s;
+    }
+
+    .phone-b .loading-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: #f59e0b;
+      border-radius: 999px;
+      animation: barFill 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards 1.0s;
+    }
+
+    @keyframes barFill {
+      from { width: 0%; }
+      to   { width: 100%; }
+    }
+
+    .variant-wrap { text-align: center; }
+  </style>
+</head>
+<body>
+
+  <!-- Variant A: Fuel Drop -->
+  <div class="variant-wrap" id="wrapA">
+    <p class="label">Variant A — Fuel Drop</p>
+    <div class="phone" id="phoneA">
+      <div class="status-bar">
+        <span class="status-time">9:41</span>
+        <div class="status-icons">
+          <span>●●●</span>
+          <span>WiFi</span>
+          <span>🔋</span>
+        </div>
+      </div>
+
+      <div class="wordmark">litr<span class="accent">o</span></div>
+      <p class="tagline">find the cheapest fuel nearby</p>
+
+      <div class="drop-wrap">
+        <svg class="drop-svg" viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <clipPath id="dropClip">
+              <!-- The teardrop path used as clip shape -->
+              <path d="M32 4 C32 4, 8 36, 8 52 C8 66 19 76 32 76 C45 76 56 66 56 52 C56 36 32 4 32 4 Z"/>
+            </clipPath>
+          </defs>
+
+          <!-- Grey outline (always visible) -->
+          <path class="drop-outline"
+            d="M32 4 C32 4, 8 36, 8 52 C8 66 19 76 32 76 C45 76 56 66 56 52 C56 36 32 4 32 4 Z"/>
+
+          <!-- Amber fill rect, clipped to drop shape, animates upward -->
+          <g id="clipRect" style="transform: translateY(80px)">
+            <rect x="0" y="-80" width="64" height="160" fill="#f59e0b" clip-path="url(#dropClip)"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+    <button class="replay-btn" onclick="replayA()">↺ Replay</button>
+  </div>
+
+  <!-- Variant B: Minimal bar -->
+  <div class="variant-wrap" id="wrapB">
+    <p class="label">Variant B — Minimal</p>
+    <div class="phone phone-b" id="phoneB">
+      <div class="status-bar">
+        <span class="status-time">9:41</span>
+        <div class="status-icons">
+          <span>●●●</span>
+          <span>WiFi</span>
+          <span>🔋</span>
+        </div>
+      </div>
+
+      <div class="wordmark" style="margin-bottom: 8px;">litr<span class="accent">o</span></div>
+      <p class="wordmark-sub">fuel prices · poland</p>
+
+      <div class="loading-bar-track">
+        <div class="loading-bar-fill"></div>
+      </div>
+    </div>
+    <button class="replay-btn" onclick="replayB()">↺ Replay</button>
+  </div>
+
+  <script>
+    function replayA() {
+      const phone = document.getElementById('phoneA');
+      phone.querySelectorAll('[style*="animation"], .wordmark, .tagline, .drop-wrap, .dots').forEach(el => {
+        el.style.animation = 'none';
+        el.offsetHeight; // reflow
+        el.style.animation = '';
+      });
+      const clipRect = document.getElementById('clipRect');
+      clipRect.style.animation = 'none';
+      clipRect.offsetHeight;
+      clipRect.style.animation = '';
+    }
+
+    function replayB() {
+      const phone = document.getElementById('phoneB');
+      phone.querySelectorAll('.wordmark, .wordmark-sub, .loading-bar-track, .loading-bar-fill').forEach(el => {
+        el.style.animation = 'none';
+        el.offsetHeight;
+        el.style.animation = '';
+      });
+    }
+  </script>
+</body>
+</html>

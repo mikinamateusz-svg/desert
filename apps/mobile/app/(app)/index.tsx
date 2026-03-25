@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { View, ActivityIndicator, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView } from 'react-native';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView } from 'react-native';
 import Mapbox, { MapView, Camera, ShapeSource, CircleLayer } from '@rnmapbox/maps';
 import { router } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -15,6 +15,7 @@ type OnPressEvent = {
 };
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
+import { LoadingScreen, type LoadingStage } from '../../src/components/LoadingScreen';
 import { SoftSignUpSheet } from '../../src/components/SoftSignUpSheet';
 import { useLocation, type LocationCoords } from '../../src/hooks/useLocation';
 import { useNearbyStations } from '../../src/hooks/useNearbyStations';
@@ -58,12 +59,20 @@ export default function MapScreen() {
   const [sheetDismissed, setSheetDismissed] = useState(false);
   const programmaticMoveRef = useRef(false);
 
+  // Loading screen stage
+  const [loadingStage, setLoadingStage] = useState<LoadingStage>('gps');
+  const [splashVisible, setSplashVisible] = useState(true);
+  const handleSplashHidden = useCallback(() => setSplashVisible(false), []);
+
   // Error banner state
   const [errorBannerVisible, setErrorBannerVisible] = useState(false);
   const errorDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Debounce ref for region change
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // any: CameraRef not exported from @rnmapbox/maps package root (moduleResolution:bundler)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const cameraRef = useRef<any>(null);
 
   // Selected fuel type (in-memory; persistence added in Story 2.4)
   const [selectedFuelType, setSelectedFuelType] = useState<FuelType>('PB_95');
@@ -96,12 +105,41 @@ export default function MapScreen() {
     }
   }, [location, permissionDenied, loadingGPS]);
 
-  const { stations, loading: loadingStations, error: stationsError } = useNearbyStations(
+  const { stations, error: stationsError } = useNearbyStations(
     accessToken,
     fetchCenter,
   );
 
   const { prices, error: pricesError } = useNearbyPrices(accessToken, fetchCenter);
+
+  // Advance loading splash stage as data arrives.
+  // P2: guests (no token) and error states must still dismiss the splash.
+  // D3: handle prices-before-stations independently.
+  useEffect(() => {
+    if (!splashVisible) return;
+    // Guest or auth error — no data will ever arrive; dismiss immediately
+    if (!accessToken) { setLoadingStage('done'); return; }
+    // Network errors — don't leave the splash up indefinitely
+    if (stationsError || pricesError) { setLoadingStage('done'); return; }
+    // Normal data arrival
+    if (stations.length > 0 && prices.length > 0) {
+      setLoadingStage('done');
+    } else if (stations.length > 0) {
+      setLoadingStage('prices');
+    } else if (prices.length > 0 && fetchCenter) {
+      // Prices arrived before stations — show 'prices' stage, not 'stations'
+      setLoadingStage('prices');
+    } else if (fetchCenter) {
+      setLoadingStage('stations');
+    }
+  }, [accessToken, fetchCenter, stations.length, prices.length, stationsError, pricesError, splashVisible]);
+
+  // P2 timeout backstop — dismiss splash after 8s regardless of data state
+  useEffect(() => {
+    if (!splashVisible) return;
+    const t = setTimeout(() => setLoadingStage('done'), 8000);
+    return () => clearTimeout(t);
+  }, [splashVisible]);
 
   // Compute relative price colour map for current viewport
   const priceColorMap = useMemo(
@@ -140,7 +178,14 @@ export default function MapScreen() {
   const handleRecentre = () => {
     if (!location) return;
     programmaticMoveRef.current = true;
+    // P3: keep cameraCenter state in sync so Camera controlled prop doesn't snap back on re-render
     setCameraCenter([location.lng, location.lat]);
+    // D1: setCamera fires a fresh animation even when coordinates haven't changed since last tap
+    cameraRef.current?.setCamera({
+      centerCoordinate: [location.lng, location.lat],
+      animationMode: 'flyTo',
+      animationDuration: 800,
+    });
   };
 
   const handlePinPress = (event: OnPressEvent) => {
@@ -148,7 +193,6 @@ export default function MapScreen() {
     console.log('Station tapped:', name); // Story 2.5 opens station detail sheet
   };
 
-  const showLoadingOverlay = loadingGPS || (loadingStations && stations.length === 0);
   const showSheet = !accessToken && !hasSeenOnboarding && !sheetDismissed;
 
   return (
@@ -160,6 +204,7 @@ export default function MapScreen() {
         onRegionDidChange={handleRegionChange}
       >
         <Camera
+          ref={cameraRef}
           defaultSettings={{ centerCoordinate: cameraCenter, zoomLevel: 13 }}
           centerCoordinate={cameraCenter}
           animationMode="flyTo"
@@ -189,15 +234,9 @@ export default function MapScreen() {
         </ShapeSource>
       </MapView>
 
-      {/* Loading overlay — starts below top bar */}
-      {showLoadingOverlay && (
-        <View
-          style={[styles.loadingOverlay, { top: topBarHeight }]}
-          pointerEvents="none"
-        >
-          <ActivityIndicator size="large" color={tokens.brand.accent} />
-          <Text style={styles.loadingText}>{t('map.loadingMap')}</Text>
-        </View>
+      {/* Fuel-drop loading splash */}
+      {splashVisible && (
+        <LoadingScreen stage={loadingStage} onHidden={handleSplashHidden} />
       )}
 
       {/* Stations error banner — auto-dismisses after 4s */}
@@ -222,7 +261,7 @@ export default function MapScreen() {
       )}
 
       {/* Fuel type selector — below top bar */}
-      <View style={[styles.fuelSelector, { top: topBarHeight + 8 }]} pointerEvents="box-none">
+      <View style={[styles.fuelSelector, { top: topBarHeight + 16 }]} pointerEvents="box-none">
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.fuelSelectorContent}>
           {FUEL_TYPES.map(ft => (
             <TouchableOpacity
@@ -268,7 +307,7 @@ export default function MapScreen() {
         disabled={!location}
         accessibilityLabel={t('map.recentre')}
       >
-        <Ionicons name="navigate" size={22} color={tokens.neutral.n0} />
+        <Ionicons name="locate" size={22} color={tokens.neutral.n0} />
       </TouchableOpacity>
 
       <SoftSignUpSheet
@@ -334,6 +373,8 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   fuelSelectorContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
     paddingHorizontal: 16,
     gap: 8,
     flexDirection: 'row',
@@ -357,24 +398,6 @@ const styles = StyleSheet.create({
   },
   fuelPillTextActive: {
     color: tokens.brand.ink,
-  },
-
-  // Loading overlay
-  loadingOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    // top is set dynamically via topBarHeight in JSX
-    backgroundColor: 'rgba(253,246,238,0.93)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 12,
-  },
-  loadingText: {
-    color: tokens.brand.ink,
-    fontSize: 14,
-    fontWeight: '500',
   },
 
   // Error banner (auto-dismiss card)

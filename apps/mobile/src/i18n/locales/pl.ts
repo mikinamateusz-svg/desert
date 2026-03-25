@@ -83,6 +83,12 @@ export default {
     openMenu: 'Otwórz menu',
     recentre: 'Wróć do mojej lokalizacji',
   },
+  loading: {
+    gps:      'Szukam Cię...',
+    stations: 'Szukam stacji...',
+    prices:   'Pobieram ceny...',
+    done:     'Gotowe',
+  },
   fuelTypes: {
     petrol_95: 'Benzyna 95',
     petrol_98: 'Benzyna 98',

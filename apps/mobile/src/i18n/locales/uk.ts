@@ -83,6 +83,12 @@ export default {
     openMenu: 'Відкрити меню',
     recentre: 'Повернутися до моєї локації',
   },
+  loading: {
+    gps:      'Шукаю вас...',
+    stations: 'Шукаю станції...',
+    prices:   'Завантажую ціни...',
+    done:     'Готово',
+  },
   fuelTypes: {
     petrol_95: 'Бензин 95',
     petrol_98: 'Бензин 98',

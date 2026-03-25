@@ -152,6 +152,45 @@ epics:
         dev_completed: 2026-03-25
         depends_on: [ui-1, ui-2]
 
+      - id: ui-6
+        title: Loading Screen — Fuel Drop Splash
+        file: ui-6-loading-screen.md
+        status: review
+        ready_date: 2026-03-25
+        dev_started: 2026-03-25
+        dev_completed: 2026-03-25
+        review_date: 2026-03-25
+        review_findings: "5 patch (P1 double fillAnim conflict on done, P2 splash never dismisses for guests/errors/empty areas, P3 cameraCenter not synced after flyTo, P4 eslint-disable comment malformed, P5 letterSpacing 0.02 sub-pixel no-op), 7 deferred"
+        patches_applied: "2026-03-25 — P1-P5 + D1-D7 all applied, tsc clean"
+        depends_on: [ui-1, 2.2, 2.3]
+        note: "Animated fuel drop fill tied to real loading stages (GPS → stations → prices). Replaces ActivityIndicator overlay."
+
+      - id: ui-7
+        title: GPS Re-centre FAB — Bug Fix & Icon Update
+        file: ui-7-recentre-fab.md
+        status: review
+        ready_date: 2026-03-25
+        dev_started: 2026-03-25
+        dev_completed: 2026-03-25
+        review_date: 2026-03-25
+        review_findings: "Reviewed with UI-6 — see UI-6 patches P3/P4"
+        patches_applied: "2026-03-25 — all patches applied"
+        depends_on: [2.2]
+        note: "Re-centre silently no-ops when state coords haven't changed. Fix via Camera imperative ref. Icon: navigate → locate (crosshair)."
+
+      - id: ui-8
+        title: Fuel Type Pills — Centring & Chrome Separation
+        file: ui-8-fuel-pills.md
+        status: review
+        ready_date: 2026-03-25
+        dev_started: 2026-03-25
+        dev_completed: 2026-03-25
+        review_date: 2026-03-25
+        review_findings: "Clean — no patches required"
+        patches_applied: "2026-03-25 — n/a"
+        depends_on: [2.3]
+        note: "Pills left-aligned (add flexGrow+justifyContent:center). Gap from top bar too tight (8→16pt)."
+
   - id: 2
     name: Station Map & Price Discovery
     status: in-progress

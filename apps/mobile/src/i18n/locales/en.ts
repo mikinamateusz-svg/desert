@@ -83,6 +83,12 @@ export default {
     openMenu: 'Open menu',
     recentre: 'Re-centre map',
   },
+  loading: {
+    gps:      'Locating you...',
+    stations: 'Finding stations...',
+    prices:   'Fetching prices...',
+    done:     'Ready',
+  },
   fuelTypes: {
     petrol_95: 'Petrol 95',
     petrol_98: 'Petrol 98',

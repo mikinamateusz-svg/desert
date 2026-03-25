@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { View, ActivityIndicator, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView } from 'react-native';
 import Mapbox, { MapView, Camera, ShapeSource, CircleLayer } from '@rnmapbox/maps';
-import type { Expression } from '@rnmapbox/maps';
 import { router } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -181,7 +180,7 @@ export default function MapScreen() {
                 'mid',       PRICE_COLORS.mid,
                 'expensive', PRICE_COLORS.expensive,
                 PRICE_COLORS.nodata, // default fallback = nodata
-              ] as Expression,
+              ] as unknown as string,
               circleRadius: 8,
               circleStrokeColor: tokens.neutral.n0,
               circleStrokeWidth: 1.5,

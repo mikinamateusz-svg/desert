@@ -88,6 +88,11 @@ export default {
     petrol_98: 'Benzyna 98',
     diesel: 'Diesel',
     lpg: 'LPG',
+    PB_95: 'PB 95',
+    PB_98: 'PB 98',
+    ON: 'ON',
+    ON_PREMIUM: 'ON+',
+    LPG: 'LPG',
   },
   account: {
     guest: 'Gość',

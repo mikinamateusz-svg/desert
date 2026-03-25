@@ -12,6 +12,7 @@ import { NotificationsModule } from './notifications/notifications.module.js';
 import { UserModule } from './user/user.module.js';
 import { FeedbackModule } from './feedback/feedback.module.js';
 import { StationModule } from './station/station.module.js';
+import { PriceModule } from './price/price.module.js';
 import { JwtAuthGuard } from './auth/jwt-auth.guard.js';
 import { RolesGuard } from './auth/guards/roles.guard.js';
 
@@ -32,6 +33,7 @@ import { RolesGuard } from './auth/guards/roles.guard.js';
     UserModule,
     FeedbackModule,
     StationModule,
+    PriceModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

@@ -181,8 +181,13 @@ epics:
       - id: 2.3
         title: Colour-Coded Price Comparison
         file: 2-3-colour-coded-price-comparison.md
-        status: ready-for-dev
+        status: review
         ready_date: 2026-03-25
+        dev_started: 2026-03-25
+        dev_completed: 2026-03-25
+        review_date: 2026-03-25
+        review_findings: "4 patch (P1 updatedAt.toISOString() crash risk, P2 NaN in priceColor filter, P3 loading stuck on logout-while-fetching, P4 pricesError discarded at call site), 5 deferred"
+        patches_applied: "2026-03-25 — P1-P4 all applied, 188/188 tests passing"
 
       - id: 2.4
         title: Fuel Type Filtering

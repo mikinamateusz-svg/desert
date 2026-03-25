@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
-import { View, ActivityIndicator, Text, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { View, ActivityIndicator, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView } from 'react-native';
 import Mapbox, { MapView, Camera, ShapeSource, CircleLayer } from '@rnmapbox/maps';
+import type { Expression } from '@rnmapbox/maps';
 import { router } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { tokens } from '../../src/theme';
 import type GeoJSON from 'geojson';
+import type { FuelType } from '@desert/types';
 
 type OnPressEvent = {
   features: GeoJSON.Feature[];
@@ -17,19 +19,26 @@ import { useAuth } from '../../src/store/auth.store';
 import { SoftSignUpSheet } from '../../src/components/SoftSignUpSheet';
 import { useLocation, type LocationCoords } from '../../src/hooks/useLocation';
 import { useNearbyStations } from '../../src/hooks/useNearbyStations';
+import { useNearbyPrices } from '../../src/hooks/useNearbyPrices';
+import { computePriceColorMap, PRICE_COLORS } from '../../src/utils/priceColor';
+import type { PriceColor } from '../../src/utils/priceColor';
 
 // Mapbox token must be set before any MapView renders
 Mapbox.setAccessToken(process.env['EXPO_PUBLIC_MAPBOX_TOKEN'] ?? '');
 
 const WARSAW: LocationCoords = { lat: 52.2297, lng: 21.0122 };
+const FUEL_TYPES: FuelType[] = ['PB_95', 'PB_98', 'ON', 'ON_PREMIUM', 'LPG'];
 
-function buildGeoJSON(stations: { id: string; name: string; lat: number; lng: number }[]): GeoJSON.FeatureCollection {
+function buildGeoJSON(
+  stations: { id: string; name: string; lat: number; lng: number }[],
+  colorMap: Map<string, PriceColor>,
+): GeoJSON.FeatureCollection {
   return {
     type: 'FeatureCollection',
     features: stations.map(s => ({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [s.lng, s.lat] },
-      properties: { id: s.id, name: s.name },
+      properties: { id: s.id, name: s.name, priceColor: colorMap.get(s.id) ?? 'nodata' },
     })),
   };
 }
@@ -56,6 +65,9 @@ export default function MapScreen() {
 
   // Debounce ref for region change
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Selected fuel type (in-memory; persistence added in Story 2.4)
+  const [selectedFuelType, setSelectedFuelType] = useState<FuelType>('PB_95');
 
   // Clean up timers on unmount
   useEffect(() => () => {
@@ -90,17 +102,29 @@ export default function MapScreen() {
     fetchCenter,
   );
 
-  // Auto-dismiss error banner after 4s
+  const { prices, error: pricesError } = useNearbyPrices(accessToken, fetchCenter);
+
+  // Compute relative price colour map for current viewport
+  const priceColorMap = useMemo(
+    () => computePriceColorMap(stations.map(s => s.id), prices, selectedFuelType),
+    [stations, prices, selectedFuelType],
+  );
+
+  // Build GeoJSON with colour property baked in
+  const geojson = useMemo(
+    () => buildGeoJSON(stations, priceColorMap),
+    [stations, priceColorMap],
+  );
+
+  // Auto-dismiss error banner after 4s (stations or prices failure)
   useEffect(() => {
-    if (stationsError) {
+    if (stationsError || pricesError) {
       setErrorBannerVisible(true);
       if (errorDismissRef.current) clearTimeout(errorDismissRef.current);
       errorDismissRef.current = setTimeout(() => setErrorBannerVisible(false), 4000);
     }
     return () => { if (errorDismissRef.current) clearTimeout(errorDismissRef.current); };
-  }, [stationsError]);
-
-  const geojson = buildGeoJSON(stations);
+  }, [stationsError, pricesError]);
 
   const handleRegionChange = (feature: GeoJSON.Feature<GeoJSON.Point>) => {
     if (programmaticMoveRef.current) {
@@ -151,7 +175,13 @@ export default function MapScreen() {
           <CircleLayer
             id="station-pins"
             style={{
-              circleColor: tokens.price.noData,  // price-tier colour added in Story 2.3
+              circleColor: [
+                'match', ['get', 'priceColor'],
+                'cheap',     PRICE_COLORS.cheap,
+                'mid',       PRICE_COLORS.mid,
+                'expensive', PRICE_COLORS.expensive,
+                PRICE_COLORS.nodata, // default fallback = nodata
+              ] as Expression,
               circleRadius: 8,
               circleStrokeColor: tokens.neutral.n0,
               circleStrokeWidth: 1.5,
@@ -178,9 +208,9 @@ export default function MapScreen() {
         </View>
       )}
 
-      {/* Location denied banner — dynamic offset below top bar */}
+      {/* Location denied banner — below top bar + fuel selector */}
       {locationDeniedVisible && (
-        <View style={[styles.locationDeniedBanner, { top: topBarHeight + 8 }]}>
+        <View style={[styles.locationDeniedBanner, { top: topBarHeight + 64 }]}>
           <Text style={styles.locationDeniedText}>{t('map.locationDenied')}</Text>
           <TouchableOpacity
             onPress={() => setLocationDeniedVisible(false)}
@@ -191,6 +221,23 @@ export default function MapScreen() {
           </TouchableOpacity>
         </View>
       )}
+
+      {/* Fuel type selector — below top bar */}
+      <View style={[styles.fuelSelector, { top: topBarHeight + 8 }]} pointerEvents="box-none">
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.fuelSelectorContent}>
+          {FUEL_TYPES.map(ft => (
+            <TouchableOpacity
+              key={ft}
+              style={[styles.fuelPill, selectedFuelType === ft && styles.fuelPillActive]}
+              onPress={() => setSelectedFuelType(ft)}
+            >
+              <Text style={[styles.fuelPillText, selectedFuelType === ft && styles.fuelPillTextActive]}>
+                {t(`fuelTypes.${ft}`)}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
 
       {/* Top bar */}
       <View style={[styles.topBar, { paddingTop: insets.top }]}>
@@ -280,6 +327,39 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
+  // Fuel type selector
+  fuelSelector: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    zIndex: 10,
+  },
+  fuelSelectorContent: {
+    paddingHorizontal: 16,
+    gap: 8,
+    flexDirection: 'row',
+  },
+  fuelPill: {
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: tokens.radius.full,
+    backgroundColor: 'rgba(26,26,26,0.85)', // semi-transparent ink — no token equivalent for rgba
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.15)',   // semi-transparent white — no token equivalent for rgba
+  },
+  fuelPillActive: {
+    backgroundColor: tokens.brand.accent,
+    borderColor: tokens.brand.accent,
+  },
+  fuelPillText: {
+    color: tokens.neutral.n200,
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  fuelPillTextActive: {
+    color: tokens.brand.ink,
+  },
+
   // Loading overlay
   loadingOverlay: {
     position: 'absolute',
@@ -321,10 +401,10 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
 
-  // Location denied banner (card, below top bar)
+  // Location denied banner (card, below top bar + fuel selector)
   locationDeniedBanner: {
     position: 'absolute',
-    // top is set dynamically via topBarHeight + 8 in JSX
+    // top is set dynamically via topBarHeight + 64 in JSX
     left: 14,
     right: 14,
     backgroundColor: tokens.surface.card,

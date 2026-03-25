@@ -123,6 +123,9 @@ epics:
         ready_date: 2026-03-24
         dev_started: 2026-03-24
         dev_completed: 2026-03-24
+        review_date: 2026-03-25
+        review_findings: "4 patch (P1 lat/lng no range validation, P2 debounce timer unmount leak, P3 AsyncStorage cache race overwrites fresh data, P4 auth guard test missing), 1 intent_gap (F1 guests with cache see pins — spec says no pins for guests), 4 deferred, 11 rejected"
+        patches_applied: "2026-03-25 — P1-P4 all applied, 167/167 tests passing"
 
       - id: 2.3
         title: Colour-Coded Price Comparison

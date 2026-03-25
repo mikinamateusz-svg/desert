@@ -33,6 +33,7 @@
       "bundler": "metro"
     },
     "plugins": [
+      "@rnmapbox/maps",
       "expo-router",
       [
         "expo-notifications",

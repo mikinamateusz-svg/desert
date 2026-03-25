@@ -46,6 +46,9 @@ export default function MapScreen() {
   // Debounce ref for region change
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Clean up debounce timer on unmount
+  useEffect(() => () => { if (debounceRef.current) clearTimeout(debounceRef.current); }, []);
+
   // Once GPS resolves (or is denied), initialise camera and fetch center
   useEffect(() => {
     if (gpsCenteredRef.current) return;

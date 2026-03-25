@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { apiGetNearbyStations, type StationDto } from '../api/stations.js';
-import type { LocationCoords } from './useLocation.js';
+import { apiGetNearbyStations, type StationDto } from '../api/stations';
+import type { LocationCoords } from './useLocation';
 
 const CACHE_KEY = 'desert.stations_cache';
 
@@ -14,13 +14,13 @@ export function useNearbyStations(
   const [error, setError] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
-  // Load cache on mount for instant display
+  // Load cache on mount for instant display — only apply if no fresh data has arrived yet
   useEffect(() => {
     void AsyncStorage.getItem(CACHE_KEY).then(raw => {
       if (raw) {
         try {
           const cached = JSON.parse(raw) as StationDto[];
-          setStations(cached);
+          setStations(prev => (prev.length === 0 ? cached : prev));
         } catch {
           // Ignore corrupt cache
         }

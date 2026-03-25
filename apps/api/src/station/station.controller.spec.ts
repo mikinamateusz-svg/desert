@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ValidationPipe } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { StationController } from './station.controller.js';
 import { StationService } from './station.service.js';
 import { GetNearbyStationsDto } from './dto/get-nearby-stations.dto.js';
@@ -27,6 +28,14 @@ describe('StationController', () => {
     }).compile();
 
     controller = module.get<StationController>(StationController);
+  });
+
+  describe('auth guard', () => {
+    it('does not declare @Public() — relies on global JwtAuthGuard', () => {
+      const reflector = new Reflector();
+      const isPublic = reflector.get<boolean>('isPublic', controller.getNearby);
+      expect(isPublic).toBeUndefined();
+    });
   });
 
   describe('getNearby', () => {
@@ -104,6 +113,30 @@ describe('StationController', () => {
     it('rejects when lng is missing', async () => {
       await expect(
         pipe.transform({ lat: '52.23' }, { type: 'query', metatype: GetNearbyStationsDto }),
+      ).rejects.toThrow();
+    });
+
+    it('rejects lat above 90', async () => {
+      await expect(
+        pipe.transform({ lat: '91', lng: '21.01' }, { type: 'query', metatype: GetNearbyStationsDto }),
+      ).rejects.toThrow();
+    });
+
+    it('rejects lat below -90', async () => {
+      await expect(
+        pipe.transform({ lat: '-91', lng: '21.01' }, { type: 'query', metatype: GetNearbyStationsDto }),
+      ).rejects.toThrow();
+    });
+
+    it('rejects lng above 180', async () => {
+      await expect(
+        pipe.transform({ lat: '52.23', lng: '181' }, { type: 'query', metatype: GetNearbyStationsDto }),
+      ).rejects.toThrow();
+    });
+
+    it('rejects lng below -180', async () => {
+      await expect(
+        pipe.transform({ lat: '52.23', lng: '-181' }, { type: 'query', metatype: GetNearbyStationsDto }),
       ).rejects.toThrow();
     });
 

@@ -1191,6 +1191,44 @@ So that the app is useful from day one — even before enough contributors exist
 
 ---
 
+### Story 2.13: On-Demand Station Sync Trigger
+
+As a **developer / ops admin**,
+I want to trigger a full Google Places station sync on demand without waiting for the weekly cron,
+So that I can seed the database immediately after first deploy, recover from a failed sync, or re-populate after a data incident — without needing a UI.
+
+**Why:** The weekly BullMQ cron (Sunday 02:00 UTC) means the station database is empty for up to 7 days after first deploy, leaving the map blank. On-demand triggering is essential for the initial seed and for any ops recovery scenario. The endpoint must be callable directly via curl/Postman without an admin UI — Story 4.10 will later add a UI button that calls this same endpoint.
+
+**Acceptance Criteria:**
+
+**Given** an authenticated ADMIN calls `POST /v1/admin/stations/sync`
+**When** no sync is currently running
+**Then** a BullMQ sync job is enqueued immediately and the response returns `{ "status": "queued", "jobId": "..." }` with HTTP 202
+
+**Given** an authenticated ADMIN calls `POST /v1/admin/stations/sync`
+**When** a sync job is already active (queued or running)
+**Then** a new job is NOT enqueued and the response returns `{ "status": "already_running", "jobId": "..." }` with HTTP 409 — no duplicate sync runs
+
+**Given** an authenticated ADMIN calls `GET /v1/admin/stations/sync/status`
+**When** called at any time
+**Then** the response returns the current sync state: `{ "status": "idle" | "running" | "failed", "lastCompletedAt": "<ISO timestamp> | null", "lastFailedAt": "<ISO timestamp> | null", "stationCount": <number> }`
+
+**Given** a non-ADMIN authenticated user calls either endpoint
+**When** the request is received
+**Then** the API returns HTTP 403
+
+**Given** an unauthenticated request hits either endpoint
+**When** the request is received
+**Then** the API returns HTTP 401
+
+**Given** a sync job completes successfully (triggered on-demand or via weekly cron)
+**When** it finishes
+**Then** the `lastCompletedAt` timestamp and `stationCount` in the status response reflect the completed run
+
+*Covers: Ops tooling requirement — no FR mapping. Depends on Story 2.1 (StationSyncService, StationSyncWorker). Story 4.10 (Epic 4) provides the admin UI that calls this endpoint.*
+
+---
+
 ## Epic 3: Photo Contribution Pipeline
 
 Drivers photograph price boards; the system extracts prices via AI OCR, matches the GPS location to the nearest station, updates the database, and immediately confirms to the driver — all within 10 seconds from their perspective. Offline submissions queue and retry automatically.
@@ -1861,6 +1899,42 @@ So that I can understand how drivers actually use the product, identify retentio
 **Then** it follows the same navigation shell, authentication, and visual language — one coherent panel
 
 *Covers: FR65, FR66. Admin interface in Polish only. Note: if PostHog's data residency options are insufficient for GDPR compliance, Mixpanel (EU data residency) or a self-hosted PostHog instance are viable alternatives — decision to be made pre-implementation.*
+
+### Story 4.10: Admin UI — Manual Station Sync Trigger *(Phase 2)*
+
+As an **ops admin**,
+I want a button in the admin panel to trigger and monitor a station sync,
+So that I can seed or re-populate station data without leaving the browser or using curl.
+
+**Why:** Story 2.13 provides the API, but ops workflows are faster and less error-prone with a UI — especially under pressure during a data incident. A status display (last sync time, station count, whether a sync is running) also gives immediate confidence that the database is healthy.
+
+**Acceptance Criteria:**
+
+**Given** an ADMIN opens the Station Sync section of the admin panel
+**When** they view it
+**Then** they see: current sync status (Idle / Running / Failed), last completed sync timestamp, and total station count in the database
+
+**Given** the ADMIN clicks "Run Sync Now"
+**When** no sync is currently running
+**Then** the button is disabled and replaced with a "Sync running…" indicator, and the status updates in real time (polling `GET /v1/admin/stations/sync/status` every 5 seconds)
+
+**Given** a sync is already running
+**When** the page is loaded or the status is polled
+**Then** the "Run Sync Now" button is disabled with a tooltip: "Sync already in progress"
+
+**Given** the sync completes
+**When** the status poll detects completion
+**Then** the last completed timestamp and station count update without a page reload, and the button re-enables
+
+**Given** the sync fails (all retries exhausted)
+**When** the status poll detects failure
+**Then** a dismissible error banner is shown: "Last sync failed — check Railway logs" and the button re-enables so the admin can retry
+
+**Given** the admin panel displays the Sync section
+**When** it is viewed alongside other admin sections
+**Then** it follows the same navigation shell, authentication guard (ADMIN only), and visual language as Story 4.1
+
+*Covers: Ops tooling — no FR mapping. Depends on Story 2.13 (API endpoints) and Story 4.1 (admin dashboard shell). Admin interface in Polish only.*
 
 ---
 

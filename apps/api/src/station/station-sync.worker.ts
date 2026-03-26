@@ -14,7 +14,7 @@ const RETRY_DELAYS = [
   24 * 60 * 60 * 1000,
 ] as const;
 
-const JOB_OPTIONS = {
+export const JOB_OPTIONS = {
   attempts: 4, // 1 initial + 3 retries
   backoff: { type: 'custom' },
 } as const;

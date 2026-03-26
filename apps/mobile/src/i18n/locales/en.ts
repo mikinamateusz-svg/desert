@@ -121,6 +121,8 @@ export default {
       pl: 'PL',
       uk: 'UK',
     },
+    notSignedIn: 'Not signed in',
+    signIn: 'Sign in',
     signOut: 'Sign out',
     deleteAccountButton: 'Delete my account',
     exportDataButton: 'Download my data',

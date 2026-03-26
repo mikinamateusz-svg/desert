@@ -22,13 +22,9 @@ export default function AccountScreen() {
   const [isExporting, setIsExporting] = useState(false);
 
   async function handleExportData() {
-    if (!accessToken) {
-      Alert.alert('', t('account.exportDataSignInRequired'));
-      return;
-    }
     setIsExporting(true);
     try {
-      await apiRequestDataExport(accessToken);
+      await apiRequestDataExport(accessToken!);
       Alert.alert('', t('account.exportDataSuccess'));
     } catch {
       Alert.alert('', t('account.exportDataError'));
@@ -48,16 +44,27 @@ export default function AccountScreen() {
         contentContainerStyle={styles.content}
         alwaysBounceVertical={false}
       >
-        {/* ── Avatar + identity ── */}
+        {/* ── Identity ── */}
         <View style={styles.identitySection}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarInitials}>
-              {getInitials(user?.display_name ?? user?.email ?? t('account.guest'))}
-            </Text>
-          </View>
-          <Text style={styles.displayName}>
-            {user?.display_name ?? user?.email ?? t('account.guest')}
-          </Text>
+          {accessToken ? (
+            <>
+              <View style={styles.avatar}>
+                <Text style={styles.avatarInitials}>
+                  {getInitials(user?.display_name ?? user?.email ?? '?')}
+                </Text>
+              </View>
+              <Text style={styles.displayName}>
+                {user?.display_name ?? user?.email}
+              </Text>
+            </>
+          ) : (
+            <>
+              <View style={styles.avatarGuest}>
+                <Text style={styles.avatarGuestIcon}>👤</Text>
+              </View>
+              <Text style={styles.notSignedIn}>{t('account.notSignedIn')}</Text>
+            </>
+          )}
         </View>
 
         {/* ── Language selector ── */}
@@ -78,37 +85,48 @@ export default function AccountScreen() {
 
         {/* ── Actions ── */}
         <View style={styles.actionsSection}>
-          <TouchableOpacity style={styles.button} onPress={logout}>
-            <Text style={styles.buttonText}>{t('account.signOut')}</Text>
-          </TouchableOpacity>
+          {/* Sign In / Sign Out */}
+          {accessToken ? (
+            <TouchableOpacity style={styles.button} onPress={logout}>
+              <Text style={styles.buttonText}>{t('account.signOut')}</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/(auth)/login')}>
+              <Text style={styles.buttonText}>{t('account.signIn')}</Text>
+            </TouchableOpacity>
+          )}
 
-          <TouchableOpacity
-            style={[styles.button, isExporting && styles.buttonDisabled]}
-            onPress={handleExportData}
-            disabled={isExporting}
-          >
-            {isExporting
-              ? <ActivityIndicator size="small" color={tokens.neutral.n500} />
-              : <Text style={styles.buttonText}>{t('account.exportDataButton')}</Text>
-            }
+          <TouchableOpacity style={styles.button} onPress={() => router.push('/(app)/feedback')}>
+            <Text style={styles.buttonText}>{t('account.sendFeedback')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.button} onPress={() => router.push('/(app)/privacy-settings')}>
             <Text style={styles.buttonText}>{t('account.privacySettings')}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={() => router.push('/(app)/feedback')}>
-            <Text style={styles.buttonText}>{t('account.sendFeedback')}</Text>
-          </TouchableOpacity>
+          {accessToken && (
+            <TouchableOpacity
+              style={[styles.button, isExporting && styles.buttonDisabled]}
+              onPress={handleExportData}
+              disabled={isExporting}
+            >
+              {isExporting
+                ? <ActivityIndicator size="small" color={tokens.neutral.n500} />
+                : <Text style={styles.buttonText}>{t('account.exportDataButton')}</Text>
+              }
+            </TouchableOpacity>
+          )}
         </View>
 
-        {/* ── Destructive zone ── */}
-        <TouchableOpacity
-          style={styles.deleteRow}
-          onPress={() => router.push('/(app)/delete-account')}
-        >
-          <Text style={styles.deleteText}>{t('account.deleteAccountButton')}</Text>
-        </TouchableOpacity>
+        {/* ── Destructive zone (logged-in only) ── */}
+        {accessToken && (
+          <TouchableOpacity
+            style={styles.deleteRow}
+            onPress={() => router.push('/(app)/delete-account')}
+          >
+            <Text style={styles.deleteText}>{t('account.deleteAccountButton')}</Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -146,10 +164,27 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: tokens.neutral.n0,
   },
+  avatarGuest: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: tokens.neutral.n200,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  avatarGuestIcon: {
+    fontSize: 32,
+  },
   displayName: {
     fontSize: 17,
     fontWeight: '600',
     color: tokens.brand.ink,
+  },
+  notSignedIn: {
+    fontSize: 17,
+    fontWeight: '500',
+    color: tokens.neutral.n400,
   },
 
   // Language

@@ -121,6 +121,8 @@ export default {
       pl: 'PL',
       uk: 'UK',
     },
+    notSignedIn: 'Не авторизовано',
+    signIn: 'Увійти',
     signOut: 'Вийти',
     deleteAccountButton: 'Видалити акаунт',
     exportDataButton: 'Завантажити мої дані',

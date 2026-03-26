@@ -121,6 +121,8 @@ export default {
       pl: 'PL',
       uk: 'UK',
     },
+    notSignedIn: 'Nie zalogowano',
+    signIn: 'Zaloguj się',
     signOut: 'Wyloguj się',
     deleteAccountButton: 'Usuń konto',
     exportDataButton: 'Pobierz moje dane',

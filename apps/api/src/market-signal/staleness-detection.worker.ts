@@ -2,13 +2,13 @@ import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/commo
 import { ConfigService } from '@nestjs/config';
 import { Queue, Worker, type Job } from 'bullmq';
 import Redis from 'ioredis';
-import { OrlenIngestionService } from './orlen-ingestion.service.js';
+import { StalenessDetectionService } from './staleness-detection.service.js';
 
-export const ORLEN_INGESTION_QUEUE = 'orlen-ingestion';
-export const ORLEN_INGESTION_JOB = 'run-ingestion';
+export const STALENESS_DETECTION_QUEUE = 'staleness-detection';
+export const STALENESS_DETECTION_JOB = 'run-detection';
 
-// AC2: retry once after 30 minutes
-const RETRY_DELAY_MS = 30 * 60 * 1000;
+// AC6: retry once after 5 minutes (short — completes before next ORLEN run)
+const RETRY_DELAY_MS = 5 * 60 * 1000;
 
 const JOB_OPTIONS = {
   attempts: 2, // 1 initial + 1 retry
@@ -16,15 +16,15 @@ const JOB_OPTIONS = {
 } as const;
 
 @Injectable()
-export class OrlenIngestionWorker implements OnModuleInit, OnModuleDestroy {
-  private readonly logger = new Logger(OrlenIngestionWorker.name);
+export class StalenessDetectionWorker implements OnModuleInit, OnModuleDestroy {
+  private readonly logger = new Logger(StalenessDetectionWorker.name);
   private queue!: Queue;
   private worker!: Worker;
   // Dedicated Redis connection — BullMQ requires maxRetriesPerRequest: null
   private redisForBullMQ!: Redis;
 
   constructor(
-    private readonly ingestionService: OrlenIngestionService,
+    private readonly detectionService: StalenessDetectionService,
     private readonly config: ConfigService,
   ) {}
 
@@ -37,48 +37,48 @@ export class OrlenIngestionWorker implements OnModuleInit, OnModuleDestroy {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const connection = this.redisForBullMQ as any;
 
-    this.queue = new Queue(ORLEN_INGESTION_QUEUE, {
+    this.queue = new Queue(STALENESS_DETECTION_QUEUE, {
       connection,
       defaultJobOptions: JOB_OPTIONS,
     });
 
-    // AC1: runs at 06:00 and 14:00 Europe/Warsaw
+    // Runs at 06:15 and 14:15 Europe/Warsaw — 15 min after ORLEN ingestion (06:00 / 14:00)
     // jobIds are stable so only one repeat entry exists in Redis (idempotent on restart)
     await this.queue.add(
-      ORLEN_INGESTION_JOB,
+      STALENESS_DETECTION_JOB,
       {},
       {
-        repeat: { pattern: '0 6 * * *', tz: 'Europe/Warsaw' },
-        jobId: 'orlen-morning',
+        repeat: { pattern: '15 6 * * *', tz: 'Europe/Warsaw' },
+        jobId: 'staleness-morning',
         ...JOB_OPTIONS,
       },
     );
     await this.queue.add(
-      ORLEN_INGESTION_JOB,
+      STALENESS_DETECTION_JOB,
       {},
       {
-        repeat: { pattern: '0 14 * * *', tz: 'Europe/Warsaw' },
-        jobId: 'orlen-afternoon',
+        repeat: { pattern: '15 14 * * *', tz: 'Europe/Warsaw' },
+        jobId: 'staleness-afternoon',
         ...JOB_OPTIONS,
       },
     );
 
     this.worker = new Worker(
-      ORLEN_INGESTION_QUEUE,
+      STALENESS_DETECTION_QUEUE,
       async (_job: Job) => {
-        await this.ingestionService.ingest();
+        await this.detectionService.detectStaleness();
       },
       {
         connection,
         settings: {
-          // AC2: fixed 30-minute retry delay regardless of attempt number
+          // AC6: fixed 5-minute retry delay regardless of attempt number
           backoffStrategy: (_attemptsMade: number): number => RETRY_DELAY_MS,
         },
       },
     );
 
     this.worker.on('completed', () => {
-      this.logger.log('ORLEN rack price ingestion completed successfully');
+      this.logger.log('Staleness detection completed successfully');
     });
 
     this.worker.on('failed', (job: Job | undefined, err: Error) => {
@@ -87,20 +87,20 @@ export class OrlenIngestionWorker implements OnModuleInit, OnModuleDestroy {
       const willRetry = attemptsMade < maxAttempts;
 
       if (!willRetry) {
-        // AC2: all retries exhausted — ops alert
+        // AC6: all retries exhausted — ops alert
         this.logger.error(
-          `ORLEN ingestion FAILED after ${attemptsMade} attempts — ops alert required`,
+          `Staleness detection FAILED after ${attemptsMade} attempts — ops alert required`,
           err.stack,
         );
       } else {
         this.logger.warn(
-          `ORLEN ingestion attempt ${attemptsMade} failed — retrying in 30 min: ${err.message}`,
+          `Staleness detection attempt ${attemptsMade} failed — retrying in 5 min: ${err.message}`,
         );
       }
     });
 
     this.logger.log(
-      'OrlenIngestionWorker initialised — runs at 06:00 and 14:00 Europe/Warsaw',
+      'StalenessDetectionWorker initialised — runs at 06:15 and 14:15 Europe/Warsaw',
     );
   }
 

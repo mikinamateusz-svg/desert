@@ -277,7 +277,13 @@ epics:
       - id: 2.8
         title: Price Staleness Auto-Detection
         file: 2-8-price-staleness-auto-detection.md
-        status: backlog
+        status: review
+        ready_date: 2026-03-26
+        dev_started: 2026-03-26
+        dev_completed: 2026-03-26
+        review_date: 2026-03-26
+        review_findings: "1 patch (P1 ON DELETE RESTRICT should be CASCADE for ephemeral staleness data), 5 deferred (D1 updated_at no DB DEFAULT codebase-wide, D2 no station count upper bound, D3 no transaction wrapping fuel-type loop, D4 shared Redis connection pre-existing, D5 getStaleFuelTypes no TTL), 17 rejected"
+        patches_applied: "2026-03-26 — P1 applied (onDelete: Cascade in schema + migration); D5 fixed (willRetry fallback ?? JOB_OPTIONS.attempts in both workers); 265/265 tests passing, tsc clean"
 
       - id: 2.9
         title: Redis Price Cache

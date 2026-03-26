@@ -33,7 +33,6 @@
     "react-dom": "19.2.0",
     "react-i18next": "^16.6.1",
     "react-native": "0.83.2",
-    "react-native-svg": "^15.15.4",
     "react-native-web": "^0.21.0"
   },
   "devDependencies": {

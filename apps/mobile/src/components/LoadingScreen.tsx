@@ -1,11 +1,9 @@
 import { useMemo, useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
-import Svg, { Path, Defs, ClipPath, Rect } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { tokens } from '../theme';
-
-const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
 export type LoadingStage = 'gps' | 'stations' | 'prices' | 'done';
 
@@ -70,10 +68,9 @@ export function LoadingScreen({ stage, onHidden }: Props) {
     return () => { cancelled.current = true; };
   }, [stage, fillAnim, screenAnim, onHidden]);
 
-  // SVG viewBox is 0 0 64 80. Rect translates from y=80 (empty, below drop) to y=0 (full).
-  const fillSvgTransform = fillAnim.interpolate({
+  const fillHeight = fillAnim.interpolate({
     inputRange:  [0, 1],
-    outputRange: ['translate(0, 80)', 'translate(0, 0)'],
+    outputRange: [0, DROP_HEIGHT],
   });
 
   // D7: useMemo instead of IIFE — avoids recomputing on every render
@@ -97,30 +94,14 @@ export function LoadingScreen({ stage, onHidden }: Props) {
         litr<Text style={styles.accent}>o</Text>
       </Text>
 
-      {/* Fuel drop — SVG teardrop matching the design spec */}
+      {/* Fuel drop — teardrop CSS clip + SVG outline overlay */}
       <View style={styles.dropOuter} accessibilityElementsHidden>
-        <Svg width={DROP_WIDTH} height={DROP_HEIGHT} viewBox="0 0 64 80">
-          <Defs>
-            <ClipPath id="dropClip">
-              <Path d="M32 4 C32 4, 8 36, 8 52 C8 66 19 76 32 76 C45 76 56 66 56 52 C56 36 32 4 32 4 Z" />
-            </ClipPath>
-          </Defs>
-          {/* Grey background — full drop */}
-          <Path
-            d="M32 4 C32 4, 8 36, 8 52 C8 66 19 76 32 76 C45 76 56 66 56 52 C56 36 32 4 32 4 Z"
-            fill={tokens.neutral.n200}
-          />
-          {/* Amber fill — rect clipped to drop shape, translateY animates upward */}
-          <AnimatedRect
-            x="0"
-            y={-80}
-            width="64"
-            height="160"
-            fill={tokens.brand.accent}
-            clipPath="url(#dropClip)"
-            transform={fillSvgTransform}
-          />
-          {/* Outline */}
+        {/* Grey background */}
+        <View style={styles.dropBackground} />
+        {/* Amber fill rising from bottom, clipped by teardrop shape */}
+        <Animated.View style={[styles.dropFill, { height: fillHeight }]} />
+        {/* SVG outline drawn on top — exact teardrop path */}
+        <Svg style={StyleSheet.absoluteFillObject} viewBox="0 0 64 80">
           <Path
             d="M32 4 C32 4, 8 36, 8 52 C8 66 19 76 32 76 C45 76 56 66 56 52 C56 36 32 4 32 4 Z"
             fill="none"
@@ -165,6 +146,22 @@ const styles = StyleSheet.create({
   dropOuter: {
     width: DROP_WIDTH,
     height: DROP_HEIGHT,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderBottomLeftRadius: DROP_WIDTH / 2,
+    borderBottomRightRadius: DROP_WIDTH / 2,
+    overflow: 'hidden',
+  },
+  dropBackground: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: tokens.neutral.n200,
+  },
+  dropFill: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: tokens.brand.accent,
   },
 
   stageLabel: {

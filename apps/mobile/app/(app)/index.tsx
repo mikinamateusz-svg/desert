@@ -18,7 +18,7 @@ import { useAuth } from '../../src/store/auth.store';
 import { LoadingScreen, type LoadingStage } from '../../src/components/LoadingScreen';
 import { SoftSignUpSheet } from '../../src/components/SoftSignUpSheet';
 import { FuelTypePickerSheet } from '../../src/components/FuelTypePickerSheet';
-import { useFuelTypePreference } from '../../src/hooks/useFuelTypePreference';
+import { useFuelTypePreference, VALID_FUEL_TYPES } from '../../src/hooks/useFuelTypePreference';
 import { useLocation, type LocationCoords } from '../../src/hooks/useLocation';
 import { useNearbyStations } from '../../src/hooks/useNearbyStations';
 import { useNearbyPrices } from '../../src/hooks/useNearbyPrices';
@@ -29,7 +29,6 @@ import type { PriceColor } from '../../src/utils/priceColor';
 Mapbox.setAccessToken(process.env['EXPO_PUBLIC_MAPBOX_TOKEN'] ?? '');
 
 const WARSAW: LocationCoords = { lat: 52.2297, lng: 21.0122 };
-const FUEL_TYPES: FuelType[] = ['PB_95', 'PB_98', 'ON', 'ON_PREMIUM', 'LPG'];
 
 function buildGeoJSON(
   stations: { id: string; name: string; lat: number; lng: number }[],
@@ -210,9 +209,10 @@ export default function MapScreen() {
   }, [setSelectedFuelType, markPromptSeen]);
 
   const handleFuelPickerDismiss = useCallback(() => {
-    // Persist current default (PB_95) and mark seen so prompt never shows again
+    // Explicitly persist PB_95 (AC3) and mark seen so prompt never shows again
+    setSelectedFuelType('PB_95');
     markPromptSeen();
-  }, [markPromptSeen]);
+  }, [setSelectedFuelType, markPromptSeen]);
 
   return (
     <View style={styles.container}>
@@ -282,7 +282,7 @@ export default function MapScreen() {
       {/* Fuel type selector — below top bar */}
       <View style={[styles.fuelSelector, { top: topBarHeight + 16 }]} pointerEvents="box-none">
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.fuelSelectorContent}>
-          {FUEL_TYPES.map(ft => (
+          {(VALID_FUEL_TYPES as FuelType[]).map(ft => (
             <TouchableOpacity
               key={ft}
               style={[styles.fuelPill, selectedFuelType === ft && styles.fuelPillActive]}

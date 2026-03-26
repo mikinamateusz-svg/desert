@@ -5,7 +5,7 @@ import type { FuelType } from '@desert/types';
 const STORAGE_KEY_FUEL     = '@litro/fuelType';
 const STORAGE_KEY_PROMPTED = '@litro/fuelTypePromptSeen';
 const DEFAULT_FUEL: FuelType = 'PB_95';
-const VALID_FUEL_TYPES: readonly FuelType[] = ['PB_95', 'PB_98', 'ON', 'ON_PREMIUM', 'LPG'];
+export const VALID_FUEL_TYPES: readonly FuelType[] = ['PB_95', 'PB_98', 'ON', 'ON_PREMIUM', 'LPG'];
 
 export interface UseFuelTypePreferenceResult {
   fuelType: FuelType;
@@ -27,10 +27,15 @@ export function useFuelTypePreference(): UseFuelTypePreferenceResult {
       AsyncStorage.getItem(STORAGE_KEY_PROMPTED),
     ])
       .then(([storedFuel, storedPrompted]) => {
-        if (storedFuel && (VALID_FUEL_TYPES as string[]).includes(storedFuel)) {
-          setFuelTypeState(storedFuel as FuelType);
+        if (storedFuel) {
+          if ((VALID_FUEL_TYPES as string[]).includes(storedFuel)) {
+            setFuelTypeState(storedFuel as FuelType);
+          } else {
+            // Corrupt value → overwrite with default (AC7)
+            void AsyncStorage.setItem(STORAGE_KEY_FUEL, DEFAULT_FUEL).catch(() => { /* silent */ });
+          }
         }
-        // Invalid/null stored value → silently keep DEFAULT_FUEL (AC6, AC7)
+        // Null stored value → no preference set yet; keep DEFAULT_FUEL in memory (AC6)
         if (storedPrompted === 'true') {
           setHasSeenPrompt(true);
         }

@@ -1,19 +1,20 @@
 import { Modal, View, Text, TouchableOpacity, Pressable, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { tokens } from '../theme';
 import type { FuelType } from '@desert/types';
-
-const FUEL_TYPES: FuelType[] = ['PB_95', 'PB_98', 'ON', 'ON_PREMIUM', 'LPG'];
+import { VALID_FUEL_TYPES } from '../hooks/useFuelTypePreference';
 
 interface Props {
   visible: boolean;
   onSelect: (ft: FuelType) => void;
-  /** Called on backdrop tap or swipe — caller should persist default and mark seen */
+  /** Called on backdrop tap or back gesture — caller should persist default and mark seen */
   onDismiss: () => void;
 }
 
 export function FuelTypePickerSheet({ visible, onSelect, onDismiss }: Props) {
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
 
   return (
     <Modal
@@ -22,33 +23,41 @@ export function FuelTypePickerSheet({ visible, onSelect, onDismiss }: Props) {
       animationType="slide"
       onRequestClose={onDismiss}
     >
-      <Pressable style={styles.overlay} onPress={onDismiss} />
-      <View style={styles.sheet}>
-        <View style={styles.handle} />
+      <View style={styles.container}>
+        {/* Backdrop — fills everything behind the sheet */}
+        <Pressable style={StyleSheet.absoluteFill} onPress={onDismiss} />
 
-        <Text style={styles.title}>{t('fuelPicker.title')}</Text>
-        <Text style={styles.subtitle}>{t('fuelPicker.subtitle')}</Text>
+        {/* Sheet — sits at the bottom of the container */}
+        <View
+          style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 24) }]}
+          accessibilityViewIsModal
+        >
+          <View style={styles.handle} />
 
-        {FUEL_TYPES.map((ft, index) => (
-          <TouchableOpacity
-            key={ft}
-            style={[styles.row, index < FUEL_TYPES.length - 1 && styles.rowBorder]}
-            onPress={() => onSelect(ft)}
-            accessibilityRole="button"
-            accessibilityLabel={t(`fuelTypes.${ft}`)}
-          >
-            <Text style={styles.rowText}>{t(`fuelTypes.${ft}`)}</Text>
-          </TouchableOpacity>
-        ))}
+          <Text style={styles.title}>{t('fuelPicker.title')}</Text>
+          <Text style={styles.subtitle}>{t('fuelPicker.subtitle')}</Text>
+
+          {(VALID_FUEL_TYPES as FuelType[]).map((ft, index) => (
+            <TouchableOpacity
+              key={ft}
+              style={[styles.row, index < VALID_FUEL_TYPES.length - 1 && styles.rowBorder]}
+              onPress={() => onSelect(ft)}
+              accessibilityRole="button"
+              accessibilityLabel={t(`fuelTypes.${ft}`)}
+            >
+              <Text style={styles.rowText}>{t(`fuelTypes.${ft}`)}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
+  container: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'flex-end',
   },
   sheet: {
     backgroundColor: tokens.surface.card,
@@ -56,7 +65,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: tokens.radius.lg,
     paddingHorizontal: 24,
     paddingTop: 12,
-    paddingBottom: 40,
   },
   handle: {
     width: 40,

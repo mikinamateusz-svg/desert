@@ -235,6 +235,9 @@ epics:
         ready_date: 2026-03-26
         dev_started: 2026-03-26
         dev_completed: 2026-03-26
+        review_date: 2026-03-26
+        review_findings: "3 patch (P1 modal layout broken — sheet sibling of flex:1 overlay pushes off-screen, P2 AC7 corrupt value not overwritten in storage, P2 dismiss handler missing setFuelType write for PB_95), 10 deferred, 5 rejected"
+        patches_applied: "2026-03-26 — P1-P3 all applied + D: accessibilityViewIsModal, safe area insets, VALID_FUEL_TYPES deduplication; tsc clean"
         note: "Persist selectedFuelType to AsyncStorage. First-launch picker sheet. Remove dead i18n keys. AdBlue deferred to 2.7."
 
       - id: 2.5

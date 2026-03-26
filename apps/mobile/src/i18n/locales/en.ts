@@ -90,15 +90,15 @@ export default {
     done:     'Ready',
   },
   fuelTypes: {
-    petrol_95: 'Petrol 95',
-    petrol_98: 'Petrol 98',
-    diesel: 'Diesel',
-    lpg: 'LPG',
     PB_95: 'PB 95',
     PB_98: 'PB 98',
     ON: 'ON',
     ON_PREMIUM: 'ON+',
     LPG: 'LPG',
+  },
+  fuelPicker: {
+    title: 'What do you usually fill up with?',
+    subtitle: 'You can change this anytime from the map.',
   },
   account: {
     guest: 'Guest',

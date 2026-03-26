@@ -90,15 +90,15 @@ export default {
     done:     'Готово',
   },
   fuelTypes: {
-    petrol_95: 'Бензин 95',
-    petrol_98: 'Бензин 98',
-    diesel: 'Дизель',
-    lpg: 'СПГ',
     PB_95: 'PB 95',
     PB_98: 'PB 98',
     ON: 'ON',
     ON_PREMIUM: 'ON+',
     LPG: 'LPG',
+  },
+  fuelPicker: {
+    title: 'Яким пальним ви зазвичай заправляєтесь?',
+    subtitle: 'Ви можете змінити це в будь-який час на карті.',
   },
   account: {
     guest: 'Гість',

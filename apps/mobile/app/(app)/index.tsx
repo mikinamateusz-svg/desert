@@ -17,6 +17,8 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
 import { LoadingScreen, type LoadingStage } from '../../src/components/LoadingScreen';
 import { SoftSignUpSheet } from '../../src/components/SoftSignUpSheet';
+import { FuelTypePickerSheet } from '../../src/components/FuelTypePickerSheet';
+import { useFuelTypePreference } from '../../src/hooks/useFuelTypePreference';
 import { useLocation, type LocationCoords } from '../../src/hooks/useLocation';
 import { useNearbyStations } from '../../src/hooks/useNearbyStations';
 import { useNearbyPrices } from '../../src/hooks/useNearbyPrices';
@@ -74,8 +76,13 @@ export default function MapScreen() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cameraRef = useRef<any>(null);
 
-  // Selected fuel type (in-memory; persistence added in Story 2.4)
-  const [selectedFuelType, setSelectedFuelType] = useState<FuelType>('PB_95');
+  const {
+    fuelType: selectedFuelType,
+    setFuelType: setSelectedFuelType,
+    hasSeenPrompt: hasSeenFuelPrompt,
+    markPromptSeen,
+    loaded: fuelTypeLoaded,
+  } = useFuelTypePreference();
 
   // Clean up timers on unmount
   useEffect(() => () => {
@@ -194,6 +201,18 @@ export default function MapScreen() {
   };
 
   const showSheet = !accessToken && !hasSeenOnboarding && !sheetDismissed;
+  // Show first-launch fuel picker once splash is gone, preference loaded, and prompt not yet seen
+  const showFuelPicker = fuelTypeLoaded && !hasSeenFuelPrompt && !splashVisible && !showSheet;
+
+  const handleFuelPickerSelect = useCallback((ft: typeof selectedFuelType) => {
+    setSelectedFuelType(ft);
+    markPromptSeen();
+  }, [setSelectedFuelType, markPromptSeen]);
+
+  const handleFuelPickerDismiss = useCallback(() => {
+    // Persist current default (PB_95) and mark seen so prompt never shows again
+    markPromptSeen();
+  }, [markPromptSeen]);
 
   return (
     <View style={styles.container}>
@@ -313,6 +332,12 @@ export default function MapScreen() {
       <SoftSignUpSheet
         visible={showSheet}
         onDismiss={() => setSheetDismissed(true)}
+      />
+
+      <FuelTypePickerSheet
+        visible={showFuelPicker}
+        onSelect={handleFuelPickerSelect}
+        onDismiss={handleFuelPickerDismiss}
       />
     </View>
   );

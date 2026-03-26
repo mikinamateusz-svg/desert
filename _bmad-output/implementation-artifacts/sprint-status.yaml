@@ -229,9 +229,13 @@ epics:
         patches_applied: "2026-03-25 — P1-P4 all applied, 188/188 tests passing"
 
       - id: 2.4
-        title: Fuel Type Filtering
+        title: Fuel Type Filtering — Persistence & First-Launch Default
         file: 2-4-fuel-type-filtering.md
-        status: backlog
+        status: review
+        ready_date: 2026-03-26
+        dev_started: 2026-03-26
+        dev_completed: 2026-03-26
+        note: "Persist selectedFuelType to AsyncStorage. First-launch picker sheet. Remove dead i18n keys. AdBlue deferred to 2.7."
 
       - id: 2.5
         title: Station Detail Screen

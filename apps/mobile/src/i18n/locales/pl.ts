@@ -90,15 +90,15 @@ export default {
     done:     'Gotowe',
   },
   fuelTypes: {
-    petrol_95: 'Benzyna 95',
-    petrol_98: 'Benzyna 98',
-    diesel: 'Diesel',
-    lpg: 'LPG',
     PB_95: 'PB 95',
     PB_98: 'PB 98',
     ON: 'ON',
     ON_PREMIUM: 'ON+',
     LPG: 'LPG',
+  },
+  fuelPicker: {
+    title: 'Czym zazwyczaj tankujesz?',
+    subtitle: 'Możesz to zmienić w każdej chwili na mapie.',
   },
   account: {
     guest: 'Gość',

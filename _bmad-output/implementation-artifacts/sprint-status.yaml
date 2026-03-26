@@ -243,7 +243,14 @@ epics:
       - id: 2.5
         title: Station Detail Screen
         file: 2-5-station-detail-screen.md
-        status: backlog
+        status: review
+        ready_date: 2026-03-26
+        dev_started: 2026-03-26
+        dev_completed: 2026-03-26
+        review_date: 2026-03-26
+        review_findings: "6 patch (P2 Linking unhandled rejection, P2 Mapbox numeric ID coercion, P2 hasPrices wrong logic, P2 relativeTime '?' shown to user, P2 negative diffMs → '-1h', P2 station blanks during dismiss animation), 8 deferred, 6 rejected"
+        patches_applied: "2026-03-26 — P1-P6 all applied + D: price row accessibilityLabel, navigate disabled prop; tsc clean"
+        note: "Bottom sheet on pin tap: name, address, per-fuel prices, freshness, Navigate CTA. Contribution CTA deferred to Epic 3."
 
       - id: 2.6
         title: Price Freshness & Verified vs Estimated Display

@@ -100,6 +100,13 @@ export default {
     title: 'Czym zazwyczaj tankujesz?',
     subtitle: 'Możesz to zmienić w każdej chwili na mapie.',
   },
+  stationDetail: {
+    noAddress: 'Adres niedostępny',
+    updatedAgo: 'Zaktualizowano {{time}} temu',
+    justNow: 'Przed chwilą',
+    noPrices: 'Brak cen',
+    navigate: 'Nawiguj →',
+  },
   account: {
     guest: 'Gość',
     languageLabel: 'Język',

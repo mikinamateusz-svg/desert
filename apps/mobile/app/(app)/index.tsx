@@ -18,12 +18,14 @@ import { useAuth } from '../../src/store/auth.store';
 import { LoadingScreen, type LoadingStage } from '../../src/components/LoadingScreen';
 import { SoftSignUpSheet } from '../../src/components/SoftSignUpSheet';
 import { FuelTypePickerSheet } from '../../src/components/FuelTypePickerSheet';
+import { StationDetailSheet } from '../../src/components/StationDetailSheet';
 import { useFuelTypePreference, VALID_FUEL_TYPES } from '../../src/hooks/useFuelTypePreference';
 import { useLocation, type LocationCoords } from '../../src/hooks/useLocation';
 import { useNearbyStations } from '../../src/hooks/useNearbyStations';
 import { useNearbyPrices } from '../../src/hooks/useNearbyPrices';
 import { computePriceColorMap, PRICE_COLORS } from '../../src/utils/priceColor';
 import type { PriceColor } from '../../src/utils/priceColor';
+import type { StationDto } from '../../src/api/stations';
 
 // Mapbox token must be set before any MapView renders
 Mapbox.setAccessToken(process.env['EXPO_PUBLIC_MAPBOX_TOKEN'] ?? '');
@@ -194,10 +196,22 @@ export default function MapScreen() {
     });
   };
 
-  const handlePinPress = (event: OnPressEvent) => {
-    const name = event.features[0]?.properties?.['name'] ?? 'Unknown';
-    console.log('Station tapped:', name); // Story 2.5 opens station detail sheet
-  };
+  const [selectedStation, setSelectedStation] = useState<StationDto | null>(null);
+
+  const selectedStationPrices = useMemo(
+    () => selectedStation
+      ? (prices.find(p => p.stationId === selectedStation.id) ?? null)
+      : null,
+    [selectedStation, prices],
+  );
+
+  const handlePinPress = useCallback((event: OnPressEvent) => {
+    const rawId = event.features[0]?.properties?.['id'];
+    const stationId = rawId != null ? String(rawId) : '';
+    if (!stationId) return;
+    const station = stations.find(s => s.id === stationId) ?? null;
+    setSelectedStation(station);
+  }, [stations]);
 
   const showSheet = !accessToken && !hasSeenOnboarding && !sheetDismissed;
   // Show first-launch fuel picker once splash is gone, preference loaded, and prompt not yet seen
@@ -338,6 +352,12 @@ export default function MapScreen() {
         visible={showFuelPicker}
         onSelect={handleFuelPickerSelect}
         onDismiss={handleFuelPickerDismiss}
+      />
+
+      <StationDetailSheet
+        station={selectedStation}
+        prices={selectedStationPrices}
+        onDismiss={() => setSelectedStation(null)}
       />
     </View>
   );

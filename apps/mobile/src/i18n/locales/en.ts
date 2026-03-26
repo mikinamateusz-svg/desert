@@ -100,6 +100,13 @@ export default {
     title: 'What do you usually fill up with?',
     subtitle: 'You can change this anytime from the map.',
   },
+  stationDetail: {
+    noAddress: 'Address not available',
+    updatedAgo: 'Updated {{time}} ago',
+    justNow: 'Just now',
+    noPrices: 'No prices yet',
+    navigate: 'Navigate →',
+  },
   account: {
     guest: 'Guest',
     languageLabel: 'Language',

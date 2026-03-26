@@ -100,6 +100,13 @@ export default {
     title: 'Яким пальним ви зазвичай заправляєтесь?',
     subtitle: 'Ви можете змінити це в будь-який час на карті.',
   },
+  stationDetail: {
+    noAddress: 'Адреса недоступна',
+    updatedAgo: 'Оновлено {{time}} тому',
+    justNow: 'Щойно',
+    noPrices: 'Цін ще немає',
+    navigate: 'Навігація →',
+  },
   account: {
     guest: 'Гість',
     languageLabel: 'Мова',

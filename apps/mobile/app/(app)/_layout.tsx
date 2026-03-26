@@ -117,11 +117,7 @@ export default function AppLayout() {
         }}
       />
 
-      {/* ── Web-only: hidden on native ── */}
-      <Tabs.Screen
-        name="index.web"
-        options={{ href: null }}
-      />
+
     </Tabs>
   );
 }

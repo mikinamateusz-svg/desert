@@ -28,6 +28,11 @@ enum SubmissionStatus {
   shadow_rejected
 }
 
+enum PriceSource {
+  community
+  seeded
+}
+
 model User {
   id               String       @id @default(uuid())
   supertokens_id   String?      @unique
@@ -65,6 +70,7 @@ model Submission {
   price_data           Json
   photo_r2_key         String?
   ocr_confidence_score Float?
+  source               PriceSource      @default(community)
   status               SubmissionStatus @default(pending)
   created_at           DateTime         @default(now())
   updated_at           DateTime         @updatedAt

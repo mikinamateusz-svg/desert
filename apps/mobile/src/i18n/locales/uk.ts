@@ -107,6 +107,12 @@ export default {
     noPrices: 'Цін ще немає',
     navigate: 'Навігація →',
   },
+  freshness: {
+    fresh:         'Щойно оновлено',
+    recent:        'Нещодавно оновлено',
+    mayBeOutdated: 'Ціна може бути застарілою',
+    estimated:     'Орієнтовна',
+  },
   account: {
     guest: 'Гість',
     languageLabel: 'Мова',

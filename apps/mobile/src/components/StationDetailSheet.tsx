@@ -14,7 +14,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { tokens } from '../theme';
 import type { FuelType } from '@desert/types';
 import { VALID_FUEL_TYPES } from '../hooks/useFuelTypePreference';
-import { relativeTime } from '../utils/relativeTime';
+import { freshnessBand } from '../utils/freshnessBand';
+import { FreshnessIndicator } from './FreshnessIndicator';
 import type { StationDto } from '../api/stations';
 import type { StationPriceDto } from '../api/prices';
 
@@ -50,14 +51,7 @@ export function StationDetailSheet({ station, prices, onDismiss }: Props) {
   const hasPrices = prices !== null &&
     (VALID_FUEL_TYPES as FuelType[]).some(ft => prices.prices[ft] !== undefined);
 
-  const freshness = (() => {
-    if (!prices) return null;
-    const token = relativeTime(prices.updatedAt);
-    if (token === '?') return null; // unparseable updatedAt — suppress freshness line
-    return token === 'just now'
-      ? t('stationDetail.justNow')
-      : t('stationDetail.updatedAgo', { time: token });
-  })();
+  const band = prices ? freshnessBand(prices.updatedAt) : 'unknown';
 
   return (
     <Modal
@@ -93,15 +87,34 @@ export function StationDetailSheet({ station, prices, onDismiss }: Props) {
                   <View
                     key={ft}
                     style={styles.priceRow}
-                    accessibilityLabel={`${t(`fuelTypes.${ft}`)}: ${price.toFixed(2)} zł/l`}
+                    accessibilityLabel={`${t(`fuelTypes.${ft}`)}: ${
+                      prices!.source === 'seeded' ? '~' : ''
+                    }${price.toFixed(2)} zł/l`}
                   >
                     <Text style={styles.priceLabel}>{t(`fuelTypes.${ft}`)}</Text>
-                    <Text style={styles.priceValue}>{price.toFixed(2)} zł/l</Text>
+                    <View style={styles.priceRight}>
+                      <FreshnessIndicator
+                        band={band}
+                        source={prices!.source}
+                        updatedAt={prices!.updatedAt}
+                      />
+                      <Text style={[
+                        styles.priceValue,
+                        prices!.source === 'seeded' && styles.priceValueEstimated,
+                      ]}>
+                        {prices!.source === 'seeded'
+                          ? `~${price.toFixed(2)}`
+                          : price.toFixed(2)} zł/l
+                      </Text>
+                    </View>
                   </View>
                 );
               })}
-              {freshness !== null && (
-                <Text style={styles.freshness}>{freshness}</Text>
+              {band === 'stale' && prices!.source === 'community' && (
+                <Text style={styles.staleWarning}>{t('freshness.mayBeOutdated')}</Text>
+              )}
+              {prices!.source === 'seeded' && (
+                <Text style={styles.estimatedLabel}>{t('freshness.estimated')}</Text>
               )}
             </View>
           ) : (
@@ -162,6 +175,7 @@ const styles = StyleSheet.create({
   priceRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     paddingVertical: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: tokens.neutral.n200,
@@ -170,15 +184,29 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: tokens.brand.ink,
   },
+  priceRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
   priceValue: {
     fontSize: 15,
     fontWeight: '600',
     color: tokens.brand.ink,
   },
-  freshness: {
+  priceValueEstimated: {
+    color: tokens.neutral.n400,
+  },
+  staleWarning: {
+    fontSize: 12,
+    color: tokens.fresh.old,
+    marginTop: 6,
+    textAlign: 'right',
+  },
+  estimatedLabel: {
     fontSize: 12,
     color: tokens.neutral.n400,
-    marginTop: 10,
+    marginTop: 6,
     textAlign: 'right',
   },
   emptyState: {

@@ -5,6 +5,7 @@ interface StationPriceRow {
   stationId: string;
   prices: Record<string, number>; // JSONB from DB — keys are FuelType values
   updatedAt: Date;
+  source: 'community' | 'seeded';
 }
 
 @Injectable()
@@ -16,7 +17,8 @@ export class PriceService {
       SELECT DISTINCT ON (sub.station_id)
         sub.station_id   AS "stationId",
         sub.price_data   AS prices,
-        sub.created_at   AS "updatedAt"
+        sub.created_at   AS "updatedAt",
+        sub.source       AS source
       FROM "Submission" sub
       JOIN "Station" s ON s.id = sub.station_id
       WHERE sub.status = 'verified'

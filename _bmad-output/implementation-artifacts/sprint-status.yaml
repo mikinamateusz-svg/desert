@@ -255,7 +255,13 @@ epics:
       - id: 2.6
         title: Price Freshness & Verified vs Estimated Display
         file: 2-6-price-freshness-verified-vs-estimated.md
-        status: backlog
+        status: review
+        ready_date: 2026-03-26
+        dev_started: 2026-03-26
+        dev_completed: 2026-03-26
+        review_date: 2026-03-26
+        review_findings: "1 intent_gap (F1 AC3 stale warning scope for seeded prices — resolved: keep community-only, matches epics spec intent), 3 patch (P1 freshness.fresh/recent i18n keys dead, P2 FreshnessIndicator a11y labels hardcoded English, P3 accessibilityRole missing on indicator Views), 5 deferred, 6 rejected"
+        patches_applied: "2026-03-26 — P1-P3 all applied via FreshnessIndicator.tsx: useTranslation added, band labels routed through t(), accessibilityRole=image added; 188/188 tests passing, tsc clean"
 
       - id: 2.7
         title: ORLEN Rack Price Ingestion

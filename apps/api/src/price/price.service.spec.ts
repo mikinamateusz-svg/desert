@@ -35,11 +35,13 @@ describe('PriceService', () => {
           stationId: 'station-1',
           prices: { PB_95: 6.42, ON: 6.89 },
           updatedAt: now,
+          source: 'community',
         },
         {
           stationId: 'station-2',
           prices: { PB_95: 6.55, LPG: 2.89 },
           updatedAt: now,
+          source: 'community',
         },
       ];
       mockPrisma.$queryRaw.mockResolvedValueOnce(fakeRows);
@@ -51,10 +53,12 @@ describe('PriceService', () => {
         stationId: 'station-1',
         prices: { PB_95: 6.42, ON: 6.89 },
         updatedAt: now,
+        source: 'community',
       });
       expect(result[1]).toMatchObject({
         stationId: 'station-2',
         prices: { PB_95: 6.55, LPG: 2.89 },
+        source: 'community',
       });
     });
 
@@ -62,7 +66,7 @@ describe('PriceService', () => {
       const now = new Date();
       // The SQL uses DISTINCT ON — the mock returns one row per station as the DB would
       const fakeRows = [
-        { stationId: 'station-1', prices: { PB_95: 6.42 }, updatedAt: now },
+        { stationId: 'station-1', prices: { PB_95: 6.42 }, updatedAt: now, source: 'community' },
       ];
       mockPrisma.$queryRaw.mockResolvedValueOnce(fakeRows);
 

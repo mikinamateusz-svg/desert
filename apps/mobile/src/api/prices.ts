@@ -32,6 +32,7 @@ export type StationPriceDto = {
   stationId: string;
   prices: Partial<Record<FuelType, number>>;
   updatedAt: string;
+  source: 'community' | 'seeded';
 };
 
 export async function apiGetNearbyPrices(

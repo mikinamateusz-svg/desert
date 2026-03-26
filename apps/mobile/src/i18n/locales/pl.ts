@@ -107,6 +107,12 @@ export default {
     noPrices: 'Brak cen',
     navigate: 'Nawiguj →',
   },
+  freshness: {
+    fresh:         'Właśnie zaktualizowano',
+    recent:        'Zaktualizowano niedawno',
+    mayBeOutdated: 'Cena może być nieaktualna',
+    estimated:     'Szacowana',
+  },
   account: {
     guest: 'Gość',
     languageLabel: 'Język',

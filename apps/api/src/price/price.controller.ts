@@ -14,6 +14,7 @@ export class PriceController {
       stationId: r.stationId,
       prices: r.prices,
       updatedAt: new Date(r.updatedAt).toISOString(),
+      source: r.source,
     }));
   }
 }

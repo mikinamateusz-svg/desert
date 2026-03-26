@@ -107,6 +107,12 @@ export default {
     noPrices: 'No prices yet',
     navigate: 'Navigate →',
   },
+  freshness: {
+    fresh:         'Just updated',
+    recent:        'Updated recently',
+    mayBeOutdated: 'Price may be outdated',
+    estimated:     'Estimated',
+  },
   account: {
     guest: 'Guest',
     languageLabel: 'Language',

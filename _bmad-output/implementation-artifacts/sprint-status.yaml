@@ -266,7 +266,13 @@ epics:
       - id: 2.7
         title: ORLEN Rack Price Ingestion
         file: 2-7-orlen-rack-price-ingestion.md
-        status: backlog
+        status: review
+        ready_date: 2026-03-26
+        dev_started: 2026-03-26
+        dev_completed: 2026-03-26
+        review_date: 2026-03-26
+        review_findings: "4 patch (P1 fuelPattern.source.length wrong offset for \\s* patterns, P2 greedy regex + no plausibility range, P3 no transaction wrapping three creates, P4 division-by-zero on corrupt previous.value=0), 6 deferred, 14 rejected"
+        patches_applied: "2026-03-26 — P1-P4 all applied + D5 test HTML improved + D6 pct_change unit comment; 231/231 tests passing, tsc clean"
 
       - id: 2.8
         title: Price Staleness Auto-Detection

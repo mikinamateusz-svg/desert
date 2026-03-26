@@ -33,6 +33,12 @@ enum PriceSource {
   seeded
 }
 
+enum SignalType {
+  orlen_rack_pb95
+  orlen_rack_on
+  orlen_rack_lpg
+}
+
 model User {
   id               String       @id @default(uuid())
   supertokens_id   String?      @unique
@@ -91,6 +97,18 @@ model UserConsent {
   user         User        @relation(fields: [user_id], references: [id])
 
   @@unique([user_id, type])
+}
+
+model MarketSignal {
+  id                   String     @id @default(uuid())
+  signal_type          SignalType
+  value                Float      // PLN/litre
+  pct_change           Float?     // fraction (0.03 = 3%), NOT a percentage — Story 2.8 must read accordingly; null for first ingestion
+  significant_movement Boolean    @default(false)
+  recorded_at          DateTime   @default(now())
+  created_at           DateTime   @default(now())
+
+  @@index([signal_type, recorded_at])
 }
 
 model NotificationPreference {

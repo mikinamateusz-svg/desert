@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 16,
     marginBottom: 16,
+    color: '#000',
   },
   error: {
     color: '#e53e3e',

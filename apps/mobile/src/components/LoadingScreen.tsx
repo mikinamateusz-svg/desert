@@ -135,11 +135,14 @@ const styles = StyleSheet.create({
     color: tokens.brand.accent,
   },
 
-  // Clip container — overflow:hidden clips the fill to the pill shape
+  // Clip container — overflow:hidden clips the fill to the drop shape
   dropOuter: {
     width: DROP_WIDTH,
     height: DROP_HEIGHT,
-    borderRadius: DROP_WIDTH / 2,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderBottomLeftRadius: DROP_WIDTH / 2,
+    borderBottomRightRadius: DROP_WIDTH / 2,
     overflow: 'hidden',
     position: 'relative',
   },
@@ -162,7 +165,10 @@ const styles = StyleSheet.create({
   // D6: n400 border so the outline is visible against the n200 empty background
   dropOutline: {
     ...StyleSheet.absoluteFillObject,
-    borderRadius: DROP_WIDTH / 2,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderBottomLeftRadius: DROP_WIDTH / 2,
+    borderBottomRightRadius: DROP_WIDTH / 2,
     borderWidth: 2.5,
     borderColor: tokens.neutral.n400,
     backgroundColor: 'transparent',

@@ -40,7 +40,7 @@ export class StationSyncWorker implements OnModuleInit, OnModuleDestroy {
   async onModuleInit(): Promise<void> {
     // P5: create a dedicated ioredis connection with maxRetriesPerRequest: null
     // (the shared REDIS_CLIENT uses maxRetriesPerRequest: 3 which breaks BullMQ)
-    const redisUrl = this.config.getOrThrow<string>('REDIS_URL');
+    const redisUrl = this.config.getOrThrow<string>('BULL_REDIS_URL');
     this.redisForBullMQ = new Redis(redisUrl, {
       maxRetriesPerRequest: null,
     });

@@ -29,7 +29,7 @@ export class StalenessDetectionWorker implements OnModuleInit, OnModuleDestroy {
   ) {}
 
   async onModuleInit(): Promise<void> {
-    const redisUrl = this.config.getOrThrow<string>('REDIS_URL');
+    const redisUrl = this.config.getOrThrow<string>('BULL_REDIS_URL');
     this.redisForBullMQ = new Redis(redisUrl, {
       maxRetriesPerRequest: null,
     });

@@ -299,7 +299,7 @@ epics:
       - id: 2.10
         title: SSR Public Map
         file: 2-10-ssr-public-map.md
-        status: backlog
+        status: review
 
       - id: 2.11
         title: Price History & Regional Aggregations

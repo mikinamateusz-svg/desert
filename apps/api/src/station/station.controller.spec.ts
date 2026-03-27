@@ -31,10 +31,10 @@ describe('StationController', () => {
   });
 
   describe('auth guard', () => {
-    it('does not declare @Public() — relies on global JwtAuthGuard', () => {
+    it('declares @Public() — unauthenticated access for SSR public map', () => {
       const reflector = new Reflector();
       const isPublic = reflector.get<boolean>('isPublic', controller.getNearby);
-      expect(isPublic).toBeUndefined();
+      expect(isPublic).toBe(true);
     });
   });
 

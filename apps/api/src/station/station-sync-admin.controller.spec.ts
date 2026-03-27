@@ -1,14 +1,26 @@
 import { ConflictException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Reflector } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
 import { UserRole } from '@prisma/client';
 import { StationSyncAdminController } from './station-sync-admin.controller.js';
 import { StationSyncAdminService } from './station-sync-admin.service.js';
+import { StationClassificationWorker } from './station-classification.worker.js';
 import { ROLES_KEY } from '../auth/decorators/roles.decorator.js';
 
 const mockSyncAdminService = {
   triggerSync: jest.fn(),
   getStatus: jest.fn(),
+};
+
+const mockClassificationWorker = {
+  getQueue: jest.fn().mockReturnValue({
+    add: jest.fn().mockResolvedValue({ id: 'job-1' }),
+  }),
+};
+
+const mockConfig = {
+  getOrThrow: jest.fn().mockReturnValue('test-secret'),
 };
 
 describe('StationSyncAdminController', () => {
@@ -22,6 +34,8 @@ describe('StationSyncAdminController', () => {
       controllers: [StationSyncAdminController],
       providers: [
         { provide: StationSyncAdminService, useValue: mockSyncAdminService },
+        { provide: StationClassificationWorker, useValue: mockClassificationWorker },
+        { provide: ConfigService, useValue: mockConfig },
       ],
     }).compile();
 

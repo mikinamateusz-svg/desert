@@ -1,0 +1,130 @@
+import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Queue, Worker, type Job } from 'bullmq';
+import Redis from 'ioredis';
+import { PrismaService } from '../prisma/prisma.service.js';
+import { StationClassificationService } from './station-classification.service.js';
+
+export const STATION_CLASSIFICATION_QUEUE = 'station-classification';
+export const STATION_CLASSIFICATION_JOB = 'classify-stations';
+
+// 1,100ms between Nearby Search calls = ~54 req/min (safely under 60 req/min limit)
+const NEARBY_SEARCH_DELAY_MS = 1_100;
+const BATCH_SIZE = 50;
+
+interface StationRow {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+}
+
+@Injectable()
+export class StationClassificationWorker implements OnModuleInit, OnModuleDestroy {
+  private readonly logger = new Logger(StationClassificationWorker.name);
+  private queue!: Queue;
+  private worker!: Worker;
+  // Dedicated Redis connection — BullMQ requires maxRetriesPerRequest: null
+  private redisForBullMQ!: Redis;
+
+  constructor(
+    private readonly classificationService: StationClassificationService,
+    private readonly prisma: PrismaService,
+    private readonly config: ConfigService,
+  ) {}
+
+  async onModuleInit(): Promise<void> {
+    const redisUrl = this.config.getOrThrow<string>('REDIS_URL');
+    this.redisForBullMQ = new Redis(redisUrl, { maxRetriesPerRequest: null });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const connection = this.redisForBullMQ as any;
+
+    this.queue = new Queue(STATION_CLASSIFICATION_QUEUE, {
+      connection,
+      defaultJobOptions: {
+        attempts: 3,
+        backoff: { type: 'exponential', delay: 60_000 },
+      },
+    });
+
+    this.worker = new Worker(
+      STATION_CLASSIFICATION_QUEUE,
+      async (_job: Job) => {
+        await this.processClassification();
+      },
+      { connection },
+    );
+
+    this.worker.on('completed', () =>
+      this.logger.log('Station classification job completed'),
+    );
+    this.worker.on('failed', (_job: Job | undefined, err: Error) =>
+      this.logger.error('Station classification job failed', err.stack),
+    );
+
+    this.logger.log('StationClassificationWorker initialised');
+  }
+
+  async onModuleDestroy(): Promise<void> {
+    await this.worker?.close();
+    await this.queue?.close();
+    await this.redisForBullMQ?.quit();
+  }
+
+  /** Exposed for enqueueing from StationSyncWorker after sync completes */
+  getQueue(): Queue {
+    return this.queue;
+  }
+
+  async processClassification(): Promise<void> {
+    const apiKey = this.config.getOrThrow<string>('GOOGLE_PLACES_API_KEY');
+    let processed = 0;
+
+    while (true) {
+      // No OFFSET — as stations are classified (version 0→1) they drop out of
+      // the WHERE clause, so the next query always starts from the new front.
+      // Using OFFSET while mutating the filtered set causes stations to be skipped.
+      const stations = await this.prisma.$queryRaw<StationRow[]>`
+        SELECT id, name,
+          CAST(ST_Y(location::geometry) AS FLOAT) AS lat,
+          CAST(ST_X(location::geometry) AS FLOAT) AS lng
+        FROM "Station"
+        WHERE classification_version = 0
+          AND location IS NOT NULL
+        ORDER BY created_at ASC
+        LIMIT ${BATCH_SIZE}
+      `;
+
+      if (stations.length === 0) break;
+
+      for (const station of stations) {
+        try {
+          const c = await this.classificationService.classifyStation(station, apiKey);
+          await this.prisma.$executeRaw`
+            UPDATE "Station" SET
+              brand                  = ${c.brand},
+              station_type           = ${c.station_type}::"StationType",
+              voivodeship            = ${c.voivodeship},
+              settlement_tier        = ${c.settlement_tier}::"SettlementTier",
+              is_border_zone_de      = ${c.is_border_zone_de},
+              classification_version = classification_version + 1,
+              updated_at             = NOW()
+            WHERE id = ${station.id}
+          `;
+          processed++;
+        } catch (err) {
+          this.logger.warn(
+            `Classification failed for station ${station.id}: ${(err as Error).message}`,
+          );
+          // Continue — one failure must not block remaining stations
+        }
+
+        // Rate-limiting delay between Nearby Search calls
+        await new Promise((r) => setTimeout(r, NEARBY_SEARCH_DELAY_MS));
+      }
+    }
+
+    this.logger.log(`Classification complete: ${processed} stations classified`);
+  }
+}

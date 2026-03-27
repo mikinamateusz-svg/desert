@@ -288,7 +288,13 @@ epics:
       - id: 2.9
         title: Redis Price Cache
         file: 2-9-redis-price-cache.md
-        status: backlog
+        status: review
+        ready_date: 2026-03-26
+        dev_started: 2026-03-26
+        dev_completed: 2026-03-26
+        review_date: 2026-03-26
+        review_findings: "2 patch (P1 corrupt JSON cache entry treated as Redis error instead of miss, P2 empty-array MGET guard missing), 4 deferred (D1 raw JSONB unvalidated, D2 non-deterministic ordering, D3 cache stampede, D4 no station count cap)"
+        patches_applied: "2026-03-26 — P1-P2 applied, 25/25 tests passing"
 
       - id: 2.10
         title: SSR Public Map
@@ -304,3 +310,14 @@ epics:
         title: Rack-Derived Estimated Price Range (Cold Start)
         file: 2-12-rack-derived-estimated-price-range.md
         status: backlog
+
+      - id: 2.13
+        title: On-Demand Station Sync Trigger
+        file: 2-13-on-demand-station-sync-trigger.md
+        status: review
+
+      - id: 2.14
+        title: Station Classification Enrichment
+        file: 2-14-station-classification-enrichment.md
+        status: review
+        dev_completed: 2026-03-27

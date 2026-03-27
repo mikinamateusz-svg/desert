@@ -154,6 +154,19 @@ describe('StationSyncService', () => {
     it('does not call $executeRawUnsafe', () => {
       expect((mockPrisma as Record<string, unknown>)['$executeRawUnsafe']).toBeUndefined();
     });
+
+    it('includes classification_version reset in ON CONFLICT DO UPDATE (AC7)', async () => {
+      mockPrisma.$executeRaw.mockResolvedValueOnce(1);
+
+      await service.upsertStation(fakePlacesResult);
+
+      // The tagged template strings contain the SQL structure — verify re-classification
+      // reset is present so changed name/location triggers classification_version = 0
+      const sqlStrings: string[] = mockPrisma.$executeRaw.mock.calls[0][0];
+      const fullSql = sqlStrings.join('?');
+      expect(fullSql).toContain('classification_version');
+      expect(fullSql).toContain('IS DISTINCT FROM');
+    });
   });
 
   describe('runSync', () => {

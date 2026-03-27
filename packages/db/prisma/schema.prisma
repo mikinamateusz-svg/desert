@@ -39,6 +39,18 @@ enum SignalType {
   orlen_rack_lpg
 }
 
+enum StationType {
+  standard
+  mop
+}
+
+enum SettlementTier {
+  metropolitan
+  city
+  town
+  rural
+}
+
 model User {
   id               String       @id @default(uuid())
   supertokens_id   String?      @unique
@@ -58,16 +70,23 @@ model User {
 }
 
 model Station {
-  id               String       @id @default(uuid())
-  name             String
-  address          String?
-  google_places_id String?      @unique
-  location         Unsupported("geography(Point,4326)")?
-  last_synced_at   DateTime?
-  created_at       DateTime     @default(now())
-  updated_at       DateTime     @updatedAt
-  submissions      Submission[]
-  staleness        StationFuelStaleness[]
+  id                     String          @id @default(uuid())
+  name                   String
+  address                String?
+  google_places_id       String?         @unique
+  location               Unsupported("geography(Point,4326)")?
+  last_synced_at         DateTime?
+  // Classification fields (populated by Story 2.14)
+  brand                  String?
+  station_type           StationType?
+  voivodeship            String?
+  settlement_tier        SettlementTier?
+  is_border_zone_de      Boolean         @default(false)
+  classification_version Int             @default(0)
+  created_at             DateTime        @default(now())
+  updated_at             DateTime        @updatedAt
+  submissions            Submission[]
+  staleness              StationFuelStaleness[]
 }
 
 model Submission {

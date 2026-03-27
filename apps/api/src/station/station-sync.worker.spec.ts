@@ -3,6 +3,10 @@ import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { StationSyncWorker, STATION_SYNC_QUEUE, STATION_SYNC_JOB } from './station-sync.worker.js';
 import { StationSyncService } from './station-sync.service.js';
+import {
+  StationClassificationWorker,
+  STATION_CLASSIFICATION_JOB,
+} from './station-classification.worker.js';
 
 // P5: mock ioredis so no real Redis connection is created
 const mockRedisQuit = jest.fn().mockResolvedValue('OK');
@@ -40,6 +44,11 @@ jest.mock('bullmq', () => ({
 const mockSyncService = { runSync: jest.fn().mockResolvedValue(undefined) };
 const mockConfig = { getOrThrow: jest.fn().mockReturnValue('redis://localhost:6379') };
 
+const mockClassificationQueueAdd = jest.fn().mockResolvedValue({ id: 'classify-job-1' });
+const mockClassificationWorker = {
+  getQueue: jest.fn().mockReturnValue({ add: mockClassificationQueueAdd }),
+};
+
 describe('StationSyncWorker', () => {
   let workerService: StationSyncWorker;
 
@@ -54,6 +63,7 @@ describe('StationSyncWorker', () => {
         StationSyncWorker,
         { provide: StationSyncService, useValue: mockSyncService },
         { provide: ConfigService, useValue: mockConfig },
+        { provide: StationClassificationWorker, useValue: mockClassificationWorker },
       ],
     }).compile();
 
@@ -134,6 +144,31 @@ describe('StationSyncWorker', () => {
       expect(capturedProcessor).toBeDefined();
       await capturedProcessor!({});
       expect(mockSyncService.runSync).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('completed event handler', () => {
+    it('enqueues a classification job when sync completes', async () => {
+      capturedWorkerEvents['completed']?.();
+      // Allow the async void chain to resolve
+      await new Promise((r) => setTimeout(r, 0));
+      expect(mockClassificationWorker.getQueue).toHaveBeenCalled();
+      expect(mockClassificationQueueAdd).toHaveBeenCalledWith(
+        STATION_CLASSIFICATION_JOB,
+        {},
+        expect.objectContaining({ jobId: expect.stringContaining('classify-after-sync-') }),
+      );
+    });
+
+    it('logs warn (not throw) if classification enqueue fails', async () => {
+      const warnSpy = jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+      mockClassificationQueueAdd.mockRejectedValueOnce(new Error('Redis down'));
+
+      capturedWorkerEvents['completed']?.();
+      await new Promise((r) => setTimeout(r, 0));
+
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Failed to enqueue'));
+      warnSpy.mockRestore();
     });
   });
 

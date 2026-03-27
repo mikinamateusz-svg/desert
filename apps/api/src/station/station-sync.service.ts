@@ -129,7 +129,13 @@ export class StationSyncService {
         address = EXCLUDED.address,
         location = EXCLUDED.location,
         last_synced_at = NOW(),
-        updated_at = NOW()
+        updated_at = NOW(),
+        classification_version = CASE
+          WHEN "Station".name IS DISTINCT FROM EXCLUDED.name
+            OR "Station".location IS DISTINCT FROM EXCLUDED.location
+          THEN 0
+          ELSE "Station".classification_version
+        END
     `;
   }
 }

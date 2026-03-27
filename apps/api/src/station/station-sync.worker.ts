@@ -3,6 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { Queue, Worker, type Job } from 'bullmq';
 import Redis from 'ioredis';
 import { StationSyncService } from './station-sync.service.js';
+import {
+  StationClassificationWorker,
+  STATION_CLASSIFICATION_JOB,
+} from './station-classification.worker.js';
 
 export const STATION_SYNC_QUEUE = 'station-sync';
 export const STATION_SYNC_JOB = 'run-sync';
@@ -30,6 +34,7 @@ export class StationSyncWorker implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly syncService: StationSyncService,
     private readonly config: ConfigService,
+    private readonly classificationWorker: StationClassificationWorker,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -76,7 +81,13 @@ export class StationSyncWorker implements OnModuleInit, OnModuleDestroy {
     );
 
     this.worker.on('completed', () => {
-      this.logger.log('Station sync job completed successfully');
+      this.logger.log('Station sync completed — enqueuing classification job');
+      void this.classificationWorker
+        .getQueue()
+        .add(STATION_CLASSIFICATION_JOB, {}, { jobId: `classify-after-sync-${Date.now()}` })
+        .catch((err: Error) =>
+          this.logger.warn(`Failed to enqueue classification job: ${err.message}`),
+        );
     });
 
     this.worker.on('failed', (job: Job | undefined, err: Error) => {

@@ -1163,7 +1163,16 @@ So that the app is useful from day one — even before enough contributors exist
 
 **Given** the estimated range is calculated
 **When** it is generated
-**Then** it is derived from: the ORLEN rack price for that fuel type (as the primary market signal) + a voivodeship-level margin band (based on historical margin patterns for that region) — resulting in a realistic low-high range a driver would plausibly see at the pump
+**Then** it is derived from the following multi-factor model applied in sequence:
+1. **Base:** current ORLEN rack price for that fuel type (from Story 2.7 `market_signal` records)
+2. **+ voivodeship margin band** — regional average retail margin for that voivodeship (sourced from e-petrol.pl weekly averages, stored as a static config updated periodically)
+3. **+ station type modifier:** MOP station → +45 gr/l; standard → 0
+4. **+ brand tier modifier:** hypermarket (Auchan, Carrefour) → −30 gr/l; budget branded (Circle K, Huzar, Moya, Amic) → −5 gr/l; mid-market (Orlen, Lotos) → 0; premium (BP, Shell) → +7 gr/l; unknown brand → 0
+5. **+ German border zone modifier:** `is_border_zone_de = true` → −15 gr/l; otherwise 0
+6. **+ settlement tier modifier:** rural → +10 gr/l; all other tiers → 0
+**And** the result is displayed as a symmetric ±0.15 PLN band around the calculated midpoint (e.g. midpoint 6.85 PLN → shown as "~6.70–7.00 PLN")
+**And** all modifier values are defined in a config file — not hardcoded in service logic — to allow tuning without a code deploy
+**And** classification data for steps 3–6 is read from the station's classification fields populated by Story 2.14
 
 **Given** ORLEN rack price data is unavailable for a fuel type
 **When** the range cannot be calculated
@@ -1187,7 +1196,7 @@ So that the app is useful from day one — even before enough contributors exist
 **When** their selected language is Polish, English, or Ukrainian
 **Then** all labels, range values, and explanation text are displayed in that language
 
-*Covers: Cold start UX requirement introduced during go-to-market planning. Depends on Story 2.6 (freshness display) and Story 2.7 (ORLEN rack price ingestion — provides the market_signal data this story reads). Story 2.8 (staleness detection) propagates stale flags that trigger range recalculation. Story 6.0 (Phase 2) extends the market_signal feed with Brent crude in PLN, improving signal quality — but Phase 1 ORLEN rack data from Story 2.7 is sufficient to run estimated ranges from launch. Transitions naturally to community-verified prices as Epic 3 contributions accumulate.*
+*Covers: Cold start UX requirement introduced during go-to-market planning. Depends on Story 2.6 (freshness display), Story 2.7 (ORLEN rack price ingestion — provides the market_signal data this story reads), and Story 2.14 (station classification — provides brand, station_type, voivodeship, settlement_tier, and is_border_zone_de fields consumed by the seed formula). Story 2.8 (staleness detection) propagates stale flags that trigger range recalculation. Story 6.0 (Phase 2) extends the market_signal feed with Brent crude in PLN, improving signal quality — but Phase 1 ORLEN rack data from Story 2.7 is sufficient to run estimated ranges from launch. Transitions naturally to community-verified prices as Epic 3 contributions accumulate.*
 
 ---
 
@@ -1226,6 +1235,71 @@ So that I can seed the database immediately after first deploy, recover from a f
 **Then** the `lastCompletedAt` timestamp and `stationCount` in the status response reflect the completed run
 
 *Covers: Ops tooling requirement — no FR mapping. Depends on Story 2.1 (StationSyncService, StationSyncWorker). Story 4.10 (Epic 4) provides the admin UI that calls this endpoint.*
+
+---
+
+### Story 2.14: Station Classification Enrichment
+
+As a **developer**,
+I want each station record to carry classification metadata (brand, station type, voivodeship, settlement tier, German border zone flag),
+So that downstream features — starting with Story 2.12's estimated price ranges — can apply per-station modifiers rather than treating all stations identically.
+
+**Why:** Without classification, every station in Poland gets the same voivodeship average regardless of what it actually is — a Shell MOP on the A2 and an Auchan station in Warsaw would both show 6.85 PLN. Classification makes the cold-start seed model meaningful rather than uniformly wrong. These fields also serve future analytics (chain performance, MOP premium tracking, regional pricing trends) at no additional data collection cost.
+
+**Acceptance Criteria:**
+
+**Given** the Station schema is migrated
+**When** the migration runs
+**Then** the following fields are added to the `Station` model:
+- `brand: String?` — normalised brand slug, e.g. `"orlen"`, `"bp"`, `"shell"`, `"circle_k"`, `"lotos"`, `"huzar"`, `"moya"`, `"amic"`, `"auchan"`, `"carrefour"`, `"independent"`, or `null` if unresolved
+- `station_type: Enum` — `"standard"` | `"mop"` | `null` until classified
+- `voivodeship: String?` — one of the 16 official voivodeship slugs (e.g. `"mazowieckie"`, `"malopolskie"`)
+- `settlement_tier: Enum` — `"metropolitan"` | `"city"` | `"town"` | `"rural"` | `null` until classified
+- `is_border_zone_de: Boolean @default(false)`
+- `classification_version: Int @default(0)` — incremented on each re-classification run to enable future bulk re-runs
+
+**Given** a station is synced from Google Places
+**When** its `name` field is processed during classification
+**Then** the brand is derived via case-insensitive substring matching against a known brand list
+**And** the brand list and its mappings are defined in a config file — not hardcoded in service logic — so the list can be extended without a code deploy
+**And** if no brand matches, `brand` is set to `"independent"`
+
+**Given** a station record with coordinates exists
+**When** MOP classification runs
+**Then** a Google Places Nearby Search is issued within a 300m radius of the station's coordinates
+**And** if any result has `"MOP"` in its name (case-insensitive), the station is classified as `station_type = "mop"`
+**And** if no such result is found, `station_type = "standard"`
+**And** the classification is persisted on the station record — the Nearby Search is not re-issued on every price calculation
+
+**Given** a station with valid coordinates
+**When** voivodeship assignment runs
+**Then** the voivodeship is resolved via reverse geocode (Google Geocoding API or a static PostGIS administrative boundary layer)
+**And** stored as a normalised slug matching the 16 official voivodeship names
+
+**Given** a station with resolved coordinates and municipality
+**When** settlement tier is assigned
+**Then** the tier is determined as follows:
+- `"metropolitan"`: station is within the administrative boundaries of Warsaw, Kraków, Wrocław, Gdańsk, Gdynia, Sopot, Poznań, or Łódź
+- `"city"`: municipality population 50,000–500,000
+- `"town"`: municipality population 10,000–50,000
+- `"rural"`: municipality population below 10,000 or no urban settlement resolved
+**And** population data is sourced from a static GUS municipality table bundled with the service — not a live API call per station
+
+**Given** a station with valid coordinates
+**When** German border zone classification runs
+**Then** `is_border_zone_de = true` if the station is within 30km of any of the following border crossing centroids: Świecko/Słubice (52.35°N, 14.55°E), Zgorzelec (51.15°N, 15.01°E), Lubieszyn (53.41°N, 14.19°E), Łęknica (51.53°N, 14.74°E), Olszyna (51.18°N, 15.22°E)
+**And** `is_border_zone_de = false` otherwise
+
+**Given** a station sync job completes (weekly cron or on-demand per Story 2.13)
+**When** new or updated station records exist
+**Then** a classification enrichment job is enqueued in BullMQ as a post-sync step — it does NOT block the sync job itself
+**And** stations with `classification_version = 0` are prioritised in the enrichment queue
+
+**Given** a station already has classification data
+**When** its `name` or coordinates change during a subsequent sync
+**Then** classification is re-run for that station and `classification_version` is incremented
+
+*Covers: prerequisite for Story 2.12 (multi-factor seed formula). Classification fields are also available for Epic 4 analytics dashboards (Stories 4.6, 4.8) and chain management (Story 7.6). Depends on Story 2.1 (StationSyncService, StationSyncWorker) and Story 2.13 (on-demand sync trigger). Google Places Nearby Search calls for MOP detection consume API quota — the enrichment job must batch requests and respect rate limits to stay within cost budget.*
 
 ---
 

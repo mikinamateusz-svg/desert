@@ -4,7 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import {
   StationClassificationWorker,
   STATION_CLASSIFICATION_QUEUE,
-  STATION_CLASSIFICATION_JOB,
 } from './station-classification.worker.js';
 import { StationClassificationService } from './station-classification.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';

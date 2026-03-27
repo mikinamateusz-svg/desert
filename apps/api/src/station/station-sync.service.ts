@@ -63,12 +63,12 @@ export class StationSyncService {
   }
 
   buildPolandGrid(): [number, number][] {
-    // 15km grid over Poland bbox (lat 49.0–54.9, lng 14.1–24.2)
-    // ~0.135° lat ≈ 15km; ~0.22° lng ≈ 15km at Polish latitudes
-    // Radius reduced to 25000m to avoid the 60-result cap in dense cities
+    // 10km grid over Poland bbox (lat 49.0–54.9, lng 14.1–24.2)
+    // ~0.090° lat ≈ 10km; ~0.147° lng ≈ 10km at Polish latitudes
+    // Smaller radius reduces risk of hitting 60-result cap in dense cities
     const points: [number, number][] = [];
-    for (let lat = 49.2; lat <= 54.8; lat += 0.135) {
-      for (let lng = 14.2; lng <= 24.1; lng += 0.22) {
+    for (let lat = 49.2; lat <= 54.8; lat += 0.09) {
+      for (let lng = 14.2; lng <= 24.1; lng += 0.147) {
         points.push([
           Math.round(lat * 1000) / 1000,
           Math.round(lng * 1000) / 1000,
@@ -87,7 +87,7 @@ export class StationSyncService {
       // X-Goog-Api-Key header is NOT supported by this endpoint (New Places API only).
       const url = new URL('https://maps.googleapis.com/maps/api/place/nearbysearch/json');
       url.searchParams.set('location', `${lat},${lng}`);
-      url.searchParams.set('radius', '15000');
+      url.searchParams.set('radius', '10000');
       url.searchParams.set('type', 'gas_station');
       url.searchParams.set('key', apiKey);
       if (pageToken) {

@@ -82,7 +82,7 @@ describe('StationSyncService', () => {
       expect(global.fetch).toHaveBeenCalledTimes(1);
     });
 
-    it('includes location, type, radius=15000 and key params in the request URL', async () => {
+    it('includes location, type, radius=10000 and key params in the request URL', async () => {
       (global.fetch as jest.Mock).mockResolvedValueOnce(makePlacesResponse([]));
 
       await service.fetchStationsAtPoint(52.23, 21.01, 'my-key');
@@ -90,7 +90,7 @@ describe('StationSyncService', () => {
       const calledUrl = (global.fetch as jest.Mock).mock.calls[0][0] as string;
       expect(calledUrl).toContain('location=52.23%2C21.01');
       expect(calledUrl).toContain('type=gas_station');
-      expect(calledUrl).toContain('radius=15000');
+      expect(calledUrl).toContain('radius=10000');
       expect(calledUrl).toContain('key=my-key');
     });
 

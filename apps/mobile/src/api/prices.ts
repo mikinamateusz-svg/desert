@@ -31,8 +31,10 @@ async function request<T>(path: string, options: RequestInit): Promise<T> {
 export type StationPriceDto = {
   stationId: string;
   prices: Partial<Record<FuelType, number>>;
+  priceRanges?: Partial<Record<FuelType, { low: number; high: number }>>;
+  estimateLabel?: Partial<Record<FuelType, 'market_estimate' | 'estimated'>>;
+  sources: Partial<Record<FuelType, 'community' | 'seeded'>>; // per-fuel
   updatedAt: string;
-  source: 'community' | 'seeded';
 };
 
 export async function apiGetNearbyPrices(

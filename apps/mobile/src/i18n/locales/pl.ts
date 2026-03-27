@@ -112,6 +112,11 @@ export default {
     recent:        'Zaktualizowano niedawno',
     mayBeOutdated: 'Cena może być nieaktualna',
     estimated:     'Szacowana',
+    marketEstimate: 'Szacunek rynkowy',
+    marketEstimateExplain: 'Nie mamy jeszcze aktualnej ceny zgłoszonej przez społeczność. Ten zakres opiera się na bieżących cenach hurtowych.',
+    estimatedExplain: 'Nie mamy jeszcze aktualnej ceny zgłoszonej przez społeczność. Ten zakres opiera się na średniej krajowej.',
+    contributePrompt: 'Kliknij, aby zgłosić zweryfikowaną cenę.',
+    dismiss: 'Rozumiem',
   },
   account: {
     guest: 'Gość',

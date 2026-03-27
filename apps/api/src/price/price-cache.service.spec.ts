@@ -18,8 +18,8 @@ const mockRedis = {
 const makeRow = (stationId: string): StationPriceRow => ({
   stationId,
   prices: { PB_95: 6.42, ON: 6.89 },
+  sources: { PB_95: 'community', ON: 'community' },
   updatedAt: new Date('2026-03-01T10:00:00.000Z'),
-  source: 'community',
 });
 
 describe('PriceCacheService', () => {
@@ -50,7 +50,7 @@ describe('PriceCacheService', () => {
       expect(result.get('station-1')).toMatchObject({
         stationId: 'station-1',
         prices: { PB_95: 6.42, ON: 6.89 },
-        source: 'community',
+        sources: { PB_95: 'community', ON: 'community' },
       });
     });
 

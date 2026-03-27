@@ -309,7 +309,13 @@ epics:
       - id: 2.12
         title: Rack-Derived Estimated Price Range (Cold Start)
         file: 2-12-rack-derived-estimated-price-range.md
-        status: backlog
+        status: review
+        ready_date: 2026-03-27
+        dev_started: 2026-03-27
+        dev_completed: 2026-03-27
+        review_date: 2026-03-27
+        review_findings: "3 patch (P2a deserialize prices null guard + updatedAt guard, P2b modal body wrong copy for fallback — add estimatedExplain i18n, P3 missing test for mixed rack+fallback), 4 deferred (D1 per-fuel label per row — UX product decision, D2 CTA non-tappable — Epic 3 not done, D3 showExplain not reset on prices change — fixed, D4 updatedAt Invalid Date — fixed), 9 rejected"
+        patches_applied: "2026-03-27 — P2a (deserialize null guard for prices + updatedAt), P2b (estimatedExplain i18n key EN/PL/UK + conditional modal body), P3 (mixed rack+fallback test), D3+D4 fixed; 380/380 tests passing, tsc clean"
 
       - id: 2.13
         title: On-Demand Station Sync Trigger

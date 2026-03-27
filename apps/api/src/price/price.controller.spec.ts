@@ -8,8 +8,8 @@ import { GetNearbyPricesDto } from './dto/get-nearby-prices.dto.js';
 const now = new Date('2026-01-15T12:00:00.000Z');
 
 const fakePriceRows = [
-  { stationId: 'station-1', prices: { PB_95: 6.42, ON: 6.89 }, updatedAt: now, source: 'community' },
-  { stationId: 'station-2', prices: { PB_95: 6.55, LPG: 2.89 }, updatedAt: now, source: 'community' },
+  { stationId: 'station-1', prices: { PB_95: 6.42, ON: 6.89 }, sources: { PB_95: 'community', ON: 'community' }, updatedAt: now },
+  { stationId: 'station-2', prices: { PB_95: 6.55, LPG: 2.89 }, sources: { PB_95: 'community', LPG: 'community' }, updatedAt: now },
 ];
 
 const mockPriceService = {
@@ -51,7 +51,7 @@ describe('PriceController', () => {
       expect(result[0]).toMatchObject({
         stationId: 'station-1',
         prices: { PB_95: 6.42, ON: 6.89 },
-        source: 'community',
+        sources: { PB_95: 'community', ON: 'community' },
       });
     });
 

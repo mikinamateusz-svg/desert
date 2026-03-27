@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PriceService } from './price.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { PriceCacheService } from './price-cache.service.js';
+import { EstimatedPriceService } from './estimated-price.service.js';
 
 const mockPrisma = { $queryRaw: jest.fn() };
 
@@ -11,13 +12,35 @@ const mockPriceCache = {
   setAtomic: jest.fn(),
 };
 
+const mockEstimatedPriceService = {
+  computeEstimatesForStations: jest.fn(),
+};
+
 const now = new Date('2026-01-15T12:00:00.000Z');
 
+const makeStation = (id: string) => ({
+  id,
+  brand: 'orlen',
+  station_type: 'standard' as const,
+  voivodeship: 'mazowieckie',
+  settlement_tier: 'city' as const,
+  is_border_zone_de: false,
+});
+
+// StationPriceRow shape (post-conversion, used for cache results and assertions)
 const makeRow = (stationId: string) => ({
   stationId,
-  prices: { PB_95: 6.42, ON: 6.89 },
+  prices: { PB_95: 6.42, ON: 6.89, LPG: 2.89 },
+  sources: { PB_95: 'community' as const, ON: 'community' as const, LPG: 'community' as const },
   updatedAt: now,
+});
+
+// DB row shape (scalar source, as returned by findPricesByStationIds raw query)
+const makeDbRow = (stationId: string) => ({
+  stationId,
+  prices: { PB_95: 6.42, ON: 6.89, LPG: 2.89 },
   source: 'community' as const,
+  updatedAt: now,
 });
 
 describe('PriceService', () => {
@@ -25,12 +48,15 @@ describe('PriceService', () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
+    // Default: no estimated prices (empty map)
+    mockEstimatedPriceService.computeEstimatesForStations.mockResolvedValue(new Map());
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PriceService,
         { provide: PrismaService, useValue: mockPrisma },
         { provide: PriceCacheService, useValue: mockPriceCache },
+        { provide: EstimatedPriceService, useValue: mockEstimatedPriceService },
       ],
     }).compile();
 
@@ -39,7 +65,6 @@ describe('PriceService', () => {
 
   describe('findPricesInArea', () => {
     it('returns empty array when no stations in area', async () => {
-      // Station discovery returns empty
       mockPrisma.$queryRaw.mockResolvedValueOnce([]);
 
       const result = await service.findPricesInArea(52.23, 21.01, 25000);
@@ -48,13 +73,11 @@ describe('PriceService', () => {
       expect(mockPriceCache.getMany).not.toHaveBeenCalled();
     });
 
-    it('returns cached results without hitting DB for prices (AC1 — all cache hits)', async () => {
+    it('returns cached results without hitting DB for prices (all cache hits)', async () => {
       const row1 = makeRow('station-1');
       const row2 = makeRow('station-2');
 
-      // Station discovery
-      mockPrisma.$queryRaw.mockResolvedValueOnce([{ id: 'station-1' }, { id: 'station-2' }]);
-      // All cache hits
+      mockPrisma.$queryRaw.mockResolvedValueOnce([makeStation('station-1'), makeStation('station-2')]);
       mockPriceCache.getMany.mockResolvedValueOnce(
         new Map([['station-1', row1], ['station-2', row2]]),
       );
@@ -62,75 +85,91 @@ describe('PriceService', () => {
       const result = await service.findPricesInArea(52.23, 21.01, 25000);
 
       expect(result).toHaveLength(2);
-      // Only one DB call (station discovery), no price DB query
       expect(mockPrisma.$queryRaw).toHaveBeenCalledTimes(1);
       expect(mockPriceCache.set).not.toHaveBeenCalled();
     });
 
-    it('fetches misses from DB and writes to cache (AC2 — cache miss)', async () => {
+    it('fetches misses from DB and writes to cache (cache miss)', async () => {
       const row1 = makeRow('station-1');
 
-      // Station discovery
-      mockPrisma.$queryRaw.mockResolvedValueOnce([{ id: 'station-1' }, { id: 'station-2' }]);
-      // station-1 is a hit, station-2 is a miss
+      mockPrisma.$queryRaw.mockResolvedValueOnce([makeStation('station-1'), makeStation('station-2')]);
       mockPriceCache.getMany.mockResolvedValueOnce(
         new Map([['station-1', row1], ['station-2', null]]),
       );
-      // DB fetch for miss
-      const row2 = makeRow('station-2');
-      mockPrisma.$queryRaw.mockResolvedValueOnce([row2]);
+      const dbRow2 = makeDbRow('station-2');
+      mockPrisma.$queryRaw.mockResolvedValueOnce([dbRow2]);
 
       const result = await service.findPricesInArea(52.23, 21.01, 25000);
 
       expect(result).toHaveLength(2);
-      // DB called twice: station discovery + price fetch for miss
       expect(mockPrisma.$queryRaw).toHaveBeenCalledTimes(2);
-      // Miss written to cache
-      expect(mockPriceCache.set).toHaveBeenCalledWith('station-2', row2);
+      // cache.set receives the converted StationPriceRow (sources map, no scalar source)
+      expect(mockPriceCache.set).toHaveBeenCalledWith('station-2', expect.objectContaining({
+        stationId: 'station-2',
+        sources: { PB_95: 'community', ON: 'community', LPG: 'community' },
+      }));
     });
 
-    it('returns only stations with verified prices (station in area but no price is excluded)', async () => {
+    it('appends estimated prices for stations with no community price', async () => {
       const row1 = makeRow('station-1');
+      const estimatedRow = {
+        stationId: 'station-2',
+        prices: { PB_95: 6.06 },
+        priceRanges: { PB_95: { low: 5.91, high: 6.21 } },
+        estimateLabel: { PB_95: 'market_estimate' as const },
+        sources: { PB_95: 'seeded' as const },
+        updatedAt: now,
+      };
 
-      // Station discovery: 2 stations in area
-      mockPrisma.$queryRaw.mockResolvedValueOnce([{ id: 'station-1' }, { id: 'station-2' }]);
-      // Both are cache misses
+      // station discovery returns 2 stations
+      mockPrisma.$queryRaw.mockResolvedValueOnce([makeStation('station-1'), makeStation('station-2')]);
+      // station-1 cache hit, station-2 miss
       mockPriceCache.getMany.mockResolvedValueOnce(
-        new Map([['station-1', null], ['station-2', null]]),
+        new Map([['station-1', row1], ['station-2', null]]),
       );
-      // DB only returns price for station-1 (station-2 has no verified submission)
-      mockPrisma.$queryRaw.mockResolvedValueOnce([row1]);
+      // DB only has verified price for station-1
+      mockPrisma.$queryRaw.mockResolvedValueOnce([]);
+      // estimated service returns price for station-2
+      mockEstimatedPriceService.computeEstimatesForStations.mockResolvedValueOnce(
+        new Map([['station-2', estimatedRow]]),
+      );
 
       const result = await service.findPricesInArea(52.23, 21.01, 25000);
 
-      expect(result).toHaveLength(1);
-      expect(result[0]?.stationId).toBe('station-1');
+      expect(result).toHaveLength(2);
+      const estimated = result.find(r => r.stationId === 'station-2');
+      expect(estimated?.sources?.PB_95).toBe('seeded');
+      expect(estimated?.estimateLabel?.PB_95).toBe('market_estimate');
+      expect(estimated?.priceRanges).toBeDefined();
     });
 
-    it('falls back to DB when Redis throws (AC5)', async () => {
+    it('does not call estimatedPriceService when all stations have community prices', async () => {
       const row1 = makeRow('station-1');
 
-      // Station discovery
-      mockPrisma.$queryRaw.mockResolvedValueOnce([{ id: 'station-1' }]);
-      // Redis MGET throws
+      mockPrisma.$queryRaw.mockResolvedValueOnce([makeStation('station-1')]);
+      mockPriceCache.getMany.mockResolvedValueOnce(new Map([['station-1', row1]]));
+
+      await service.findPricesInArea(52.23, 21.01, 25000);
+
+      expect(mockEstimatedPriceService.computeEstimatesForStations).not.toHaveBeenCalled();
+    });
+
+    it('falls back to DB when Redis throws, then computes estimated for uncovered', async () => {
+      mockPrisma.$queryRaw.mockResolvedValueOnce([makeStation('station-1'), makeStation('station-2')]);
       mockPriceCache.getMany.mockRejectedValueOnce(new Error('Redis down'));
-      // Fallback DB query
-      mockPrisma.$queryRaw.mockResolvedValueOnce([row1]);
+      // DB only returns price for station-1
+      mockPrisma.$queryRaw.mockResolvedValueOnce([makeDbRow('station-1')]);
 
       const result = await service.findPricesInArea(52.23, 21.01, 25000);
 
-      expect(result).toHaveLength(1);
-      expect(result[0]?.stationId).toBe('station-1');
+      expect(result).toHaveLength(1); // station-2 has no community price, estimated returns empty by default
       expect(mockPriceCache.set).not.toHaveBeenCalled();
     });
 
     it('does not fail when cache set throws after a miss (error is swallowed)', async () => {
-      const row1 = makeRow('station-1');
-
-      mockPrisma.$queryRaw.mockResolvedValueOnce([{ id: 'station-1' }]);
+      mockPrisma.$queryRaw.mockResolvedValueOnce([makeStation('station-1')]);
       mockPriceCache.getMany.mockResolvedValueOnce(new Map([['station-1', null]]));
-      mockPrisma.$queryRaw.mockResolvedValueOnce([row1]);
-      // set throws — swallowed inside PriceCacheService.set, result still returned
+      mockPrisma.$queryRaw.mockResolvedValueOnce([makeDbRow('station-1')]);
       mockPriceCache.set.mockRejectedValueOnce(new Error('Redis write failed'));
 
       const result = await service.findPricesInArea(52.23, 21.01, 25000);
@@ -144,9 +183,9 @@ describe('PriceService', () => {
       const row3 = makeRow('station-3');
 
       mockPrisma.$queryRaw.mockResolvedValueOnce([
-        { id: 'station-1' },
-        { id: 'station-2' },
-        { id: 'station-3' },
+        makeStation('station-1'),
+        makeStation('station-2'),
+        makeStation('station-3'),
       ]);
       mockPriceCache.getMany.mockResolvedValueOnce(
         new Map([['station-1', row1], ['station-2', row2], ['station-3', row3]]),

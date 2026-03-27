@@ -5,8 +5,10 @@ import { REDIS_CLIENT } from '../redis/redis.module.js';
 export interface StationPriceRow {
   stationId: string;
   prices: Record<string, number>;
+  priceRanges?: Record<string, { low: number; high: number }>;
+  estimateLabel?: Record<string, 'market_estimate' | 'estimated'>;
+  sources: Record<string, 'community' | 'seeded'>; // per-fuel
   updatedAt: Date;
-  source: 'community' | 'seeded';
 }
 
 const KEY_PREFIX = 'price:station:';
@@ -92,11 +94,24 @@ export class PriceCacheService {
 
   private deserialize(raw: string): StationPriceRow {
     const parsed = JSON.parse(raw) as Record<string, unknown>;
+    const prices = (parsed['prices'] ?? {}) as Record<string, number>;
+    // Backward compat: old entries have a scalar `source`, new entries have `sources` record
+    let sources: Record<string, 'community' | 'seeded'>;
+    if (parsed['sources'] && typeof parsed['sources'] === 'object') {
+      sources = parsed['sources'] as Record<string, 'community' | 'seeded'>;
+    } else {
+      const src = (parsed['source'] ?? 'community') as 'community' | 'seeded';
+      sources = Object.fromEntries(Object.keys(prices).map(ft => [ft, src]));
+    }
+    const rawUpdatedAt = parsed['updatedAt'];
+    const updatedAt = rawUpdatedAt ? new Date(rawUpdatedAt as string) : new Date(0);
     return {
-      stationId: parsed.stationId as string,
-      prices: parsed.prices as Record<string, number>,
-      updatedAt: new Date(parsed.updatedAt as string),
-      source: parsed.source as 'community' | 'seeded',
+      stationId: parsed['stationId'] as string,
+      prices,
+      priceRanges: parsed['priceRanges'] as StationPriceRow['priceRanges'],
+      estimateLabel: parsed['estimateLabel'] as StationPriceRow['estimateLabel'],
+      sources,
+      updatedAt,
     };
   }
 }

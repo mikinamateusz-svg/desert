@@ -112,6 +112,11 @@ export default {
     recent:        'Updated recently',
     mayBeOutdated: 'Price may be outdated',
     estimated:     'Estimated',
+    marketEstimate: 'Market estimate',
+    marketEstimateExplain: "We don't have a recent community price here yet. This range is based on current wholesale market data.",
+    estimatedExplain: "We don't have a recent community price here yet. This range is based on a national average price.",
+    contributePrompt: 'Tap to contribute a verified price.',
+    dismiss: 'Got it',
   },
   account: {
     guest: 'Guest',

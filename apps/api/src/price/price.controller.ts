@@ -13,8 +13,10 @@ export class PriceController {
     return rows.map(r => ({
       stationId: r.stationId,
       prices: r.prices,
+      ...(r.priceRanges   ? { priceRanges:   r.priceRanges   } : {}),
+      ...(r.estimateLabel ? { estimateLabel: r.estimateLabel } : {}),
+      sources: r.sources,
       updatedAt: new Date(r.updatedAt).toISOString(),
-      source: r.source,
     }));
   }
 }

@@ -1,6 +1,12 @@
 // Server-side only — do not import this file in Client Components
 
-const API_URL = process.env.INTERNAL_API_URL ?? 'http://localhost:3000';
+function normalizeApiUrl(raw: string | undefined): string {
+  const url = raw ?? 'http://localhost:3000';
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  return `https://${url}`;
+}
+
+const API_URL = normalizeApiUrl(process.env.INTERNAL_API_URL);
 
 export interface StationDto {
   id: string;

@@ -2,6 +2,7 @@ import { ConflictException, Controller, Get, Headers, HttpCode, Post, Unauthoriz
 import { ConfigService } from '@nestjs/config';
 import { UserRole } from '@prisma/client';
 import { Roles } from '../auth/decorators/roles.decorator.js';
+// ^^ used both at class level (@Roles(ADMIN)) and method level (@Roles() to override)
 import { Public } from '../auth/decorators/public.decorator.js';
 import { StationSyncAdminService, SyncStatusResult, TriggerSyncResult } from './station-sync-admin.service.js';
 import { StationClassificationWorker } from './station-classification.worker.js';
@@ -32,6 +33,7 @@ export class StationSyncAdminController {
 
   /** Enqueue a classification job. Protected by X-Admin-Secret header. */
   @Public()
+  @Roles()
   @Post('classify')
   @HttpCode(202)
   async triggerClassify(@Headers('x-admin-secret') secret: string): Promise<{ status: string; jobId: string }> {

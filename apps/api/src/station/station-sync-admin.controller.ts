@@ -31,6 +31,19 @@ export class StationSyncAdminController {
     return this.syncAdminService.getStatus();
   }
 
+  /** Enqueue a station sync job. Protected by X-Admin-Secret header. */
+  @Public()
+  @Roles()
+  @Post('sync/trigger')
+  @HttpCode(202)
+  async triggerSyncPublic(@Headers('x-admin-secret') secret: string): Promise<TriggerSyncResult> {
+    const expected = this.config.getOrThrow<string>('ADMIN_SECRET');
+    if (secret !== expected) throw new UnauthorizedException();
+    const result = await this.syncAdminService.triggerSync();
+    if (result.status === 'already_running') throw new ConflictException(result);
+    return result;
+  }
+
   /** Enqueue a classification job. Protected by X-Admin-Secret header. */
   @Public()
   @Roles()

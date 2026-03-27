@@ -56,7 +56,7 @@ const mockPrisma = {
 };
 const mockConfig = {
   getOrThrow: jest.fn().mockImplementation((key: string) => {
-    if (key === 'REDIS_URL') return 'redis://localhost:6379';
+    if (key === 'BULL_REDIS_URL') return 'redis://localhost:6379';
     if (key === 'GOOGLE_PLACES_API_KEY') return 'test-api-key';
     throw new Error(`Unexpected config key: ${key}`);
   }),

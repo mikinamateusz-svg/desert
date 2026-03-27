@@ -71,7 +71,7 @@ describe('StalenessDetectionWorker', () => {
 
   describe('onModuleInit', () => {
     it('retrieves REDIS_URL via getOrThrow', () => {
-      expect(mockConfig.getOrThrow).toHaveBeenCalledWith('REDIS_URL');
+      expect(mockConfig.getOrThrow).toHaveBeenCalledWith('BULL_REDIS_URL');
     });
 
     it('creates a dedicated Redis connection with maxRetriesPerRequest: null', () => {

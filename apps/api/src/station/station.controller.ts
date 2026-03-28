@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param, Query } from '@nestjs/common';
 import { StationService } from './station.service.js';
 import { GetNearbyStationsDto } from './dto/get-nearby-stations.dto.js';
 import { StationDto } from './dto/station.dto.js';
@@ -12,5 +12,13 @@ export class StationController {
   @Get('nearby')
   async getNearby(@Query() dto: GetNearbyStationsDto): Promise<StationDto[]> {
     return this.stationService.findStationsInArea(dto.lat, dto.lng, dto.radius ?? 25000);
+  }
+
+  @Public()
+  @Get(':id')
+  async getById(@Param('id') id: string): Promise<StationDto> {
+    const station = await this.stationService.findById(id);
+    if (!station) throw new NotFoundException();
+    return station;
   }
 }

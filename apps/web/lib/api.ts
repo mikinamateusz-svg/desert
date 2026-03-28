@@ -52,3 +52,21 @@ export async function fetchStationsWithPrices(
   const priceMap = new Map(prices.map(p => [p.stationId, p]));
   return stations.map(s => ({ ...s, price: priceMap.get(s.id) ?? null }));
 }
+
+export async function fetchStationWithPrice(id: string): Promise<StationWithPrice | null> {
+  const stationRes = await fetch(`${API_URL}/v1/stations/${encodeURIComponent(id)}`, {
+    next: { revalidate: 600 },
+  });
+  if (!stationRes.ok) return null;
+  const station = await stationRes.json() as StationDto;
+
+  // Fetch prices via nearby with tight radius around the station
+  const priceRes = await fetch(
+    `${API_URL}/v1/prices/nearby?lat=${station.lat}&lng=${station.lng}&radius=200`,
+    { next: { revalidate: 600 } },
+  );
+  const nearbyPrices: StationPriceDto[] = priceRes.ok ? await priceRes.json() : [];
+  const price = nearbyPrices.find(p => p.stationId === id) ?? null;
+
+  return { ...station, price };
+}

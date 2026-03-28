@@ -32,6 +32,23 @@ export class StationService {
     return results[0] ?? null;
   }
 
+  async findById(id: string): Promise<StationInArea | null> {
+    const results = await this.prisma.$queryRaw<StationInArea[]>`
+      SELECT
+        id,
+        name,
+        address,
+        google_places_id,
+        ST_Y(location::geometry) AS lat,
+        ST_X(location::geometry) AS lng
+      FROM "Station"
+      WHERE id = ${id}
+        AND location IS NOT NULL
+      LIMIT 1
+    `;
+    return results[0] ?? null;
+  }
+
   async findStationsInArea(lat: number, lng: number, radiusMeters: number): Promise<StationInArea[]> {
     return this.prisma.$queryRaw<StationInArea[]>`
       SELECT

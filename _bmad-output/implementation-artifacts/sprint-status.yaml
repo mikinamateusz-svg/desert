@@ -327,3 +327,119 @@ epics:
         file: 2-14-station-classification-enrichment.md
         status: review
         dev_completed: 2026-03-27
+
+  - id: web
+    name: Web App — Public Site & Content
+    stories:
+      - id: web-1
+        title: Web Layout Shell — Navbar, Footer, i18n Routing
+        file: web-1-layout-shell.md
+        status: in-progress
+        dev_started: 2026-03-28
+        note: >
+          Sticky navbar (logo, nav links, lang switcher, login/account CTA).
+          Footer with about/legal/contact links.
+          Next.js middleware i18n: / = PL default, /en/, /uk/ prefixes.
+          Map page restructured: full-viewport minus navbar, desktop sidebar shell
+          (station list + ad slot placeholder). Mobile: full-screen map, no sidebar.
+
+      - id: web-2
+        title: Station Detail Page
+        file: web-2-station-detail-page.md
+        status: in-progress
+        dev_started: 2026-03-28
+        note: >
+          SSR route /stacje/[id] (PL) / /en/stations/[id] / /uk/stations/[id].
+          Fetch station + prices server-side. Display name, address, fuel prices table,
+          freshness indicator, mini static map, Navigate CTA.
+          Ad slot above fold on desktop sidebar, inline on mobile.
+          SEO: dynamic meta title/description per station.
+        deferred:
+          - id: D1
+            title: EN/UK station detail pages are near-duplicate of PL page
+            detail: >
+              apps/web/app/en/stations/[id]/page.tsx and uk/stations/[id]/page.tsx
+              are full copies of stacje/[id]/page.tsx with hardcoded locale.
+              Content pages were refactored to shared components but station detail
+              was not. Maintenance risk if price table layout changes.
+              Fix: extract StationDetailPageContent.tsx shared component.
+
+      - id: web-3
+        title: Content Pages — About, Contact, Legal
+        file: web-3-content-pages.md
+        status: in-progress
+        dev_started: 2026-03-28
+        note: >
+          /o-nas (About Litro): mission, how it works, trust signals.
+          /kontakt (Contact): form with name/email/message, mailto action for now.
+          /cennik (Pricing): tier comparison table stub.
+          /polityka-prywatnosci + /regulamin: legal stubs.
+          All pages: navbar + footer, full i18n, ad slots in sidebar on desktop.
+
+      - id: web-4
+        title: Ad Slot Infrastructure
+        file: web-4-ad-slots.md
+        status: in-progress
+        dev_started: 2026-03-28
+        note: >
+          AdSlot component with slot ID + size props. Renders labelled placeholder
+          div (border-dashed, "Ad" label) until real network integrated.
+          Defined slot inventory: sidebar-top, sidebar-bottom, content-inline,
+          station-detail-top, article-inline. Easy swap-in for Google Ad Manager
+          or any SSP. No ad on mobile map view.
+
+      - id: web-5
+        title: News & Fuel Price Trends (Aktualności)
+        file: web-5-news-trends.md
+        status: backlog
+        note: >
+          /aktualnosci article list + /aktualnosci/[slug] detail.
+          Markdown or CMS-based content. Article inline ads.
+          Weekly fuel price summary auto-generated from MarketSignal data.
+          SEO: structured data, OG tags.
+
+      - id: web-6
+        title: User Account Dashboard
+        file: web-6-account-dashboard.md
+        status: backlog
+        note: >
+          /konto: consumption log, price submission history, saved stations.
+          Auth-gated (redirect to login). No ads.
+          Links to mobile app for full consumption tracking.
+
+      - id: web-7
+        title: Fleet Manager Dashboard
+        file: web-7-fleet-dashboard.md
+        status: backlog
+        note: >
+          /flota: multi-vehicle fuel log, cost per km, monthly reports, CSV export.
+          Role-gated (FLEET_MANAGER). Upsell CTA for drivers to upgrade.
+          No ads.
+
+      - id: web-8
+        title: Data API & Data Buyer Page
+        file: web-8-data-api.md
+        status: backlog
+        note: >
+          /dane: API documentation, pricing tiers, sample payloads.
+          Lead capture form → sales contact.
+          Role-gated API explorer for DATA_BUYER accounts.
+
+      - id: web-9
+        title: Station Manager Portal
+        file: web-9-station-manager.md
+        status: backlog
+        note: >
+          /dla-stacji: landing page with value prop + sign-up CTA.
+          Authenticated portal: claim station, update hours/amenities,
+          view price submission history for your station.
+          Role-gated (STATION_MANAGER).
+
+      - id: web-10
+        title: Price Alerts & Notifications
+        file: web-10-price-alerts.md
+        status: backlog
+        note: >
+          /powiadomienia: set fuel type + price threshold + location radius.
+          Email + push notification delivery.
+          Auth-gated. Links to mobile app for push setup.

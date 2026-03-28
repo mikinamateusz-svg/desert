@@ -464,9 +464,9 @@ The web app deploys to Vercel (free Hobby tier). For the deployment to work:
 
 - apps/web/package.json (modified — added mapbox-gl ^2.15.0, react-map-gl ^7.1.7, @types/mapbox-gl devDep)
 - apps/web/.env.example (modified — added INTERNAL_API_URL, NEXT_PUBLIC_MAPBOX_TOKEN)
-- apps/web/lib/i18n.ts (new — Locale type, detectLocale, Translations interface, pl/en/uk strings)
+- apps/web/lib/i18n.ts (new — Locale type, detectLocale, Translations interface, pl/en/uk strings; extended in web-1)
 - apps/web/lib/api.ts (new — fetchStationsWithPrices, StationDto, StationPriceDto, StationWithPrice)
-- apps/web/app/page.tsx (modified — replaced placeholder with SSR Server Component)
+- apps/web/app/page.tsx (modified — replaced placeholder with SSR Server Component; extended in web-1 with sidebar)
 - apps/web/components/MapView.tsx (new — "use client" Mapbox map wrapper with contribute modal)
 - apps/web/components/StationMarker.tsx (new — "use client" Mapbox Marker with price pin)
 - apps/web/components/StationPopup.tsx (new — "use client" Mapbox Popup with fuel price list)
@@ -478,14 +478,37 @@ The web app deploys to Vercel (free Hobby tier). For the deployment to work:
 - `lib/i18n.ts`: `detectLocale` parses first segment of `Accept-Language` header; defaults to `pl`. `Translations` interface typed explicitly (not `Record<string,string>`) so Client Components can use typed keys.
 - `lib/api.ts`: server-side only. Both fetches run in `Promise.all` with `next: { revalidate: 600 }` (10-min ISR, matches Redis TTL). Graceful `r.ok` check returns `[]` on API unavailability rather than throwing.
 - `app/page.tsx`: `await headers()` (Next.js 16 requires `await` on `headers()`). `<ul className="sr-only">` renders all station names + PB_95 prices in the HTML for SEO indexability (AC2). Passes pre-fetched `stations` as props to MapView — no client-side API call (AC3).
-- `components/MapView.tsx`: uses `react-map-gl` `Map` with `mapboxAccessToken` from `NEXT_PUBLIC_MAPBOX_TOKEN`. All Mapbox imports are inside `"use client"` boundary — no SSR issues. Contribute CTA opens an inline modal (not a navigation) that explains login requirement (AC4).
+- `components/MapView.tsx`: uses `react-map-gl` `Map` with `mapboxAccessToken` from `NEXT_PUBLIC_MAPBOX_TOKEN`. All Mapbox imports are inside `"use client"` boundary — no SSR issues. Contribute CTA opens an inline modal (not a navigation) that explains login requirement (AC4). Map dimensions changed from `100vw/100vh` to `100%/100%` to fill flex container correctly when sidebar is present.
 - `components/StationMarker.tsx`: renders a `<button>` inside a `<Marker>`. Shows `~` prefix for estimated prices.
 - `components/StationPopup.tsx`: shows all available fuels in standard order, range display for estimated prices, contribute button that triggers parent modal.
 - API tests: 380/380 pass, no regressions.
 - Build: `next build` succeeds, route `/` is `ƒ (Dynamic)` (correct — reads `headers()`).
 - `mapbox-gl` uses v2.x (not v3) because react-map-gl v7 is compatible with mapbox-gl v2. This is the established stable pairing.
 
+### Extensions (web-1 stories)
+
+The following changes were made to 2.10 files as part of the web-1/web-2 implementation sprint:
+
+**`app/page.tsx`**
+- Map restructured into a flex row: map fills `flex-1`, desktop sidebar in `hidden lg:flex w-80 xl:w-96` aside
+- Height set to `calc(100dvh - 64px)` to fill viewport below sticky navbar
+- Cookie locale detection added: `detectLocale(acceptLanguage, cookieLocale?)` — cookie takes precedence over Accept-Language
+- `MapSidebar` component added (station list sorted by PB95, top 30, links to station detail pages)
+
+**`lib/i18n.ts`**
+- `detectLocale` extended with optional `cookieLocale` parameter
+- `localeToHtmlLang()` utility added
+- `Translations` interface massively expanded with `nav`, `footer`, `sidebar`, `station`, `about`, `contact`, `pricing`, `legal` sections
+- `sidebar.sortedByPrice` added (translated subtitle for the map sidebar)
+- `station.fuelHeader` added (translated fuel type column header)
+- `pricing.features` added (`{ free: string[], pro: string[], fleet: string[] }` per locale)
+- All three locale objects fully populated
+
+**`lib/api.ts`**
+- `fetchStationWithPrice(id)` added: fetches single station by ID then prices via nearby 200m radius
+
 ## Change Log
 
 - 2026-03-27: Story created — SSR public map with Mapbox, server-side price fetching, i18n, SEO list
 - 2026-03-27: Story implemented — all tasks complete, 380 API tests passing, tsc + lint clean, next build succeeds
+- 2026-03-28: Extended by web-1/web-2 — map page restructured with sidebar, cookie locale, MapSidebar; i18n massively expanded; fetchStationWithPrice added

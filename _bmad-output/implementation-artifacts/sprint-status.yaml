@@ -334,26 +334,22 @@ epics:
       - id: web-1
         title: Web Layout Shell — Navbar, Footer, i18n Routing
         file: web-1-layout-shell.md
-        status: in-progress
+        status: review
         dev_started: 2026-03-28
-        note: >
-          Sticky navbar (logo, nav links, lang switcher, login/account CTA).
-          Footer with about/legal/contact links.
-          Next.js middleware i18n: / = PL default, /en/, /uk/ prefixes.
-          Map page restructured: full-viewport minus navbar, desktop sidebar shell
-          (station list + ad slot placeholder). Mobile: full-screen map, no sidebar.
+        dev_completed: 2026-03-28
+        review_date: 2026-03-28
+        review_findings: "5 patch (P1 fuel header ternary always Polish, P1 open redirect in set-locale, P2 currentPath x-invoke-path never set, P2 MapSidebar hardcoded English subtitle, P3 dead x-locale middleware injection), 2 deferred (D1 station detail page duplication, D2 pricing features hardcoded in component)"
+        patches_applied: "2026-03-28 — P1-P3 all applied; D2 fixed (pricing features moved to i18n.ts); D1 logged in web-2 deferred; tsc clean"
 
       - id: web-2
         title: Station Detail Page
         file: web-2-station-detail-page.md
-        status: in-progress
+        status: review
         dev_started: 2026-03-28
-        note: >
-          SSR route /stacje/[id] (PL) / /en/stations/[id] / /uk/stations/[id].
-          Fetch station + prices server-side. Display name, address, fuel prices table,
-          freshness indicator, mini static map, Navigate CTA.
-          Ad slot above fold on desktop sidebar, inline on mobile.
-          SEO: dynamic meta title/description per station.
+        dev_completed: 2026-03-28
+        review_date: 2026-03-28
+        review_findings: "See web-1 review — P1 fuel header bug applies here. D1 EN/UK pages are full duplicates."
+        patches_applied: "2026-03-28 — fuel header fix applied; D1 logged"
         deferred:
           - id: D1
             title: EN/UK station detail pages are near-duplicate of PL page
@@ -367,26 +363,22 @@ epics:
       - id: web-3
         title: Content Pages — About, Contact, Legal
         file: web-3-content-pages.md
-        status: in-progress
+        status: review
         dev_started: 2026-03-28
-        note: >
-          /o-nas (About Litro): mission, how it works, trust signals.
-          /kontakt (Contact): form with name/email/message, mailto action for now.
-          /cennik (Pricing): tier comparison table stub.
-          /polityka-prywatnosci + /regulamin: legal stubs.
-          All pages: navbar + footer, full i18n, ad slots in sidebar on desktop.
+        dev_completed: 2026-03-28
+        review_date: 2026-03-28
+        review_findings: "D2 pricing features hardcoded per-locale in component (not in i18n.ts)"
+        patches_applied: "2026-03-28 — D2 fixed (pricing.features moved to i18n.ts)"
 
       - id: web-4
         title: Ad Slot Infrastructure
         file: web-4-ad-slots.md
-        status: in-progress
+        status: review
         dev_started: 2026-03-28
-        note: >
-          AdSlot component with slot ID + size props. Renders labelled placeholder
-          div (border-dashed, "Ad" label) until real network integrated.
-          Defined slot inventory: sidebar-top, sidebar-bottom, content-inline,
-          station-detail-top, article-inline. Easy swap-in for Google Ad Manager
-          or any SSP. No ad on mobile map view.
+        dev_completed: 2026-03-28
+        review_date: 2026-03-28
+        review_findings: "Clean — no patches required"
+        patches_applied: "2026-03-28 — n/a"
 
       - id: web-5
         title: News & Fuel Price Trends (Aktualności)

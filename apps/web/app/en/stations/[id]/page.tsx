@@ -127,7 +127,6 @@ export default async function StationDetailEnPage({ params }: Props) {
           <div className="space-y-4">
             {staticMapUrl ? (
               <div className="rounded-xl overflow-hidden border border-gray-200 aspect-[4/3]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={staticMapUrl} alt={`Map: ${station.name}`} className="w-full h-full object-cover" loading="lazy" />
               </div>
             ) : (

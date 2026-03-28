@@ -66,8 +66,8 @@ export const SETTLEMENT_TIER_MODIFIERS_GR: Record<string, number> = {
 /** Symmetric band radius for market_estimate ranges (gr/l → ±0.15 PLN). */
 export const BAND_RADIUS_GR = 15;
 
-/** Band for fallback estimates — ±5% of midpoint (applied as a fraction, not gr/l). */
-export const FALLBACK_BAND_PCT = 0.05;
+/** Band for fallback estimates — ±2.5% of midpoint (applied as a fraction, not gr/l). */
+export const FALLBACK_BAND_PCT = 0.025;
 
 /**
  * National average pump prices (PLN/l) — used as fallback midpoint when ORLEN

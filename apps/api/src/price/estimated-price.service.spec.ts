@@ -174,7 +174,7 @@ describe('EstimatedPriceService', () => {
   // ─── computeFallback ───────────────────────────────────────────────────────
 
   describe('computeFallback', () => {
-    it('returns fallback with ±5% band for PB_95', () => {
+    it('returns fallback with ±2.5% band for PB_95', () => {
       const result = service.computeFallback('PB_95');
       const base = NATIONAL_FALLBACK_PRICES_PLN['PB_95']!;
       expect(result).not.toBeNull();

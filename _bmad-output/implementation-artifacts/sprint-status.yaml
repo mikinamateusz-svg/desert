@@ -333,7 +333,7 @@ epics:
     stories:
       - id: web-1
         title: Web Layout Shell — Navbar, Footer, i18n Routing
-        file: web-1-layout-shell.md
+        file: web-stories.md
         status: review
         dev_started: 2026-03-28
         dev_completed: 2026-03-28
@@ -343,7 +343,7 @@ epics:
 
       - id: web-2
         title: Station Detail Page
-        file: web-2-station-detail-page.md
+        file: web-stories.md
         status: review
         dev_started: 2026-03-28
         dev_completed: 2026-03-28
@@ -362,7 +362,7 @@ epics:
 
       - id: web-3
         title: Content Pages — About, Contact, Legal
-        file: web-3-content-pages.md
+        file: web-stories.md
         status: review
         dev_started: 2026-03-28
         dev_completed: 2026-03-28
@@ -372,7 +372,7 @@ epics:
 
       - id: web-4
         title: Ad Slot Infrastructure
-        file: web-4-ad-slots.md
+        file: web-stories.md
         status: review
         dev_started: 2026-03-28
         dev_completed: 2026-03-28

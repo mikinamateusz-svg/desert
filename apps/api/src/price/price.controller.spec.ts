@@ -3,6 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { PriceController } from './price.controller.js';
 import { PriceService } from './price.service.js';
+import { PriceHistoryService } from './price-history.service.js';
 import { GetNearbyPricesDto } from './dto/get-nearby-prices.dto.js';
 
 const now = new Date('2026-01-15T12:00:00.000Z');
@@ -16,6 +17,11 @@ const mockPriceService = {
   findPricesInArea: jest.fn(),
 };
 
+const mockPriceHistoryService = {
+  getHistory: jest.fn(),
+  getRegionalAverage: jest.fn(),
+};
+
 describe('PriceController', () => {
   let controller: PriceController;
 
@@ -26,6 +32,7 @@ describe('PriceController', () => {
       controllers: [PriceController],
       providers: [
         { provide: PriceService, useValue: mockPriceService },
+        { provide: PriceHistoryService, useValue: mockPriceHistoryService },
       ],
     }).compile();
 
@@ -92,6 +99,60 @@ describe('PriceController', () => {
       mockPriceService.findPricesInArea.mockRejectedValueOnce(new Error('DB error'));
 
       await expect(controller.getNearby({ lat: 52.23, lng: 21.01 })).rejects.toThrow('DB error');
+    });
+  });
+
+  describe('getHistory', () => {
+    it('returns history entries with ISO recordedAt strings', async () => {
+      mockPriceHistoryService.getHistory.mockResolvedValueOnce([
+        { price: 6.50, source: 'community', recordedAt: now },
+        { price: 6.42, source: 'seeded', recordedAt: new Date('2026-01-14T12:00:00.000Z') },
+      ]);
+
+      const result = await controller.getHistory({ stationId: 'station-1', fuelType: 'PB_95' });
+
+      expect(result.history).toHaveLength(2);
+      expect(result.history[0]).toEqual({ price: 6.50, source: 'community', recordedAt: now.toISOString() });
+    });
+
+    it('delegates to priceHistoryService.getHistory with correct params', async () => {
+      mockPriceHistoryService.getHistory.mockResolvedValueOnce([]);
+
+      await controller.getHistory({ stationId: 'station-abc', fuelType: 'ON' });
+
+      expect(mockPriceHistoryService.getHistory).toHaveBeenCalledWith('station-abc', 'ON', undefined);
+    });
+
+    it('passes optional limit to service', async () => {
+      mockPriceHistoryService.getHistory.mockResolvedValueOnce([]);
+
+      await controller.getHistory({ stationId: 'station-abc', fuelType: 'ON', limit: 30 });
+
+      expect(mockPriceHistoryService.getHistory).toHaveBeenCalledWith('station-abc', 'ON', 30);
+    });
+
+    it('is auth-protected (no @Public decorator)', () => {
+      const reflector = new Reflector();
+      const isPublic = reflector.get<boolean>('isPublic', controller.getHistory);
+      expect(isPublic).toBeUndefined();
+    });
+  });
+
+  describe('getRegional', () => {
+    it('delegates to priceHistoryService.getRegionalAverage and returns result', async () => {
+      const expected = { voivodeship: 'mazowieckie', fuelType: 'PB_95', averagePrice: 6.55, stationCount: 10 };
+      mockPriceHistoryService.getRegionalAverage.mockResolvedValueOnce(expected);
+
+      const result = await controller.getRegional({ voivodeship: 'mazowieckie', fuelType: 'PB_95' });
+
+      expect(result).toEqual(expected);
+      expect(mockPriceHistoryService.getRegionalAverage).toHaveBeenCalledWith('mazowieckie', 'PB_95');
+    });
+
+    it('is auth-protected (no @Public decorator)', () => {
+      const reflector = new Reflector();
+      const isPublic = reflector.get<boolean>('isPublic', controller.getRegional);
+      expect(isPublic).toBeUndefined();
     });
   });
 

@@ -82,3 +82,6 @@ export const NATIONAL_FALLBACK_PRICES_PLN: Record<string, number> = {
 
 /** Fuel types for which estimated ranges are computed (tied to ORLEN rack signals). */
 export const ESTIMABLE_FUEL_TYPES = ['PB_95', 'ON', 'LPG'] as const;
+
+/** All valid fuel types accepted by the platform. */
+export const VALID_FUEL_TYPES = ['PB_95', 'PB_98', 'ON', 'ON_PREMIUM', 'LPG'] as const;

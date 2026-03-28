@@ -87,6 +87,9 @@ model Station {
   updated_at             DateTime        @updatedAt
   submissions            Submission[]
   staleness              StationFuelStaleness[]
+  priceHistory           PriceHistory[]
+
+  @@index([voivodeship])
 }
 
 model Submission {
@@ -155,4 +158,16 @@ model StationFuelStaleness {
 
   @@unique([station_id, fuel_type])
   @@index([station_id])
+}
+
+model PriceHistory {
+  id          String      @id @default(uuid())
+  station_id  String
+  fuel_type   String      // 'PB_95' | 'PB_98' | 'ON' | 'ON_PREMIUM' | 'LPG'
+  price       Float       // PLN/litre
+  source      PriceSource
+  recorded_at DateTime    @default(now())
+  station     Station     @relation(fields: [station_id], references: [id], onDelete: Cascade)
+
+  @@index([station_id, fuel_type, recorded_at(sort: Desc)])
 }

@@ -3,6 +3,7 @@ import { PriceService } from './price.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { PriceCacheService } from './price-cache.service.js';
 import { EstimatedPriceService } from './estimated-price.service.js';
+import { PriceHistoryService } from './price-history.service.js';
 
 const mockPrisma = { $queryRaw: jest.fn() };
 
@@ -14,6 +15,10 @@ const mockPriceCache = {
 
 const mockEstimatedPriceService = {
   computeEstimatesForStations: jest.fn(),
+};
+
+const mockPriceHistory = {
+  recordPrices: jest.fn().mockResolvedValue(undefined),
 };
 
 const now = new Date('2026-01-15T12:00:00.000Z');
@@ -57,6 +62,7 @@ describe('PriceService', () => {
         { provide: PrismaService, useValue: mockPrisma },
         { provide: PriceCacheService, useValue: mockPriceCache },
         { provide: EstimatedPriceService, useValue: mockEstimatedPriceService },
+        { provide: PriceHistoryService, useValue: mockPriceHistory },
       ],
     }).compile();
 
@@ -200,7 +206,37 @@ describe('PriceService', () => {
   });
 
   describe('setVerifiedPrice', () => {
+    it('records price history before writing to cache (AC1)', async () => {
+      mockPriceCache.setAtomic.mockResolvedValueOnce(undefined);
+      const row = makeRow('station-1');
+
+      await service.setVerifiedPrice('station-1', row);
+
+      expect(mockPriceHistory.recordPrices).toHaveBeenCalledWith('station-1', row);
+    });
+
     it('delegates to priceCache.setAtomic (AC3)', async () => {
+      mockPriceCache.setAtomic.mockResolvedValueOnce(undefined);
+      const row = makeRow('station-1');
+
+      await service.setVerifiedPrice('station-1', row);
+
+      expect(mockPriceCache.setAtomic).toHaveBeenCalledWith('station-1', row);
+    });
+
+    it('calls recordPrices before setAtomic (history first)', async () => {
+      const callOrder: string[] = [];
+      mockPriceHistory.recordPrices.mockImplementationOnce(async () => { callOrder.push('history'); });
+      mockPriceCache.setAtomic.mockImplementationOnce(async () => { callOrder.push('cache'); });
+      const row = makeRow('station-1');
+
+      await service.setVerifiedPrice('station-1', row);
+
+      expect(callOrder).toEqual(['history', 'cache']);
+    });
+
+    it('still updates cache if history write fails (P3 — best-effort history)', async () => {
+      mockPriceHistory.recordPrices.mockRejectedValueOnce(new Error('DB down'));
       mockPriceCache.setAtomic.mockResolvedValueOnce(undefined);
       const row = makeRow('station-1');
 

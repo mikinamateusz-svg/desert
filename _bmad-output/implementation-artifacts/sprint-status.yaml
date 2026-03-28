@@ -304,7 +304,12 @@ epics:
       - id: 2.11
         title: Price History & Regional Aggregations
         file: 2-11-price-history-regional-aggregations.md
-        status: backlog
+        status: review
+        dev_started: 2026-03-28
+        dev_completed: 2026-03-28
+        review_date: 2026-03-28
+        review_findings: "4 patch (P1 getHistory unbounded, P2 fuelType/stationId unvalidated, P3 recordPrices failure blocks cache, P4 no @IsUUID on stationId), 3 deferred (D1 Float vs Decimal pre-existing, D2 queryRaw type annotation, D3 no voivodeship index), 12 rejected"
+        patches_applied: "2026-03-28 — P1-P4 applied; D2+D3 fixed; D1 logged; 400/400 tests passing, tsc clean"
 
       - id: 2.12
         title: Rack-Derived Estimated Price Range (Cold Start)

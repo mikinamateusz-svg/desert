@@ -3,12 +3,13 @@ import { PriceController } from './price.controller.js';
 import { PriceService } from './price.service.js';
 import { PriceCacheService } from './price-cache.service.js';
 import { EstimatedPriceService } from './estimated-price.service.js';
+import { PriceHistoryService } from './price-history.service.js';
 import { RedisModule } from '../redis/redis.module.js';
 
 @Module({
   imports: [RedisModule],
   controllers: [PriceController],
-  providers: [PriceService, PriceCacheService, EstimatedPriceService],
+  providers: [PriceService, PriceCacheService, EstimatedPriceService, PriceHistoryService],
   exports: [PriceService],
 })
 export class PriceModule {}

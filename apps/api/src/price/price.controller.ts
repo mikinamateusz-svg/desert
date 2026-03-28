@@ -1,12 +1,18 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { PriceService } from './price.service.js';
+import { PriceHistoryService } from './price-history.service.js';
 import { GetNearbyPricesDto } from './dto/get-nearby-prices.dto.js';
+import { GetPriceHistoryDto } from './dto/get-price-history.dto.js';
+import { GetRegionalAverageDto } from './dto/get-regional-average.dto.js';
 import { StationPriceDto } from './dto/station-price.dto.js';
 import { Public } from '../auth/decorators/public.decorator.js';
 
 @Controller('v1/prices')
 export class PriceController {
-  constructor(private readonly priceService: PriceService) {}
+  constructor(
+    private readonly priceService: PriceService,
+    private readonly priceHistoryService: PriceHistoryService,
+  ) {}
 
   @Public()
   @Get('nearby')
@@ -20,5 +26,22 @@ export class PriceController {
       sources: r.sources,
       updatedAt: new Date(r.updatedAt).toISOString(),
     }));
+  }
+
+  @Get('history')
+  async getHistory(@Query() dto: GetPriceHistoryDto) {
+    const history = await this.priceHistoryService.getHistory(dto.stationId, dto.fuelType, dto.limit);
+    return {
+      history: history.map(e => ({
+        price: e.price,
+        source: e.source,
+        recordedAt: e.recordedAt.toISOString(),
+      })),
+    };
+  }
+
+  @Get('regional')
+  async getRegional(@Query() dto: GetRegionalAverageDto) {
+    return this.priceHistoryService.getRegionalAverage(dto.voivodeship, dto.fuelType);
   }
 }

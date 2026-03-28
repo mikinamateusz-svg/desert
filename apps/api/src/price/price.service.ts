@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { PriceCacheService, StationPriceRow } from './price-cache.service.js';
 import { EstimatedPriceService, StationClassificationRow } from './estimated-price.service.js';
+import { PriceHistoryService } from './price-history.service.js';
 import { ESTIMABLE_FUEL_TYPES } from './config/price-modifiers.js';
 
 export type { StationPriceRow };
@@ -15,6 +16,7 @@ export class PriceService {
     private readonly prisma: PrismaService,
     private readonly priceCache: PriceCacheService,
     private readonly estimatedPriceService: EstimatedPriceService,
+    private readonly priceHistory: PriceHistoryService,
   ) {}
 
   /**
@@ -75,9 +77,15 @@ export class PriceService {
 
   /**
    * Called by the OCR verification pipeline when a submission is verified.
-   * Atomically invalidates the old cache and writes the new price.
+   * Records price history (best-effort), then atomically invalidates the old cache and writes the new price.
+   * History write failure is logged but does not block the cache update.
    */
   async setVerifiedPrice(stationId: string, data: StationPriceRow): Promise<void> {
+    try {
+      await this.priceHistory.recordPrices(stationId, data);
+    } catch (err) {
+      this.logger.warn(`History write failed for station ${stationId} — cache update will still proceed`, err);
+    }
     await this.priceCache.setAtomic(stationId, data);
   }
 

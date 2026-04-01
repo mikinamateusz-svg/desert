@@ -28,7 +28,8 @@ from day one makes staleness detection meaningful and estimated ranges accurate.
 ## Acceptance Criteria
 
 1. **Given** a scheduled job runs twice daily (06:00 and 14:00 Europe/Warsaw)
-   **When** it polls ORLEN's public rack price page (`ORLEN_RACK_PRICE_URL` env var)
+   **When** it calls the ORLEN JSON APIs (`tool.orlen.pl/api/wholesalefuelprices` and
+   `tool.orlen.pl/api/autogasprices`)
    **Then** it fetches PB95, ON, LPG wholesale prices and stores each as a `market_signal` record
    with `signal_type` (orlen_rack_pb95 | orlen_rack_on | orlen_rack_lpg), `value` (PLN/litre),
    `recorded_at`, and `pct_change` vs previous reading.
@@ -105,19 +106,22 @@ from day one makes staleness detection meaningful and estimated ranges accurate.
 ### Phase 2 — `OrlenIngestionService`
 
 - [x] **2.1** Create `apps/api/src/market-signal/orlen-ingestion.service.ts`:
-  - Constructor injects `PrismaService` + `ConfigService`, reads `ORLEN_RACK_PRICE_URL`.
-  - `async ingest(): Promise<void>` — orchestrates fetch → parse → store.
-  - `async fetchPage(): Promise<string>` — GET with 15s `AbortSignal.timeout`, throws on
-    non-OK status.
-  - `parsePrices(html: string): RackPrices` — extracts PB95, ON, LPG from ORLEN table HTML.
-    Fuel labels: `Eurosuper 95` (PB95), `Ekodiesel` (ON), `Autogas` (LPG).
-    ORLEN publishes PLN/1000L → divide by 1000.
-    Throws `Error` if any fuel cannot be found or parsed.
+  - Constructor injects `PrismaService` only (no `ConfigService` — API URLs hardcoded).
+  - `async ingest(): Promise<void>` — fetches both JSON endpoints in parallel, parses, stores.
+  - `async fetchJson<T>(url: string): Promise<T>` — GET with 15s `AbortSignal.timeout`, throws on
+    non-OK status, returns parsed JSON. Public for testability.
+  - `parsePrices(wholesale, autogas): RackPrices` — maps JSON items to PLN/litre values.
+    - Wholesale: finds `productName === 'Pb95'` and `'ONEkodiesel'`, divides value by 1000.
+    - LPG: mean of all `autogasprices` items (already PLN/litre, spread ~3–5 gr).
+    - Plausibility check on all three values; throws if any outside [0.3–15] PLN/l.
   - `private async storeSignals(prices: RackPrices): Promise<void>`:
     - For each signal type: fetch most recent record, compute `pct_change` fraction
       (`(value - prev) / prev`), set `significant_movement` if `|pct_change| >= 0.03`.
-    - Create new `MarketSignal` record.
+    - Create new `MarketSignal` record in a single `$transaction`.
     - Logger.warn on significant movement.
+  - **Maintenance note (2026-04-01):** Original implementation scraped HTML; ORLEN migrated to
+    JS-rendered SPA, breaking the parser. Replaced with `tool.orlen.pl` JSON API. No env var
+    required (`ORLEN_RACK_PRICE_URL` is now unused).
 
 - [x] **2.2** `RackPrices` interface exported:
   ```ts
@@ -158,14 +162,16 @@ from day one makes staleness detection meaningful and estimated ranges accurate.
 ### Phase 5 — Tests
 
 - [x] **5.1** Create `apps/api/src/market-signal/orlen-ingestion.service.spec.ts`:
-  - Mock `PrismaService` and `ConfigService`.
-  - Test `parsePrices`: valid HTML → correct PLN/litre values; missing fuel → throws.
+  - Mock `PrismaService` only (ConfigService removed).
+  - Test `parsePrices`: valid JSON fixtures → correct PLN/litre values; missing product → throws;
+    empty autogas → throws; implausible values → throws.
+  - Test `fetchJson`: 200 OK → returns JSON; non-OK → throws; User-Agent header present.
   - Test `ingest` / `storeSignals`:
     - First ingestion: `pct_change: null`, `significant_movement: false`.
     - 2% movement: `significant_movement: false`.
     - 3% movement exactly: `significant_movement: true`.
     - Negative movement ≥3%: `significant_movement: true`.
-    - `fetchPage` non-OK response → throws (no record created).
+    - Fetch non-OK response → throws (no record created).
 
 - [x] **5.2** Create `apps/api/src/market-signal/orlen-ingestion.worker.spec.ts`:
   - Mock `OrlenIngestionService`, `ConfigService`.
@@ -192,4 +198,15 @@ from day one makes staleness detection meaningful and estimated ranges accurate.
 - **Story 2.8 integration** — `significant_movement` flag is written but consumed by Story 2.8
 - **Story 2.12 integration** — seeded price range display uses Story 2.7 + 2.12 together
 - **Story 6.0 Brent crude signal** — Phase 2 extension; same module, new signal type
-- **ORLEN page parser maintenance** — parser may need updates if ORLEN changes page layout
+- **ORLEN API maintenance** — JSON API endpoints on `tool.orlen.pl` may change; product name
+  mapping (`Pb95`, `ONEkodiesel`) must be verified if ingestion fails again
+- **`effectiveDate` not used for wholesale filtering** — `wholesale.find` returns first match;
+  if the API ever returns multi-date series, stale/future prices could be ingested silently.
+  Currently the API returns one row per product — monitor if prices look wrong.
+- **Hardcoded API URLs** — `ORLEN_WHOLESALE_URL` / `ORLEN_AUTOGAS_URL` are module constants;
+  a path change by ORLEN requires a code deploy, not a config change.
+- **No shared AbortController for parallel fetches** — a timeout on one `fetchJson` call does
+  not cancel the peer; job completion is delayed by up to 15s on partial failure.
+- **`PLN_PER_LITRE_MAX = 15.0` kills ingestion on extreme price spikes** — if wholesale rack
+  price ever exceeds 15 PLN/l the plausibility check throws and both BullMQ retry attempts
+  fail; distinguish from real API outage before investigating.

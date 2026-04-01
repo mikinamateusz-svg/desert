@@ -1,38 +1,36 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { OrlenIngestionService } from './orlen-ingestion.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 global.fetch = jest.fn();
 
-// ── HTML fixtures ─────────────────────────────────────────────────────────────
+// ── JSON fixtures ──────────────────────────────────────────────────────────────
 
-/**
- * Realistic ORLEN-style HTML: fuel name in one <td>, price in the next <td>.
- * The parser must advance past the matched label text (via exec + match[0].length)
- * and then find the first digit in the remaining HTML (which starts with </td><td>).
- * Prices are in PLN/1000L.
- */
-const makeOrlenHtml = (pb95: string, on: string, lpg: string) =>
-  `<table class="price-table">
-    <thead><tr><th>Produkt</th><th>Cena netto (zł/1000 l)</th></tr></thead>
-    <tbody>
-      <tr><td>Eurosuper 95</td><td class="price">${pb95}</td></tr>
-      <tr><td>Ekodiesel</td><td class="price">${on}</td></tr>
-      <tr><td>Autogas</td><td class="price">${lpg}</td></tr>
-    </tbody>
-  </table>`;
+// Mirror the product name constants from the service (kept in sync manually — not re-exported)
+const PRODUCT_PB95 = 'Pb95';
+const PRODUCT_ON   = 'ONEkodiesel';
 
-/** Standard fixture — prices in PLN/1000L */
-const VALID_HTML = makeOrlenHtml('5 234,56', '5 123,45', '2 987,65');
-// Expected PLN/litre: 5.23456, 5.12345, 2.98765
+/** Wholesale fixture — values in PLN/1000L */
+const makeWholesale = (pb95: number, on: number) => [
+  { productName: PRODUCT_PB95, effectiveDate: '2026-04-01T00:00:00', value: pb95 },
+  { productName: PRODUCT_ON,   effectiveDate: '2026-04-01T00:00:00', value: on },
+  { productName: 'Pb98',       effectiveDate: '2026-04-01T00:00:00', value: 6032.0 },
+];
+
+/** Autogas fixture — values in PLN/litre (already per-litre, per voivodeship) */
+const makeAutogas = (...values: number[]) => values.map(v => ({ value: v }));
+
+/** Standard fixtures */
+const VALID_WHOLESALE = makeWholesale(5234.56, 5123.45);
+// Expected PLN/litre: 5.23456, 5.12345
+const VALID_AUTOGAS = makeAutogas(2.98765, 3.01235);
+// Expected mean: (2.98765 + 3.01235) / 2 = 3.0
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
 
-const mockCreate = jest.fn().mockResolvedValue({});
+const mockCreate    = jest.fn().mockResolvedValue({});
 const mockFindFirst = jest.fn();
-// P3: $transaction mock — executes all operations (array form)
 const mockTransaction = jest.fn().mockImplementation(
   (ops: Promise<unknown>[]) => Promise.all(ops),
 );
@@ -40,24 +38,24 @@ const mockTransaction = jest.fn().mockImplementation(
 const mockPrisma = {
   marketSignal: {
     findFirst: mockFindFirst,
-    create: mockCreate,
+    create:    mockCreate,
   },
   $transaction: mockTransaction,
 };
 
-const mockConfig = {
-  getOrThrow: jest.fn().mockReturnValue('https://orlen.pl/rack'),
-};
-
-const makeFetchOk = (html: string) =>
-  (global.fetch as jest.Mock).mockResolvedValue({
-    ok: true,
-    text: jest.fn().mockResolvedValue(html),
+/** Make fetch return the standard valid JSON for both endpoints */
+const makeFetchOk = (wholesale = VALID_WHOLESALE, autogas = VALID_AUTOGAS) =>
+  (global.fetch as jest.Mock).mockImplementation((url: string) => {
+    const data = (url as string).includes('autogas') ? autogas : wholesale;
+    return Promise.resolve({
+      ok:   true,
+      json: jest.fn().mockResolvedValue(data),
+    });
   });
 
 const makeFetchFail = (status: number) =>
   (global.fetch as jest.Mock).mockResolvedValue({
-    ok: false,
+    ok:         false,
     status,
     statusText: 'Error',
   });
@@ -73,7 +71,6 @@ describe('OrlenIngestionService', () => {
       providers: [
         OrlenIngestionService,
         { provide: PrismaService, useValue: mockPrisma },
-        { provide: ConfigService, useValue: mockConfig },
       ],
     }).compile();
     service = module.get<OrlenIngestionService>(OrlenIngestionService);
@@ -82,102 +79,95 @@ describe('OrlenIngestionService', () => {
   // ── parsePrices ─────────────────────────────────────────────────────────────
 
   describe('parsePrices', () => {
-    it('extracts PB95 price from HTML and converts PLN/1000L → PLN/l', () => {
-      const { pb95 } = service.parsePrices(VALID_HTML);
+    it('extracts PB95 price from wholesale JSON and converts PLN/1000L → PLN/l', () => {
+      const { pb95 } = service.parsePrices(VALID_WHOLESALE, VALID_AUTOGAS);
       expect(pb95).toBeCloseTo(5.23456, 4);
     });
 
-    it('extracts ON price from HTML', () => {
-      const { on } = service.parsePrices(VALID_HTML);
+    it('extracts ON price from wholesale JSON', () => {
+      const { on } = service.parsePrices(VALID_WHOLESALE, VALID_AUTOGAS);
       expect(on).toBeCloseTo(5.12345, 4);
     });
 
-    it('extracts LPG price from HTML', () => {
-      const { lpg } = service.parsePrices(VALID_HTML);
-      expect(lpg).toBeCloseTo(2.98765, 4);
+    it('computes LPG as mean of all voivodeship values', () => {
+      const autogas = makeAutogas(3.08, 3.10, 3.12);
+      const { lpg } = service.parsePrices(VALID_WHOLESALE, autogas);
+      expect(lpg).toBeCloseTo((3.08 + 3.10 + 3.12) / 3, 5);
     });
 
-    it('handles comma decimal separator without spaces', () => {
-      const html = makeOrlenHtml('5234,56', '5123,45', '2987,65');
-      const { pb95 } = service.parsePrices(html);
-      expect(pb95).toBeCloseTo(5.23456, 4);
+    it('works with a single autogas value', () => {
+      const { lpg } = service.parsePrices(VALID_WHOLESALE, makeAutogas(3.10));
+      expect(lpg).toBeCloseTo(3.10, 4);
     });
 
-    it('handles dot decimal separator', () => {
-      const html = makeOrlenHtml('5234.56', '5123.45', '2987.65');
-      const { pb95 } = service.parsePrices(html);
-      expect(pb95).toBeCloseTo(5.23456, 4);
+    it('throws when Pb95 is missing from wholesale data', () => {
+      const noPb95 = VALID_WHOLESALE.filter(i => i.productName !== PRODUCT_PB95);
+      expect(() => service.parsePrices(noPb95, VALID_AUTOGAS)).toThrow(/"Pb95"/i);
     });
 
-    it('correctly advances past label when \\s* matches multiple spaces (P1 fix)', () => {
-      // "Eurosuper  95" — two spaces matched by \s*. Using source.length would advance
-      // by 14 chars (wrong); exec + match[0].length advances by 13 chars (correct).
-      const html = makeOrlenHtml('5 234,56', '5 123,45', '2 987,65')
-        .replace('Eurosuper 95', 'Eurosuper  95');
-      const { pb95 } = service.parsePrices(html);
-      expect(pb95).toBeCloseTo(5.23456, 4);
+    it('throws when ONEkodiesel is missing from wholesale data', () => {
+      const noOn = VALID_WHOLESALE.filter(i => i.productName !== PRODUCT_ON);
+      expect(() => service.parsePrices(noOn, VALID_AUTOGAS)).toThrow(/"ONEkodiesel"/i);
     });
 
-    it('throws when parsed value is implausibly high (P2 plausibility check)', () => {
-      // 52345 PLN/1000L → 52.345 PLN/l — way outside [0.3, 15]
-      const html = makeOrlenHtml('52345,00', '5123,45', '2987,65');
-      expect(() => service.parsePrices(html)).toThrow(/plausible range/i);
+    it('throws when autogas list is empty', () => {
+      expect(() => service.parsePrices(VALID_WHOLESALE, [])).toThrow(/empty/i);
     });
 
-    it('throws when parsed value is implausibly low (P2 plausibility check)', () => {
-      // 100 PLN/1000L → 0.1 PLN/l — below minimum
-      const html = makeOrlenHtml('100,00', '5123,45', '2987,65');
-      expect(() => service.parsePrices(html)).toThrow(/plausible range/i);
+    it('throws when wholesale response is not an array (e.g. error envelope)', () => {
+      expect(() =>
+        service.parsePrices({ error: 'maintenance' } as any, VALID_AUTOGAS),
+      ).toThrow(/unexpected shape/i);
     });
 
-    it('throws when Eurosuper 95 label is missing', () => {
-      const html = `<table><tr><td>Ekodiesel</td><td>5123,45</td></tr></table>`;
-      expect(() => service.parsePrices(html)).toThrow(/Eurosuper/i);
+    it('throws when autogas response is not an array', () => {
+      expect(() =>
+        service.parsePrices(VALID_WHOLESALE, { error: 'maintenance' } as any),
+      ).toThrow(/unexpected shape/i);
     });
 
-    it('throws when Ekodiesel label is missing', () => {
-      const html = `<table><tr><td>Eurosuper 95</td><td>5234,56</td></tr></table>`;
-      expect(() => service.parsePrices(html)).toThrow(/Ekodiesel/i);
+    it('throws when wholesale PB95 value is implausibly high (plausibility check)', () => {
+      const bad = makeWholesale(52_000, 5123.45); // 52 PLN/l — impossible
+      expect(() => service.parsePrices(bad, VALID_AUTOGAS)).toThrow(/plausible range/i);
     });
 
-    it('throws when Autogas label is missing', () => {
-      const htmlNoLpg = `<table>
-        <tr><td>Eurosuper 95</td><td>5234,56</td></tr>
-        <tr><td>Ekodiesel</td><td>5123,45</td></tr>
-      </table>`;
-      expect(() => service.parsePrices(htmlNoLpg)).toThrow(/Autogas/i);
-    });
-
-    it('is case-insensitive for fuel labels', () => {
-      const html = makeOrlenHtml('5 234,56', '5 123,45', '2 987,65')
-        .replace('Eurosuper 95', 'eurosuper 95')
-        .replace('Ekodiesel', 'ekodiesel')
-        .replace('Autogas', 'autogas');
-      expect(() => service.parsePrices(html)).not.toThrow();
+    it('throws when wholesale PB95 value is implausibly low (plausibility check)', () => {
+      const bad = makeWholesale(100, 5123.45); // 0.1 PLN/l — impossible
+      expect(() => service.parsePrices(bad, VALID_AUTOGAS)).toThrow(/plausible range/i);
     });
   });
 
-  // ── fetchPage ───────────────────────────────────────────────────────────────
+  // ── fetchJson ────────────────────────────────────────────────────────────────
 
-  describe('fetchPage', () => {
-    it('returns HTML on 200 OK', async () => {
-      makeFetchOk('<html>ok</html>');
-      const html = await service.fetchPage();
-      expect(html).toBe('<html>ok</html>');
+  describe('fetchJson', () => {
+    it('returns parsed JSON on 200 OK', async () => {
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok:   true,
+        json: jest.fn().mockResolvedValue([{ productName: 'Pb95', value: 5466 }]),
+      });
+      const result = await service.fetchJson('https://tool.orlen.pl/api/wholesalefuelprices');
+      expect(result).toEqual([{ productName: 'Pb95', value: 5466 }]);
     });
 
     it('throws on non-OK HTTP status', async () => {
       makeFetchFail(503);
-      await expect(service.fetchPage()).rejects.toThrow('503');
+      await expect(
+        service.fetchJson('https://tool.orlen.pl/api/wholesalefuelprices'),
+      ).rejects.toThrow('503');
     });
 
     it('sends a User-Agent header', async () => {
-      makeFetchOk('<html/>');
-      await service.fetchPage();
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok:   true,
+        json: jest.fn().mockResolvedValue([]),
+      });
+      await service.fetchJson('https://tool.orlen.pl/api/wholesalefuelprices');
       expect(global.fetch).toHaveBeenCalledWith(
-        'https://orlen.pl/rack',
+        'https://tool.orlen.pl/api/wholesalefuelprices',
         expect.objectContaining({
-          headers: expect.objectContaining({ 'User-Agent': expect.stringContaining('Desert') }),
+          headers: expect.objectContaining({
+            'User-Agent': expect.stringContaining('Desert'),
+          }),
         }),
       );
     });
@@ -187,7 +177,7 @@ describe('OrlenIngestionService', () => {
 
   describe('ingest — first ever ingestion', () => {
     it('stores pct_change: null and significant_movement: false when no previous signal', async () => {
-      makeFetchOk(VALID_HTML);
+      makeFetchOk();
       mockFindFirst.mockResolvedValue(null);
 
       await service.ingest();
@@ -202,7 +192,7 @@ describe('OrlenIngestionService', () => {
 
   describe('ingest — movement < 3% (2%)', () => {
     it('sets significant_movement: false', async () => {
-      makeFetchOk(VALID_HTML);
+      makeFetchOk();
       mockFindFirst.mockResolvedValue({ value: 5.23456 * 1.02 });
 
       await service.ingest();
@@ -216,7 +206,7 @@ describe('OrlenIngestionService', () => {
 
   describe('ingest — movement exactly 3%', () => {
     it('sets significant_movement: true', async () => {
-      makeFetchOk(VALID_HTML);
+      makeFetchOk();
       const prevValue = 5.23456 / 1.03;
       mockFindFirst.mockResolvedValue({ value: prevValue });
 
@@ -231,7 +221,7 @@ describe('OrlenIngestionService', () => {
 
   describe('ingest — negative movement ≥ 3%', () => {
     it('sets significant_movement: true for a price drop ≥ 3%', async () => {
-      makeFetchOk(VALID_HTML);
+      makeFetchOk();
       mockFindFirst.mockResolvedValue({ value: 5.23456 * 1.05 });
 
       await service.ingest();
@@ -245,7 +235,7 @@ describe('OrlenIngestionService', () => {
 
   describe('ingest — movement > 0 but < 3%', () => {
     it('sets significant_movement: false for 1% rise', async () => {
-      makeFetchOk(VALID_HTML);
+      makeFetchOk();
       const prevValue = 5.23456 / 1.01;
       mockFindFirst.mockResolvedValue({ value: prevValue });
 
@@ -261,7 +251,7 @@ describe('OrlenIngestionService', () => {
   // P4: division-by-zero guard
   describe('ingest — corrupt previous.value === 0 (P4 fix)', () => {
     it('stores pct_change: null instead of Infinity when previous.value is 0', async () => {
-      makeFetchOk(VALID_HTML);
+      makeFetchOk();
       mockFindFirst.mockResolvedValue({ value: 0 });
 
       await service.ingest();
@@ -276,24 +266,22 @@ describe('OrlenIngestionService', () => {
   // P3: transaction wrapping
   describe('ingest — atomic transaction (P3 fix)', () => {
     it('wraps all three creates in a single $transaction call', async () => {
-      makeFetchOk(VALID_HTML);
+      makeFetchOk();
       mockFindFirst.mockResolvedValue(null);
 
       await service.ingest();
 
       expect(mockTransaction).toHaveBeenCalledTimes(1);
-      // $transaction received an array of 3 promises (one per fuel type)
       const ops = mockTransaction.mock.calls[0][0] as unknown[];
       expect(ops).toHaveLength(3);
     });
 
     it('reads all previous values before writing (parallel reads)', async () => {
-      makeFetchOk(VALID_HTML);
+      makeFetchOk();
       mockFindFirst.mockResolvedValue(null);
 
       await service.ingest();
 
-      // All three findFirst calls happen before any create calls
       expect(mockFindFirst).toHaveBeenCalledTimes(3);
       expect(mockCreate).toHaveBeenCalledTimes(3);
     });
@@ -310,7 +298,7 @@ describe('OrlenIngestionService', () => {
 
   describe('ingest — parse failure', () => {
     it('propagates parse error without creating any records', async () => {
-      makeFetchOk('<html>no prices here</html>');
+      makeFetchOk([], []); // empty arrays → no Pb95 / no autogas values
 
       await expect(service.ingest()).rejects.toThrow();
       expect(mockCreate).not.toHaveBeenCalled();
@@ -321,7 +309,7 @@ describe('OrlenIngestionService', () => {
     it('logs a warning on significant movement', async () => {
       const warnSpy = jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
 
-      makeFetchOk(VALID_HTML);
+      makeFetchOk();
       const prevValue = 5.23456 / 1.04;
       mockFindFirst.mockResolvedValue({ value: prevValue });
 
@@ -336,12 +324,12 @@ describe('OrlenIngestionService', () => {
     it('does not log a warning when all movements are < 3%', async () => {
       const warnSpy = jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
 
-      makeFetchOk(VALID_HTML);
+      makeFetchOk();
       mockFindFirst.mockImplementation((args: { where: { signal_type: string } }) => {
         const currentByType: Record<string, number> = {
           orlen_rack_pb95: 5.23456,
           orlen_rack_on:   5.12345,
-          orlen_rack_lpg:  2.98765,
+          orlen_rack_lpg:  3.0,
         };
         const current = currentByType[args.where.signal_type];
         return Promise.resolve({ value: current * 1.01 });
@@ -356,7 +344,7 @@ describe('OrlenIngestionService', () => {
 
   describe('pct_change value', () => {
     it('stores pct_change as a fraction (not percentage)', async () => {
-      makeFetchOk(VALID_HTML);
+      makeFetchOk();
       const prevValue = 5.23456 / 1.05;
       mockFindFirst.mockResolvedValue({ value: prevValue });
 

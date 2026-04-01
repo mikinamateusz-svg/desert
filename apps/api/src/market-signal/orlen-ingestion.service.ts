@@ -1,17 +1,37 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 const SIGNIFICANT_MOVEMENT_THRESHOLD = 0.03; // 3%
 const FETCH_TIMEOUT_MS = 15_000;
-// Plausibility bounds for converted PLN/litre value (P2)
 const PLN_PER_LITRE_MIN = 0.3;
 const PLN_PER_LITRE_MAX = 15.0;
 
+/**
+ * ORLEN JSON API endpoints — replaces the former HTML scraper.
+ * ORLEN migrated their public price page to a JS-rendered SPA; the canonical
+ * data source is now the tool.orlen.pl REST API.
+ */
+const ORLEN_WHOLESALE_URL  = 'https://tool.orlen.pl/api/wholesalefuelprices';
+const ORLEN_AUTOGAS_URL    = 'https://tool.orlen.pl/api/autogasprices';
+const PRODUCT_PB95         = 'Pb95';
+const PRODUCT_ON           = 'ONEkodiesel';
+
 export interface RackPrices {
   pb95: number; // PLN/litre
-  on: number;
-  lpg: number;
+  on:   number;
+  lpg:  number;
+}
+
+/** Shape of one item in the wholesalefuelprices response */
+interface OrlenWholesaleItem {
+  productName:   string;
+  effectiveDate: string;
+  value:         number; // PLN/1000L
+}
+
+/** Shape of one item in the autogasprices response (per-voivodeship, PLN/litre) */
+interface OrlenAutogasItem {
+  value: number; // PLN/litre
 }
 
 type SignalEntry = {
@@ -26,97 +46,98 @@ type SignalRecord = SignalEntry & {
 };
 
 /**
- * Ingests ORLEN rack prices from their public wholesale price page.
+ * Ingests ORLEN rack prices from their public JSON API.
  *
- * ORLEN publishes prices at ORLEN_RACK_PRICE_URL in a table where rows
- * contain fuel names and prices in PLN/1000L. Known fuel labels:
- *   "Eurosuper 95" → PB95
- *   "Ekodiesel"    → ON
- *   "Autogas"      → LPG
+ * ORLEN publishes wholesale fuel prices via tool.orlen.pl:
+ *   GET /api/wholesalefuelprices — PB95 + ON in PLN/1000L
+ *   GET /api/autogasprices       — LPG per voivodeship in PLN/litre
  *
- * NOTE: The parser targets the current ORLEN page structure and may require
- * maintenance if ORLEN changes their site layout.
+ * Wholesale prices are divided by 1000 to get PLN/litre.
+ * LPG is the mean of all voivodeship prices (range is narrow, ~3–5 gr spread).
+ *
+ * Product name mapping:
+ *   productName "Pb95"       → orlen_rack_pb95
+ *   productName "ONEkodiesel" → orlen_rack_on
+ *   autogasprices mean        → orlen_rack_lpg
  *
  * NOTE: pct_change is stored as a fraction (0.03 = 3%), not a percentage.
- * Story 2.8 (staleness detection) must read it accordingly.
  */
 @Injectable()
 export class OrlenIngestionService {
   private readonly logger = new Logger(OrlenIngestionService.name);
-  private readonly orlenUrl: string;
 
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly config: ConfigService,
-  ) {
-    this.orlenUrl = this.config.getOrThrow<string>('ORLEN_RACK_PRICE_URL');
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
   async ingest(): Promise<void> {
-    const html = await this.fetchPage();
-    const prices = this.parsePrices(html);
+    const [wholesale, autogas] = await Promise.all([
+      this.fetchJson<OrlenWholesaleItem[]>(ORLEN_WHOLESALE_URL),
+      this.fetchJson<OrlenAutogasItem[]>(ORLEN_AUTOGAS_URL),
+    ]);
+    const prices = this.parsePrices(wholesale, autogas);
     await this.storeSignals(prices);
   }
 
-  async fetchPage(): Promise<string> {
-    const response = await fetch(this.orlenUrl, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; DesertPriceBot/1.0)' },
-      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-    });
-    if (!response.ok) {
-      throw new Error(`ORLEN page returned HTTP ${response.status} ${response.statusText}`);
-    }
-    return response.text();
-  }
-
   /**
-   * Parses ORLEN rack prices from the page HTML.
-   * ORLEN publishes prices in PLN/1000L; this method converts to PLN/litre.
+   * Parses ORLEN rack prices from the JSON API responses.
    *
-   * The parser locates each fuel label via exec() to get the exact match length
-   * (P1: fixes the source.length offset bug for patterns with \s*), then extracts
-   * the first decimal number that follows. ORLEN uses a comma decimal separator and
-   * may use spaces as a thousands separator (e.g. "1 456,78").
+   * Wholesale prices are in PLN/1000L and must be divided by 1000.
+   * LPG is already PLN/litre — we take the mean across voivodeships.
    */
-  parsePrices(html: string): RackPrices {
-    const extractPrice = (fuelPattern: RegExp): number => {
-      // P1: use exec() to get the actual matched length, not the regex source length.
-      // For /Eurosuper\s*95/i, source.length = 14 but the matched text "Eurosuper 95"
-      // is only 12 chars — using source.length would slice into the label itself.
-      const nameMatch = fuelPattern.exec(html);
-      if (!nameMatch) {
-        throw new Error(`Cannot find "${fuelPattern}" in ORLEN page`);
-      }
-      const slice = html.slice(nameMatch.index + nameMatch[0].length);
+  parsePrices(wholesale: OrlenWholesaleItem[], autogas: OrlenAutogasItem[]): RackPrices {
+    if (!Array.isArray(wholesale)) {
+      throw new Error('ORLEN wholesale API returned unexpected shape (expected array)');
+    }
+    if (!Array.isArray(autogas)) {
+      throw new Error('ORLEN autogas API returned unexpected shape (expected array)');
+    }
 
-      // P2: restrict to digits and spaces (thousands sep) only — no cross-field greediness
-      const match = slice.match(/\d[\d ]*(?:[,.]\d+)?/);
-      if (!match) {
-        throw new Error(`Cannot parse price after "${fuelPattern}" in ORLEN page`);
+    const findWholesale = (productName: string): number => {
+      const item = wholesale.find(i => i.productName === productName);
+      if (!item) {
+        throw new Error(`Cannot find "${productName}" in ORLEN wholesale data`);
       }
-      // Normalise: remove spaces (thousands sep), comma → decimal point
-      const raw = match[0].trim().replace(/ /g, '').replace(',', '.');
-      const perThousandLitre = parseFloat(raw);
-      if (isNaN(perThousandLitre) || perThousandLitre <= 0) {
-        throw new Error(`Invalid price value "${raw}" for "${fuelPattern}"`);
-      }
-      const plnPerLitre = perThousandLitre / 1000;
-
-      // P2: plausibility range — catches misparsed values (e.g. a stray date digit)
+      const plnPerLitre = item.value / 1000;
       if (plnPerLitre < PLN_PER_LITRE_MIN || plnPerLitre > PLN_PER_LITRE_MAX) {
         throw new Error(
           `Price ${plnPerLitre.toFixed(4)} PLN/l is outside plausible range ` +
-          `[${PLN_PER_LITRE_MIN}–${PLN_PER_LITRE_MAX}] for "${fuelPattern}"`,
+          `[${PLN_PER_LITRE_MIN}–${PLN_PER_LITRE_MAX}] for "${productName}"`,
         );
       }
       return plnPerLitre;
     };
 
+    const lpgValues = autogas
+      .map(i => i.value)
+      .filter((v): v is number => typeof v === 'number' && v > 0);
+    if (lpgValues.length === 0) {
+      throw new Error('Autogas price list is empty or contains no valid values');
+    }
+    const lpg = lpgValues.reduce((sum, v) => sum + v, 0) / lpgValues.length;
+    if (lpg < PLN_PER_LITRE_MIN || lpg > PLN_PER_LITRE_MAX) {
+      throw new Error(
+        `LPG price ${lpg.toFixed(4)} PLN/l is outside plausible range ` +
+        `[${PLN_PER_LITRE_MIN}–${PLN_PER_LITRE_MAX}]`,
+      );
+    }
+
     return {
-      pb95: extractPrice(/Eurosuper\s*95/i),
-      on:   extractPrice(/Ekodiesel/i),
-      lpg:  extractPrice(/Autogas/i),
+      pb95: findWholesale(PRODUCT_PB95),
+      on:   findWholesale(PRODUCT_ON),
+      lpg,
     };
+  }
+
+  async fetchJson<T>(url: string): Promise<T> {
+    const response = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; DesertPriceBot/1.0)' },
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
+    if (!response.ok) {
+      throw new Error(
+        `ORLEN API returned HTTP ${response.status} ${response.statusText} for ${url}`,
+      );
+    }
+    return response.json() as Promise<T>;
   }
 
   private async storeSignals(prices: RackPrices): Promise<void> {
@@ -127,8 +148,6 @@ export class OrlenIngestionService {
     ];
 
     // P3: read all previous signals in parallel first, then batch-create atomically.
-    // Sequential findFirst+create pairs risked partial writes (e.g. pb95 committed,
-    // on/lpg not) if the process died mid-loop.
     const previousValues = await Promise.all(
       entries.map(({ type }) =>
         this.prisma.marketSignal.findFirst({
@@ -140,18 +159,16 @@ export class OrlenIngestionService {
 
     const records: SignalRecord[] = entries.map(({ type, value }, i) => {
       const previous = previousValues[i];
-      // P4: guard against previous.value === 0 (corrupt historical row) which would
-      // produce Infinity — treat as first ingestion instead.
+      // P4: guard against previous.value === 0 (corrupt historical row) → Infinity
       const pctChange =
         previous !== null && previous.value !== 0
-          ? (value - previous.value) / previous.value  // fraction; 0.03 = 3%
+          ? (value - previous.value) / previous.value
           : null;
       const significantMovement =
         pctChange !== null && Math.abs(pctChange) >= SIGNIFICANT_MOVEMENT_THRESHOLD;
       return { type, value, pctChange, significantMovement, previous };
     });
 
-    // P3: all-or-nothing write — three signals from the same run land together
     await this.prisma.$transaction(
       records.map(({ type, value, pctChange, significantMovement }) =>
         this.prisma.marketSignal.create({

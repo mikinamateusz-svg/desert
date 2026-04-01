@@ -272,7 +272,7 @@ So that I understand the market context and trust Litro as an authoritative sour
 
 - **AC4 — Editorial articles:** Markdown files in `apps/web/content/articles/` are parsed at build/request time using `gray-matter` for frontmatter (`slug`, `title`, `date`, `excerpt`) and `marked` for body HTML. At least 2 example articles included.
 
-- **AC5 — SEO:** Each article page has `generateMetadata()` with: title, description (from excerpt), `og:title`, `og:description`, `og:type: article`, `og:url`. JSON-LD `Article` structured data block rendered in `<script type="application/ld+json">`.
+- **AC5 — SEO:** Each article page has `generateMetadata()` with: title, description (from excerpt), `og:title`, `og:description`, `og:type: article`, `og:url`. JSON-LD `Article` structured data block rendered in `<script type="application/ld+json">`. **Exception:** the auto price summary page (`tygodniowe-ceny-paliw`) omits JSON-LD — it is a live data table, not an editorial article, and `Article` schema would be semantically incorrect. It does include `og:title`, `og:type: article`, and `og:url`.
 
 - **AC6 — Ad slot:** `<AdSlot slotId="aktualnosci-inline" className="h-[100px] w-full my-6" />` rendered after article body. Reuses existing `AdSlot` component from `components/AdSlot.tsx`.
 
@@ -387,7 +387,7 @@ Per-article `generateMetadata()` sets title, description (from excerpt), og:titl
 - **`PrismaService` injection:** Check how `price.module.ts` adds PrismaService to providers and follow same pattern.
 - **`$queryRaw` type:** Use `Prisma.sql` tagged template — same pattern as `PriceHistoryService.getRegionalAverage()`.
 - **`marked` output:** Render via `dangerouslySetInnerHTML={{ __html: article.html }}` only for content from your own markdown files — not from user input.
-- **API URL in Server Components:** Use `process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL` — do NOT use `NEXT_PUBLIC_API_URL` for server-side fetches. Check `apps/web/lib/api.ts` to confirm the pattern.
+- **API URL in Server Components:** Use `process.env.INTERNAL_API_URL ?? process.env.NEXT_PUBLIC_API_URL` — do NOT use `NEXT_PUBLIC_API_URL` for server-side fetches. `lib/api.ts` uses `INTERNAL_API_URL` (not `API_URL` — spec was wrong).
 - **`pct_change` is a fraction:** `0.015` = +1.5%. Multiply by 100 and format to 1 decimal place. `null` = first ingestion → display `—`.
 - **New dependencies:** Add `gray-matter: ^4.0.3`, `marked: ^12.0.0`, `@types/marked: ^6.0.0` to `apps/web/package.json`. Run `pnpm install` from repo root.
 
@@ -440,11 +440,21 @@ No unit tests required for `articles.ts` — file I/O functions; integration tes
 - `generateStaticParams` deliberately omitted — all article pages are SSR for fresh price data.
 - tsc clean on both `apps/api` and `apps/web`; 407/407 API tests passing.
 
+**Deferred (from code review 2026-04-01)**
+
+- `articles.ts` — no in-memory cache; `getArticleBySlug` reads all files on every SSR render. Acceptable at current article count; add `unstable_cache` or module-level map if content library grows beyond ~20 articles.
+- `articles.ts` — frontmatter fields (`slug`, `title`, `excerpt`) cast unsafely via `as string`; no guard for missing keys. Editorial-only risk; add validation before opening content authoring to non-devs.
+- `PriceSummaryContent` — no `AbortController` timeout on the internal API fetch. Graceful fallback exists; revisit if API latency becomes an issue.
+- `marked` output rendered via `dangerouslySetInnerHTML` without HTML sanitization. Acceptable for trusted editorial content; add `sanitize-html` if content authoring is ever opened to external contributors.
+- `GET /v1/market-signal/summary` has no rate-limiting throttle guard. Public endpoint hitting DB on every request; add `@Throttle()` in a future hardening story.
+- `PrismaService` added as a local provider in `MarketSignalModule` — may create a second client instance if `PrismaModule` is already `@Global()`. Investigate when consolidating module structure.
+
 ### Change Log
 
 - 2026-03-28: Story created (stub in web-stories.md + full spec in web-5-news-trends.md)
 - 2026-04-01: Full spec merged into web-stories.md; standalone file deleted
 - 2026-04-01: Story implemented — all ACs satisfied, 407/407 tests passing, tsc clean
+- 2026-04-01: Code review patches applied — YAML date parsing fix, duplicate h1 removed, auto article og metadata added, self-referencing footer link removed, AktualnosciPage typo fixed; AC5 clarified re: JSON-LD exclusion for auto article; INTERNAL_API_URL env var corrected in spec; 6 items deferred
 
 ---
 

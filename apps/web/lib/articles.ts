@@ -36,7 +36,7 @@ export function getAllArticles(): Omit<Article, 'html'>[] {
       return {
         slug:    data['slug'] as string,
         title:   data['title'] as string,
-        date:    String(data['date']),
+        date:    data['date'] instanceof Date ? data['date'].toISOString().split('T')[0]! : String(data['date']),
         excerpt: data['excerpt'] as string,
         auto:    false,
       };
@@ -61,7 +61,7 @@ export function getArticleBySlug(slug: string): Article | null {
       return {
         slug:    data['slug'] as string,
         title:   data['title'] as string,
-        date:    String(data['date']),
+        date:    data['date'] instanceof Date ? data['date'].toISOString().split('T')[0]! : String(data['date']),
         excerpt: data['excerpt'] as string,
         html:    marked(content) as string,
         auto:    false,

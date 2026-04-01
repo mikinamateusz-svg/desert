@@ -7,7 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: 'Aktualności — Litro' };
 }
 
-export default async function AktualnosiciPage() {
+export default async function AktualnosciPage() {
   const headerList = await headers();
   const cookieStore = await cookies();
   const locale = detectLocale(

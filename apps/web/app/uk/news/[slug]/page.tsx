@@ -12,7 +12,10 @@ export async function generateMetadata({
   const { slug } = await params;
   const article = getArticleBySlug(slug);
   if (!article) return { title: 'Не знайдено — Litro' };
-  if (article.auto) return { title: 'Тижневі ціни на пальне ORLEN — Litro' };
+  if (article.auto) return {
+    title: 'Тижневі ціни на пальне ORLEN — Litro',
+    openGraph: { title: 'Тижневі ціни на пальне ORLEN', type: 'article', url: 'https://litro.app/uk/news/tygodniowe-ceny-paliw' },
+  };
   return {
     title:       `${article.title} — Litro`,
     description: article.excerpt,

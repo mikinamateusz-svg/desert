@@ -8,12 +8,6 @@ function articleHref(slug: string, locale: Locale): string {
   return `/aktualnosci/${slug}`;
 }
 
-function listHref(locale: Locale): string {
-  if (locale === 'en') return '/en/news';
-  if (locale === 'uk') return '/uk/news';
-  return '/aktualnosci';
-}
-
 export default function ArticleListPageContent({
   locale,
   t,
@@ -50,9 +44,6 @@ export default function ArticleListPageContent({
         </ul>
       )}
 
-      <p className="mt-6 text-xs text-gray-400">
-        <Link href={listHref(locale)} className="hover:underline">{t.news.title}</Link>
-      </p>
     </main>
   );
 }

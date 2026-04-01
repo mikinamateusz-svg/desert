@@ -62,6 +62,7 @@ interface NearbySearchResponse {
   status: string;
 }
 
+
 export interface StationClassification {
   brand: string | null;
   station_type: 'standard' | 'mop';

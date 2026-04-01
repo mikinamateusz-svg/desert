@@ -388,10 +388,13 @@ epics:
       - id: web-5
         title: News & Fuel Price Trends (Aktualności)
         file: web-stories.md
-        status: review
+        status: done
         ready_date: 2026-03-28
         dev_started: 2026-04-01
         dev_completed: 2026-04-01
+        review_date: 2026-04-01
+        review_findings: "1 bad_spec (INTERNAL_API_URL vs API_URL in guardrail), 1 intent_gap (JSON-LD for auto article — resolved: omission is correct, AC5 clarified), 5 patch (P1 YAML date→JS Date wrong string+broken sort, P2 duplicate h1 in auto article, P3 auto article missing og:type/og:url, P4 self-referencing footer link, P5 AktualnosiciPage typo), 6 deferred, 9 rejected"
+        patches_applied: "2026-04-01 — P1-P5 all applied, tsc clean"
 
       - id: web-6
         title: User Account Dashboard

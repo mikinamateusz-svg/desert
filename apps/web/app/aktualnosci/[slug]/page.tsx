@@ -13,7 +13,10 @@ export async function generateMetadata({
   const { slug } = await params;
   const article = getArticleBySlug(slug);
   if (!article) return { title: 'Nie znaleziono — Litro' };
-  if (article.auto) return { title: 'Tygodniowe ceny paliw ORLEN — Litro' };
+  if (article.auto) return {
+    title: 'Tygodniowe ceny paliw ORLEN — Litro',
+    openGraph: { title: 'Tygodniowe ceny paliw ORLEN', type: 'article', url: 'https://litro.app/aktualnosci/tygodniowe-ceny-paliw' },
+  };
   return {
     title:       `${article.title} — Litro`,
     description: article.excerpt,

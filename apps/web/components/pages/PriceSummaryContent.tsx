@@ -39,7 +39,6 @@ export default async function PriceSummaryContent({ t }: { t: Translations }) {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-1">{t.news.priceSummaryTitle}</h1>
       <p className="text-sm text-gray-500 mb-6">{t.news.priceSummarySubtitle}</p>
 
       {signals.length === 0 ? (

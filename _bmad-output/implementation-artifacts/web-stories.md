@@ -429,12 +429,22 @@ No unit tests required for `articles.ts` — file I/O functions; integration tes
 
 ### Dev Agent Record
 
-*(to be filled by dev agent)*
+**Completion Notes**
+
+- `market-signal.controller.ts` — `GET /v1/market-signal/summary` uses `DISTINCT ON (signal_type)` to return latest record per type; returns `{ signals: [] }` when table is empty (graceful empty-state).
+- `PrismaService` added to `MarketSignalModule` providers (was already global but controller needs explicit injection in module scope).
+- `articles.ts` — `gray-matter` parses frontmatter; `marked` renders body HTML; `tygodniowe-ceny-paliw` slug is synthetic (never read from filesystem).
+- `PriceSummaryContent` — async Server Component; uses `INTERNAL_API_URL` env var (same as `lib/api.ts`); falls back gracefully to empty signals on fetch error.
+- `ArticlePageContent` — branches on `article.auto` to render `PriceSummaryContent` vs `dangerouslySetInnerHTML` (own markdown only).
+- JSON-LD block emitted only for editorial articles (not for the auto price summary).
+- `generateStaticParams` deliberately omitted — all article pages are SSR for fresh price data.
+- tsc clean on both `apps/api` and `apps/web`; 407/407 API tests passing.
 
 ### Change Log
 
 - 2026-03-28: Story created (stub in web-stories.md + full spec in web-5-news-trends.md)
 - 2026-04-01: Full spec merged into web-stories.md; standalone file deleted
+- 2026-04-01: Story implemented — all ACs satisfied, 407/407 tests passing, tsc clean
 
 ---
 

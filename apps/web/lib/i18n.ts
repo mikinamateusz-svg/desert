@@ -133,6 +133,16 @@ export interface Translations {
     termsTitle: string;
     stub: string;
   };
+  news: {
+    title: string;
+    readMore: string;
+    backToNews: string;
+    noArticles: string;
+    priceSummaryTitle: string;
+    priceSummarySubtitle: string;
+    noData: string;
+    weekChange: string;
+  };
 }
 
 export const translations: Record<Locale, Translations> = {
@@ -255,6 +265,16 @@ export const translations: Record<Locale, Translations> = {
       termsTitle: 'Regulamin',
       stub: 'Dokument w przygotowaniu. Skontaktuj się z nami w razie pytań.',
     },
+    news: {
+      title: 'Aktualności',
+      readMore: 'Czytaj więcej',
+      backToNews: '← Aktualności',
+      noArticles: 'Brak artykułów.',
+      priceSummaryTitle: 'Tygodniowe ceny paliw ORLEN',
+      priceSummarySubtitle: 'Ceny hurtowe ORLEN (PLN/litr)',
+      noData: 'Dane w przygotowaniu.',
+      weekChange: 'zmiana tyg.',
+    },
   },
 
   en: {
@@ -376,6 +396,16 @@ export const translations: Record<Locale, Translations> = {
       termsTitle: 'Terms of service',
       stub: 'Document in preparation. Contact us if you have questions.',
     },
+    news: {
+      title: 'News',
+      readMore: 'Read more',
+      backToNews: '← News',
+      noArticles: 'No articles yet.',
+      priceSummaryTitle: 'Weekly ORLEN fuel prices',
+      priceSummarySubtitle: 'ORLEN wholesale prices (PLN/l)',
+      noData: 'Data not yet available.',
+      weekChange: 'wk change',
+    },
   },
 
   uk: {
@@ -496,6 +526,16 @@ export const translations: Record<Locale, Translations> = {
       privacyTitle: 'Політика конфіденційності',
       termsTitle: 'Умови використання',
       stub: "Документ у підготовці. Зв'яжіться з нами, якщо маєте питання.",
+    },
+    news: {
+      title: 'Новини',
+      readMore: 'Читати далі',
+      backToNews: '← Новини',
+      noArticles: 'Немає статей.',
+      priceSummaryTitle: 'Тижневі ціни на пальне ORLEN',
+      priceSummarySubtitle: 'Оптові ціни ORLEN (PLN/л)',
+      noData: 'Дані ще не доступні.',
+      weekChange: 'зміна за тижд.',
     },
   },
 };

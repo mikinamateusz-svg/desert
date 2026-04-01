@@ -387,13 +387,11 @@ epics:
 
       - id: web-5
         title: News & Fuel Price Trends (Aktualności)
-        file: web-5-news-trends.md
-        status: backlog
-        note: >
-          /aktualnosci article list + /aktualnosci/[slug] detail.
-          Markdown or CMS-based content. Article inline ads.
-          Weekly fuel price summary auto-generated from MarketSignal data.
-          SEO: structured data, OG tags.
+        file: web-stories.md
+        status: review
+        ready_date: 2026-03-28
+        dev_started: 2026-04-01
+        dev_completed: 2026-04-01
 
       - id: web-6
         title: User Account Dashboard

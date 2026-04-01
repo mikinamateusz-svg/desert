@@ -114,10 +114,15 @@ export class StationClassificationWorker implements OnModuleInit, OnModuleDestro
           `;
           processed++;
         } catch (err) {
-          this.logger.warn(
-            `Classification failed for station ${station.id}: ${(err as Error).message}`,
-          );
-          // Continue — one failure must not block remaining stations
+          const msg = (err as Error).message;
+          // REQUEST_DENIED means the API key is disabled or invalid — no point
+          // continuing through thousands of stations. Abort the whole run so
+          // BullMQ retries after backoff rather than spamming per-station WARNs.
+          if (msg.includes('REQUEST_DENIED')) {
+            throw new Error(`Google Places API disabled (REQUEST_DENIED) — aborting classification run`);
+          }
+          this.logger.warn(`Classification failed for station ${station.id}: ${msg}`);
+          // Continue — one transient failure must not block remaining stations
         }
 
         // Rate-limiting delay between Nearby Search calls

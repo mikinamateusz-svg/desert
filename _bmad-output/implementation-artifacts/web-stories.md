@@ -251,20 +251,190 @@ So that integrating a real ad network requires only swapping the placeholder con
 
 ## Story web-5 — News & Fuel Price Trends
 
-**Status:** backlog
+**Status:** ready-for-dev
+**Created:** 2026-03-28
 
 ### User Story
 
-As a **public user**,
-I want to read news articles and regional fuel price trends,
-So that I understand what's driving price changes and can plan my fill-ups.
+As a **visitor to the Litro website**,
+I want to read fuel price news and see a weekly price trend summary,
+So that I understand the market context and trust Litro as an authoritative source on fuel prices.
+
+**Why:** Content pages build SEO authority and return traffic. The auto-generated weekly price summary from MarketSignal data is the first step toward differentiating Litro as a data platform, not just a map app.
 
 ### Acceptance Criteria
 
-- `/aktualnosci` lists articles sorted by date
-- `/aktualnosci/[slug]` renders full article with inline ad slot
-- Weekly fuel price summary auto-generated from MarketSignal rack data
-- SEO: structured data, OG tags per article
+- **AC1 — Article list:** `GET /aktualnosci` renders a server-side list of articles sorted by date (newest first). The auto-generated weekly price summary appears pinned at the top, followed by editorial markdown articles. EN at `/en/news`, UK at `/uk/news`.
+
+- **AC2 — Article detail:** `GET /aktualnosci/[slug]` renders the full article with: title, date, body content, and an inline ad slot (`aktualnosci-inline`, 100px height) after the body. EN at `/en/news/[slug]`, UK at `/uk/news/[slug]`.
+
+- **AC3 — Auto-generated price summary:** The slug `tygodniowe-ceny-paliw` is always present. Its content is rendered dynamically server-side from MarketSignal data fetched from a new `@Public()` API endpoint. Shows PB_95, ON, and LPG rack prices with week-on-week % change. When MarketSignal table is empty (as it currently is), shows a graceful "data not yet available" message — no error, no crash.
+
+- **AC4 — Editorial articles:** Markdown files in `apps/web/content/articles/` are parsed at build/request time using `gray-matter` for frontmatter (`slug`, `title`, `date`, `excerpt`) and `marked` for body HTML. At least 2 example articles included.
+
+- **AC5 — SEO:** Each article page has `generateMetadata()` with: title, description (from excerpt), `og:title`, `og:description`, `og:type: article`, `og:url`. JSON-LD `Article` structured data block rendered in `<script type="application/ld+json">`.
+
+- **AC6 — Ad slot:** `<AdSlot slotId="aktualnosci-inline" className="h-[100px] w-full my-6" />` rendered after article body. Reuses existing `AdSlot` component from `components/AdSlot.tsx`.
+
+- **AC7 — i18n:** All UI chrome strings (section title, "read more", "back to news", "no articles", price summary labels) added to `lib/i18n.ts` for all three locales (pl/en/uk). Article titles and bodies are Polish-only for MVP — locale chrome wraps them.
+
+- **AC8 — New API endpoint:** `GET /v1/market-signal/summary` returns the latest MarketSignal record per signal type as `{ signals: SummaryItem[] }`. Is `@Public()` — no auth required. Returns `{ signals: [] }` when table is empty.
+
+### Technical Architecture
+
+**New API endpoint: `GET /v1/market-signal/summary`**
+
+Add `MarketSignalController` to `MarketSignalModule`:
+
+```typescript
+// apps/api/src/market-signal/market-signal.controller.ts
+@Controller('v1/market-signal')
+export class MarketSignalController {
+  constructor(private readonly prisma: PrismaService) {}
+
+  @Public()
+  @Get('summary')
+  async getSummary() {
+    const rows = await this.prisma.$queryRaw<SummaryRow[]>`
+      SELECT DISTINCT ON (signal_type)
+        signal_type, value, pct_change, recorded_at
+      FROM "MarketSignal"
+      WHERE signal_type IN ('orlen_rack_pb95', 'orlen_rack_on', 'orlen_rack_lpg')
+      ORDER BY signal_type, recorded_at DESC
+    `;
+    return {
+      signals: rows.map(r => ({
+        signalType: r.signal_type,
+        value: r.value,
+        pctChange: r.pct_change ?? null,
+        recordedAt: r.recorded_at.toISOString(),
+      })),
+    };
+  }
+}
+```
+
+Response shape:
+```typescript
+interface SummaryItem {
+  signalType: 'orlen_rack_pb95' | 'orlen_rack_on' | 'orlen_rack_lpg';
+  value: number;          // PLN/litre, rack price
+  pctChange: number | null; // fraction e.g. 0.015 = +1.5%, null if first record
+  recordedAt: string;     // ISO timestamp
+}
+```
+
+Register in `market-signal.module.ts` — add `MarketSignalController` to controllers array. Inject `PrismaService`.
+
+**Article content system**
+
+Directory: `apps/web/content/articles/` with frontmatter format:
+```markdown
+---
+slug: start-litro
+title: Witamy w Litro — społecznościowe ceny paliw
+date: 2026-03-28
+excerpt: Litro to nowa aplikacja, która zbiera ceny paliw od kierowców w czasie rzeczywistym.
+---
+Treść artykułu...
+```
+
+Article reader `apps/web/lib/articles.ts` exports: `getAllArticles()`, `getArticleBySlug(slug)`, `getAutoArticleMeta()`. The slug `tygodniowe-ceny-paliw` is always synthetic (auto-generated price summary). `html` field is rendered from markdown via `marked`; empty string for the auto article.
+
+**Auto-generated price summary component**
+
+`apps/web/components/pages/PriceSummaryContent.tsx` — Server Component rendered when `article.auto === true`. Fetches `GET /v1/market-signal/summary` using `process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL`. Signal type → label: `orlen_rack_pb95` → `PB 95`, `orlen_rack_on` → `ON (Diesel)`, `orlen_rack_lpg` → `LPG`. Shows rack price + `pctChange` as `+1.5%` / `-0.8%` / `—`. Empty signals array → locale-aware "no data yet" message.
+
+**Web route structure**
+```
+apps/web/app/
+├── aktualnosci/
+│   ├── page.tsx                    ← PL list (Server Component)
+│   └── [slug]/page.tsx             ← PL article detail
+├── en/news/
+│   ├── page.tsx                    ← EN list
+│   └── [slug]/page.tsx             ← EN article detail
+└── uk/news/
+    ├── page.tsx                    ← UK list
+    └── [slug]/page.tsx             ← UK article detail
+```
+
+Each route shell is thin — locale detection + passing `locale` and `t` to shared `*PageContent` components. No logic duplication across PL/EN/UK.
+
+**i18n additions to `lib/i18n.ts`** — add `news` section to `Translations` interface + all 3 locale objects:
+```typescript
+news: {
+  title: string;           // "Aktualności" / "News" / "Новини"
+  readMore: string;        // "Czytaj więcej" / "Read more" / "Читати далі"
+  backToNews: string;      // "← Aktualności" / "← News" / "← Новини"
+  noArticles: string;      // "Brak artykułów." / "No articles yet." / "Немає статей."
+  priceSummaryTitle: string;    // "Tygodniowe ceny paliw ORLEN" / "Weekly ORLEN fuel prices" / ...
+  priceSummarySubtitle: string; // "Ceny hurtowe ORLEN (PLN/litr)" / "ORLEN wholesale prices (PLN/l)" / ...
+  noData: string;          // "Dane w przygotowaniu." / "Data not yet available." / ...
+  weekChange: string;      // "zmiana tyg." / "wk change" / "зміна за тижд."
+}
+```
+
+**SEO / structured data**
+
+Per-article `generateMetadata()` sets title, description (from excerpt), og:title, og:description, og:type: article, og:url. JSON-LD `Article` block with headline, datePublished, description, publisher rendered in `<script type="application/ld+json">`. Do NOT add `generateStaticParams` — pages are SSR, not statically generated (keeps price summary always fresh).
+
+### Dev Guardrails
+
+- **Locale detection:** Follow exactly the same pattern as `o-nas/page.tsx` — `detectLocale(headerList.get('accept-language'), cookieStore.get('locale')?.value)`.
+- **AdSlot reuse:** Import from existing `../../components/AdSlot`. Use `slotId="aktualnosci-inline"`.
+- **`@Public()` pattern:** Import from `../../auth/public.decorator.js` — same as other public endpoints.
+- **`PrismaService` injection:** Check how `price.module.ts` adds PrismaService to providers and follow same pattern.
+- **`$queryRaw` type:** Use `Prisma.sql` tagged template — same pattern as `PriceHistoryService.getRegionalAverage()`.
+- **`marked` output:** Render via `dangerouslySetInnerHTML={{ __html: article.html }}` only for content from your own markdown files — not from user input.
+- **API URL in Server Components:** Use `process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL` — do NOT use `NEXT_PUBLIC_API_URL` for server-side fetches. Check `apps/web/lib/api.ts` to confirm the pattern.
+- **`pct_change` is a fraction:** `0.015` = +1.5%. Multiply by 100 and format to 1 decimal place. `null` = first ingestion → display `—`.
+- **New dependencies:** Add `gray-matter: ^4.0.3`, `marked: ^12.0.0`, `@types/marked: ^6.0.0` to `apps/web/package.json`. Run `pnpm install` from repo root.
+
+### Testing Requirements
+
+**`market-signal.controller.spec.ts`:**
+- Returns `{ signals: [] }` when `$queryRaw` returns `[]`
+- Returns mapped summary items when data present (camelCase response from snake_case DB row)
+- `pct_change: null` DB row → `pctChange: null` in response (not `undefined`)
+- Endpoint is `@Public()` — verify via Reflector same pattern as `price.controller.spec.ts`
+
+No unit tests required for `articles.ts` — file I/O functions; integration tested implicitly via page rendering.
+
+### File List
+
+**New (API):**
+- `apps/api/src/market-signal/market-signal.controller.ts`
+- `apps/api/src/market-signal/market-signal.controller.spec.ts`
+
+**Modified (API):**
+- `apps/api/src/market-signal/market-signal.module.ts` — add `MarketSignalController` + `PrismaService` to providers
+
+**New (Web):**
+- `apps/web/content/articles/2026-03-28-start-litro.md`
+- `apps/web/content/articles/2026-03-21-ceny-paliw-marzec.md`
+- `apps/web/lib/articles.ts`
+- `apps/web/app/aktualnosci/page.tsx`
+- `apps/web/app/aktualnosci/[slug]/page.tsx`
+- `apps/web/app/en/news/page.tsx`
+- `apps/web/app/en/news/[slug]/page.tsx`
+- `apps/web/app/uk/news/page.tsx`
+- `apps/web/app/uk/news/[slug]/page.tsx`
+- `apps/web/components/pages/ArticleListPageContent.tsx`
+- `apps/web/components/pages/ArticlePageContent.tsx`
+- `apps/web/components/pages/PriceSummaryContent.tsx`
+
+**Modified (Web):**
+- `apps/web/lib/i18n.ts` — add `news` key to `Translations` interface + all 3 locale objects
+
+### Dev Agent Record
+
+*(to be filled by dev agent)*
+
+### Change Log
+
+- 2026-03-28: Story created (stub in web-stories.md + full spec in web-5-news-trends.md)
+- 2026-04-01: Full spec merged into web-stories.md; standalone file deleted
 
 ---
 

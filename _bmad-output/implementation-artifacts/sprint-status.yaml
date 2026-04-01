@@ -441,3 +441,53 @@ epics:
           /powiadomienia: set fuel type + price threshold + location radius.
           Email + push notification delivery.
           Auth-gated. Links to mobile app for push setup.
+
+  - id: 3
+    name: Photo Contribution Pipeline
+    status: in-progress
+    stories:
+      - id: 3.1
+        title: Camera Capture & Photo Pre-Processing
+        file: 3-1-camera-capture-photo-preprocessing.md
+        status: ready-for-dev
+        ready_date: 2026-04-01
+
+      - id: 3.2
+        title: Immediate Confirmation & Offline Queue
+        file: 3-2-immediate-confirmation-offline-queue.md
+        status: backlog
+
+      - id: 3.3
+        title: Photo Upload & Submission Record Creation
+        file: 3-3-photo-upload-submission-record-creation.md
+        status: backlog
+
+      - id: 3.4
+        title: GPS-to-Station Matching
+        file: 3-4-gps-to-station-matching.md
+        status: backlog
+
+      - id: 3.5
+        title: OCR Price Extraction
+        file: 3-5-ocr-price-extraction.md
+        status: backlog
+
+      - id: 3.6
+        title: Logo Recognition as Secondary Signal
+        file: 3-6-logo-recognition-secondary-signal.md
+        status: backlog
+
+      - id: 3.7
+        title: Price Validation & Database Update
+        file: 3-7-price-validation-database-update.md
+        status: backlog
+
+      - id: 3.8
+        title: Pipeline Retry & Dead-Letter Queue
+        file: 3-8-pipeline-retry-dead-letter-queue.md
+        status: backlog
+
+      - id: 3.9
+        title: Pipeline Cost Controls
+        file: 3-9-pipeline-cost-controls.md
+        status: backlog

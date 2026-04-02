@@ -14,6 +14,7 @@ import { FeedbackModule } from './feedback/feedback.module.js';
 import { StationModule } from './station/station.module.js';
 import { PriceModule } from './price/price.module.js';
 import { MarketSignalModule } from './market-signal/market-signal.module.js';
+import { PhotoModule } from './photo/photo.module.js';
 import { JwtAuthGuard } from './auth/jwt-auth.guard.js';
 import { RolesGuard } from './auth/guards/roles.guard.js';
 
@@ -36,6 +37,7 @@ import { RolesGuard } from './auth/guards/roles.guard.js';
     StationModule,
     PriceModule,
     MarketSignalModule,
+    PhotoModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

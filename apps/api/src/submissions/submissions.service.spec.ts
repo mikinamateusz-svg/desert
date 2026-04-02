@@ -1,13 +1,29 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SubmissionsService } from './submissions.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { StorageService } from '../storage/storage.service.js';
+import { PhotoPipelineWorker } from '../photo/photo-pipeline.worker.js';
 
 const mockPrismaService = {
   submission: {
     findMany: jest.fn(),
     count: jest.fn(),
+    create: jest.fn(),
   },
 };
+
+const mockStorageService = {
+  uploadBuffer: jest.fn(),
+};
+
+const mockPhotoPipelineWorker = {
+  enqueue: jest.fn(),
+};
+
+// Stable UUID for assertions
+jest.mock('node:crypto', () => ({
+  randomUUID: jest.fn().mockReturnValue('fixed-uuid-1234'),
+}));
 
 const baseSubmission = {
   id: 'sub-uuid-1',
@@ -32,11 +48,15 @@ describe('SubmissionsService', () => {
       providers: [
         SubmissionsService,
         { provide: PrismaService, useValue: mockPrismaService },
+        { provide: StorageService, useValue: mockStorageService },
+        { provide: PhotoPipelineWorker, useValue: mockPhotoPipelineWorker },
       ],
     }).compile();
 
     service = module.get<SubmissionsService>(SubmissionsService);
   });
+
+  // ── getMySubmissions ────────────────────────────────────────────────────────
 
   describe('getMySubmissions', () => {
     it('should return paginated list with total', async () => {
@@ -134,6 +154,126 @@ describe('SubmissionsService', () => {
       expect(mockPrismaService.submission.findMany).toHaveBeenCalledWith(
         expect.objectContaining({ orderBy: { created_at: 'desc' } }),
       );
+    });
+  });
+
+  // ── createSubmission ────────────────────────────────────────────────────────
+
+  describe('createSubmission', () => {
+    const photoBuffer = Buffer.from('fake-jpeg-bytes');
+    const baseFields = {
+      fuelType: 'PB_95',
+      gpsLat: 52.2297,
+      gpsLng: 21.0122,
+      manualPrice: null,
+      preselectedStationId: null,
+    };
+
+    beforeEach(() => {
+      mockStorageService.uploadBuffer.mockResolvedValue(undefined);
+      mockPrismaService.submission.create.mockResolvedValue({});
+      mockPhotoPipelineWorker.enqueue.mockResolvedValue(undefined);
+    });
+
+    it('uploads photo to R2 with correct key and content type', async () => {
+      await service.createSubmission('user-abc', photoBuffer, baseFields);
+
+      expect(mockStorageService.uploadBuffer).toHaveBeenCalledWith(
+        'submissions/user-abc/fixed-uuid-1234.jpg',
+        photoBuffer,
+        'image/jpeg',
+      );
+    });
+
+    it('creates Submission record with correct data', async () => {
+      await service.createSubmission('user-abc', photoBuffer, baseFields);
+
+      expect(mockPrismaService.submission.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          id: 'fixed-uuid-1234',
+          user_id: 'user-abc',
+          photo_r2_key: 'submissions/user-abc/fixed-uuid-1234.jpg',
+          gps_lat: 52.2297,
+          gps_lng: 21.0122,
+          status: 'pending',
+        }),
+      });
+    });
+
+    it('stores fuel_type in price_data with null price when no manualPrice', async () => {
+      await service.createSubmission('user-abc', photoBuffer, baseFields);
+
+      expect(mockPrismaService.submission.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          price_data: [{ fuel_type: 'PB_95', price_per_litre: null }],
+        }),
+      });
+    });
+
+    it('stores manual_price in price_data when provided', async () => {
+      await service.createSubmission('user-abc', photoBuffer, {
+        ...baseFields,
+        manualPrice: 6.54,
+      });
+
+      expect(mockPrismaService.submission.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          price_data: [{ fuel_type: 'PB_95', price_per_litre: 6.54 }],
+        }),
+      });
+    });
+
+    it('sets station_id from preselectedStationId when provided', async () => {
+      await service.createSubmission('user-abc', photoBuffer, {
+        ...baseFields,
+        preselectedStationId: 'station-xyz',
+      });
+
+      expect(mockPrismaService.submission.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ station_id: 'station-xyz' }),
+      });
+    });
+
+    it('sets station_id to null when preselectedStationId is null', async () => {
+      await service.createSubmission('user-abc', photoBuffer, baseFields);
+
+      expect(mockPrismaService.submission.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ station_id: null }),
+      });
+    });
+
+    it('stores null gps_lat/gps_lng when GPS not available', async () => {
+      await service.createSubmission('user-abc', photoBuffer, {
+        ...baseFields,
+        gpsLat: null,
+        gpsLng: null,
+      });
+
+      expect(mockPrismaService.submission.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ gps_lat: null, gps_lng: null }),
+      });
+    });
+
+    it('enqueues BullMQ job with the new submissionId', async () => {
+      await service.createSubmission('user-abc', photoBuffer, baseFields);
+
+      expect(mockPhotoPipelineWorker.enqueue).toHaveBeenCalledWith('fixed-uuid-1234');
+    });
+
+    it('AC3: does not create Submission when R2 upload throws', async () => {
+      mockStorageService.uploadBuffer.mockRejectedValueOnce(new Error('R2 unavailable'));
+
+      await expect(service.createSubmission('user-abc', photoBuffer, baseFields)).rejects.toThrow(
+        'R2 unavailable',
+      );
+
+      expect(mockPrismaService.submission.create).not.toHaveBeenCalled();
+      expect(mockPhotoPipelineWorker.enqueue).not.toHaveBeenCalled();
+    });
+
+    it('returns void on success', async () => {
+      const result = await service.createSubmission('user-abc', photoBuffer, baseFields);
+      expect(result).toBeUndefined();
     });
   });
 });

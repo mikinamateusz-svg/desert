@@ -4,6 +4,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { ValidationPipe } from '@nestjs/common';
+import multipart from '@fastify/multipart';
 import { AppModule } from './app.module.js';
 
 async function bootstrap() {
@@ -11,6 +12,9 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({ logger: true }),
   );
+
+  // Required for POST /v1/submissions multipart photo upload
+  await app.register(multipart);
 
   app.useGlobalPipes(
     new ValidationPipe({

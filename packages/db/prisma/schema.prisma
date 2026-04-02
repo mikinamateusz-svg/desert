@@ -99,6 +99,8 @@ model Submission {
   price_data           Json
   photo_r2_key         String?
   ocr_confidence_score Float?
+  gps_lat              Float?           // nulled by Story 3.4 worker after station matching
+  gps_lng              Float?           // nulled by Story 3.4 worker after station matching
   source               PriceSource      @default(community)
   status               SubmissionStatus @default(pending)
   created_at           DateTime         @default(now())

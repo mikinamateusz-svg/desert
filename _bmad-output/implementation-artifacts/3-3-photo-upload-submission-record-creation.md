@@ -1,0 +1,450 @@
+# Story 3.3: Photo Upload & Submission Record Creation
+
+**Status:** ready-for-dev
+**Epic:** 3 — Photo Contribution Pipeline
+**Created:** 2026-04-02
+
+---
+
+## User Story
+
+As a **developer**,
+I want the server to accept a photo upload, store it in R2, and enqueue an async processing job,
+So that the pipeline can process submissions without blocking the driver's device.
+
+**Why:** Story 3.2 fire-and-forgets the upload to `POST /v1/submissions`. Without this story that endpoint doesn't exist, so the queue always retries. Once this story ships, queued photos will upload on the first attempt for online drivers and retry naturally for offline ones. All heavy pipeline work (GPS matching, OCR, validation) is async — Story 3.3 just accepts the photo and hands it off.
+
+---
+
+## Acceptance Criteria
+
+### AC1 — Photo stored in R2
+**Given** the mobile app POSTs a `multipart/form-data` request with a `photo` file and metadata
+**When** the API receives the request
+**Then** the photo is stored in Cloudflare R2 under key `submissions/{userId}/{submissionId}.jpg`
+**And** the API returns `202 Accepted` — never waits for pipeline processing to complete
+
+### AC2 — Submission record created on R2 success
+**Given** the R2 upload succeeds
+**When** the `Submission` record is created
+**Then** it contains: `user_id` (from JWT), `photo_r2_key`, `gps_lat` (nullable), `gps_lng` (nullable), `price_data: [{ fuel_type, price_per_litre: manualPrice | null }]`, `station_id` (preselected station UUID or NULL), `status: pending`
+
+### AC3 — R2 failure is safe
+**Given** the R2 upload throws
+**When** the API handles the error
+**Then** no `Submission` record is created
+**And** the API returns `500` — the mobile queue will retry
+
+### AC4 — BullMQ job enqueued
+**Given** the Submission record is created
+**When** the record is persisted
+**Then** a BullMQ job is added to the `photo-pipeline` queue with payload `{ submissionId }` only
+**And** the job has: `attempts: 4`, `backoff: { type: 'custom' }`, `jobId: photo-{submissionId}` (dedup)
+**And** the worker stub logs receipt and completes — actual processing in Stories 3.4–3.7
+
+---
+
+## Out of Scope (Story 3.3)
+
+- GPS-to-station matching in the worker → **Story 3.4**
+- OCR price extraction → **Story 3.5**
+- Photo deletion from R2 → **Story 3.7** (photos will accumulate until then — acceptable, well within 10GB free tier)
+- File size validation beyond multipart limits
+- Photo virus scanning
+
+---
+
+## Technical Specification
+
+### 1. New dependency — `@fastify/multipart`
+
+The API uses NestJS with `FastifyAdapter` (see `main.ts`). Standard `multer`/`FileInterceptor` is Express-only. File upload requires `@fastify/multipart`.
+
+```
+pnpm --filter @desert/api add @fastify/multipart
+```
+
+NestJS 11 uses Fastify v5 — `@fastify/multipart ^9.0.0` is the correct version for Fastify v5.
+
+Register in `apps/api/src/main.ts`:
+
+```typescript
+import multipart from '@fastify/multipart';
+// after NestFactory.create:
+await app.register(multipart);
+```
+
+### 2. Prisma schema change — add GPS columns to Submission
+
+The BullMQ job payload is `{ submissionId }` only (architecture rule: worker fetches all data from DB). GPS coords must therefore be stored temporarily on the Submission so Story 3.4's worker can read them.
+
+In `packages/db/prisma/schema.prisma`, add to the `Submission` model:
+
+```prisma
+model Submission {
+  // ... existing fields ...
+  gps_lat              Float?           // nulled by Story 3.4 after station matching
+  gps_lng              Float?           // nulled by Story 3.4 after station matching
+  // ...
+}
+```
+
+Then generate and apply migration:
+
+```
+pnpm --filter @desert/db exec prisma migrate dev --name add_submission_gps
+```
+
+**GDPR note:** GPS stored under "legitimate interest" (required for the async pipeline). Story 3.4 worker MUST null both columns after station matching (or immediately if `station_id` is already set from preselection).
+
+### 3. File structure
+
+**New files:**
+```
+apps/api/src/photo/
+├── photo.module.ts
+├── photo-pipeline.worker.ts
+└── photo-pipeline.worker.spec.ts
+```
+
+**Modified files:**
+```
+apps/api/src/
+├── main.ts                                           ← register @fastify/multipart
+├── app.module.ts                                     ← add PhotoModule
+├── submissions/
+│   ├── submissions.controller.ts                     ← add POST handler
+│   ├── submissions.controller.spec.ts                ← add POST tests
+│   ├── submissions.service.ts                        ← add createSubmission()
+│   ├── submissions.service.spec.ts                   ← add createSubmission tests
+│   ├── submissions.module.ts                         ← import StorageModule + PhotoModule
+│   └── dto/create-submission.dto.ts                  ← NEW: multipart field shapes
+packages/db/prisma/schema.prisma                      ← add gps_lat / gps_lng
+packages/db/prisma/migrations/*/migration.sql         ← generated by migrate dev
+```
+
+### 4. `photo-pipeline.worker.ts`
+
+Follow the exact BullMQ pattern from `orlen-ingestion.worker.ts` and `station-sync.worker.ts` — dedicated Redis connection with `maxRetriesPerRequest: null`, `Queue` for enqueueing, `Worker` for processing.
+
+```typescript
+import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Queue, Worker, type Job } from 'bullmq';
+import Redis from 'ioredis';
+
+export const PHOTO_PIPELINE_QUEUE = 'photo-pipeline';
+export const PHOTO_PIPELINE_JOB = 'process-submission';
+
+export interface PhotoPipelineJobData {
+  submissionId: string;
+}
+
+const JOB_OPTIONS = {
+  attempts: 4,          // 1 initial + 3 retries (3.4–3.7 will fail transiently until implemented)
+  backoff: { type: 'custom' as const },
+} as const;
+
+@Injectable()
+export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
+  private readonly logger = new Logger(PhotoPipelineWorker.name);
+  private queue!: Queue;
+  private worker!: Worker;
+  private redisForBullMQ!: Redis;
+
+  constructor(private readonly config: ConfigService) {}
+
+  async onModuleInit(): Promise<void> {
+    const redisUrl = this.config.getOrThrow<string>('BULL_REDIS_URL');
+    this.redisForBullMQ = new Redis(redisUrl, { maxRetriesPerRequest: null });
+    const connection = this.redisForBullMQ as unknown as Parameters<typeof Queue>[1]['connection'];
+
+    this.queue = new Queue(PHOTO_PIPELINE_QUEUE, {
+      connection,
+      defaultJobOptions: JOB_OPTIONS,
+    });
+
+    this.worker = new Worker<PhotoPipelineJobData>(
+      PHOTO_PIPELINE_QUEUE,
+      async (job: Job<PhotoPipelineJobData>) => {
+        // Stories 3.4 (GPS matching), 3.5 (OCR), 3.7 (price validation + R2 deletion)
+        // will replace this stub.
+        this.logger.log(
+          `[stub] Photo pipeline job received for submission ${job.data.submissionId}`,
+        );
+      },
+      {
+        connection,
+        settings: {
+          backoffStrategy: () => 30_000, // uniform 30s for stub; 3.5+ will tune
+        },
+      },
+    );
+
+    this.worker.on('failed', (job, err) => {
+      this.logger.error(
+        `Photo pipeline job failed for submission ${job?.data?.submissionId}: ${err.message}`,
+      );
+    });
+
+    this.logger.log('PhotoPipelineWorker initialised (stub — processing deferred to 3.4+)');
+  }
+
+  async onModuleDestroy(): Promise<void> {
+    await this.worker?.close();
+    await this.queue?.close();
+    await this.redisForBullMQ?.quit();
+  }
+
+  async enqueue(submissionId: string): Promise<void> {
+    await this.queue.add(
+      PHOTO_PIPELINE_JOB,
+      { submissionId },
+      {
+        jobId: `photo-${submissionId}`, // dedup — safe to re-enqueue if transient failure
+        ...JOB_OPTIONS,
+      },
+    );
+  }
+
+  getQueue(): Queue {
+    return this.queue;
+  }
+}
+```
+
+### 5. `photo.module.ts`
+
+```typescript
+import { Module } from '@nestjs/common';
+import { PhotoPipelineWorker } from './photo-pipeline.worker.js';
+
+@Module({
+  providers: [PhotoPipelineWorker],
+  exports: [PhotoPipelineWorker],
+})
+export class PhotoModule {}
+```
+
+### 6. `submissions.module.ts` — updated
+
+```typescript
+import { Module } from '@nestjs/common';
+import { SubmissionsController } from './submissions.controller.js';
+import { SubmissionsService } from './submissions.service.js';
+import { StorageModule } from '../storage/storage.module.js';
+import { PhotoModule } from '../photo/photo.module.js';
+
+@Module({
+  imports: [StorageModule, PhotoModule],
+  controllers: [SubmissionsController],
+  providers: [SubmissionsService],
+})
+export class SubmissionsModule {}
+```
+
+### 7. `submissions.service.ts` — new `createSubmission` method
+
+Inject `StorageService` and `PhotoPipelineWorker` via constructor (existing `PrismaService` already present).
+
+```typescript
+async createSubmission(
+  userId: string,
+  photoBuffer: Buffer,
+  fields: {
+    fuelType: string;
+    gpsLat: number | null;
+    gpsLng: number | null;
+    manualPrice: number | null;
+    preselectedStationId: string | null;
+  },
+): Promise<void> {
+  const submissionId = randomUUID();
+  const r2Key = `submissions/${userId}/${submissionId}.jpg`;
+
+  // AC3: R2 upload BEFORE creating the DB record — failure propagates, no orphan record
+  await this.storageService.uploadBuffer(r2Key, photoBuffer, 'image/jpeg');
+
+  const priceData = [
+    { fuel_type: fields.fuelType, price_per_litre: fields.manualPrice },
+  ];
+
+  await this.prisma.submission.create({
+    data: {
+      id: submissionId,
+      user_id: userId,
+      station_id: fields.preselectedStationId ?? null,
+      photo_r2_key: r2Key,
+      gps_lat: fields.gpsLat,
+      gps_lng: fields.gpsLng,
+      price_data: priceData,
+      status: SubmissionStatus.pending,
+    },
+  });
+
+  await this.photoPipelineWorker.enqueue(submissionId);
+}
+```
+
+`randomUUID` is from Node.js built-in `crypto`:
+```typescript
+import { randomUUID } from 'node:crypto';
+```
+
+### 8. `submissions.controller.ts` — POST handler
+
+Use `@Req() req: FastifyRequest` from `fastify`. The controller extracts multipart parts and calls the service with parsed fields. Use `@HttpCode(HttpStatus.ACCEPTED)` for 202.
+
+```typescript
+import { Controller, Get, Post, Req, Query, HttpCode, HttpStatus, BadRequestException } from '@nestjs/common';
+import { FastifyRequest } from 'fastify';
+import { UserRole } from '@prisma/client';
+import { Roles } from '../auth/decorators/roles.decorator.js';
+import { CurrentUser } from '../auth/current-user.decorator.js';
+import { SubmissionsService } from './submissions.service.js';
+import { GetSubmissionsDto } from './dto/get-submissions.dto.js';
+
+@Controller('v1/submissions')
+export class SubmissionsController {
+  constructor(private readonly submissionsService: SubmissionsService) {}
+
+  @Get()
+  @Roles(UserRole.DRIVER)
+  getMySubmissions(
+    @CurrentUser('id') userId: string,
+    @Query() dto: GetSubmissionsDto,
+  ) {
+    return this.submissionsService.getMySubmissions(userId, dto.page, dto.limit);
+  }
+
+  @Post()
+  @Roles(UserRole.DRIVER)
+  @HttpCode(HttpStatus.ACCEPTED)
+  async create(
+    @Req() req: FastifyRequest,
+    @CurrentUser('id') userId: string,
+  ): Promise<void> {
+    if (!req.isMultipart()) {
+      throw new BadRequestException('Expected multipart/form-data');
+    }
+
+    let photoBuffer: Buffer | null = null;
+    const fields: Record<string, string> = {};
+
+    const parts = req.parts({ limits: { fileSize: 5 * 1024 * 1024 } }); // 5 MB cap
+    for await (const part of parts) {
+      if (part.type === 'file' && part.fieldname === 'photo') {
+        photoBuffer = await part.toBuffer();
+      } else if (part.type === 'field') {
+        fields[part.fieldname] = part.value as string;
+      }
+    }
+
+    if (!photoBuffer || photoBuffer.length === 0) {
+      throw new BadRequestException('photo field is required');
+    }
+
+    const fuelType = fields['fuel_type'];
+    if (!fuelType) {
+      throw new BadRequestException('fuel_type field is required');
+    }
+
+    await this.submissionsService.createSubmission(userId, photoBuffer, {
+      fuelType,
+      gpsLat: parseOptionalFloat(fields['gps_lat']),
+      gpsLng: parseOptionalFloat(fields['gps_lng']),
+      manualPrice: parseOptionalFloat(fields['manual_price']),
+      preselectedStationId: fields['preselected_station_id'] || null,
+    });
+  }
+}
+
+function parseOptionalFloat(val: string | undefined): number | null {
+  if (!val || val === '') return null;
+  const n = parseFloat(val);
+  return isNaN(n) ? null : n;
+}
+```
+
+### 9. `main.ts` change
+
+Add one `await app.register(multipart)` call after `NestFactory.create`:
+
+```typescript
+import multipart from '@fastify/multipart';
+// ...
+const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ logger: true }));
+await app.register(multipart);
+app.useGlobalPipes(new ValidationPipe({ ... }));
+```
+
+### 10. `app.module.ts` change
+
+Add `PhotoModule` to imports:
+
+```typescript
+import { PhotoModule } from './photo/photo.module.js';
+// ...
+imports: [
+  // ... existing ...
+  PhotoModule,
+  SubmissionsModule,
+  // ...
+],
+```
+
+---
+
+## Test Requirements
+
+### `submissions.service.spec.ts` — new tests for `createSubmission`
+
+Mock: `PrismaService`, `StorageService`, `PhotoPipelineWorker`.
+
+```
+it('happy path — uploads to R2, creates Submission, enqueues job')
+it('R2 failure — propagates error, prisma.submission.create NOT called')
+it('with manualPrice — price_data contains the price_per_litre')
+it('with preselectedStationId — station_id set on Submission')
+it('null GPS — gps_lat/gps_lng null on Submission')
+it('enqueue called with correct submissionId')
+```
+
+### `submissions.controller.spec.ts` — new tests for `POST /v1/submissions`
+
+Since multipart parsing cannot be easily unit-tested, focus on:
+```
+it('calls createSubmission with parsed fields and returns 202')
+it('throws BadRequestException when no photo in request')
+it('throws BadRequestException when fuel_type missing')
+```
+
+Mock `req` as `{ isMultipart: () => true, parts: async function*() { ... } }`.
+
+### `photo-pipeline.worker.spec.ts`
+
+Mock Redis and Queue:
+```
+it('enqueue adds job with correct jobId, data, and options')
+it('getQueue returns the Queue instance')
+```
+
+---
+
+## D1 Resolution
+
+Story 3.2 deferred: "Server-side POST /v1/submissions not implemented — queue retries handle this."
+Story 3.3 fully resolves D1: once deployed, the mobile queue's first upload attempt will succeed for online drivers.
+
+---
+
+## Implementation Notes
+
+- **`randomUUID` import:** `import { randomUUID } from 'node:crypto'` — built-in, no extra package
+- **R2 key collision:** UUID-based keys are collision-proof; no additional dedup needed
+- **`@fastify/multipart` TypeScript types:** included in the package — no `@types/` needed
+- **`for await...of parts`:** the multipart stream must be fully consumed before the handler returns, otherwise Fastify closes the connection. The `for await` loop handles this correctly
+- **Content-Type header:** the mobile app does NOT set `Content-Type: multipart/form-data` manually (correct — fetch sets the boundary automatically). The server must not require a specific boundary value
+- **Empty string → null:** mobile sends `''` for optional fields (gps_lat, manual_price, preselected_station_id). `parseOptionalFloat` and `|| null` guard handle this
+- **`price_per_litre: null`:** stored in JSONB — `getMySubmissions` reads it as `PriceEntry[]` but doesn't error on null values; the Activity screen only shows prices for verified submissions
+- **GDPR:** `gps_lat`/`gps_lng` are classified as "temporarily stored for legitimate pipeline use." Story 3.4 worker MUST null both columns after matching (see AC constraint in Story 3.4 spec)

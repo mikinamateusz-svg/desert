@@ -501,7 +501,10 @@ epics:
       - id: 3.3
         title: Photo Upload & Submission Record Creation
         file: 3-3-photo-upload-submission-record-creation.md
-        status: backlog
+        status: review
+        ready_date: 2026-04-02
+        dev_started: 2026-04-02
+        dev_completed: 2026-04-02
 
       - id: 3.4
         title: GPS-to-Station Matching

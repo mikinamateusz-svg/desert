@@ -18,6 +18,7 @@
     "@aws-sdk/s3-request-presigner": "^3.1015.0",
     "@desert/db": "workspace:*",
     "@desert/types": "workspace:*",
+    "@fastify/multipart": "^9.4.0",
     "@nestjs/common": "11.1.17",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "11.1.17",

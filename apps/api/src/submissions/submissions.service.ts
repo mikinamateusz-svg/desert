@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { SubmissionStatus } from '@prisma/client';
+import { randomUUID } from 'node:crypto';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { StorageService } from '../storage/storage.service.js';
+import { PhotoPipelineWorker } from '../photo/photo-pipeline.worker.js';
 
-type PriceEntry = { fuel_type: string; price_per_litre: number };
+type PriceEntry = { fuel_type: string; price_per_litre: number | null };
 
 type MappedSubmission = {
   id: string;
@@ -12,9 +15,21 @@ type MappedSubmission = {
   created_at: Date;
 };
 
+export interface CreateSubmissionFields {
+  fuelType: string;
+  gpsLat: number | null;
+  gpsLng: number | null;
+  manualPrice: number | null;
+  preselectedStationId: string | null;
+}
+
 @Injectable()
 export class SubmissionsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly storageService: StorageService,
+    private readonly photoPipelineWorker: PhotoPipelineWorker,
+  ) {}
 
   async getMySubmissions(userId: string, page: number, limit: number) {
     const skip = (page - 1) * limit;
@@ -48,5 +63,38 @@ export class SubmissionsService {
     }));
 
     return { data, total, page, limit };
+  }
+
+  /**
+   * AC1: Upload photo to R2 first — if this fails, no Submission record is created (AC3).
+   * AC2: Create Submission with status=pending, then enqueue BullMQ job (AC4).
+   * Returns void; caller returns 202 Accepted.
+   */
+  async createSubmission(
+    userId: string,
+    photoBuffer: Buffer,
+    fields: CreateSubmissionFields,
+  ): Promise<void> {
+    const submissionId = randomUUID();
+    const r2Key = `submissions/${userId}/${submissionId}.jpg`;
+
+    // AC3: R2 upload BEFORE DB insert — failure propagates, no orphan Submission record
+    await this.storageService.uploadBuffer(r2Key, photoBuffer, 'image/jpeg');
+
+    await this.prisma.submission.create({
+      data: {
+        id: submissionId,
+        user_id: userId,
+        station_id: fields.preselectedStationId ?? null,
+        photo_r2_key: r2Key,
+        gps_lat: fields.gpsLat,
+        gps_lng: fields.gpsLng,
+        price_data: [{ fuel_type: fields.fuelType, price_per_litre: fields.manualPrice }],
+        status: SubmissionStatus.pending,
+      },
+    });
+
+    // AC4: job payload is submissionId only — worker fetches all data from DB
+    await this.photoPipelineWorker.enqueue(submissionId);
   }
 }

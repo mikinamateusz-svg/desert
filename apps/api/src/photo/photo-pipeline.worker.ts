@@ -7,6 +7,7 @@ import { PrismaService } from '../prisma/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
 import { StationService, type NearbyStationWithDistance } from '../station/station.service.js';
 import { OcrService } from '../ocr/ocr.service.js';
+import { LogoService } from '../logo/logo.service.js';
 
 export const PHOTO_PIPELINE_QUEUE = 'photo-pipeline';
 export const PHOTO_PIPELINE_JOB = 'process-submission';
@@ -38,6 +39,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     private readonly stationService: StationService,
     private readonly storageService: StorageService,
     private readonly ocrService: OcrService,
+    private readonly logoService: LogoService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -82,7 +84,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       }
     });
 
-    this.logger.log('PhotoPipelineWorker initialised (Stories 3.4 GPS + 3.5 OCR active)');
+    this.logger.log('PhotoPipelineWorker initialised (Stories 3.4 GPS + 3.5 OCR + 3.6 Logo active)');
   }
 
   async onModuleDestroy(): Promise<void> {
@@ -140,9 +142,15 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       return; // rejected inside runOcrExtraction — do not proceed
     }
 
-    // Stories 3.6 (logo recognition), 3.7 (validation) — stubs
+    // Story 3.6: logo recognition (secondary signal — never blocks pipeline)
+    const logoFlagged = await this.runLogoRecognition(submission, candidates);
+    if (logoFlagged) {
+      return; // submission flagged for ops review — do not proceed to Story 3.7
+    }
+
+    // Story 3.7 stub
     this.logger.log(
-      `Submission ${submissionId}: OCR complete — logo/validation deferred to Stories 3.6+`,
+      `Submission ${submissionId}: logo recognition complete — validation deferred to Story 3.7`,
     );
   }
 
@@ -264,6 +272,120 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     });
 
     return true;
+  }
+
+  // ── Logo recognition step ──────────────────────────────────────────────────
+
+  /**
+   * Logo recognition — secondary signal for station disambiguation.
+   * Runs ONLY when GPS match is ambiguous (two candidates at similar distances).
+   * Never throws — all failures fall through to "proceed on GPS match".
+   *
+   * Returns true if the submission was flagged for ops review (caller should return).
+   * Returns false in all other cases (pipeline continues to Story 3.7).
+   *
+   * NOTE: Photo is NOT deleted here — Story 3.7 handles deletion.
+   */
+  private async runLogoRecognition(
+    submission: Pick<Submission, 'id' | 'photo_r2_key'>,
+    candidates: NearbyStationWithDistance[],
+  ): Promise<boolean> {
+    // AC1 + AC2: evaluate ambiguity threshold
+    if (!this.isAmbiguousMatch(candidates)) {
+      this.logger.log(
+        `Submission ${submission.id}: logo recognition skipped — GPS match is unambiguous`,
+      );
+      return false;
+    }
+
+    this.logger.log(
+      `Submission ${submission.id}: logo recognition running — ` +
+        `${candidates.length} candidates, nearest=${candidates[0]?.distance_m.toFixed(0)}m, ` +
+        `second=${candidates[1]?.distance_m.toFixed(0)}m`,
+    );
+
+    // Guard: no photo — skip silently (missing_photo already handled by OCR step,
+    // but guard defensively in case photo_r2_key was nulled between steps)
+    if (!submission.photo_r2_key) {
+      this.logger.warn(
+        `Submission ${submission.id}: logo recognition skipped — photo_r2_key is null`,
+      );
+      return false;
+    }
+
+    // Fetch photo from R2 — catch all errors (logo recognition is optional)
+    let photoBuffer: Buffer;
+    try {
+      photoBuffer = await this.storageService.getObjectBuffer(submission.photo_r2_key);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      this.logger.error(
+        `Submission ${submission.id}: logo recognition — R2 fetch failed: ${message}. Proceeding on GPS match.`,
+      );
+      return false;
+    }
+
+    // Call Claude Haiku for brand recognition (errors caught inside recogniseBrand — returns null brand)
+    const logoResult = await this.logoService.recogniseBrand(photoBuffer);
+
+    this.logger.log(
+      `Submission ${submission.id}: logo recognition result — ` +
+        `brand=${logoResult.brand ?? 'null'}, confidence=${logoResult.confidence.toFixed(2)}`,
+    );
+
+    // GPS-matched station's brand (from candidates list — brand added to findNearbyWithDistance in Story 3.6)
+    const matchedStationBrand = candidates[0]?.brand ?? null;
+
+    const evaluation = this.logoService.evaluateMatch(logoResult, matchedStationBrand);
+
+    if (evaluation === 'mismatch') {
+      // AC5: contradicting signal — flag for ops review
+      this.logger.warn(
+        `Submission ${submission.id}: logo mismatch — ` +
+          `detected "${logoResult.brand}", GPS-matched station brand "${matchedStationBrand}". ` +
+          `Flagging for ops review.`,
+      );
+      try {
+        await this.prisma.submission.update({
+          where: { id: submission.id },
+          data: { status: SubmissionStatus.shadow_rejected },
+        });
+        return true; // flagged — caller returns early
+      } catch (err) {
+        // DB failure writing shadow_rejected — log and proceed rather than triggering BullMQ
+        // retry (which would re-run OCR unnecessarily for a logo-step DB issue)
+        const message = err instanceof Error ? err.message : String(err);
+        this.logger.error(
+          `Submission ${submission.id}: failed to write shadow_rejected status — ${message}. Proceeding on GPS match.`,
+        );
+        return false;
+      }
+    }
+
+    // AC4: match confirmed, or AC6: inconclusive — both proceed on GPS match
+    if (evaluation === 'match') {
+      this.logger.log(`Submission ${submission.id}: logo recognition confirmed GPS match`);
+    } else {
+      this.logger.log(
+        `Submission ${submission.id}: logo recognition inconclusive — proceeding on GPS match`,
+      );
+    }
+    return false;
+  }
+
+  /**
+   * Returns true if the GPS match is ambiguous (logo recognition should run).
+   * Ambiguous = 2+ candidates AND nearest is NOT >50% closer than second nearest.
+   */
+  private isAmbiguousMatch(candidates: NearbyStationWithDistance[]): boolean {
+    if (candidates.length < 2) return false;
+
+    const nearest = candidates[0].distance_m;
+    const secondNearest = candidates[1].distance_m;
+
+    // Unambiguous: nearest is >50% closer than second nearest (nearest < 0.5 * second)
+    const isUnambiguous = nearest < 0.5 * secondNearest;
+    return !isUnambiguous;
   }
 
   private async rejectSubmission(

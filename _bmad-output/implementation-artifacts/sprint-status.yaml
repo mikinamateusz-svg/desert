@@ -534,7 +534,12 @@ epics:
       - id: 3.6
         title: Logo Recognition as Secondary Signal
         file: 3-6-logo-recognition-secondary-signal.md
-        status: backlog
+        status: done
+        ready_date: 2026-04-02
+        implemented_date: 2026-04-02
+        review_date: 2026-04-02
+        review_findings: "I1 photo orphaned in R2 on shadow_rejected — Story 3.7 must delete photo for shadow_rejected submissions (ops keep photo alive for review until then). D1 double R2 fetch per ambiguous submission — accepted per spec OQ3 (R2 egress free, defer post-MVP). D2 parseResponse regex misses preamble before code fence — pre-existing pattern in OcrService, defer. D3 KNOWN_BRANDS and BRAND_PATTERNS maintained separately — drift risk if new brand added, defer (validate or share constant pre-launch). D4 no observability for sustained Anthropic API failure — defer to Story 3.9 pipeline cost controls."
+        patches_applied: "2026-04-02 — P1: shadow_rejected DB update wrapped in try/catch (proceeds on GPS match on DB failure). P2: evaluateMatch confidence threshold raised from === 0 to < 0.4 (mirrors OCR). P3: secondNearest === 0 guard removed from isAmbiguousMatch (co-located stations are ambiguous). 2 confidence threshold tests + 2 DB failure tests added. 558 tests pass."
 
       - id: 3.7
         title: Price Validation & Database Update

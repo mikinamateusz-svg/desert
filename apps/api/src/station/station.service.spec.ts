@@ -67,11 +67,12 @@ describe('StationService', () => {
       name: 'Orlen Centrum',
       address: 'ul. Marszałkowska 1',
       google_places_id: 'gp_orlen',
+      brand: 'orlen',
       distance_m: 45.2,
     };
 
     it('returns candidates with distance_m sorted by proximity', async () => {
-      const secondCandidate = { ...candidate, id: 'stn-2', name: 'BP Centrum', distance_m: 120.7 };
+      const secondCandidate = { ...candidate, id: 'stn-2', name: 'BP Centrum', brand: 'bp', distance_m: 120.7 };
       mockPrisma.$queryRaw.mockResolvedValueOnce([candidate, secondCandidate]);
 
       const result = await service.findNearbyWithDistance(52.2297, 21.0122);

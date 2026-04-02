@@ -13,6 +13,7 @@ export interface NearbyStationWithDistance {
   name: string;
   address: string | null;
   google_places_id: string | null;
+  brand: string | null;  // from Station.brand (Story 2.14 classification)
   distance_m: number;
 }
 
@@ -69,6 +70,7 @@ export class StationService {
         name,
         address,
         google_places_id,
+        brand,
         ST_Distance(location, ST_Point(${lng}, ${lat})::geography) AS distance_m
       FROM "Station"
       WHERE ST_DWithin(location, ST_Point(${lng}, ${lat})::geography, ${radiusMeters})

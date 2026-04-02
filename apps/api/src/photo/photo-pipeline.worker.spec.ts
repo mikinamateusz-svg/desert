@@ -10,6 +10,7 @@ import { PrismaService } from '../prisma/prisma.service.js';
 import { StationService } from '../station/station.service.js';
 import { StorageService } from '../storage/storage.service.js';
 import { OcrService } from '../ocr/ocr.service.js';
+import { LogoService } from '../logo/logo.service.js';
 import type { Job } from 'bullmq';
 
 // ── BullMQ / Redis mocks ───────────────────────────────────────────────────
@@ -62,6 +63,11 @@ const mockOcrService = {
   validatePriceBands: jest.fn(),
 };
 
+const mockLogoService = {
+  recogniseBrand: jest.fn(),
+  evaluateMatch: jest.fn(),
+};
+
 // ── Test fixtures ──────────────────────────────────────────────────────────
 
 const makeJob = (submissionId: string) =>
@@ -87,8 +93,23 @@ const nearbyStation = {
   name: 'Orlen Centrum',
   address: 'ul. Test 1',
   google_places_id: 'gp_1',
+  brand: 'orlen',
   distance_m: 45.5,
 };
+
+// Two candidates at similar distances → ambiguous → logo recognition runs
+// 80 vs 120: diff=40, 50% of 120=60, 40 < 60 → ambiguous
+const ambiguousCandidates = [
+  { id: 'station-1', name: 'Orlen Krakowska', address: null, google_places_id: null, brand: 'orlen', distance_m: 80 },
+  { id: 'station-2', name: 'BP Centrum', address: null, google_places_id: null, brand: 'bp', distance_m: 120 },
+];
+
+// Two candidates where nearest is clearly closer → unambiguous → logo recognition skipped
+// 60 vs 140: diff=80, 50% of 140=70, 80 > 70 → unambiguous
+const unambiguousCandidates = [
+  { id: 'station-1', name: 'Orlen Krakowska', address: null, google_places_id: null, brand: 'orlen', distance_m: 60 },
+  { id: 'station-2', name: 'BP Centrum', address: null, google_places_id: null, brand: 'bp', distance_m: 140 },
+];
 
 const successfulOcrResult = {
   prices: [{ fuel_type: 'PB_95', price_per_litre: 6.19 }],
@@ -122,6 +143,14 @@ describe('PhotoPipelineWorker', () => {
     mockOcrService.extractPrices.mockResolvedValue(successfulOcrResult);
     mockOcrService.validatePriceBands.mockReturnValue(null); // all prices in range
 
+    // Logo — default: match confirmed (most tests use single/unambiguous candidates, skips logo)
+    mockLogoService.recogniseBrand.mockResolvedValue({
+      brand: 'orlen',
+      confidence: 0.9,
+      raw_response: '{"brand":"orlen","confidence":0.9}',
+    });
+    mockLogoService.evaluateMatch.mockReturnValue('match');
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PhotoPipelineWorker,
@@ -130,6 +159,7 @@ describe('PhotoPipelineWorker', () => {
         { provide: StationService, useValue: mockStationService },
         { provide: StorageService, useValue: mockStorageService },
         { provide: OcrService, useValue: mockOcrService },
+        { provide: LogoService, useValue: mockLogoService },
       ],
     }).compile();
 
@@ -742,6 +772,352 @@ describe('PhotoPipelineWorker', () => {
       expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
         expect.objectContaining({ data: expect.objectContaining({ status: 'rejected' }) }),
       );
+    });
+  });
+
+  // ── processJob — logo recognition step (Story 3.6) ───────────────────────
+
+  describe('processJob — logo recognition step', () => {
+    describe('ambiguity threshold — skip cases', () => {
+      it('skips logo recognition when only one candidate (single unambiguous match)', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockLogoService.recogniseBrand).not.toHaveBeenCalled();
+      });
+
+      it('skips logo recognition on preselected station path (candidates = [])', async () => {
+        const preselected = { ...pendingSubmission, station_id: 'pre-selected-id' };
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(preselected);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockLogoService.recogniseBrand).not.toHaveBeenCalled();
+      });
+
+      it('skips logo recognition when nearest is >50% closer than second nearest', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(unambiguousCandidates);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockLogoService.recogniseBrand).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('ambiguity threshold — run cases', () => {
+      it('calls recogniseBrand when match is ambiguous (nearest not >50% closer)', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockLogoService.recogniseBrand).toHaveBeenCalledTimes(1);
+      });
+
+      it('fetches photo from R2 for logo recognition when ambiguous', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        // getObjectBuffer called twice: once for OCR, once for logo
+        expect(mockStorageService.getObjectBuffer).toHaveBeenCalledWith(
+          pendingSubmission.photo_r2_key,
+        );
+      });
+    });
+
+    describe('match outcome — confirmed', () => {
+      it('does not update status when logo recognition confirms GPS match', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+        mockLogoService.evaluateMatch.mockReturnValueOnce('match');
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        const updateCalls = mockPrismaService.submission.update.mock.calls as Array<
+          [{ where: unknown; data: Record<string, unknown> }]
+        >;
+        const shadowRejectedUpdates = updateCalls.filter(
+          ([args]) => args.data['status'] === 'shadow_rejected',
+        );
+        expect(shadowRejectedUpdates).toHaveLength(0);
+      });
+
+      it('does not set shadow_rejected when evaluateMatch returns "match"', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+        mockLogoService.evaluateMatch.mockReturnValueOnce('match');
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPrismaService.submission.update).not.toHaveBeenCalledWith(
+          expect.objectContaining({ data: expect.objectContaining({ status: 'shadow_rejected' }) }),
+        );
+      });
+
+      it('proceeds to Story 3.7 stub after logo match (job completes)', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+        mockLogoService.evaluateMatch.mockReturnValueOnce('match');
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+      });
+    });
+
+    describe('match outcome — mismatch', () => {
+      it('sets status: shadow_rejected when evaluateMatch returns "mismatch"', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+        mockLogoService.evaluateMatch.mockReturnValueOnce('mismatch');
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith({
+          where: { id: 'sub-123' },
+          data: { status: 'shadow_rejected' },
+        });
+      });
+
+      it('returns early (does not reach Story 3.7 stub) on logo mismatch', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+        mockLogoService.evaluateMatch.mockReturnValueOnce('mismatch');
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+
+        // Verify update was for shadow_rejected (not a Story 3.7 finalisation)
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+          expect.objectContaining({ data: expect.objectContaining({ status: 'shadow_rejected' }) }),
+        );
+      });
+
+      it('does not delete photo from R2 on logo mismatch (Story 3.7 handles deletion)', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+        mockLogoService.evaluateMatch.mockReturnValueOnce('mismatch');
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockStorageService.deleteObject).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('match outcome — inconclusive', () => {
+      it('does not update status when logo recognition is inconclusive', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+        mockLogoService.evaluateMatch.mockReturnValueOnce('inconclusive');
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPrismaService.submission.update).not.toHaveBeenCalledWith(
+          expect.objectContaining({ data: expect.objectContaining({ status: 'shadow_rejected' }) }),
+        );
+      });
+
+      it('proceeds to Story 3.7 stub when inconclusive', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+        mockLogoService.evaluateMatch.mockReturnValueOnce('inconclusive');
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+      });
+    });
+
+    describe('failure resilience', () => {
+      it('proceeds when R2 fetch fails during logo recognition (logo is optional)', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+        // First getObjectBuffer call (OCR) succeeds; second (logo) fails
+        mockStorageService.getObjectBuffer
+          .mockResolvedValueOnce(Buffer.from('fake-image')) // OCR fetch
+          .mockRejectedValueOnce(new Error('R2 timeout'));  // logo fetch
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+      });
+
+      it('does not throw when R2 fetch fails during logo recognition', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+        mockStorageService.getObjectBuffer
+          .mockResolvedValueOnce(Buffer.from('fake-image'))
+          .mockRejectedValueOnce(new Error('R2 timeout'));
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+        expect(mockLogoService.recogniseBrand).not.toHaveBeenCalled();
+      });
+
+      it('proceeds when recogniseBrand returns null brand (API failure fallback)', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+        mockLogoService.recogniseBrand.mockResolvedValueOnce({
+          brand: null,
+          confidence: 0,
+          raw_response: '',
+        });
+        mockLogoService.evaluateMatch.mockReturnValueOnce('inconclusive');
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+      });
+
+      it('does not call recogniseBrand when photo_r2_key is null at logo step', async () => {
+        const noPhotoAmbiguous = { ...pendingSubmission, photo_r2_key: null };
+        // GPS match was made (station_id set) but photo_r2_key is null
+        // OCR rejects this submission with 'missing_photo' before logo step is reached
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(noPhotoAmbiguous);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        // OCR rejects for missing_photo — logo step never runs
+        expect(mockLogoService.recogniseBrand).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('isAmbiguousMatch helper', () => {
+      it('returns false for empty candidates array', async () => {
+        // GPS matching rejects on empty candidates, but we can test the threshold via
+        // a single-candidate case reaching logo step
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockLogoService.recogniseBrand).not.toHaveBeenCalled();
+      });
+
+      it('returns false for single candidate — logo skipped', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockLogoService.recogniseBrand).not.toHaveBeenCalled();
+      });
+
+      it('returns true for two candidates where nearest is NOT >50% closer', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockLogoService.recogniseBrand).toHaveBeenCalledTimes(1);
+      });
+
+      it('returns false for two candidates where nearest IS >50% closer', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(unambiguousCandidates);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockLogoService.recogniseBrand).not.toHaveBeenCalled();
+      });
+
+      it('handles secondNearest === 0 without throwing (two co-located stations → ambiguous → logo runs)', async () => {
+        const zeroDistanceCandidates = [
+          { ...nearbyStation, distance_m: 0 },
+          { ...nearbyStation, id: 'station-2', distance_m: 0 },
+        ];
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(zeroDistanceCandidates);
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+        // Both at 0m: 0 < 0.5 * 0 → false → ambiguous → logo runs
+        expect(mockLogoService.recogniseBrand).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('brand field threading', () => {
+      it('passes candidates[0].brand to evaluateMatch (not a separate DB lookup)', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        // evaluateMatch should be called with the brand from candidates[0] ('orlen')
+        expect(mockLogoService.evaluateMatch).toHaveBeenCalledWith(
+          expect.anything(),
+          'orlen', // candidates[0].brand from ambiguousCandidates
+        );
+      });
+
+      it('handles null brand on GPS-matched station (passes null to evaluateMatch)', async () => {
+        const noBrandCandidates = [
+          { ...ambiguousCandidates[0], brand: null },
+          { ...ambiguousCandidates[1] },
+        ];
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(noBrandCandidates);
+        mockLogoService.evaluateMatch.mockReturnValueOnce('inconclusive');
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockLogoService.evaluateMatch).toHaveBeenCalledWith(
+          expect.anything(),
+          null,
+        );
+      });
+    });
+
+    describe('mismatch DB failure resilience', () => {
+      it('proceeds (does not throw to BullMQ) when shadow_rejected DB update fails', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+        mockLogoService.evaluateMatch.mockReturnValueOnce('mismatch');
+        // GPS update (station_id) succeeds, OCR price_data update succeeds, then shadow_rejected fails
+        mockPrismaService.submission.update
+          .mockResolvedValueOnce({}) // GPS update
+          .mockResolvedValueOnce({}) // OCR price_data update
+          .mockRejectedValueOnce(new Error('DB connection lost')); // shadow_rejected update
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+      });
+
+      it('does not shadow_reject when DB update fails — proceeds on GPS match', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+        mockLogoService.evaluateMatch.mockReturnValueOnce('mismatch');
+        mockPrismaService.submission.update
+          .mockResolvedValueOnce({})
+          .mockResolvedValueOnce({})
+          .mockRejectedValueOnce(new Error('DB connection lost'));
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        // Job completes without BullMQ retry
+        expect(mockLogoService.recogniseBrand).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('GPS-rejected path — logo skipped', () => {
+      it('does not call recogniseBrand when GPS matching rejected the submission', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([]); // no match → reject
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockLogoService.recogniseBrand).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('OCR-rejected path — logo skipped', () => {
+      it('does not call recogniseBrand when OCR rejected the submission', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+        // OCR returns low confidence → rejection → early return before logo step
+        mockOcrService.extractPrices.mockResolvedValueOnce({
+          prices: [],
+          confidence_score: 0.2,
+        });
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockLogoService.recogniseBrand).not.toHaveBeenCalled();
+      });
     });
   });
 });

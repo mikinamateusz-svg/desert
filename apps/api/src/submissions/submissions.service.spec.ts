@@ -9,11 +9,13 @@ const mockPrismaService = {
     findMany: jest.fn(),
     count: jest.fn(),
     create: jest.fn(),
+    delete: jest.fn(),
   },
 };
 
 const mockStorageService = {
   uploadBuffer: jest.fn(),
+  deleteObject: jest.fn(),
 };
 
 const mockPhotoPipelineWorker = {
@@ -171,7 +173,9 @@ describe('SubmissionsService', () => {
 
     beforeEach(() => {
       mockStorageService.uploadBuffer.mockResolvedValue(undefined);
+      mockStorageService.deleteObject.mockResolvedValue(undefined);
       mockPrismaService.submission.create.mockResolvedValue({});
+      mockPrismaService.submission.delete.mockResolvedValue({});
       mockPhotoPipelineWorker.enqueue.mockResolvedValue(undefined);
     });
 
@@ -276,15 +280,32 @@ describe('SubmissionsService', () => {
       expect(result).toBeUndefined();
     });
 
-    it('propagates error when BullMQ enqueue fails after DB create', async () => {
+    it('rolls back DB record and R2 object when BullMQ enqueue fails', async () => {
       mockPhotoPipelineWorker.enqueue.mockRejectedValueOnce(new Error('Redis unavailable'));
 
       await expect(service.createSubmission('user-abc', photoBuffer, baseFields)).rejects.toThrow(
         'Redis unavailable',
       );
 
-      // DB record was already created — submission is stuck pending (accepted trade-off)
-      expect(mockPrismaService.submission.create).toHaveBeenCalled();
+      expect(mockPrismaService.submission.delete).toHaveBeenCalledWith({
+        where: { id: 'fixed-uuid-1234' },
+      });
+      expect(mockStorageService.deleteObject).toHaveBeenCalledWith(
+        'submissions/user-abc/fixed-uuid-1234.jpg',
+      );
+    });
+
+    it('deletes orphan R2 object when DB create fails', async () => {
+      mockPrismaService.submission.create.mockRejectedValueOnce(new Error('DB constraint'));
+
+      await expect(service.createSubmission('user-abc', photoBuffer, baseFields)).rejects.toThrow(
+        'DB constraint',
+      );
+
+      expect(mockStorageService.deleteObject).toHaveBeenCalledWith(
+        'submissions/user-abc/fixed-uuid-1234.jpg',
+      );
+      expect(mockPhotoPipelineWorker.enqueue).not.toHaveBeenCalled();
     });
   });
 });

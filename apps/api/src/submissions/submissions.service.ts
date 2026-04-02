@@ -81,20 +81,33 @@ export class SubmissionsService {
     // AC3: R2 upload BEFORE DB insert — failure propagates, no orphan Submission record
     await this.storageService.uploadBuffer(r2Key, photoBuffer, 'image/jpeg');
 
-    await this.prisma.submission.create({
-      data: {
-        id: submissionId,
-        user_id: userId,
-        station_id: fields.preselectedStationId ?? null,
-        photo_r2_key: r2Key,
-        gps_lat: fields.gpsLat,
-        gps_lng: fields.gpsLng,
-        price_data: [{ fuel_type: fields.fuelType, price_per_litre: fields.manualPrice }],
-        status: SubmissionStatus.pending,
-      },
-    });
+    try {
+      await this.prisma.submission.create({
+        data: {
+          id: submissionId,
+          user_id: userId,
+          station_id: fields.preselectedStationId ?? null,
+          photo_r2_key: r2Key,
+          gps_lat: fields.gpsLat,
+          gps_lng: fields.gpsLng,
+          price_data: [{ fuel_type: fields.fuelType, price_per_litre: fields.manualPrice }],
+          status: SubmissionStatus.pending,
+        },
+      });
+    } catch (dbErr) {
+      // DB failed after R2 succeeded — best-effort cleanup to avoid orphan R2 object
+      await this.storageService.deleteObject(r2Key).catch(() => {});
+      throw dbErr;
+    }
 
-    // AC4: job payload is submissionId only — worker fetches all data from DB
-    await this.photoPipelineWorker.enqueue(submissionId);
+    try {
+      // AC4: job payload is submissionId only — worker fetches all data from DB
+      await this.photoPipelineWorker.enqueue(submissionId);
+    } catch (queueErr) {
+      // Queue failed after DB create — roll back both DB record and R2 object
+      await this.prisma.submission.delete({ where: { id: submissionId } }).catch(() => {});
+      await this.storageService.deleteObject(r2Key).catch(() => {});
+      throw queueErr;
+    }
   }
 }

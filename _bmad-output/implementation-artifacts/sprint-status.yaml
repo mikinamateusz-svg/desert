@@ -507,7 +507,7 @@ epics:
         dev_completed: 2026-04-02
         review_date: 2026-04-02
         review_findings: "5 patches applied (P1 FastifyAdapter bodyLimit raised to 10MB — Fastify default 1MB would reject photos >1MB; P2 drain unexpected file parts to avoid multipart stream stall; P3 skip duplicate photo parts — only first photo buffered; P4 add fields:10 limit to req.parts() to bound field memory; P5 parseOptionalFloat rejects Infinity/-Infinity), 4 logged/deferred (orphan R2 on DB failure → Story 3.7 R2 cleanup; stuck-pending on enqueue failure → client 500+retry creates new submission, accepted trade-off; shared Redis conn for Queue+Worker → consistent with existing workers, BullMQ v4+ duplicates internally; hardcoded .jpg/no MIME validation → deferred to Story 3.5 OCR), all 4 ACs confirmed PASS by Acceptance Auditor"
-        patches_applied: "2026-04-02 — P1-P5 applied; 33 tests pass; tsc clean"
+        patches_applied: "2026-04-02 — P1-P5 applied; 33 tests pass; tsc clean. P6 (follow-up): StorageService.deleteObject added; createSubmission now rolls back orphan R2 on DB failure and rolls back DB+R2 on enqueue failure; 34 tests pass. Remaining deferred: shared Redis conn for Queue+Worker (consistent with existing workers, BullMQ v4+ handles internally), hardcoded .jpg/no MIME validation (deferred to Story 3.5)"
 
       - id: 3.4
         title: GPS-to-Station Matching

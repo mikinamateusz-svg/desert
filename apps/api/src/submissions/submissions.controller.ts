@@ -42,10 +42,13 @@ export class SubmissionsController {
     let photoBuffer: Buffer | null = null;
     const fields: Record<string, string> = {};
 
-    const parts = req.parts({ limits: { fileSize: 5 * 1024 * 1024 } }); // 5 MB cap
+    const parts = req.parts({ limits: { fileSize: 5 * 1024 * 1024, fields: 10 } }); // 5 MB / 10 fields max
     for await (const part of parts) {
-      if (part.type === 'file' && part.fieldname === 'photo') {
+      if (part.type === 'file' && part.fieldname === 'photo' && !photoBuffer) {
         photoBuffer = await part.toBuffer();
+      } else if (part.type === 'file') {
+        // Drain any unexpected file parts to avoid stalling the multipart stream
+        await part.toBuffer();
       } else if (part.type === 'field') {
         fields[part.fieldname] = part.value as string;
       }
@@ -73,5 +76,5 @@ export class SubmissionsController {
 function parseOptionalFloat(val: string | undefined): number | null {
   if (!val || val === '') return null;
   const n = parseFloat(val);
-  return isNaN(n) ? null : n;
+  return isNaN(n) || !isFinite(n) ? null : n;
 }

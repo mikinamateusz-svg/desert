@@ -275,5 +275,16 @@ describe('SubmissionsService', () => {
       const result = await service.createSubmission('user-abc', photoBuffer, baseFields);
       expect(result).toBeUndefined();
     });
+
+    it('propagates error when BullMQ enqueue fails after DB create', async () => {
+      mockPhotoPipelineWorker.enqueue.mockRejectedValueOnce(new Error('Redis unavailable'));
+
+      await expect(service.createSubmission('user-abc', photoBuffer, baseFields)).rejects.toThrow(
+        'Redis unavailable',
+      );
+
+      // DB record was already created — submission is stuck pending (accepted trade-off)
+      expect(mockPrismaService.submission.create).toHaveBeenCalled();
+    });
   });
 });

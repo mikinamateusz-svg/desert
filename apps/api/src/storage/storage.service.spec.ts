@@ -103,6 +103,34 @@ describe('StorageService', () => {
     });
   });
 
+  describe('getObjectBuffer', () => {
+    beforeEach(async () => {
+      mockSend.mockResolvedValueOnce({});
+      await service.onModuleInit();
+      mockSend.mockReset();
+    });
+
+    it('returns a Buffer from the R2 stream', async () => {
+      async function* fakeStream() {
+        yield Buffer.from('hello');
+        yield Buffer.from(' world');
+      }
+      mockSend.mockResolvedValueOnce({ Body: fakeStream() });
+
+      const result = await service.getObjectBuffer('test/key.jpg');
+
+      expect(result).toEqual(Buffer.from('hello world'));
+    });
+
+    it('throws when response.Body is undefined', async () => {
+      mockSend.mockResolvedValueOnce({ Body: undefined });
+
+      await expect(service.getObjectBuffer('test/key.jpg')).rejects.toThrow(
+        'R2 object body is empty for key: test/key.jpg',
+      );
+    });
+  });
+
   describe('getPresignedUrl', () => {
     beforeEach(async () => {
       mockSend.mockResolvedValueOnce({});

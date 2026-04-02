@@ -53,6 +53,7 @@ export class StorageService implements OnModuleInit {
     const response = await this.client.send(
       new GetObjectCommand({ Bucket: this.bucket, Key: key }),
     );
+    if (!response.Body) throw new Error(`R2 object body is empty for key: ${key}`);
     const chunks: Uint8Array[] = [];
     for await (const chunk of response.Body as AsyncIterable<Uint8Array>) {
       chunks.push(chunk);

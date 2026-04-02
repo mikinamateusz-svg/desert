@@ -523,10 +523,13 @@ epics:
       - id: 3.5
         title: OCR Price Extraction
         file: 3-5-ocr-price-extraction.md
-        status: review
+        status: done
         ready_date: 2026-04-02
         dev_started: 2026-04-02
         dev_completed: 2026-04-02
+        review_date: 2026-04-02
+        review_findings: "P1 response.Body null guard missing in getObjectBuffer (High). D1 no size cap on getObjectBuffer OOM risk (defer to Story 3.9). D2 duplicate fuel_type not deduplicated (defer to Story 3.7). D3 Anthropic 400 exhausts retries (defer to Story 3.9). D4 BULL_REDIS_URL missing from .env.example (pre-existing). D5 validatePriceBands silently skips unknown types (low risk, defer)."
+        patches_applied: "2026-04-02 — P1 applied: null guard on response.Body in getObjectBuffer throws descriptive error; 2 tests added; 505 tests pass, tsc clean."
 
       - id: 3.6
         title: Logo Recognition as Secondary Signal

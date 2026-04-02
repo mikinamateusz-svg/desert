@@ -2,10 +2,11 @@ import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/commo
 import { ConfigService } from '@nestjs/config';
 import { Queue, Worker, type Job } from 'bullmq';
 import Redis from 'ioredis';
-import { SubmissionStatus, type Submission } from '@prisma/client';
+import { SubmissionStatus, type Submission, type Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
 import { StationService, type NearbyStationWithDistance } from '../station/station.service.js';
+import { OcrService } from '../ocr/ocr.service.js';
 
 export const PHOTO_PIPELINE_QUEUE = 'photo-pipeline';
 export const PHOTO_PIPELINE_JOB = 'process-submission';
@@ -36,6 +37,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     private readonly prisma: PrismaService,
     private readonly stationService: StationService,
     private readonly storageService: StorageService,
+    private readonly ocrService: OcrService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -73,12 +75,14 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         this.prisma.submission
           .update({ where: { id: submissionId }, data: { gps_lat: null, gps_lng: null } })
           .catch((e: Error) =>
-            this.logger.error(`Failed to null GPS on final failure for ${submissionId}: ${e.message}`),
+            this.logger.error(
+              `Failed to null GPS on final failure for ${submissionId}: ${e.message}`,
+            ),
           );
       }
     });
 
-    this.logger.log('PhotoPipelineWorker initialised (Story 3.4 GPS matching active)');
+    this.logger.log('PhotoPipelineWorker initialised (Stories 3.4 GPS + 3.5 OCR active)');
   }
 
   async onModuleDestroy(): Promise<void> {
@@ -130,9 +134,15 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       return; // rejected inside runGpsMatching — do not proceed
     }
 
-    // Stories 3.5 (OCR), 3.6 (logo recognition), 3.7 (validation) — stubs
+    // Story 3.5: OCR price extraction
+    const ocrComplete = await this.runOcrExtraction(submission);
+    if (!ocrComplete) {
+      return; // rejected inside runOcrExtraction — do not proceed
+    }
+
+    // Stories 3.6 (logo recognition), 3.7 (validation) — stubs
     this.logger.log(
-      `Submission ${submissionId}: GPS matched to ${candidates[0]?.name ?? 'preselected'} — OCR/logo/validation deferred to Stories 3.5+`,
+      `Submission ${submissionId}: OCR complete — logo/validation deferred to Stories 3.6+`,
     );
   }
 
@@ -189,6 +199,71 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     );
 
     return candidates;
+  }
+
+  // ── OCR extraction step ────────────────────────────────────────────────────
+
+  /**
+   * Fetches photo from R2, calls Claude Haiku for OCR, validates result.
+   * Returns true if OCR succeeded and the submission should proceed.
+   * Returns false if the submission was rejected (caller should return).
+   * Throws on transient API/infra failure (BullMQ retries).
+   *
+   * IMPORTANT: does NOT delete the photo on success — that is Story 3.7's responsibility.
+   */
+  private async runOcrExtraction(
+    submission: Pick<Submission, 'id' | 'photo_r2_key'>,
+  ): Promise<boolean> {
+    // AC7: no photo — reject without calling Claude (saves API cost)
+    if (!submission.photo_r2_key) {
+      await this.rejectSubmission(submission, 'missing_photo');
+      return false;
+    }
+
+    // Fetch photo from R2 — throws on S3 error (transient → BullMQ retries)
+    const photoBuffer = await this.storageService.getObjectBuffer(submission.photo_r2_key);
+
+    // Call Claude Haiku — throws on API error (transient → BullMQ retries)
+    const ocrResult = await this.ocrService.extractPrices(photoBuffer);
+
+    this.logger.log(
+      `Submission ${submission.id}: OCR confidence=${ocrResult.confidence_score.toFixed(2)}, ` +
+        `prices found=${ocrResult.prices.length}`,
+    );
+
+    // AC3: low confidence → reject, delete photo, no retry
+    if (ocrResult.confidence_score < 0.4) {
+      await this.rejectSubmission(submission, 'low_ocr_confidence');
+      return false;
+    }
+
+    // No prices extracted — reject to keep data quality high (see Q1 in story spec)
+    if (ocrResult.prices.length === 0) {
+      await this.rejectSubmission(submission, 'no_prices_extracted');
+      return false;
+    }
+
+    // AC4: validate price bands
+    const invalidFuelType = this.ocrService.validatePriceBands(ocrResult.prices);
+    if (invalidFuelType) {
+      this.logger.warn(
+        `Submission ${submission.id}: price out of range for ${invalidFuelType} — rejecting`,
+      );
+      await this.rejectSubmission(submission, 'price_out_of_range');
+      return false;
+    }
+
+    // AC2: store extracted prices and confidence score
+    // Note: do NOT change status to 'verified' — Story 3.7 does that after full validation
+    await this.prisma.submission.update({
+      where: { id: submission.id },
+      data: {
+        price_data: ocrResult.prices as unknown as Prisma.InputJsonValue,
+        ocr_confidence_score: ocrResult.confidence_score,
+      },
+    });
+
+    return true;
   }
 
   private async rejectSubmission(

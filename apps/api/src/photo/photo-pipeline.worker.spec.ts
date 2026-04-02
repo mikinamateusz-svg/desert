@@ -9,6 +9,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StationService } from '../station/station.service.js';
 import { StorageService } from '../storage/storage.service.js';
+import { OcrService } from '../ocr/ocr.service.js';
 import type { Job } from 'bullmq';
 
 // ── BullMQ / Redis mocks ───────────────────────────────────────────────────
@@ -53,6 +54,12 @@ const mockStationService = {
 
 const mockStorageService = {
   deleteObject: jest.fn(),
+  getObjectBuffer: jest.fn(),
+};
+
+const mockOcrService = {
+  extractPrices: jest.fn(),
+  validatePriceBands: jest.fn(),
 };
 
 // ── Test fixtures ──────────────────────────────────────────────────────────
@@ -83,6 +90,12 @@ const nearbyStation = {
   distance_m: 45.5,
 };
 
+const successfulOcrResult = {
+  prices: [{ fuel_type: 'PB_95', price_per_litre: 6.19 }],
+  confidence_score: 0.92,
+  raw_response: '{"prices":[{"fuel_type":"PB_95","price_per_litre":6.19}],"confidence_score":0.92}',
+};
+
 // ── Test suite ─────────────────────────────────────────────────────────────
 
 describe('PhotoPipelineWorker', () => {
@@ -91,10 +104,23 @@ describe('PhotoPipelineWorker', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     capturedProcessor = null;
+
+    // BullMQ
     mockQueueAdd.mockResolvedValue({ id: 'job-1' });
+
+    // DB
     mockPrismaService.submission.update.mockResolvedValue({});
-    mockStorageService.deleteObject.mockResolvedValue(undefined);
+
+    // Station
     mockStationService.findNearbyWithDistance.mockResolvedValue([]);
+
+    // Storage — default success so GPS tests pass through OCR step
+    mockStorageService.deleteObject.mockResolvedValue(undefined);
+    mockStorageService.getObjectBuffer.mockResolvedValue(Buffer.from('fake-image'));
+
+    // OCR — default success so GPS tests are unaffected by OCR step
+    mockOcrService.extractPrices.mockResolvedValue(successfulOcrResult);
+    mockOcrService.validatePriceBands.mockReturnValue(null); // all prices in range
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -103,6 +129,7 @@ describe('PhotoPipelineWorker', () => {
         { provide: PrismaService, useValue: mockPrismaService },
         { provide: StationService, useValue: mockStationService },
         { provide: StorageService, useValue: mockStorageService },
+        { provide: OcrService, useValue: mockOcrService },
       ],
     }).compile();
 
@@ -209,7 +236,7 @@ describe('PhotoPipelineWorker', () => {
       );
     });
 
-    it('does not delete R2 photo on successful match', async () => {
+    it('does not delete R2 photo on successful GPS match (OCR succeeds)', async () => {
       mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
       mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
 
@@ -246,7 +273,7 @@ describe('PhotoPipelineWorker', () => {
       expect(mockStationService.findNearbyWithDistance).not.toHaveBeenCalled();
     });
 
-    it('does not delete R2 photo for preselected station', async () => {
+    it('does not delete R2 photo for preselected station (OCR succeeds)', async () => {
       mockPrismaService.submission.findUnique.mockResolvedValueOnce(preselectedSubmission);
 
       await capturedProcessor!(makeJob('sub-123'));
@@ -297,6 +324,15 @@ describe('PhotoPipelineWorker', () => {
       mockStationService.findNearbyWithDistance.mockResolvedValueOnce([]);
 
       await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+    });
+
+    it('does not call OCR when GPS matching rejects the submission', async () => {
+      mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+      mockStationService.findNearbyWithDistance.mockResolvedValueOnce([]);
+
+      await capturedProcessor!(makeJob('sub-123'));
+
+      expect(mockOcrService.extractPrices).not.toHaveBeenCalled();
     });
   });
 
@@ -428,10 +464,267 @@ describe('PhotoPipelineWorker', () => {
     });
   });
 
+  // ── processJob — OCR step (Story 3.5) ────────────────────────────────────
+
+  describe('processJob — OCR step', () => {
+    describe('successful OCR', () => {
+      it('calls getObjectBuffer with the submission photo_r2_key', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockStorageService.getObjectBuffer).toHaveBeenCalledWith(
+          'submissions/user-abc/sub-123.jpg',
+        );
+      });
+
+      it('calls extractPrices with the photo buffer', async () => {
+        const fakeBuffer = Buffer.from('fake-image-bytes');
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockStorageService.getObjectBuffer.mockResolvedValueOnce(fakeBuffer);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockOcrService.extractPrices).toHaveBeenCalledWith(fakeBuffer);
+      });
+
+      it('updates price_data and ocr_confidence_score on the Submission', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith({
+          where: { id: 'sub-123' },
+          data: {
+            price_data: successfulOcrResult.prices,
+            ocr_confidence_score: successfulOcrResult.confidence_score,
+          },
+        });
+      });
+
+      it('does NOT delete R2 photo on OCR success (Story 3.7 handles deletion)', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockStorageService.deleteObject).not.toHaveBeenCalled();
+      });
+
+      it('does NOT change status to verified (Story 3.7 handles verification)', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        // No update call should set status to anything
+        const updateCalls = mockPrismaService.submission.update.mock.calls as Array<
+          [{ where: unknown; data: Record<string, unknown> }]
+        >;
+        const statusUpdates = updateCalls.filter(([args]) => 'status' in args.data);
+        expect(statusUpdates).toHaveLength(0);
+      });
+    });
+
+    describe('low confidence rejection', () => {
+      const lowConfidenceResult = { ...successfulOcrResult, confidence_score: 0.3 };
+
+      it('rejects submission when confidence_score < 0.4', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrService.extractPrices.mockResolvedValueOnce(lowConfidenceResult);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+          expect.objectContaining({ data: expect.objectContaining({ status: 'rejected' }) }),
+        );
+      });
+
+      it('deletes photo from R2 on low-confidence rejection', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrService.extractPrices.mockResolvedValueOnce(lowConfidenceResult);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockStorageService.deleteObject).toHaveBeenCalledWith(
+          'submissions/user-abc/sub-123.jpg',
+        );
+      });
+
+      it('completes job without throwing on low confidence', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrService.extractPrices.mockResolvedValueOnce(lowConfidenceResult);
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+      });
+
+      it('does not update price_data when confidence is low', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrService.extractPrices.mockResolvedValueOnce(lowConfidenceResult);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        const updateCalls = mockPrismaService.submission.update.mock.calls as Array<
+          [{ where: unknown; data: Record<string, unknown> }]
+        >;
+        const priceDataUpdates = updateCalls.filter(([args]) => 'price_data' in args.data);
+        expect(priceDataUpdates).toHaveLength(0);
+      });
+    });
+
+    describe('no prices extracted', () => {
+      const noPricesResult = { ...successfulOcrResult, prices: [], confidence_score: 0.7 };
+
+      it('rejects submission when prices array is empty', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrService.extractPrices.mockResolvedValueOnce(noPricesResult);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+          expect.objectContaining({ data: expect.objectContaining({ status: 'rejected' }) }),
+        );
+      });
+
+      it('deletes photo from R2 on no-prices rejection', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrService.extractPrices.mockResolvedValueOnce(noPricesResult);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockStorageService.deleteObject).toHaveBeenCalledWith(
+          'submissions/user-abc/sub-123.jpg',
+        );
+      });
+
+      it('completes job without throwing when no prices found', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrService.extractPrices.mockResolvedValueOnce(noPricesResult);
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+      });
+    });
+
+    describe('price out of range', () => {
+      it('rejects submission when validatePriceBands returns a fuel type', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrService.validatePriceBands.mockReturnValueOnce('PB_95');
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+          expect.objectContaining({ data: expect.objectContaining({ status: 'rejected' }) }),
+        );
+      });
+
+      it('deletes photo from R2 on price-out-of-range rejection', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrService.validatePriceBands.mockReturnValueOnce('PB_95');
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockStorageService.deleteObject).toHaveBeenCalledWith(
+          'submissions/user-abc/sub-123.jpg',
+        );
+      });
+
+      it('completes job without throwing on price range rejection', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrService.validatePriceBands.mockReturnValueOnce('LPG');
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+      });
+    });
+
+    describe('missing photo_r2_key', () => {
+      const noPhotoSubmission = { ...pendingSubmission, photo_r2_key: null };
+
+      it('rejects submission without calling Claude when photo_r2_key is null', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(noPhotoSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockOcrService.extractPrices).not.toHaveBeenCalled();
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+          expect.objectContaining({ data: expect.objectContaining({ status: 'rejected' }) }),
+        );
+      });
+
+      it('does not call getObjectBuffer when photo_r2_key is null', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(noPhotoSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockStorageService.getObjectBuffer).not.toHaveBeenCalled();
+      });
+
+      it('completes job without throwing on missing photo', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(noPhotoSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+      });
+    });
+
+    describe('transient OCR failure', () => {
+      it('throws when getObjectBuffer fails so BullMQ retries', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockStorageService.getObjectBuffer.mockRejectedValueOnce(new Error('R2 unavailable'));
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).rejects.toThrow('R2 unavailable');
+      });
+
+      it('throws when extractPrices throws so BullMQ retries', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrService.extractPrices.mockRejectedValueOnce(new Error('Claude API 503'));
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).rejects.toThrow('Claude API 503');
+      });
+
+      it('does NOT delete photo when extractPrices throws (photo needed for retry)', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrService.extractPrices.mockRejectedValueOnce(new Error('Claude API 503'));
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).rejects.toThrow();
+        expect(mockStorageService.deleteObject).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('OCR skipped for already-rejected submission (GPS path)', () => {
+      it('does not call extractPrices when GPS matching rejected the submission', async () => {
+        // GPS: no station match → rejectSubmission → return null → processJob returns early
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([]); // no match
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockOcrService.extractPrices).not.toHaveBeenCalled();
+      });
+    });
+  });
+
   // ── processJob — R2 cleanup resilience ───────────────────────────────────
 
   describe('processJob — R2 cleanup resilience', () => {
-    it('does not throw when R2 deleteObject fails during rejection', async () => {
+    it('does not throw when R2 deleteObject fails during GPS rejection', async () => {
       mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
       mockStationService.findNearbyWithDistance.mockResolvedValueOnce([]);
       mockStorageService.deleteObject.mockRejectedValueOnce(new Error('R2 unavailable'));

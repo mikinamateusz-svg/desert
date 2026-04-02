@@ -523,7 +523,10 @@ epics:
       - id: 3.5
         title: OCR Price Extraction
         file: 3-5-ocr-price-extraction.md
-        status: backlog
+        status: review
+        ready_date: 2026-04-02
+        dev_started: 2026-04-02
+        dev_completed: 2026-04-02
 
       - id: 3.6
         title: Logo Recognition as Secondary Signal

@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, Animated, StyleSheet } from 'react-native
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { tokens } from '../../theme';
+import { useQueueCount } from '../../hooks/useQueueCount';
+import { QueueBadge } from './QueueBadge';
 
 interface Props {
   onAddPrice: () => void;
@@ -14,6 +16,7 @@ export function MapFABGroup({ onAddPrice, onLogFillup, isPanning }: Props) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const opacity = useRef(new Animated.Value(1)).current;
+  const { pending, failed } = useQueueCount();
 
   useEffect(() => {
     Animated.timing(opacity, {
@@ -32,6 +35,13 @@ export function MapFABGroup({ onAddPrice, onLogFillup, isPanning }: Props) {
       ]}
       pointerEvents={isPanning ? 'none' : 'box-none'}
     >
+      {(pending > 0 || failed > 0) && (
+        <>
+          <QueueBadge pending={pending} failed={failed} />
+          <View style={styles.gap} />
+        </>
+      )}
+
       <TouchableOpacity
         style={styles.primaryPill}
         onPress={onAddPrice}

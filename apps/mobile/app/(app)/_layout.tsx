@@ -82,9 +82,13 @@ export default function AppLayout() {
         }}
       />
 
-      {/* ── Contribution flow: full-screen camera, no tab bar ── */}
+      {/* ── Contribution flow: full-screen camera + confirmation, no tab bar ── */}
       <Tabs.Screen
         name="capture"
+        options={{ href: null, headerShown: false }}
+      />
+      <Tabs.Screen
+        name="confirm"
         options={{ href: null, headerShown: false }}
       />
 

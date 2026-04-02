@@ -233,5 +233,13 @@ export default {
     storageFull: 'Unable to save photo — device storage is full',
     cameraUnavailable: 'Camera unavailable',
     goBack: 'Go back',
+    queuePending: '{{count}} photos queued',
+    queueFailed: '{{count}} photos failed to upload',
+  },
+  confirmation: {
+    title: 'Thank you for contributing!',
+    subtitle: "We'll process your photo and update the price shortly.",
+    done: 'Done',
+    fillupNudge: 'Did you fill up here? Log pump reading →',
   },
 } as const;

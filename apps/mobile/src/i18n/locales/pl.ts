@@ -234,5 +234,13 @@ export default {
     storageFull: 'Nie można zapisać zdjęcia — brak miejsca na urządzeniu',
     cameraUnavailable: 'Aparat niedostępny',
     goBack: 'Wróć',
+    queuePending: '{{count}} zdjęć w kolejce',
+    queueFailed: '{{count}} zdjęć nie przesłano',
+  },
+  confirmation: {
+    title: 'Dziękujemy za wkład!',
+    subtitle: 'Przetworzymy Twoje zdjęcie i wkrótce zaktualizujemy cenę.',
+    done: 'Gotowe',
+    fillupNudge: 'Czy tu tankowałeś? Zarejestruj odczyt pompy →',
   },
 } as const;

@@ -235,5 +235,13 @@ export default {
     storageFull: 'Неможливо зберегти фото — недостатньо місця на пристрої',
     cameraUnavailable: 'Камера недоступна',
     goBack: 'Назад',
+    queuePending: '{{count}} фото в черзі',
+    queueFailed: '{{count}} фото не вдалося завантажити',
+  },
+  confirmation: {
+    title: 'Дякуємо за внесок!',
+    subtitle: 'Ми обробимо ваше фото та незабаром оновимо ціну.',
+    done: 'Готово',
+    fillupNudge: "Ви тут заправлялись? Записати показник помпи →",
   },
 } as const;

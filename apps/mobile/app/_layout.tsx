@@ -3,12 +3,20 @@ import { View, ActivityIndicator } from 'react-native';
 import { Slot } from 'expo-router';
 import { AuthProvider } from '../src/store/auth.store';
 import { initI18n } from '../src/i18n';
+import { initQueueDb } from '../src/services/queueDb';
+import { startQueueProcessor, stopQueueProcessor } from '../src/services/queueProcessor';
 
 export default function RootLayout() {
   const [i18nReady, setI18nReady] = useState(false);
 
   useEffect(() => {
     void initI18n().then(() => setI18nReady(true));
+  }, []);
+
+  useEffect(() => {
+    initQueueDb();
+    startQueueProcessor();
+    return () => stopQueueProcessor();
   }, []);
 
   if (!i18nReady) {

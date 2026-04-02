@@ -223,17 +223,22 @@ export default function CaptureScreen() {
 
   const handleConfirm = useCallback(async (manualPrice: number | undefined) => {
     if (!capturedPhoto) return;
-    await enqueueSubmission({
-      photoUri: capturedPhoto.uri,
-      fuelType: selectedFuelType,
-      manualPrice,
-      preselectedStationId,
-      gpsLat: capturedPhoto.gpsLat,
-      gpsLng: capturedPhoto.gpsLng,
-      capturedAt: capturedPhoto.capturedAt,
-    });
-    router.replace('/(app)/');
-  }, [capturedPhoto, selectedFuelType, preselectedStationId]);
+    try {
+      await enqueueSubmission({
+        photoUri: capturedPhoto.uri,
+        fuelType: selectedFuelType,
+        manualPrice,
+        preselectedStationId,
+        gpsLat: capturedPhoto.gpsLat,
+        gpsLng: capturedPhoto.gpsLng,
+        capturedAt: capturedPhoto.capturedAt,
+      });
+      router.replace('/(app)/confirm');
+    } catch {
+      // SQLite write failed (device storage full or DB error)
+      Alert.alert(t('contribution.storageFull'));
+    }
+  }, [capturedPhoto, selectedFuelType, preselectedStationId, t]);
 
   // ── Location required ────────────────────────────────────────────────────
   if (screenState === 'location-required') {

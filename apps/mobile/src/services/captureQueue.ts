@@ -1,10 +1,24 @@
 import type { CaptureResult } from '../types/contribution';
+import { insertQueueEntry } from './queueDb';
+import { processQueue } from './queueProcessor';
 
 /**
- * Stub for the Story 3.2 offline queue interface.
- * Story 3.2 will replace this implementation without changing callers.
+ * Persist a captured photo to the local SQLite queue and immediately
+ * trigger a background upload attempt.
+ *
+ * The insertion is synchronous — callers can navigate to the confirmation
+ * screen right after this returns. The upload happens fire-and-forget.
  */
 export async function enqueueSubmission(result: CaptureResult): Promise<void> {
-  // TODO Story 3.2: persist to SQLite offline queue
-  console.log('[captureQueue] enqueueSubmission (stub):', result.capturedAt, result.fuelType);
+  insertQueueEntry({
+    photoUri: result.photoUri,
+    fuelType: result.fuelType,
+    manualPrice: result.manualPrice,
+    preselectedStationId: result.preselectedStationId,
+    gpsLat: result.gpsLat,
+    gpsLng: result.gpsLng,
+    capturedAt: result.capturedAt,
+  });
+  // Fire-and-forget — caller does not await the network upload
+  void processQueue();
 }

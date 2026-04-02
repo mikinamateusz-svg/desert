@@ -42,7 +42,8 @@
           "sounds": [],
           "androidMode": "default"
         }
-      ]
+      ],
+      "expo-sqlite"
     ],
     "experiments": {
       "typedRoutes": false

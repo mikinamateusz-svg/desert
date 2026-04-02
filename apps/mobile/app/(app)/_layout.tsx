@@ -82,6 +82,12 @@ export default function AppLayout() {
         }}
       />
 
+      {/* ── Contribution flow: full-screen camera, no tab bar ── */}
+      <Tabs.Screen
+        name="capture"
+        options={{ href: null, headerShown: false }}
+      />
+
       {/* ── Sub-screens: navigated from Account ── */}
       <Tabs.Screen
         name="feedback"

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView, Linking, Alert } from 'react-native';
 import Mapbox, { MapView, Camera, ShapeSource, CircleLayer } from '@rnmapbox/maps';
 import { router } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -7,6 +7,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { tokens } from '../../src/theme';
 import type GeoJSON from 'geojson';
 import type { FuelType } from '@desert/types';
+import { MapFABGroup } from '../../src/components/contribution/MapFABGroup';
+import { useCameraPermission } from '../../src/hooks/useCameraPermission';
 
 type OnPressEvent = {
   features: GeoJSON.Feature[];
@@ -89,6 +91,7 @@ export default function MapScreen() {
   useEffect(() => () => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     if (errorDismissRef.current) clearTimeout(errorDismissRef.current);
+    if (panEndRef.current) clearTimeout(panEndRef.current);
   }, []);
 
   // Once GPS resolves (or is denied), initialise camera and fetch center
@@ -176,6 +179,11 @@ export default function MapScreen() {
       programmaticMoveRef.current = false;
       return;
     }
+    // FAB fade-out while panning
+    setIsMapPanning(true);
+    if (panEndRef.current) clearTimeout(panEndRef.current);
+    panEndRef.current = setTimeout(() => setIsMapPanning(false), 600);
+
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       const [lng, lat] = feature.geometry.coordinates;
@@ -195,6 +203,42 @@ export default function MapScreen() {
       animationDuration: 800,
     });
   };
+
+  // ── Contribution FAB ─────────────────────────────────────────────────────
+  const [isMapPanning, setIsMapPanning] = useState(false);
+  const panEndRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { permissionGranted: cameraGranted, requestPermission: requestCamera } = useCameraPermission();
+  // Separate gate for contribution flow — distinct from first-launch onboarding sheet
+  const [showContributionGate, setShowContributionGate] = useState(false);
+
+  const handleAddPrice = useCallback(async () => {
+    if (!accessToken) {
+      // AC2: guest — show sign-up sheet regardless of hasSeenOnboarding
+      setShowContributionGate(true);
+      return;
+    }
+    if (permissionDenied) {
+      // AC3: location denied — navigate to LocationRequiredScreen via capture route
+      router.push('/(app)/capture?locationDenied=1');
+      return;
+    }
+    if (cameraGranted !== true) {
+      // AC4: camera denied or status not yet loaded — request permission first
+      const granted = await requestCamera();
+      if (!granted) {
+        Alert.alert(
+          t('contribution.cameraPermissionDenied'),
+          '',
+          [
+            { text: t('contribution.goToSettings'), onPress: () => void Linking.openSettings() },
+            { text: t('contribution.cancel'), style: 'cancel' },
+          ],
+        );
+        return;
+      }
+    }
+    router.push('/(app)/capture');
+  }, [accessToken, permissionDenied, cameraGranted, requestCamera, t]);
 
   const [selectedStation, setSelectedStation] = useState<StationDto | null>(null);
 
@@ -343,9 +387,20 @@ export default function MapScreen() {
         <Ionicons name="locate" size={22} color={tokens.neutral.n0} />
       </TouchableOpacity>
 
+      <MapFABGroup
+        onAddPrice={() => void handleAddPrice()}
+        onLogFillup={() => {/* no-op: future story */}}
+        isPanning={isMapPanning}
+      />
+
       <SoftSignUpSheet
         visible={showSheet}
         onDismiss={() => setSheetDismissed(true)}
+      />
+      {/* AC2: contribution auth gate — shown for guests regardless of onboarding state */}
+      <SoftSignUpSheet
+        visible={showContributionGate}
+        onDismiss={() => setShowContributionGate(false)}
       />
 
       <FuelTypePickerSheet

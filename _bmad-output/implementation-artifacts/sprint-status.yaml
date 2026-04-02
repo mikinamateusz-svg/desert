@@ -449,8 +449,43 @@ epics:
       - id: 3.1
         title: Camera Capture & Photo Pre-Processing
         file: 3-1-camera-capture-photo-preprocessing.md
-        status: ready-for-dev
+        status: done
         ready_date: 2026-04-01
+        dev_started: 2026-04-01
+        dev_completed: 2026-04-02
+        review_date: 2026-04-02
+        review_findings: "5 patch (P1 capture button a11y label 'Add price' instead of 'Take photo', P2 cameraGranted===null bypasses permission pre-flight, P3 guest auth gate fails for hasSeenOnboarding=true users, P4 GPS (0,0) fallback stored in CaptureResult when location unresolved, P5 luminance darkness check reads JPEG binary bytes not pixels — always gives garbage), 4 deferred"
+        patches_applied: "2026-04-02 — P1-P5 all applied, tsc clean"
+        deferred:
+          - id: D1
+            title: handleConfirm no error handling for enqueueSubmission rejection
+            detail: >
+              Stub never throws. Story 3.2 implements real persistence — error handling
+              belongs there, not in the capture flow.
+          - id: D2
+            title: captureNearbyStations not cleared on retake
+            detail: >
+              handleRetake resets capturedPhoto/qualityFlag/preselectedStationId but not
+              captureNearbyStations. Low risk — overwritten on next capture before
+              disambiguation is shown.
+          - id: D3
+            title: requestPermission in useCameraPermission not memoized
+            detail: >
+              New function reference each render causes handleAddPrice to recreate.
+              Minor perf issue, acceptable for PoC.
+          - id: D4
+            title: No abort/cleanup for in-flight takePictureAsync on screen unmount
+            detail: >
+              State updates may fire on unmounted component. Acceptable for PoC.
+              Story 3.2 scope.
+          - id: D5
+            title: Darkness check (AC7) not implemented — deferred
+            detail: >
+              JPEG-encoded bytes are Huffman-coded entropy data, not pixel values.
+              Iterating over them yields meaningless luminance. Proper darkness detection
+              requires pixel-level access not available via expo-image-manipulator alone.
+              dark flag hardcoded to false. Resolve in Story 3.5 when OCR image pipeline
+              adds proper image analysis, or via a native module.
 
       - id: 3.2
         title: Immediate Confirmation & Offline Queue

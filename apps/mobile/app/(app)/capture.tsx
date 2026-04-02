@@ -221,6 +221,9 @@ export default function CaptureScreen() {
     setScreenState('confirm');
   }, []);
 
+  // AC1 perf goal: confirmation screen should appear within 300ms of the driver
+  // tapping "Confirm". enqueueSubmission() is a synchronous SQLite INSERT so the
+  // only latency here is router.replace() — well within target on any modern device.
   const handleConfirm = useCallback(async (manualPrice: number | undefined) => {
     if (!capturedPhoto) return;
     try {

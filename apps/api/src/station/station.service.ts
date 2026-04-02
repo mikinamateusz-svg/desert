@@ -8,6 +8,14 @@ export interface NearbyStation {
   google_places_id: string | null;
 }
 
+export interface NearbyStationWithDistance {
+  id: string;
+  name: string;
+  address: string | null;
+  google_places_id: string | null;
+  distance_m: number;
+}
+
 export interface StationInArea {
   id: string;
   name: string;
@@ -47,6 +55,26 @@ export class StationService {
       LIMIT 1
     `;
     return results[0] ?? null;
+  }
+
+  async findNearbyWithDistance(
+    lat: number,
+    lng: number,
+    radiusMeters = 200,
+    limit = 5,
+  ): Promise<NearbyStationWithDistance[]> {
+    return this.prisma.$queryRaw<NearbyStationWithDistance[]>`
+      SELECT
+        id,
+        name,
+        address,
+        google_places_id,
+        ST_Distance(location, ST_Point(${lng}, ${lat})::geography) AS distance_m
+      FROM "Station"
+      WHERE ST_DWithin(location, ST_Point(${lng}, ${lat})::geography, ${radiusMeters})
+      ORDER BY location <-> ST_Point(${lng}, ${lat})::geography
+      LIMIT ${limit}
+    `;
   }
 
   async findStationsInArea(lat: number, lng: number, radiusMeters: number): Promise<StationInArea[]> {

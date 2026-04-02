@@ -512,7 +512,10 @@ epics:
       - id: 3.4
         title: GPS-to-Station Matching
         file: 3-4-gps-to-station-matching.md
-        status: backlog
+        status: review
+        ready_date: 2026-04-02
+        dev_started: 2026-04-02
+        dev_completed: 2026-04-02
 
       - id: 3.5
         title: OCR Price Extraction

@@ -383,6 +383,51 @@ describe('PhotoPipelineWorker', () => {
     });
   });
 
+  // ── failed event — GDPR GPS null on final retry exhaustion ───────────────
+
+  describe('failed event — GPS null on final failure', () => {
+    let capturedFailedHandler: ((job: Job | undefined, err: Error) => void) | null = null;
+
+    beforeEach(() => {
+      // mockWorkerOn is already cleared by jest.clearAllMocks() in outer beforeEach.
+      // Capture the 'failed' handler registered during onModuleInit.
+      const calls = mockWorkerOn.mock.calls as [string, (...args: unknown[]) => void][];
+      const failedCall = calls.find(([event]) => event === 'failed');
+      capturedFailedHandler = failedCall
+        ? (failedCall[1] as (job: Job | undefined, err: Error) => void)
+        : null;
+    });
+
+    const makeFailedJob = (submissionId: string, attemptsMade: number, attempts: number) =>
+      ({
+        data: { submissionId },
+        attemptsMade,
+        opts: { attempts },
+      }) as unknown as Job<PhotoPipelineJobData>;
+
+    it('nulls GPS coords on final retry exhaustion', async () => {
+      const job = makeFailedJob('sub-123', 4, 4);
+      capturedFailedHandler!(job, new Error('DB connection lost'));
+
+      // Allow the async update to be enqueued (it is a floating promise)
+      await Promise.resolve();
+
+      expect(mockPrismaService.submission.update).toHaveBeenCalledWith({
+        where: { id: 'sub-123' },
+        data: { gps_lat: null, gps_lng: null },
+      });
+    });
+
+    it('does not null GPS when there are retries remaining', async () => {
+      const job = makeFailedJob('sub-123', 2, 4); // 2 of 4 attempts used
+      capturedFailedHandler!(job, new Error('transient error'));
+
+      await Promise.resolve();
+
+      expect(mockPrismaService.submission.update).not.toHaveBeenCalled();
+    });
+  });
+
   // ── processJob — R2 cleanup resilience ───────────────────────────────────
 
   describe('processJob — R2 cleanup resilience', () => {

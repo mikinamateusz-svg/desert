@@ -512,10 +512,13 @@ epics:
       - id: 3.4
         title: GPS-to-Station Matching
         file: 3-4-gps-to-station-matching.md
-        status: review
+        status: done
         ready_date: 2026-04-02
         dev_started: 2026-04-02
         dev_completed: 2026-04-02
+        review_date: 2026-04-02
+        review_findings: "ECH GDPR: GPS not nulled on final retry exhaustion (3 path variants). AC4 GIST index false positive (already in migration 20260324000000). BH#5 backoff false positive (wired in Worker settings). ORDER BY <-> vs ST_Distance note (negligible at 200m, logged)."
+        patches_applied: "2026-04-02 — GDPR fix: failed event handler nulls GPS when attemptsMade >= attemptsAllowed; 2 new tests added; 457 tests pass, tsc clean."
 
       - id: 3.5
         title: OCR Price Extraction

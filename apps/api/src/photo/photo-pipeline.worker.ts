@@ -64,9 +64,18 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     );
 
     this.worker.on('failed', (job: Job | undefined, err: Error) => {
-      this.logger.error(
-        `Photo pipeline job failed for submission ${job?.data?.submissionId ?? 'unknown'}: ${err.message}`,
-      );
+      const submissionId = job?.data?.submissionId ?? 'unknown';
+      this.logger.error(`Photo pipeline job failed for submission ${submissionId}: ${err.message}`);
+
+      // GDPR: if all retries are exhausted, null GPS coords so they don't linger in the DB.
+      const attemptsAllowed = job?.opts?.attempts ?? JOB_OPTIONS.attempts;
+      if (job && (job.attemptsMade ?? 0) >= attemptsAllowed) {
+        this.prisma.submission
+          .update({ where: { id: submissionId }, data: { gps_lat: null, gps_lng: null } })
+          .catch((e: Error) =>
+            this.logger.error(`Failed to null GPS on final failure for ${submissionId}: ${e.message}`),
+          );
+      }
     });
 
     this.logger.log('PhotoPipelineWorker initialised (Story 3.4 GPS matching active)');

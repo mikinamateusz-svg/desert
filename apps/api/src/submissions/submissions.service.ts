@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { SubmissionStatus } from '@prisma/client';
 import { randomUUID } from 'node:crypto';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
 import { PhotoPipelineWorker } from '../photo/photo-pipeline.worker.js';
+import { SubmissionDedupService } from '../photo/submission-dedup.service.js';
 
 type PriceEntry = { fuel_type: string; price_per_litre: number | null };
 
@@ -25,10 +26,13 @@ export interface CreateSubmissionFields {
 
 @Injectable()
 export class SubmissionsService {
+  private readonly logger = new Logger(SubmissionsService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly storageService: StorageService,
     private readonly photoPipelineWorker: PhotoPipelineWorker,
+    private readonly submissionDedupService: SubmissionDedupService,
   ) {}
 
   async getMySubmissions(userId: string, page: number, limit: number) {
@@ -75,6 +79,21 @@ export class SubmissionsService {
     photoBuffer: Buffer,
     fields: CreateSubmissionFields,
   ): Promise<void> {
+    // Story 3.10: L1 station dedup — preselected path only (stationId unknown for GPS path)
+    if (fields.preselectedStationId) {
+      try {
+        const isDuplicate = await this.submissionDedupService.checkStationDedup(fields.preselectedStationId);
+        if (isDuplicate) {
+          this.logger.log(
+            `[DEDUP-L1] station=${fields.preselectedStationId} — fresh result exists, skipping intake`,
+          );
+          return;
+        }
+      } catch (e: unknown) {
+        this.logger.warn(`[DEDUP-L1] Redis check failed, proceeding normally: ${(e as Error).message}`);
+      }
+    }
+
     const submissionId = randomUUID();
     const r2Key = `submissions/${userId}/${submissionId}.jpg`;
 

@@ -14,6 +14,7 @@ import { LogoService } from '../logo/logo.service.js';
 import { PriceService } from '../price/price.service.js';
 import { PriceValidationService } from '../price/price-validation.service.js';
 import { OcrSpendService } from './ocr-spend.service.js';
+import { SubmissionDedupService } from './submission-dedup.service.js';
 import { Worker, type Job } from 'bullmq';
 
 // ── BullMQ / Redis mocks ───────────────────────────────────────────────────
@@ -92,6 +93,13 @@ const mockOcrSpendService = {
   computeCostUsd: jest.fn(),
   recordSpend: jest.fn(),
   getSpendCap: jest.fn(),
+};
+
+const mockSubmissionDedupService = {
+  checkStationDedup: jest.fn(),
+  checkHashDedup: jest.fn(),
+  recordStationDedup: jest.fn(),
+  recordHashDedup: jest.fn(),
 };
 
 // ── Test fixtures ──────────────────────────────────────────────────────────
@@ -211,6 +219,12 @@ describe('PhotoPipelineWorker', () => {
     mockOcrSpendService.recordSpend.mockResolvedValue(0.5);
     mockOcrSpendService.getSpendCap.mockReturnValue(20);
 
+    // SubmissionDedupService — default: no duplicates, recording succeeds
+    mockSubmissionDedupService.checkStationDedup.mockResolvedValue(false);
+    mockSubmissionDedupService.checkHashDedup.mockResolvedValue(false);
+    mockSubmissionDedupService.recordStationDedup.mockResolvedValue(undefined);
+    mockSubmissionDedupService.recordHashDedup.mockResolvedValue(undefined);
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PhotoPipelineWorker,
@@ -229,6 +243,7 @@ describe('PhotoPipelineWorker', () => {
         { provide: PriceService, useValue: mockPriceService },
         { provide: PriceValidationService, useValue: mockPriceValidationService },
         { provide: OcrSpendService, useValue: mockOcrSpendService },
+        { provide: SubmissionDedupService, useValue: mockSubmissionDedupService },
       ],
     }).compile();
 
@@ -303,6 +318,7 @@ describe('PhotoPipelineWorker', () => {
           { provide: PriceService, useValue: mockPriceService },
           { provide: PriceValidationService, useValue: mockPriceValidationService },
           { provide: OcrSpendService, useValue: mockOcrSpendService },
+          { provide: SubmissionDedupService, useValue: mockSubmissionDedupService },
         ],
       }).compile();
 
@@ -1747,6 +1763,124 @@ describe('PhotoPipelineWorker', () => {
         worker.resumeWorker();
 
         expect(mockWorkerResume).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  // ── Story 3.10: Submission Deduplication ──────────────────────────────────
+
+  describe('Story 3.10 — submission deduplication', () => {
+    describe('L2 station dedup', () => {
+      it('rejects with duplicate_submission and skips OCR when station has fresh result', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockSubmissionDedupService.checkStationDedup.mockResolvedValueOnce(true);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockOcrService.extractPrices).not.toHaveBeenCalled();
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+          expect.objectContaining({
+            data: expect.objectContaining({ status: 'rejected' }),
+          }),
+        );
+      });
+
+      it('proceeds to OCR when station has no fresh result', async () => {
+        mockPrismaService.submission.findUnique
+          .mockResolvedValueOnce(pendingSubmission)
+          .mockResolvedValueOnce(submissionAfterOcr);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockSubmissionDedupService.checkStationDedup.mockResolvedValueOnce(false);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockOcrService.extractPrices).toHaveBeenCalled();
+      });
+
+      it('proceeds to OCR (fail-open) when station dedup Redis check throws', async () => {
+        mockPrismaService.submission.findUnique
+          .mockResolvedValueOnce(pendingSubmission)
+          .mockResolvedValueOnce(submissionAfterOcr);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockSubmissionDedupService.checkStationDedup.mockRejectedValueOnce(new Error('Redis down'));
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockOcrService.extractPrices).toHaveBeenCalled();
+      });
+    });
+
+    describe('hash dedup', () => {
+      it('rejects with duplicate_submission and skips OCR when photo hash matches', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockSubmissionDedupService.checkHashDedup.mockResolvedValueOnce(true);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockOcrService.extractPrices).not.toHaveBeenCalled();
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+          expect.objectContaining({
+            data: expect.objectContaining({ status: 'rejected' }),
+          }),
+        );
+      });
+
+      it('proceeds to OCR (fail-open) when hash dedup Redis check throws', async () => {
+        mockPrismaService.submission.findUnique
+          .mockResolvedValueOnce(pendingSubmission)
+          .mockResolvedValueOnce(submissionAfterOcr);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockSubmissionDedupService.checkHashDedup.mockRejectedValueOnce(new Error('Redis down'));
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockOcrService.extractPrices).toHaveBeenCalled();
+      });
+    });
+
+    describe('dedup key recording', () => {
+      it('records station and hash dedup keys after successful OCR', async () => {
+        mockPrismaService.submission.findUnique
+          .mockResolvedValueOnce(pendingSubmission)
+          .mockResolvedValueOnce(submissionAfterOcr);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockSubmissionDedupService.recordStationDedup).toHaveBeenCalledWith('station-abc');
+        expect(mockSubmissionDedupService.recordHashDedup).toHaveBeenCalledWith(
+          expect.stringMatching(/^[0-9a-f]{64}$/),
+        );
+      });
+
+      it('does NOT record dedup keys when OCR returns low confidence', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrService.extractPrices.mockResolvedValueOnce({
+          prices: [],
+          confidence_score: 0.1,
+          raw_response: '',
+          input_tokens: 100,
+          output_tokens: 10,
+        });
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockSubmissionDedupService.recordStationDedup).not.toHaveBeenCalled();
+        expect(mockSubmissionDedupService.recordHashDedup).not.toHaveBeenCalled();
+      });
+
+      it('does not throw when recordStationDedup fails — dedup recording is non-critical', async () => {
+        mockPrismaService.submission.findUnique
+          .mockResolvedValueOnce(pendingSubmission)
+          .mockResolvedValueOnce(submissionAfterOcr);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockSubmissionDedupService.recordStationDedup.mockRejectedValueOnce(new Error('Redis down'));
+        mockSubmissionDedupService.recordHashDedup.mockRejectedValueOnce(new Error('Redis down'));
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
       });
     });
   });

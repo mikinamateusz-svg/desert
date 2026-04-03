@@ -3,6 +3,7 @@ import { SubmissionsService } from './submissions.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
 import { PhotoPipelineWorker } from '../photo/photo-pipeline.worker.js';
+import { SubmissionDedupService } from '../photo/submission-dedup.service.js';
 
 const mockPrismaService = {
   submission: {
@@ -20,6 +21,10 @@ const mockStorageService = {
 
 const mockPhotoPipelineWorker = {
   enqueue: jest.fn(),
+};
+
+const mockSubmissionDedupService = {
+  checkStationDedup: jest.fn(),
 };
 
 // Stable UUID for assertions
@@ -46,12 +51,15 @@ describe('SubmissionsService', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
 
+    mockSubmissionDedupService.checkStationDedup.mockResolvedValue(false);
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SubmissionsService,
         { provide: PrismaService, useValue: mockPrismaService },
         { provide: StorageService, useValue: mockStorageService },
         { provide: PhotoPipelineWorker, useValue: mockPhotoPipelineWorker },
+        { provide: SubmissionDedupService, useValue: mockSubmissionDedupService },
       ],
     }).compile();
 
@@ -306,6 +314,53 @@ describe('SubmissionsService', () => {
         'submissions/user-abc/fixed-uuid-1234.jpg',
       );
       expect(mockPhotoPipelineWorker.enqueue).not.toHaveBeenCalled();
+    });
+
+    // ── Story 3.10: L1 station dedup ─────────────────────────────────────────
+
+    it('L1 dedup hit: returns early without R2 upload when preselected station has fresh result', async () => {
+      mockSubmissionDedupService.checkStationDedup.mockResolvedValueOnce(true);
+
+      const result = await service.createSubmission('user-abc', photoBuffer, {
+        ...baseFields,
+        preselectedStationId: 'station-xyz',
+      });
+
+      expect(result).toBeUndefined();
+      expect(mockStorageService.uploadBuffer).not.toHaveBeenCalled();
+      expect(mockPrismaService.submission.create).not.toHaveBeenCalled();
+      expect(mockPhotoPipelineWorker.enqueue).not.toHaveBeenCalled();
+    });
+
+    it('L1 dedup miss: proceeds normally when no fresh result for preselected station', async () => {
+      mockSubmissionDedupService.checkStationDedup.mockResolvedValueOnce(false);
+
+      await service.createSubmission('user-abc', photoBuffer, {
+        ...baseFields,
+        preselectedStationId: 'station-xyz',
+      });
+
+      expect(mockStorageService.uploadBuffer).toHaveBeenCalled();
+      expect(mockPrismaService.submission.create).toHaveBeenCalled();
+    });
+
+    it('L1 dedup Redis error: proceeds normally (fail-open)', async () => {
+      mockSubmissionDedupService.checkStationDedup.mockRejectedValueOnce(new Error('Redis down'));
+
+      await service.createSubmission('user-abc', photoBuffer, {
+        ...baseFields,
+        preselectedStationId: 'station-xyz',
+      });
+
+      expect(mockStorageService.uploadBuffer).toHaveBeenCalled();
+      expect(mockPrismaService.submission.create).toHaveBeenCalled();
+    });
+
+    it('L1 dedup skipped for GPS path (no preselectedStationId)', async () => {
+      await service.createSubmission('user-abc', photoBuffer, baseFields); // preselectedStationId: null
+
+      expect(mockSubmissionDedupService.checkStationDedup).not.toHaveBeenCalled();
+      expect(mockStorageService.uploadBuffer).toHaveBeenCalled();
     });
   });
 });

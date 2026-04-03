@@ -11,6 +11,7 @@ import { LogoService } from '../logo/logo.service.js';
 import { PriceService } from '../price/price.service.js';
 import { PriceValidationService } from '../price/price-validation.service.js';
 import { OcrSpendService } from './ocr-spend.service.js';
+import { SubmissionDedupService } from './submission-dedup.service.js';
 
 export const PHOTO_PIPELINE_QUEUE = 'photo-pipeline';
 export const PHOTO_PIPELINE_JOB = 'process-submission';
@@ -51,6 +52,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     private readonly priceService: PriceService,
     private readonly priceValidationService: PriceValidationService,
     private readonly ocrSpendService: OcrSpendService,
+    private readonly submissionDedupService: SubmissionDedupService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -174,8 +176,27 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       return; // rejected inside runGpsMatching — do not proceed
     }
 
+    // Resolve stationId: GPS path uses candidates[0], preselect path uses submission.station_id
+    const stationId = candidates.length > 0 ? candidates[0].id : submission.station_id;
+
+    // Story 3.10: L2 station dedup — skip OCR if a verified result exists for this station
+    if (stationId) {
+      try {
+        const isDuplicate = await this.submissionDedupService.checkStationDedup(stationId);
+        if (isDuplicate) {
+          this.logger.log(
+            `[DEDUP-L2] station=${stationId} submission=${submissionId} — recent verified result exists, skipping OCR`,
+          );
+          await this.rejectSubmission(submission, 'duplicate_submission');
+          return;
+        }
+      } catch (e: unknown) {
+        this.logger.warn(`[DEDUP-L2] Redis check failed, proceeding normally: ${(e as Error).message}`);
+      }
+    }
+
     // Story 3.5: OCR price extraction
-    const ocrComplete = await this.runOcrExtraction(submission);
+    const ocrComplete = await this.runOcrExtraction(submission, stationId);
     if (!ocrComplete) {
       return; // rejected inside runOcrExtraction — do not proceed
     }
@@ -187,8 +208,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     }
 
     // Story 3.7: price validation + database update
-    // Resolve station ID: GPS path uses candidates[0], preselect path uses submission.station_id
-    const stationId = candidates.length > 0 ? candidates[0].id : submission.station_id;
+    // stationId already resolved above
     if (!stationId) {
       this.logger.error(
         `Submission ${submissionId}: no stationId after GPS matching — cannot validate prices`,
@@ -266,6 +286,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
    */
   private async runOcrExtraction(
     submission: Pick<Submission, 'id' | 'photo_r2_key'>,
+    stationId: string | null,
   ): Promise<boolean> {
     // AC7: no photo — reject without calling Claude (saves API cost)
     if (!submission.photo_r2_key) {
@@ -275,6 +296,21 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
 
     // Fetch photo from R2 — throws on S3 error (transient → BullMQ retries)
     const photoBuffer = await this.storageService.getObjectBuffer(submission.photo_r2_key);
+
+    // Story 3.10: hash dedup — skip Claude if this exact photo was submitted recently
+    const photoHash = SubmissionDedupService.computePhotoHash(photoBuffer);
+    try {
+      const isHashDuplicate = await this.submissionDedupService.checkHashDedup(photoHash);
+      if (isHashDuplicate) {
+        this.logger.log(
+          `[DEDUP-HASH] hash=${photoHash.slice(0, 8)} submission=${submission.id} — duplicate photo, skipping OCR`,
+        );
+        await this.rejectSubmission(submission, 'duplicate_submission');
+        return false;
+      }
+    } catch (e: unknown) {
+      this.logger.warn(`[DEDUP-HASH] Redis check failed, proceeding normally: ${(e as Error).message}`);
+    }
 
     // Call Claude Haiku — throws on API error (transient → BullMQ retries)
     const ocrResult = await this.ocrService.extractPrices(photoBuffer);
@@ -326,6 +362,16 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         ocr_confidence_score: ocrResult.confidence_score,
       },
     });
+
+    // Story 3.10: record dedup keys — best-effort, non-blocking
+    if (stationId) {
+      this.submissionDedupService.recordStationDedup(stationId).catch((e: Error) =>
+        this.logger.warn(`Failed to record station dedup key: ${e.message}`),
+      );
+    }
+    this.submissionDedupService.recordHashDedup(photoHash).catch((e: Error) =>
+      this.logger.warn(`Failed to record hash dedup key: ${e.message}`),
+    );
 
     return true;
   }

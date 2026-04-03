@@ -619,6 +619,47 @@ describe('PhotoPipelineWorker', () => {
       expect(mockStorageService.deleteObject).not.toHaveBeenCalled();
     });
 
+    it('logs [OPS-ALERT] even when submission is not found in DB (P-2)', async () => {
+      mockPrismaService.submission.findUnique.mockResolvedValueOnce(null);
+      const errorSpy = jest.spyOn(worker['logger'], 'error');
+      const job = makeFailedJob('sub-123', 4, 4);
+
+      capturedFailedHandler!(job, new Error('pipeline error'));
+      await flushPromises();
+
+      const alertCall = errorSpy.mock.calls.find(
+        call => typeof call[0] === 'string' && call[0].includes('[OPS-ALERT]') && call[0].includes('sub-123'),
+      );
+      expect(alertCall).toBeDefined();
+    });
+
+    it('does NOT delete from R2 when DB update fails (P-1)', async () => {
+      mockPrismaService.submission.update.mockRejectedValueOnce(new Error('DB error'));
+      const job = makeFailedJob('sub-123', 4, 4);
+
+      capturedFailedHandler!(job, new Error('pipeline error'));
+      await flushPromises();
+
+      expect(mockStorageService.deleteObject).not.toHaveBeenCalled();
+    });
+
+    it('logs [OPS-ALERT] when submissionId is unknown (P-3)', async () => {
+      const errorSpy = jest.spyOn(worker['logger'], 'error');
+      // Simulate a job with no submissionId — worker sets it to 'unknown'
+      const job = { data: { submissionId: 'unknown' }, attemptsMade: 4, opts: { attempts: 4 } } as unknown as Job<PhotoPipelineJobData>;
+
+      capturedFailedHandler!(job, new Error('pipeline error'));
+      await flushPromises();
+
+      const alertCall = errorSpy.mock.calls.find(
+        call => typeof call[0] === 'string' && call[0].includes('[OPS-ALERT]') && call[0].includes('unknown submissionId'),
+      );
+      expect(alertCall).toBeDefined();
+      // No DB or R2 ops should run
+      expect(mockPrismaService.submission.findUnique).not.toHaveBeenCalled();
+      expect(mockStorageService.deleteObject).not.toHaveBeenCalled();
+    });
+
     it('skips R2 deletion when photo_r2_key is null', async () => {
       mockPrismaService.submission.findUnique.mockResolvedValueOnce({
         id: 'sub-123',

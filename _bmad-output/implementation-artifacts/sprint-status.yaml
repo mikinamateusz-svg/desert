@@ -558,8 +558,8 @@ epics:
         ready_date: 2026-04-03
         implemented_date: 2026-04-03
         review_date: 2026-04-03
-        review_findings: "AC1+AC2 already satisfied (BACKOFF_DELAYS_MS + rejectSubmission pattern). AC3+AC5 implemented: handleFinalFailure — rejected status + GPS/photo null + R2 delete + [OPS-ALERT] log + DLQ depth check. 8 new tests, fixed mockResolvedValue bleed-through bug (afterEach mockReset)."
-        patches_applied: "2026-04-03 — 601/601 tests passing"
+        review_findings: "3 patch (P-1 R2 deleted even when DB update silently failed — GDPR; P-2 [OPS-ALERT] skipped when findUnique fails/null; P-3 submissionId='unknown' reaches handleFinalFailure with no guard), 5 deferred (D1 DLQ depth off-by-one BullMQ timing, D2 alert storm on burst, D3 getFailedCount=-1 on Redis error, D4 [OPS-ALERT] emitted even when cleanup failed, D5 R2 orphan on account deletion), 4 rejected"
+        patches_applied: "2026-04-03 — P-1/P-2/P-3 applied; 604/604 tests passing"
 
       - id: 3.9
         title: Pipeline Cost Controls

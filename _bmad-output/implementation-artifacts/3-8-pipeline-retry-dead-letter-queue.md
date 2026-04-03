@@ -138,9 +138,21 @@ For intermediate failure: `job.attemptsMade = 2` → guard should NOT trigger cl
 - `handleFinalFailure` private method added to worker: fetches submission, updates to `rejected` + nulled GPS/photo key, deletes R2 photo (best-effort), logs `[OPS-ALERT]`, checks DLQ depth.
 - `DLQ_DEPTH_ALERT_THRESHOLD = 10` constant defined at module level.
 - `failed` event handler refactored: old GPS-only update replaced with `handleFinalFailure` call (fire-and-forget with `.catch` guard).
-- 8 new tests added to `photo-pipeline.worker.spec.ts` covering all DLQ cleanup scenarios.
-- Fixed mock implementation bleed-through bug: added `afterEach(() => mockPrismaService.submission.findUnique.mockReset())` inside Story 3.8 describe block — `jest.clearAllMocks()` clears call history but not implementations, so persistent `mockResolvedValue` from inner `beforeEach` was leaking into later OCR tests.
-- Full suite: 601/601 passing (was 594 before Story 3.8).
+- 8 new tests + 3 review-patch tests = 11 new tests total.
+- Fixed mock implementation bleed-through bug: added `afterEach(() => mockPrismaService.submission.findUnique.mockReset())` inside Story 3.8 describe block.
+- Full suite: 604/604 passing.
+
+**Code review patches applied (2026-04-03):**
+- P-1: R2 deletion now gated on DB update success (`updateOk` flag) — prevents orphaned DB record with deleted photo (GDPR)
+- P-2: `[OPS-ALERT]` now fires even when `findUnique` fails or returns null — ops always notified of DLQ entry
+- P-3: Guard in `failed` handler for `submissionId = 'unknown'` — emits `[OPS-ALERT]` and skips DB/R2 ops
+
+**Deferred from review:**
+- D-1: DLQ depth count may not include current job (BullMQ event timing off-by-one) — fix post-MVP with `+1` adjustment
+- D-2: Alert storm on burst failures — no rate-limiting; acceptable for PoC
+- D-3: `getFailedCount()` returns `-1` on Redis error, depth alert suppressed — log warning on `-1` post-MVP
+- D-4: `[OPS-ALERT]` emitted even when DB/R2 cleanup failed — misleading but preceding error logs provide context
+- D-5: R2 orphan if submission hard-deleted before final failure cleanup — pre-existing architectural gap (account deletion flow)
 
 ## File List
 

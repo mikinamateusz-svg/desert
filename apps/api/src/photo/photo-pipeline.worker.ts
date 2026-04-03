@@ -80,6 +80,13 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
 
       const attemptsAllowed = job?.opts?.attempts ?? JOB_OPTIONS.attempts;
       if (job && (job.attemptsMade ?? 0) >= attemptsAllowed) {
+        // P-3: guard against missing submissionId — alert ops but skip DB/R2 cleanup
+        if (!submissionId || submissionId === 'unknown') {
+          this.logger.error(
+            `[OPS-ALERT] Pipeline job moved to dead-letter queue with unknown submissionId. Failure: ${err.message}`,
+          );
+          return;
+        }
         // Final failure — all retries exhausted. Clean up and alert ops.
         this.handleFinalFailure(submissionId, err).catch((e: Error) =>
           this.logger.error(
@@ -535,9 +542,17 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         return null;
       });
 
-    if (!submission) return;
+    // P-2: emit ops alert even when submission not found — job is in DLQ regardless
+    if (!submission) {
+      this.logger.error(
+        `[OPS-ALERT] Submission ${submissionId} moved to dead-letter queue after all retries exhausted — ` +
+          `cleanup skipped (submission not found in DB). Failure: ${err.message}`,
+      );
+      return;
+    }
 
     // Mark rejected + null GPS (GDPR) + null photo key atomically
+    let updateOk = false;
     await this.prisma.submission
       .update({
         where: { id: submissionId },
@@ -548,14 +563,17 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
           photo_r2_key: null,
         },
       })
+      .then(() => {
+        updateOk = true;
+      })
       .catch((e: Error) =>
         this.logger.error(
           `Failed to mark submission ${submissionId} rejected after DLQ entry: ${e.message}`,
         ),
       );
 
-    // Delete photo from R2 (best-effort)
-    if (submission.photo_r2_key) {
+    // P-1: only delete from R2 if DB update succeeded — avoids orphaned DB record with deleted photo
+    if (updateOk && submission.photo_r2_key) {
       await this.storageService
         .deleteObject(submission.photo_r2_key)
         .catch((e: Error) =>

@@ -168,6 +168,12 @@ const preselectedSubmission = {
   gps_lng: null,
 };
 
+// Submission where OCR already ran in a prior BullMQ attempt (retry scenario)
+const retrySubmission = {
+  ...pendingSubmission,
+  ocr_confidence_score: 0.92,
+};
+
 // ── Test suite ─────────────────────────────────────────────────────────────
 
 describe('PhotoPipelineWorker', () => {
@@ -1881,6 +1887,40 @@ describe('PhotoPipelineWorker', () => {
         mockSubmissionDedupService.recordHashDedup.mockRejectedValueOnce(new Error('Redis down'));
 
         await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+      });
+    });
+
+    describe('BullMQ retry safety', () => {
+      it('skips L2 station dedup on retry (ocr_confidence_score already set) — prevents false rejection', async () => {
+        mockPrismaService.submission.findUnique
+          .mockResolvedValueOnce(retrySubmission)
+          .mockResolvedValueOnce(submissionAfterOcr);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        // Station dedup would hit (key was set in prior attempt) — but check must be skipped
+        mockSubmissionDedupService.checkStationDedup.mockResolvedValueOnce(true);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        // L2 dedup check must NOT have been called
+        expect(mockSubmissionDedupService.checkStationDedup).not.toHaveBeenCalled();
+        // Pipeline must proceed to OCR
+        expect(mockOcrService.extractPrices).toHaveBeenCalled();
+      });
+
+      it('skips hash dedup on retry (ocr_confidence_score already set) — prevents false rejection', async () => {
+        mockPrismaService.submission.findUnique
+          .mockResolvedValueOnce(retrySubmission)
+          .mockResolvedValueOnce(submissionAfterOcr);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        // Hash dedup would hit (key was set in prior attempt) — but check must be skipped
+        mockSubmissionDedupService.checkHashDedup.mockResolvedValueOnce(true);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        // Hash dedup check must NOT have been called
+        expect(mockSubmissionDedupService.checkHashDedup).not.toHaveBeenCalled();
+        // Pipeline must proceed to OCR
+        expect(mockOcrService.extractPrices).toHaveBeenCalled();
       });
     });
   });

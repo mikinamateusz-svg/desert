@@ -1,6 +1,6 @@
 # Story 3.10: Submission Deduplication
 
-## Status: review
+## Status: done
 
 ## Story
 
@@ -211,6 +211,16 @@ Include `station=` and `submission=` in all DEDUP log messages.
 - L2 station dedup + hash dedup both wrapped in try/catch (fail-open on Redis error)
 - Dedup keys recorded best-effort after successful OCR (both `.catch(() => warn)`)
 - 662/662 tests passing, tsc clean, lint 0 errors
+
+### Review Patches (2026-04-03)
+
+**P-2 applied — BullMQ retry safety:** L2 station dedup and hash dedup checks now skip when `submission.ocr_confidence_score !== null`. This prevents a transient downstream failure (e.g., DB error in price validation) from permanently rejecting a valid submission on BullMQ retry. `runOcrExtraction` signature extended to `Pick<Submission, 'id' | 'photo_r2_key' | 'ocr_confidence_score'>`. Two retry-safety tests added to worker spec.
+
+### Review Deferred Items
+
+- **D1** — Non-atomic GET/SET race window on concurrent submissions: `checkStationDedup`/`checkHashDedup` (GET) and `recordStationDedup`/`recordHashDedup` (SET) are separate round-trips. Multiple concurrent workers can both pass the check before either records. Fix requires `SET NX EX` (atomic set-if-not-exists). Acceptable for single-instance MVP.
+- **D2** — Station dedup key recorded before full pipeline completion (per AC4, "before price validation"): if logo recognition or price validation subsequently rejects the submission, the 12h dedup window is live on an ultimately-rejected submission. Spec explicitly chose this timing for the coalescing use case. Low probability in practice.
+- **D3** — Fire-and-forget key recording invisible in metrics: if Redis is degraded at write-time (after being healthy at read-time), keys silently fail to record with no counter tracking the gap. By-design "best-effort" consistent with `OcrSpendService` pattern.
 
 ## File List
 

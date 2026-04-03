@@ -575,10 +575,13 @@ epics:
       - id: 3.10
         title: Submission Deduplication
         file: 3-10-submission-deduplication.md
-        status: review
+        status: done
         ready_date: 2026-04-03
         dev_started: 2026-04-03
         dev_completed: 2026-04-03
+        review_date: 2026-04-03
+        review_findings: "1 patch (P-2 BullMQ retry kills valid submission via stale dedup key), 3 deferred (D1 non-atomic GET/SET race on concurrent submissions, D2 station dedup key recorded before full pipeline per AC4, D3 fire-and-forget recording invisible in metrics), 12 rejected"
+        patches_applied: "2026-04-03 — P-2 applied: skip L2+hash dedup when ocr_confidence_score != null (retry guard); 126/126 worker tests passing"
         note: >
           L1 (API intake) + L2 (worker) station dedup via Redis 12h TTL key set after
           successful OCR. Hash dedup (SHA-256, 24h TTL) for exact duplicate photos.

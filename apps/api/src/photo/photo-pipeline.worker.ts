@@ -180,7 +180,8 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     const stationId = candidates.length > 0 ? candidates[0].id : submission.station_id;
 
     // Story 3.10: L2 station dedup — skip OCR if a verified result exists for this station
-    if (stationId) {
+    // Skip on retry: ocr_confidence_score already set means OCR ran in a prior BullMQ attempt
+    if (stationId && submission.ocr_confidence_score === null) {
       try {
         const isDuplicate = await this.submissionDedupService.checkStationDedup(stationId);
         if (isDuplicate) {
@@ -285,7 +286,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
    * IMPORTANT: does NOT delete the photo on success — that is Story 3.7's responsibility.
    */
   private async runOcrExtraction(
-    submission: Pick<Submission, 'id' | 'photo_r2_key'>,
+    submission: Pick<Submission, 'id' | 'photo_r2_key' | 'ocr_confidence_score'>,
     stationId: string | null,
   ): Promise<boolean> {
     // AC7: no photo — reject without calling Claude (saves API cost)
@@ -298,18 +299,21 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     const photoBuffer = await this.storageService.getObjectBuffer(submission.photo_r2_key);
 
     // Story 3.10: hash dedup — skip Claude if this exact photo was submitted recently
+    // Skip on retry: ocr_confidence_score already set means OCR ran in a prior BullMQ attempt
     const photoHash = SubmissionDedupService.computePhotoHash(photoBuffer);
-    try {
-      const isHashDuplicate = await this.submissionDedupService.checkHashDedup(photoHash);
-      if (isHashDuplicate) {
-        this.logger.log(
-          `[DEDUP-HASH] hash=${photoHash.slice(0, 8)} submission=${submission.id} — duplicate photo, skipping OCR`,
-        );
-        await this.rejectSubmission(submission, 'duplicate_submission');
-        return false;
+    if (submission.ocr_confidence_score === null) {
+      try {
+        const isHashDuplicate = await this.submissionDedupService.checkHashDedup(photoHash);
+        if (isHashDuplicate) {
+          this.logger.log(
+            `[DEDUP-HASH] hash=${photoHash.slice(0, 8)} submission=${submission.id} — duplicate photo, skipping OCR`,
+          );
+          await this.rejectSubmission(submission, 'duplicate_submission');
+          return false;
+        }
+      } catch (e: unknown) {
+        this.logger.warn(`[DEDUP-HASH] Redis check failed, proceeding normally: ${(e as Error).message}`);
       }
-    } catch (e: unknown) {
-      this.logger.warn(`[DEDUP-HASH] Redis check failed, proceeding normally: ${(e as Error).message}`);
     }
 
     // Call Claude Haiku — throws on API error (transient → BullMQ retries)

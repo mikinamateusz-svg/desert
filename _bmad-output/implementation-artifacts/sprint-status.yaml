@@ -544,7 +544,9 @@ epics:
       - id: 3.7
         title: Price Validation & Database Update
         file: 3-7-price-validation-database-update.md
-        status: backlog
+        status: review
+        ready_date: 2026-04-03
+        implemented_date: 2026-04-03
 
       - id: 3.8
         title: Pipeline Retry & Dead-Letter Queue

@@ -43,7 +43,13 @@
           "androidMode": "default"
         }
       ],
-      "expo-sqlite"
+      "expo-sqlite",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow desert to access your camera to photograph fuel station price boards."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": false

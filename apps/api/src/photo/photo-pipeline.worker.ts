@@ -6,8 +6,10 @@ import { SubmissionStatus, type Submission, type Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
 import { StationService, type NearbyStationWithDistance } from '../station/station.service.js';
-import { OcrService } from '../ocr/ocr.service.js';
+import { OcrService, type ExtractedPrice } from '../ocr/ocr.service.js';
 import { LogoService } from '../logo/logo.service.js';
+import { PriceService } from '../price/price.service.js';
+import { PriceValidationService } from '../price/price-validation.service.js';
 
 export const PHOTO_PIPELINE_QUEUE = 'photo-pipeline';
 export const PHOTO_PIPELINE_JOB = 'process-submission';
@@ -40,6 +42,8 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     private readonly storageService: StorageService,
     private readonly ocrService: OcrService,
     private readonly logoService: LogoService,
+    private readonly priceService: PriceService,
+    private readonly priceValidationService: PriceValidationService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -84,7 +88,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       }
     });
 
-    this.logger.log('PhotoPipelineWorker initialised (Stories 3.4 GPS + 3.5 OCR + 3.6 Logo active)');
+    this.logger.log('PhotoPipelineWorker initialised (Stories 3.4 GPS + 3.5 OCR + 3.6 Logo + 3.7 Price Validation active)');
   }
 
   async onModuleDestroy(): Promise<void> {
@@ -148,10 +152,16 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       return; // submission flagged for ops review — do not proceed to Story 3.7
     }
 
-    // Story 3.7 stub
-    this.logger.log(
-      `Submission ${submissionId}: logo recognition complete — validation deferred to Story 3.7`,
-    );
+    // Story 3.7: price validation + database update
+    // Resolve station ID: GPS path uses candidates[0], preselect path uses submission.station_id
+    const stationId = candidates.length > 0 ? candidates[0].id : submission.station_id;
+    if (!stationId) {
+      this.logger.error(
+        `Submission ${submissionId}: no stationId after GPS matching — cannot validate prices`,
+      );
+      return;
+    }
+    await this.runPriceValidationAndUpdate(submissionId, stationId);
   }
 
   // ── GPS matching step ──────────────────────────────────────────────────────
@@ -386,6 +396,106 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     // Unambiguous: nearest is >50% closer than second nearest (nearest < 0.5 * second)
     const isUnambiguous = nearest < 0.5 * secondNearest;
     return !isUnambiguous;
+  }
+
+  // ── Price validation & database update step ───────────────────────────────
+
+  /**
+   * Validates extracted prices against the 3-tier hierarchy (Story 3.7).
+   * - Re-fetches submission to get the price_data written by the OCR step.
+   * - Validates prices via PriceValidationService (Tier 1 / Tier 3).
+   * - If all fail: rejects the submission (rejectSubmission handles photo deletion).
+   * - If any pass: marks verified, deletes photo, publishes to cache + history,
+   *   and clears staleness flags for each verified fuel type.
+   */
+  private async runPriceValidationAndUpdate(
+    submissionId: string,
+    stationId: string,
+  ): Promise<void> {
+    // Re-fetch to get price_data written by runOcrExtraction
+    const updated = await this.prisma.submission.findUnique({
+      where: { id: submissionId },
+      select: { id: true, price_data: true, photo_r2_key: true },
+    });
+
+    if (!updated) {
+      this.logger.warn(`Submission ${submissionId}: not found during price validation — skipping`);
+      return;
+    }
+
+    const rawPrices = updated.price_data as unknown as ExtractedPrice[];
+    if (!Array.isArray(rawPrices) || rawPrices.length === 0) {
+      await this.rejectSubmission(updated, 'price_validation_failed');
+      return;
+    }
+
+    const { valid, invalid } = await this.priceValidationService.validatePrices(
+      stationId,
+      rawPrices,
+    );
+
+    this.logger.log(
+      `Submission ${submissionId}: price validation — ${valid.length} valid, ${invalid.length} invalid`,
+    );
+
+    if (valid.length === 0) {
+      await this.rejectSubmission(updated, 'price_validation_failed');
+      return;
+    }
+
+    // Build price row for cache / history (validated prices only)
+    const validatedPrices = valid.map(p => ({
+      fuel_type: p.fuel_type,
+      price_per_litre: p.price_per_litre,
+    }));
+
+    const priceRow = {
+      stationId,
+      prices: Object.fromEntries(valid.map(p => [p.fuel_type, p.price_per_litre])),
+      sources: Object.fromEntries(
+        valid.map(p => [p.fuel_type, 'community' as const]),
+      ),
+      updatedAt: new Date(),
+    };
+
+    // Update submission: mark verified, store validated prices only, null photo key atomically
+    await this.prisma.submission.update({
+      where: { id: submissionId },
+      data: {
+        status: SubmissionStatus.verified,
+        price_data: validatedPrices as unknown as Prisma.InputJsonValue,
+        photo_r2_key: null,
+      },
+    });
+
+    // Delete photo from R2 (best-effort — log on failure, do not throw)
+    if (updated.photo_r2_key) {
+      await this.storageService
+        .deleteObject(updated.photo_r2_key)
+        .catch((err: Error) =>
+          this.logger.error(
+            `Failed to delete R2 object ${updated.photo_r2_key} for submission ${submissionId}: ${err.message}`,
+          ),
+        );
+    }
+
+    // Write price history + invalidate / rewrite Redis cache atomically
+    await this.priceService.setVerifiedPrice(stationId, priceRow);
+
+    // Clear staleness flags for each verified fuel type
+    for (const { fuel_type } of valid) {
+      await this.prisma.stationFuelStaleness
+        .deleteMany({ where: { station_id: stationId, fuel_type } })
+        .catch((err: Error) =>
+          this.logger.warn(
+            `Failed to clear staleness for ${stationId}/${fuel_type}: ${err.message}`,
+          ),
+        );
+    }
+
+    this.logger.log(
+      `Submission ${submissionId}: verified — ${valid.length} price(s) accepted for station ${stationId}`,
+    );
   }
 
   private async rejectSubmission(

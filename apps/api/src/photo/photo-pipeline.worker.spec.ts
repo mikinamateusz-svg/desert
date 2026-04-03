@@ -11,6 +11,8 @@ import { StationService } from '../station/station.service.js';
 import { StorageService } from '../storage/storage.service.js';
 import { OcrService } from '../ocr/ocr.service.js';
 import { LogoService } from '../logo/logo.service.js';
+import { PriceService } from '../price/price.service.js';
+import { PriceValidationService } from '../price/price-validation.service.js';
 import type { Job } from 'bullmq';
 
 // ── BullMQ / Redis mocks ───────────────────────────────────────────────────
@@ -47,6 +49,9 @@ const mockPrismaService = {
     findUnique: jest.fn(),
     update: jest.fn(),
   },
+  stationFuelStaleness: {
+    deleteMany: jest.fn(),
+  },
 };
 
 const mockStationService = {
@@ -66,6 +71,14 @@ const mockOcrService = {
 const mockLogoService = {
   recogniseBrand: jest.fn(),
   evaluateMatch: jest.fn(),
+};
+
+const mockPriceService = {
+  setVerifiedPrice: jest.fn(),
+};
+
+const mockPriceValidationService = {
+  validatePrices: jest.fn(),
 };
 
 // ── Test fixtures ──────────────────────────────────────────────────────────
@@ -117,6 +130,21 @@ const successfulOcrResult = {
   raw_response: '{"prices":[{"fuel_type":"PB_95","price_per_litre":6.19}],"confidence_score":0.92}',
 };
 
+// Re-fetched submission (contains price_data written by OCR step)
+const submissionAfterOcr = {
+  id: 'sub-123',
+  price_data: [{ fuel_type: 'PB_95', price_per_litre: 6.19 }],
+  photo_r2_key: 'submissions/user-abc/sub-123.jpg',
+};
+
+// Submission with preselected station (station_id already set before GPS step)
+const preselectedSubmission = {
+  ...pendingSubmission,
+  station_id: 'station-abc',
+  gps_lat: null,
+  gps_lng: null,
+};
+
 // ── Test suite ─────────────────────────────────────────────────────────────
 
 describe('PhotoPipelineWorker', () => {
@@ -151,6 +179,14 @@ describe('PhotoPipelineWorker', () => {
     });
     mockLogoService.evaluateMatch.mockReturnValue('match');
 
+    // Price validation — default: first price passes Tier 3
+    mockPriceValidationService.validatePrices.mockResolvedValue({
+      valid: [{ fuel_type: 'PB_95', price_per_litre: 6.19, tier: 3 }],
+      invalid: [],
+    });
+    mockPriceService.setVerifiedPrice.mockResolvedValue(undefined);
+    mockPrismaService.stationFuelStaleness.deleteMany.mockResolvedValue({ count: 0 });
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PhotoPipelineWorker,
@@ -160,6 +196,8 @@ describe('PhotoPipelineWorker', () => {
         { provide: StorageService, useValue: mockStorageService },
         { provide: OcrService, useValue: mockOcrService },
         { provide: LogoService, useValue: mockLogoService },
+        { provide: PriceService, useValue: mockPriceService },
+        { provide: PriceValidationService, useValue: mockPriceValidationService },
       ],
     }).compile();
 
@@ -1117,6 +1155,221 @@ describe('PhotoPipelineWorker', () => {
         await capturedProcessor!(makeJob('sub-123'));
 
         expect(mockLogoService.recogniseBrand).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  // ── Story 3.7: Price Validation & Database Update ─────────────────────────
+
+  describe('Story 3.7 — price validation and database update', () => {
+    // Helper: set up a full happy-path pipeline run through to Story 3.7
+    const setupHappyPath = () => {
+      mockPrismaService.submission.findUnique
+        .mockResolvedValueOnce(pendingSubmission)    // initial fetch
+        .mockResolvedValueOnce(submissionAfterOcr);  // Story 3.7 re-fetch
+      mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+    };
+
+    describe('verified path — at least one price passes validation', () => {
+      it('marks submission as verified', async () => {
+        setupHappyPath();
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+          expect.objectContaining({
+            data: expect.objectContaining({ status: 'verified' }),
+          }),
+        );
+      });
+
+      it('stores only validated prices in price_data', async () => {
+        setupHappyPath();
+        mockPriceValidationService.validatePrices.mockResolvedValueOnce({
+          valid: [{ fuel_type: 'PB_95', price_per_litre: 6.19, tier: 3 }],
+          invalid: [{ fuel_type: 'ON', price_per_litre: 99.0, reason: 'tier3_out_of_range' }],
+        });
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+          expect.objectContaining({
+            data: expect.objectContaining({
+              status: 'verified',
+              price_data: [{ fuel_type: 'PB_95', price_per_litre: 6.19 }],
+            }),
+          }),
+        );
+      });
+
+      it('nulls photo_r2_key in the same update that sets verified', async () => {
+        setupHappyPath();
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+          expect.objectContaining({
+            data: expect.objectContaining({ status: 'verified', photo_r2_key: null }),
+          }),
+        );
+      });
+
+      it('deletes photo from R2', async () => {
+        setupHappyPath();
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockStorageService.deleteObject).toHaveBeenCalledWith(
+          'submissions/user-abc/sub-123.jpg',
+        );
+      });
+
+      it('calls setVerifiedPrice with correct stationId and prices', async () => {
+        setupHappyPath();
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPriceService.setVerifiedPrice).toHaveBeenCalledWith(
+          nearbyStation.id,
+          expect.objectContaining({
+            stationId: nearbyStation.id,
+            prices: { PB_95: 6.19 },
+            sources: { PB_95: 'community' },
+          }),
+        );
+      });
+
+      it('clears staleness flags for each validated fuel type', async () => {
+        setupHappyPath();
+        mockPriceValidationService.validatePrices.mockResolvedValueOnce({
+          valid: [
+            { fuel_type: 'PB_95', price_per_litre: 6.19, tier: 3 },
+            { fuel_type: 'ON', price_per_litre: 5.89, tier: 3 },
+          ],
+          invalid: [],
+        });
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPrismaService.stationFuelStaleness.deleteMany).toHaveBeenCalledWith(
+          expect.objectContaining({ where: { station_id: nearbyStation.id, fuel_type: 'PB_95' } }),
+        );
+        expect(mockPrismaService.stationFuelStaleness.deleteMany).toHaveBeenCalledWith(
+          expect.objectContaining({ where: { station_id: nearbyStation.id, fuel_type: 'ON' } }),
+        );
+      });
+
+      it('completes without throwing when R2 deletion fails', async () => {
+        setupHappyPath();
+        mockStorageService.deleteObject.mockRejectedValueOnce(new Error('R2 unavailable'));
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+
+        // Submission is still marked verified despite R2 error
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+          expect.objectContaining({ data: expect.objectContaining({ status: 'verified' }) }),
+        );
+      });
+
+      it('completes without throwing when staleness clear fails', async () => {
+        setupHappyPath();
+        mockPrismaService.stationFuelStaleness.deleteMany.mockRejectedValueOnce(
+          new Error('DB timeout'),
+        );
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+      });
+    });
+
+    describe('rejected path — all prices fail validation', () => {
+      it('marks submission as rejected when all prices fail', async () => {
+        mockPrismaService.submission.findUnique
+          .mockResolvedValueOnce(pendingSubmission)
+          .mockResolvedValueOnce(submissionAfterOcr);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockPriceValidationService.validatePrices.mockResolvedValueOnce({
+          valid: [],
+          invalid: [{ fuel_type: 'PB_95', price_per_litre: 0.5, reason: 'tier3_out_of_range' }],
+        });
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+          expect.objectContaining({ data: expect.objectContaining({ status: 'rejected' }) }),
+        );
+      });
+
+      it('deletes photo when all prices fail validation', async () => {
+        mockPrismaService.submission.findUnique
+          .mockResolvedValueOnce(pendingSubmission)
+          .mockResolvedValueOnce(submissionAfterOcr);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockPriceValidationService.validatePrices.mockResolvedValueOnce({
+          valid: [],
+          invalid: [{ fuel_type: 'PB_95', price_per_litre: 0.5, reason: 'tier3_out_of_range' }],
+        });
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockStorageService.deleteObject).toHaveBeenCalledWith(
+          'submissions/user-abc/sub-123.jpg',
+        );
+      });
+
+      it('does NOT call setVerifiedPrice when all prices fail', async () => {
+        mockPrismaService.submission.findUnique
+          .mockResolvedValueOnce(pendingSubmission)
+          .mockResolvedValueOnce(submissionAfterOcr);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockPriceValidationService.validatePrices.mockResolvedValueOnce({
+          valid: [],
+          invalid: [{ fuel_type: 'PB_95', price_per_litre: 0.5, reason: 'tier3_out_of_range' }],
+        });
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPriceService.setVerifiedPrice).not.toHaveBeenCalled();
+      });
+
+      it('rejects submission when re-fetched price_data is empty', async () => {
+        mockPrismaService.submission.findUnique
+          .mockResolvedValueOnce(pendingSubmission)
+          .mockResolvedValueOnce({ ...submissionAfterOcr, price_data: [] });
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+          expect.objectContaining({ data: expect.objectContaining({ status: 'rejected' }) }),
+        );
+        expect(mockPriceValidationService.validatePrices).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('preselect path — stationId from submission.station_id', () => {
+      it('uses submission.station_id when candidates is empty (preselect path)', async () => {
+        mockPrismaService.submission.findUnique
+          .mockResolvedValueOnce(preselectedSubmission)
+          .mockResolvedValueOnce(submissionAfterOcr);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPriceService.setVerifiedPrice).toHaveBeenCalledWith(
+          'station-abc', // preselectedSubmission.station_id
+          expect.anything(),
+        );
+      });
+    });
+
+    describe('logo-flagged path — Story 3.7 skipped', () => {
+      it('does not call validatePrices when submission is shadow_rejected by logo step', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce(ambiguousCandidates);
+        mockLogoService.evaluateMatch.mockReturnValueOnce('mismatch');
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPriceValidationService.validatePrices).not.toHaveBeenCalled();
       });
     });
   });

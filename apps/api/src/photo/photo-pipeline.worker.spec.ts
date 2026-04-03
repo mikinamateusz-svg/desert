@@ -13,6 +13,7 @@ import { OcrService } from '../ocr/ocr.service.js';
 import { LogoService } from '../logo/logo.service.js';
 import { PriceService } from '../price/price.service.js';
 import { PriceValidationService } from '../price/price-validation.service.js';
+import { OcrSpendService } from './ocr-spend.service.js';
 import type { Job } from 'bullmq';
 
 // ── BullMQ / Redis mocks ───────────────────────────────────────────────────
@@ -20,8 +21,11 @@ import type { Job } from 'bullmq';
 const mockQueueAdd = jest.fn();
 const mockQueueClose = jest.fn();
 const mockQueueGetFailedCount = jest.fn();
+const mockQueueGetJobCounts = jest.fn();
 const mockWorkerClose = jest.fn();
 const mockWorkerOn = jest.fn();
+const mockWorkerPause = jest.fn();
+const mockWorkerResume = jest.fn();
 
 // Capture the processor so tests can invoke processJob directly
 let capturedProcessor: ((job: Job<PhotoPipelineJobData>) => Promise<void>) | null = null;
@@ -31,11 +35,12 @@ jest.mock('bullmq', () => ({
     add: mockQueueAdd,
     close: mockQueueClose,
     getFailedCount: mockQueueGetFailedCount,
+    getJobCounts: mockQueueGetJobCounts,
   })),
   Worker: jest.fn().mockImplementation(
     (_name: string, processor: (job: Job<PhotoPipelineJobData>) => Promise<void>) => {
       capturedProcessor = processor;
-      return { close: mockWorkerClose, on: mockWorkerOn };
+      return { close: mockWorkerClose, on: mockWorkerOn, pause: mockWorkerPause, resume: mockWorkerResume };
     },
   ),
 }));
@@ -81,6 +86,12 @@ const mockPriceService = {
 
 const mockPriceValidationService = {
   validatePrices: jest.fn(),
+};
+
+const mockOcrSpendService = {
+  computeCostUsd: jest.fn(),
+  recordSpend: jest.fn(),
+  getSpendCap: jest.fn(),
 };
 
 // ── Test fixtures ──────────────────────────────────────────────────────────
@@ -130,6 +141,8 @@ const successfulOcrResult = {
   prices: [{ fuel_type: 'PB_95', price_per_litre: 6.19 }],
   confidence_score: 0.92,
   raw_response: '{"prices":[{"fuel_type":"PB_95","price_per_litre":6.19}],"confidence_score":0.92}',
+  input_tokens: 1000,
+  output_tokens: 200,
 };
 
 // Re-fetched submission (contains price_data written by OCR step)
@@ -159,6 +172,9 @@ describe('PhotoPipelineWorker', () => {
     // BullMQ
     mockQueueAdd.mockResolvedValue({ id: 'job-1' });
     mockQueueGetFailedCount.mockResolvedValue(0); // default: DLQ is empty
+    mockQueueGetJobCounts.mockResolvedValue({ waiting: 0, active: 0, delayed: 0 });
+    mockWorkerPause.mockResolvedValue(undefined);
+    mockWorkerResume.mockReturnValue(undefined);
 
     // DB
     mockPrismaService.submission.update.mockResolvedValue({});
@@ -190,10 +206,21 @@ describe('PhotoPipelineWorker', () => {
     mockPriceService.setVerifiedPrice.mockResolvedValue(undefined);
     mockPrismaService.stationFuelStaleness.deleteMany.mockResolvedValue({ count: 0 });
 
+    // OcrSpendService — default: spend well below cap, no pausing
+    mockOcrSpendService.computeCostUsd.mockReturnValue(0.001);
+    mockOcrSpendService.recordSpend.mockResolvedValue(0.5);
+    mockOcrSpendService.getSpendCap.mockReturnValue(20);
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PhotoPipelineWorker,
-        { provide: ConfigService, useValue: { getOrThrow: () => 'redis://localhost:6379' } },
+        {
+          provide: ConfigService,
+          useValue: {
+            getOrThrow: () => 'redis://localhost:6379',
+            get: (key: string, defaultVal?: string) => defaultVal ?? '',
+          },
+        },
         { provide: PrismaService, useValue: mockPrismaService },
         { provide: StationService, useValue: mockStationService },
         { provide: StorageService, useValue: mockStorageService },
@@ -201,6 +228,7 @@ describe('PhotoPipelineWorker', () => {
         { provide: LogoService, useValue: mockLogoService },
         { provide: PriceService, useValue: mockPriceService },
         { provide: PriceValidationService, useValue: mockPriceValidationService },
+        { provide: OcrSpendService, useValue: mockOcrSpendService },
       ],
     }).compile();
 
@@ -1554,4 +1582,140 @@ describe('PhotoPipelineWorker', () => {
       });
     });
   });
+
+  // ── Story 3.9: Pipeline Cost Controls ────────────────────────────────────
+
+  describe('Story 3.9 — OCR spend tracking and rate controls', () => {
+    const setupHappyPath = () => {
+      mockPrismaService.submission.findUnique
+        .mockResolvedValueOnce(pendingSubmission)
+        .mockResolvedValueOnce(submissionAfterOcr);
+      mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+    };
+
+    describe('spend recording', () => {
+      it('calls computeCostUsd with input_tokens and output_tokens from OCR result', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockOcrSpendService.computeCostUsd).toHaveBeenCalledWith(
+          successfulOcrResult.input_tokens,
+          successfulOcrResult.output_tokens,
+        );
+      });
+
+      it('calls recordSpend with the computed cost', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrSpendService.computeCostUsd.mockReturnValueOnce(0.0042);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockOcrSpendService.recordSpend).toHaveBeenCalledWith(0.0042);
+      });
+
+      it('does not throw when recordSpend fails — spend tracking is non-critical', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrSpendService.recordSpend.mockRejectedValueOnce(new Error('Redis down'));
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+      });
+
+      it('does NOT call computeCostUsd when OCR is skipped (no station match)', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([]);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockOcrSpendService.computeCostUsd).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('daily spend cap enforcement', () => {
+      it('pauses the worker when daily spend reaches the cap', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrSpendService.recordSpend.mockResolvedValueOnce(20.001); // at cap
+        mockOcrSpendService.getSpendCap.mockReturnValue(20);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockWorkerPause).toHaveBeenCalledTimes(1);
+      });
+
+      it('logs [OPS-ALERT] when spend cap is reached', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrSpendService.recordSpend.mockResolvedValueOnce(20.5);
+        mockOcrSpendService.getSpendCap.mockReturnValue(20);
+        const errorSpy = jest.spyOn(worker['logger'], 'error');
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        const alert = errorSpy.mock.calls.find(
+          call => typeof call[0] === 'string' && call[0].includes('[OPS-ALERT]') && call[0].includes('spend'),
+        );
+        expect(alert).toBeDefined();
+      });
+
+      it('does NOT pause the worker when daily spend is below the cap', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrSpendService.recordSpend.mockResolvedValueOnce(5.0);
+        mockOcrSpendService.getSpendCap.mockReturnValue(20);
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockWorkerPause).not.toHaveBeenCalled();
+      });
+
+      it('does NOT pause the worker a second time when already paused for spend cap', async () => {
+        // First job hits cap and pauses
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrSpendService.recordSpend.mockResolvedValueOnce(21.0);
+        mockOcrSpendService.getSpendCap.mockReturnValue(20);
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockWorkerPause).toHaveBeenCalledTimes(1);
+        mockWorkerPause.mockClear();
+
+        // Second job also over cap — should NOT pause again
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrSpendService.recordSpend.mockResolvedValueOnce(22.0);
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockWorkerPause).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('resumeWorker', () => {
+      it('resumes the worker and clears the paused flag', async () => {
+        // Trigger cap pause first
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrSpendService.recordSpend.mockResolvedValueOnce(21.0);
+        mockOcrSpendService.getSpendCap.mockReturnValue(20);
+        await capturedProcessor!(makeJob('sub-123'));
+        expect(mockWorkerPause).toHaveBeenCalledTimes(1);
+
+        // Now resume
+        worker.resumeWorker();
+
+        expect(mockWorkerResume).toHaveBeenCalledTimes(1);
+      });
+
+      it('does not call resume when worker is not paused for spend cap', () => {
+        // Worker is not paused — resumeWorker should be a no-op
+        worker.resumeWorker();
+
+        expect(mockWorkerResume).not.toHaveBeenCalled();
+      });
+    });
+  });
 });
+

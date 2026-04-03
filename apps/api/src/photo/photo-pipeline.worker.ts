@@ -10,6 +10,7 @@ import { OcrService, type ExtractedPrice } from '../ocr/ocr.service.js';
 import { LogoService } from '../logo/logo.service.js';
 import { PriceService } from '../price/price.service.js';
 import { PriceValidationService } from '../price/price-validation.service.js';
+import { OcrSpendService } from './ocr-spend.service.js';
 
 export const PHOTO_PIPELINE_QUEUE = 'photo-pipeline';
 export const PHOTO_PIPELINE_JOB = 'process-submission';
@@ -37,6 +38,8 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
   private worker!: Worker;
   // Dedicated Redis connection — BullMQ requires maxRetriesPerRequest: null
   private redisForBullMQ!: Redis;
+  // Story 3.9: true when worker has been paused due to daily spend cap
+  private pausedForSpendCap = false;
 
   constructor(
     private readonly config: ConfigService,
@@ -47,6 +50,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     private readonly logoService: LogoService,
     private readonly priceService: PriceService,
     private readonly priceValidationService: PriceValidationService,
+    private readonly ocrSpendService: OcrSpendService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -60,6 +64,11 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       defaultJobOptions: JOB_OPTIONS,
     });
 
+    const rateLimit = parseInt(
+      this.config.get<string>('OCR_WORKER_RATE_LIMIT_PER_MINUTE', '60'),
+      10,
+    );
+
     this.worker = new Worker<PhotoPipelineJobData>(
       PHOTO_PIPELINE_QUEUE,
       async (job: Job<PhotoPipelineJobData>) => {
@@ -67,6 +76,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       },
       {
         connection,
+        limiter: { max: rateLimit, duration: 60_000 },
         settings: {
           backoffStrategy: (attemptsMade: number) =>
             BACKOFF_DELAYS_MS[attemptsMade - 1] ?? BACKOFF_DELAYS_MS[BACKOFF_DELAYS_MS.length - 1],
@@ -96,7 +106,8 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       }
     });
 
-    this.logger.log('PhotoPipelineWorker initialised (Stories 3.4 GPS + 3.5 OCR + 3.6 Logo + 3.7 Price Validation active)');
+    this.scheduleMidnightReset();
+    this.logger.log('PhotoPipelineWorker initialised (Stories 3.4 GPS + 3.5 OCR + 3.6 Logo + 3.7 Price Validation + 3.9 Cost Controls active)');
   }
 
   async onModuleDestroy(): Promise<void> {
@@ -119,6 +130,20 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
   /** Exposed for tests and ops tooling */
   getQueue(): Queue {
     return this.queue;
+  }
+
+  /** Resume the worker after a spend-cap pause. Called by Story 4.4 admin endpoint. */
+  resumeWorker(): void {
+    if (this.pausedForSpendCap) {
+      try {
+        this.worker.resume();
+      } catch (e: unknown) {
+        this.logger.error(`Failed to manually resume worker: ${(e as Error).message}`);
+        return;
+      }
+      this.pausedForSpendCap = false;
+      this.logger.log('OCR worker manually resumed by admin');
+    }
   }
 
   // ── Job processor ──────────────────────────────────────────────────────────
@@ -252,6 +277,17 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
 
     // Call Claude Haiku — throws on API error (transient → BullMQ retries)
     const ocrResult = await this.ocrService.extractPrices(photoBuffer);
+
+    // Record spend and check daily cap (Story 3.9)
+    const costUsd = this.ocrSpendService.computeCostUsd(
+      ocrResult.input_tokens,
+      ocrResult.output_tokens,
+    );
+    const dailySpend = await this.ocrSpendService.recordSpend(costUsd).catch((e: Error) => {
+      this.logger.warn(`Failed to record OCR spend: ${e.message}`);
+      return 0;
+    });
+    await this.checkSpendCap(dailySpend);
 
     this.logger.log(
       `Submission ${submission.id}: OCR confidence=${ocrResult.confidence_score.toFixed(2)}, ` +
@@ -597,6 +633,56 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
           `possible systemic pipeline failure`,
       );
     }
+  }
+
+  // ── Spend cap & rate controls (Story 3.9) ────────────────────────────────
+
+  /**
+   * Pauses the worker if daily OCR spend has reached the configured cap.
+   * Idempotent — only pauses once per cap breach.
+   */
+  private async checkSpendCap(dailySpend: number): Promise<void> {
+    const cap = this.ocrSpendService.getSpendCap();
+    if (dailySpend >= cap && !this.pausedForSpendCap) {
+      this.pausedForSpendCap = true;
+      await this.worker.pause().catch((e: Error) =>
+        this.logger.error(`Failed to pause worker on spend cap: ${e.message}`),
+      );
+      const jobCounts = await this.queue.getJobCounts('waiting', 'active', 'delayed').catch(() => ({}));
+      this.logger.error(
+        `[OPS-ALERT] OCR pipeline paused — daily spend $${dailySpend.toFixed(4)} reached cap $${cap.toFixed(2)}. ` +
+          `Queue depth: ${JSON.stringify(jobCounts)}. ` +
+          `Resume via admin dashboard or wait for UTC midnight auto-reset.`,
+      );
+    }
+  }
+
+  /**
+   * Schedules an automatic worker resume at the next UTC midnight.
+   * Chains itself so it runs every day without drift.
+   */
+  private scheduleMidnightReset(): void {
+    const now = new Date();
+    const midnight = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1),
+    );
+    const msUntilMidnight = midnight.getTime() - now.getTime();
+
+    // .unref() prevents the timer from keeping the Node process alive if nothing else is running.
+    setTimeout(() => {
+      void (async () => {
+        if (this.pausedForSpendCap) {
+          try {
+            this.worker.resume();
+          } catch (e: unknown) {
+            this.logger.error(`Failed to auto-resume worker at midnight: ${(e as Error).message}`);
+          }
+          this.pausedForSpendCap = false;
+          this.logger.log('OCR worker auto-resumed after UTC midnight spend cap reset');
+        }
+        this.scheduleMidnightReset(); // chain for next day
+      })();
+    }, msUntilMidnight).unref();
   }
 
   private async rejectSubmission(

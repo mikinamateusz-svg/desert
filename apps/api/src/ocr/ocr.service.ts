@@ -13,6 +13,8 @@ export interface OcrResult {
   prices: ExtractedPrice[];
   confidence_score: number; // 0.0 – 1.0
   raw_response: string; // for debugging; not stored in DB
+  input_tokens: number; // Claude API usage — for spend tracking (Story 3.9)
+  output_tokens: number;
 }
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -77,6 +79,7 @@ export class OcrService {
   /**
    * Sends a photo buffer to Claude Haiku 4.5 and extracts fuel prices.
    * Throws on transient API failure (Claude 429, 5xx, network error) — BullMQ retries.
+   * Returns OcrResult with confidence 0.0 on Anthropic 4xx (non-retriable bad request).
    * Returns OcrResult with empty prices array if no prices found (not a throw).
    */
   async extractPrices(
@@ -85,33 +88,53 @@ export class OcrService {
   ): Promise<OcrResult> {
     const base64Image = photoBuffer.toString('base64');
 
-    // This call throws on API error — intentional, allows BullMQ retry
-    const response = await this.client.messages.create({
-      model: 'claude-haiku-4-5',
-      max_tokens: 512,
-      messages: [
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'image',
-              source: {
-                type: 'base64',
-                media_type: mediaType,
-                data: base64Image,
+    let response: Awaited<ReturnType<typeof this.client.messages.create>>;
+    try {
+      response = await this.client.messages.create({
+        model: 'claude-haiku-4-5',
+        max_tokens: 512,
+        messages: [
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'image',
+                source: {
+                  type: 'base64',
+                  media_type: mediaType,
+                  data: base64Image,
+                },
               },
-            },
-            {
-              type: 'text',
-              text: OCR_PROMPT,
-            },
-          ],
-        },
-      ],
-    });
+              {
+                type: 'text',
+                text: OCR_PROMPT,
+              },
+            ],
+          },
+        ],
+      });
+    } catch (err: unknown) {
+      // 4xx errors are non-retriable (bad request, invalid image, etc.)
+      // Return confidence 0.0 so the low_ocr_confidence path rejects gracefully.
+      // 5xx / network errors still throw → BullMQ retries.
+      const httpStatus = (err as { status?: number }).status;
+      if (typeof httpStatus === 'number' && httpStatus >= 400 && httpStatus < 500) {
+        const message = (err as Error).message ?? String(err);
+        this.logger.warn(
+          `OCR: Anthropic ${httpStatus} error — non-retriable, rejecting submission: ${message}`,
+        );
+        return { prices: [], confidence_score: 0.0, raw_response: message, input_tokens: 0, output_tokens: 0 };
+      }
+      throw err;
+    }
 
     const rawText = response.content[0]?.type === 'text' ? response.content[0].text : '';
-    return this.parseResponse(rawText);
+    const result = this.parseResponse(rawText);
+    return {
+      ...result,
+      input_tokens: response.usage.input_tokens,
+      output_tokens: response.usage.output_tokens,
+    };
   }
 
   /**
@@ -156,10 +179,10 @@ export class OcrService {
         }
       }
 
-      return { prices, confidence_score, raw_response: rawText };
+      return { prices, confidence_score, raw_response: rawText, input_tokens: 0, output_tokens: 0 };
     } catch {
       this.logger.warn(`OCR: failed to parse Claude response: ${rawText}`);
-      return { prices: [], confidence_score: 0.0, raw_response: rawText };
+      return { prices: [], confidence_score: 0.0, raw_response: rawText, input_tokens: 0, output_tokens: 0 };
     }
   }
 

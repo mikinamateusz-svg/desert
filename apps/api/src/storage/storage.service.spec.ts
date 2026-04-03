@@ -129,6 +129,34 @@ describe('StorageService', () => {
         'R2 object body is empty for key: test/key.jpg',
       );
     });
+
+    it('throws when accumulated bytes exceed the size limit (Story 3.9 OOM guard)', async () => {
+      const limit = 5; // 5 bytes
+      async function* bigStream() {
+        yield Buffer.alloc(3); // 3 bytes
+        yield Buffer.alloc(4); // total 7 — exceeds 5
+      }
+      mockSend.mockResolvedValueOnce({ Body: bigStream() });
+
+      await expect(service.getObjectBuffer('test/big.jpg', limit)).rejects.toThrow(
+        'exceeds size limit',
+      );
+    });
+
+    it('accepts a stream that fits within the custom size limit', async () => {
+      const limit = 10;
+      async function* smallStream() {
+        yield Buffer.from('hello'); // 5 bytes
+      }
+      mockSend.mockResolvedValueOnce({ Body: smallStream() });
+
+      const result = await service.getObjectBuffer('test/small.jpg', limit);
+      expect(result).toEqual(Buffer.from('hello'));
+    });
+
+    it('MAX_OBJECT_BYTES constant is 10 MB', () => {
+      expect(StorageService.MAX_OBJECT_BYTES).toBe(10 * 1024 * 1024);
+    });
   });
 
   describe('getPresignedUrl', () => {

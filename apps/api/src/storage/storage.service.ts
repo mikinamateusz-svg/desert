@@ -49,13 +49,23 @@ export class StorageService implements OnModuleInit {
     await this.client.send(new DeleteObjectCommand({ Bucket: this.bucket, Key: key }));
   }
 
-  async getObjectBuffer(key: string): Promise<Buffer> {
+  // 10 MB default — photos should never exceed 5 MB in practice; guard against OOM (Story 3.9 D1)
+  static readonly MAX_OBJECT_BYTES = 10 * 1024 * 1024;
+
+  async getObjectBuffer(key: string, maxBytes = StorageService.MAX_OBJECT_BYTES): Promise<Buffer> {
     const response = await this.client.send(
       new GetObjectCommand({ Bucket: this.bucket, Key: key }),
     );
     if (!response.Body) throw new Error(`R2 object body is empty for key: ${key}`);
     const chunks: Uint8Array[] = [];
+    let totalBytes = 0;
     for await (const chunk of response.Body as AsyncIterable<Uint8Array>) {
+      totalBytes += chunk.length;
+      if (totalBytes > maxBytes) {
+        throw new Error(
+          `R2 object ${key} exceeds size limit of ${maxBytes} bytes (got ${totalBytes}+)`,
+        );
+      }
       chunks.push(chunk);
     }
     return Buffer.concat(chunks);

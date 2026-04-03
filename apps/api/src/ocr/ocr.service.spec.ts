@@ -17,8 +17,9 @@ jest.mock('@anthropic-ai/sdk', () => ({
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
-const makeApiResponse = (text: string) => ({
+const makeApiResponse = (text: string, inputTokens = 1000, outputTokens = 200) => ({
   content: [{ type: 'text', text }],
+  usage: { input_tokens: inputTokens, output_tokens: outputTokens },
 });
 
 const validJsonResponse = JSON.stringify({
@@ -126,6 +127,52 @@ describe('OcrService', () => {
         (c: { type: string }) => c.type === 'image',
       );
       expect(imageContent.source.media_type).toBe('image/png');
+    });
+
+    // ── Story 3.9: token usage and 4xx handling ─────────────────────────────
+
+    it('returns input_tokens and output_tokens from API response usage', async () => {
+      mockMessagesCreate.mockResolvedValueOnce(makeApiResponse(validJsonResponse, 1500, 300));
+
+      const result = await service.extractPrices(Buffer.from('img'));
+
+      expect(result.input_tokens).toBe(1500);
+      expect(result.output_tokens).toBe(300);
+    });
+
+    it('returns zero tokens on Anthropic 4xx error (non-retriable path)', async () => {
+      const httpErr = Object.assign(new Error('Bad request'), { status: 400 });
+      mockMessagesCreate.mockRejectedValueOnce(httpErr);
+
+      const result = await service.extractPrices(Buffer.from('img'));
+
+      expect(result.input_tokens).toBe(0);
+      expect(result.output_tokens).toBe(0);
+      expect(result.confidence_score).toBe(0.0);
+      expect(result.prices).toEqual([]);
+    });
+
+    it('returns empty prices and confidence 0.0 on Anthropic 4xx (graceful rejection path)', async () => {
+      const httpErr = Object.assign(new Error('Request too large'), { status: 413 });
+      mockMessagesCreate.mockRejectedValueOnce(httpErr);
+
+      const result = await service.extractPrices(Buffer.from('img'));
+
+      expect(result.prices).toEqual([]);
+      expect(result.confidence_score).toBe(0.0);
+    });
+
+    it('re-throws Anthropic 5xx errors so BullMQ can retry', async () => {
+      const httpErr = Object.assign(new Error('Internal Server Error'), { status: 500 });
+      mockMessagesCreate.mockRejectedValueOnce(httpErr);
+
+      await expect(service.extractPrices(Buffer.from('img'))).rejects.toThrow('Internal Server Error');
+    });
+
+    it('re-throws errors without a status field (network errors, etc.)', async () => {
+      mockMessagesCreate.mockRejectedValueOnce(new Error('ECONNRESET'));
+
+      await expect(service.extractPrices(Buffer.from('img'))).rejects.toThrow('ECONNRESET');
     });
   });
 

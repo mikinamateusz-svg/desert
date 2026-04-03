@@ -564,4 +564,7 @@ epics:
       - id: 3.9
         title: Pipeline Cost Controls
         file: 3-9-pipeline-cost-controls.md
-        status: backlog
+        status: review
+        ready_date: 2026-04-03
+        dev_started: 2026-04-03
+        dev_completed: 2026-04-03

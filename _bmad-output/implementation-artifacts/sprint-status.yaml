@@ -564,7 +564,10 @@ epics:
       - id: 3.9
         title: Pipeline Cost Controls
         file: 3-9-pipeline-cost-controls.md
-        status: review
+        status: done
         ready_date: 2026-04-03
         dev_started: 2026-04-03
         dev_completed: 2026-04-03
+        review_date: 2026-04-03
+        review_findings: "3 patch (P-1 getSpendCap NaN on invalid config, P-2 rateLimit=0/NaN not validated, P-3 Anthropic 429 treated as non-retriable), 8 deferred (D1 concurrent cap overshoot by design, D2 fail-open on Redis outage, D3 parseResponse zero tokens fragile, D4 midnight reset no Redis verify, D5 resumeWorker state inconsistency, D6 TTL extend at midnight, D7 setTimeout no cancel on destroy, D8 size cap not ENV-configurable), 7 rejected"
+        patches_applied: "2026-04-03 — P-1/P-2/P-3 applied; 639/639 tests passing"

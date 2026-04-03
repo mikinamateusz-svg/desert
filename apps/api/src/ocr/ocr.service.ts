@@ -118,7 +118,8 @@ export class OcrService {
       // Return confidence 0.0 so the low_ocr_confidence path rejects gracefully.
       // 5xx / network errors still throw → BullMQ retries.
       const httpStatus = (err as { status?: number }).status;
-      if (typeof httpStatus === 'number' && httpStatus >= 400 && httpStatus < 500) {
+      // 429 Too Many Requests is retriable — BullMQ will back off and retry.
+      if (typeof httpStatus === 'number' && httpStatus >= 400 && httpStatus < 500 && httpStatus !== 429) {
         const message = (err as Error).message ?? String(err);
         this.logger.warn(
           `OCR: Anthropic ${httpStatus} error — non-retriable, rejecting submission: ${message}`,

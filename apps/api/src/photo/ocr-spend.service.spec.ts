@@ -140,5 +140,36 @@ describe('OcrSpendService', () => {
       // ConfigService.get returns the default value ('20') when key not configured
       expect(service.getSpendCap()).toBe(20);
     });
+
+    it('returns $20 default when MAX_DAILY_OCR_SPEND_USD is a non-numeric string (P-1)', async () => {
+      const module: TestingModule = await Test.createTestingModule({
+        providers: [
+          OcrSpendService,
+          { provide: REDIS_CLIENT, useValue: mockRedis },
+          {
+            provide: ConfigService,
+            useValue: { get: (_key: string, _defaultVal?: string) => 'disabled' },
+          },
+        ],
+      }).compile();
+      const svc = module.get<OcrSpendService>(OcrSpendService);
+      expect(svc.getSpendCap()).toBe(20);
+    });
+
+    it('returns $20 default when MAX_DAILY_OCR_SPEND_USD is "$20" with dollar sign (P-1)', async () => {
+      const module: TestingModule = await Test.createTestingModule({
+        providers: [
+          OcrSpendService,
+          { provide: REDIS_CLIENT, useValue: mockRedis },
+          {
+            provide: ConfigService,
+            useValue: { get: (_key: string, _defaultVal?: string) => '$20' },
+          },
+        ],
+      }).compile();
+      const svc = module.get<OcrSpendService>(OcrSpendService);
+      // parseFloat('$20') = NaN → fallback to 20
+      expect(svc.getSpendCap()).toBe(20);
+    });
   });
 });

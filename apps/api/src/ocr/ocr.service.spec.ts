@@ -174,6 +174,13 @@ describe('OcrService', () => {
 
       await expect(service.extractPrices(Buffer.from('img'))).rejects.toThrow('ECONNRESET');
     });
+
+    it('re-throws Anthropic 429 so BullMQ can retry with backoff (P-3)', async () => {
+      const httpErr = Object.assign(new Error('Too Many Requests'), { status: 429 });
+      mockMessagesCreate.mockRejectedValueOnce(httpErr);
+
+      await expect(service.extractPrices(Buffer.from('img'))).rejects.toThrow('Too Many Requests');
+    });
   });
 
   // ── parseResponse ──────────────────────────────────────────────────────────

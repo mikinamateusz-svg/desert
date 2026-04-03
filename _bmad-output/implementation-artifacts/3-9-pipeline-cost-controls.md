@@ -1,6 +1,6 @@
 # Story 3.9: Pipeline Cost Controls
 
-## Status: review
+## Status: done
 
 ## Story
 
@@ -198,6 +198,26 @@ Expose `resumeWorker(): Promise<void>` on the worker (public method). Story 4.4 
 - `_bmad-output/implementation-artifacts/3-9-pipeline-cost-controls.md` (this file)
 - `_bmad-output/implementation-artifacts/sprint-status.yaml` (modified)
 
+## Review Findings
+
+- **3 patches applied (P-1/P-2/P-3), 8 deferred, 7 rejected**
+- P-1: `getSpendCap()` NaN guard — fallback to 20 on non-numeric config
+- P-2: `OCR_WORKER_RATE_LIMIT_PER_MINUTE` invalid/zero — clamp to 60 on bad config
+- P-3: Anthropic 429 excluded from non-retriable 4xx range — BullMQ retries as expected
+- 639/639 tests passing
+
+## Deferred
+
+- **D1** — Concurrent jobs can exceed cap by up to concurrency×cost before pause fires (by design; post-hoc tracking)
+- **D2** — Fail-open on Redis failure: spend cap bypassed during Redis outage (deliberate availability trade-off; document before go-live)
+- **D3** — `parseResponse` returns `input_tokens: 0` — fragile if called outside `extractPrices` (low risk for MVP)
+- **D4** — Midnight reset doesn't verify Redis key rolled over before resuming (low probability with `.unref()` + Node timer precision)
+- **D5** — `resumeWorker()` state inconsistency on BullMQ error; midnight timer will self-correct (minor)
+- **D6** — TTL `expire` call can extend an expiring key at midnight boundary (Redis memory waste only, functionally harmless)
+- **D7** — `setTimeout` handle not stored; `onModuleDestroy` cannot cancel the midnight timer (`.unref()` handles process-exit; low risk)
+- **D8** — `getObjectBuffer` size cap not ENV-configurable (`MAX_PHOTO_SIZE_BYTES` implied by spec but hardcoded constant acceptable for MVP)
+
 ## Change Log
 
 - 2026-04-03: Story 3.9 created and implementation started.
+- 2026-04-03: Code review complete — P-1/P-2/P-3 applied; D1–D8 logged.

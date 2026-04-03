@@ -277,6 +277,46 @@ describe('PhotoPipelineWorker', () => {
     });
   });
 
+  // ── onModuleInit — rate limit validation (P-2) ────────────────────────────
+
+  describe('onModuleInit — rate limit fallback (P-2)', () => {
+    it('initialises successfully when OCR_WORKER_RATE_LIMIT_PER_MINUTE is non-numeric (falls back to 60)', async () => {
+      const { Worker: MockWorkerClass } = require('bullmq') as { Worker: jest.Mock };
+      MockWorkerClass.mockClear();
+
+      const module = await Test.createTestingModule({
+        providers: [
+          PhotoPipelineWorker,
+          {
+            provide: ConfigService,
+            useValue: {
+              getOrThrow: () => 'redis://localhost:6379',
+              get: (key: string, defaultVal?: string) =>
+                key === 'OCR_WORKER_RATE_LIMIT_PER_MINUTE' ? 'abc' : (defaultVal ?? ''),
+            },
+          },
+          { provide: PrismaService, useValue: mockPrismaService },
+          { provide: StationService, useValue: mockStationService },
+          { provide: StorageService, useValue: mockStorageService },
+          { provide: OcrService, useValue: mockOcrService },
+          { provide: LogoService, useValue: mockLogoService },
+          { provide: PriceService, useValue: mockPriceService },
+          { provide: PriceValidationService, useValue: mockPriceValidationService },
+          { provide: OcrSpendService, useValue: mockOcrSpendService },
+        ],
+      }).compile();
+
+      const w = module.get<PhotoPipelineWorker>(PhotoPipelineWorker);
+      await w.onModuleInit();
+
+      // Worker should have been constructed — no crash
+      expect(MockWorkerClass).toHaveBeenCalled();
+      const workerOpts = MockWorkerClass.mock.calls[MockWorkerClass.mock.calls.length - 1][2];
+      // Non-numeric 'abc' → parseInt = NaN → falls back to 60
+      expect(workerOpts.limiter).toEqual({ max: 60, duration: 60_000 });
+    });
+  });
+
   // ── onModuleDestroy ───────────────────────────────────────────────────────
 
   describe('onModuleDestroy', () => {

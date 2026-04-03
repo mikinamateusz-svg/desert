@@ -46,7 +46,8 @@ export class OcrSpendService {
   /** Returns the configured daily spend cap in USD (default: $20). */
   getSpendCap(): number {
     const raw = this.config.get<string>('MAX_DAILY_OCR_SPEND_USD', '20');
-    return parseFloat(raw);
+    const cap = parseFloat(raw);
+    return isNaN(cap) ? 20 : cap;
   }
 
   private getSpendKey(): string {

@@ -64,10 +64,11 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       defaultJobOptions: JOB_OPTIONS,
     });
 
-    const rateLimit = parseInt(
+    const rateLimitRaw = parseInt(
       this.config.get<string>('OCR_WORKER_RATE_LIMIT_PER_MINUTE', '60'),
       10,
     );
+    const rateLimit = Number.isFinite(rateLimitRaw) && rateLimitRaw > 0 ? rateLimitRaw : 60;
 
     this.worker = new Worker<PhotoPipelineJobData>(
       PHOTO_PIPELINE_QUEUE,

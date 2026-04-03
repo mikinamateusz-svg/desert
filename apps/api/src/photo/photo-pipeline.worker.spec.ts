@@ -14,7 +14,7 @@ import { LogoService } from '../logo/logo.service.js';
 import { PriceService } from '../price/price.service.js';
 import { PriceValidationService } from '../price/price-validation.service.js';
 import { OcrSpendService } from './ocr-spend.service.js';
-import type { Job } from 'bullmq';
+import { Worker, type Job } from 'bullmq';
 
 // ── BullMQ / Redis mocks ───────────────────────────────────────────────────
 
@@ -281,7 +281,7 @@ describe('PhotoPipelineWorker', () => {
 
   describe('onModuleInit — rate limit fallback (P-2)', () => {
     it('initialises successfully when OCR_WORKER_RATE_LIMIT_PER_MINUTE is non-numeric (falls back to 60)', async () => {
-      const { Worker: MockWorkerClass } = require('bullmq') as { Worker: jest.Mock };
+      const MockWorkerClass = Worker as unknown as jest.Mock;
       MockWorkerClass.mockClear();
 
       const module = await Test.createTestingModule({
@@ -1626,13 +1626,6 @@ describe('PhotoPipelineWorker', () => {
   // ── Story 3.9: Pipeline Cost Controls ────────────────────────────────────
 
   describe('Story 3.9 — OCR spend tracking and rate controls', () => {
-    const setupHappyPath = () => {
-      mockPrismaService.submission.findUnique
-        .mockResolvedValueOnce(pendingSubmission)
-        .mockResolvedValueOnce(submissionAfterOcr);
-      mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
-    };
-
     describe('spend recording', () => {
       it('calls computeCostUsd with input_tokens and output_tokens from OCR result', async () => {
         mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);

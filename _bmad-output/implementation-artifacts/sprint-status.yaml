@@ -9,7 +9,10 @@ epics:
       - id: 1.0a
         title: Turborepo Monorepo Scaffold & Local Dev Environment
         file: 1-0a-turborepo-monorepo-scaffold.md
-        status: review
+        status: done
+        review_date: 2026-04-03
+        review_findings: "6 patch (P-2 fetch-depth:2 breaks Turbo affected detection, P-2 node-version floating not pinned to .nvmrc, P-2 lint dependsOn:^lint serialises unnecessarily, P-2 Docker services bind to 0.0.0.0+Redis no auth, P-3 apps/mobile .gitignore missing .env, P-3 duplicate dist/** in turbo.json outputs), 4 deferred (D1 Turbo remote cache not configured, D2 EAS projectId personal account, D3 React 19.2+RN 0.83 vs Expo SDK 55 matrix post-scaffold, D4 shamefully-hoist masks undeclared deps), ~12 rejected"
+        patches_applied: "2026-04-03 — all 6 patches applied; fetch-depth:0, node-version-file:.nvmrc, lint dependsOn:[], docker localhost binding+Redis auth, mobile .gitignore .env, turbo.json out/**"
 
       - id: 1.0b
         title: Infrastructure Provisioning & CI/CD Pipeline

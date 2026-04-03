@@ -1,6 +1,22 @@
 # Story 1.0a: Turborepo Monorepo Scaffold & Local Dev Environment
 
-Status: review
+Status: done
+
+## Review Patches (2026-04-03)
+
+**Applied:**
+- P-2: `fetch-depth: 2` → `fetch-depth: 0` in CI (both ci and deploy jobs) — depth 2 caused Turbo affected detection to fall back to full rebuild on any merge commit
+- P-2: `node-version: 24` → `node-version-file: ".nvmrc"` in CI (both jobs) — pins runner to `24.14.0` to match local dev
+- P-2: `turbo.json` `lint.dependsOn` `["^lint"]` → `[]` — lint is statically independent, cross-package serialisation was unnecessary
+- P-2: `docker-compose.yml` — both services now bind to `127.0.0.1` only; Redis adds `--requirepass devpassword`; `.env.example` REDIS_URL updated to `redis://:devpassword@localhost:6379`
+- P-3: `apps/mobile/.gitignore` — added `.env`/`.env.local` exclusions (belt-and-suspenders; root .gitignore covers it but app-level was missing)
+- P-3: `turbo.json` `build.outputs` — replaced duplicate `dist/**` with `out/**`
+
+**Deferred:**
+- D1: Turbo remote cache not configured — CI is a full cold rebuild every run; low urgency at PoC scale but defeats Turborepo's CI performance goal as repo grows
+- D2: EAS `projectId` tied to personal Expo account — already in project_deferred.md pre-launch checklist
+- D3: `apps/mobile` React 19.2.0 + RN 0.83.2 diverged from Expo SDK 55 tested matrix (introduced post-scaffold) — app runs but outside SDK's tested range with `newArchEnabled:true`; investigate before any native module changes
+- D4: `shamefully-hoist=true` masks undeclared dependencies — necessary for Expo/RN compatibility, acceptable for MVP
 
 ## Story
 

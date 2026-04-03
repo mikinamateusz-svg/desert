@@ -554,7 +554,12 @@ epics:
       - id: 3.8
         title: Pipeline Retry & Dead-Letter Queue
         file: 3-8-pipeline-retry-dead-letter-queue.md
-        status: backlog
+        status: review
+        ready_date: 2026-04-03
+        implemented_date: 2026-04-03
+        review_date: 2026-04-03
+        review_findings: "AC1+AC2 already satisfied (BACKOFF_DELAYS_MS + rejectSubmission pattern). AC3+AC5 implemented: handleFinalFailure — rejected status + GPS/photo null + R2 delete + [OPS-ALERT] log + DLQ depth check. 8 new tests, fixed mockResolvedValue bleed-through bug (afterEach mockReset)."
+        patches_applied: "2026-04-03 — 601/601 tests passing"
 
       - id: 3.9
         title: Pipeline Cost Controls

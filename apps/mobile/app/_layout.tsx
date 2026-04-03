@@ -19,17 +19,15 @@ export default function RootLayout() {
     return () => stopQueueProcessor();
   }, []);
 
-  if (!i18nReady) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
-
   return (
     <AuthProvider>
-      <Slot />
+      {!i18nReady ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <Slot />
+      )}
     </AuthProvider>
   );
 }

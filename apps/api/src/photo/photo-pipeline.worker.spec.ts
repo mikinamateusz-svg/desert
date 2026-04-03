@@ -19,6 +19,7 @@ import type { Job } from 'bullmq';
 
 const mockQueueAdd = jest.fn();
 const mockQueueClose = jest.fn();
+const mockQueueGetFailedCount = jest.fn();
 const mockWorkerClose = jest.fn();
 const mockWorkerOn = jest.fn();
 
@@ -29,6 +30,7 @@ jest.mock('bullmq', () => ({
   Queue: jest.fn().mockImplementation(() => ({
     add: mockQueueAdd,
     close: mockQueueClose,
+    getFailedCount: mockQueueGetFailedCount,
   })),
   Worker: jest.fn().mockImplementation(
     (_name: string, processor: (job: Job<PhotoPipelineJobData>) => Promise<void>) => {
@@ -156,6 +158,7 @@ describe('PhotoPipelineWorker', () => {
 
     // BullMQ
     mockQueueAdd.mockResolvedValue({ id: 'job-1' });
+    mockQueueGetFailedCount.mockResolvedValue(0); // default: DLQ is empty
 
     // DB
     mockPrismaService.submission.update.mockResolvedValue({});
@@ -487,19 +490,35 @@ describe('PhotoPipelineWorker', () => {
     });
   });
 
-  // ── failed event — GDPR GPS null on final retry exhaustion ───────────────
+  // ── Story 3.8: DLQ cleanup on final retry exhaustion ─────────────────────
 
-  describe('failed event — GPS null on final failure', () => {
+  describe('Story 3.8 — dead-letter queue cleanup on final failure', () => {
     let capturedFailedHandler: ((job: Job | undefined, err: Error) => void) | null = null;
 
+    // Flush all pending microtasks (needed for multi-step async handleFinalFailure)
+    const flushPromises = () => new Promise<void>(resolve => setImmediate(resolve));
+
+    const dlqSubmission = {
+      id: 'sub-123',
+      photo_r2_key: 'submissions/user-abc/sub-123.jpg',
+    };
+
     beforeEach(() => {
-      // mockWorkerOn is already cleared by jest.clearAllMocks() in outer beforeEach.
       // Capture the 'failed' handler registered during onModuleInit.
       const calls = mockWorkerOn.mock.calls as [string, (...args: unknown[]) => void][];
       const failedCall = calls.find(([event]) => event === 'failed');
       capturedFailedHandler = failedCall
         ? (failedCall[1] as (job: Job | undefined, err: Error) => void)
         : null;
+
+      // Default: submission exists with a photo
+      mockPrismaService.submission.findUnique.mockResolvedValue(dlqSubmission);
+    });
+
+    afterEach(() => {
+      // Reset findUnique implementation so it doesn't bleed into subsequent describe blocks.
+      // jest.clearAllMocks() (outer beforeEach) clears call history but NOT implementations.
+      mockPrismaService.submission.findUnique.mockReset();
     });
 
     const makeFailedJob = (submissionId: string, attemptsMade: number, attempts: number) =>
@@ -509,26 +528,109 @@ describe('PhotoPipelineWorker', () => {
         opts: { attempts },
       }) as unknown as Job<PhotoPipelineJobData>;
 
-    it('nulls GPS coords on final retry exhaustion', async () => {
+    it('marks submission as rejected with nulled GPS and photo key on final failure', async () => {
       const job = makeFailedJob('sub-123', 4, 4);
       capturedFailedHandler!(job, new Error('DB connection lost'));
-
-      // Allow the async update to be enqueued (it is a floating promise)
-      await Promise.resolve();
+      await flushPromises();
 
       expect(mockPrismaService.submission.update).toHaveBeenCalledWith({
         where: { id: 'sub-123' },
-        data: { gps_lat: null, gps_lng: null },
+        data: { status: 'rejected', gps_lat: null, gps_lng: null, photo_r2_key: null },
       });
     });
 
-    it('does not null GPS when there are retries remaining', async () => {
+    it('deletes photo from R2 on final failure', async () => {
+      const job = makeFailedJob('sub-123', 4, 4);
+      capturedFailedHandler!(job, new Error('Claude API timeout'));
+      await flushPromises();
+
+      expect(mockStorageService.deleteObject).toHaveBeenCalledWith(
+        'submissions/user-abc/sub-123.jpg',
+      );
+    });
+
+    it('logs [OPS-ALERT] with submission ID on final failure', async () => {
+      const errorSpy = jest.spyOn(worker['logger'], 'error');
+      const job = makeFailedJob('sub-123', 4, 4);
+      capturedFailedHandler!(job, new Error('R2 unavailable'));
+      await flushPromises();
+
+      const alertCall = errorSpy.mock.calls.find(
+        call => typeof call[0] === 'string' && call[0].includes('[OPS-ALERT]') && call[0].includes('sub-123'),
+      );
+      expect(alertCall).toBeDefined();
+    });
+
+    it('does NOT trigger cleanup when there are retries remaining', async () => {
       const job = makeFailedJob('sub-123', 2, 4); // 2 of 4 attempts used
       capturedFailedHandler!(job, new Error('transient error'));
+      await flushPromises();
 
-      await Promise.resolve();
+      expect(mockPrismaService.submission.findUnique).not.toHaveBeenCalled();
+      expect(mockPrismaService.submission.update).not.toHaveBeenCalled();
+      expect(mockStorageService.deleteObject).not.toHaveBeenCalled();
+    });
+
+    it('logs DLQ depth [OPS-ALERT] when failed count exceeds threshold', async () => {
+      mockQueueGetFailedCount.mockResolvedValueOnce(11); // above threshold of 10
+      const errorSpy = jest.spyOn(worker['logger'], 'error');
+      const job = makeFailedJob('sub-123', 4, 4);
+      capturedFailedHandler!(job, new Error('DB timeout'));
+      await flushPromises();
+
+      const depthAlert = errorSpy.mock.calls.find(
+        call => typeof call[0] === 'string' && call[0].includes('[OPS-ALERT]') && call[0].includes('DLQ depth'),
+      );
+      expect(depthAlert).toBeDefined();
+    });
+
+    it('does NOT log DLQ depth alert when failed count is at or below threshold', async () => {
+      mockQueueGetFailedCount.mockResolvedValueOnce(10); // at threshold — no alert
+      const errorSpy = jest.spyOn(worker['logger'], 'error');
+      const job = makeFailedJob('sub-123', 4, 4);
+      capturedFailedHandler!(job, new Error('transient'));
+      await flushPromises();
+
+      const depthAlert = errorSpy.mock.calls.find(
+        call => typeof call[0] === 'string' && call[0].includes('DLQ depth'),
+      );
+      expect(depthAlert).toBeUndefined();
+    });
+
+    it('completes without throwing when R2 deletion fails', async () => {
+      mockStorageService.deleteObject.mockRejectedValueOnce(new Error('R2 down'));
+      const job = makeFailedJob('sub-123', 4, 4);
+
+      capturedFailedHandler!(job, new Error('pipeline error'));
+      await expect(flushPromises()).resolves.toBeUndefined();
+
+      // Still logs ops alert despite R2 failure
+      expect(mockPrismaService.submission.update).toHaveBeenCalled();
+    });
+
+    it('completes gracefully when submission is not found in DB', async () => {
+      mockPrismaService.submission.findUnique.mockResolvedValueOnce(null);
+      const job = makeFailedJob('sub-123', 4, 4);
+
+      capturedFailedHandler!(job, new Error('pipeline error'));
+      await expect(flushPromises()).resolves.toBeUndefined();
 
       expect(mockPrismaService.submission.update).not.toHaveBeenCalled();
+      expect(mockStorageService.deleteObject).not.toHaveBeenCalled();
+    });
+
+    it('skips R2 deletion when photo_r2_key is null', async () => {
+      mockPrismaService.submission.findUnique.mockResolvedValueOnce({
+        id: 'sub-123',
+        photo_r2_key: null,
+      });
+      const job = makeFailedJob('sub-123', 4, 4);
+      capturedFailedHandler!(job, new Error('pipeline error'));
+      await flushPromises();
+
+      expect(mockStorageService.deleteObject).not.toHaveBeenCalled();
+      // Status update still runs
+      expect(mockPrismaService.submission.update).toHaveBeenCalled();
     });
   });
 

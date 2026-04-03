@@ -27,6 +27,9 @@ const JOB_OPTIONS = {
   backoff: { type: 'custom' as const },
 } as const;
 
+// Alert when this many submissions are sitting in the dead-letter queue (failed state).
+const DLQ_DEPTH_ALERT_THRESHOLD = 10;
+
 @Injectable()
 export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PhotoPipelineWorker.name);
@@ -75,16 +78,14 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       const submissionId = job?.data?.submissionId ?? 'unknown';
       this.logger.error(`Photo pipeline job failed for submission ${submissionId}: ${err.message}`);
 
-      // GDPR: if all retries are exhausted, null GPS coords so they don't linger in the DB.
       const attemptsAllowed = job?.opts?.attempts ?? JOB_OPTIONS.attempts;
       if (job && (job.attemptsMade ?? 0) >= attemptsAllowed) {
-        this.prisma.submission
-          .update({ where: { id: submissionId }, data: { gps_lat: null, gps_lng: null } })
-          .catch((e: Error) =>
-            this.logger.error(
-              `Failed to null GPS on final failure for ${submissionId}: ${e.message}`,
-            ),
-          );
+        // Final failure — all retries exhausted. Clean up and alert ops.
+        this.handleFinalFailure(submissionId, err).catch((e: Error) =>
+          this.logger.error(
+            `Unhandled error in handleFinalFailure for ${submissionId}: ${e.message}`,
+          ),
+        );
       }
     });
 
@@ -509,6 +510,75 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     this.logger.log(
       `Submission ${submissionId}: verified — ${valid.length} price(s) accepted for station ${stationId}`,
     );
+  }
+
+  // ── Dead-letter queue cleanup ─────────────────────────────────────────────
+
+  /**
+   * Called when a job exhausts all BullMQ retries (final failure).
+   * - Updates submission to rejected + nulls GPS + nulls photo key
+   * - Deletes photo from R2 (best-effort)
+   * - Emits a structured ops alert log
+   * - Checks DLQ depth and alerts if threshold exceeded
+   */
+  private async handleFinalFailure(submissionId: string, err: Error): Promise<void> {
+    // Fetch current photo key before nulling it
+    const submission = await this.prisma.submission
+      .findUnique({
+        where: { id: submissionId },
+        select: { id: true, photo_r2_key: true },
+      })
+      .catch((e: Error) => {
+        this.logger.error(
+          `Failed to fetch submission ${submissionId} during DLQ cleanup: ${e.message}`,
+        );
+        return null;
+      });
+
+    if (!submission) return;
+
+    // Mark rejected + null GPS (GDPR) + null photo key atomically
+    await this.prisma.submission
+      .update({
+        where: { id: submissionId },
+        data: {
+          status: SubmissionStatus.rejected,
+          gps_lat: null,
+          gps_lng: null,
+          photo_r2_key: null,
+        },
+      })
+      .catch((e: Error) =>
+        this.logger.error(
+          `Failed to mark submission ${submissionId} rejected after DLQ entry: ${e.message}`,
+        ),
+      );
+
+    // Delete photo from R2 (best-effort)
+    if (submission.photo_r2_key) {
+      await this.storageService
+        .deleteObject(submission.photo_r2_key)
+        .catch((e: Error) =>
+          this.logger.error(
+            `Failed to delete R2 photo ${submission.photo_r2_key} for DLQ submission ${submissionId}: ${e.message}`,
+          ),
+        );
+    }
+
+    // Ops alert — structured log for monitoring / log-sink pickup
+    this.logger.error(
+      `[OPS-ALERT] Submission ${submissionId} moved to dead-letter queue after all retries exhausted. ` +
+        `Failure: ${err.message}`,
+    );
+
+    // DLQ depth check — alert if systemic issue (many concurrent failures)
+    const failedCount = await this.queue.getFailedCount().catch(() => -1);
+    if (failedCount > DLQ_DEPTH_ALERT_THRESHOLD) {
+      this.logger.error(
+        `[OPS-ALERT] DLQ depth ${failedCount} exceeds threshold ${DLQ_DEPTH_ALERT_THRESHOLD} — ` +
+          `possible systemic pipeline failure`,
+      );
+    }
   }
 
   private async rejectSubmission(

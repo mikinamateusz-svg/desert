@@ -159,6 +159,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       this.logger.error(
         `Submission ${submissionId}: no stationId after GPS matching — cannot validate prices`,
       );
+      await this.rejectSubmission(submission, 'no_station_id');
       return;
     }
     await this.runPriceValidationAndUpdate(submissionId, stationId);
@@ -438,6 +439,15 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       `Submission ${submissionId}: price validation — ${valid.length} valid, ${invalid.length} invalid`,
     );
 
+    // Log each out-of-band price for ops review (IG-1: structured log, 48h retention window)
+    for (const inv of invalid) {
+      this.logger.warn(
+        `Submission ${submissionId}: out-of-band price — ` +
+          `station=${stationId}, fuel_type=${inv.fuel_type}, ` +
+          `price=${inv.price_per_litre}, reason=${inv.reason}`,
+      );
+    }
+
     if (valid.length === 0) {
       await this.rejectSubmission(updated, 'price_validation_failed');
       return;
@@ -479,19 +489,22 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         );
     }
 
-    // Write price history + invalidate / rewrite Redis cache atomically
-    await this.priceService.setVerifiedPrice(stationId, priceRow);
+    // Write price history + invalidate / rewrite Redis cache (best-effort — DB fallback serves price on miss)
+    await this.priceService.setVerifiedPrice(stationId, priceRow).catch((err: Error) =>
+      this.logger.error(
+        `Failed to write price cache/history for station ${stationId}, submission ${submissionId}: ${err.message}`,
+      ),
+    );
 
-    // Clear staleness flags for each verified fuel type
-    for (const { fuel_type } of valid) {
-      await this.prisma.stationFuelStaleness
-        .deleteMany({ where: { station_id: stationId, fuel_type } })
-        .catch((err: Error) =>
-          this.logger.warn(
-            `Failed to clear staleness for ${stationId}/${fuel_type}: ${err.message}`,
-          ),
-        );
-    }
+    // Clear staleness flags for all verified fuel types in a single batch query (best-effort)
+    const validFuelTypes = valid.map(p => p.fuel_type);
+    await this.prisma.stationFuelStaleness
+      .deleteMany({ where: { station_id: stationId, fuel_type: { in: validFuelTypes } } })
+      .catch((err: Error) =>
+        this.logger.warn(
+          `Failed to clear staleness for station ${stationId}: ${err.message}`,
+        ),
+      );
 
     this.logger.log(
       `Submission ${submissionId}: verified — ${valid.length} price(s) accepted for station ${stationId}`,

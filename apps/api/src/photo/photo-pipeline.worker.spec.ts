@@ -1239,7 +1239,7 @@ describe('PhotoPipelineWorker', () => {
         );
       });
 
-      it('clears staleness flags for each validated fuel type', async () => {
+      it('clears staleness flags for all validated fuel types in a single batch query', async () => {
         setupHappyPath();
         mockPriceValidationService.validatePrices.mockResolvedValueOnce({
           valid: [
@@ -1251,11 +1251,23 @@ describe('PhotoPipelineWorker', () => {
 
         await capturedProcessor!(makeJob('sub-123'));
 
+        expect(mockPrismaService.stationFuelStaleness.deleteMany).toHaveBeenCalledTimes(1);
         expect(mockPrismaService.stationFuelStaleness.deleteMany).toHaveBeenCalledWith(
-          expect.objectContaining({ where: { station_id: nearbyStation.id, fuel_type: 'PB_95' } }),
+          expect.objectContaining({
+            where: { station_id: nearbyStation.id, fuel_type: { in: ['PB_95', 'ON'] } },
+          }),
         );
-        expect(mockPrismaService.stationFuelStaleness.deleteMany).toHaveBeenCalledWith(
-          expect.objectContaining({ where: { station_id: nearbyStation.id, fuel_type: 'ON' } }),
+      });
+
+      it('completes without throwing when setVerifiedPrice fails', async () => {
+        setupHappyPath();
+        mockPriceService.setVerifiedPrice.mockRejectedValueOnce(new Error('Redis unavailable'));
+
+        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+
+        // Submission is still marked verified despite cache/history write failure
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+          expect.objectContaining({ data: expect.objectContaining({ status: 'verified' }) }),
         );
       });
 
@@ -1357,6 +1369,32 @@ describe('PhotoPipelineWorker', () => {
         expect(mockPriceService.setVerifiedPrice).toHaveBeenCalledWith(
           'station-abc', // preselectedSubmission.station_id
           expect.anything(),
+        );
+      });
+    });
+
+    describe('out-of-band price logging — IG-1', () => {
+      it('logs a warning for each out-of-band price while still verifying valid prices', async () => {
+        setupHappyPath();
+        mockPriceValidationService.validatePrices.mockResolvedValueOnce({
+          valid: [{ fuel_type: 'PB_95', price_per_litre: 6.19, tier: 3 }],
+          invalid: [{ fuel_type: 'ON', price_per_litre: 99.0, reason: 'tier3_out_of_range: 4.0–12.0' }],
+        });
+        const warnSpy = jest.spyOn(worker['logger'], 'warn');
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        const outOfBandWarning = warnSpy.mock.calls.find(
+          call => typeof call[0] === 'string' && call[0].includes('out-of-band price'),
+        );
+        expect(outOfBandWarning).toBeDefined();
+        expect(outOfBandWarning![0]).toContain('fuel_type=ON');
+        expect(outOfBandWarning![0]).toContain('price=99');
+        expect(outOfBandWarning![0]).toContain('tier3_out_of_range');
+
+        // Valid price still goes through
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+          expect.objectContaining({ data: expect.objectContaining({ status: 'verified' }) }),
         );
       });
     });

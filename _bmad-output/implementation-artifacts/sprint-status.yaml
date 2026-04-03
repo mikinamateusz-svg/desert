@@ -544,9 +544,12 @@ epics:
       - id: 3.7
         title: Price Validation & Database Update
         file: 3-7-price-validation-database-update.md
-        status: review
+        status: done
         ready_date: 2026-04-03
         implemented_date: 2026-04-03
+        review_date: 2026-04-03
+        review_findings: "3 patch (P-1 setVerifiedPrice best-effort catch, P-2 !stationId guard calls rejectSubmission, P-3 batch staleness deleteMany), 1 intent_gap resolved as log-based ops review (IG-1 structured warn per out-of-band price — Story 4.2 updated), 3 deferred (D1 no rejection_reason column, D2 R2 orphan risk, D3 AdBlue dead code), 4 rejected as false positives"
+        patches_applied: "2026-04-03 — P-1/P-2/P-3/IG-1 all applied; 594 tests passing"
 
       - id: 3.8
         title: Pipeline Retry & Dead-Letter Queue

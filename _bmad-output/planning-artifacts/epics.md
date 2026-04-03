@@ -1731,6 +1731,15 @@ So that low-confidence or disputed prices don't pollute the public map.
 **When** an ADMIN uses the review queue
 **Then** the interface is available in Polish, English, and Ukrainian
 
+**Out-of-band price log review (Story 3.7 pipeline integration):**
+
+**Given** the pipeline has verified a submission but logged out-of-band price warnings
+**When** an ADMIN views the out-of-band price log panel
+**Then** they see a list of log entries each showing: submission ID, station, fuel type, submitted price, rejection reason (e.g. `tier1_out_of_band: 4.80–7.20` or `tier3_out_of_range: 4.00–12.00`), and timestamp
+**And** entries are surfaced within the 48-hour ops review window (log retention assumption)
+
+> **Implementation note (Story 3.7):** Out-of-band prices are not blocked from partial verification — valid prices in the same submission are published immediately. Only the out-of-band prices are dropped and logged via `logger.warn` with structured fields (submission_id, station_id, fuel_type, price, reason). This review panel reads those log entries. If log retention is extended beyond 48h in future, this AC should be revisited to consider a DB-backed flagging mechanism instead.
+
 *Covers: FR40, FR41*
 
 > **Note (implementation readiness):** Missing error-scenario ACs — add before this story is built. E.g. database write fails mid-approve/reject (submission status left inconsistent); two admins act on the same submission simultaneously (concurrent action); Redis cache invalidation fails after approval.

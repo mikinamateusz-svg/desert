@@ -205,6 +205,43 @@ Use `Prisma.sql` with `Prisma.join(fuelTypes)` for the IN clause.
 - `apps/api/src/photo/photo-pipeline.worker.spec.ts` (modified — Story 3.7 tests)
 - `_bmad-output/implementation-artifacts/3-7-price-validation-database-update.md` (new)
 
+## Review Findings (2026-04-03)
+
+**Reviewed by:** bmad-code-review (Blind Hunter + Edge Case Hunter + Acceptance Auditor)
+
+### Patches applied
+
+**P-1 — `setVerifiedPrice` failure best-effort (was: unhandled throw)**
+Wrapped `priceService.setVerifiedPrice` in `.catch()` — consistent with R2 deletion and staleness clearing. On failure, the submission remains `verified` in DB and the price is served from DB fallback on the next read (`findPricesInArea` has Redis fallback). History write inside `setVerifiedPrice` was already best-effort; only the Redis `setAtomic` call could throw.
+
+**P-2 — `!stationId` guard calls `rejectSubmission` instead of silently returning**
+Changed from log + return to `rejectSubmission(submission, 'no_station_id')` + return. Submission is now correctly terminated rather than left permanently `pending`. Guard is theoretically unreachable in normal flow (GPS invariants guarantee stationId) but defensive handling is correct.
+
+**P-3 — Staleness clearing batched into single `deleteMany`**
+Replaced per-fuel-type loop (`N` sequential DB queries) with a single `deleteMany` using `fuel_type: { in: validFuelTypes }`. One round-trip, atomic, same semantics.
+
+**IG-1 — Structured `logger.warn` per out-of-band price (replaces silent drop)**
+Added per-entry warning log after validation: `station=${stationId}, fuel_type=..., price=..., reason=...`. Out-of-band prices are not flagged for ops via a DB status change — valid prices in the same submission are published immediately. Ops review relies on log entries within the 48-hour retention window. Story 4.2 updated to surface these log entries in the admin review panel. See `epics.md` Story 4.2 for the ops review AC.
+
+### Deferred (not actionable in this story)
+
+**D1 — `rejection_reason` not persisted to DB**
+`rejectSubmission` logs the reason but does not write it to a `rejection_reason` column (no such column exists in schema). Consistent with how all other rejection reasons are handled in the codebase. Requires a schema migration to address. Deferred.
+
+**D2 — R2 deletion ordering (orphan risk on crash)**
+`photo_r2_key` is nulled in the DB update before the R2 object is deleted. A crash between these two operations leaves an orphaned R2 object with no DB pointer. Accepted best-effort behavior — consistent with existing pipeline. Deferred to ops tooling.
+
+**D3 — `AdBlue` in `ABSOLUTE_BANDS` but absent from OCR `VALID_FUEL_TYPES`**
+AdBlue cannot flow through the OCR step today. The band entry is dead code. Pre-existing OCR/validation constant mismatch. Deferred.
+
+### False positives
+
+- **Tier 1 non-fallthrough to Tier 3**: Correct per spec — Tier 3 only applies when no recent history exists. Not a bug.
+- **AC4 Tier 2 unconditional skip**: By design — Story 5.0 deferred. Dev Notes confirm this.
+- **AC5 Redis+DB atomicity**: AC5's "atomically" refers to Redis DEL+SETEX inside `setAtomic`, not cross-system transactionality. Not actionable.
+- **`setVerifiedPrice` per-fuel-type history**: Confirmed correct — `recordPrices` uses `Object.entries(data.prices).map(...)` → `createMany`. One row per fuel type.
+
 ## Change Log
 
 - 2026-04-03: Story 3.7 implemented. PriceValidationService (Tier 1 + Tier 3), worker integration, R2 cleanup, cache + history + staleness update. 592 tests passing.
+- 2026-04-03: Code review patches applied (P-1 setVerifiedPrice best-effort, P-2 !stationId rejectSubmission, P-3 batch staleness, IG-1 out-of-band logging). 594 tests passing.

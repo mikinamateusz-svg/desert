@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { detectLocale } from '../lib/i18n';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -6,13 +7,15 @@ export const metadata: Metadata = {
   description: 'desert ops admin panel',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await detectLocale();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body>{children}</body>
     </html>
   );

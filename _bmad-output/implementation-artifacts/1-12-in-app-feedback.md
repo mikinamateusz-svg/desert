@@ -1,6 +1,6 @@
 # Story 1.12: In-App Feedback & Feature Requests
 
-Status: review
+Status: done
 
 ## Story
 
@@ -766,3 +766,9 @@ All acceptance criteria pass. Security properties (no PII, no credential leak, J
 | 2026-03-24 | Story implemented — all 6 phases complete, 106/106 tests passing |
 | 2026-03-24 | Senior developer review completed — 3 patch, 2 deferred, 5 rejected |
 | 2026-03-24 | Review patches applied — P1-P3 all applied, 106/106 tests passing, tsc clean |
+
+## Review Notes (2026-04-04)
+
+1 patch applied. Prior review (2026-03-24) applied P1–P3.
+
+**P-3 (new):** `FeedbackController POST /v1/feedback` missing `@Roles()` — violates Story 1.5 AC6. Added `@Roles(...all 5 roles)`.

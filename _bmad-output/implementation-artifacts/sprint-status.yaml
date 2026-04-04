@@ -134,44 +134,49 @@ epics:
       - id: 1.9
         title: Personal Data Export
         file: 1-9-personal-data-export.md
-        status: review
-        ready_date: 2026-03-23
-        dev_completed: 2026-03-23
-        review_date: 2026-03-23
-        review_findings: "3 patch (F1 no rate limit on export endpoint, F2 controller test missing sendExportEmail assertion, F3 no exportMyData error-path test), 2 intent_gap (F4 photo_r2_key+expo_push_token GDPR completeness, F5 fleet_id/shadow_banned/deletion_reason omitted), 3 deferred, 2 rejected"
-        patches_applied: "2026-03-23 — F1-F3 all applied, 81/81 tests passing"
+        status: done
+        review_date: "2026-04-04"
+        review_findings:
+          - "Prior (2026-03-23): F1 rate limit, F2 sendExportEmail assertion, F3 error-path test — all patched"
+          - "No new findings. @Roles() on POST /v1/me/export covered by 1.8 review patch"
+          - "D1: photo_r2_key + expo_push_token excluded from export — GDPR gap, deferred"
+          - "D2: shadow_rejected visible in export — correct transparency per GDPR, intentional"
+        patches_applied:
+          - "2026-03-23 — F1–F3 applied, 81/81 tests passing"
 
       - id: 1.10
         title: Consent Management
         file: 1-10-consent-management.md
-        status: review
-        ready_date: 2026-03-23
-        dev_completed: 2026-03-23
-        review_date: 2026-03-23
-        review_findings: "3 patch (P1 hardcoded Retry string not i18n'd, P2 hardcoded CORE_SERVICE in withdraw handler — extensibility regression risk, P3 Apple existing-user test missing not.toHaveBeenCalled assertion), 3 deferred, 1 rejected"
-        patches_applied: "2026-03-23 — P1-P3 all applied, 95/95 tests passing"
+        status: done
+        review_date: "2026-04-04"
+        review_findings:
+          - "Prior (2026-03-23): P1 hardcoded Retry i18n, P2 CORE_SERVICE extensibility, P3 Apple test — all patched"
+          - "No new findings. @Roles() on /v1/me/consents endpoints covered by 1.8 review patch"
+        patches_applied:
+          - "2026-03-23 — P1–P3 applied, 95/95 tests passing"
 
       - id: 1.11
         title: Internationalisation (i18n) Foundation
         file: 1-11-i18n-foundation.md
-        status: review
-        ready_date: 2026-03-23
-        dev_started: 2026-03-24
-        dev_completed: 2026-03-24
-        review_date: 2026-03-24
-        review_findings: "3 patch (P1 AsyncStorage failure in initI18n causes permanent spinner, P2 silent changeLanguage persistence failure, P3 double-init not guarded for StrictMode/New Arch), 2 deferred (D1 pre-existing 'Guest' hardcoded string, D2 undocumented privacy-settings change)"
-        patches_applied: "2026-03-24 — P1-P3 all applied, 95/95 tests passing"
+        status: done
+        review_date: "2026-04-04"
+        review_findings:
+          - "Prior (2026-03-24): P1 AsyncStorage spinner, P2 silent persistence, P3 double-init — all patched"
+          - "No new findings. Mobile-only story."
+        patches_applied:
+          - "2026-03-24 — P1–P3 applied, 95/95 tests passing"
 
       - id: 1.12
         title: In-App Feedback & Feature Requests
         file: 1-12-in-app-feedback.md
-        status: review
-        ready_date: 2026-03-24
-        dev_started: 2026-03-24
-        dev_completed: 2026-03-24
-        review_date: 2026-03-24
-        review_findings: "3 patch (P1 DTO app_version/os missing MinLength(1), P2 no fetch timeout on Slack webhook, P3 guest silent no-op on Send tap — button not disabled when !accessToken), 2 deferred (D1 ThrottlerGuard not registered pre-existing, D2 whitespace-only message passes MinLength), 5 rejected"
-        patches_applied: "2026-03-24 — P1-P3 all applied, 106/106 tests passing, tsc clean"
+        status: done
+        review_date: "2026-04-04"
+        review_findings:
+          - "Prior (2026-03-24): P1 DTO MinLength, P2 fetch timeout, P3 guest button — all patched"
+          - "P-3 (new): FeedbackController POST /v1/feedback missing @Roles() — violates 1.5 AC6"
+        patches_applied:
+          - "2026-03-24 — P1–P3 applied, 106/106 tests passing"
+          - "apps/api/src/feedback/feedback.controller.ts: add @Roles(...ALL_ROLES)"
 
   - id: ui
     name: UI Polish & Design System

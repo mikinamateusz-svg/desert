@@ -1,6 +1,6 @@
 # Story 1.11: Internationalisation (i18n) Foundation
 
-Status: review
+Status: done
 
 ## Story
 
@@ -703,3 +703,7 @@ No `verbatimModuleSyntax` violations introduced.
 | 2026-03-24 | Story implemented: async initI18n(), changeLanguage(), language selector on Account screen, map.* + fuelTypes.* + account.language.* i18n keys, hardcoded strings migrated, redundant i18n imports removed. All tasks complete. |
 | 2026-03-24 | Senior Developer Review (AI): 3 patch findings (P1 AsyncStorage error → permanent spinner, P2 silent changeLanguage failure, P3 double-init guard missing), 2 deferred (D1 pre-existing 'Guest' string, D2 undocumented privacy-settings change). |
 | 2026-03-24 | Review patches P1-P3 applied: try/catch on AsyncStorage.getItem in initI18n (P1), try/catch + console.warn on AsyncStorage.setItem in changeLanguage (P2), if (i18n.isInitialized) return guard in initI18n (P3). tsc --noEmit clean, 95/95 tests pass. Status → review. |
+
+## Review Notes (2026-04-04)
+
+No new patches. Prior review (2026-03-24) applied P1–P3. Story is mobile-only — no @Roles() concern.

@@ -1,6 +1,6 @@
 # Story 1.10: Consent Management
 
-Status: review
+Status: done
 
 ## Story
 
@@ -805,3 +805,11 @@ The implementation is correct in all security-critical areas: ConsentType valida
 - [x] **P1** — Retry button i18n: replaced hardcoded `'Retry'` with `{t('privacy.retryButton')}`; added `retryButton: 'Retry'` to `en.ts`, `retryButton: 'Spróbuj ponownie'` to `pl.ts`, `retryButton: 'Спробувати знову'` to `uk.ts`
 - [x] **P2** — Withdraw handler parameterised: `handleWithdrawPress(type: string)` and `handleWithdraw(type: string)` now accept and forward the type; call site updated to `onPress={() => handleWithdrawPress(consent.type)}`
 - [x] **P3** — Apple returning-user test: added `expect(mockUserService.createCoreServiceConsent).not.toHaveBeenCalled()` to "should find existing user on returning sign-in (fullName is null)" test in `auth.service.spec.ts`
+
+## Review Notes (2026-04-04)
+
+No new patches. Prior review (2026-03-23) applied P1–P3. `@Roles()` on GET /v1/me/consents and POST /v1/me/consents/:type/withdraw covered by Story 1.8 re-review patch.
+
+**D1 (carried):** `withdrawConsent` uses `updateMany` — silently no-ops if consent not found. Intentional soft-delete semantics.
+
+**D2 (carried):** `CORE_SERVICE` hardcoded in `createCoreServiceConsent` — acceptable for MVP. Extensibility concern deferred.

@@ -1,6 +1,6 @@
 # Story 1.9: Personal Data Export
 
-Status: review
+Status: done
 
 ## Story
 
@@ -540,3 +540,11 @@ None — implementation completed without issues.
 - `apps/mobile/src/i18n/locales/en.ts` — added 4 `account.exportData*` keys
 - `apps/mobile/src/i18n/locales/pl.ts` — added 4 `account.exportData*` keys
 - `apps/mobile/src/i18n/locales/uk.ts` — added 4 `account.exportData*` keys
+
+## Review Notes (2026-04-04)
+
+No new patches. Prior review (2026-03-23) applied F1–F3 patches (rate limit, controller test, error-path test). `@Roles()` missing on `POST /v1/me/export` patched as part of Story 1.8 re-review (user.controller.ts covers all /v1/me/* endpoints).
+
+**D1 (carried from prior review):** `photo_r2_key` and `expo_push_token` excluded from export — arguable GDPR gap. Accepted for MVP; revisit before App Store submission.
+
+**D2 (carried):** `shadow_rejected` status exposed in GDPR export — correct transparency (user has right to know their actual data), but reveals shadow ban system. Intentional design decision.

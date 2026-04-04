@@ -32,7 +32,16 @@ epics:
       - id: 1.1
         title: Driver Email/Password Registration & Login
         file: 1-1-driver-email-password-registration-login.md
-        status: review
+        status: done
+        review_date: "2026-04-04"
+        review_findings:
+          - "P-1: register/login/googleSignIn/appleSignIn all returned full User object (shadow_banned, supertokens_id, trust_score leaked) — stripped to safe fields"
+          - "D1: No mid-session token refresh on mobile — post-MVP"
+          - "D2: DB query on every authenticated request in JwtAuthGuard — acceptable for MVP"
+          - "D3: register() missing P2002 guard — theoretically impossible, logged only"
+          - "Note: login findUniqueOrThrow, JwtAuthGuard Logger, getMe safe fields already fixed in 8689ebb"
+        patches_applied:
+          - "apps/api/src/auth/auth.service.ts: strip sensitive fields from all 4 auth response return values"
 
       - id: 1.2
         title: Google Sign-In

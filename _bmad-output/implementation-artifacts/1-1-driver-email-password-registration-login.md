@@ -1,6 +1,6 @@
 # Story 1.1: Driver Email/Password Registration & Login
 
-Status: review
+Status: done
 
 ## Story
 
@@ -597,3 +597,16 @@ claude-sonnet-4-6
 - `apps/mobile/app/(auth)/register.tsx` — registration screen
 - `apps/mobile/app/(app)/_layout.tsx` — protected app layout (redirects to login if not authenticated)
 - `apps/mobile/app/(app)/index.tsx` — map placeholder screen with sign-out
+
+## Review Patches (2026-04-04)
+
+### P-1 Applied — Auth responses no longer leak sensitive User fields
+`apps/api/src/auth/auth.service.ts`: All four auth methods (`register`, `login`, `googleSignIn`, `appleSignIn`) were returning the full Prisma `User` object including `shadow_banned`, `supertokens_id`, `trust_score`, `deleted_at`, `deletion_reason`. These fields are now stripped at the return point — only `{ id, email, display_name, role }` is returned, consistent with `GET /me`.
+
+**Note:** Several other issues (login `findUniqueOrThrow` → `findUnique` + null guard, `Logger` in `JwtAuthGuard`, safe `getMe()` fields) were already fixed in commit `8689ebb` prior to this formal review.
+
+## Review Deferred Items (2026-04-04)
+
+- **D1**: No mid-session token refresh on mobile. SuperTokens access tokens expire (~1hr); after expiry, API calls return 401 with `WRONG_CREDENTIALS` error which is misleading. Post-MVP: add token refresh or re-login prompt.
+- **D2**: `JwtAuthGuard` does a DB query on every authenticated request (loads full User for shadow-ban/deletion checks). Acceptable for MVP; consider caching at scale.
+- **D3**: `register()` has no P2002 (unique constraint) guard for concurrent duplicate email. Theoretically impossible since SuperTokens checks email uniqueness first; log only.

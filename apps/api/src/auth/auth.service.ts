@@ -62,7 +62,8 @@ export class AuthService {
       { userId: user.id, role: user.role },
     );
 
-    return { user, accessToken: session.getAccessToken() };
+    const { id, email: userEmail, display_name, role } = user;
+    return { user: { id, email: userEmail, display_name, role }, accessToken: session.getAccessToken() };
   }
 
   async login(email: string, password: string) {
@@ -98,7 +99,8 @@ export class AuthService {
       { userId: user.id, role: user.role },
     );
 
-    return { user, accessToken: session.getAccessToken() };
+    const { id, email: safeEmail, display_name, role } = user;
+    return { user: { id, email: safeEmail, display_name, role }, accessToken: session.getAccessToken() };
   }
 
   async logout(sessionHandle: string) {
@@ -220,7 +222,8 @@ export class AuthService {
       { userId: user.id, role: user.role },
     );
 
-    return { user, accessToken: session.getAccessToken() };
+    const { id, email: safeEmail, display_name, role } = user;
+    return { user: { id, email: safeEmail, display_name, role }, accessToken: session.getAccessToken() };
   }
 
   async appleSignIn(
@@ -335,6 +338,7 @@ export class AuthService {
       { userId: user.id, role: user.role },
     );
 
-    return { user, accessToken: session.getAccessToken() };
+    const { id, email: safeEmail, display_name, role } = user;
+    return { user: { id, email: safeEmail, display_name, role }, accessToken: session.getAccessToken() };
   }
 }

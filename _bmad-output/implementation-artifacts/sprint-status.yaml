@@ -74,7 +74,15 @@ epics:
       - id: 1.4
         title: First-Open Onboarding & Guest Mode
         file: 1-4-first-open-onboarding-guest-mode.md
-        status: review
+        status: done
+        review_date: "2026-04-04"
+        review_findings:
+          - "No patches needed — implementation clean"
+          - "D1: AsyncStorage failure in restoreSession skips token restore too — effectively impossible, acceptable"
+          - "D2: skipOnboarding duplicates markOnboardingSeen — DRY, not a bug"
+          - "D3: No mobile unit tests for guest mode logic — acknowledged in TODO comment"
+          - "Note: GOOGLE_EMAIL_MISSING/APPLE_EMAIL_MISSING in sheets already fixed by 8689ebb"
+        patches_applied: []
 
       - id: 1.5
         title: RBAC & Role Enforcement

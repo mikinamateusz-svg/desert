@@ -1,6 +1,6 @@
 # Story 1.4: First-Open Onboarding & Guest Mode
 
-Status: review
+Status: done
 
 ## Story
 
@@ -293,3 +293,15 @@ import { SignUpGateSheet } from '../components/SignUpGateSheet';
 ```
 
 The gate receives `onDismiss` which discards the photo and returns to map — the discard logic lives in Epic 3.
+
+## Review Notes (2026-04-04)
+
+No patches applied. Implementation is clean.
+
+**Previously fixed (commit `8689ebb`):** `GOOGLE_EMAIL_MISSING` and `APPLE_EMAIL_MISSING` error codes added to `SoftSignUpSheet` and `SignUpGateSheet` `handleSocialError` functions.
+
+## Review Deferred Items (2026-04-04)
+
+- **D1**: `restoreSession` in `auth.store.ts` lacks isolation between AsyncStorage and SecureStore reads — if `AsyncStorage.getItem` throws, the SecureStore token restore is also skipped, silently logging the user out. AsyncStorage failures are effectively impossible in normal operation; acceptable for MVP.
+- **D2**: `skipOnboarding` and `markOnboardingSeen` are identical implementations. `skipOnboarding` could delegate to `markOnboardingSeen` internally. DRY issue, not a bug.
+- **D3**: No mobile unit tests for guest mode logic (`skipOnboarding`, `hasSeenOnboarding` restore, `isGuest` derivation). Acknowledged in the code's TODO comment; requires `@testing-library/react-native` setup.

@@ -1,6 +1,6 @@
 # Story 1.8: Account Deletion & Right to Erasure
 
-Status: review
+Status: done
 
 ## Story
 
@@ -842,3 +842,9 @@ All keys present and consumed. `successMessage` displayed via `Alert.alert` on s
 | 2026-03-23 | claude-sonnet-4-6 | Implemented Story 1.8 — all tasks complete, 66/66 tests passing |
 | 2026-03-23 | claude-sonnet-4-6 (reviewer) | Code review complete — 4 patch findings (P1 missing 401 test, P2 dead successMessage, P3 silent null accessToken, P4 missing KeyboardAvoidingView), 1 deferred, 1 rejected |
 | 2026-03-23 | claude-sonnet-4-6 | Applied all 4 review patches (P1–P4) — 67/67 tests passing; story promoted to review |
+
+## Review Notes (2026-04-04)
+
+Prior review (2026-03-23) applied P1–P4 patches. One new finding on re-review:
+
+**P-3 (new):** `UserController` (`DELETE /v1/me`) missing `@Roles()` — violates Story 1.5 AC6. Endpoint also has `GET /v1/me/consents`, `POST /v1/me/consents/:type/withdraw`, `POST /v1/me/export` (added by stories 1.9–1.10) all missing `@Roles()`. All patched now with `@Roles(...ALL_ROLES)` covering all 5 role types.

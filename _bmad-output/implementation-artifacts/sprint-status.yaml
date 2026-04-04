@@ -122,10 +122,14 @@ epics:
       - id: 1.8
         title: Account Deletion & Right to Erasure
         file: 1-8-account-deletion-right-to-erasure.md
-        status: review
-        review_date: 2026-03-23
-        review_findings: "4 patch (P1 missing 401 test, P2 dead successMessage no toast, P3 silent null accessToken, P4 no KeyboardAvoidingView), 1 deferred, 1 rejected"
-        patches_applied: "2026-03-23 — P1-P4 all applied, 67/67 tests passing"
+        status: done
+        review_date: "2026-04-04"
+        review_findings:
+          - "Prior (2026-03-23): P1 missing 401 test, P2 dead successMessage, P3 silent null accessToken, P4 no KeyboardAvoidingView — all patched"
+          - "P-3 (new): UserController DELETE /v1/me missing @Roles() — violates 1.5 AC6; also caught /v1/me/consents and /v1/me/export endpoints from later stories"
+        patches_applied:
+          - "2026-03-23 — P1–P4 applied, 67/67 tests passing"
+          - "apps/api/src/user/user.controller.ts: add @Roles(...ALL_ROLES) to all 4 endpoints"
 
       - id: 1.9
         title: Personal Data Export

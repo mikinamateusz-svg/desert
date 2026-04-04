@@ -1,6 +1,6 @@
 # Story 3.8: Pipeline Retry & Dead-Letter Queue
 
-## Status: review
+## Status: done
 
 ## Story
 
@@ -164,3 +164,7 @@ For intermediate failure: `job.attemptsMade = 2` → guard should NOT trigger cl
 ## Change Log
 
 - 2026-04-03: Story 3.8 created and implementation started.
+
+## Review Notes (2026-04-04)
+
+No new patches. Prior review (2026-04-03) applied P-1/P-2/P-3. 604/604 tests passing.

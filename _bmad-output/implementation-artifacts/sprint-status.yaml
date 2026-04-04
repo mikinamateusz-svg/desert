@@ -97,7 +97,13 @@ epics:
       - id: 1.6
         title: Submission History
         file: 1-6-submission-history.md
-        status: review
+        status: done
+        review_date: "2026-04-04"
+        review_findings:
+          - "P-1 (fixed externally): FUEL_TYPE_KEYS used lowercase keys (petrol_95, diesel) never matching stored uppercase values (PB_95, ON); missing ON_PREMIUM — fixed in e56aa9a (UI polish) via i18n"
+          - "D1: ApiError class duplicated in submissions.ts and auth.ts — DRY issue, not a bug"
+          - "D2: GET /v1/submissions restricted to DRIVER role only — admins cannot use it; acceptable for MVP"
+        patches_applied: []
 
       - id: 1.7
         title: Notification Preferences

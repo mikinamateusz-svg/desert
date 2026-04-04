@@ -1,6 +1,6 @@
 # Story 1.6: Submission History
 
-Status: review
+Status: done
 
 ## Story
 
@@ -486,3 +486,13 @@ Run `pnpm --filter api test` to confirm all 39+ tests pass after implementation.
 - Push notification for submission outcome (explicitly excluded per architecture Decision 4)
 - The Alerts tab screen (placeholder only)
 - The full Account tab screen (placeholder with sign-out button is sufficient)
+
+## Review Notes (2026-04-04)
+
+No patches applied. One P-1 bug found but already fixed in a later commit.
+
+**P-1 (fixed in e56aa9a):** `FUEL_TYPE_KEYS` in `activity.tsx` used lowercase keys (`petrol_95`, `diesel`) that never matched stored uppercase values (`PB_95`, `ON`). Also missing `ON_PREMIUM`. The `formatFuelType` fallback `?? fuelType` meant users always saw raw codes. Fixed in commit `e56aa9a` (UI polish) which replaced the mapping with i18n (`t('fuelTypes.${p.fuel_type}', { defaultValue: p.fuel_type })`).
+
+**D1:** `ApiError` class is duplicated between `apps/mobile/src/api/submissions.ts` and `apps/mobile/src/api/auth.ts`. DRY issue, not a bug — acceptable for MVP. Extract to shared `apps/mobile/src/api/client.ts` in a future cleanup.
+
+**D2:** `@Roles(UserRole.DRIVER)` limits `GET /v1/submissions` to drivers only. Admins/fleet managers cannot query their own submissions via this endpoint. Acceptable for MVP scope; admin views come in a future epic.

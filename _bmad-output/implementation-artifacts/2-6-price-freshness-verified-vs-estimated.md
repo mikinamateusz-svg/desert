@@ -1,6 +1,6 @@
 # Story 2.6: Price Freshness & Verified vs Estimated Display
 
-Status: review
+Status: done
 
 ## Story
 
@@ -363,3 +363,7 @@ Freshness band thresholds (derived from `updatedAt`):
   with `~` prefix; range format (`~6.40–6.70`) requires Story 2.7 + 2.12
 - **`pump_meter` source type** — added with Epic 3 fill-up submission flow
 - **Map pin freshness indicator** — separate story; detail sheet is the primary freshness surface
+
+## Review Notes (2026-04-04)
+
+No new patches. Prior review applied all patches — see sprint-status.yaml for details.

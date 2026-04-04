@@ -1,6 +1,6 @@
 # Story 2.7: ORLEN Rack Price Ingestion
 
-Status: review
+Status: done
 
 ## Story
 
@@ -210,3 +210,7 @@ from day one makes staleness detection meaningful and estimated ranges accurate.
 - **`PLN_PER_LITRE_MAX = 15.0` kills ingestion on extreme price spikes** — if wholesale rack
   price ever exceeds 15 PLN/l the plausibility check throws and both BullMQ retry attempts
   fail; distinguish from real API outage before investigating.
+
+## Review Notes (2026-04-04)
+
+No new patches. Prior review applied all patches — see sprint-status.yaml for details.

@@ -242,3 +242,7 @@ interface RegionalAverageResponseDto {
 
 - **D1 — `price` stored as Float (IEEE 754) instead of Decimal:** Floating-point accumulation errors in AVG(). Consistent with rest of codebase (MarketSignal.value, submission price_data all use Float). Requires a wider migration to change. Pre-existing issue, not caused by this story.
 
+
+## Review Notes (2026-04-04)
+
+No new patches. Prior review applied all patches — see sprint-status.yaml for details.

@@ -1,6 +1,6 @@
 # Story 2.5: Station Detail Screen
 
-Status: review
+Status: done
 
 ## Story
 
@@ -282,3 +282,7 @@ The contribution flow will be added when Epic 3 is picked up.
 - **Verified vs estimated price badges** — Story 2.6.
 - **AdBlue** — Story 2.7.
 - **Analytics event `station_detail_viewed`** — separate analytics story.
+
+## Review Notes (2026-04-04)
+
+No new patches. Prior review applied all patches — see sprint-status.yaml for details.

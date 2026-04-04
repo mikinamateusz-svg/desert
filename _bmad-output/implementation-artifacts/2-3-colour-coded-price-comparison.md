@@ -1,6 +1,6 @@
 # Story 2.3: Colour-Coded Price Comparison
 
-Status: review
+Status: done
 
 ## Story
 
@@ -476,3 +476,7 @@ claude-sonnet-4-6
 - 2026-03-25: Story created
 - 2026-03-25: Implementation complete — Phase 1-5 all done, 188/188 tests passing
 - 2026-03-25: Code review patches P1-P4 applied — updatedAt safe Date cast, NaN guard in priceColor, useNearbyPrices loading reset on early-return, pricesError wired to error banner
+
+## Review Notes (2026-04-04)
+
+No new patches. Prior review applied all patches — see sprint-status.yaml for details.

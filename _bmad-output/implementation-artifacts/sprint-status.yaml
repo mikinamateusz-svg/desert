@@ -269,7 +269,7 @@ epics:
       - id: 2.1
         title: Station Database & Google Places Sync
         file: 2-1-station-database-google-places-sync.md
-        status: review
+        status: done
         ready_date: 2026-03-24
         dev_started: 2026-03-24
         dev_completed: 2026-03-24
@@ -280,7 +280,7 @@ epics:
       - id: 2.2
         title: Mobile Map View with Station Pins
         file: 2-2-mobile-map-view-station-pins.md
-        status: review
+        status: done
         ready_date: 2026-03-24
         dev_started: 2026-03-24
         dev_completed: 2026-03-24
@@ -291,7 +291,7 @@ epics:
       - id: 2.3
         title: Colour-Coded Price Comparison
         file: 2-3-colour-coded-price-comparison.md
-        status: review
+        status: done
         ready_date: 2026-03-25
         dev_started: 2026-03-25
         dev_completed: 2026-03-25
@@ -302,7 +302,7 @@ epics:
       - id: 2.4
         title: Fuel Type Filtering — Persistence & First-Launch Default
         file: 2-4-fuel-type-filtering.md
-        status: review
+        status: done
         ready_date: 2026-03-26
         dev_started: 2026-03-26
         dev_completed: 2026-03-26
@@ -314,7 +314,7 @@ epics:
       - id: 2.5
         title: Station Detail Screen
         file: 2-5-station-detail-screen.md
-        status: review
+        status: done
         ready_date: 2026-03-26
         dev_started: 2026-03-26
         dev_completed: 2026-03-26
@@ -326,7 +326,7 @@ epics:
       - id: 2.6
         title: Price Freshness & Verified vs Estimated Display
         file: 2-6-price-freshness-verified-vs-estimated.md
-        status: review
+        status: done
         ready_date: 2026-03-26
         dev_started: 2026-03-26
         dev_completed: 2026-03-26
@@ -337,7 +337,7 @@ epics:
       - id: 2.7
         title: ORLEN Rack Price Ingestion
         file: 2-7-orlen-rack-price-ingestion.md
-        status: review
+        status: done
         ready_date: 2026-03-26
         dev_started: 2026-03-26
         dev_completed: 2026-03-26
@@ -348,7 +348,7 @@ epics:
       - id: 2.8
         title: Price Staleness Auto-Detection
         file: 2-8-price-staleness-auto-detection.md
-        status: review
+        status: done
         ready_date: 2026-03-26
         dev_started: 2026-03-26
         dev_completed: 2026-03-26
@@ -359,7 +359,7 @@ epics:
       - id: 2.9
         title: Redis Price Cache
         file: 2-9-redis-price-cache.md
-        status: review
+        status: done
         ready_date: 2026-03-26
         dev_started: 2026-03-26
         dev_completed: 2026-03-26
@@ -375,7 +375,7 @@ epics:
       - id: 2.11
         title: Price History & Regional Aggregations
         file: 2-11-price-history-regional-aggregations.md
-        status: review
+        status: done
         dev_started: 2026-03-28
         dev_completed: 2026-03-28
         review_date: 2026-03-28
@@ -385,7 +385,7 @@ epics:
       - id: 2.12
         title: Rack-Derived Estimated Price Range (Cold Start)
         file: 2-12-rack-derived-estimated-price-range.md
-        status: review
+        status: done
         ready_date: 2026-03-27
         dev_started: 2026-03-27
         dev_completed: 2026-03-27
@@ -410,7 +410,7 @@ epics:
       - id: web-1
         title: Web Layout Shell — Navbar, Footer, i18n Routing
         file: web-stories.md
-        status: review
+        status: done
         dev_started: 2026-03-28
         dev_completed: 2026-03-28
         review_date: 2026-03-28
@@ -420,7 +420,7 @@ epics:
       - id: web-2
         title: Station Detail Page
         file: web-stories.md
-        status: review
+        status: done
         dev_started: 2026-03-28
         dev_completed: 2026-03-28
         review_date: 2026-03-28
@@ -439,7 +439,7 @@ epics:
       - id: web-3
         title: Content Pages — About, Contact, Legal
         file: web-stories.md
-        status: review
+        status: done
         dev_started: 2026-03-28
         dev_completed: 2026-03-28
         review_date: 2026-03-28
@@ -449,7 +449,7 @@ epics:
       - id: web-4
         title: Ad Slot Infrastructure
         file: web-stories.md
-        status: review
+        status: done
         dev_started: 2026-03-28
         dev_completed: 2026-03-28
         review_date: 2026-03-28

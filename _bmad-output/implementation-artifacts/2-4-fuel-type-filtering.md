@@ -1,6 +1,6 @@
 # Story 2.4: Fuel Type Filtering — Persistence & First-Launch Default
 
-Status: review
+Status: done
 
 ## Story
 
@@ -190,3 +190,7 @@ Adding it requires:
 
 Suggested: handle in Story 2.7 (ORLEN rack price ingestion), which will need to extend the
 fuel taxonomy anyway. At that point, add AdBlue to the picker and pills simultaneously.
+
+## Review Notes (2026-04-04)
+
+No new patches. Prior review applied all patches — see sprint-status.yaml for details.

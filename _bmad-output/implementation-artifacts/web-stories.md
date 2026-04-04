@@ -7,7 +7,7 @@
 
 ## Story web-1 — Layout Shell: Navbar, Footer, i18n Routing
 
-**Status:** review
+**Status:** done
 **Created:** 2026-03-28
 
 ### User Story
@@ -72,7 +72,7 @@ So that I can easily explore the site, switch language, and find legal/contact i
 
 ## Story web-2 — Station Detail Page
 
-**Status:** review
+**Status:** done
 **Created:** 2026-03-28
 
 ### User Story
@@ -138,7 +138,7 @@ So that I can share a link to a specific station and search engines can index pe
 
 ## Story web-3 — Content Pages: About, Contact, Pricing, Legal
 
-**Status:** review
+**Status:** done
 **Created:** 2026-03-28
 
 ### User Story
@@ -207,7 +207,7 @@ app/uk/about/page.tsx                   ← <AboutPageContent locale="uk" t={tra
 
 ## Story web-4 — Ad Slot Infrastructure
 
-**Status:** review
+**Status:** done
 **Created:** 2026-03-28
 
 ### User Story

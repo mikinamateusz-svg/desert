@@ -1,6 +1,6 @@
 # Story 2.2: Mobile Map View with Station Pins
 
-Status: review
+Status: done
 
 ## Story
 
@@ -379,3 +379,9 @@ claude-sonnet-4-6
 ### Change Log
 
 - 2026-03-24: Story 2.2 implemented — Mapbox map screen with GPS centering, ShapeSource+CircleLayer station pins, `useLocation`+`useNearbyStations` hooks, offline AsyncStorage cache, `GET /v1/stations/nearby` API endpoint. 162/162 API tests passing, mobile tsc clean.
+
+## Review Notes (2026-04-04)
+
+No new patches. Prior review (2026-03-25) applied P1–P4.
+
+**Design decision override:** Prior review logged F1 as intent gap — "spec says no pins for guests." This has been reversed. The station endpoint is `@Public()` (made public in Story 2.10 for SSR), and Story 1.4's value proposition ("explore fuel prices before registering") requires guests to see pins. The `!accessToken` gate in `useNearbyStations` and non-optional `accessToken` in `apiGetNearbyStations` were removed in the UI-5 re-review patch (commit 94a201b). Guests now see full station data — intentional per product decision.

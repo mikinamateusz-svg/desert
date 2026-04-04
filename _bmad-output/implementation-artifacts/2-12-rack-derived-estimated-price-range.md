@@ -1,6 +1,6 @@
 # Story 2.12: Rack-Derived Estimated Price Range (Cold Start)
 
-Status: in-progress
+Status: done
 
 ## Story
 
@@ -338,3 +338,7 @@ claude-sonnet-4-6
 ## Change Log
 
 - 2026-03-27: Story 2.12 created from epics spec, dev started.
+
+## Review Notes (2026-04-04)
+
+No new patches. Prior review applied P2a, P2b, P3, D3, D4 — see sprint-status.yaml for details.

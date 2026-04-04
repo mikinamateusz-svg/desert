@@ -1,7 +1,7 @@
 # Story 2.9 — Redis Price Cache
 
 ## Status
-review
+done
 
 ## Story
 As a **developer**,
@@ -118,3 +118,7 @@ _empty_
 
 ## Change Log
 - 2026-03-26: Story 2.9 implemented — Redis per-station price cache with read-through, 24h TTL, atomic verified-price writes, and DB fallback on Redis unavailability.
+
+## Review Notes (2026-04-04)
+
+No new patches. Prior review applied P1–P2 — see sprint-status.yaml for details.

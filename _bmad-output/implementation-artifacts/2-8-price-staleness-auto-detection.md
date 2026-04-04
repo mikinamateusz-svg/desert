@@ -1,6 +1,6 @@
 # Story 2.8: Price Staleness Auto-Detection
 
-Status: review
+Status: done
 
 ## Story
 
@@ -319,3 +319,7 @@ freshness signal. The `significant_movement` flag written by Story 2.7 is the pr
 ### Change Log
 
 - 2026-03-26 — Story 2.8 implemented: `StationFuelStaleness` schema + migration, `StalenessDetectionService`, `StalenessDetectionWorker`, 34 new tests (265 total), tsc clean.
+
+## Review Notes (2026-04-04)
+
+No new patches. Prior review applied all patches — see sprint-status.yaml for details.

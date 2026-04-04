@@ -1,6 +1,6 @@
 # Story 2.1: Station Database & Google Places Sync
 
-Status: review
+Status: done
 
 ## Story
 
@@ -789,3 +789,7 @@ claude-sonnet-4-6
 
 - 2026-03-24: Story 2.1 implemented — Station DB schema with PostGIS, Google Places sync worker, BullMQ weekly cron, 141/141 tests passing, tsc clean.
 - 2026-03-24: Code review patches P1–P7 applied — per-point isolation, 25km grid, inter-grid delay, geometry null guard, dedicated Redis connection, defaultJobOptions. 145/145 tests passing, tsc clean.
+
+## Review Notes (2026-04-04)
+
+No new patches. Prior review applied all patches — see sprint-status.yaml for details.

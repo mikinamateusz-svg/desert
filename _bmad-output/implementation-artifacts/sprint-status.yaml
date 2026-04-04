@@ -17,7 +17,17 @@ epics:
       - id: 1.0b
         title: Infrastructure Provisioning & CI/CD Pipeline
         file: 1-0b-infrastructure-provisioning-cicd-pipeline.md
-        status: review
+        status: done
+        review_date: "2026-04-04"
+        review_findings:
+          - "P-1: startCommand in railway.toml overrides Dockerfile CMD — preDeployCommand fix already applied in commit a278c33 post-story"
+          - "P-2: CI step order was build→type-check→lint→test; reordered to lint→type-check→build→test (fail fast)"
+          - "P-3: console.log/error in RedisModule replaced with NestJS Logger"
+          - "D1: Redis/R2 startup errors swallowed — intentional for local dev without infra credentials"
+          - "D2: Static healthcheck has no dependency checks — post-MVP improvement"
+        patches_applied:
+          - ".github/workflows/ci.yml: reorder CI steps to lint→type-check→build→test"
+          - "apps/api/src/redis/redis.module.ts: replace console.log/error with NestJS Logger"
 
       - id: 1.1
         title: Driver Email/Password Registration & Login

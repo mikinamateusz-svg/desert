@@ -1,6 +1,6 @@
 # Story 1.0b: Infrastructure Provisioning & CI/CD Pipeline
 
-Status: review
+Status: done
 
 ## Story
 
@@ -470,3 +470,17 @@ claude-sonnet-4-6
 - `apps/admin/vercel.json`
 - `.github/workflows/ci.yml`
 - `docs/deployment.md`
+
+## Review Patches (2026-04-04)
+
+### P-2 Applied — CI step order reordered to fail fast
+`.github/workflows/ci.yml`: Reordered CI steps from build→type-check→lint→test to lint→type-check→build→test. Lint and type-check are fast and should gate the slower build step.
+
+### P-3 Applied — NestJS Logger in RedisModule
+`apps/api/src/redis/redis.module.ts`: Replaced `console.log`/`console.error` with `new Logger('RedisModule')` for consistent structured log output in production.
+
+## Review Deferred Items (2026-04-04)
+
+- **D1**: `railway.toml` `startCommand` originally overrode Dockerfile CMD, skipping `prisma migrate deploy`. Fixed post-story in commit `a278c33` via `preDeployCommand`. No further action needed.
+- **D2**: Redis/R2 startup connection failures are caught and logged but do not abort startup. Intentional for local dev without infra credentials. Accept for MVP; revisit if silent misconfiguration becomes a production incident pattern.
+- **D3**: Static `/health` endpoint has no dependency checks — Redis, DB, R2 failures are invisible to Railway's healthcheck. Post-MVP improvement: add dependency health to the health endpoint.

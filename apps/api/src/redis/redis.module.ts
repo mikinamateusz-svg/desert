@@ -1,8 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 
 export const REDIS_CLIENT = 'REDIS_CLIENT';
+
+const logger = new Logger('RedisModule');
 
 @Module({
   providers: [
@@ -13,8 +15,8 @@ export const REDIS_CLIENT = 'REDIS_CLIENT';
           maxRetriesPerRequest: 3,
           lazyConnect: false,
         });
-        client.on('connect', () => console.log('Redis connected'));
-        client.on('error', (err) => console.error('Redis error', err));
+        client.on('connect', () => logger.log('Redis connected'));
+        client.on('error', (err) => logger.error('Redis error', err));
         return client;
       },
       inject: [ConfigService],

@@ -131,10 +131,10 @@ describe('PriceController', () => {
       expect(mockPriceHistoryService.getHistory).toHaveBeenCalledWith('station-abc', 'ON', 30);
     });
 
-    it('is auth-protected (no @Public decorator)', () => {
+    it('is publicly accessible (@Public decorator present)', () => {
       const reflector = new Reflector();
       const isPublic = reflector.get<boolean>('isPublic', controller.getHistory);
-      expect(isPublic).toBeUndefined();
+      expect(isPublic).toBe(true);
     });
   });
 
@@ -149,10 +149,10 @@ describe('PriceController', () => {
       expect(mockPriceHistoryService.getRegionalAverage).toHaveBeenCalledWith('mazowieckie', 'PB_95');
     });
 
-    it('is auth-protected (no @Public decorator)', () => {
+    it('is publicly accessible (@Public decorator present)', () => {
       const reflector = new Reflector();
       const isPublic = reflector.get<boolean>('isPublic', controller.getRegional);
-      expect(isPublic).toBeUndefined();
+      expect(isPublic).toBe(true);
     });
   });
 

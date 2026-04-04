@@ -108,7 +108,16 @@ epics:
       - id: 1.7
         title: Notification Preferences
         file: 1-7-notification-preferences.md
-        status: review
+        status: done
+        review_date: "2026-04-04"
+        review_findings:
+          - "P-3: expo_push_token missing @MaxLength(300) — unbounded string input"
+          - "P-3: NotificationsController missing @Roles() on GET + PATCH — violates 1.5 AC6"
+          - "D1: ApiError class triplicated (auth.ts, submissions.ts, notifications.ts)"
+          - "D2: apiGetSubmissions called on each mount when permission denied (limit=1, acceptable)"
+        patches_applied:
+          - "apps/api/src/notifications/dto/update-notification-preferences.dto.ts: add @MaxLength(300) to expo_push_token"
+          - "apps/api/src/notifications/notifications.controller.ts: add @Roles(...ALL_ROLES) to GET and PATCH endpoints"
 
       - id: 1.8
         title: Account Deletion & Right to Erasure

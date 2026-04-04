@@ -1,9 +1,10 @@
-import { IsBoolean, IsOptional, IsString, ValidateIf } from 'class-validator';
+import { IsBoolean, IsOptional, IsString, MaxLength, ValidateIf } from 'class-validator';
 
 export class UpdateNotificationPreferencesDto {
   @IsOptional()
   @ValidateIf((o: UpdateNotificationPreferencesDto) => o.expo_push_token !== null)
   @IsString()
+  @MaxLength(300)
   expo_push_token?: string | null;
 
   @IsOptional()

@@ -1,6 +1,6 @@
 # Story 1.7: Notification Preferences
 
-Status: review
+Status: done
 
 ## Story
 
@@ -583,3 +583,15 @@ Send ONLY the changed key in the PATCH payload. Do NOT serialize all three boole
 ### Mobile — authLoading Guard
 
 Show `<ActivityIndicator>` while `useAuth().isLoading` is true — prevents the sign-in prompt flashing briefly for authenticated users on cold start. Same pattern as `activity.tsx`.
+
+## Review Notes (2026-04-04)
+
+2 patches applied.
+
+**P-3:** `UpdateNotificationPreferencesDto.expo_push_token` had no `@MaxLength` — unbounded string input. Added `@MaxLength(300)` (Expo push tokens are ~150–200 chars).
+
+**P-3:** `NotificationsController` had no `@Roles()` on either endpoint — violates Story 1.5 AC6 (every route must have explicit `@Roles()` or `@Public()`). Added `@Roles(...ALL_ROLES)` (all 5 role types) on `GET` and `PATCH`.
+
+**D1:** `ApiError` class now duplicated across `auth.ts`, `submissions.ts`, and `notifications.ts`. Extract to shared `apps/mobile/src/api/client.ts` in a future cleanup.
+
+**D2:** Re-prompt logic calls `apiGetSubmissions` on every mount when permission is denied (before `REPROMPT_KEY` is set). Single lightweight call (`limit=1`), acceptable for MVP.

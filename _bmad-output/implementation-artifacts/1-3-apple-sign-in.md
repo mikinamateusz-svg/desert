@@ -1,6 +1,6 @@
 # Story 1.3: Apple Sign-In
 
-Status: review
+Status: done
 
 ## Story
 
@@ -540,3 +540,18 @@ _To be filled by dev agent during implementation_
 ### File List
 
 _To be filled by dev agent during implementation_
+
+## Review Patches (2026-04-04)
+
+### P-3 Applied — INVALID_APPLE_TOKEN and APPLE_EMAIL_MISSING unhandled in login/register screens
+`apps/mobile/app/(auth)/login.tsx` and `register.tsx`: the shared `handleGoogleError` function (used for both Google and Apple button errors) was missing `INVALID_APPLE_TOKEN` and `APPLE_EMAIL_MISSING` cases — both would fall through to the generic "Invalid Google token" message. Added explicit cases mapping to `auth.common.invalidAppleToken` and `auth.common.appleEmailMissing` i18n keys (already present; `SoftSignUpSheet`/`SignUpGateSheet` already handled these correctly).
+
+### P-3 Applied — AppleAuthDto.identityToken missing @MaxLength
+`apps/api/src/auth/dto/apple-auth.dto.ts`: Added `@MaxLength(2048)` to `identityToken`, matching the same guard applied to `GoogleAuthDto` in Story 1.2 review. `MaxLength` was already imported for `FullNameDto` fields.
+
+**Note:** Several higher-severity issues were already fixed in commit `8689ebb` prior to this review (hardcoded `com.desert.app` fallback removed, P2002 guard added, `identityToken` null → `onError` call, `@MaxLength` on fullName fields, user field leak fixed in 1.1 review).
+
+## Review Deferred Items (2026-04-04)
+
+- **D1**: `AppleSignInButton` and `GoogleSignInButton` share the same `onError` callback in login/register (`handleGoogleError`), which is a misleading function name. Cosmetic rename — no functional impact.
+- **D2**: Apple `identityToken` is additionally bounded by Fastify's 1MB body limit — the `@MaxLength(2048)` is belt-and-suspenders.

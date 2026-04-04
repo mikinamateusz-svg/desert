@@ -16,6 +16,7 @@ class FullNameDto {
 export class AppleAuthDto {
   @IsString()
   @IsNotEmpty()
+  @MaxLength(2048)
   identityToken!: string;
 
   @IsOptional()

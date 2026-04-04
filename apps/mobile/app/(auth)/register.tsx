@@ -30,6 +30,10 @@ export default function RegisterScreen() {
       setError(t('auth.common.socialEmailConflict'));
     } else if (code === 'GOOGLE_EMAIL_MISSING') {
       setError(t('auth.common.googleEmailMissing'));
+    } else if (code === 'INVALID_APPLE_TOKEN') {
+      setError(t('auth.common.invalidAppleToken'));
+    } else if (code === 'APPLE_EMAIL_MISSING') {
+      setError(t('auth.common.appleEmailMissing'));
     } else {
       setError(t('auth.common.invalidGoogleToken'));
     }

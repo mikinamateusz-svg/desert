@@ -1,6 +1,6 @@
 # Story UI-5: Remaining Screens — Visual Alignment
 
-Status: review
+Status: done
 
 ## Story
 
@@ -256,3 +256,9 @@ secondaryButtonText: {
 - Delete Account uses top-anchored layout, card inputs, `tokens.price.expensive` delete button
 - `tsc --noEmit` passes
 - `grep -rn '"#' apps/mobile/app` returns only acceptable inline rgba/amber-50 values
+
+## Review Notes (2026-04-04)
+
+1 P-1 patch applied (via useNearbyStations / stations.ts).
+
+**P-1:** `useNearbyStations` gated on `!accessToken` — guests see empty map with no stations. API endpoint is `@Public()` so no token required. Fixed: removed `!accessToken` guard in hook, made `accessToken` optional in `apiGetNearbyStations` (only sends Authorization header when token present).

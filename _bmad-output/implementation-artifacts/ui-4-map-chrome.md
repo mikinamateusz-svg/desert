@@ -1,6 +1,6 @@
 # Story UI-4: Map Chrome — Top Bar, Floating Controls & Consistent Overlays
 
-Status: review
+Status: done
 
 ## Story
 
@@ -457,3 +457,7 @@ locationDeniedDismiss: {
 - Container background `tokens.surface.warmPage`
 - All i18n keys in EN, PL, UK
 - `tsc --noEmit` passes
+
+## Review Notes (2026-04-04)
+
+No patches to chrome itself. P-1 bug found in map data loading (see ui-5 / useNearbyStations).

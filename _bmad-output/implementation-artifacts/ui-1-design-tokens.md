@@ -1,6 +1,6 @@
 # Story UI-1: Design Tokens — Shared Colour & Spacing System
 
-Status: review
+Status: done
 
 ## Story
 
@@ -254,3 +254,7 @@ For each file below, replace every raw hex/number literal inside `StyleSheet.cre
 - Zero raw hex strings in `apps/mobile/app/` and `apps/mobile/src/components/` StyleSheet blocks
 - `tsc --noEmit` passes
 - All existing tests pass (no behaviour change)
+
+## Review Notes (2026-04-04)
+
+No patches. Pure token refactor — no behaviour change. Design token values correct.

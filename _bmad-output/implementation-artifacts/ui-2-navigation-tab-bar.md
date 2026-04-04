@@ -1,6 +1,6 @@
 # Story UI-2: Navigation — Bottom Tab Bar & Route Structure
 
-Status: review
+Status: done
 
 ## Story
 
@@ -309,3 +309,7 @@ export default function AppLayout() {
 - Sub-screens (feedback, privacy-settings, delete-account) have native back button headers
 - All i18n keys present in EN, PL, UK
 - `tsc --noEmit` passes
+
+## Review Notes (2026-04-04)
+
+No patches. Navigation structure correct. Guest mode routing unchanged.

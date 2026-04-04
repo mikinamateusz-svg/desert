@@ -29,7 +29,7 @@ export function useNearbyStations(
   }, []);
 
   useEffect(() => {
-    if (!center || !accessToken) return;
+    if (!center) return;
 
     // Cancel previous in-flight request
     abortRef.current?.abort();

@@ -89,3 +89,7 @@ intentional separation.
 - Chrome gap is 16pt (`topBarHeight + 16`)
 - No visual regression on active pill state
 - `tsc --noEmit` passes
+
+## Review Notes (2026-04-04)
+
+No new patches. Prior review (2026-03-25) found no issues. Clean.

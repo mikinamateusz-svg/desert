@@ -1,6 +1,6 @@
 # Story UI-3: Account Screen Redesign
 
-Status: review
+Status: done
 
 ## Story
 
@@ -304,3 +304,7 @@ const styles = StyleSheet.create({
 - Language selector uses amber active state
 - All strings localised in EN, PL, UK
 - `tsc --noEmit` passes
+
+## Review Notes (2026-04-04)
+
+No patches. Account screen redesign clean. Correct use of design tokens.

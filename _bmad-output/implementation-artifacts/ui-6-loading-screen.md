@@ -183,3 +183,7 @@ On `done`: fill to 100% (400ms) → 200ms hold → fade screen out (350ms) → c
 - `tsc --noEmit` passes with zero errors
 - Old `ActivityIndicator` overlay removed from `index.tsx`
 - Visual smoke test passes on device (AC 4.2 / 4.3)
+
+## Review Notes (2026-04-04)
+
+No new patches. Prior review (2026-03-25) applied P1–P5 patches. Clean.

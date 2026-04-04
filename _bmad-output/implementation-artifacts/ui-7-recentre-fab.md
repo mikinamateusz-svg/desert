@@ -112,3 +112,7 @@ the pattern established by Google Maps and Apple Maps.
 - Icon is `locate` (crosshair) not `navigate` (arrow)
 - `tsc --noEmit` passes
 - Device smoke test passes
+
+## Review Notes (2026-04-04)
+
+No new patches. Reviewed alongside UI-6 (2026-03-25). Clean.

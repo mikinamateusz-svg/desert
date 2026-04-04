@@ -87,7 +87,12 @@ epics:
       - id: 1.5
         title: RBAC & Role Enforcement
         file: 1-5-rbac-role-enforcement.md
-        status: review
+        status: done
+        review_date: "2026-04-04"
+        review_findings:
+          - "No patches needed — implementation clean"
+          - "D1: RolesGuard doesn't check @Public() — no practical risk (@Public+@Roles is a logical contradiction)"
+        patches_applied: []
 
       - id: 1.6
         title: Submission History

@@ -1,6 +1,6 @@
 # Story 1.5: RBAC & Role Enforcement
 
-Status: review
+Status: done
 
 ## Story
 
@@ -250,3 +250,11 @@ For the 403 test (AC2) in `roles.guard.spec.ts`, the guard returns `false` — N
 - `1a59403` — Story 1.3 — Apple Sign-In
 - `65bc36f` — Story 1.2 — Google Sign-In
 - `e4ace71` — Story 1.1 — email/password registration & login
+
+## Review Notes (2026-04-04)
+
+No patches applied. Implementation is clean.
+
+Guard ordering is correct (JwtAuthGuard → RolesGuard via two APP_GUARD providers). @Public() skip, shadow_ban/deleted_at live-checks, and role enforcement all work as designed. RolesGuard test coverage is thorough (8 cases). Health endpoint correctly marked @Public().
+
+**D1:** RolesGuard does not independently check @Public() metadata — if a route were mistakenly decorated with both @Public() and @Roles(), it would throw ForbiddenException instead of allowing access. @Public() and @Roles() are mutually exclusive by design; no practical risk.

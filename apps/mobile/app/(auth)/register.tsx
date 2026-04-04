@@ -28,6 +28,8 @@ export default function RegisterScreen() {
   function handleGoogleError(code: string) {
     if (code === 'SOCIAL_EMAIL_CONFLICT') {
       setError(t('auth.common.socialEmailConflict'));
+    } else if (code === 'GOOGLE_EMAIL_MISSING') {
+      setError(t('auth.common.googleEmailMissing'));
     } else {
       setError(t('auth.common.invalidGoogleToken'));
     }

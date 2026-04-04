@@ -46,7 +46,16 @@ epics:
       - id: 1.2
         title: Google Sign-In
         file: 1-2-google-sign-in.md
-        status: review
+        status: done
+        review_date: "2026-04-04"
+        review_findings:
+          - "P-3: GOOGLE_EMAIL_MISSING not handled in login/register handleGoogleError — showed wrong error message"
+          - "P-3: GoogleAuthDto.idToken missing @MaxLength(2048)"
+          - "Note: higher-severity issues (empty-audience bypass, P2002, auth dep) already fixed in 8689ebb"
+        patches_applied:
+          - "apps/mobile/app/(auth)/login.tsx: add GOOGLE_EMAIL_MISSING case to handleGoogleError"
+          - "apps/mobile/app/(auth)/register.tsx: add GOOGLE_EMAIL_MISSING case to handleGoogleError"
+          - "apps/api/src/auth/dto/google-auth.dto.ts: add @MaxLength(2048) to idToken"
 
       - id: 1.3
         title: Apple Sign-In

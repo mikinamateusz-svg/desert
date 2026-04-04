@@ -1,6 +1,6 @@
 # Story 1.2: Google Sign-In
 
-Status: review
+Status: done
 
 ## Story
 
@@ -640,3 +640,18 @@ claude-sonnet-4-6
 - `apps/mobile/src/i18n/locales/pl.ts` — added auth.common namespace
 - `apps/mobile/src/i18n/locales/uk.ts` — added auth.common namespace
 - `apps/mobile/.env.example` — new file with EXPO_PUBLIC_GOOGLE_* vars
+
+## Review Patches (2026-04-04)
+
+### P-3 Applied — GOOGLE_EMAIL_MISSING shown as wrong error in login/register screens
+`apps/mobile/app/(auth)/login.tsx` and `register.tsx`: `handleGoogleError` fell through to the generic "Invalid Google token" message for `GOOGLE_EMAIL_MISSING`. Added explicit case mapping to `auth.common.googleEmailMissing` (i18n key already existed; `SignUpGateSheet`/`SoftSignUpSheet` already handled this correctly — login/register were missed).
+
+### P-3 Applied — GoogleAuthDto.idToken missing @MaxLength
+`apps/api/src/auth/dto/google-auth.dto.ts`: Added `@MaxLength(2048)` to prevent oversized token payloads reaching `OAuth2Client.verifyIdToken`. Google JWTs are ~1KB; 2048 chars provides headroom while capping abuse.
+
+**Note:** Several higher-severity issues were already fixed in commit `8689ebb` prior to this review (empty-audience bypass P-1, P2002 guard, `auth` dep in useEffect, user field leak fixed in 1.1 review).
+
+## Review Deferred Items (2026-04-04)
+
+- **D1**: `GoogleAuthDto.idToken` is additionally bounded by Fastify's 1MB body limit — the `@MaxLength(2048)` patch above is belt-and-suspenders.
+- **D2**: `handleGoogleError` in login/register uses a shared handler for both Google and Apple errors (Apple errors also go through it). Currently shows `auth.common.invalidGoogleToken` for Apple errors that aren't `SOCIAL_EMAIL_CONFLICT` — acceptable for MVP since Apple errors are handled in their own dedicated component in later stories.

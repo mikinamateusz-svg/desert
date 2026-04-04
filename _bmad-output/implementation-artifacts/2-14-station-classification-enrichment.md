@@ -1,6 +1,6 @@
 # Story 2.14: Station Classification Enrichment
 
-Status: review
+Status: done
 
 ## Story
 
@@ -666,3 +666,7 @@ claude-sonnet-4-6
 ## Change Log
 
 - 2026-03-27: Story 2.14 implemented — station classification enrichment. Schema migration, brand/settlement config files, StationClassificationService (30 tests), StationClassificationWorker (15 tests), StationSyncWorker wired to enqueue classification on completion. 351/351 tests passing, tsc clean.
+
+## Review Notes (2026-04-04)
+
+No new patches. Story was implemented with review patches baked into the commit (f0afdd4). `$executeRaw` uses Prisma tagged templates — no SQL injection risk. `@Roles(UserRole.ADMIN)` at class level with `@Public() @Roles()` override on secret-key endpoints is correct.

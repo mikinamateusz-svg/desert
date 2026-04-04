@@ -1,6 +1,6 @@
 # Story 2.10 — SSR Public Map
 
-**Status:** review
+**Status:** done
 **Epic:** 2 — Price Discovery
 **Story ID:** 2.10
 **Created:** 2026-03-27
@@ -512,3 +512,13 @@ The following changes were made to 2.10 files as part of the web-1/web-2 impleme
 - 2026-03-27: Story created — SSR public map with Mapbox, server-side price fetching, i18n, SEO list
 - 2026-03-27: Story implemented — all tasks complete, 380 API tests passing, tsc + lint clean, next build succeeds
 - 2026-03-28: Extended by web-1/web-2 — map page restructured with sidebar, cookie locale, MapSidebar; i18n massively expanded; fetchStationWithPrice added
+
+## Review Notes (2026-04-04)
+
+1 patch applied.
+
+**P-3:** `GET /v1/prices/history` and `GET /v1/prices/regional` had no `@Roles()` or `@Public()` — AC6 violation. Both are public price data endpoints (no personal data). Added `@Public()` to both, consistent with `GET /v1/prices/nearby` and the station endpoints.
+
+**Note:** `GET /v1/stations/nearby`, `GET /v1/stations/:id`, and `GET /v1/prices/nearby` correctly marked `@Public()` in Story 2.10. The two remaining price endpoints were missed.
+
+**D1:** `fetchStationsWithPrices` fetches 50km radius for the Warsaw default on SSR render — pulls all stations in central Poland on every cold cache hit. Acceptable for MVP. Consider bounding box or city-level caching in Phase 2.

@@ -370,7 +370,13 @@ epics:
       - id: 2.10
         title: SSR Public Map
         file: 2-10-ssr-public-map.md
-        status: review
+        status: done
+        review_date: "2026-04-04"
+        review_findings:
+          - "P-3: GET /v1/prices/history and /regional missing @Public() — AC6 violation, added"
+          - "D1: SSR default 50km fetch for Warsaw on cold cache — acceptable for MVP"
+        patches_applied:
+          - "apps/api/src/price/price.controller.ts: add @Public() to getHistory and getRegional"
 
       - id: 2.11
         title: Price History & Regional Aggregations
@@ -396,12 +402,12 @@ epics:
       - id: 2.13
         title: On-Demand Station Sync Trigger
         file: 2-13-on-demand-station-sync-trigger.md
-        status: review
+        status: done
 
       - id: 2.14
         title: Station Classification Enrichment
         file: 2-14-station-classification-enrichment.md
-        status: review
+        status: done
         dev_completed: 2026-03-27
 
   - id: web

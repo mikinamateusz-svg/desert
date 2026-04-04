@@ -28,6 +28,7 @@ export class PriceController {
     }));
   }
 
+  @Public()
   @Get('history')
   async getHistory(@Query() dto: GetPriceHistoryDto) {
     const history = await this.priceHistoryService.getHistory(dto.stationId, dto.fuelType, dto.limit);
@@ -40,6 +41,7 @@ export class PriceController {
     };
   }
 
+  @Public()
   @Get('regional')
   async getRegional(@Query() dto: GetRegionalAverageDto) {
     return this.priceHistoryService.getRegionalAverage(dto.voivodeship, dto.fuelType);

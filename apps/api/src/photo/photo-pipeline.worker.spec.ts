@@ -15,6 +15,7 @@ import { PriceService } from '../price/price.service.js';
 import { PriceValidationService } from '../price/price-validation.service.js';
 import { OcrSpendService } from './ocr-spend.service.js';
 import { SubmissionDedupService } from './submission-dedup.service.js';
+import { TrustScoreService } from '../user/trust-score.service.js';
 import { Worker, type Job } from 'bullmq';
 
 // ── BullMQ / Redis mocks ───────────────────────────────────────────────────
@@ -60,6 +61,9 @@ const mockPrismaService = {
   stationFuelStaleness: {
     deleteMany: jest.fn(),
   },
+  user: {
+    findUnique: jest.fn(),
+  },
 };
 
 const mockStationService = {
@@ -100,6 +104,10 @@ const mockSubmissionDedupService = {
   checkHashDedup: jest.fn(),
   recordStationDedup: jest.fn(),
   recordHashDedup: jest.fn(),
+};
+
+const mockTrustScoreService = {
+  updateScore: jest.fn(),
 };
 
 // ── Test fixtures ──────────────────────────────────────────────────────────
@@ -156,6 +164,7 @@ const successfulOcrResult = {
 // Re-fetched submission (contains price_data written by OCR step)
 const submissionAfterOcr = {
   id: 'sub-123',
+  user_id: 'user-abc',
   price_data: [{ fuel_type: 'PB_95', price_per_litre: 6.19 }],
   photo_r2_key: 'submissions/user-abc/sub-123.jpg',
 };
@@ -231,6 +240,12 @@ describe('PhotoPipelineWorker', () => {
     mockSubmissionDedupService.recordStationDedup.mockResolvedValue(undefined);
     mockSubmissionDedupService.recordHashDedup.mockResolvedValue(undefined);
 
+    // TrustScoreService — default: update succeeds
+    mockTrustScoreService.updateScore.mockResolvedValue(undefined);
+
+    // User — default: trust_score = 100 (normal user, not low-trust)
+    mockPrismaService.user.findUnique.mockResolvedValue({ trust_score: 100 });
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PhotoPipelineWorker,
@@ -250,6 +265,7 @@ describe('PhotoPipelineWorker', () => {
         { provide: PriceValidationService, useValue: mockPriceValidationService },
         { provide: OcrSpendService, useValue: mockOcrSpendService },
         { provide: SubmissionDedupService, useValue: mockSubmissionDedupService },
+        { provide: TrustScoreService, useValue: mockTrustScoreService },
       ],
     }).compile();
 
@@ -325,6 +341,7 @@ describe('PhotoPipelineWorker', () => {
           { provide: PriceValidationService, useValue: mockPriceValidationService },
           { provide: OcrSpendService, useValue: mockOcrSpendService },
           { provide: SubmissionDedupService, useValue: mockSubmissionDedupService },
+          { provide: TrustScoreService, useValue: mockTrustScoreService },
         ],
       }).compile();
 
@@ -454,7 +471,7 @@ describe('PhotoPipelineWorker', () => {
 
       expect(mockPrismaService.submission.update).toHaveBeenCalledWith({
         where: { id: 'sub-123' },
-        data: { status: 'rejected', gps_lat: null, gps_lng: null },
+        data: { status: 'rejected', gps_lat: null, gps_lng: null, photo_r2_key: null },
       });
     });
 
@@ -513,7 +530,7 @@ describe('PhotoPipelineWorker', () => {
 
       expect(mockPrismaService.submission.update).toHaveBeenCalledWith({
         where: { id: 'sub-123' },
-        data: { status: 'rejected', gps_lat: null, gps_lng: null },
+        data: { status: 'rejected', gps_lat: null, gps_lng: null, photo_r2_key: null },
       });
     });
 

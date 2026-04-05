@@ -12,6 +12,7 @@ import { PriceService } from '../price/price.service.js';
 import { PriceValidationService } from '../price/price-validation.service.js';
 import { OcrSpendService } from './ocr-spend.service.js';
 import { SubmissionDedupService } from './submission-dedup.service.js';
+import { TrustScoreService } from '../user/trust-score.service.js';
 
 export const PHOTO_PIPELINE_QUEUE = 'photo-pipeline';
 export const PHOTO_PIPELINE_JOB = 'process-submission';
@@ -53,6 +54,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     private readonly priceValidationService: PriceValidationService,
     private readonly ocrSpendService: OcrSpendService,
     private readonly submissionDedupService: SubmissionDedupService,
+    private readonly trustScoreService: TrustScoreService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -197,13 +199,14 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     }
 
     // Story 3.5: OCR price extraction
-    const ocrComplete = await this.runOcrExtraction(submission, stationId);
-    if (!ocrComplete) {
+    const ocrResult = await this.runOcrExtraction(submission, stationId);
+    if (!ocrResult) {
       return; // rejected inside runOcrExtraction — do not proceed
     }
+    const { trustScore } = ocrResult;
 
     // Story 3.6: logo recognition (secondary signal — never blocks pipeline)
-    const logoFlagged = await this.runLogoRecognition(submission, candidates);
+    const logoFlagged = await this.runLogoRecognition(submission, candidates, trustScore);
     if (logoFlagged) {
       return; // submission flagged for ops review — do not proceed to Story 3.7
     }
@@ -278,20 +281,20 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
 
   /**
    * Fetches photo from R2, calls Claude Haiku for OCR, validates result.
-   * Returns true if OCR succeeded and the submission should proceed.
-   * Returns false if the submission was rejected (caller should return).
+   * Returns { trustScore } if OCR succeeded and the submission should proceed.
+   * Returns null if the submission was rejected (caller should return).
    * Throws on transient API/infra failure (BullMQ retries).
    *
    * IMPORTANT: does NOT delete the photo on success — that is Story 3.7's responsibility.
    */
   private async runOcrExtraction(
-    submission: Pick<Submission, 'id' | 'photo_r2_key' | 'ocr_confidence_score'>,
+    submission: Pick<Submission, 'id' | 'user_id' | 'photo_r2_key' | 'ocr_confidence_score'>,
     stationId: string | null,
-  ): Promise<boolean> {
+  ): Promise<{ trustScore: number } | null> {
     // AC7: no photo — reject without calling Claude (saves API cost)
     if (!submission.photo_r2_key) {
       await this.rejectSubmission(submission, 'missing_photo');
-      return false;
+      return null;
     }
 
     // Fetch photo from R2 — throws on S3 error (transient → BullMQ retries)
@@ -308,7 +311,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
             `[DEDUP-HASH] hash=${photoHash.slice(0, 8)} submission=${submission.id} — duplicate photo, skipping OCR`,
           );
           await this.rejectSubmission(submission, 'duplicate_submission');
-          return false;
+          return null;
         }
       } catch (e: unknown) {
         this.logger.warn(`[DEDUP-HASH] Redis check failed, proceeding normally: ${(e as Error).message}`);
@@ -334,16 +337,32 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         `prices found=${ocrResult.prices.length}`,
     );
 
+    // Story 4.3: Trust score gating — fetch user trust score
+    const userRecord = await this.prisma.user.findUnique({
+      where: { id: submission.user_id },
+      select: { trust_score: true },
+    });
+    const trustScore = userRecord?.trust_score ?? 100;
+
+    // Low-trust users → review queue regardless of confidence
+    if (trustScore < 50) {
+      await this.prisma.submission.update({
+        where: { id: submission.id },
+        data: { status: SubmissionStatus.shadow_rejected, flag_reason: 'low_trust' },
+      });
+      return null;
+    }
+
     // AC3: low confidence → reject, delete photo, no retry
     if (ocrResult.confidence_score < 0.4) {
       await this.rejectSubmission(submission, 'low_ocr_confidence');
-      return false;
+      return null;
     }
 
     // No prices extracted — reject to keep data quality high (see Q1 in story spec)
     if (ocrResult.prices.length === 0) {
       await this.rejectSubmission(submission, 'no_prices_extracted');
-      return false;
+      return null;
     }
 
     // AC4: validate price bands
@@ -353,7 +372,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         `Submission ${submission.id}: price out of range for ${invalidFuelType} — rejecting`,
       );
       await this.rejectSubmission(submission, 'price_out_of_range');
-      return false;
+      return null;
     }
 
     // AC2: store extracted prices and confidence score
@@ -376,7 +395,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       this.logger.warn(`Failed to record hash dedup key: ${e.message}`),
     );
 
-    return true;
+    return { trustScore };
   }
 
   // ── Logo recognition step ──────────────────────────────────────────────────
@@ -392,8 +411,9 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
    * NOTE: Photo is NOT deleted here — Story 3.7 handles deletion.
    */
   private async runLogoRecognition(
-    submission: Pick<Submission, 'id' | 'photo_r2_key'>,
+    submission: Pick<Submission, 'id' | 'user_id' | 'photo_r2_key'>,
     candidates: NearbyStationWithDistance[],
+    trustScore: number,
   ): Promise<boolean> {
     // AC1 + AC2: evaluate ambiguity threshold
     if (!this.isAmbiguousMatch(candidates)) {
@@ -408,6 +428,14 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         `${candidates.length} candidates, nearest=${candidates[0]?.distance_m.toFixed(0)}m, ` +
         `second=${candidates[1]?.distance_m.toFixed(0)}m`,
     );
+
+    // Story 4.3: High-trust bypass — skip logo check for trusted users with borderline confidence
+    if (trustScore >= 200) {
+      this.logger.log(
+        `Submission ${submission.id}: logo recognition skipped — high trust score (${trustScore})`,
+      );
+      return false;
+    }
 
     // Guard: no photo — skip silently (missing_photo already handled by OCR step,
     // but guard defensively in case photo_r2_key was nulled between steps)
@@ -455,6 +483,9 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
           where: { id: submission.id },
           data: { status: SubmissionStatus.shadow_rejected, flag_reason: 'logo_mismatch' },
         });
+        await this.trustScoreService
+          .updateScore(submission.user_id, TrustScoreService.DELTA_SHADOW_REJECTED)
+          .catch((e: Error) => this.logger.warn(`Failed to update trust score: ${e.message}`));
         return true; // flagged — caller returns early
       } catch (err) {
         // DB failure writing shadow_rejected — log and proceed rather than triggering BullMQ
@@ -510,7 +541,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     // Re-fetch to get price_data written by runOcrExtraction
     const updated = await this.prisma.submission.findUnique({
       where: { id: submissionId },
-      select: { id: true, price_data: true, photo_r2_key: true },
+      select: { id: true, user_id: true, price_data: true, photo_r2_key: true },
     });
 
     if (!updated) {
@@ -600,6 +631,13 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         this.logger.warn(
           `Failed to clear staleness for station ${stationId}: ${err.message}`,
         ),
+      );
+
+    // Story 4.3: increment trust score for auto-verified submission (fail-open)
+    await this.trustScoreService
+      .updateScore(updated.user_id, TrustScoreService.DELTA_AUTO_VERIFIED)
+      .catch((e: Error) =>
+        this.logger.warn(`Failed to update trust score for submission ${submissionId}: ${e.message}`),
       );
 
     this.logger.log(
@@ -749,6 +787,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         status: SubmissionStatus.rejected,
         gps_lat: null,
         gps_lng: null,
+        photo_r2_key: null,
       },
     });
 

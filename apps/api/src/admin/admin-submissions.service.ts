@@ -9,6 +9,7 @@ import { SubmissionStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { PriceService, type StationPriceRow } from '../price/price.service.js';
 import { StorageService } from '../storage/storage.service.js';
+import { TrustScoreService } from '../user/trust-score.service.js';
 
 export interface FlaggedSubmissionRow {
   id: string;
@@ -46,6 +47,7 @@ export class AdminSubmissionsService {
     private readonly prisma: PrismaService,
     private readonly priceService: PriceService,
     private readonly storage: StorageService,
+    private readonly trustScoreService: TrustScoreService,
   ) {}
 
   async listFlagged(page: number, limit: number): Promise<SubmissionListResult> {
@@ -150,7 +152,7 @@ export class AdminSubmissionsService {
     // 1. Atomically claim the submission — prevents concurrent double-approvals
     const submission = await this.prisma.submission.findUnique({
       where: { id: submissionId },
-      select: { id: true, station_id: true, price_data: true, photo_r2_key: true, status: true },
+      select: { id: true, user_id: true, station_id: true, price_data: true, photo_r2_key: true, status: true },
     });
 
     if (!submission) throw new NotFoundException(`Submission ${submissionId} not found`);
@@ -226,6 +228,15 @@ export class AdminSubmissionsService {
     // 5. Write audit log
     await this.writeAuditLog(adminUserId, AUDIT_ACTION_APPROVE, submissionId, null);
 
+    // 5b. Update trust score (fail-open)
+    await this.trustScoreService
+      .updateScore(submission.user_id, TrustScoreService.DELTA_ADMIN_APPROVED)
+      .catch((e: unknown) =>
+        this.logger.warn(
+          `Approve ${submissionId}: trust score update failed: ${e instanceof Error ? e.message : String(e)}`,
+        ),
+      );
+
     // 6. Delete photo from R2 (best-effort — storage cost, not a correctness concern)
     if (submission.photo_r2_key) {
       await this.storage.deleteObject(submission.photo_r2_key).catch((e: unknown) =>
@@ -239,7 +250,7 @@ export class AdminSubmissionsService {
   async reject(submissionId: string, adminUserId: string, notes: string | null): Promise<void> {
     const submission = await this.prisma.submission.findUnique({
       where: { id: submissionId },
-      select: { id: true, photo_r2_key: true, status: true },
+      select: { id: true, user_id: true, photo_r2_key: true, status: true },
     });
 
     if (!submission) throw new NotFoundException(`Submission ${submissionId} not found`);
@@ -258,6 +269,15 @@ export class AdminSubmissionsService {
     }
 
     await this.writeAuditLog(adminUserId, AUDIT_ACTION_REJECT, submissionId, notes);
+
+    // Update trust score (fail-open)
+    await this.trustScoreService
+      .updateScore(submission.user_id, TrustScoreService.DELTA_ADMIN_REJECTED)
+      .catch((e: unknown) =>
+        this.logger.warn(
+          `Reject ${submissionId}: trust score update failed: ${e instanceof Error ? e.message : String(e)}`,
+        ),
+      );
 
     if (submission.photo_r2_key) {
       await this.storage.deleteObject(submission.photo_r2_key).catch((e: unknown) =>

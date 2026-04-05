@@ -50,6 +50,37 @@ const translations = {
       stations: { title: 'Stacje', description: 'Zarządzaj stacjami paliw.' },
       metrics: { title: 'Metryki', description: 'Przegląd operacyjnych wskaźników produktu.' },
     },
+    users: {
+      trustScore: 'Wynik zaufania',
+      shadowBanned: 'Zablokowany',
+      shadowBan: 'Nałóż shadow ban',
+      removeBan: 'Zdejmij blokadę',
+      confirmBan: 'Czy na pewno nałożyć shadow ban na tego użytkownika?',
+      confirmUnban: 'Czy na pewno zdjąć blokadę z tego użytkownika?',
+      alertsLabel: 'Alerty anomalii',
+      dismissAlert: 'Odrzuć alert',
+      noAlerts: 'Brak aktywnych alertów.',
+      alertTypes: {
+        high_frequency: 'Wysoka częstotliwość',
+        price_variance: 'Odchylenie cen',
+        station_spread: 'Rozprzestrzenienie po stacjach',
+      },
+      submissionStatuses: {
+        pending: 'Oczekujące',
+        verified: 'Zweryfikowane',
+        rejected: 'Odrzucone',
+        shadow_rejected: 'Shadow odrzucone',
+      },
+      nameColumn: 'Użytkownik',
+      statusColumn: 'Status',
+      submissionsColumn: 'Zgłoszenia',
+      alertsColumn: 'Alerty',
+      joinedColumn: 'Dołączył/a',
+      activeStatus: 'Aktywny',
+      searchPlaceholder: 'Szukaj po e-mail lub nazwie…',
+      searchButton: 'Szukaj',
+      noUsersFound: 'Nie znaleziono użytkowników.',
+    },
     review: {
       flagReason: { logo_mismatch: 'Niezgodność logo', low_trust: 'Niskie zaufanie' },
       columns: {
@@ -112,6 +143,37 @@ const translations = {
       deadLetter: { title: 'Dead-Letter Queue', description: 'Review unprocessed jobs.' },
       stations: { title: 'Stations', description: 'Manage fuel stations.' },
       metrics: { title: 'Metrics', description: 'Operational product metrics overview.' },
+    },
+    users: {
+      trustScore: 'Trust score',
+      shadowBanned: 'Shadow banned',
+      shadowBan: 'Shadow ban',
+      removeBan: 'Remove ban',
+      confirmBan: 'Are you sure you want to shadow ban this user?',
+      confirmUnban: 'Are you sure you want to remove the ban from this user?',
+      alertsLabel: 'Anomaly alerts',
+      dismissAlert: 'Dismiss alert',
+      noAlerts: 'No active alerts.',
+      alertTypes: {
+        high_frequency: 'High frequency',
+        price_variance: 'Price variance',
+        station_spread: 'Station spread',
+      },
+      submissionStatuses: {
+        pending: 'Pending',
+        verified: 'Verified',
+        rejected: 'Rejected',
+        shadow_rejected: 'Shadow rejected',
+      },
+      nameColumn: 'User',
+      statusColumn: 'Status',
+      submissionsColumn: 'Submissions',
+      alertsColumn: 'Alerts',
+      joinedColumn: 'Joined',
+      activeStatus: 'Active',
+      searchPlaceholder: 'Search by email or name…',
+      searchButton: 'Search',
+      noUsersFound: 'No users found.',
     },
     review: {
       flagReason: { logo_mismatch: 'Logo mismatch', low_trust: 'Low trust score' },
@@ -176,6 +238,37 @@ const translations = {
       stations: { title: 'Станції', description: 'Управління автозаправними станціями.' },
       metrics: { title: 'Метрики', description: 'Огляд операційних показників продукту.' },
     },
+    users: {
+      trustScore: 'Рейтинг довіри',
+      shadowBanned: 'Тіньово заблокований',
+      shadowBan: 'Тіньовий бан',
+      removeBan: 'Зняти блокування',
+      confirmBan: 'Ви впевнені, що хочете накласти тіньовий бан на цього користувача?',
+      confirmUnban: 'Ви впевнені, що хочете зняти блокування з цього користувача?',
+      alertsLabel: 'Сповіщення про аномалії',
+      dismissAlert: 'Відхилити сповіщення',
+      noAlerts: 'Немає активних сповіщень.',
+      alertTypes: {
+        high_frequency: 'Висока частота',
+        price_variance: 'Відхилення цін',
+        station_spread: 'Розповсюдження по станціях',
+      },
+      submissionStatuses: {
+        pending: 'Очікується',
+        verified: 'Підтверджено',
+        rejected: 'Відхилено',
+        shadow_rejected: 'Тіньово відхилено',
+      },
+      nameColumn: 'Користувач',
+      statusColumn: 'Статус',
+      submissionsColumn: 'Заявки',
+      alertsColumn: 'Сповіщення',
+      joinedColumn: 'Приєднався',
+      activeStatus: 'Активний',
+      searchPlaceholder: 'Пошук за email або іменем…',
+      searchButton: 'Пошук',
+      noUsersFound: 'Користувачів не знайдено.',
+    },
     review: {
       flagReason: { logo_mismatch: 'Невідповідність логотипу', low_trust: 'Низький рейтинг довіри' },
       columns: {
@@ -224,6 +317,28 @@ export interface Translations {
     errorGeneric: string;
   };
   common: { logout: string; loading: string; comingSoon: string };
+  users: {
+    trustScore: string;
+    shadowBanned: string;
+    shadowBan: string;
+    removeBan: string;
+    confirmBan: string;
+    confirmUnban: string;
+    alertsLabel: string;
+    dismissAlert: string;
+    noAlerts: string;
+    alertTypes: Record<string, string>;
+    submissionStatuses: Record<string, string>;
+    nameColumn: string;
+    statusColumn: string;
+    submissionsColumn: string;
+    alertsColumn: string;
+    joinedColumn: string;
+    activeStatus: string;
+    searchPlaceholder: string;
+    searchButton: string;
+    noUsersFound: string;
+  };
   review: {
     flagReason: Record<string, string>;
     columns: {

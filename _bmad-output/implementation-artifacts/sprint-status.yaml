@@ -373,8 +373,8 @@ epics:
         status: done
         review_date: "2026-04-04"
         review_findings:
-          - "P-3: GET /v1/prices/history and /regional missing @Public() � AC6 violation, added"
-          - "D1: SSR default 50km fetch for Warsaw on cold cache � acceptable for MVP"
+          - "P-3: GET /v1/prices/history and /regional missing @Public() � AC6 violation, added"
+          - "D1: SSR default 50km fetch for Warsaw on cold cache � acceptable for MVP"
         patches_applied:
           - "apps/api/src/price/price.controller.ts: add @Public() to getHistory and getRegional"
 
@@ -663,3 +663,30 @@ epics:
           L1 (API intake) + L2 (worker) station dedup via Redis 12h TTL key set after
           successful OCR. Hash dedup (SHA-256, 24h TTL) for exact duplicate photos.
           Both fail-open on Redis error. No new ENV vars — constants only.
+
+  - id: 4
+    name: Admin Operations & Data Integrity
+    stories:
+      - id: 4.1
+        title: Admin Dashboard Foundation
+        status: done
+        dev_completed: 2026-04-05
+        review_date: 2026-04-05
+        review_findings: "5 patch (P-1 missing @Roles on AdminSubmissionsController, P-2 missing CSRF protection note, P-2 promote-admin script missing idempotency check, P-3 no rate limit on login endpoint, P-3 missing HttpOnly flag note on cookie), 3 deferred, 4 rejected"
+        patches_applied: "2026-04-05 — all 5 patches applied; tsc clean"
+
+      - id: 4.2
+        title: Submission Review Queue
+        status: done
+        dev_completed: 2026-04-05
+        review_date: 2026-04-05
+        review_findings: "intent gaps resolved: IG-1 flag_reason column added to Submission (Option A), IG-2 presigned photo URL 1h TTL, IG-3 GPS preserved through station-match, shown rounded to 4dp in admin detail, nulled on approve/reject. Patches: gps_lat/gps_lng nulled on approve+reject, photo_r2_key cleared before audit log, page NaN guard, trust score updates on approve/reject"
+        patches_applied: "2026-04-05 — all patches applied; 720/720 tests passing, tsc clean"
+
+      - id: 4.3
+        title: User Abuse Detection & Shadow Ban
+        status: done
+        dev_completed: 2026-04-05
+        review_date: 2026-04-05
+        review_findings: "2 intent gaps resolved: IG-1 low_trust routing applies 0 delta (not -25 — routing only, not verdict); IG-2 upsertAlert dedup Option C (suppress if any undismissed alert exists, no 24h window). 15 patches: P-1 adminId from JWT not body, P-2 audit log submission_id→notes for user actions, P-3 TOCTOU shadow-ban check wrapped in $transaction, P-4 forbid banning ADMIN-role users, P-5 checkHighFrequency excludes shadow_rejected, P-6 checkPriceVariance groups by fuel_type+COUNT(DISTINCT id), P-7 checkStationSpread uses toFixed(2) key grouping, P-8 encodeURIComponent on search in pagination, P-9 parseInt NaN guard, P-10 router.refresh after ban/unban, P-11 column header i18n fix, P-12/13 missing i18n keys added (nameColumn/statusColumn/submissionsColumn/alertsColumn/joinedColumn/activeStatus/searchPlaceholder/searchButton/noUsersFound), P-14 named trust constants TRUST_HIGH/TRUST_LOW, P-15 startup runDetection error logging. 3 deferred fixed: D-1 rejectSubmission nulls photo_r2_key, D-2 TrustScoreService logs 0-row updates, D-3 removed redundant submission count in getUser. 4 rejected as noise."
+        patches_applied: "2026-04-05 — all patches applied; 720/720 tests passing, tsc clean"

@@ -58,7 +58,7 @@ model User {
   display_name     String?
   role             UserRole     @default(DRIVER)
   fleet_id         String?
-  trust_score      Int          @default(0)
+  trust_score      Int          @default(100)
   shadow_banned    Boolean      @default(false)
   deleted_at       DateTime?
   deletion_reason  String?
@@ -67,6 +67,7 @@ model User {
   submissions              Submission[]
   notificationPreference   NotificationPreference?
   userConsents             UserConsent[]
+  anomalyAlerts            AnomalyAlert[]
 }
 
 model Station {
@@ -167,13 +168,26 @@ model AdminAuditLog {
   id            String   @id @default(uuid())
   // Intentionally not a FK — log must be retained if admin account is deleted
   admin_user_id String
-  action        String   // 'APPROVE' | 'REJECT'
-  submission_id String
+  action        String   // 'APPROVE' | 'REJECT' | 'SHADOW_BAN' | 'UNBAN'
+  submission_id String?
   notes         String?
   created_at    DateTime @default(now())
 
   @@index([submission_id])
   @@index([admin_user_id, created_at])
+}
+
+model AnomalyAlert {
+  id           String    @id @default(uuid())
+  user_id      String
+  alert_type   String    // 'high_frequency' | 'price_variance' | 'station_spread'
+  detail       Json
+  created_at   DateTime  @default(now())
+  dismissed_at DateTime?
+  user         User      @relation(fields: [user_id], references: [id])
+
+  @@index([user_id, dismissed_at])
+  @@index([dismissed_at, created_at])
 }
 
 model PriceHistory {

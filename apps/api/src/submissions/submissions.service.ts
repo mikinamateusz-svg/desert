@@ -79,6 +79,33 @@ export class SubmissionsService {
     photoBuffer: Buffer,
     fields: CreateSubmissionFields,
   ): Promise<void> {
+    // Story 4.3: Shadow ban short-circuit — silently creates a shadow_rejected record so the user
+    // sees a normal 202 response but no data enters the pipeline.
+    // Wrapped in a transaction to prevent TOCTOU race between the ban check and the create.
+    const shadowBanned = await this.prisma.$transaction(async (tx) => {
+      const user = await tx.user.findUnique({
+        where: { id: userId },
+        select: { shadow_banned: true },
+      });
+      if (user?.shadow_banned) {
+        await tx.submission.create({
+          data: {
+            user_id: userId,
+            station_id: null,
+            photo_r2_key: null,
+            gps_lat: null,
+            gps_lng: null,
+            price_data: [],
+            status: SubmissionStatus.shadow_rejected,
+            flag_reason: 'shadow_banned',
+          },
+        });
+        return true;
+      }
+      return false;
+    });
+    if (shadowBanned) return;
+
     // Story 3.10: L1 station dedup — preselected path only (stationId unknown for GPS path)
     if (fields.preselectedStationId) {
       try {

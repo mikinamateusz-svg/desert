@@ -5,6 +5,7 @@ import { AdminSubmissionsService } from './admin-submissions.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { PriceService } from '../price/price.service.js';
 import { StorageService } from '../storage/storage.service.js';
+import { TrustScoreService } from '../user/trust-score.service.js';
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
 
@@ -35,6 +36,9 @@ const mockDeleteObject = jest.fn();
 const mockGetPresignedUrl = jest.fn();
 const mockStorage = { deleteObject: mockDeleteObject, getPresignedUrl: mockGetPresignedUrl };
 
+const mockUpdateScore = jest.fn();
+const mockTrustScoreService = { updateScore: mockUpdateScore };
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const ADMIN_ID = 'admin-uuid-1';
@@ -43,6 +47,7 @@ const STATION_ID = 'station-uuid-1';
 
 const makeShadowRejected = (overrides = {}) => ({
   id: SUB_ID,
+  user_id: 'user-uuid-1',
   station_id: STATION_ID,
   price_data: [{ fuel_type: 'PB_95', price_per_litre: 6.5 }],
   photo_r2_key: 'submissions/user/sub.jpg',
@@ -70,6 +75,7 @@ describe('AdminSubmissionsService', () => {
     mockSetVerifiedPrice.mockResolvedValue(undefined);
     mockDeleteObject.mockResolvedValue(undefined);
     mockGetPresignedUrl.mockResolvedValue('https://r2.example.com/presigned');
+    mockUpdateScore.mockResolvedValue(undefined);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -77,6 +83,7 @@ describe('AdminSubmissionsService', () => {
         { provide: PrismaService, useValue: mockPrisma },
         { provide: PriceService, useValue: mockPriceService },
         { provide: StorageService, useValue: mockStorage },
+        { provide: TrustScoreService, useValue: mockTrustScoreService },
       ],
     }).compile();
 

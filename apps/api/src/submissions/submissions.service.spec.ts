@@ -12,6 +12,19 @@ const mockPrismaService = {
     create: jest.fn(),
     delete: jest.fn(),
   },
+  user: {
+    findUnique: jest.fn(),
+  },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  $transaction: jest.fn((fn: (tx: any) => Promise<any>) => {
+    const tx = {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      user: { findUnique: (...args: any[]) => mockPrismaService.user.findUnique(...args) },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      submission: { create: (...args: any[]) => mockPrismaService.submission.create(...args) },
+    };
+    return fn(tx);
+  }),
 };
 
 const mockStorageService = {
@@ -52,6 +65,8 @@ describe('SubmissionsService', () => {
     jest.clearAllMocks();
 
     mockSubmissionDedupService.checkStationDedup.mockResolvedValue(false);
+    // Default: user is not shadow-banned
+    mockPrismaService.user.findUnique.mockResolvedValue({ shadow_banned: false });
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -361,6 +376,22 @@ describe('SubmissionsService', () => {
 
       expect(mockSubmissionDedupService.checkStationDedup).not.toHaveBeenCalled();
       expect(mockStorageService.uploadBuffer).toHaveBeenCalled();
+    });
+
+    it('shadow-ban short-circuit creates shadow_rejected record and returns without uploading', async () => {
+      mockPrismaService.user.findUnique.mockResolvedValue({ shadow_banned: true });
+
+      await service.createSubmission('user-abc', photoBuffer, baseFields);
+
+      expect(mockPrismaService.submission.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          user_id: 'user-abc',
+          status: 'shadow_rejected',
+          flag_reason: 'shadow_banned',
+        }),
+      });
+      expect(mockStorageService.uploadBuffer).not.toHaveBeenCalled();
+      expect(mockPhotoPipelineWorker.enqueue).not.toHaveBeenCalled();
     });
   });
 });

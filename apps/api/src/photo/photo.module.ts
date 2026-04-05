@@ -8,9 +8,10 @@ import { OcrModule } from '../ocr/ocr.module.js';
 import { LogoModule } from '../logo/logo.module.js';
 import { PriceModule } from '../price/price.module.js';
 import { RedisModule } from '../redis/redis.module.js';
+import { UserModule } from '../user/user.module.js';
 
 @Module({
-  imports: [StationModule, StorageModule, OcrModule, LogoModule, PriceModule, RedisModule],
+  imports: [StationModule, StorageModule, OcrModule, LogoModule, PriceModule, RedisModule, UserModule],
   providers: [PhotoPipelineWorker, OcrSpendService, SubmissionDedupService],
   exports: [PhotoPipelineWorker, SubmissionDedupService],
 })

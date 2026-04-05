@@ -63,9 +63,6 @@ export class JwtAuthGuard implements CanActivate {
       if (user.deleted_at) {
         throw new UnauthorizedException();
       }
-      if (user.shadow_banned) {
-        throw new UnauthorizedException();
-      }
 
       (req as FastifyRequest & { currentUser: User; sessionHandle: string }).currentUser = user;
       (req as FastifyRequest & { currentUser: User; sessionHandle: string }).sessionHandle =

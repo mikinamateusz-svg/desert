@@ -50,6 +50,39 @@ const translations = {
       stations: { title: 'Stacje', description: 'Zarządzaj stacjami paliw.' },
       metrics: { title: 'Metryki', description: 'Przegląd operacyjnych wskaźników produktu.' },
     },
+    review: {
+      flagReason: { logo_mismatch: 'Niezgodność logo', low_trust: 'Niskie zaufanie' },
+      columns: {
+        station: 'Stacja',
+        prices: 'Ceny',
+        confidence: 'Pewność OCR',
+        submitted: 'Zgłoszono',
+        contributor: 'Zgłaszający',
+        flag: 'Powód flagi',
+      },
+      noItems: 'Brak zgłoszeń do przeglądu.',
+      approve: 'Zatwierdź',
+      reject: 'Odrzuć',
+      rejectNotesLabel: 'Powód odrzucenia (opcjonalnie)',
+      rejectConfirm: 'Potwierdź odrzucenie',
+      cancel: 'Anuluj',
+      back: '← Powrót',
+      approvedSuccess: 'Zgłoszenie zatwierdzone.',
+      rejectedSuccess: 'Zgłoszenie odrzucone.',
+      errorGeneric: 'Błąd. Spróbuj ponownie.',
+      errorConflict: 'To zgłoszenie zostało już rozpatrzone.',
+      stationLabel: 'Stacja',
+      brandLabel: 'Marka stacji',
+      flagLabel: 'Powód flagi',
+      confidenceLabel: 'Pewność OCR',
+      submittedLabel: 'Data zgłoszenia',
+      contributorLabel: 'ID zgłaszającego',
+      unknown: 'Nieznana',
+      na: 'n/d',
+      photoLabel: 'Zdjęcie',
+      photoExpires: 'Link wygasa za 1 godz.',
+      gpsLabel: 'Lokalizacja GPS',
+    },
   },
   en: {
     nav: {
@@ -79,6 +112,39 @@ const translations = {
       deadLetter: { title: 'Dead-Letter Queue', description: 'Review unprocessed jobs.' },
       stations: { title: 'Stations', description: 'Manage fuel stations.' },
       metrics: { title: 'Metrics', description: 'Operational product metrics overview.' },
+    },
+    review: {
+      flagReason: { logo_mismatch: 'Logo mismatch', low_trust: 'Low trust score' },
+      columns: {
+        station: 'Station',
+        prices: 'Prices',
+        confidence: 'OCR confidence',
+        submitted: 'Submitted',
+        contributor: 'Contributor',
+        flag: 'Flag reason',
+      },
+      noItems: 'No submissions awaiting review.',
+      approve: 'Approve',
+      reject: 'Reject',
+      rejectNotesLabel: 'Rejection reason (optional)',
+      rejectConfirm: 'Confirm rejection',
+      cancel: 'Cancel',
+      back: '← Back',
+      approvedSuccess: 'Submission approved.',
+      rejectedSuccess: 'Submission rejected.',
+      errorGeneric: 'Something went wrong. Try again.',
+      errorConflict: 'This submission has already been reviewed.',
+      stationLabel: 'Station',
+      brandLabel: 'Station brand',
+      flagLabel: 'Flag reason',
+      confidenceLabel: 'OCR confidence',
+      submittedLabel: 'Submitted',
+      contributorLabel: 'Contributor ID',
+      unknown: 'Unknown',
+      na: 'n/a',
+      photoLabel: 'Photo',
+      photoExpires: 'Link expires in 1 hour',
+      gpsLabel: 'GPS location',
     },
   },
   uk: {
@@ -110,6 +176,39 @@ const translations = {
       stations: { title: 'Станції', description: 'Управління автозаправними станціями.' },
       metrics: { title: 'Метрики', description: 'Огляд операційних показників продукту.' },
     },
+    review: {
+      flagReason: { logo_mismatch: 'Невідповідність логотипу', low_trust: 'Низький рейтинг довіри' },
+      columns: {
+        station: 'Станція',
+        prices: 'Ціни',
+        confidence: 'Точність OCR',
+        submitted: 'Подано',
+        contributor: 'Автор',
+        flag: 'Причина позначки',
+      },
+      noItems: 'Немає заявок для перегляду.',
+      approve: 'Затвердити',
+      reject: 'Відхилити',
+      rejectNotesLabel: 'Причина відхилення (необов\'язково)',
+      rejectConfirm: 'Підтвердити відхилення',
+      cancel: 'Скасувати',
+      back: '← Назад',
+      approvedSuccess: 'Заявку затверджено.',
+      rejectedSuccess: 'Заявку відхилено.',
+      errorGeneric: 'Помилка. Спробуйте ще раз.',
+      errorConflict: 'Цю заявку вже розглянуто.',
+      stationLabel: 'Станція',
+      brandLabel: 'Бренд станції',
+      flagLabel: 'Причина позначки',
+      confidenceLabel: 'Точність OCR',
+      submittedLabel: 'Дата подання',
+      contributorLabel: 'ID автора',
+      unknown: 'Невідомо',
+      na: 'н/д',
+      photoLabel: 'Фото',
+      photoExpires: 'Посилання діє 1 год',
+      gpsLabel: 'GPS-локація',
+    },
   },
 } as const;
 
@@ -125,6 +224,39 @@ export interface Translations {
     errorGeneric: string;
   };
   common: { logout: string; loading: string; comingSoon: string };
+  review: {
+    flagReason: Record<string, string>;
+    columns: {
+      station: string;
+      prices: string;
+      confidence: string;
+      submitted: string;
+      contributor: string;
+      flag: string;
+    };
+    noItems: string;
+    approve: string;
+    reject: string;
+    rejectNotesLabel: string;
+    rejectConfirm: string;
+    cancel: string;
+    back: string;
+    approvedSuccess: string;
+    rejectedSuccess: string;
+    errorGeneric: string;
+    errorConflict: string;
+    stationLabel: string;
+    brandLabel: string;
+    flagLabel: string;
+    confidenceLabel: string;
+    submittedLabel: string;
+    contributorLabel: string;
+    unknown: string;
+    na: string;
+    photoLabel: string;
+    photoExpires: string;
+    gpsLabel: string;
+  };
   sections: {
     submissions: { title: string; description: string };
     users: { title: string; description: string };

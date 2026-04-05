@@ -360,7 +360,7 @@ describe('PhotoPipelineWorker', () => {
   // ── processJob — GPS match ────────────────────────────────────────────────
 
   describe('processJob — GPS match', () => {
-    it('sets station_id to nearest candidate and nulls GPS on match', async () => {
+    it('sets station_id to nearest candidate on match (GPS retained for potential admin review)', async () => {
       mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
       mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
 
@@ -368,7 +368,7 @@ describe('PhotoPipelineWorker', () => {
 
       expect(mockPrismaService.submission.update).toHaveBeenCalledWith({
         where: { id: 'sub-123' },
-        data: { station_id: 'station-abc', gps_lat: null, gps_lng: null },
+        data: { station_id: 'station-abc' },
       });
     });
 
@@ -1149,7 +1149,7 @@ describe('PhotoPipelineWorker', () => {
 
         expect(mockPrismaService.submission.update).toHaveBeenCalledWith({
           where: { id: 'sub-123' },
-          data: { status: 'shadow_rejected' },
+          data: { status: 'shadow_rejected', flag_reason: 'logo_mismatch' },
         });
       });
 

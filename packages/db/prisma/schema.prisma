@@ -103,6 +103,7 @@ model Submission {
   gps_lng              Float?           // nulled by Story 3.4 worker after station matching
   source               PriceSource      @default(community)
   status               SubmissionStatus @default(pending)
+  flag_reason          String?          // set when status = shadow_rejected: 'logo_mismatch' | 'low_trust'
   created_at           DateTime         @default(now())
   updated_at           DateTime         @updatedAt
   user                 User             @relation(fields: [user_id], references: [id])
@@ -160,6 +161,19 @@ model StationFuelStaleness {
 
   @@unique([station_id, fuel_type])
   @@index([station_id])
+}
+
+model AdminAuditLog {
+  id            String   @id @default(uuid())
+  // Intentionally not a FK — log must be retained if admin account is deleted
+  admin_user_id String
+  action        String   // 'APPROVE' | 'REJECT'
+  submission_id String
+  notes         String?
+  created_at    DateTime @default(now())
+
+  @@index([submission_id])
+  @@index([admin_user_id, created_at])
 }
 
 model PriceHistory {

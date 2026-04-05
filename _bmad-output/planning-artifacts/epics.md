@@ -751,6 +751,54 @@ So that I can share ideas and problems without leaving the app to find a support
 
 ---
 
+### Story 1.13: Guest Mode Feature Gates
+
+As a **guest user**,
+I want gated features to be visible and discoverable — not hidden — so that I understand what signing in unlocks before committing to registration.
+
+**Why:** Hiding features from guests removes the conversion signal entirely. A guest who never sees the leaderboard or savings summary has no reason to sign up for them. The pattern — navigate to the feature, see what it offers, get a frictionless sign-up prompt — maximises discovery without a registration wall. The map and prices remain fully open; the gate only activates at the moment of action.
+
+**Guest access matrix:**
+
+| Feature | Guest access |
+|---|---|
+| Station map + colour-coded prices | Full — no gate |
+| Station detail sheet (prices, freshness) | Full — no gate |
+| Price contribution (photo submit) | Gate on submit (Story 1.4) |
+| Alert preferences panel | Gate on tap |
+| Fuel log / consumption tracking | Gate on tap |
+| Personal savings summary | Gate on tap |
+| Leaderboard | Read-only — guest can browse; gate on "join leaderboard" action only |
+
+**Acceptance Criteria:**
+
+**Given** a guest opens the app
+**When** they navigate to any gated feature entry point (alerts, fuel log, savings, leaderboard)
+**Then** the entry point is visible in the navigation — it does not disappear or grey out for guests
+
+**Given** a guest taps a gated feature entry point (alerts, fuel log, savings)
+**When** the tap is registered
+**Then** a modal is shown with a short value proposition specific to that feature and sign-in options: `[Continue with Google]` `[Continue with Apple]` `[Use Email]`
+**And** the modal is dismissible — guest returns to their previous screen with no penalty
+
+**Given** a guest views the leaderboard
+**When** they browse it
+**Then** they can see ranked entries (anonymised display names, savings amounts) without signing in
+**And** a non-intrusive banner reads: *"Sign in to track your savings and appear on the leaderboard"*
+**And** no gate modal fires unless the guest taps an explicit "Join" or "Track my savings" action
+
+**Given** a guest taps a feature gate sign-in option and completes registration
+**When** sign-up is successful
+**Then** they are returned to the feature they were trying to access — not dropped back on the map
+
+**Given** a guest dismisses a feature gate modal
+**When** they return to the same gated feature later
+**Then** the gate prompt is shown again — it is not a one-time dismissal like the soft sign-up card
+
+*Analytics: `feature_gate_shown`, `feature_gate_signup_started` events defined in Story 4.9.*
+
+---
+
 ## Epic 2: Station Map & Price Discovery
 
 Drivers and public users can view a map of Polish fuel stations colour-coded by price, see freshness indicators, and distinguish community-verified prices from seeded estimates.
@@ -1579,6 +1627,72 @@ So that a runaway bug, reprocessing loop, or submission flood cannot generate un
 
 ---
 
+### Story 3.10: Submission Deduplication
+
+As a **developer**,
+I want the pipeline to detect and discard duplicate submissions before they reach OCR,
+So that redundant Claude API calls are eliminated and popular stations don't generate disproportionate processing costs.
+
+**Why:** Without deduplication, a station receiving multiple near-simultaneous submissions — common for busy forecourts — triggers a separate OCR call for each one, even though the first verified result will make the rest redundant. A hash-based check also catches the same photo submitted multiple times across sessions. Both are wasted spend. Three dedup layers eliminate the majority of redundant work: L1 at API intake (cheapest — no R2 upload), L2 in the worker after GPS matching (before OCR), and hash-based in the worker before OCR. All layers are fail-open — a Redis failure is logged and processing continues normally, since deduplication is a cost optimisation, not a data integrity gate.
+
+**Acceptance Criteria:**
+
+**L1 — API intake (preselected station path)**
+
+**Given** a submission arrives with a `preselectedStationId`
+**When** a `dedup:station:{stationId}` key exists in Redis (set within the last 12 hours by a prior successful OCR)
+**Then** the submission is accepted with a 202 response but no R2 upload, no DB record, and no BullMQ job is created
+**And** the event is logged: `[DEDUP-L1] station={stationId} — fresh result exists, skipping intake`
+
+**Given** the GPS path (no `preselectedStationId`)
+**When** the submission arrives
+**Then** L1 dedup check is skipped entirely — stationId is not yet known
+
+**Given** Redis is unavailable at L1 check time
+**When** the check fails
+**Then** a warning is logged and the submission proceeds normally — fail-open
+
+**L2 — Worker (after GPS matching, before OCR)**
+
+**Given** the worker has resolved a `stationId` via GPS matching
+**When** a `dedup:station:{stationId}` key exists in Redis
+**Then** the submission is rejected with status `rejected` and reason `duplicate_submission`
+**And** the photo is deleted from R2
+**And** the event is logged: `[DEDUP-L2] station={stationId} submission={submissionId} — recent verified result exists, skipping OCR`
+**And** no Claude OCR call is made
+
+**Given** the submission's `ocr_confidence_score` is already set (BullMQ retry of a job that failed downstream)
+**When** L2 would fire
+**Then** the dedup check is skipped — the submission proceeds to allow retry to complete
+
+**Hash dedup — Worker (after R2 fetch, before OCR)**
+
+**Given** the photo buffer is fetched from R2
+**When** its SHA-256 hash matches a `dedup:hash:{sha256hex}` key in Redis (set within the last 24 hours)
+**Then** the submission is rejected with status `rejected` and reason `duplicate_submission`
+**And** the photo is deleted from R2
+**And** no Claude OCR call is made
+
+**Given** the submission's `ocr_confidence_score` is already set (BullMQ retry)
+**When** hash dedup would fire
+**Then** the check is skipped — retry proceeds
+
+**Key recording**
+
+**Given** OCR completes successfully (confidence ≥ 0.4, prices extracted, bands valid)
+**When** the result is ready to be passed to price validation
+**Then** `dedup:station:{stationId}` is recorded in Redis with a 12-hour TTL
+**And** `dedup:hash:{sha256hex}` is recorded in Redis with a 24-hour TTL
+**And** both recording calls are best-effort — a Redis failure logs a warning but does not prevent the submission from completing
+
+**Given** OCR fails for any reason (low confidence, unreadable photo, etc.)
+**When** the job is rejected or retried
+**Then** no dedup keys are recorded for that submission
+
+*Covers: cost optimisation — no FR assigned. Architecture note: station dedup key is recorded before price validation completes to support coalescing (multiple concurrent submissions for the same station — the second skips OCR as soon as the first records its key). Known race window: non-atomic GET/SET means two concurrent workers can both pass the check; acceptable for MVP single-instance deployment. Future: replace with atomic `SET NX EX` if needed at scale.*
+
+---
+
 ## Epic 4: Admin Operations & Data Integrity
 
 ### Story 4.1: Admin Dashboard Foundation
@@ -1812,7 +1926,19 @@ So that I can spot OCR degradation or queue problems the moment they happen — 
 **When** the ADMIN selects a specific rejection reason
 **Then** they can drill down to the list of submissions with that rejection reason in the selected period
 
-*Covers: FR61, FR64. Admin interface in Polish only.*
+**Given** an ADMIN views the Product Metrics tab
+**When** they select a time period (today / last 7 days / last 30 days)
+**Then** they see the following server-side aggregate counters — no user identifiers, no consent required:
+- **Map views:** total map loads per day (server-side counter incremented on API request)
+- **Station detail views:** total station sheet opens per day
+- **Daily/monthly active devices:** count of unique device tokens making at least one API request in the period (device token is ephemeral and not linked to identity)
+- **New registrations:** count of new User records created per day
+- **Guest vs authenticated ratio:** % of map-load requests with a valid session token vs anonymous
+- **Nudge delivery counts:** count of guest push nudges sent per market event (from Story 6.9), no per-user attribution
+- **Submission funnel totals:** already in Contribution Funnel tab — duplicated here as a product-level view alongside map engagement
+**And** none of these counters store or reference user IDs, email addresses, or any personal identifier — they are pure server-side aggregates derived from request counts and DB row counts
+
+*Covers: FR61, FR64. Admin interface in Polish only. Architecture note: all metrics in the Product Metrics tab are server-side aggregates — no analytics SDK involved, no consent required, fully GDPR-compliant by design.*
 
 ### Story 4.7: API Cost Tracking Dashboard *(Phase 2)*
 
@@ -1876,10 +2002,30 @@ So that I can understand how drivers actually use the product, identify retentio
 - `photo_submitted` — fuel_types count, station_id
 - `submission_confirmed` — outcome (queued/sent)
 - `contribution_streak_milestone` — streak length
+- `app_opened` — extend existing event with `auth_state` property: `guest` | `authenticated`
+- `guest_nudge_shown` — nudge_type (`engagement_based` | `market_event`)
+- `guest_nudge_dismissed` — nudge_type
+- `guest_nudge_cta_tapped` — nudge_type, method (`google` | `apple` | `email`)
+- `feature_gate_shown` — feature_name (`alerts` | `fuel_log` | `savings` | `leaderboard`)
+- `feature_gate_signup_started` — feature_name, method (`google` | `apple` | `email`)
 
-**Given** a driver who has declined analytics consent (if separate consent is required)
-**When** analytics events would be captured
-**Then** no events are sent — consent state is checked before every event flush
+**Given** an authenticated driver uses the app
+**When** analytics events are captured
+**Then** all events are linked to a **hashed user ID** — never a raw user ID, email, or any directly identifying field
+**And** the hashed ID cannot be reversed to identify the individual without access to the hash salt, which is stored separately from analytics data
+**And** the legal basis for this processing is **legitimate interest** (pseudonymised data, purpose limited to service improvement, no advertising profiling) — documented in the LIA required before Phase 2 launch
+**And** the privacy policy clearly discloses this processing and the right to object
+
+**Given** an authenticated driver navigates to privacy settings *(extends the screen built in Story 1.10 — add analytics toggle alongside existing consent records)*
+**When** they view their data preferences
+**Then** they see an "Analytics" toggle: *"Help us improve the app by sharing anonymous usage data"*, defaulting to **on**
+**And** toggling it off stops all PostHog/Mixpanel event emission for that user immediately
+**And** their existing analytics data is not deleted (legitimate interest basis does not require deletion on opt-out, only cessation of future processing) — this is disclosed in the toggle description
+**And** toggling it back on resumes event capture from that point forward
+
+**Given** a driver has opted out of analytics
+**When** they perform any action that would normally trigger an event
+**Then** no event is sent to PostHog/Mixpanel — opt-out state is checked before every event call, client-side
 
 **Given** an ADMIN opens the Engagement Dashboard section
 **When** they view it, for a selectable period (last 7 / 30 / 90 days / all time)
@@ -1889,6 +2035,9 @@ So that I can understand how drivers actually use the product, identify retentio
 - **Retention cohorts** — % of new drivers who return at day 7, day 14, day 30
 - **Top contributing users** — anonymised (by user_id hash, not PII) — top 20 by submission count
 - **Top contributing regions** — voivodeship-level submission heatmap
+- **Guest ratio** — % of `app_opened` events from unauthenticated sessions, 7/30/90-day trend
+- **Guest → sign-up conversion rate** — % of guest sessions resulting in account creation, broken down by entry point (soft card | contribution gate | feature gate | nudge CTA)
+- **Nudge performance** — per nudge type (engagement_based, market_event): impressions, dismissal rate, CTA tap rate, sign-ups within 24h
 
 **Given** the engagement dashboard
 **When** any metric is displayed
@@ -1898,7 +2047,9 @@ So that I can understand how drivers actually use the product, identify retentio
 **When** it is viewed alongside other admin panel sections (4.1, 4.6, 4.7, 4.8)
 **Then** it follows the same navigation shell, authentication, and visual language — one coherent panel
 
-*Covers: FR65, FR66. Admin interface in Polish only. Note: if PostHog's data residency options are insufficient for GDPR compliance, Mixpanel (EU data residency) or a self-hosted PostHog instance are viable alternatives — decision to be made pre-implementation.*
+*Covers: FR65, FR66. Admin interface in Polish only.*
+*Legal basis: legitimate interest (Article 6(1)(f)) — pseudonymised event data processed solely for service improvement, not for advertising or profiling. A Legitimate Interest Assessment (LIA) must be completed and documented before Phase 2 launch. Analytics vendor must offer EU data residency; PostHog Cloud (EU region), Mixpanel (EU data residency), or self-hosted PostHog are all viable — decision to be made pre-implementation with legal review input.*
+*Data minimisation principle: collect the minimum event set needed to answer specific product questions. Do not instrument events speculatively. Each event in the list above must have a defined decision it enables.*
 
 ### Story 4.10: Admin UI — Manual Station Sync Trigger *(Phase 2)*
 
@@ -2425,12 +2576,12 @@ So that I can fill up before the rise hits the pumps near me.
 
 **Acceptance Criteria:**
 
-**Given** Story 6.0 publishes a `price_rise_signal` event to the BullMQ queue
+**Given** Story 2.7 records a `market_signal` with `significant_movement: true` for any fuel type *(Phase 1 signal source)*, or Story 6.0 publishes a `price_rise_signal` event *(Phase 2 extension)*
 **When** the alert worker processes it
-**Then** all drivers with active rise alerts and a last fill-up within 14 days receive a push notification:
+**Then** all drivers who have opted in to sharp-rise alerts (Story 1.7) and have granted push notification permission receive a push notification:
 "Our data suggests fuel prices in your area may rise soon — worth filling up if you can."
 **And** the notification deep-links to the map view
-**And** the underlying data source (ORLEN rack prices, Brent crude) is never mentioned to the driver in any surface
+**And** the underlying data source is never mentioned to the driver in any surface
 
 **Given** both a Brent crude signal and an ORLEN rack signal fire within the same 24-hour window
 **When** alerts would be sent for both
@@ -2446,15 +2597,11 @@ So that I can fill up before the rise hits the pumps near me.
 **When** another market signal would trigger within 72 hours for the same fuel type
 **Then** no second predictive alert is sent — one alert per price movement cycle
 
-**Given** a driver has not filled up in the last 14 days
-**When** a predictive alert would fire
-**Then** no notification is sent — a driver who hasn't filled up recently is unlikely to act and the alert adds noise
-
 **Given** a driver has not granted notification permission
 **When** a predictive alert would trigger
 **Then** no notification is sent — silently dropped; re-prompting handled by Story 6.5
 
-*Covers: FR23 (predictive layer). Driver opt-in toggle for predictive alerts defined in Story 6.4. Internal implementation note: signal source logged for ops monitoring and prediction accuracy tracking — never exposed to drivers.*
+*Covers: FR23 (predictive layer). Phase 1: ORLEN rack signal only (Story 2.7 `significant_movement` flag) — no dependency on Story 6.4 or 6.0 for Phase 1 delivery; opt-in toggle is the existing sharp-rise toggle in Story 1.7. Phase 2: extended with Brent crude via Story 6.0. Signal source logged internally for ops monitoring and prediction accuracy tracking — never exposed to drivers.*
 
 ---
 
@@ -2642,6 +2789,60 @@ So that I can identify where opt-in rates are low, measure re-prompting effectiv
 **Then** it follows the same navigation shell, authentication, and visual language as all other admin panel sections — one coherent panel, not a separate tool
 
 *Covers: FR65 (extension). Architecture note: all admin panel stories (4.1, 4.6, 4.7, 4.8, this story) must be reviewed together at implementation readiness to ensure a coherent shared shell — navigation, auth, and tech stack must be consistent across all sections.*
+
+---
+
+### Story 6.9: Guest Conversion Nudges *(Phase 2)*
+
+As a **guest user**,
+I want to discover what signing in would add to my experience at moments when it's genuinely relevant,
+So that I can make an informed decision to create an account when the value is tangible.
+
+**Why:** Guest users who never encounter a compelling reason to sign up will remain guests indefinitely. Two complementary nudge triggers address this without resorting to nagging: an engagement signal (regular map use identifies a strong sign-up candidate) and a market event signal (a confirmed real-world price movement demonstrates the alert value concretely). The market event nudge is delivered via push — so the guest sees it even if they don't open the app — with in-app banner as fallback for guests who declined push permission. Neither nudge delivers the full alert experience: that requires an account, push permission, and opt-in. The gap between what the guest receives and what a signed-up driver gets *is* the value proposition for registering.
+
+**Dependencies:** Nudge 1 requires anonymous session count tracking (device-local, no account). Nudge 2 requires Story 6.2 community confirmation threshold to be deployed. Push delivery to guests requires push permission granted at first open (Story 1.7 already requests this before auth).
+
+**Acceptance Criteria:**
+
+**Nudge 1 — Engagement-based (in-app card)**
+
+**Given** a guest has opened the app 3 or more times within a rolling 7-day window, tracked device-locally
+**When** they open the app for the qualifying session
+**Then** after the map has loaded — not interrupting navigation — a dismissible card is shown:
+*"You've been checking prices regularly. Sign in to get automatic alerts — so the app does the checking for you."*
+**And** the card offers: `[Continue with Google]` `[Continue with Apple]` `[Use Email]` and a dismiss option
+**And** this card is shown at most once per device lifetime — never shown again after dismissal or sign-up
+
+**Given** the guest dismisses the engagement nudge card
+**When** they open the app on any subsequent session
+**Then** the card is not shown again — dismissal is permanent
+
+**Nudge 2 — Market event (push primary, in-app fallback)**
+
+**Given** Story 6.2's community confirmation threshold has been met for a regional price rise
+**When** the confirmation event fires
+**Then** a push notification is sent to all guest devices that have granted push permission:
+*"Fuel prices moved today. Sign in to get a heads-up next time — and fill up before it happens."*
+**And** tapping the notification opens the app and shows the sign-in screen
+**And** the push is sent at most once per market confirmation event per device
+
+**Given** a guest opens the app within 48 hours of a market confirmation event AND they did not receive the push (push permission was not granted)
+**When** the app loads
+**Then** a dismissible in-app banner is shown as fallback:
+*"Fuel prices moved today. Sign in to get a heads-up next time — and fill up before it happens."*
+**And** the banner includes a `[Sign in]` CTA and a dismiss option
+**And** the banner is shown at most once per market event per device
+**And** after 48 hours the banner no longer shows for that event regardless of app opens
+
+**Given** both Nudge 1 (engagement card) and a Nudge 2 (market event banner) would appear in the same session
+**When** the app loads
+**Then** only the market event banner is shown — it takes precedence; the engagement card fires on the next qualifying session if it has not yet been shown
+
+**Given** the market event nudge copy
+**When** it is composed
+**Then** it contains no specific price movement figures, percentages, fuel type names, or station details — copy is intentionally general
+
+*Analytics: `guest_nudge_shown`, `guest_nudge_dismissed`, `guest_nudge_cta_tapped` events defined in Story 4.9.*
 
 ---
 

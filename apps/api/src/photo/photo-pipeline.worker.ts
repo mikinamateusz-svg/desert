@@ -258,14 +258,13 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       return null;
     }
 
-    // Match found — set station_id, null GPS coords
+    // Match found — set station_id. GPS coords are retained until the submission is
+    // either verified (nulled in runPriceValidationAndUpdate) or flagged for admin review
+    // (nulled when admin approves/rejects). This lets ops see where the photo was taken
+    // if the submission is flagged for a logo mismatch.
     await this.prisma.submission.update({
       where: { id: submission.id },
-      data: {
-        station_id: candidates[0].id,
-        gps_lat: null,
-        gps_lng: null,
-      },
+      data: { station_id: candidates[0].id },
     });
 
     this.logger.log(
@@ -454,7 +453,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       try {
         await this.prisma.submission.update({
           where: { id: submission.id },
-          data: { status: SubmissionStatus.shadow_rejected },
+          data: { status: SubmissionStatus.shadow_rejected, flag_reason: 'logo_mismatch' },
         });
         return true; // flagged — caller returns early
       } catch (err) {
@@ -563,13 +562,15 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       updatedAt: new Date(),
     };
 
-    // Update submission: mark verified, store validated prices only, null photo key atomically
+    // Update submission: mark verified, store validated prices only, null photo key + GPS atomically
     await this.prisma.submission.update({
       where: { id: submissionId },
       data: {
         status: SubmissionStatus.verified,
         price_data: validatedPrices as unknown as Prisma.InputJsonValue,
         photo_r2_key: null,
+        gps_lat: null,
+        gps_lng: null,
       },
     });
 

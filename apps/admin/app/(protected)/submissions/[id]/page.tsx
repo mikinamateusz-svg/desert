@@ -86,7 +86,6 @@ export default async function SubmissionDetailPage({ params }: Props) {
             {submission.photo_url && (
               <DetailRow label={t.review.photoLabel}>
                 <div>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={submission.photo_url}
                     alt="submission photo"

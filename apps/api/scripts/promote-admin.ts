@@ -10,6 +10,11 @@
 import { PrismaClient, UserRole } from '@desert/db';
 
 async function main(): Promise<void> {
+  if (!process.env.DATABASE_URL) {
+    console.error('Error: DATABASE_URL is not set.');
+    process.exit(1);
+  }
+
   const emailArg = process.argv.find((a) => a.startsWith('--email='));
   if (!emailArg) {
     console.error('Usage: pnpm promote-admin --email=<email>');

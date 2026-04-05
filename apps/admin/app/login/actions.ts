@@ -3,7 +3,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-const API_URL = process.env.API_URL ?? 'http://localhost:3001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 const COOKIE_NAME = 'admin_token';
 const COOKIE_MAX_AGE = 60 * 60 * 8; // 8 hours
 
@@ -45,7 +45,7 @@ export async function loginAction(formData: FormData): Promise<{ error: string }
   cookieStore.set(COOKIE_NAME, body.accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: 'strict',
     path: '/',
     maxAge: COOKIE_MAX_AGE,
   });

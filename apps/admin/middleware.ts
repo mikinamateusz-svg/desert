@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const PUBLIC_PATHS = ['/login'];
+const PUBLIC_PATHS = new Set(['/login']);
 
 interface AdminTokenClaims {
   role?: string;
@@ -24,10 +24,16 @@ function decodeJwtPayload(token: string): AdminTokenClaims | null {
   }
 }
 
+function clearAndRedirect(req: NextRequest): NextResponse {
+  const res = NextResponse.redirect(new URL('/login', req.url));
+  res.cookies.delete('admin_token');
+  return res;
+}
+
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) {
+  if (PUBLIC_PATHS.has(pathname)) {
     return NextResponse.next();
   }
 
@@ -40,16 +46,16 @@ export function middleware(req: NextRequest) {
   const claims = decodeJwtPayload(token);
 
   if (!claims) {
-    return NextResponse.redirect(new URL('/login', req.url));
+    return clearAndRedirect(req);
   }
 
   const nowSec = Math.floor(Date.now() / 1000);
   if (claims.exp && claims.exp < nowSec) {
-    return NextResponse.redirect(new URL('/login', req.url));
+    return clearAndRedirect(req);
   }
 
   if (claims.role !== 'ADMIN') {
-    return NextResponse.redirect(new URL('/login', req.url));
+    return clearAndRedirect(req);
   }
 
   return NextResponse.next();

@@ -81,6 +81,26 @@ const translations = {
       searchButton: 'Szukaj',
       noUsersFound: 'Nie znaleziono użytkowników.',
     },
+    deadLetter: {
+      title: 'Kolejka błędów',
+      description: 'Przeglądaj nieprzetworzone zadania.',
+      columns: {
+        submissionId: 'ID zgłoszenia',
+        station: 'Stacja',
+        failureReason: 'Przyczyna błędu',
+        attempts: 'Próby',
+        lastAttempt: 'Ostatnia próba',
+      },
+      retry: 'Ponów',
+      discard: 'Odrzuć',
+      confirmDiscard: 'Czy na pewno odrzucić to zadanie? Zdjęcie zostanie usunięte.',
+      noItems: 'Brak zadań w kolejce błędów.',
+      retrySuccess: 'Zadanie zostało ponownie dodane do kolejki.',
+      discardSuccess: 'Zadanie zostało odrzucone.',
+      errorGeneric: 'Błąd. Spróbuj ponownie.',
+      unknownStation: 'Nieznana',
+      unknownReason: 'Nieznany',
+    },
     review: {
       flagReason: { logo_mismatch: 'Niezgodność logo', low_trust: 'Niskie zaufanie' },
       columns: {
@@ -174,6 +194,26 @@ const translations = {
       searchPlaceholder: 'Search by email or name…',
       searchButton: 'Search',
       noUsersFound: 'No users found.',
+    },
+    deadLetter: {
+      title: 'Dead-Letter Queue',
+      description: 'Review unprocessed jobs.',
+      columns: {
+        submissionId: 'Submission ID',
+        station: 'Station',
+        failureReason: 'Failure reason',
+        attempts: 'Attempts',
+        lastAttempt: 'Last attempt',
+      },
+      retry: 'Retry',
+      discard: 'Discard',
+      confirmDiscard: 'Are you sure you want to discard this job? The photo will be deleted.',
+      noItems: 'No jobs in the dead-letter queue.',
+      retrySuccess: 'Job re-queued successfully.',
+      discardSuccess: 'Job discarded.',
+      errorGeneric: 'Something went wrong. Try again.',
+      unknownStation: 'Unknown',
+      unknownReason: 'Unknown',
     },
     review: {
       flagReason: { logo_mismatch: 'Logo mismatch', low_trust: 'Low trust score' },
@@ -269,6 +309,26 @@ const translations = {
       searchButton: 'Пошук',
       noUsersFound: 'Користувачів не знайдено.',
     },
+    deadLetter: {
+      title: 'Черга помилок',
+      description: 'Перегляд необроблених задач.',
+      columns: {
+        submissionId: 'ID заявки',
+        station: 'Станція',
+        failureReason: 'Причина помилки',
+        attempts: 'Спроби',
+        lastAttempt: 'Остання спроба',
+      },
+      retry: 'Повторити',
+      discard: 'Відхилити',
+      confirmDiscard: 'Ви впевнені, що хочете відхилити цю задачу? Фото буде видалено.',
+      noItems: 'Черга помилок порожня.',
+      retrySuccess: 'Задачу знову додано до черги.',
+      discardSuccess: 'Задачу відхилено.',
+      errorGeneric: 'Помилка. Спробуйте ще раз.',
+      unknownStation: 'Невідомо',
+      unknownReason: 'Невідомо',
+    },
     review: {
       flagReason: { logo_mismatch: 'Невідповідність логотипу', low_trust: 'Низький рейтинг довіри' },
       columns: {
@@ -338,6 +398,26 @@ export interface Translations {
     searchPlaceholder: string;
     searchButton: string;
     noUsersFound: string;
+  };
+  deadLetter: {
+    title: string;
+    description: string;
+    columns: {
+      submissionId: string;
+      station: string;
+      failureReason: string;
+      attempts: string;
+      lastAttempt: string;
+    };
+    retry: string;
+    discard: string;
+    confirmDiscard: string;
+    noItems: string;
+    retrySuccess: string;
+    discardSuccess: string;
+    errorGeneric: string;
+    unknownStation: string;
+    unknownReason: string;
   };
   review: {
     flagReason: Record<string, string>;

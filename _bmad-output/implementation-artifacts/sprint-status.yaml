@@ -683,6 +683,14 @@ epics:
         review_findings: "intent gaps resolved: IG-1 flag_reason column added to Submission (Option A), IG-2 presigned photo URL 1h TTL, IG-3 GPS preserved through station-match, shown rounded to 4dp in admin detail, nulled on approve/reject. Patches: gps_lat/gps_lng nulled on approve+reject, photo_r2_key cleared before audit log, page NaN guard, trust score updates on approve/reject"
         patches_applied: "2026-04-05 — all patches applied; 720/720 tests passing, tsc clean"
 
+      - id: 4.4
+        title: Dead-Letter Queue Management
+        status: done
+        dev_completed: 2026-04-05
+        review_date: 2026-04-05
+        review_findings: "13 patches: P-1 reorder discardJob (job.remove before submission.update), P-2 null guard when submission missing from DB, P-3 job.getState() check before retry/discard (ConflictException if not failed), P-4 updateMany status guard (notIn rejected/verified), P-5 Slack alert 1h rate limit + remove onModuleInit alert call, P-6 SSRF fix validate SLACK_WEBHOOK_URL prefix, P-7 dashboard link in alert text (ADMIN_DASHBOARD_URL env), P-8 jobId format guard /^\\d+$/ in controller, P-9 onModuleInit no longer awaits Redis, P-10 AbortSignal.timeout(5000) on Slack fetch, P-11 O(n²) sort → tsMap pre-build, P-12 cache queue reference in onModuleInit, P-13 dead code ?? errorLabel removed. 1 deferred: D-1 listDlq no pagination (DLQ stays small under normal ops). 5 rejected as noise."
+        patches_applied: "2026-04-05 — all 13 patches applied; 731/731 tests passing, tsc clean"
+
       - id: 4.3
         title: User Abuse Detection & Shadow Ban
         status: done

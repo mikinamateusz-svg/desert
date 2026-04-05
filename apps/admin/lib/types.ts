@@ -59,6 +59,16 @@ export interface AnomalyAlertRow {
   dismissed_at: string | null;
 }
 
+export interface DlqJobRow {
+  jobId: string;
+  submissionId: string;
+  stationId: string | null;
+  stationName: string | null;
+  failureReason: string;
+  attemptsMade: number;
+  lastAttemptAt: string | null;
+}
+
 export interface UserDetail {
   id: string;
   email: string | null;

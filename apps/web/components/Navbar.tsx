@@ -15,7 +15,7 @@ const NAV_LINKS = (t: Translations, locale: Locale) => [
   { href: '/', label: t.nav.map },
   { href: locale === 'en' ? '/en/about' : locale === 'uk' ? '/uk/about' : '/o-nas', label: t.nav.about },
   { href: locale === 'en' ? '/en/contact' : locale === 'uk' ? '/uk/contact' : '/kontakt', label: t.nav.contact },
-  { href: locale === 'en' ? '/en/pricing' : locale === 'uk' ? '/uk/pricing' : '/cennik', label: t.nav.pricing },
+  // { href: locale === 'en' ? '/en/pricing' : locale === 'uk' ? '/uk/pricing' : '/cennik', label: t.nav.pricing },
 ];
 
 export default function Navbar({ locale, t }: Props) {

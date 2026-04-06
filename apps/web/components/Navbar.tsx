@@ -68,12 +68,12 @@ export default function Navbar({ locale, t }: Props) {
           ))}
         </div>
 
-        {/* Login CTA */}
+        {/* Get the app CTA */}
         <a
           href="#"
           className="hidden sm:inline-flex items-center gap-1.5 bg-blue-600 text-white text-sm font-medium px-3.5 py-1.5 rounded-lg hover:bg-blue-700 transition-colors"
         >
-          {t.nav.login}
+          {t.nav.getApp}
         </a>
 
         {/* Mobile hamburger */}
@@ -129,7 +129,7 @@ export default function Navbar({ locale, t }: Props) {
                 href="#"
                 className="bg-blue-600 text-white text-sm font-medium px-3 py-1.5 rounded-lg"
               >
-                {t.nav.login}
+                {t.nav.getApp}
               </a>
             </div>
           </nav>

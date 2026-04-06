@@ -46,6 +46,7 @@ export interface Translations {
     login: string;
     account: string;
     menu: string;
+    getApp: string;
   };
   footer: {
     tagline: string;
@@ -178,6 +179,7 @@ export const translations: Record<Locale, Translations> = {
       login: 'Zaloguj się',
       account: 'Konto',
       menu: 'Menu',
+      getApp: 'Pobierz aplikację',
     },
     footer: {
       tagline: 'Ceny paliw od społeczności',
@@ -309,6 +311,7 @@ export const translations: Record<Locale, Translations> = {
       login: 'Sign in',
       account: 'Account',
       menu: 'Menu',
+      getApp: 'Get the app',
     },
     footer: {
       tagline: 'Community fuel prices',
@@ -440,6 +443,7 @@ export const translations: Record<Locale, Translations> = {
       login: 'Увійти',
       account: 'Кабінет',
       menu: 'Меню',
+      getApp: 'Завантажити додаток',
     },
     footer: {
       tagline: 'Ціни на пальне від спільноти',

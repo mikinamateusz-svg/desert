@@ -38,7 +38,7 @@ export type StationPriceDto = {
 };
 
 export async function apiGetNearbyPrices(
-  accessToken: string,
+  accessToken: string | null,
   lat: number,
   lng: number,
   radiusMeters?: number,
@@ -51,7 +51,7 @@ export async function apiGetNearbyPrices(
   });
   return request<StationPriceDto[]>(`/v1/prices/nearby?${params.toString()}`, {
     method: 'GET',
-    headers: { Authorization: `Bearer ${accessToken}` },
+    headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
     signal,
   });
 }

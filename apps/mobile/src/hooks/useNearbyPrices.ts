@@ -12,7 +12,7 @@ export function useNearbyPrices(
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    if (!center || !accessToken) {
+    if (!center) {
       setLoading(false);
       return;
     }
@@ -28,7 +28,7 @@ export function useNearbyPrices(
     void (async () => {
       try {
         const data = await apiGetNearbyPrices(
-          accessToken,
+          accessToken ?? null,
           center.lat,
           center.lng,
           undefined,

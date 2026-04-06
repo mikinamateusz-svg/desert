@@ -53,15 +53,6 @@ interface GeocodeResponse {
   status: string;
 }
 
-interface NearbySearchResult {
-  name: string;
-}
-
-interface NearbySearchResponse {
-  results: NearbySearchResult[];
-  status: string;
-}
-
 
 export interface StationClassification {
   brand: string | null;
@@ -98,24 +89,6 @@ export class StationClassificationService {
       if (pattern.test(name)) return brand;
     }
     return 'independent';
-  }
-
-  async detectMop(lat: number, lng: number, apiKey: string): Promise<boolean> {
-    const url = new URL('https://maps.googleapis.com/maps/api/place/nearbysearch/json');
-    url.searchParams.set('location', `${lat},${lng}`);
-    url.searchParams.set('radius', '300');
-    url.searchParams.set('keyword', 'MOP');
-    url.searchParams.set('key', apiKey);
-
-    const res = await fetch(url.toString(), { signal: AbortSignal.timeout(10_000) });
-    if (!res.ok) throw new Error(`Nearby Search HTTP error: ${res.status}`);
-
-    const data = (await res.json()) as NearbySearchResponse;
-    if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') {
-      throw new Error(`Nearby Search API status: ${data.status}`);
-    }
-
-    return data.results.some((r) => /mop/i.test(r.name));
   }
 
   async resolveGeocode(
@@ -181,14 +154,11 @@ export class StationClassificationService {
     station: StationForClassification,
     apiKey: string,
   ): Promise<StationClassification> {
-    const mopInNameOrAddress =
+    const isMop =
       /\bMOP\b/i.test(station.name ?? '') ||
       /\bMOP\b/i.test(station.address ?? '');
 
-    const [isMop, geocode] = await Promise.all([
-      mopInNameOrAddress ? Promise.resolve(true) : this.detectMop(station.lat, station.lng, apiKey),
-      this.resolveGeocode(station.lat, station.lng, apiKey),
-    ]);
+    const geocode = await this.resolveGeocode(station.lat, station.lng, apiKey);
 
     return {
       brand: this.extractBrand(station.name),

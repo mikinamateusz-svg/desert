@@ -9,11 +9,6 @@ global.fetch = jest.fn();
 
 const mockConfig = { getOrThrow: jest.fn().mockReturnValue('test-api-key') };
 
-const makeNearbyResponse = (results: { name: string }[], status = 'OK') => ({
-  ok: true,
-  json: jest.fn().mockResolvedValue({ status, results }),
-});
-
 const makeGeocodeResponse = (voivodeship: string | null, locality: string | null, status = 'OK') => {
   const components: { long_name: string; types: string[] }[] = [];
   if (voivodeship) components.push({ long_name: voivodeship, types: ['administrative_area_level_1', 'political'] });
@@ -96,58 +91,6 @@ describe('StationClassificationService', () => {
 
     it('returns null for empty string (falsy — same as null)', () => {
       expect(service.extractBrand('')).toBeNull();
-    });
-  });
-
-  // ─── detectMop ─────────────────────────────────────────────────────────────
-
-  describe('detectMop', () => {
-    it('returns true when a result has MOP in name', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce(
-        makeNearbyResponse([{ name: 'MOP Pruszków A2' }, { name: 'BP' }]),
-      );
-      expect(await service.detectMop(52.1, 20.8, 'key')).toBe(true);
-    });
-
-    it('returns true for lowercase mop in name', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce(
-        makeNearbyResponse([{ name: 'Stacja mop Autostrada' }]),
-      );
-      expect(await service.detectMop(52.1, 20.8, 'key')).toBe(true);
-    });
-
-    it('returns false when no result has MOP in name', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce(
-        makeNearbyResponse([{ name: 'Orlen Warszawa' }, { name: 'Shell' }]),
-      );
-      expect(await service.detectMop(52.1, 20.8, 'key')).toBe(false);
-    });
-
-    it('returns false on ZERO_RESULTS', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce(makeNearbyResponse([], 'ZERO_RESULTS'));
-      expect(await service.detectMop(52.1, 20.8, 'key')).toBe(false);
-    });
-
-    it('throws on non-OK HTTP status', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce({ ok: false, status: 429 });
-      await expect(service.detectMop(52.1, 20.8, 'key')).rejects.toThrow('HTTP error: 429');
-    });
-
-    it('throws on REQUEST_DENIED API status', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce(
-        makeNearbyResponse([], 'REQUEST_DENIED'),
-      );
-      await expect(service.detectMop(52.1, 20.8, 'key')).rejects.toThrow('REQUEST_DENIED');
-    });
-
-    it('sends correct query parameters', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce(makeNearbyResponse([],'ZERO_RESULTS'));
-      await service.detectMop(52.23, 21.01, 'test-key');
-      const calledUrl = (global.fetch as jest.Mock).mock.calls[0][0] as string;
-      expect(calledUrl).toContain('radius=300');
-      expect(calledUrl).toContain('keyword=MOP');
-      expect(calledUrl).toContain('52.23');
-      expect(calledUrl).toContain('21.01');
     });
   });
 
@@ -272,7 +215,7 @@ describe('StationClassificationService', () => {
       expect(global.fetch).toHaveBeenCalledTimes(1);
     });
 
-    it('falls back to Nearby Search when name and address have no MOP signal', async () => {
+    it('classifies as standard when no MOP in name or address — makes exactly one API call', async () => {
       const station: StationForClassification = {
         id: 'station-6',
         name: 'Orlen',
@@ -281,13 +224,12 @@ describe('StationClassificationService', () => {
         lng: 19.63,
       };
       (global.fetch as jest.Mock)
-        .mockResolvedValueOnce(makeNearbyResponse([{ name: 'MOP Wiśniowa Góra Wschód' }]))
         .mockResolvedValueOnce(makeGeocodeResponse('lodzkie', null));
 
       const result = await service.classifyStation(station, 'key');
 
-      expect(result.station_type).toBe('mop');
-      expect(global.fetch).toHaveBeenCalledTimes(2);
+      expect(result.station_type).toBe('standard');
+      expect(global.fetch).toHaveBeenCalledTimes(1);
     });
 
     it('classifies non-MOP Auchan station near DE border as standard + border zone', async () => {
@@ -299,7 +241,6 @@ describe('StationClassificationService', () => {
         lng: 14.60,
       };
       (global.fetch as jest.Mock)
-        .mockResolvedValueOnce(makeNearbyResponse([], 'ZERO_RESULTS'))
         .mockResolvedValueOnce(makeGeocodeResponse('lubuskie', 'Słubice'));
 
       const result = await service.classifyStation(borderStation, 'key');
@@ -319,7 +260,6 @@ describe('StationClassificationService', () => {
         lng: 20.69,
       };
       (global.fetch as jest.Mock)
-        .mockResolvedValueOnce(makeNearbyResponse([], 'ZERO_RESULTS'))
         .mockResolvedValueOnce(makeGeocodeResponse('małopolskie', 'Nowy Sącz'));
 
       const result = await service.classifyStation(nowySaczStation, 'key');
@@ -336,7 +276,6 @@ describe('StationClassificationService', () => {
         lng: 21.01,
       };
       (global.fetch as jest.Mock)
-        .mockResolvedValueOnce(makeNearbyResponse([], 'ZERO_RESULTS'))
         .mockResolvedValueOnce(makeGeocodeResponse('mazowieckie', 'Warszawa'));
 
       const result = await service.classifyStation(warsawStation, 'key');
@@ -344,23 +283,7 @@ describe('StationClassificationService', () => {
       expect(result.brand).toBe('orlen');
       expect(result.station_type).toBe('standard');
       expect(result.settlement_tier).toBe('metropolitan');
-    });
-
-    it('fires detectMop and resolveGeocode in parallel when no MOP in name or address', async () => {
-      const station: StationForClassification = {
-        id: 'station-3',
-        name: 'Orlen Centrum',
-        address: null,
-        lat: 52.23,
-        lng: 21.01,
-      };
-      (global.fetch as jest.Mock)
-        .mockResolvedValueOnce(makeNearbyResponse([], 'ZERO_RESULTS'))
-        .mockResolvedValueOnce(makeGeocodeResponse('mazowieckie', 'Warszawa'));
-
-      await service.classifyStation(station, 'key');
-
-      expect(global.fetch).toHaveBeenCalledTimes(2);
+      expect(global.fetch).toHaveBeenCalledTimes(1);
     });
   });
 });

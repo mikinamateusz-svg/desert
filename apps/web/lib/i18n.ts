@@ -129,6 +129,13 @@ export interface Translations {
       fleet: string[];
     };
   };
+  download: {
+    title: string;
+    subtitle: string;
+    appStore: string;
+    googlePlay: string;
+    comingSoon: string;
+  };
   legal: {
     privacyTitle: string;
     termsTitle: string;
@@ -262,6 +269,13 @@ export const translations: Record<Locale, Translations> = {
         fleet: ['Wszystko z planu Pro', 'Wiele pojazdów', 'Raporty kosztów', 'Integracja z systemami FK', 'Dedykowany opiekun'],
       },
     },
+    download: {
+      title: 'Pobierz Litro',
+      subtitle: 'Zawsze wiesz, gdzie jest najtaniej. Dołącz do społeczności kierowców.',
+      appStore: 'Pobierz w App Store',
+      googlePlay: 'Pobierz na Google Play',
+      comingSoon: 'Aplikacja pojawi się w sklepach wkrótce.',
+    },
     legal: {
       privacyTitle: 'Polityka prywatności',
       termsTitle: 'Regulamin',
@@ -394,6 +408,13 @@ export const translations: Record<Locale, Translations> = {
         fleet: ['Everything in Pro', 'Multiple vehicles', 'Cost reports', 'Accounting integration', 'Dedicated manager'],
       },
     },
+    download: {
+      title: 'Download Litro',
+      subtitle: 'Always know where fuel is cheapest. Join the driver community.',
+      appStore: 'Download on the App Store',
+      googlePlay: 'Get it on Google Play',
+      comingSoon: 'The app is coming to stores soon.',
+    },
     legal: {
       privacyTitle: 'Privacy policy',
       termsTitle: 'Terms of service',
@@ -525,6 +546,13 @@ export const translations: Record<Locale, Translations> = {
         pro: ['Все з плану Водій', 'Push-сповіщення про ціни', 'Експорт даних CSV', 'Пріоритетна підтримка'],
         fleet: ['Все з плану Pro', 'Кілька автомобілів', 'Звіти витрат', 'Інтеграція з бухгалтерією', 'Персональний менеджер'],
       },
+    },
+    download: {
+      title: 'Завантажити Litro',
+      subtitle: 'Завжди знайте, де дешевше. Приєднуйтесь до спільноти водіїв.',
+      appStore: 'Завантажити в App Store',
+      googlePlay: 'Отримати в Google Play',
+      comingSoon: 'Додаток незабаром з\'явиться в магазинах.',
     },
     legal: {
       privacyTitle: 'Політика конфіденційності',

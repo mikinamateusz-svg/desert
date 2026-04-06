@@ -17,7 +17,15 @@ export function computePriceColorMap(
   fuelType: FuelType,
 ): Map<string, PriceColor> {
   const result = new Map<string, PriceColor>();
-  const priceByStation = new Map(prices.map(p => [p.stationId, p.prices[fuelType]]));
+
+  // Use reported price when available, fall back to range midpoint for estimated stations
+  const priceByStation = new Map(prices.map(p => {
+    const reported = p.prices[fuelType];
+    if (reported !== undefined) return [p.stationId, reported] as const;
+    const range = p.priceRanges?.[fuelType];
+    if (range) return [p.stationId, (range.low + range.high) / 2] as const;
+    return [p.stationId, undefined] as const;
+  }));
 
   const validPrices = stationIds
     .map(id => priceByStation.get(id))

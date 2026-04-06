@@ -20,7 +20,7 @@ export default function FuelTypePills({ selected, onChange, t }: Props) {
           onClick={() => onChange(ft)}
           className={`px-3 py-1 rounded-full text-xs font-semibold transition-all whitespace-nowrap ${
             selected === ft
-              ? 'bg-white text-gray-900'
+              ? 'bg-amber-400 text-gray-900'
               : 'text-white hover:bg-white/15 active:bg-white/20'
           }`}
         >

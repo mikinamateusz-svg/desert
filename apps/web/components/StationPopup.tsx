@@ -10,11 +10,11 @@ interface Props {
   station: StationWithPrice;
   t: Translations;
   onClose: () => void;
-  onContribute: () => void;
 }
 
-export default function StationPopup({ station, t, onClose, onContribute }: Props) {
+export default function StationPopup({ station, t, onClose }: Props) {
   const { price } = station;
+  const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${station.lat},${station.lng}`;
 
   return (
     <Popup
@@ -57,12 +57,14 @@ export default function StationPopup({ station, t, onClose, onContribute }: Prop
           <p className="text-xs text-gray-400 mb-3">{t.noData}</p>
         )}
 
-        <button
-          onClick={onContribute}
-          className="w-full text-xs font-semibold text-center py-1.5 px-2 rounded bg-yellow-400 hover:bg-yellow-300 text-gray-900 transition-colors"
+        <a
+          href={mapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full text-xs font-semibold text-center py-1.5 px-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition-colors"
         >
-          {t.contribute}
-        </button>
+          {t.station.navigate}
+        </a>
       </div>
     </Popup>
   );

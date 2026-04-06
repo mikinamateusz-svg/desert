@@ -55,14 +55,8 @@ interface Props {
 export default function MapView({ stations, defaultLat, defaultLng, t }: Props) {
   const mapRef = useRef<MapRef>(null);
   const [selected, setSelected] = useState<StationWithPrice | null>(null);
-  const [showContributePrompt, setShowContributePrompt] = useState(false);
   const [noneInView, setNoneInView] = useState(false);
   const priceTiers = computePriceTiers(stations);
-
-  function handleContribute() {
-    setSelected(null);
-    setShowContributePrompt(true);
-  }
 
   function handleFindCheapest() {
     const map = mapRef.current;
@@ -121,18 +115,9 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
             station={selected}
             t={t}
             onClose={() => setSelected(null)}
-            onContribute={handleContribute}
           />
         )}
       </ReactMap>
-
-      {/* Contribute CTA — top-right overlay */}
-      <button
-        onClick={() => setShowContributePrompt(true)}
-        className="absolute top-4 right-4 z-10 px-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-300 text-gray-900 text-sm font-semibold shadow-md transition-colors"
-      >
-        {t.contribute}
-      </button>
 
       {/* Cheapest in viewport — mobile only, bottom-centre floating pill */}
       <button
@@ -146,28 +131,6 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
       {noneInView && (
         <div className="lg:hidden absolute bottom-24 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-full bg-gray-900/90 text-white text-xs whitespace-nowrap">
           {t.cheapestFinder.none}
-        </div>
-      )}
-
-      {/* Login prompt modal */}
-      {showContributePrompt && (
-        <div
-          className="absolute inset-0 z-20 flex items-center justify-center bg-black/40"
-          onClick={() => setShowContributePrompt(false)}
-        >
-          <div
-            className="bg-white rounded-xl shadow-xl p-6 mx-6 max-w-sm w-full"
-            onClick={e => e.stopPropagation()}
-          >
-            <h2 className="text-base font-semibold text-gray-900 mb-2">{t.contributePromptTitle}</h2>
-            <p className="text-sm text-gray-600 mb-4">{t.contributePrompt}</p>
-            <button
-              onClick={() => setShowContributePrompt(false)}
-              className="w-full py-2 rounded-lg bg-yellow-400 hover:bg-yellow-300 text-gray-900 text-sm font-semibold transition-colors"
-            >
-              {t.close}
-            </button>
-          </div>
         </div>
       )}
     </div>

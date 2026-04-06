@@ -68,19 +68,14 @@ export default function StationMarker({ station, priceColor, onClick }: Props) {
   };
 
   return (
-    <Marker
-      longitude={station.lng}
-      latitude={station.lat}
-      anchor="bottom"
-      onClick={onClick}
-      style={{ cursor: 'pointer' }}
-    >
-      <div
+    <Marker longitude={station.lng} latitude={station.lat} anchor="bottom">
+      <button
+        onClick={onClick}
         aria-label={`${station.name}: PB 95 ${pinLabel} zł/l`}
-        style={pinStyle}
+        style={{ ...pinStyle, border: 'none', padding: 0, outline: 'none' }}
       >
         <span style={labelStyle}>{pinLabel}</span>
-      </div>
+      </button>
     </Marker>
   );
 }

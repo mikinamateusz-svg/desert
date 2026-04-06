@@ -71,6 +71,13 @@ export interface StationClassification {
   is_border_zone_de: boolean;
 }
 
+/** Fields re-derivable from local data alone — no Google API needed. */
+export interface LocalReclassification {
+  brand: string | null;
+  station_type: 'standard' | 'mop';
+  is_border_zone_de: boolean;
+}
+
 export interface StationForClassification {
   id: string;
   name: string;
@@ -152,6 +159,22 @@ export class StationClassificationService {
     return DE_BORDER_CROSSINGS.some(
       ([bLat, bLng]) => haversineKm(lat, lng, bLat, bLng) <= DE_BORDER_RADIUS_KM,
     );
+  }
+
+  /**
+   * Re-derives brand, station_type, and is_border_zone_de from locally available
+   * data only — no Google API calls. voivodeship and settlement_tier are left
+   * untouched (already set by the full API classification run).
+   */
+  reclassifyLocal(station: StationForClassification): LocalReclassification {
+    const isMop =
+      /\bMOP\b/i.test(station.name ?? '') ||
+      /\bMOP\b/i.test(station.address ?? '');
+    return {
+      brand: this.extractBrand(station.name),
+      station_type: isMop ? 'mop' : 'standard',
+      is_border_zone_de: this.isGermanBorderZone(station.lat, station.lng),
+    };
   }
 
   async classifyStation(

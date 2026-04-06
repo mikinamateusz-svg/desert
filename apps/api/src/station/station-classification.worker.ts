@@ -7,6 +7,7 @@ import { StationClassificationService } from './station-classification.service.j
 
 export const STATION_CLASSIFICATION_QUEUE = 'station-classification';
 export const STATION_CLASSIFICATION_JOB = 'classify-stations';
+export const STATION_LOCAL_RECLASSIFY_JOB = 'local-reclassify-stations';
 
 // 1,100ms between Nearby Search calls = ~54 req/min (safely under 60 req/min limit)
 const NEARBY_SEARCH_DELAY_MS = 1_100;
@@ -51,8 +52,12 @@ export class StationClassificationWorker implements OnModuleInit, OnModuleDestro
 
     this.worker = new Worker(
       STATION_CLASSIFICATION_QUEUE,
-      async (_job: Job) => {
-        await this.processClassification();
+      async (job: Job) => {
+        if (job.name === STATION_LOCAL_RECLASSIFY_JOB) {
+          await this.processLocalReclassification();
+        } else {
+          await this.processClassification();
+        }
       },
       { connection },
     );
@@ -76,6 +81,67 @@ export class StationClassificationWorker implements OnModuleInit, OnModuleDestro
   /** Exposed for enqueueing from StationSyncWorker after sync completes */
   getQueue(): Queue {
     return this.queue;
+  }
+
+  /**
+   * Re-derives brand, station_type, and is_border_zone_de for all already-classified
+   * stations using only locally available data — no Google API calls.
+   * voivodeship and settlement_tier are left untouched.
+   */
+  async processLocalReclassification(): Promise<void> {
+    const BATCH = 500;
+    let offset = 0;
+    let total = 0;
+    let updated = 0;
+
+    interface ClassifiedRow extends StationRow {
+      current_brand: string | null;
+      current_station_type: string | null;
+      current_is_border_zone_de: boolean;
+    }
+
+    while (true) {
+      const rows = await this.prisma.$queryRaw<ClassifiedRow[]>`
+        SELECT id, name, address,
+          brand                            AS current_brand,
+          station_type::text               AS current_station_type,
+          is_border_zone_de                AS current_is_border_zone_de,
+          CAST(ST_Y(location::geometry) AS FLOAT) AS lat,
+          CAST(ST_X(location::geometry) AS FLOAT) AS lng
+        FROM "Station"
+        WHERE classification_version >= 1
+          AND location IS NOT NULL
+        ORDER BY id
+        LIMIT ${BATCH} OFFSET ${offset}
+      `;
+
+      if (rows.length === 0) break;
+
+      for (const row of rows) {
+        const local = this.classificationService.reclassifyLocal(row);
+
+        if (
+          local.brand !== row.current_brand ||
+          local.station_type !== row.current_station_type ||
+          local.is_border_zone_de !== row.current_is_border_zone_de
+        ) {
+          await this.prisma.$executeRaw`
+            UPDATE "Station" SET
+              brand             = ${local.brand},
+              station_type      = ${local.station_type}::"StationType",
+              is_border_zone_de = ${local.is_border_zone_de},
+              updated_at        = NOW()
+            WHERE id = ${row.id}
+          `;
+          updated++;
+        }
+        total++;
+      }
+
+      offset += BATCH;
+    }
+
+    this.logger.log(`Local reclassification complete: ${updated}/${total} stations updated`);
   }
 
   async processClassification(): Promise<void> {

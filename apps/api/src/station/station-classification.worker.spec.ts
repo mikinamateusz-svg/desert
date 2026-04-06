@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import {
   StationClassificationWorker,
   STATION_CLASSIFICATION_QUEUE,
+  STATION_LOCAL_RECLASSIFY_JOB,
 } from './station-classification.worker.js';
 import { StationClassificationService } from './station-classification.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
@@ -44,11 +45,13 @@ jest.mock('ioredis', () =>
 // ─── Service / prisma mocks ───────────────────────────────────────────────────
 
 const mockClassify = jest.fn();
+const mockReclassifyLocal = jest.fn();
 const mockQueryRaw = jest.fn();
 const mockExecuteRaw = jest.fn();
 
 const mockClassificationService = {
   classifyStation: mockClassify,
+  reclassifyLocal: mockReclassifyLocal,
 };
 const mockPrisma = {
   $queryRaw: mockQueryRaw,
@@ -240,15 +243,115 @@ describe('StationClassificationWorker', () => {
       expect(firstSql).not.toContain('OFFSET');
     });
 
-    it('job processor delegates to processClassification', async () => {
+    it('job processor routes unknown job name to processClassification', async () => {
       expect(capturedProcessor).toBeDefined();
       const processSpy = jest
         .spyOn(workerInstance, 'processClassification')
         .mockResolvedValue(undefined);
 
-      await capturedProcessor!({});
+      await capturedProcessor!({ name: 'classify-stations' });
 
       expect(processSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('job processor routes local-reclassify job to processLocalReclassification', async () => {
+      expect(capturedProcessor).toBeDefined();
+      const localSpy = jest
+        .spyOn(workerInstance, 'processLocalReclassification')
+        .mockResolvedValue(undefined);
+
+      await capturedProcessor!({ name: STATION_LOCAL_RECLASSIFY_JOB });
+
+      expect(localSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  // ─── processLocalReclassification ────────────────────────────────────────
+
+  describe('processLocalReclassification', () => {
+    const classifiedStation = {
+      id: 's1',
+      name: 'Orlen',
+      address: null,
+      lat: 52.23,
+      lng: 21.01,
+      current_brand: 'orlen',
+      current_station_type: 'standard',
+      current_is_border_zone_de: false,
+    };
+
+    it('updates station when reclassifyLocal returns different values', async () => {
+      mockQueryRaw
+        .mockResolvedValueOnce([classifiedStation])
+        .mockResolvedValueOnce([]);
+      mockReclassifyLocal.mockReturnValue({
+        brand: 'orlen',
+        station_type: 'mop',        // changed
+        is_border_zone_de: false,
+      });
+      mockExecuteRaw.mockResolvedValue(1);
+
+      await workerInstance.processLocalReclassification();
+
+      expect(mockReclassifyLocal).toHaveBeenCalledWith(classifiedStation);
+      expect(mockExecuteRaw).toHaveBeenCalledTimes(1);
+    });
+
+    it('skips update when reclassifyLocal returns identical values', async () => {
+      mockQueryRaw
+        .mockResolvedValueOnce([classifiedStation])
+        .mockResolvedValueOnce([]);
+      mockReclassifyLocal.mockReturnValue({
+        brand: 'orlen',
+        station_type: 'standard',   // same as current
+        is_border_zone_de: false,
+      });
+
+      await workerInstance.processLocalReclassification();
+
+      expect(mockExecuteRaw).not.toHaveBeenCalled();
+    });
+
+    it('does nothing when no classified stations exist', async () => {
+      mockQueryRaw.mockResolvedValueOnce([]);
+
+      await workerInstance.processLocalReclassification();
+
+      expect(mockReclassifyLocal).not.toHaveBeenCalled();
+      expect(mockExecuteRaw).not.toHaveBeenCalled();
+    });
+
+    it('processes multiple batches using OFFSET pagination', async () => {
+      const batch = Array.from({ length: 500 }, (_, i) => ({ ...classifiedStation, id: `s${i}` }));
+      mockQueryRaw
+        .mockResolvedValueOnce(batch)
+        .mockResolvedValueOnce([classifiedStation])
+        .mockResolvedValueOnce([]);
+      mockReclassifyLocal.mockReturnValue({
+        brand: 'orlen',
+        station_type: 'standard',
+        is_border_zone_de: false,
+      });
+
+      await workerInstance.processLocalReclassification();
+
+      expect(mockReclassifyLocal).toHaveBeenCalledTimes(501);
+      expect(mockQueryRaw).toHaveBeenCalledTimes(3);
+    });
+
+    it('does not call Google classify API', async () => {
+      mockQueryRaw
+        .mockResolvedValueOnce([classifiedStation])
+        .mockResolvedValueOnce([]);
+      mockReclassifyLocal.mockReturnValue({
+        brand: 'orlen',
+        station_type: 'standard',
+        is_border_zone_de: false,
+      });
+
+      await workerInstance.processLocalReclassification();
+
+      expect(mockClassify).not.toHaveBeenCalled();
     });
   });
 });

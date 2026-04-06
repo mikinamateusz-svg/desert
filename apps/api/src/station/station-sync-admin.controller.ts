@@ -5,7 +5,7 @@ import { Roles } from '../auth/decorators/roles.decorator.js';
 // ^^ used both at class level (@Roles(ADMIN)) and method level (@Roles() to override)
 import { Public } from '../auth/decorators/public.decorator.js';
 import { StationSyncAdminService, SyncStatusResult, TriggerSyncResult } from './station-sync-admin.service.js';
-import { StationClassificationWorker } from './station-classification.worker.js';
+import { StationClassificationWorker, STATION_LOCAL_RECLASSIFY_JOB } from './station-classification.worker.js';
 
 @Controller('v1/admin/stations')
 @Roles(UserRole.ADMIN)
@@ -54,6 +54,22 @@ export class StationSyncAdminController {
     if (secret !== expected) throw new UnauthorizedException();
     const queue = this.classificationWorker.getQueue();
     const job = await queue.add('classify-stations', {}, { attempts: 1 });
+    return { status: 'queued', jobId: job.id ?? 'unknown' };
+  }
+
+  /**
+   * Re-run local-only classification (brand, station_type, border zone) for all
+   * already-classified stations. No Google API calls — safe to run at any time.
+   */
+  @Public()
+  @Roles()
+  @Post('local-reclassify')
+  @HttpCode(202)
+  async triggerLocalReclassify(@Headers('x-admin-secret') secret: string): Promise<{ status: string; jobId: string }> {
+    const expected = this.config.getOrThrow<string>('ADMIN_SECRET');
+    if (secret !== expected) throw new UnauthorizedException();
+    const queue = this.classificationWorker.getQueue();
+    const job = await queue.add(STATION_LOCAL_RECLASSIFY_JOB, {}, { attempts: 1 });
     return { status: 'queued', jobId: job.id ?? 'unknown' };
   }
 }

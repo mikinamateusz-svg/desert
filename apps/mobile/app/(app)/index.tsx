@@ -232,6 +232,17 @@ export default function MapScreen() {
   const handlePinPress = useCallback((stationId: string) => {
     const station = stations.find(s => s.id === stationId) ?? null;
     setSelectedStation(station);
+    if (station) {
+      programmaticMoveRef.current = true;
+      cameraRef.current?.setCamera({
+        centerCoordinate: [station.lng, station.lat],
+        zoomLevel: 15,
+        // paddingBottom shifts the effective viewport centre above the bottom sheet (~300px)
+        padding: { paddingBottom: 320, paddingTop: 0, paddingLeft: 0, paddingRight: 0 },
+        animationMode: 'flyTo',
+        animationDuration: 600,
+      });
+    }
   }, [stations]);
 
   const showSheet = !accessToken && !hasSeenOnboarding && !sheetDismissed;
@@ -289,6 +300,7 @@ export default function MapScreen() {
                 priceColor={priceColor}
                 label={label}
                 isEstimated={isEstimated}
+                isSelected={station.id === selectedStation?.id}
                 onPress={() => handlePinPress(station.id)}
               />
             </MarkerView>

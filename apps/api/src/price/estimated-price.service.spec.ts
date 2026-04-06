@@ -16,6 +16,7 @@ const mockPrisma = { $queryRaw: mockQueryRaw };
 
 const baseStation: StationClassificationRow = {
   id: 'station-1',
+  name: 'Orlen Station',
   brand: 'orlen',
   station_type: 'standard',
   voivodeship: 'mazowieckie',
@@ -141,6 +142,7 @@ describe('EstimatedPriceService', () => {
     it('stacks all modifiers correctly (MOP + shell + rural + border)', () => {
       const station: StationClassificationRow = {
         id: 's',
+        name: 'Shell MOP Station',
         brand: 'shell',           // +7 gr
         station_type: 'mop',      // +45 gr
         voivodeship: 'mazowieckie', // +26 gr margin

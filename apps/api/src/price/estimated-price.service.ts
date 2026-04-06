@@ -24,6 +24,7 @@ const FUEL_TYPE_TO_SIGNAL: Record<string, string> = {
 
 export interface StationClassificationRow {
   id: string;
+  name: string;
   brand: string | null;
   station_type: 'standard' | 'mop' | null;
   voivodeship: string | null;
@@ -128,8 +129,11 @@ export class EstimatedPriceService {
       const sources: Record<string, 'community' | 'seeded'> = {};
       const estimateLabel: Record<string, 'market_estimate' | 'estimated'> = {};
 
+      const isLpgOnly = /\bLPG\b/i.test(station.name);
+
       for (const fuelType of ESTIMABLE_FUEL_TYPES) {
         if (coveredFuels?.has(fuelType)) continue;
+        if (isLpgOnly && fuelType !== 'LPG') continue;
 
         const rackPln = rackPrices.get(fuelType);
 

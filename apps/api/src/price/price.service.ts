@@ -157,7 +157,7 @@ export class PriceService {
     radiusMeters: number,
   ): Promise<StationClassificationRow[]> {
     return this.prisma.$queryRaw<StationClassificationRow[]>`
-      SELECT id, brand, station_type, voivodeship, settlement_tier, is_border_zone_de
+      SELECT id, name, brand, station_type, voivodeship, settlement_tier, is_border_zone_de
       FROM "Station"
       WHERE location IS NOT NULL
         AND ST_DWithin(location, ST_Point(${lng}, ${lat})::geography, ${radiusMeters})

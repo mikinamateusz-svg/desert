@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import type { PriceColor } from '../../utils/priceColor';
 
 // Teardrop: 32×32 square with three rounded corners + sharp bottom-left,
@@ -26,7 +26,13 @@ export function StationPin({ priceColor, label, isEstimated, onPress }: StationP
   const showEstimated = isEstimated && priceColor !== 'nodata';
 
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={styles.container}>
+    // TouchableOpacity is swallowed by Mapbox's native gesture recogniser inside MarkerView.
+    // Using the responder system directly is the reliable alternative.
+    <View
+      style={styles.container}
+      onStartShouldSetResponder={() => true}
+      onResponderGrant={onPress}
+    >
       <View
         style={[
           styles.pin,
@@ -43,7 +49,7 @@ export function StationPin({ priceColor, label, isEstimated, onPress }: StationP
           {label}
         </Text>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 }
 

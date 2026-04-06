@@ -70,7 +70,7 @@ const fakeClassification = {
   is_border_zone_de: false,
 };
 
-const fakeStation = { id: 's1', name: 'Orlen', lat: 52.23, lng: 21.01 };
+const fakeStation = { id: 's1', name: 'Orlen', address: null, lat: 52.23, lng: 21.01 };
 
 describe('StationClassificationWorker', () => {
   let workerInstance: StationClassificationWorker;
@@ -182,8 +182,8 @@ describe('StationClassificationWorker', () => {
 
     it('continues processing remaining stations when one classification fails', async () => {
       const stations = [
-        { id: 's1', name: 'Orlen', lat: 52.23, lng: 21.01 },
-        { id: 's2', name: 'BP', lat: 52.24, lng: 21.02 },
+        { id: 's1', name: 'Orlen', address: null, lat: 52.23, lng: 21.01 },
+        { id: 's2', name: 'BP', address: null, lat: 52.24, lng: 21.02 },
       ];
       mockQueryRaw.mockResolvedValueOnce(stations).mockResolvedValueOnce([]);
       mockClassify

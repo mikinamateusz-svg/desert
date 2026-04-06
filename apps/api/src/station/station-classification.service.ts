@@ -74,6 +74,7 @@ export interface StationClassification {
 export interface StationForClassification {
   id: string;
   name: string;
+  address: string | null;
   lat: number;
   lng: number;
 }
@@ -157,8 +158,12 @@ export class StationClassificationService {
     station: StationForClassification,
     apiKey: string,
   ): Promise<StationClassification> {
+    const mopInNameOrAddress =
+      /\bMOP\b/i.test(station.name ?? '') ||
+      /\bMOP\b/i.test(station.address ?? '');
+
     const [isMop, geocode] = await Promise.all([
-      this.detectMop(station.lat, station.lng, apiKey),
+      mopInNameOrAddress ? Promise.resolve(true) : this.detectMop(station.lat, station.lng, apiKey),
       this.resolveGeocode(station.lat, station.lng, apiKey),
     ]);
 

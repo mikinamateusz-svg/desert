@@ -232,18 +232,16 @@ describe('StationClassificationService', () => {
   // ─── classifyStation ──────────────────────────────────────────────────────
 
   describe('classifyStation', () => {
-    const station: StationForClassification = {
-      id: 'station-1',
-      name: 'Shell MOP Pruszków',
-      lat: 52.17,
-      lng: 20.79,
-    };
-
-    it('returns full classification for a MOP Shell station near Warsaw', async () => {
-      // detectMop call
+    it('detects MOP via station name — skips Nearby Search', async () => {
+      const station: StationForClassification = {
+        id: 'station-1',
+        name: 'Shell MOP Pruszków',
+        address: null,
+        lat: 52.17,
+        lng: 20.79,
+      };
+      // Only resolveGeocode fetch — Nearby Search must NOT be called
       (global.fetch as jest.Mock)
-        .mockResolvedValueOnce(makeNearbyResponse([{ name: 'MOP Pruszków A2' }]))
-        // resolveGeocode call
         .mockResolvedValueOnce(makeGeocodeResponse('mazowieckie', 'Pruszków'));
 
       const result = await service.classifyStation(station, 'key');
@@ -251,16 +249,54 @@ describe('StationClassificationService', () => {
       expect(result.brand).toBe('shell');
       expect(result.station_type).toBe('mop');
       expect(result.voivodeship).toBe('mazowieckie');
-      expect(result.settlement_tier).toBe('rural'); // Pruszków not in metropolitan list
+      expect(result.settlement_tier).toBe('rural');
       expect(result.is_border_zone_de).toBe(false);
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+    });
+
+    it('detects MOP via address when name has no MOP signal', async () => {
+      const station: StationForClassification = {
+        id: 'station-5',
+        name: 'Orlen',
+        address: 'MOP Wiśniowa Góra Wschód, A1',
+        lat: 51.72,
+        lng: 19.63,
+      };
+      // Only resolveGeocode fetch — Nearby Search must NOT be called
+      (global.fetch as jest.Mock)
+        .mockResolvedValueOnce(makeGeocodeResponse('lodzkie', null));
+
+      const result = await service.classifyStation(station, 'key');
+
+      expect(result.station_type).toBe('mop');
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+    });
+
+    it('falls back to Nearby Search when name and address have no MOP signal', async () => {
+      const station: StationForClassification = {
+        id: 'station-6',
+        name: 'Orlen',
+        address: 'ul. Brzezińska 44, Wiśniowa Góra',
+        lat: 51.72,
+        lng: 19.63,
+      };
+      (global.fetch as jest.Mock)
+        .mockResolvedValueOnce(makeNearbyResponse([{ name: 'MOP Wiśniowa Góra Wschód' }]))
+        .mockResolvedValueOnce(makeGeocodeResponse('lodzkie', null));
+
+      const result = await service.classifyStation(station, 'key');
+
+      expect(result.station_type).toBe('mop');
+      expect(global.fetch).toHaveBeenCalledTimes(2);
     });
 
     it('classifies non-MOP Auchan station near DE border as standard + border zone', async () => {
       const borderStation: StationForClassification = {
         id: 'station-2',
         name: 'Auchan Słubice',
+        address: null,
         lat: 52.35,
-        lng: 14.60, // near Słubice
+        lng: 14.60,
       };
       (global.fetch as jest.Mock)
         .mockResolvedValueOnce(makeNearbyResponse([], 'ZERO_RESULTS'))
@@ -278,6 +314,7 @@ describe('StationClassificationService', () => {
       const nowySaczStation: StationForClassification = {
         id: 'station-4',
         name: 'Orlen Nowy Sącz',
+        address: null,
         lat: 49.62,
         lng: 20.69,
       };
@@ -287,13 +324,14 @@ describe('StationClassificationService', () => {
 
       const result = await service.classifyStation(nowySaczStation, 'key');
 
-      expect(result.settlement_tier).toBe('city'); // 83k pop ≥ 50k → 'city', must not be 'rural'
+      expect(result.settlement_tier).toBe('city');
     });
 
     it('classifies metropolitan Orlen station correctly', async () => {
       const warsawStation: StationForClassification = {
         id: 'station-3',
         name: 'Orlen Centrum',
+        address: null,
         lat: 52.23,
         lng: 21.01,
       };
@@ -308,7 +346,14 @@ describe('StationClassificationService', () => {
       expect(result.settlement_tier).toBe('metropolitan');
     });
 
-    it('fires detectMop and resolveGeocode in parallel (both fetch calls happen)', async () => {
+    it('fires detectMop and resolveGeocode in parallel when no MOP in name or address', async () => {
+      const station: StationForClassification = {
+        id: 'station-3',
+        name: 'Orlen Centrum',
+        address: null,
+        lat: 52.23,
+        lng: 21.01,
+      };
       (global.fetch as jest.Mock)
         .mockResolvedValueOnce(makeNearbyResponse([], 'ZERO_RESULTS'))
         .mockResolvedValueOnce(makeGeocodeResponse('mazowieckie', 'Warszawa'));

@@ -15,6 +15,7 @@ const BATCH_SIZE = 50;
 interface StationRow {
   id: string;
   name: string;
+  address: string | null;
   lat: number;
   lng: number;
 }
@@ -86,7 +87,7 @@ export class StationClassificationWorker implements OnModuleInit, OnModuleDestro
       // the WHERE clause, so the next query always starts from the new front.
       // Using OFFSET while mutating the filtered set causes stations to be skipped.
       const stations = await this.prisma.$queryRaw<StationRow[]>`
-        SELECT id, name,
+        SELECT id, name, address,
           CAST(ST_Y(location::geometry) AS FLOAT) AS lat,
           CAST(ST_X(location::geometry) AS FLOAT) AS lng
         FROM "Station"

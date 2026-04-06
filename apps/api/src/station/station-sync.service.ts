@@ -133,6 +133,7 @@ export class StationSyncService {
         classification_version = CASE
           WHEN "Station".name IS DISTINCT FROM EXCLUDED.name
             OR "Station".location IS DISTINCT FROM EXCLUDED.location
+            OR "Station".address IS DISTINCT FROM EXCLUDED.address
           THEN 0
           ELSE "Station".classification_version
         END

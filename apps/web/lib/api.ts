@@ -14,6 +14,7 @@ export interface StationDto {
   address: string | null;
   lat: number;
   lng: number;
+  brand: string | null;
 }
 
 export interface StationPriceDto {

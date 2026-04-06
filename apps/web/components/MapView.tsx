@@ -6,7 +6,7 @@ import { useState, useRef } from 'react';
 import type { StationWithPrice } from '../lib/api';
 import type { Translations } from '../lib/i18n';
 import StationMarker from './StationMarker';
-import StationPopup from './StationPopup';
+import StationDetailPanel from './StationDetailPanel';
 
 type PriceColor = 'cheap' | 'mid' | 'expensive' | 'nodata';
 
@@ -109,25 +109,28 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
             onClick={() => setSelected(station)}
           />
         ))}
-
-        {selected && (
-          <StationPopup
-            station={selected}
-            t={t}
-            onClose={() => setSelected(null)}
-          />
-        )}
       </ReactMap>
 
-      {/* Cheapest in viewport — mobile only, bottom-centre floating pill */}
-      <button
-        onClick={handleFindCheapest}
-        className="lg:hidden absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white shadow-lg border border-gray-200 text-sm font-semibold text-gray-900 hover:bg-gray-50 active:scale-95 transition-all whitespace-nowrap"
-      >
-        🏆 {t.cheapestFinder.button}
-      </button>
+      {/* Station detail panel — rendered outside ReactMap to avoid z-index issues */}
+      {selected && (
+        <StationDetailPanel
+          station={selected}
+          t={t}
+          onClose={() => setSelected(null)}
+        />
+      )}
 
-      {/* "None in view" feedback toast */}
+      {/* Cheapest in viewport pill — mobile only, hidden when panel is open */}
+      {!selected && (
+        <button
+          onClick={handleFindCheapest}
+          className="lg:hidden absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white shadow-lg border border-gray-200 text-sm font-semibold text-gray-900 hover:bg-gray-50 active:scale-95 transition-all whitespace-nowrap"
+        >
+          🏆 {t.cheapestFinder.button}
+        </button>
+      )}
+
+      {/* "None in view" toast */}
       {noneInView && (
         <div className="lg:hidden absolute bottom-24 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-full bg-gray-900/90 text-white text-xs whitespace-nowrap">
           {t.cheapestFinder.none}

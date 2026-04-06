@@ -2,7 +2,7 @@
 
 import ReactMap, { NavigationControl, type MapRef } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import type { StationWithPrice } from '../lib/api';
 import type { Translations } from '../lib/i18n';
 import StationMarker from './StationMarker';
@@ -45,6 +45,10 @@ function computePriceTiers(stations: StationWithPrice[]): Map<string, PriceColor
   return result;
 }
 
+// On mobile the bottom sheet covers ~50% of the map height.
+// Offset the fly-to so the pin lands in the upper visible portion.
+const MOBILE_PAN_OFFSET_PX = 120;
+
 interface Props {
   stations: StationWithPrice[];
   defaultLat: number;
@@ -57,6 +61,23 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
   const [selected, setSelected] = useState<StationWithPrice | null>(null);
   const [noneInView, setNoneInView] = useState(false);
   const priceTiers = computePriceTiers(stations);
+
+  const selectStation = useCallback((station: StationWithPrice) => {
+    setSelected(station);
+    const map = mapRef.current;
+    if (!map) return;
+
+    // On mobile (<lg = <1024px) pan so the pin sits above the bottom sheet.
+    // On desktop the panel is a floating card and doesn't cover the pin.
+    const isMobile = window.innerWidth < 1024;
+    if (isMobile) {
+      map.flyTo({
+        center: [station.lng, station.lat],
+        offset: [0, MOBILE_PAN_OFFSET_PX],
+        duration: 400,
+      });
+    }
+  }, []);
 
   function handleFindCheapest() {
     const map = mapRef.current;
@@ -82,8 +103,7 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
       (s.price!.prices['PB_95']! < best.price!.prices['PB_95']!) ? s : best,
     );
 
-    map.flyTo({ center: [cheapest.lng, cheapest.lat], zoom: 15, duration: 800 });
-    setSelected(cheapest);
+    selectStation(cheapest);
   }
 
   return (
@@ -106,12 +126,13 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
             key={station.id}
             station={station}
             priceColor={priceTiers.get(station.id) ?? 'nodata'}
-            onClick={() => setSelected(station)}
+            isSelected={selected?.id === station.id}
+            onClick={() => selectStation(station)}
           />
         ))}
       </ReactMap>
 
-      {/* Station detail panel — rendered outside ReactMap to avoid z-index issues */}
+      {/* Station detail panel — outside ReactMap to avoid z-index issues */}
       {selected && (
         <StationDetailPanel
           station={selected}
@@ -120,7 +141,7 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
         />
       )}
 
-      {/* Cheapest in viewport pill — mobile only, hidden when panel is open */}
+      {/* Cheapest in viewport pill — mobile only, hidden while panel is open */}
       {!selected && (
         <button
           onClick={handleFindCheapest}

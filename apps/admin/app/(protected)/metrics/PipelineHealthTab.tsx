@@ -47,13 +47,13 @@ export function PipelineHealthTab({ t }: Props) {
   }
 
   // Initial load
-  useEffect(() => { load(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { load(); }, []); // load is stable (refs startTransition + server action)
 
   // Auto-refresh every 60 s
   useEffect(() => {
     const id = setInterval(load, 60_000);
     return () => clearInterval(id);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // load is stable
 
   if (error) {
     return (

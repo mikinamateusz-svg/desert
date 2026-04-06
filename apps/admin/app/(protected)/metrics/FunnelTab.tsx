@@ -47,7 +47,7 @@ function Drilldown({
     });
   }
 
-  useEffect(() => { load(1); }, [reason, period]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { load(1); }, [reason, period]); // load is stable; re-run on reason/period change
 
   const label = t.flagReasons[reason] ?? reason;
 
@@ -130,7 +130,7 @@ export function FunnelTab({ t }: Props) {
     });
   }
 
-  useEffect(() => { load(period); }, [period]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { load(period); }, [period]); // load is stable; re-run on period change
 
   if (drilldownReason) {
     return (

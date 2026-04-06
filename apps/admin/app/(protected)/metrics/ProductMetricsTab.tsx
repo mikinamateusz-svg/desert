@@ -26,7 +26,7 @@ export function ProductMetricsTab({ t }: Props) {
     });
   }
 
-  useEffect(() => { load(period); }, [period]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { load(period); }, [period]); // load is stable; re-run on period change
 
   return (
     <div className="space-y-6">

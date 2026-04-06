@@ -58,7 +58,7 @@ export function StationPin({ priceColor, label, isEstimated, isSelected = false,
             elevation: isSelected ? 8 : 4,
           },
           showEstimated
-            ? { backgroundColor: '#e5e7eb', borderWidth: isSelected ? 3 : 2.5, borderColor: isSelected ? 'white' : color }
+            ? { backgroundColor: '#e5e7eb', borderWidth: isSelected ? 3 : 2.5, borderColor: color }
             : { backgroundColor: color, borderWidth: isSelected ? 3 : 0, borderColor: 'white' },
         ]}
       >
@@ -66,7 +66,7 @@ export function StationPin({ priceColor, label, isEstimated, isSelected = false,
           style={{
             fontSize: isSelected ? 8 : 7,
             fontWeight: '800',
-            color: showEstimated && !isSelected ? color : '#ffffff',
+            color: showEstimated ? color : '#ffffff',
             transform: [{ rotate: '45deg' }],
             textAlign: 'center',
             includeFontPadding: false,

@@ -7,7 +7,7 @@ export interface StationPriceRow {
   prices: Record<string, number>;
   priceRanges?: Record<string, { low: number; high: number }>;
   estimateLabel?: Record<string, 'market_estimate' | 'estimated'>;
-  sources: Record<string, 'community' | 'seeded'>; // per-fuel
+  sources: Record<string, 'community' | 'seeded' | 'admin_override'>; // per-fuel
   updatedAt: Date;
 }
 
@@ -96,9 +96,9 @@ export class PriceCacheService {
     const parsed = JSON.parse(raw) as Record<string, unknown>;
     const prices = (parsed['prices'] ?? {}) as Record<string, number>;
     // Backward compat: old entries have a scalar `source`, new entries have `sources` record
-    let sources: Record<string, 'community' | 'seeded'>;
+    let sources: Record<string, 'community' | 'seeded' | 'admin_override'>;
     if (parsed['sources'] && typeof parsed['sources'] === 'object') {
-      sources = parsed['sources'] as Record<string, 'community' | 'seeded'>;
+      sources = parsed['sources'] as Record<string, 'community' | 'seeded' | 'admin_override'>;
     } else {
       const src = (parsed['source'] ?? 'community') as 'community' | 'seeded';
       sources = Object.fromEntries(Object.keys(prices).map(ft => [ft, src]));

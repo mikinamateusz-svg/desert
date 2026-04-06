@@ -101,6 +101,37 @@ const translations = {
       unknownStation: 'Nieznana',
       unknownReason: 'Nieznany',
     },
+    stations: {
+      searchPlaceholder: 'Szukaj po nazwie lub adresie…',
+      searchButton: 'Szukaj',
+      nameColumn: 'Nazwa',
+      addressColumn: 'Adres',
+      brandColumn: 'Marka',
+      noResults: 'Nie znaleziono stacji.',
+      pricesTitle: 'Aktualne ceny',
+      fuelTypeColumn: 'Rodzaj paliwa',
+      priceColumn: 'Cena (PLN/l)',
+      sourceColumn: 'Źródło',
+      lastUpdatedColumn: 'Ostatnia aktualizacja',
+      sources: {
+        community: 'Społeczność',
+        admin_override: 'Nadpisanie admina',
+        seeded: 'Zainicjowane',
+      },
+      overrideTitle: 'Nadpisz cenę',
+      fuelTypeLabel: 'Rodzaj paliwa',
+      priceLabel: 'Cena (PLN/l)',
+      reasonLabel: 'Powód',
+      reasonPlaceholder: 'Podaj powód nadpisania…',
+      submitOverride: 'Zapisz nadpisanie',
+      refreshCache: 'Odśwież cache',
+      confirmRefresh: 'Czy na pewno odświeżyć cache dla tej stacji?',
+      overrideSuccess: 'Cena została nadpisana.',
+      refreshSuccess: 'Cache został odświeżony.',
+      errorGeneric: 'Błąd. Spróbuj ponownie.',
+      errorNotFound: 'Stacja nie została znaleziona.',
+      detailAction: 'Szczegóły',
+    },
     review: {
       flagReason: { logo_mismatch: 'Niezgodność logo', low_trust: 'Niskie zaufanie' },
       columns: {
@@ -214,6 +245,37 @@ const translations = {
       errorGeneric: 'Something went wrong. Try again.',
       unknownStation: 'Unknown',
       unknownReason: 'Unknown',
+    },
+    stations: {
+      searchPlaceholder: 'Search by name or address…',
+      searchButton: 'Search',
+      nameColumn: 'Name',
+      addressColumn: 'Address',
+      brandColumn: 'Brand',
+      noResults: 'No stations found.',
+      pricesTitle: 'Current prices',
+      fuelTypeColumn: 'Fuel type',
+      priceColumn: 'Price (PLN/l)',
+      sourceColumn: 'Source',
+      lastUpdatedColumn: 'Last updated',
+      sources: {
+        community: 'Community',
+        admin_override: 'Admin override',
+        seeded: 'Seeded',
+      },
+      overrideTitle: 'Override price',
+      fuelTypeLabel: 'Fuel type',
+      priceLabel: 'Price (PLN/l)',
+      reasonLabel: 'Reason',
+      reasonPlaceholder: 'Enter reason for override…',
+      submitOverride: 'Save override',
+      refreshCache: 'Refresh cache',
+      confirmRefresh: 'Are you sure you want to refresh the cache for this station?',
+      overrideSuccess: 'Price overridden successfully.',
+      refreshSuccess: 'Cache refreshed successfully.',
+      errorGeneric: 'Something went wrong. Try again.',
+      errorNotFound: 'Station not found.',
+      detailAction: 'View',
     },
     review: {
       flagReason: { logo_mismatch: 'Logo mismatch', low_trust: 'Low trust score' },
@@ -329,6 +391,37 @@ const translations = {
       unknownStation: 'Невідомо',
       unknownReason: 'Невідомо',
     },
+    stations: {
+      searchPlaceholder: 'Пошук за назвою або адресою…',
+      searchButton: 'Пошук',
+      nameColumn: 'Назва',
+      addressColumn: 'Адреса',
+      brandColumn: 'Бренд',
+      noResults: 'Станцій не знайдено.',
+      pricesTitle: 'Поточні ціни',
+      fuelTypeColumn: 'Вид пального',
+      priceColumn: 'Ціна (PLN/л)',
+      sourceColumn: 'Джерело',
+      lastUpdatedColumn: 'Остання оновлення',
+      sources: {
+        community: 'Спільнота',
+        admin_override: 'Перевизначення адміна',
+        seeded: 'Ініціалізовано',
+      },
+      overrideTitle: 'Перевизначити ціну',
+      fuelTypeLabel: 'Вид пального',
+      priceLabel: 'Ціна (PLN/л)',
+      reasonLabel: 'Причина',
+      reasonPlaceholder: 'Вкажіть причину перевизначення…',
+      submitOverride: 'Зберегти перевизначення',
+      refreshCache: 'Оновити кеш',
+      confirmRefresh: 'Ви впевнені, що хочете оновити кеш для цієї станції?',
+      overrideSuccess: 'Ціну успішно перевизначено.',
+      refreshSuccess: 'Кеш успішно оновлено.',
+      errorGeneric: 'Помилка. Спробуйте ще раз.',
+      errorNotFound: 'Станцію не знайдено.',
+      detailAction: 'Деталі',
+    },
     review: {
       flagReason: { logo_mismatch: 'Невідповідність логотипу', low_trust: 'Низький рейтинг довіри' },
       columns: {
@@ -365,6 +458,38 @@ const translations = {
   },
 } as const;
 
+export interface StationsTranslations {
+  searchPlaceholder: string;
+  searchButton: string;
+  nameColumn: string;
+  addressColumn: string;
+  brandColumn: string;
+  noResults: string;
+  pricesTitle: string;
+  fuelTypeColumn: string;
+  priceColumn: string;
+  sourceColumn: string;
+  lastUpdatedColumn: string;
+  sources: {
+    community: string;
+    admin_override: string;
+    seeded: string;
+  };
+  overrideTitle: string;
+  fuelTypeLabel: string;
+  priceLabel: string;
+  reasonLabel: string;
+  reasonPlaceholder: string;
+  submitOverride: string;
+  refreshCache: string;
+  confirmRefresh: string;
+  overrideSuccess: string;
+  refreshSuccess: string;
+  errorGeneric: string;
+  errorNotFound: string;
+  detailAction: string;
+}
+
 export interface Translations {
   nav: { submissions: string; users: string; deadLetter: string; stations: string; metrics: string };
   login: {
@@ -377,6 +502,7 @@ export interface Translations {
     errorGeneric: string;
   };
   common: { logout: string; loading: string; comingSoon: string };
+  stations: StationsTranslations;
   users: {
     trustScore: string;
     shadowBanned: string;

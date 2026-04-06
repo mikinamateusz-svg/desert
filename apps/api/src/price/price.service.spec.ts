@@ -104,11 +104,12 @@ describe('PriceService', () => {
       );
       const dbRow2 = makeDbRow('station-2');
       mockPrisma.$queryRaw.mockResolvedValueOnce([dbRow2]);
+      mockPrisma.$queryRaw.mockResolvedValueOnce([]); // admin_override query
 
       const result = await service.findPricesInArea(52.23, 21.01, 25000);
 
       expect(result).toHaveLength(2);
-      expect(mockPrisma.$queryRaw).toHaveBeenCalledTimes(2);
+      expect(mockPrisma.$queryRaw).toHaveBeenCalledTimes(3); // station discovery + submission query + admin_override query
       // cache.set receives the converted StationPriceRow (sources map, no scalar source)
       expect(mockPriceCache.set).toHaveBeenCalledWith('station-2', expect.objectContaining({
         stationId: 'station-2',
@@ -135,6 +136,7 @@ describe('PriceService', () => {
       );
       // DB only has verified price for station-1
       mockPrisma.$queryRaw.mockResolvedValueOnce([]);
+      mockPrisma.$queryRaw.mockResolvedValueOnce([]); // admin_override query
       // estimated service returns price for station-2
       mockEstimatedPriceService.computeEstimatesForStations.mockResolvedValueOnce(
         new Map([['station-2', estimatedRow]]),
@@ -165,6 +167,7 @@ describe('PriceService', () => {
       mockPriceCache.getMany.mockRejectedValueOnce(new Error('Redis down'));
       // DB only returns price for station-1
       mockPrisma.$queryRaw.mockResolvedValueOnce([makeDbRow('station-1')]);
+      mockPrisma.$queryRaw.mockResolvedValueOnce([]); // admin_override query
 
       const result = await service.findPricesInArea(52.23, 21.01, 25000);
 
@@ -176,6 +179,7 @@ describe('PriceService', () => {
       mockPrisma.$queryRaw.mockResolvedValueOnce([makeStation('station-1')]);
       mockPriceCache.getMany.mockResolvedValueOnce(new Map([['station-1', null]]));
       mockPrisma.$queryRaw.mockResolvedValueOnce([makeDbRow('station-1')]);
+      mockPrisma.$queryRaw.mockResolvedValueOnce([]); // admin_override query
       mockPriceCache.set.mockRejectedValueOnce(new Error('Redis write failed'));
 
       const result = await service.findPricesInArea(52.23, 21.01, 25000);
@@ -202,6 +206,68 @@ describe('PriceService', () => {
       expect(result[0]?.stationId).toBe('station-1');
       expect(result[1]?.stationId).toBe('station-2');
       expect(result[2]?.stationId).toBe('station-3');
+    });
+  });
+
+  describe('admin_override merge in findPricesByStationIds', () => {
+    it('overlays admin_override price when override is newer than submission', async () => {
+      const submissionDate = new Date('2026-04-01T10:00:00Z');
+      const overrideDate  = new Date('2026-04-06T09:00:00Z');
+
+      mockPrisma.$queryRaw.mockResolvedValueOnce([makeStation('station-1')]);
+      mockPriceCache.getMany.mockResolvedValueOnce(new Map([['station-1', null]]));
+      // Submission: PB_95=6.20, ON=5.80
+      mockPrisma.$queryRaw.mockResolvedValueOnce([
+        { stationId: 'station-1', prices: { PB_95: 6.20, ON: 5.80 }, updatedAt: submissionDate, source: 'community' },
+      ]);
+      // Admin override: PB_95=6.50, newer
+      mockPrisma.$queryRaw.mockResolvedValueOnce([
+        { stationId: 'station-1', fuelType: 'PB_95', price: 6.50, recordedAt: overrideDate },
+      ]);
+
+      const result = await service.findPricesInArea(52.23, 21.01, 25000);
+
+      expect(result).toHaveLength(1);
+      expect(result[0]?.prices['PB_95']).toBe(6.50);
+      expect(result[0]?.sources['PB_95']).toBe('admin_override');
+      expect(result[0]?.prices['ON']).toBe(5.80);
+      expect(result[0]?.sources['ON']).toBe('community');
+    });
+
+    it('ignores admin_override when it is older than the submission', async () => {
+      const overrideDate  = new Date('2026-04-01T08:00:00Z');
+      const submissionDate = new Date('2026-04-01T10:00:00Z');
+
+      mockPrisma.$queryRaw.mockResolvedValueOnce([makeStation('station-1')]);
+      mockPriceCache.getMany.mockResolvedValueOnce(new Map([['station-1', null]]));
+      mockPrisma.$queryRaw.mockResolvedValueOnce([
+        { stationId: 'station-1', prices: { PB_95: 6.35 }, updatedAt: submissionDate, source: 'community' },
+      ]);
+      mockPrisma.$queryRaw.mockResolvedValueOnce([
+        { stationId: 'station-1', fuelType: 'PB_95', price: 6.50, recordedAt: overrideDate },
+      ]);
+
+      const result = await service.findPricesInArea(52.23, 21.01, 25000);
+
+      expect(result[0]?.prices['PB_95']).toBe(6.35);
+      expect(result[0]?.sources['PB_95']).toBe('community');
+    });
+
+    it('serves admin_override-only station when no verified submission exists', async () => {
+      const overrideDate = new Date('2026-04-06T09:00:00Z');
+
+      mockPrisma.$queryRaw.mockResolvedValueOnce([makeStation('station-1')]);
+      mockPriceCache.getMany.mockResolvedValueOnce(new Map([['station-1', null]]));
+      mockPrisma.$queryRaw.mockResolvedValueOnce([]); // no verified submission
+      mockPrisma.$queryRaw.mockResolvedValueOnce([
+        { stationId: 'station-1', fuelType: 'PB_95', price: 6.50, recordedAt: overrideDate },
+      ]);
+
+      const result = await service.findPricesInArea(52.23, 21.01, 25000);
+
+      expect(result).toHaveLength(1);
+      expect(result[0]?.prices['PB_95']).toBe(6.50);
+      expect(result[0]?.sources['PB_95']).toBe('admin_override');
     });
   });
 

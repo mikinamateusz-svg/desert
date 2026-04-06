@@ -166,7 +166,9 @@ export class PriceService {
 
   private async findPricesByStationIds(stationIds: string[]): Promise<StationPriceRow[]> {
     if (stationIds.length === 0) return [];
-    const rows = await this.prisma.$queryRaw<
+
+    // Query 1: latest verified submission per station (all fuel types in price_data JSON)
+    const submissionRows = await this.prisma.$queryRaw<
       { stationId: string; prices: Record<string, number>; updatedAt: Date; source: 'community' | 'seeded' }[]
     >(
       Prisma.sql`
@@ -181,14 +183,66 @@ export class PriceService {
         ORDER BY sub.station_id, sub.created_at DESC
       `,
     );
-    // Convert scalar source from DB into per-fuel sources map
-    return rows.map(row => ({
-      stationId: row.stationId,
-      prices:    row.prices,
-      sources:   Object.fromEntries(
+
+    // Query 2: latest admin_override per station per fuel type — merged on top of submissions
+    const overrideRows = await this.prisma.$queryRaw<
+      { stationId: string; fuelType: string; price: number; recordedAt: Date }[]
+    >(
+      Prisma.sql`
+        SELECT DISTINCT ON (station_id, fuel_type)
+          station_id   AS "stationId",
+          fuel_type    AS "fuelType",
+          price,
+          recorded_at  AS "recordedAt"
+        FROM "PriceHistory"
+        WHERE station_id IN (${Prisma.join(stationIds)})
+          AND source = 'admin_override'
+        ORDER BY station_id, fuel_type, recorded_at DESC
+      `,
+    );
+
+    // Build override lookup: stationId → fuelType → { price, recordedAt }
+    const overrideMap = new Map<string, Map<string, { price: number; recordedAt: Date }>>();
+    for (const row of overrideRows) {
+      if (!overrideMap.has(row.stationId)) overrideMap.set(row.stationId, new Map());
+      overrideMap.get(row.stationId)!.set(row.fuelType, { price: row.price, recordedAt: row.recordedAt });
+    }
+
+    // Convert submission rows, merging any newer admin override per fuel type
+    const result: StationPriceRow[] = submissionRows.map(row => {
+      const prices: Record<string, number> = { ...row.prices };
+      const sources: Record<string, 'community' | 'seeded' | 'admin_override'> = Object.fromEntries(
         Object.keys(row.prices).map(ft => [ft, row.source]),
-      ),
-      updatedAt: row.updatedAt,
-    }));
+      );
+      const stationOverrides = overrideMap.get(row.stationId);
+      if (stationOverrides) {
+        for (const [ft, ov] of stationOverrides) {
+          if (ov.recordedAt > row.updatedAt) {
+            prices[ft] = ov.price;
+            sources[ft] = 'admin_override';
+          }
+        }
+      }
+      return { stationId: row.stationId, prices, sources, updatedAt: row.updatedAt };
+    });
+
+    // Stations with only admin overrides (no verified submission yet) — serve override data directly
+    const submittedIds = new Set(submissionRows.map(r => r.stationId));
+    for (const id of stationIds) {
+      if (submittedIds.has(id)) continue;
+      const stationOverrides = overrideMap.get(id);
+      if (!stationOverrides || stationOverrides.size === 0) continue;
+      const prices: Record<string, number> = {};
+      const sources: Record<string, 'admin_override'> = {};
+      let latestDate = new Date(0);
+      for (const [ft, ov] of stationOverrides) {
+        prices[ft] = ov.price;
+        sources[ft] = 'admin_override';
+        if (ov.recordedAt > latestDate) latestDate = ov.recordedAt;
+      }
+      result.push({ stationId: id, prices, sources, updatedAt: latestDate });
+    }
+
+    return result;
   }
 }

@@ -11,6 +11,6 @@ import { RedisModule } from '../redis/redis.module.js';
   imports: [RedisModule],
   controllers: [PriceController],
   providers: [PriceService, PriceCacheService, EstimatedPriceService, PriceHistoryService, PriceValidationService],
-  exports: [PriceService, PriceValidationService],
+  exports: [PriceService, PriceValidationService, PriceCacheService],
 })
 export class PriceModule {}

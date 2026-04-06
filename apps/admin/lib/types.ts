@@ -69,6 +69,31 @@ export interface DlqJobRow {
   lastAttemptAt: string | null;
 }
 
+export interface StationRow {
+  id: string;
+  name: string;
+  address: string | null;
+  brand: string | null;
+}
+
+export interface StationListResult {
+  data: StationRow[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface StationPriceRow {
+  fuel_type: string;
+  price: number;
+  source: string; // 'community' | 'admin_override' | 'seeded'
+  recorded_at: string;
+}
+
+export interface StationDetail extends StationRow {
+  prices: StationPriceRow[];
+}
+
 export interface UserDetail {
   id: string;
   email: string | null;

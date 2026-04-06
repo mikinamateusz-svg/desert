@@ -59,6 +59,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Deploy web to Vercel
+        working-directory: apps/web
         run: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --yes
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}

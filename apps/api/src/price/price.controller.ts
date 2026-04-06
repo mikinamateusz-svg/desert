@@ -1,6 +1,7 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Headers } from '@nestjs/common';
 import { PriceService } from './price.service.js';
 import { PriceHistoryService } from './price-history.service.js';
+import { MetricsCounterService } from '../metrics/metrics-counter.service.js';
 import { GetNearbyPricesDto } from './dto/get-nearby-prices.dto.js';
 import { GetPriceHistoryDto } from './dto/get-price-history.dto.js';
 import { GetRegionalAverageDto } from './dto/get-regional-average.dto.js';
@@ -12,11 +13,20 @@ export class PriceController {
   constructor(
     private readonly priceService: PriceService,
     private readonly priceHistoryService: PriceHistoryService,
+    private readonly metricsCounter: MetricsCounterService,
   ) {}
 
   @Public()
   @Get('nearby')
-  async getNearby(@Query() dto: GetNearbyPricesDto): Promise<StationPriceDto[]> {
+  async getNearby(
+    @Query() dto: GetNearbyPricesDto,
+    @Headers('authorization') authorization?: string,
+  ): Promise<StationPriceDto[]> {
+    // Fire-and-forget map-view counter — never blocks the response.
+    // A Bearer token in Authorization header indicates an authenticated session.
+    const authenticated = Boolean(authorization?.startsWith('Bearer '));
+    this.metricsCounter.incrementMapView(authenticated);
+
     const rows = await this.priceService.findPricesInArea(dto.lat, dto.lng, dto.radius ?? 25000);
     return rows.map(r => ({
       stationId: r.stationId,

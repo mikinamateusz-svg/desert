@@ -683,6 +683,14 @@ epics:
         review_findings: "intent gaps resolved: IG-1 flag_reason column added to Submission (Option A), IG-2 presigned photo URL 1h TTL, IG-3 GPS preserved through station-match, shown rounded to 4dp in admin detail, nulled on approve/reject. Patches: gps_lat/gps_lng nulled on approve+reject, photo_r2_key cleared before audit log, page NaN guard, trust score updates on approve/reject"
         patches_applied: "2026-04-05 — all patches applied; 720/720 tests passing, tsc clean"
 
+      - id: 4.5
+        title: Manual Price Override & Station Refresh
+        status: done
+        dev_completed: 2026-04-06
+        review_date: 2026-04-06
+        review_findings: "1 intent gap resolved: IG-1 (P-1) admin overrides written to PriceHistory but serving path queried Submission — override invisible to mobile users. Fix: Option A — extend findPricesByStationIds to UNION latest admin_override from PriceHistory per fuel type; override wins when newer than last verified submission. 8 patches: P-1 refreshCache fail-open on Redis error, P-2 @Max(50) on price, P-3 ParseUUIDPipe on all :id params, P-4 split useTransition into two in StationActions, P-5 priceHistory.create+auditLog.create in $transaction, P-6 search truncated to 200 chars, P-7 @MaxLength(500) on reason, P-8 revalidatePath('/stations') added to refreshCache action. Also updated StationPriceRow.sources type + StationPriceDto to include admin_override. Deferred: D-1 index on (station_id, fuel_type, recorded_at DESC), D-2 KNOWN_FUEL_TYPES shared constant, D-3 controller-layer DTO test, D-4 ALTER TYPE migration PG<12 note, D-5 toLocaleString server-side locale."
+        patches_applied: "2026-04-06 — all patches applied; 744/744 tests passing, tsc clean"
+
       - id: 4.4
         title: Dead-Letter Queue Management
         status: done

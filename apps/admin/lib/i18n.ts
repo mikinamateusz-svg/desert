@@ -132,6 +132,57 @@ const translations = {
       errorNotFound: 'Stacja nie została znaleziona.',
       detailAction: 'Szczegóły',
     },
+    metrics: {
+      tabs: { pipeline: 'Zdrowie pipeline', funnel: 'Lejek zgłoszeń', product: 'Metryki produktu' },
+      period: { today: 'Dziś', '7d': 'Ostatnie 7 dni', '30d': 'Ostatnie 30 dni' },
+      pipeline: {
+        successRate: 'Skuteczność (ostatnia godz.)',
+        processingP50: 'Czas przetwarzania p50',
+        processingP95: 'Czas przetwarzania p95',
+        queueDepth: 'Głębokość kolejki',
+        activeJobs: 'Aktywne zadania',
+        dlqCount: 'Kolejka błędów (DLQ)',
+        errorBreakdown: 'Rozkład błędów (ostatnia godz.)',
+        noErrors: 'Brak błędów w ostatniej godzinie.',
+        seconds: 's',
+        noData: 'Brak danych (brak zgłoszeń w ostatniej godzinie).',
+        autoRefresh: 'Odśwież',
+      },
+      funnel: {
+        total: 'Wszystkich zgłoszeń',
+        verified: 'Zweryfikowanych',
+        rejected: 'Odrzuconych',
+        shadowRejected: 'Shadow odrzuconych',
+        pending: 'Oczekujących',
+        dlq: 'W kolejce błędów',
+        rejectionBreakdown: 'Rozkład odrzuceń',
+        drilldownTitle: 'Zgłoszenia — ',
+        backToFunnel: '← Powrót',
+        columnId: 'ID',
+        columnStation: 'Stacja',
+        columnDate: 'Data',
+        columnReason: 'Powód',
+        noSubmissions: 'Brak zgłoszeń dla wybranego powodu.',
+      },
+      product: {
+        totalMapViews: 'Łączne odsłony mapy',
+        avgAuthPct: 'Udział zalogowanych',
+        totalNewRegs: 'Nowe rejestracje',
+        date: 'Data',
+        mapViews: 'Odsłony mapy',
+        authPct: '% zalogowanych',
+        newRegs: 'Rejestracje',
+      },
+      flagReasons: {
+        logo_mismatch: 'Niezgodność logo',
+        low_trust: 'Niskie zaufanie',
+        price_validation_failed: 'Błąd walidacji ceny',
+        gps_no_match: 'Brak dopasowania GPS',
+        low_confidence: 'Niska pewność OCR',
+        dead_letter_discarded: 'Odrzucone z DLQ',
+      },
+      errorGeneric: 'Błąd ładowania. Spróbuj ponownie.',
+    },
     review: {
       flagReason: { logo_mismatch: 'Niezgodność logo', low_trust: 'Niskie zaufanie' },
       columns: {
@@ -276,6 +327,57 @@ const translations = {
       errorGeneric: 'Something went wrong. Try again.',
       errorNotFound: 'Station not found.',
       detailAction: 'View',
+    },
+    metrics: {
+      tabs: { pipeline: 'Pipeline Health', funnel: 'Contribution Funnel', product: 'Product Metrics' },
+      period: { today: 'Today', '7d': 'Last 7 days', '30d': 'Last 30 days' },
+      pipeline: {
+        successRate: 'Success rate (last 1h)',
+        processingP50: 'Processing time p50',
+        processingP95: 'Processing time p95',
+        queueDepth: 'Queue depth',
+        activeJobs: 'Active jobs',
+        dlqCount: 'Dead-letter queue',
+        errorBreakdown: 'Error breakdown (last 1h)',
+        noErrors: 'No errors in the last hour.',
+        seconds: 's',
+        noData: 'No data (no submissions processed in the last hour).',
+        autoRefresh: 'Refresh',
+      },
+      funnel: {
+        total: 'Total submissions',
+        verified: 'Verified',
+        rejected: 'Rejected',
+        shadowRejected: 'Shadow rejected',
+        pending: 'Pending',
+        dlq: 'Dead-letter queue',
+        rejectionBreakdown: 'Rejection breakdown',
+        drilldownTitle: 'Submissions — ',
+        backToFunnel: '← Back',
+        columnId: 'ID',
+        columnStation: 'Station',
+        columnDate: 'Date',
+        columnReason: 'Reason',
+        noSubmissions: 'No submissions for the selected reason.',
+      },
+      product: {
+        totalMapViews: 'Total map views',
+        avgAuthPct: 'Authenticated share',
+        totalNewRegs: 'New registrations',
+        date: 'Date',
+        mapViews: 'Map views',
+        authPct: '% authenticated',
+        newRegs: 'Registrations',
+      },
+      flagReasons: {
+        logo_mismatch: 'Logo mismatch',
+        low_trust: 'Low trust score',
+        price_validation_failed: 'Price validation failed',
+        gps_no_match: 'GPS no match',
+        low_confidence: 'Low OCR confidence',
+        dead_letter_discarded: 'Discarded from DLQ',
+      },
+      errorGeneric: 'Failed to load. Try again.',
     },
     review: {
       flagReason: { logo_mismatch: 'Logo mismatch', low_trust: 'Low trust score' },
@@ -422,6 +524,57 @@ const translations = {
       errorNotFound: 'Станцію не знайдено.',
       detailAction: 'Деталі',
     },
+    metrics: {
+      tabs: { pipeline: 'Здоров\'я pipeline', funnel: 'Воронка внесків', product: 'Метрики продукту' },
+      period: { today: 'Сьогодні', '7d': 'Останні 7 днів', '30d': 'Останні 30 днів' },
+      pipeline: {
+        successRate: 'Ефективність (остання год.)',
+        processingP50: 'Час обробки p50',
+        processingP95: 'Час обробки p95',
+        queueDepth: 'Глибина черги',
+        activeJobs: 'Активні завдання',
+        dlqCount: 'Черга помилок (DLQ)',
+        errorBreakdown: 'Розподіл помилок (остання год.)',
+        noErrors: 'Помилок за останню годину немає.',
+        seconds: 'с',
+        noData: 'Немає даних (немає оброблених заявок за останню годину).',
+        autoRefresh: 'Оновити',
+      },
+      funnel: {
+        total: 'Всього заявок',
+        verified: 'Підтверджено',
+        rejected: 'Відхилено',
+        shadowRejected: 'Тіньово відхилено',
+        pending: 'Очікується',
+        dlq: 'Черга помилок',
+        rejectionBreakdown: 'Розподіл відхилень',
+        drilldownTitle: 'Заявки — ',
+        backToFunnel: '← Назад',
+        columnId: 'ID',
+        columnStation: 'Станція',
+        columnDate: 'Дата',
+        columnReason: 'Причина',
+        noSubmissions: 'Немає заявок для вибраної причини.',
+      },
+      product: {
+        totalMapViews: 'Всього переглядів карти',
+        avgAuthPct: 'Частка авторизованих',
+        totalNewRegs: 'Нові реєстрації',
+        date: 'Дата',
+        mapViews: 'Перегляди карти',
+        authPct: '% авторизованих',
+        newRegs: 'Реєстрації',
+      },
+      flagReasons: {
+        logo_mismatch: 'Невідповідність логотипу',
+        low_trust: 'Низький рейтинг довіри',
+        price_validation_failed: 'Помилка валідації ціни',
+        gps_no_match: 'Немає збігу GPS',
+        low_confidence: 'Низька точність OCR',
+        dead_letter_discarded: 'Відхилено з DLQ',
+      },
+      errorGeneric: 'Помилка завантаження. Спробуйте ще раз.',
+    },
     review: {
       flagReason: { logo_mismatch: 'Невідповідність логотипу', low_trust: 'Низький рейтинг довіри' },
       columns: {
@@ -457,6 +610,51 @@ const translations = {
     },
   },
 } as const;
+
+export interface MetricsTranslations {
+  tabs: { pipeline: string; funnel: string; product: string };
+  period: { today: string; '7d': string; '30d': string };
+  pipeline: {
+    successRate: string;
+    processingP50: string;
+    processingP95: string;
+    queueDepth: string;
+    activeJobs: string;
+    dlqCount: string;
+    errorBreakdown: string;
+    noErrors: string;
+    seconds: string;
+    noData: string;
+    autoRefresh: string;
+  };
+  funnel: {
+    total: string;
+    verified: string;
+    rejected: string;
+    shadowRejected: string;
+    pending: string;
+    dlq: string;
+    rejectionBreakdown: string;
+    drilldownTitle: string;
+    backToFunnel: string;
+    columnId: string;
+    columnStation: string;
+    columnDate: string;
+    columnReason: string;
+    noSubmissions: string;
+  };
+  product: {
+    totalMapViews: string;
+    avgAuthPct: string;
+    totalNewRegs: string;
+    date: string;
+    mapViews: string;
+    authPct: string;
+    newRegs: string;
+  };
+  flagReasons: Record<string, string>;
+  errorGeneric: string;
+}
 
 export interface StationsTranslations {
   searchPlaceholder: string;
@@ -503,6 +701,7 @@ export interface Translations {
   };
   common: { logout: string; loading: string; comingSoon: string };
   stations: StationsTranslations;
+  metrics: MetricsTranslations;
   users: {
     trustScore: string;
     shadowBanned: string;

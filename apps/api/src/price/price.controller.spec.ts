@@ -4,6 +4,7 @@ import { Reflector } from '@nestjs/core';
 import { PriceController } from './price.controller.js';
 import { PriceService } from './price.service.js';
 import { PriceHistoryService } from './price-history.service.js';
+import { MetricsCounterService } from '../metrics/metrics-counter.service.js';
 import { GetNearbyPricesDto } from './dto/get-nearby-prices.dto.js';
 
 const now = new Date('2026-01-15T12:00:00.000Z');
@@ -22,6 +23,10 @@ const mockPriceHistoryService = {
   getRegionalAverage: jest.fn(),
 };
 
+const mockMetricsCounter = {
+  incrementMapView: jest.fn(),
+};
+
 describe('PriceController', () => {
   let controller: PriceController;
 
@@ -33,6 +38,7 @@ describe('PriceController', () => {
       providers: [
         { provide: PriceService, useValue: mockPriceService },
         { provide: PriceHistoryService, useValue: mockPriceHistoryService },
+        { provide: MetricsCounterService, useValue: mockMetricsCounter },
       ],
     }).compile();
 
@@ -52,7 +58,7 @@ describe('PriceController', () => {
       mockPriceService.findPricesInArea.mockResolvedValueOnce(fakePriceRows);
 
       const dto: GetNearbyPricesDto = { lat: 52.23, lng: 21.01 };
-      const result = await controller.getNearby(dto);
+      const result = await controller.getNearby(dto, undefined);
 
       expect(result).toHaveLength(2);
       expect(result[0]).toMatchObject({
@@ -65,7 +71,7 @@ describe('PriceController', () => {
     it('serialises updatedAt as ISO string', async () => {
       mockPriceService.findPricesInArea.mockResolvedValueOnce(fakePriceRows);
 
-      const result = await controller.getNearby({ lat: 52.23, lng: 21.01 });
+      const result = await controller.getNearby({ lat: 52.23, lng: 21.01 }, undefined);
 
       expect(typeof result[0]?.updatedAt).toBe('string');
       expect(result[0]?.updatedAt).toBe(now.toISOString());
@@ -74,7 +80,7 @@ describe('PriceController', () => {
     it('calls findPricesInArea with default radius 25000 when not provided', async () => {
       mockPriceService.findPricesInArea.mockResolvedValueOnce([]);
 
-      await controller.getNearby({ lat: 52.23, lng: 21.01 });
+      await controller.getNearby({ lat: 52.23, lng: 21.01 }, undefined);
 
       expect(mockPriceService.findPricesInArea).toHaveBeenCalledWith(52.23, 21.01, 25000);
     });
@@ -82,7 +88,7 @@ describe('PriceController', () => {
     it('calls findPricesInArea with explicit radius when provided', async () => {
       mockPriceService.findPricesInArea.mockResolvedValueOnce([]);
 
-      await controller.getNearby({ lat: 52.23, lng: 21.01, radius: 10000 });
+      await controller.getNearby({ lat: 52.23, lng: 21.01, radius: 10000 }, undefined);
 
       expect(mockPriceService.findPricesInArea).toHaveBeenCalledWith(52.23, 21.01, 10000);
     });
@@ -90,7 +96,7 @@ describe('PriceController', () => {
     it('returns empty array when service returns no rows', async () => {
       mockPriceService.findPricesInArea.mockResolvedValueOnce([]);
 
-      const result = await controller.getNearby({ lat: 52.23, lng: 21.01 });
+      const result = await controller.getNearby({ lat: 52.23, lng: 21.01 }, undefined);
 
       expect(result).toEqual([]);
     });

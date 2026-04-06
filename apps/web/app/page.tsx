@@ -3,6 +3,7 @@ import { detectLocale, translations } from '../lib/i18n';
 import { fetchStationsWithPrices } from '../lib/api';
 import MapView from '../components/MapView';
 import MapSidebar from '../components/MapSidebar';
+import AdSlot from '../components/AdSlot';
 
 const DEFAULT_LAT = 52.0;
 const DEFAULT_LNG = 19.5;
@@ -19,28 +20,49 @@ export default async function PublicMapPage() {
   const stations = await fetchStationsWithPrices(DEFAULT_LAT, DEFAULT_LNG, DEFAULT_RADIUS);
 
   return (
-    <div className="flex flex-row flex-1" style={{ height: 'calc(100dvh - 64px)' }}>
-      {/* Map — fills all space on mobile, flex-1 on desktop */}
-      <div className="flex-1 relative min-w-0">
-        <ul className="sr-only">
-          {stations.map(s => {
-            const pb95 = s.price?.prices['PB_95'];
-            return (
-              <li key={s.id}>
-                {s.name}
-                {s.address ? `, ${s.address}` : ''}
-                {pb95 !== undefined ? ` — PB 95: ${pb95.toFixed(2)} zł/l` : ''}
-              </li>
-            );
-          })}
-        </ul>
-        <MapView stations={stations} defaultLat={DEFAULT_LAT} defaultLng={DEFAULT_LNG} t={t} />
+    <div className="flex flex-col flex-1" style={{ height: 'calc(100dvh - 64px)' }}>
+
+      {/* ── Mobile ad banner (<lg) ── */}
+      <div className="flex lg:hidden items-center justify-center py-1.5 px-3 bg-white border-b border-gray-100 flex-shrink-0">
+        <AdSlot slotId="mobile-top" className="h-[60px] w-full" />
       </div>
 
-      {/* Desktop sidebar — hidden on mobile */}
-      <aside className="hidden lg:flex flex-col w-80 xl:w-96 border-l border-gray-200 bg-white overflow-y-auto flex-shrink-0">
-        <MapSidebar stations={stations} t={t} locale={locale} />
-      </aside>
+      {/* ── Medium leaderboard banner (lg → 2xl) ── */}
+      <div className="hidden lg:flex 2xl:hidden items-center justify-center py-2 bg-white border-b border-gray-100 flex-shrink-0">
+        <AdSlot slotId="leaderboard-top" className="h-[90px] w-[728px] max-w-full" />
+      </div>
+
+      {/* ── Main content row ── */}
+      <div className="flex flex-row flex-1 min-h-0">
+
+        {/* Left skyscraper ad column — 2xl+ only */}
+        <aside className="hidden 2xl:flex flex-col items-center pt-6 w-44 border-r border-gray-200 bg-white flex-shrink-0">
+          <AdSlot slotId="left-skyscraper" className="w-[160px] h-[600px]" />
+        </aside>
+
+        {/* Map */}
+        <div className="flex-1 relative min-w-0">
+          <ul className="sr-only">
+            {stations.map(s => {
+              const pb95 = s.price?.prices['PB_95'];
+              return (
+                <li key={s.id}>
+                  {s.name}
+                  {s.address ? `, ${s.address}` : ''}
+                  {pb95 !== undefined ? ` — PB 95: ${pb95.toFixed(2)} zł/l` : ''}
+                </li>
+              );
+            })}
+          </ul>
+          <MapView stations={stations} defaultLat={DEFAULT_LAT} defaultLng={DEFAULT_LNG} t={t} />
+        </div>
+
+        {/* Right sidebar — lg+ */}
+        <aside className="hidden lg:flex flex-col w-80 xl:w-96 border-l border-gray-200 bg-white overflow-y-auto flex-shrink-0">
+          <MapSidebar stations={stations} t={t} locale={locale} />
+        </aside>
+
+      </div>
     </div>
   );
 }

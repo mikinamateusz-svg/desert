@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import type { StationWithPrice } from '../lib/api';
 import type { Locale, Translations } from '../lib/i18n';
-import AdSlot from './AdSlot';
-
 interface Props {
   stations: StationWithPrice[];
   t: Translations;
@@ -84,10 +82,6 @@ export default function MapSidebar({ stations, t, locale }: Props) {
         )}
       </div>
 
-      {/* Ad slot */}
-      <div className="p-3 border-t border-gray-100 flex-shrink-0">
-        <AdSlot slotId="sidebar-map-bottom" className="h-[120px] w-full" />
-      </div>
     </div>
   );
 }

@@ -136,6 +136,10 @@ export interface Translations {
     googlePlay: string;
     comingSoon: string;
   };
+  cheapestFinder: {
+    button: string;
+    none: string;
+  };
   legal: {
     privacyTitle: string;
     termsTitle: string;
@@ -268,6 +272,10 @@ export const translations: Record<Locale, Translations> = {
         pro: ['Wszystko z planu Kierowca', 'Powiadomienia push o cenach', 'Eksport danych CSV', 'Priorytetowe wsparcie'],
         fleet: ['Wszystko z planu Pro', 'Wiele pojazdów', 'Raporty kosztów', 'Integracja z systemami FK', 'Dedykowany opiekun'],
       },
+    },
+    cheapestFinder: {
+      button: 'Najtańsza w widoku',
+      none: 'Brak stacji z cenami w widoku',
     },
     download: {
       title: 'Pobierz Litro',
@@ -408,6 +416,10 @@ export const translations: Record<Locale, Translations> = {
         fleet: ['Everything in Pro', 'Multiple vehicles', 'Cost reports', 'Accounting integration', 'Dedicated manager'],
       },
     },
+    cheapestFinder: {
+      button: 'Cheapest in view',
+      none: 'No priced stations in view',
+    },
     download: {
       title: 'Download Litro',
       subtitle: 'Always know where fuel is cheapest. Join the driver community.',
@@ -546,6 +558,10 @@ export const translations: Record<Locale, Translations> = {
         pro: ['Все з плану Водій', 'Push-сповіщення про ціни', 'Експорт даних CSV', 'Пріоритетна підтримка'],
         fleet: ['Все з плану Pro', 'Кілька автомобілів', 'Звіти витрат', 'Інтеграція з бухгалтерією', 'Персональний менеджер'],
       },
+    },
+    cheapestFinder: {
+      button: 'Найдешевша у вигляді',
+      none: 'Немає станцій з цінами у вигляді',
     },
     download: {
       title: 'Завантажити Litro',

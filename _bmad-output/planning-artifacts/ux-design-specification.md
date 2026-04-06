@@ -1265,3 +1265,42 @@ PB_95 and PB_98 share the green family but use distinct shades — distinguishab
 ### Deferred: real brand logo PNGs
 
 When brand logo image files are sourced, add them inside `BrandLogo.tsx` as a static `require()` map. Recommended spec: 88×88 px @2x, transparent background, square crop. Known brands to cover: `orlen`, `shell`, `bp`, `circle_k`, `lotos`, `huzar`, `moya`, `amic`, `auchan`, `carrefour`.
+
+---
+
+## Web Map Layout & Ad Placement
+
+**Status:** Implemented (2026-04-06)
+
+### Breakpoint behaviour
+
+| Breakpoint | Layout |
+|---|---|
+| `<1024px` (mobile) | Ad banner (60px) above full-width map. Station list hidden. Cheapest-in-view pill shown on map. |
+| `1024–1535px` (lg→2xl) | Leaderboard banner (728×90, 90px tall) above map+station list row. |
+| `≥1536px` (2xl+) | Three-column: left skyscraper ad (160×600) \| map (flex-1) \| station list (320–384px). No top banner. |
+
+### Ad slots
+
+| Slot ID | Unit size | Shown at |
+|---|---|---|
+| `mobile-top` | 60px tall, full width | `<lg` |
+| `leaderboard-top` | 728×90 | `lg` to `2xl` |
+| `left-skyscraper` | 160×600 | `2xl+` |
+
+All slots are placeholders (`AdSlot` component) — drop Google AdSense tag into each slot once account is approved.
+
+### Cheapest-in-viewport finder
+
+**Shown:** Mobile only (`<lg`). Floating pill, bottom-centre of map.
+
+**Behaviour:** One-shot — user taps the pill, the map reads the current Mapbox bounding box, filters loaded stations within those bounds that have a PB 95 price, finds the cheapest, flies to it (zoom 15, 800ms), and opens its popup. If no priced station is in view, a brief toast appears and dismisses after 2.5s. The result does not update automatically on pan/zoom — user must tap again.
+
+**Files changed:**
+
+| File | Change |
+|---|---|
+| `apps/web/app/page.tsx` | Layout restructured to flex-col with conditional ad rows and three-column inner row |
+| `apps/web/components/MapView.tsx` | Added `mapRef`, `handleFindCheapest`, cheapest pill button, "none in view" toast |
+| `apps/web/components/MapSidebar.tsx` | Removed bottom ad slot (ads moved to layout level) |
+| `apps/web/lib/i18n.ts` | Added `cheapestFinder.button` and `cheapestFinder.none` keys (pl/en/uk) |

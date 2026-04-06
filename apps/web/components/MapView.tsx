@@ -1,8 +1,8 @@
 'use client';
 
-import ReactMap, { NavigationControl } from 'react-map-gl';
+import ReactMap, { NavigationControl, type MapRef } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import type { StationWithPrice } from '../lib/api';
 import type { Translations } from '../lib/i18n';
 import StationMarker from './StationMarker';
@@ -53,8 +53,10 @@ interface Props {
 }
 
 export default function MapView({ stations, defaultLat, defaultLng, t }: Props) {
+  const mapRef = useRef<MapRef>(null);
   const [selected, setSelected] = useState<StationWithPrice | null>(null);
   const [showContributePrompt, setShowContributePrompt] = useState(false);
+  const [noneInView, setNoneInView] = useState(false);
   const priceTiers = computePriceTiers(stations);
 
   function handleContribute() {
@@ -62,9 +64,38 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
     setShowContributePrompt(true);
   }
 
+  function handleFindCheapest() {
+    const map = mapRef.current;
+    if (!map) return;
+    const bounds = map.getBounds();
+    if (!bounds) return;
+
+    const inView = stations.filter(s =>
+      s.lat >= bounds.getSouth() &&
+      s.lat <= bounds.getNorth() &&
+      s.lng >= bounds.getWest() &&
+      s.lng <= bounds.getEast() &&
+      s.price?.prices['PB_95'] !== undefined,
+    );
+
+    if (inView.length === 0) {
+      setNoneInView(true);
+      setTimeout(() => setNoneInView(false), 2500);
+      return;
+    }
+
+    const cheapest = inView.reduce((best, s) =>
+      (s.price!.prices['PB_95']! < best.price!.prices['PB_95']!) ? s : best,
+    );
+
+    map.flyTo({ center: [cheapest.lng, cheapest.lat], zoom: 15, duration: 800 });
+    setSelected(cheapest);
+  }
+
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       <ReactMap
+        ref={mapRef}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
         initialViewState={{
           longitude: defaultLng,
@@ -95,7 +126,7 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
         )}
       </ReactMap>
 
-      {/* Contribute CTA — top-right overlay (AC4) */}
+      {/* Contribute CTA — top-right overlay */}
       <button
         onClick={() => setShowContributePrompt(true)}
         className="absolute top-4 right-4 z-10 px-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-300 text-gray-900 text-sm font-semibold shadow-md transition-colors"
@@ -103,7 +134,22 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
         {t.contribute}
       </button>
 
-      {/* Login prompt modal (AC4) */}
+      {/* Cheapest in viewport — mobile only, bottom-centre floating pill */}
+      <button
+        onClick={handleFindCheapest}
+        className="lg:hidden absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white shadow-lg border border-gray-200 text-sm font-semibold text-gray-900 hover:bg-gray-50 active:scale-95 transition-all whitespace-nowrap"
+      >
+        🏆 {t.cheapestFinder.button}
+      </button>
+
+      {/* "None in view" feedback toast */}
+      {noneInView && (
+        <div className="lg:hidden absolute bottom-24 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-full bg-gray-900/90 text-white text-xs whitespace-nowrap">
+          {t.cheapestFinder.none}
+        </div>
+      )}
+
+      {/* Login prompt modal */}
       {showContributePrompt && (
         <div
           className="absolute inset-0 z-20 flex items-center justify-center bg-black/40"

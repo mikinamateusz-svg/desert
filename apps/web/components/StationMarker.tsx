@@ -2,6 +2,7 @@
 
 import { Marker } from 'react-map-gl';
 import type { CSSProperties } from 'react';
+import type { FuelType } from '@desert/types';
 import type { StationWithPrice } from '../lib/api';
 
 type PriceColor = 'cheap' | 'mid' | 'expensive' | 'nodata';
@@ -22,13 +23,14 @@ interface Props {
   station: StationWithPrice;
   priceColor: PriceColor;
   isSelected: boolean;
+  selectedFuel: FuelType;
   onClick: () => void;
 }
 
-export default function StationMarker({ station, priceColor, isSelected, onClick }: Props) {
-  const pb95  = station.price?.prices['PB_95'];
-  const range = station.price?.priceRanges?.['PB_95'];
-  const isEstimated = range !== undefined || station.price?.estimateLabel?.['PB_95'] !== undefined;
+export default function StationMarker({ station, priceColor, isSelected, selectedFuel, onClick }: Props) {
+  const pb95  = station.price?.prices[selectedFuel];
+  const range = station.price?.priceRanges?.[selectedFuel];
+  const isEstimated = range !== undefined || station.price?.estimateLabel?.[selectedFuel] !== undefined;
 
   let pinLabel: string;
   if (range) {
@@ -82,7 +84,7 @@ export default function StationMarker({ station, priceColor, isSelected, onClick
     >
       {/* button kept for accessibility label; click is handled by Marker */}
       <button
-        aria-label={`${station.name}: PB 95 ${pinLabel} zł/l`}
+        aria-label={`${station.name}: ${selectedFuel} ${pinLabel} zł/l`}
         style={{ ...pinStyle, border: 'none', padding: 0, outline: 'none' }}
         tabIndex={-1}
       >

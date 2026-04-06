@@ -3,25 +3,27 @@
 import ReactMap, { NavigationControl, type MapRef } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useState, useRef, useCallback } from 'react';
+import type { FuelType } from '@desert/types';
 import type { StationWithPrice } from '../lib/api';
 import type { Translations } from '../lib/i18n';
 import StationMarker from './StationMarker';
 import StationDetailPanel from './StationDetailPanel';
+import FuelTypePills from './FuelTypePills';
 
 type PriceColor = 'cheap' | 'mid' | 'expensive' | 'nodata';
 
-function getRepresentativePrice(station: StationWithPrice): number | undefined {
-  const pb95 = station.price?.prices['PB_95'];
-  if (pb95 !== undefined) return pb95;
-  const range = station.price?.priceRanges?.['PB_95'];
+function getRepresentativePrice(station: StationWithPrice, fuelType: string): number | undefined {
+  const exact = station.price?.prices[fuelType];
+  if (exact !== undefined) return exact;
+  const range = station.price?.priceRanges?.[fuelType];
   if (range) return (range.low + range.high) / 2;
   return undefined;
 }
 
-function computePriceTiers(stations: StationWithPrice[]): Map<string, PriceColor> {
+function computePriceTiers(stations: StationWithPrice[], fuelType: string): Map<string, PriceColor> {
   const result = new Map<string, PriceColor>();
   const withPrices = stations
-    .map(s => ({ id: s.id, price: getRepresentativePrice(s) }))
+    .map(s => ({ id: s.id, price: getRepresentativePrice(s, fuelType) }))
     .filter((x): x is { id: string; price: number } => x.price !== undefined);
 
   if (withPrices.length < 2) {
@@ -35,7 +37,7 @@ function computePriceTiers(stations: StationWithPrice[]): Map<string, PriceColor
   const spread = max - min;
 
   stations.forEach(s => {
-    const price = getRepresentativePrice(s);
+    const price = getRepresentativePrice(s, fuelType);
     if (price === undefined) { result.set(s.id, 'nodata'); return; }
     if (spread === 0) { result.set(s.id, 'mid'); return; }
     const ratio = (price - min) / spread;
@@ -63,7 +65,9 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
   const mapRef = useRef<MapRef>(null);
   const [selected, setSelected] = useState<StationWithPrice | null>(null);
   const [noneInView, setNoneInView] = useState(false);
-  const priceTiers = computePriceTiers(stations);
+  const [selectedFuel, setSelectedFuel] = useState<FuelType>('PB_95');
+
+  const priceTiers = computePriceTiers(stations, selectedFuel);
 
   const selectStation = useCallback((station: StationWithPrice) => {
     setSelected(station);
@@ -94,7 +98,7 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
       s.lat <= bounds.getNorth() &&
       s.lng >= bounds.getWest() &&
       s.lng <= bounds.getEast() &&
-      s.price?.prices['PB_95'] !== undefined,
+      getRepresentativePrice(s, selectedFuel) !== undefined,
     );
 
     if (inView.length === 0) {
@@ -104,7 +108,7 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
     }
 
     const cheapest = inView.reduce((best, s) =>
-      (s.price!.prices['PB_95']! < best.price!.prices['PB_95']!) ? s : best,
+      getRepresentativePrice(s, selectedFuel)! < getRepresentativePrice(best, selectedFuel)! ? s : best,
     );
 
     selectStation(cheapest);
@@ -131,10 +135,14 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
             station={station}
             priceColor={priceTiers.get(station.id) ?? 'nodata'}
             isSelected={selected?.id === station.id}
+            selectedFuel={selectedFuel}
             onClick={() => selectStation(station)}
           />
         ))}
       </ReactMap>
+
+      {/* Fuel type selector — floats at top-centre, always visible */}
+      <FuelTypePills selected={selectedFuel} onChange={setSelectedFuel} t={t} />
 
       {/* Station detail panel — outside ReactMap to avoid z-index issues */}
       {selected && (

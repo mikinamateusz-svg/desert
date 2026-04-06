@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Linking,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import { tokens } from '../../src/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
@@ -19,20 +20,41 @@ import {
 } from '../../src/api/notifications';
 import { apiGetSubmissions } from '../../src/api/submissions';
 import { useNotificationPermission } from '../../src/hooks/useNotificationPermission';
+import { FeatureGateSheet } from '../../src/components/FeatureGateSheet';
 
 const REPROMPT_KEY = 'desert:notifRepromptShown';
 
 export default function AlertsScreen() {
   const { t } = useTranslation();
+  const router = useRouter();
   const { accessToken, isLoading: authLoading } = useAuth();
   const { status: permissionStatus, isChecking, requestPermission, getExpoPushToken } =
     useNotificationPermission();
 
+  const [gateVisible, setGateVisible] = useState(false);
   const [prefs, setPrefs] = useState<NotificationPreferences | null>(null);
   const [isLoadingPrefs, setIsLoadingPrefs] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [showReprompt, setShowReprompt] = useState(false);
+
+  // Show gate as soon as auth is resolved and user is a guest.
+  useEffect(() => {
+    if (!authLoading && !accessToken) {
+      setGateVisible(true);
+    }
+  }, [authLoading, accessToken]);
+
+  // Navigate back when the gate is dismissed without a sign-in completing.
+  // Using an effect (rather than an inline onDismiss callback) means we always
+  // read the current accessToken value and avoid stale-closure bugs.
+  const prevGateVisibleRef = useRef(false);
+  useEffect(() => {
+    if (prevGateVisibleRef.current && !gateVisible && !accessToken) {
+      router.back();
+    }
+    prevGateVisibleRef.current = gateVisible;
+  }, [gateVisible, accessToken, router]);
 
   // Load preferences when permission is granted and user is authenticated
   const loadPrefs = useCallback(async () => {
@@ -133,7 +155,12 @@ export default function AlertsScreen() {
   if (!accessToken) {
     return (
       <View style={styles.center}>
-        <Text style={styles.emptyTitle}>{t('notifications.signInPrompt')}</Text>
+        <FeatureGateSheet
+          visible={gateVisible}
+          onDismiss={() => setGateVisible(false)}
+          featureKey="alerts"
+          returnTo="/(app)/alerts"
+        />
       </View>
     );
   }

@@ -8,15 +8,23 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, useRouter, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
 import { ApiError } from '../../src/api/auth';
 import { GoogleSignInButton } from '../../src/components/GoogleSignInButton';
 import { AppleSignInButton } from '../../src/components/AppleSignInButton';
 
+const ALLOWED_RETURN_ROUTES: readonly string[] = [
+  '/(app)/alerts',
+  '/(app)/log',
+  '/(app)/leaderboard',
+];
+
 export default function RegisterScreen() {
   const { t } = useTranslation();
+  const router = useRouter();
+  const { returnTo } = useLocalSearchParams<{ returnTo?: string }>();
   const { register } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -44,6 +52,9 @@ export default function RegisterScreen() {
     setIsSubmitting(true);
     try {
       await register(email, password, displayName);
+      if (returnTo && ALLOWED_RETURN_ROUTES.includes(returnTo)) {
+        router.replace(returnTo as Parameters<typeof router.replace>[0]);
+      }
     } catch (err) {
       if (err instanceof ApiError && err.error === 'EMAIL_ALREADY_EXISTS') {
         setError(t('auth.register.emailAlreadyExists'));

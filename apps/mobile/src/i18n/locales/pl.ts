@@ -45,6 +45,26 @@ export default {
       discard: 'Odrzuć i wróć',
     },
   },
+  featureGate: {
+    useEmail: 'Użyj e-maila',
+    maybeLater: 'Może później',
+    alerts: {
+      title: 'Ustaw alerty cenowe',
+      subtitle: 'Otrzymuj powiadomienia, gdy ceny w pobliżu spadną lub gwałtownie wzrosną.',
+    },
+    savings: {
+      title: 'Śledź swoje oszczędności',
+      subtitle: 'Zobacz, ile zaoszczędziłeś, tankując na najtańszych stacjach.',
+    },
+    log: {
+      title: 'Dziennik paliwa',
+      subtitle: 'Rejestruj tankowania i śledź koszty przejechanych kilometrów.',
+    },
+    leaderboard: {
+      title: 'Dołącz do tablicy wyników',
+      subtitle: 'Śledź swoje oszczędności i porównuj się z innymi kierowcami.',
+    },
+  },
   nav: {
     map: 'Mapa',
     activity: 'Aktywność',

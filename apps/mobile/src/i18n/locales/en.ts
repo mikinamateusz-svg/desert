@@ -45,6 +45,26 @@ export default {
       discard: 'Discard and go back',
     },
   },
+  featureGate: {
+    useEmail: 'Use Email',
+    maybeLater: 'Maybe later',
+    alerts: {
+      title: 'Set price alerts',
+      subtitle: 'Get notified when prices nearby drop or spike.',
+    },
+    savings: {
+      title: 'Track your savings',
+      subtitle: 'See how much you save by refuelling at the cheapest stations.',
+    },
+    log: {
+      title: 'Fuel log',
+      subtitle: 'Log fill-ups and track fuel costs per kilometre.',
+    },
+    leaderboard: {
+      title: 'Join the leaderboard',
+      subtitle: 'Track your savings and see how you compare with other drivers.',
+    },
+  },
   nav: {
     map: 'Map',
     activity: 'Activity',

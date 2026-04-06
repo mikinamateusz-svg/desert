@@ -45,9 +45,12 @@ function computePriceTiers(stations: StationWithPrice[]): Map<string, PriceColor
   return result;
 }
 
-// On mobile the bottom sheet covers ~50% of the map height.
-// Offset the fly-to so the pin lands in the upper visible portion.
-const MOBILE_PAN_OFFSET_PX = 120;
+// On mobile the bottom sheet covers ~300px from the bottom of the map.
+// A negative y-offset pulls the target point above the map centre so the pin
+// lands in the middle of the visible area above the sheet.
+// Zoom 15 gives enough context to see the street the station is on.
+const MOBILE_SHEET_OFFSET_Y = -150;
+const MOBILE_SELECT_ZOOM = 15;
 
 interface Props {
   stations: StationWithPrice[];
@@ -73,8 +76,9 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
     if (isMobile) {
       map.flyTo({
         center: [station.lng, station.lat],
-        offset: [0, MOBILE_PAN_OFFSET_PX],
-        duration: 400,
+        offset: [0, MOBILE_SHEET_OFFSET_Y],
+        zoom: MOBILE_SELECT_ZOOM,
+        duration: 600,
       });
     }
   }, []);

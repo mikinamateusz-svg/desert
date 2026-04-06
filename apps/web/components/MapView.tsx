@@ -8,6 +8,43 @@ import type { Translations } from '../lib/i18n';
 import StationMarker from './StationMarker';
 import StationPopup from './StationPopup';
 
+type PriceColor = 'cheap' | 'mid' | 'expensive' | 'nodata';
+
+function getRepresentativePrice(station: StationWithPrice): number | undefined {
+  const pb95 = station.price?.prices['PB_95'];
+  if (pb95 !== undefined) return pb95;
+  const range = station.price?.priceRanges?.['PB_95'];
+  if (range) return (range.low + range.high) / 2;
+  return undefined;
+}
+
+function computePriceTiers(stations: StationWithPrice[]): Map<string, PriceColor> {
+  const result = new Map<string, PriceColor>();
+  const withPrices = stations
+    .map(s => ({ id: s.id, price: getRepresentativePrice(s) }))
+    .filter((x): x is { id: string; price: number } => x.price !== undefined);
+
+  if (withPrices.length < 2) {
+    stations.forEach(s => result.set(s.id, 'nodata'));
+    return result;
+  }
+
+  const prices = withPrices.map(x => x.price);
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const spread = max - min;
+
+  stations.forEach(s => {
+    const price = getRepresentativePrice(s);
+    if (price === undefined) { result.set(s.id, 'nodata'); return; }
+    if (spread === 0) { result.set(s.id, 'mid'); return; }
+    const ratio = (price - min) / spread;
+    result.set(s.id, ratio <= 0.33 ? 'cheap' : ratio <= 0.66 ? 'mid' : 'expensive');
+  });
+
+  return result;
+}
+
 interface Props {
   stations: StationWithPrice[];
   defaultLat: number;
@@ -18,6 +55,7 @@ interface Props {
 export default function MapView({ stations, defaultLat, defaultLng, t }: Props) {
   const [selected, setSelected] = useState<StationWithPrice | null>(null);
   const [showContributePrompt, setShowContributePrompt] = useState(false);
+  const priceTiers = computePriceTiers(stations);
 
   function handleContribute() {
     setSelected(null);
@@ -42,6 +80,7 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
           <StationMarker
             key={station.id}
             station={station}
+            priceColor={priceTiers.get(station.id) ?? 'nodata'}
             onClick={() => setSelected(station)}
           />
         ))}

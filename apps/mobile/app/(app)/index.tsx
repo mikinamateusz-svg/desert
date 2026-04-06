@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView, Linking, Alert } from 'react-native';
-import Mapbox, { MapView, Camera, ShapeSource, CircleLayer } from '@rnmapbox/maps';
+import Mapbox, { MapView, Camera, MarkerView } from '@rnmapbox/maps';
 import { router } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -9,12 +9,7 @@ import type GeoJSON from 'geojson';
 import type { FuelType } from '@desert/types';
 import { MapFABGroup } from '../../src/components/contribution/MapFABGroup';
 import { useCameraPermission } from '../../src/hooks/useCameraPermission';
-
-type OnPressEvent = {
-  features: GeoJSON.Feature[];
-  coordinates: { latitude: number; longitude: number };
-  point: { x: number; y: number };
-};
+import { StationPin } from '../../src/components/map/StationPin';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
 import { LoadingScreen, type LoadingStage } from '../../src/components/LoadingScreen';
@@ -25,28 +20,13 @@ import { useFuelTypePreference, VALID_FUEL_TYPES } from '../../src/hooks/useFuel
 import { useLocation, type LocationCoords } from '../../src/hooks/useLocation';
 import { useNearbyStations } from '../../src/hooks/useNearbyStations';
 import { useNearbyPrices } from '../../src/hooks/useNearbyPrices';
-import { computePriceColorMap, PRICE_COLORS } from '../../src/utils/priceColor';
-import type { PriceColor } from '../../src/utils/priceColor';
+import { computePriceColorMap } from '../../src/utils/priceColor';
 import type { StationDto } from '../../src/api/stations';
 
 // Mapbox token must be set before any MapView renders
 Mapbox.setAccessToken(process.env['EXPO_PUBLIC_MAPBOX_TOKEN'] ?? '');
 
 const WARSAW: LocationCoords = { lat: 52.2297, lng: 21.0122 };
-
-function buildGeoJSON(
-  stations: { id: string; name: string; lat: number; lng: number }[],
-  colorMap: Map<string, PriceColor>,
-): GeoJSON.FeatureCollection {
-  return {
-    type: 'FeatureCollection',
-    features: stations.map(s => ({
-      type: 'Feature',
-      geometry: { type: 'Point', coordinates: [s.lng, s.lat] },
-      properties: { id: s.id, name: s.name, priceColor: colorMap.get(s.id) ?? 'nodata' },
-    })),
-  };
-}
 
 export default function MapScreen() {
   const { t } = useTranslation();
@@ -158,10 +138,10 @@ export default function MapScreen() {
     [stations, prices, selectedFuelType],
   );
 
-  // Build GeoJSON with colour property baked in
-  const geojson = useMemo(
-    () => buildGeoJSON(stations, priceColorMap),
-    [stations, priceColorMap],
+  // Quick price lookup by stationId for pin labels
+  const priceMap = useMemo(
+    () => new Map(prices.map(p => [p.stationId, p])),
+    [prices],
   );
 
   // Auto-dismiss error banner after 4s (stations or prices failure)
@@ -249,10 +229,7 @@ export default function MapScreen() {
     [selectedStation, prices],
   );
 
-  const handlePinPress = useCallback((event: OnPressEvent) => {
-    const rawId = event.features[0]?.properties?.['id'];
-    const stationId = rawId != null ? String(rawId) : '';
-    if (!stationId) return;
+  const handlePinPress = useCallback((stationId: string) => {
     const station = stations.find(s => s.id === stationId) ?? null;
     setSelectedStation(station);
   }, [stations]);
@@ -288,27 +265,35 @@ export default function MapScreen() {
           animationDuration={800}
         />
 
-        <ShapeSource
-          id="stations"
-          shape={geojson}
-          onPress={handlePinPress}
-        >
-          <CircleLayer
-            id="station-pins"
-            style={{
-              circleColor: [
-                'match', ['get', 'priceColor'],
-                'cheap',     PRICE_COLORS.cheap,
-                'mid',       PRICE_COLORS.mid,
-                'expensive', PRICE_COLORS.expensive,
-                PRICE_COLORS.nodata, // default fallback = nodata
-              ] as unknown as string,
-              circleRadius: 8,
-              circleStrokeColor: tokens.neutral.n0,
-              circleStrokeWidth: 1.5,
-            }}
-          />
-        </ShapeSource>
+        {stations.map(station => {
+          const priceData = priceMap.get(station.id);
+          const priceColor = priceColorMap.get(station.id) ?? 'nodata';
+          const range = priceData?.priceRanges?.[selectedFuelType];
+          const reported = priceData?.prices[selectedFuelType];
+          const isEstimated = range !== undefined || priceData?.estimateLabel?.[selectedFuelType] !== undefined;
+          let label: string;
+          if (range) {
+            label = `~${((range.low + range.high) / 2).toFixed(2)}`;
+          } else if (reported !== undefined) {
+            label = `${isEstimated ? '~' : ''}${reported.toFixed(2)}`;
+          } else {
+            label = '?';
+          }
+          return (
+            <MarkerView
+              key={station.id}
+              coordinate={[station.lng, station.lat]}
+              anchor={{ x: 0.5, y: 1 }}
+            >
+              <StationPin
+                priceColor={priceColor}
+                label={label}
+                isEstimated={isEstimated}
+                onPress={() => handlePinPress(station.id)}
+              />
+            </MarkerView>
+          );
+        })}
       </MapView>
 
       {/* Fuel-drop loading splash */}

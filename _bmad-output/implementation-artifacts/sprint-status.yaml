@@ -178,6 +178,26 @@ epics:
           - "2026-03-24 — P1–P3 applied, 106/106 tests passing"
           - "apps/api/src/feedback/feedback.controller.ts: add @Roles(...ALL_ROLES)"
 
+      - id: 1.13
+        title: Guest Mode Feature Gates — Phase 1 (Alerts)
+        file: ~no spec file~ (split from original 1.13 in-session 2026-04-06)
+        status: done
+        review_date: "2026-04-06"
+        review_findings:
+          - "P-1: Stale accessToken closure in alerts.tsx onDismiss fired router.back() after social sign-in — fixed with prevGateVisibleRef effect"
+          - "P-2: handleUseEmail called onDismiss() causing router.back()+router.push() double navigation — fixed by not calling onDismiss on email path"
+          - "P-2: FeatureGateSheet stayed open for already-authenticated user on second open — fixed with accessTokenRef check in visibility effect"
+          - "P-2: Error state not cleared between sign-in attempts — fixed with setError(null) in visibility effect on each open"
+          - "P-2: onDismiss identity change caused spurious effect re-fires — fixed with onDismissRef"
+          - "P-3: returnTo not validated before router.replace — fixed with ALLOWED_RETURN_ROUTES allowlist"
+          - "D-1: OAuth completing after Maybe Later dismiss (silent sign-in, no redirect) — deferred, requires GoogleSignInButton changes"
+          - "D-2: No loading state across buttons during in-flight social auth — deferred, pre-existing button limitation"
+          - "D-3: gateVisible re-triggers after sign-out on same session — deferred, correct semantics"
+          - "D-4: auth object instability in GoogleSignInButton useEffect — deferred, pre-existing"
+        patches_applied:
+          - "All 5 patch findings applied before commit 9f28e35"
+        note: "Phase 2+ gates (savings, log, leaderboard) deferred to their respective feature stories"
+
   - id: ui
     name: UI Polish & Design System
     stories:

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import type { Locale, Translations } from '../lib/i18n';
+import { LitroWordmark } from './LitroWordmark';
 
 interface Props {
   locale: Locale;
@@ -24,9 +25,9 @@ export default function Navbar({ locale, t }: Props) {
   return (
     <header className="sticky top-0 z-50 h-16 bg-white border-b border-gray-200 flex items-center px-4 lg:px-6">
       {/* Logo */}
-      <Link href="/" className="flex items-center gap-1.5 mr-8 flex-shrink-0">
-        <span className="text-xl font-bold tracking-tight text-blue-600">Litro</span>
-        <span className="hidden sm:inline text-xs text-gray-400 font-normal mt-0.5">ceny paliw</span>
+      <Link href="/" className="flex items-center gap-2 mr-8 flex-shrink-0">
+        <LitroWordmark height={22} />
+        <span className="hidden sm:inline text-xs text-gray-400 font-normal">ceny paliw</span>
       </Link>
 
       {/* Desktop nav */}

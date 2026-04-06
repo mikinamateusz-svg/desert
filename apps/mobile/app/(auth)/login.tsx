@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  View,
   Text,
   TextInput,
   TouchableOpacity,
@@ -14,6 +15,7 @@ import { useAuth } from '../../src/store/auth.store';
 import { ApiError } from '../../src/api/auth';
 import { GoogleSignInButton } from '../../src/components/GoogleSignInButton';
 import { AppleSignInButton } from '../../src/components/AppleSignInButton';
+import { LitroLogo } from '../../src/components/LitroLogo';
 
 export default function LoginScreen() {
   const { t } = useTranslation();
@@ -59,6 +61,9 @@ export default function LoginScreen() {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
+      <View style={styles.logoRow}>
+        <LitroLogo size={36} />
+      </View>
       <Text style={styles.title}>{t('auth.login.title')}</Text>
 
       <TextInput
@@ -110,6 +115,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 24,
     backgroundColor: '#fff',
+  },
+  logoRow: {
+    alignItems: 'center',
+    marginBottom: 24,
   },
   title: {
     fontSize: 28,

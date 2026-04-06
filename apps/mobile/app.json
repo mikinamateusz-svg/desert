@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "desert",
+    "name": "Litro",
     "slug": "desert",
     "owner": "mmikina",
     "version": "1.0.0",
@@ -21,7 +21,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#1a1a1a"
       },
       "package": "com.desert.app",
       "permissions": [

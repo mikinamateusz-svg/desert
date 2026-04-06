@@ -1,6 +1,6 @@
 'use client';
 
-import Map, { NavigationControl } from 'react-map-gl';
+import ReactMap, { NavigationControl } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useState } from 'react';
 import type { StationWithPrice } from '../lib/api';
@@ -64,7 +64,7 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-      <Map
+      <ReactMap
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
         initialViewState={{
           longitude: defaultLng,
@@ -93,7 +93,7 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
             onContribute={handleContribute}
           />
         )}
-      </Map>
+      </ReactMap>
 
       {/* Contribute CTA — top-right overlay (AC4) */}
       <button

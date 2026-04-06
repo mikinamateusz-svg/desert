@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Station Detail Card — Design Mockup v2</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── Design tokens (from tokens.ts) ── */
+  :root {
+    --ink:         #1a1a1a;
+    --accent:      #f59e0b;
+    --accent-bg:   #fef3c7;
+    --n900:        #111111;
+    --n800:        #1a1a1a;
+    --n500:        #6b7280;
+    --n400:        #9ca3af;
+    --n200:        #e5e7eb;
+    --n100:        #f4f4f4;
+    --n0:          #ffffff;
+    --card:        #ffffff;
+    --cheap:       #22c55e;
+    --cheap-dark:  #16a34a;
+    --mid:         #f59e0b;
+    --expensive:   #ef4444;
+    --fresh:       #22c55e;
+    --stale:       #f59e0b;
+    --old:         #94a3b8;
+    --r-sm:        6px;
+    --r-md:        10px;
+    --r-lg:        16px;
+  }
+
+  body {
+    background: #d1d5db;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+    padding: 40px 24px 80px;
+    color: var(--ink);
+  }
+
+  h1 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin-bottom: 4px;
+  }
+  .version-note {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-bottom: 0;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #9ca3af;
+    margin-bottom: 14px;
+    margin-top: 48px;
+    display: block;
+  }
+
+  /* ── Phone frame ── */
+  .phone-row {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    margin-top: 16px;
+  }
+
+  .phone {
+    width: 375px;
+    background: #111;
+    border-radius: 50px;
+    padding: 14px;
+    box-shadow: 0 28px 70px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.08);
+    flex-shrink: 0;
+  }
+  .phone-notch {
+    width: 100px; height: 28px;
+    background: #111;
+    border-radius: 0 0 18px 18px;
+    margin: 0 auto -4px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .phone-screen {
+    background: #a8d5f5;
+    border-radius: 38px;
+    overflow: hidden;
+    position: relative;
+    height: 720px;
+  }
+
+  /* Map background */
+  .map-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(155deg, #bde0f7 0%, #9cccea 50%, #88bedd 100%);
+  }
+  .map-road-h {
+    position: absolute;
+    top: 130px; left: 0; right: 0; height: 22px;
+    background: rgba(255,255,255,.6);
+    border-top: 1.5px solid rgba(255,255,255,.4);
+    border-bottom: 1.5px solid rgba(255,255,255,.4);
+  }
+  .map-road-v {
+    position: absolute;
+    top: 0; bottom: 0; left: 150px; width: 26px;
+    background: rgba(255,255,255,.5);
+  }
+  .map-block {
+    position: absolute;
+    background: rgba(255,255,255,.15);
+    border-radius: 4px;
+  }
+
+  /* Map pin */
+  .map-pin {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .pin-bubble {
+    color: white;
+    font-size: 13px;
+    font-weight: 800;
+    border-radius: 12px;
+    padding: 5px 11px;
+    box-shadow: 0 3px 10px rgba(0,0,0,.3);
+    white-space: nowrap;
+    letter-spacing: .01em;
+  }
+  .pin-tail {
+    width: 0; height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+  }
+
+  /* ── Bottom sheet ── */
+  .sheet {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: var(--card);
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    padding: 10px 20px 32px;
+    box-shadow: 0 -4px 28px rgba(0,0,0,.14);
+  }
+
+  .handle {
+    width: 36px; height: 4px;
+    border-radius: 2px;
+    background: var(--n200);
+    margin: 0 auto 14px;
+  }
+
+  /* ── Close button ── */
+  .close-btn {
+    position: absolute;
+    top: 10px; right: 14px;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--n100);
+    display: flex; align-items: center; justify-content: center;
+    border: none;
+    color: var(--n400);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  /* ── Station header ── */
+  .station-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .brand-logo {
+    width: 44px; height: 44px;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--n200);
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .brand-logo-fallback {
+    background: var(--n100);
+    font-size: 20px;
+  }
+  .brand-orlen {
+    background: #e30613;
+    color: white;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .04em;
+  }
+  .brand-shell {
+    background: #FFD500;
+    font-size: 20px;
+  }
+  .brand-bp {
+    background: #006600;
+    color: white;
+    font-size: 12px;
+    font-weight: 900;
+  }
+  .brand-circle-k {
+    background: #cc0000;
+    color: white;
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: .03em;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .station-info { flex: 1; min-width: 0; }
+  .station-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .station-name.wrap { white-space: normal; }
+  .station-address {
+    font-size: 12px;
+    color: var(--n500);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ══════════════════════════════════════
+     FUEL BADGE ICONS
+     ══════════════════════════════════════ */
+  .fuel-badge {
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    letter-spacing: -.01em;
+    color: white;
+    flex-shrink: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    line-height: 1;
+  }
+  /* Primary row: larger badge */
+  .fuel-badge.lg {
+    width: 38px; height: 28px;
+    font-size: 14px;
+    border-radius: 6px;
+  }
+  /* Secondary rows: smaller badge */
+  .fuel-badge.sm {
+    width: 30px; height: 22px;
+    font-size: 11px;
+    border-radius: 4px;
+  }
+
+  /* 95 — green */
+  .badge-95     { background: #22c55e; }
+  /* 98 — darker green to distinguish */
+  .badge-98     { background: #15803d; }
+  /* ON — near-black */
+  .badge-on     { background: #1c1c1e; }
+  /* ON Premium — dark with amber star overlay */
+  .badge-on-p   { background: #1c1c1e; position: relative; overflow: visible; }
+  .badge-on-p .star {
+    position: absolute;
+    top: -4px; right: -4px;
+    width: 11px; height: 11px;
+    background: #f59e0b;
+    border-radius: 50%;
+    font-size: 7px;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-weight: 900;
+    line-height: 1;
+    box-shadow: 0 1px 3px rgba(0,0,0,.3);
+  }
+  /* LPG — red */
+  .badge-lpg    { background: #ef4444; }
+
+  /* ── Price rows ── */
+  .price-list { margin-bottom: 14px; }
+
+  /* Primary / selected fuel */
+  .fuel-row-primary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--accent-bg);
+    border-radius: var(--r-md);
+    padding: 11px 13px;
+    margin-bottom: 6px;
+  }
+  .fuel-row-primary .fuel-left {
+    display: flex; align-items: center; gap: 9px;
+  }
+  .fuel-row-primary .fuel-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .fuel-row-primary .fuel-right {
+    display: flex; align-items: center; gap: 5px;
+  }
+  .fuel-row-primary .fuel-price {
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .fuel-row-primary .fuel-unit {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--n500);
+    align-self: flex-end;
+    margin-bottom: 2px;
+  }
+
+  /* Secondary rows */
+  .fuel-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 2px;
+    border-bottom: 1px solid var(--n200);
+  }
+  .fuel-row:last-child { border-bottom: none; }
+  .fuel-row .fuel-left {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .fuel-row .fuel-label {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--n500);
+  }
+  .fuel-row .fuel-right {
+    display: flex; align-items: center; gap: 5px;
+  }
+  .fuel-row .fuel-price {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .fuel-row .fuel-price.est {
+    color: var(--n400);
+  }
+  .fuel-row .fuel-unit {
+    font-size: 11px;
+    color: var(--n400);
+  }
+
+  /* Freshness dots */
+  .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot.fresh  { background: var(--fresh); }
+  .dot.stale  { background: var(--stale); }
+  .dot.old    { background: var(--old); }
+  .dot.est    { border: 1.5px solid var(--n400); background: transparent; }
+
+  /* Estimated footnote */
+  .est-footnote {
+    font-size: 11px;
+    color: var(--n400);
+    text-align: right;
+    text-decoration: underline;
+    margin-top: 4px;
+    cursor: pointer;
+  }
+  .stale-warning {
+    font-size: 11px;
+    color: var(--old);
+    text-align: right;
+    margin-top: 4px;
+  }
+
+  /* Navigate button */
+  .nav-btn {
+    width: 100%;
+    background: var(--accent);
+    border: none;
+    border-radius: var(--r-md);
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    letter-spacing: .01em;
+  }
+
+  /* Empty state */
+  .empty-state {
+    padding: 22px 0;
+    text-align: center;
+    color: var(--n400);
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+
+  /* ── Flat cards ── */
+  .card-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .card-frame {
+    background: #111;
+    border-radius: 24px;
+    padding: 10px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.35);
+  }
+  .card {
+    background: var(--card);
+    border-radius: var(--r-lg);
+    padding: 10px 18px 18px;
+    width: 320px;
+    position: relative;
+  }
+  .card-variant-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--n400);
+    margin-bottom: 6px;
+  }
+
+  /* ── Icon legend ── */
+  .icon-legend {
+    background: white;
+    border-radius: 16px;
+    padding: 22px 24px;
+    max-width: 540px;
+    margin-top: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+  }
+  .icon-legend-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--n500);
+    margin-bottom: 14px;
+  }
+  .icon-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+  .icon-row:last-child { margin-bottom: 0; }
+  .icon-meta { font-size: 13px; color: var(--ink); line-height: 1.4; }
+  .icon-meta strong { color: var(--ink); }
+  .icon-meta span { color: var(--n500); font-size: 12px; }
+
+  /* ── Notes panel ── */
+  .notes {
+    background: white;
+    border-radius: 14px;
+    padding: 18px 22px;
+    max-width: 760px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #374151;
+    margin-top: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.07);
+  }
+  .notes p + p { margin-top: 8px; }
+  .notes code {
+    background: var(--n100);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 12px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+</style>
+</head>
+<body>
+
+<h1>Station Detail Card — Mockup v2</h1>
+<p class="version-note">Fuel badge icons · Updated naming (95, 98, ON, ON+, LPG) · Close button</p>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ICON LEGEND
+     ═══════════════════════════════════════════════════════════ -->
+<span class="section-label">Fuel badge icons</span>
+
+<div class="icon-legend">
+  <div class="icon-legend-title">Icon design — badge style, color-coded by fuel category</div>
+
+  <div class="icon-row">
+    <div class="fuel-badge lg badge-95">95</div>
+    <div class="icon-meta">
+      <strong>95</strong> &nbsp;(was: PB 95)<br>
+      <span>Green #22c55e · Display label: "95"</span>
+    </div>
+  </div>
+  <div class="icon-row">
+    <div class="fuel-badge lg badge-98">98</div>
+    <div class="icon-meta">
+      <strong>98</strong> &nbsp;(was: PB 98)<br>
+      <span>Darker green #15803d — distinguishable at a glance from 95 · Display label: "98"</span>
+    </div>
+  </div>
+  <div class="icon-row">
+    <div class="fuel-badge lg badge-on">ON</div>
+    <div class="icon-meta">
+      <strong>ON</strong> &nbsp;(Diesel)<br>
+      <span>Near-black #1c1c1e · Display label: "ON"</span>
+    </div>
+  </div>
+  <div class="icon-row">
+    <div class="fuel-badge lg badge-on-p" style="position:relative;">
+      ON
+      <span class="star">★</span>
+    </div>
+    <div class="icon-meta">
+      <strong>ON+</strong> &nbsp;(Diesel Premium)<br>
+      <span>Same near-black body + amber dot with ★ — premium signal without extra label · Display label: "ON+"</span>
+    </div>
+  </div>
+  <div class="icon-row">
+    <div class="fuel-badge lg badge-lpg">LPG</div>
+    <div class="icon-meta">
+      <strong>LPG</strong><br>
+      <span>Red #ef4444 — visually distinct from petrol/diesel family · Display label: "LPG"</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PHONE FRAMES — MAIN VARIANTS
+     ═══════════════════════════════════════════════════════════ -->
+
+<span class="section-label">Variant A — Known brand (Orlen) · 95 selected · All 5 fuels</span>
+
+<div class="phone-row">
+
+  <!-- PHONE A: Orlen, 95 selected, all fuels -->
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="map-bg"></div>
+      <div class="map-road-h"></div>
+      <div class="map-road-v"></div>
+      <div class="map-block" style="top:50px;left:180px;width:60px;height:60px;"></div>
+      <div class="map-block" style="top:170px;left:30px;width:80px;height:50px;"></div>
+
+      <div class="map-pin" style="top:70px; left:72px;">
+        <div class="pin-bubble" style="background:#22c55e;">6.42</div>
+        <div class="pin-tail" style="border-top:9px solid #22c55e; border-left:6px solid transparent; border-right:6px solid transparent;"></div>
+      </div>
+
+      <div class="sheet">
+        <div class="handle"></div>
+        <button class="close-btn">✕</button>
+
+        <div class="station-header">
+          <div class="brand-logo brand-orlen">ORLEN</div>
+          <div class="station-info">
+            <div class="station-name">Orlen Naftowa</div>
+            <div class="station-address">ul. Naftowa 3, Warszawa</div>
+          </div>
+        </div>
+
+        <div class="price-list">
+          <!-- PRIMARY: 95 selected -->
+          <div class="fuel-row-primary">
+            <div class="fuel-left">
+              <div class="fuel-badge lg badge-95">95</div>
+              <span class="fuel-label">95</span>
+            </div>
+            <div class="fuel-right">
+              <div class="dot fresh"></div>
+              <span class="fuel-price">6.42</span>
+              <span class="fuel-unit">zł/l</span>
+            </div>
+          </div>
+
+          <!-- Secondary rows -->
+          <div class="fuel-row">
+            <div class="fuel-left">
+              <div class="fuel-badge sm badge-98">98</div>
+              <span class="fuel-label">98</span>
+            </div>
+            <div class="fuel-right">
+              <div class="dot fresh"></div>
+              <span class="fuel-price">6.80</span>
+              <span class="fuel-unit">zł/l</span>
+            </div>
+          </div>
+          <div class="fuel-row">
+            <div class="fuel-left">
+              <div class="fuel-badge sm badge-on">ON</div>
+              <span class="fuel-label">ON</span>
+            </div>
+            <div class="fuel-right">
+              <div class="dot fresh"></div>
+              <span class="fuel-price">6.18</span>
+              <span class="fuel-unit">zł/l</span>
+            </div>
+          </div>
+          <div class="fuel-row">
+            <div class="fuel-left">
+              <div class="fuel-badge sm badge-on-p" style="position:relative;">
+                ON
+                <span class="star" style="width:9px;height:9px;font-size:6px;top:-3px;right:-3px;">★</span>
+              </div>
+              <span class="fuel-label">ON+</span>
+            </div>
+            <div class="fuel-right">
+              <div class="dot est"></div>
+              <span class="fuel-price est">~6.35</span>
+              <span class="fuel-unit">zł/l</span>
+            </div>
+          </div>
+          <div class="fuel-row">
+            <div class="fuel-left">
+              <div class="fuel-badge sm badge-lpg">LPG</div>
+              <span class="fuel-label">LPG</span>
+            </div>
+            <div class="fuel-right">
+              <div class="dot fresh"></div>
+              <span class="fuel-price">2.89</span>
+              <span class="fuel-unit">zł/l</span>
+            </div>
+          </div>
+
+          <div class="est-footnote">~ estimated price</div>
+        </div>
+
+        <button class="nav-btn">Navigate →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHONE B: Independent, Diesel (ON) selected, stale data -->
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="map-bg" style="background:linear-gradient(155deg,#c5d8e8 0%,#b0c8dc 100%);"></div>
+      <div class="map-road-h" style="top:200px;"></div>
+      <div class="map-road-v" style="left:220px;"></div>
+
+      <div class="map-pin" style="top:150px; left:195px;">
+        <div class="pin-bubble" style="background:#f59e0b;">6.14</div>
+        <div class="pin-tail" style="border-top:9px solid #f59e0b; border-left:6px solid transparent; border-right:6px solid transparent;"></div>
+      </div>
+
+      <div class="sheet">
+        <div class="handle"></div>
+        <button class="close-btn">✕</button>
+
+        <div class="station-header">
+          <div class="brand-logo brand-logo-fallback">⛽</div>
+          <div class="station-info">
+            <div class="station-name">Stacja przy Rondzie</div>
+            <div class="station-address">ul. Okrężna 12, Kraków</div>
+          </div>
+        </div>
+
+        <div class="price-list">
+          <!-- PRIMARY: ON selected -->
+          <div class="fuel-row-primary">
+            <div class="fuel-left">
+              <div class="fuel-badge lg badge-on">ON</div>
+              <span class="fuel-label">ON</span>
+            </div>
+            <div class="fuel-right">
+              <div class="dot stale"></div>
+              <span class="fuel-price">6.14</span>
+              <span class="fuel-unit">zł/l</span>
+            </div>
+          </div>
+
+          <div class="fuel-row">
+            <div class="fuel-left">
+              <div class="fuel-badge sm badge-95">95</div>
+              <span class="fuel-label">95</span>
+            </div>
+            <div class="fuel-right">
+              <div class="dot stale"></div>
+              <span class="fuel-price">6.55</span>
+              <span class="fuel-unit">zł/l</span>
+            </div>
+          </div>
+          <div class="fuel-row">
+            <div class="fuel-left">
+              <div class="fuel-badge sm badge-lpg">LPG</div>
+              <span class="fuel-label">LPG</span>
+            </div>
+            <div class="fuel-right">
+              <div class="dot stale"></div>
+              <span class="fuel-price">2.76</span>
+              <span class="fuel-unit">zł/l</span>
+            </div>
+          </div>
+
+          <div class="stale-warning">Price may be outdated</div>
+        </div>
+
+        <button class="nav-btn">Navigate →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHONE C: LPG selected, ON+ premium, Shell brand -->
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="map-bg" style="background:linear-gradient(155deg,#c8dde8 0%,#aac6d8 100%);"></div>
+      <div class="map-road-h" style="top:90px;"></div>
+      <div class="map-road-v" style="left:80px;"></div>
+
+      <div class="map-pin" style="top:50px; left:200px;">
+        <div class="pin-bubble" style="background:#22c55e;">2.89</div>
+        <div class="pin-tail" style="border-top:9px solid #22c55e; border-left:6px solid transparent; border-right:6px solid transparent;"></div>
+      </div>
+
+      <div class="sheet">
+        <div class="handle"></div>
+        <button class="close-btn">✕</button>
+
+        <div class="station-header">
+          <div class="brand-logo brand-shell">🐚</div>
+          <div class="station-info">
+            <div class="station-name">Shell Expressway</div>
+            <div class="station-address">A1, km 204, Łódź</div>
+          </div>
+        </div>
+
+        <div class="price-list">
+          <!-- PRIMARY: LPG selected -->
+          <div class="fuel-row-primary">
+            <div class="fuel-left">
+              <div class="fuel-badge lg badge-lpg">LPG</div>
+              <span class="fuel-label">LPG</span>
+            </div>
+            <div class="fuel-right">
+              <div class="dot fresh"></div>
+              <span class="fuel-price">2.89</span>
+              <span class="fuel-unit">zł/l</span>
+            </div>
+          </div>
+
+          <div class="fuel-row">
+            <div class="fuel-left">
+              <div class="fuel-badge sm badge-95">95</div>
+              <span class="fuel-label">95</span>
+            </div>
+            <div class="fuel-right">
+              <div class="dot fresh"></div>
+              <span class="fuel-price">6.52</span>
+              <span class="fuel-unit">zł/l</span>
+            </div>
+          </div>
+          <div class="fuel-row">
+            <div class="fuel-left">
+              <div class="fuel-badge sm badge-98">98</div>
+              <span class="fuel-label">98</span>
+            </div>
+            <div class="fuel-right">
+              <div class="dot fresh"></div>
+              <span class="fuel-price">6.90</span>
+              <span class="fuel-unit">zł/l</span>
+            </div>
+          </div>
+          <div class="fuel-row">
+            <div class="fuel-left">
+              <div class="fuel-badge sm badge-on">ON</div>
+              <span class="fuel-label">ON</span>
+            </div>
+            <div class="fuel-right">
+              <div class="dot fresh"></div>
+              <span class="fuel-price">6.22</span>
+              <span class="fuel-unit">zł/l</span>
+            </div>
+          </div>
+          <div class="fuel-row">
+            <div class="fuel-left">
+              <div class="fuel-badge sm badge-on-p" style="position:relative;">
+                ON
+                <span class="star" style="width:9px;height:9px;font-size:6px;top:-3px;right:-3px;">★</span>
+              </div>
+              <span class="fuel-label">ON+</span>
+            </div>
+            <div class="fuel-right">
+              <div class="dot fresh"></div>
+              <span class="fuel-price">6.48</span>
+              <span class="fuel-unit">zł/l</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="nav-btn">Navigate →</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FLAT CARDS — EDGE CASES
+     ═══════════════════════════════════════════════════════════ -->
+
+<span class="section-label">Edge cases</span>
+<div class="card-row">
+
+  <!-- No prices -->
+  <div class="card-frame">
+    <div class="card">
+      <div class="card-variant-label">No prices yet</div>
+      <div class="handle" style="margin-bottom:10px;"></div>
+      <button class="close-btn">✕</button>
+      <div class="station-header">
+        <div class="brand-logo brand-circle-k">CIRCLE<br>K</div>
+        <div class="station-info">
+          <div class="station-name">Circle K Centrum</div>
+          <div class="station-address">ul. Marszałkowska 5, Warszawa</div>
+        </div>
+      </div>
+      <div class="empty-state">No prices reported yet.<br>Be the first to contribute!</div>
+      <button class="nav-btn">Navigate →</button>
+    </div>
+  </div>
+
+  <!-- No brand, no address, no selection (all equal weight) -->
+  <div class="card-frame">
+    <div class="card">
+      <div class="card-variant-label">No brand · No address · No fuel selected</div>
+      <div class="handle" style="margin-bottom:10px;"></div>
+      <button class="close-btn">✕</button>
+      <div class="station-header">
+        <div class="brand-logo brand-logo-fallback">⛽</div>
+        <div class="station-info">
+          <div class="station-name">Stacja Paliw Jan Kowalski</div>
+          <!-- no address -->
+        </div>
+      </div>
+      <div class="price-list">
+        <div class="fuel-row">
+          <div class="fuel-left">
+            <div class="fuel-badge sm badge-95">95</div>
+            <span class="fuel-label">95</span>
+          </div>
+          <div class="fuel-right">
+            <div class="dot fresh"></div>
+            <span class="fuel-price">6.49</span>
+            <span class="fuel-unit">zł/l</span>
+          </div>
+        </div>
+        <div class="fuel-row">
+          <div class="fuel-left">
+            <div class="fuel-badge sm badge-on">ON</div>
+            <span class="fuel-label">ON</span>
+          </div>
+          <div class="fuel-right">
+            <div class="dot fresh"></div>
+            <span class="fuel-price">6.20</span>
+            <span class="fuel-unit">zł/l</span>
+          </div>
+        </div>
+        <div class="fuel-row">
+          <div class="fuel-left">
+            <div class="fuel-badge sm badge-lpg">LPG</div>
+            <span class="fuel-label">LPG</span>
+          </div>
+          <div class="fuel-right">
+            <div class="dot old"></div>
+            <span class="fuel-price">2.92</span>
+            <span class="fuel-unit">zł/l</span>
+          </div>
+        </div>
+      </div>
+      <button class="nav-btn">Navigate →</button>
+    </div>
+  </div>
+
+  <!-- Long station name, 98 selected -->
+  <div class="card-frame">
+    <div class="card">
+      <div class="card-variant-label">Long name · 98 selected · estimated prices</div>
+      <div class="handle" style="margin-bottom:10px;"></div>
+      <button class="close-btn">✕</button>
+      <div class="station-header">
+        <div class="brand-logo brand-orlen">ORLEN</div>
+        <div class="station-info">
+          <div class="station-name wrap">Orlen Centrum Handlowe Złote Tarasy</div>
+          <div class="station-address">ul. Złota 59, Warszawa</div>
+        </div>
+      </div>
+      <div class="price-list">
+        <!-- PRIMARY: 98 selected -->
+        <div class="fuel-row-primary">
+          <div class="fuel-left">
+            <div class="fuel-badge lg badge-98">98</div>
+            <span class="fuel-label">98</span>
+          </div>
+          <div class="fuel-right">
+            <div class="dot est"></div>
+            <span class="fuel-price est">~6.88</span>
+            <span class="fuel-unit">zł/l</span>
+          </div>
+        </div>
+        <div class="fuel-row">
+          <div class="fuel-left">
+            <div class="fuel-badge sm badge-95">95</div>
+            <span class="fuel-label">95</span>
+          </div>
+          <div class="fuel-right">
+            <div class="dot est"></div>
+            <span class="fuel-price est">~6.45</span>
+            <span class="fuel-unit">zł/l</span>
+          </div>
+        </div>
+        <div class="fuel-row">
+          <div class="fuel-left">
+            <div class="fuel-badge sm badge-on">ON</div>
+            <span class="fuel-label">ON</span>
+          </div>
+          <div class="fuel-right">
+            <div class="dot est"></div>
+            <span class="fuel-price est">~6.20</span>
+            <span class="fuel-unit">zł/l</span>
+          </div>
+        </div>
+        <div class="est-footnote">~ market estimate</div>
+      </div>
+      <button class="nav-btn">Navigate →</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     NAMING CHANGE SUMMARY
+     ═══════════════════════════════════════════════════════════ -->
+<span class="section-label">Code changes needed for naming</span>
+<div class="notes">
+  <p><strong>Internal identifiers unchanged</strong> — <code>PB_95</code>, <code>PB_98</code> stay as-is in DB schema, API, and TypeScript types. No migration needed.</p>
+  <p><strong>Display labels change in 3 i18n files</strong> (en.ts, pl.ts, uk.ts):</p>
+  <p>
+    <code>PB_95: 'PB 95'</code> → <code>PB_95: '95'</code><br>
+    <code>PB_98: 'PB 98'</code> → <code>PB_98: '98'</code><br>
+    <code>ON_PREMIUM: 'ON+'</code> → keep <code>'ON+'</code> (icon carries premium signal)
+  </p>
+  <p><strong>All UI automatically updates</strong> — StationDetailSheet, FuelTypePickerSheet, PriceConfirmationCard, and any other component using <code>t('fuelTypes.PB_95')</code> will render "95" without any component code changes.</p>
+  <p><strong>UX spec</strong> — update display names in the station card spec section accordingly.</p>
+</div>
+
+</body>
+</html>

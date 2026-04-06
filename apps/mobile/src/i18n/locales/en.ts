@@ -110,8 +110,8 @@ export default {
     done:     'Ready',
   },
   fuelTypes: {
-    PB_95: 'PB 95',
-    PB_98: 'PB 98',
+    PB_95: '95',
+    PB_98: '98',
     ON: 'ON',
     ON_PREMIUM: 'ON+',
     LPG: 'LPG',
@@ -126,6 +126,8 @@ export default {
     justNow: 'Just now',
     noPrices: 'No prices yet',
     navigate: 'Navigate →',
+    close: 'Close station details',
+    notAvailable: 'Not available',
   },
   freshness: {
     fresh:         'Just updated',

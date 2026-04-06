@@ -397,6 +397,7 @@ export default function MapScreen() {
       <StationDetailSheet
         station={selectedStation}
         prices={selectedStationPrices}
+        selectedFuel={selectedFuelType}
         onDismiss={() => setSelectedStation(null)}
       />
     </View>

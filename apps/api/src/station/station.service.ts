@@ -22,6 +22,7 @@ export interface StationInArea {
   name: string;
   address: string | null;
   google_places_id: string | null;
+  brand: string | null;
   lat: number;
   lng: number;
 }
@@ -48,6 +49,7 @@ export class StationService {
         name,
         address,
         google_places_id,
+        brand,
         ST_Y(location::geometry) AS lat,
         ST_X(location::geometry) AS lng
       FROM "Station"
@@ -86,6 +88,7 @@ export class StationService {
         name,
         address,
         google_places_id,
+        brand,
         ST_Y(location::geometry) AS lat,
         ST_X(location::geometry) AS lng
       FROM "Station"

@@ -110,8 +110,8 @@ export default {
     done:     'Готово',
   },
   fuelTypes: {
-    PB_95: 'PB 95',
-    PB_98: 'PB 98',
+    PB_95: '95',
+    PB_98: '98',
     ON: 'ON',
     ON_PREMIUM: 'ON+',
     LPG: 'LPG',
@@ -126,6 +126,8 @@ export default {
     justNow: 'Щойно',
     noPrices: 'Цін ще немає',
     navigate: 'Навігація →',
+    close: 'Закрити деталі станції',
+    notAvailable: 'Недоступно',
   },
   freshness: {
     fresh:         'Щойно оновлено',

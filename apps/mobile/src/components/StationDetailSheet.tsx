@@ -16,21 +16,24 @@ import type { FuelType } from '@desert/types';
 import { VALID_FUEL_TYPES } from '../hooks/useFuelTypePreference';
 import { freshnessBand } from '../utils/freshnessBand';
 import { FreshnessIndicator } from './FreshnessIndicator';
+import { FuelBadge } from './FuelBadge';
+import { BrandLogo } from './BrandLogo';
 import type { StationDto } from '../api/stations';
 import type { StationPriceDto } from '../api/prices';
 
 interface Props {
   station: StationDto | null;
   prices: StationPriceDto | null;
+  selectedFuel: FuelType | null;
   onDismiss: () => void;
 }
 
-export function StationDetailSheet({ station, prices, onDismiss }: Props) {
+export function StationDetailSheet({ station, prices, selectedFuel, onDismiss }: Props) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const [showExplain, setShowExplain] = useState(false);
 
-  // Reset explain modal when station changes or when estimated fuels disappear (e.g. price refresh)
+  // Reset explain modal when station changes or estimated fuels disappear
   const hasAnyEstimateForEffect = prices?.estimateLabel !== undefined &&
     Object.keys(prices.estimateLabel).length > 0;
   useEffect(() => {
@@ -55,17 +58,52 @@ export function StationDetailSheet({ station, prices, onDismiss }: Props) {
     }
   }, []);
 
-  const hasPrices = prices !== null &&
-    (VALID_FUEL_TYPES as FuelType[]).some(ft => prices.prices[ft] !== undefined);
-
   const band = prices ? freshnessBand(prices.updatedAt) : 'unknown';
 
-  // Determine station-level estimate status from per-fuel estimateLabel
   const estimatedFuels = Object.keys(prices?.estimateLabel ?? {});
   const hasAnyEstimate = estimatedFuels.length > 0;
   const overallEstimateLabel = estimatedFuels.every(
     ft => prices?.estimateLabel?.[ft as FuelType] === 'estimated',
   ) ? 'estimated' : 'market_estimate';
+
+  // Fuel ordering: highlighted first → available secondaries → unavailable (∅) at end
+  const highlightedFuel = selectedFuel && prices?.prices[selectedFuel] !== undefined
+    ? selectedFuel
+    : null;
+  const availableFuels = (VALID_FUEL_TYPES as FuelType[]).filter(
+    ft => prices?.prices[ft] !== undefined,
+  );
+  const unavailableFuels = (VALID_FUEL_TYPES as FuelType[]).filter(
+    ft => prices?.prices[ft] === undefined,
+  );
+  const secondaryFuels = availableFuels.filter(ft => ft !== highlightedFuel);
+
+  // When there is no highlighted row, available rows render at equal weight (not dimmed)
+  const hasHighlight = highlightedFuel !== null;
+
+  const renderPriceValue = (ft: FuelType) => {
+    if (!prices) return '';
+    const price = prices.prices[ft];
+    if (price === undefined) return '';
+    const range = prices.priceRanges?.[ft];
+    const fuelSource = prices.sources[ft] ?? 'community';
+    if (range) return `~${range.low.toFixed(2)}–${range.high.toFixed(2)}`;
+    if (fuelSource === 'seeded') return `~${price.toFixed(2)}`;
+    return price.toFixed(2);
+  };
+
+  const renderA11yValue = (ft: FuelType) => {
+    if (!prices) return '';
+    const price = prices.prices[ft];
+    if (price === undefined) return t('stationDetail.notAvailable');
+    const range = prices.priceRanges?.[ft];
+    const fuelSource = prices.sources[ft] ?? 'community';
+    if (range) return `${range.low.toFixed(2)} to ${range.high.toFixed(2)} zł/l`;
+    return `${fuelSource === 'seeded' ? '~' : ''}${price.toFixed(2)} zł/l`;
+  };
+
+  const isEstimated = (ft: FuelType) =>
+    (prices?.sources[ft] ?? 'community') === 'seeded';
 
   return (
     <>
@@ -84,54 +122,114 @@ export function StationDetailSheet({ station, prices, onDismiss }: Props) {
           >
             <View style={styles.handle} />
 
-            {/* Header */}
-            <Text style={styles.stationName} numberOfLines={2}>
-              {displayStation?.name ?? ''}
-            </Text>
-            <Text style={styles.address} numberOfLines={2}>
-              {displayStation?.address ?? t('stationDetail.noAddress')}
-            </Text>
+            {/* Close button */}
+            <TouchableOpacity
+              style={styles.closeBtn}
+              onPress={onDismiss}
+              accessibilityRole="button"
+              accessibilityLabel={t('stationDetail.close')}
+            >
+              <Text style={styles.closeBtnText}>✕</Text>
+            </TouchableOpacity>
 
-            {/* Price list */}
-            {hasPrices ? (
+            {/* Header: brand logo + station name + address */}
+            <View style={styles.header}>
+              <BrandLogo brand={displayStation?.brand ?? null} />
+              <View style={styles.headerText}>
+                <Text style={styles.stationName} numberOfLines={2}>
+                  {displayStation?.name ?? ''}
+                </Text>
+                {displayStation?.address ? (
+                  <Text style={styles.address} numberOfLines={1}>
+                    {displayStation.address}
+                  </Text>
+                ) : null}
+              </View>
+            </View>
+
+            {/* Price list — shown whenever prices object exists */}
+            {prices !== null ? (
               <View style={styles.priceList}>
-                {(VALID_FUEL_TYPES as FuelType[]).map(ft => {
-                  const price = prices!.prices[ft];
-                  if (price === undefined) return null;
-                  const range = prices!.priceRanges?.[ft];
-                  const fuelSource = prices!.sources[ft] ?? 'community';
-                  const displayValue = range
-                    ? `~${range.low.toFixed(2)}–${range.high.toFixed(2)}`
-                    : fuelSource === 'seeded'
-                      ? `~${price.toFixed(2)}`
-                      : price.toFixed(2);
-                  const a11yValue = range
-                    ? `${range.low.toFixed(2)} to ${range.high.toFixed(2)} zł/l`
-                    : `${fuelSource === 'seeded' ? '~' : ''}${price.toFixed(2)} zł/l`;
+
+                {/* Selected / highlighted fuel — primary row */}
+                {highlightedFuel && (
+                  <View
+                    style={styles.primaryRow}
+                    accessibilityLabel={`${t(`fuelTypes.${highlightedFuel}`)}: ${renderA11yValue(highlightedFuel)}`}
+                  >
+                    <View style={styles.fuelLeft}>
+                      <FuelBadge fuelType={highlightedFuel} size="lg" />
+                      <Text style={styles.primaryLabel}>{t(`fuelTypes.${highlightedFuel}`)}</Text>
+                    </View>
+                    <View style={styles.priceRight}>
+                      <FreshnessIndicator
+                        band={band}
+                        source={prices?.sources[highlightedFuel] ?? 'community'}
+                        updatedAt={prices.updatedAt}
+                      />
+                      <Text style={[
+                        styles.primaryPrice,
+                        isEstimated(highlightedFuel) && styles.priceEstimated,
+                      ]}>
+                        {renderPriceValue(highlightedFuel)}
+                      </Text>
+                      <Text style={styles.priceUnit}>zł/l</Text>
+                    </View>
+                  </View>
+                )}
+
+                {/* Available secondary fuels */}
+                {secondaryFuels.map((ft, index) => {
+                  const isLast = index === secondaryFuels.length - 1 && unavailableFuels.length === 0;
                   return (
                     <View
                       key={ft}
-                      style={styles.priceRow}
-                      accessibilityLabel={`${t(`fuelTypes.${ft}`)}: ${a11yValue}`}
+                      style={[styles.secondaryRow, isLast && styles.lastRow]}
+                      accessibilityLabel={`${t(`fuelTypes.${ft}`)}: ${renderA11yValue(ft)}`}
                     >
-                      <Text style={styles.priceLabel}>{t(`fuelTypes.${ft}`)}</Text>
+                      <View style={styles.fuelLeft}>
+                        <FuelBadge fuelType={ft} size="sm" />
+                        <Text style={hasHighlight ? styles.secondaryLabel : styles.neutralLabel}>
+                          {t(`fuelTypes.${ft}`)}
+                        </Text>
+                      </View>
                       <View style={styles.priceRight}>
                         <FreshnessIndicator
                           band={band}
-                          source={fuelSource}
-                          updatedAt={prices!.updatedAt}
+                          source={prices.sources[ft] ?? 'community'}
+                          updatedAt={prices.updatedAt}
                         />
                         <Text style={[
-                          styles.priceValue,
-                          fuelSource === 'seeded' && styles.priceValueEstimated,
+                          hasHighlight ? styles.secondaryPrice : styles.neutralPrice,
+                          isEstimated(ft) && styles.priceEstimated,
                         ]}>
-                          {displayValue} zł/l
+                          {renderPriceValue(ft)}
                         </Text>
+                        <Text style={styles.priceUnit}>zł/l</Text>
                       </View>
                     </View>
                   );
                 })}
-                {band === 'stale' && estimatedFuels.length === 0 && (
+
+                {/* Unavailable fuels — demoted to end, ∅ in price position */}
+                {unavailableFuels.map((ft, index) => {
+                  const isLast = index === unavailableFuels.length - 1;
+                  return (
+                    <View
+                      key={ft}
+                      style={[styles.secondaryRow, isLast && styles.lastRow]}
+                      accessibilityLabel={`${t(`fuelTypes.${ft}`)}: ${t('stationDetail.notAvailable')}`}
+                    >
+                      <View style={styles.fuelLeft}>
+                        <FuelBadge fuelType={ft} size="sm" />
+                        <Text style={styles.unavailableLabel}>{t(`fuelTypes.${ft}`)}</Text>
+                      </View>
+                      <Text style={styles.unavailableSymbol}>∅</Text>
+                    </View>
+                  );
+                })}
+
+                {band === 'stale' && estimatedFuels.length === 0 && availableFuels.length > 0 && (
                   <Text style={styles.staleWarning}>{t('freshness.mayBeOutdated')}</Text>
                 )}
                 {hasAnyEstimate && (
@@ -207,56 +305,156 @@ const styles = StyleSheet.create({
     backgroundColor: tokens.surface.card,
     borderTopLeftRadius: tokens.radius.lg,
     borderTopRightRadius: tokens.radius.lg,
-    paddingHorizontal: 24,
-    paddingTop: 12,
+    paddingHorizontal: 20,
+    paddingTop: 10,
   },
   handle: {
-    width: 40,
+    width: 36,
     height: 4,
     borderRadius: 2,
     backgroundColor: tokens.neutral.n200,
     alignSelf: 'center',
-    marginBottom: 20,
+    marginBottom: 14,
+  },
+
+  // Close button
+  closeBtn: {
+    position: 'absolute',
+    top: 10,
+    right: 14,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: tokens.neutral.n100,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  closeBtnText: {
+    fontSize: 14,
+    color: tokens.neutral.n400,
+    fontWeight: '600',
+    lineHeight: 16,
+  },
+
+  // Header
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 14,
+  },
+  headerText: {
+    flex: 1,
+    minWidth: 0,
   },
   stationName: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '700',
     color: tokens.brand.ink,
-    marginBottom: 4,
+    lineHeight: 22,
   },
   address: {
-    fontSize: 13,
+    fontSize: 12,
     color: tokens.neutral.n500,
-    marginBottom: 20,
+    marginTop: 2,
   },
+
+  // Price list
   priceList: {
-    marginBottom: 20,
+    marginBottom: 16,
   },
-  priceRow: {
+
+  // Primary (selected + available) fuel row
+  primaryRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: tokens.neutral.n200,
+    backgroundColor: '#fef3c7',
+    borderRadius: tokens.radius.md,
+    paddingVertical: 11,
+    paddingHorizontal: 13,
+    marginBottom: 6,
   },
-  priceLabel: {
-    fontSize: 15,
-    color: tokens.brand.ink,
-  },
-  priceRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  priceValue: {
+  primaryLabel: {
     fontSize: 15,
     fontWeight: '600',
     color: tokens.brand.ink,
   },
-  priceValueEstimated: {
+  primaryPrice: {
+    fontSize: 19,
+    fontWeight: '800',
+    color: tokens.brand.ink,
+  },
+
+  // Secondary rows (when a highlighted row exists — dimmed relative to primary)
+  secondaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 7,
+    paddingHorizontal: 2,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: tokens.neutral.n200,
+  },
+  lastRow: {
+    borderBottomWidth: 0,
+  },
+  secondaryLabel: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: tokens.neutral.n500,
+  },
+  secondaryPrice: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: tokens.brand.ink,
+  },
+
+  // Neutral rows (when NO highlighted row — equal weight, not dimmed)
+  neutralLabel: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: tokens.brand.ink,
+  },
+  neutralPrice: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: tokens.brand.ink,
+  },
+
+  // Unavailable fuel rows (∅ — no price data)
+  unavailableLabel: {
+    fontSize: 14,
+    fontWeight: '400',
     color: tokens.neutral.n400,
   },
+  unavailableSymbol: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: tokens.neutral.n400,
+  },
+
+  // Shared
+  fuelLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  priceRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  priceUnit: {
+    fontSize: 11,
+    color: tokens.neutral.n400,
+    alignSelf: 'flex-end',
+    marginBottom: 1,
+  },
+  priceEstimated: {
+    color: tokens.neutral.n400,
+  },
+
   staleWarning: {
     fontSize: 12,
     color: tokens.fresh.old,
@@ -270,15 +468,19 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     textDecorationLine: 'underline',
   },
+
+  // Empty state (prices object is null — no data at all)
   emptyState: {
     paddingVertical: 24,
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   emptyText: {
     fontSize: 14,
     color: tokens.neutral.n400,
   },
+
+  // Navigate button
   navigateButton: {
     backgroundColor: tokens.brand.accent,
     borderRadius: tokens.radius.md,
@@ -290,6 +492,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: tokens.brand.ink,
   },
+
+  // Explain modal
   explainOverlay: {
     flex: 1,
     justifyContent: 'center',

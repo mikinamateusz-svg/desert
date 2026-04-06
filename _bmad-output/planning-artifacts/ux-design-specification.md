@@ -1111,3 +1111,157 @@ No tablet-specific breakpoint — the desktop layout works from 768px upward.
 - Semantic HTML: nav, main, button, article — not div-only structures
 - Visible focus ring on all interactive elements — outline: none only replaced with a visible alternative
 - Skip link: "Skip to main content" for keyboard users on public map and ops portal
+
+---
+
+## Station Detail Sheet Redesign
+
+**Date:** 2026-04-06
+**Status:** Implemented
+**Scope:** Mobile-only (`StationDetailSheet.tsx`). The web `StationPopup.tsx` is out of scope for this iteration.
+**Trigger:** Visual refresh to improve scannability, introduce brand identity, fuel type iconography, explicit close affordance, and prioritised fuel display.
+
+---
+
+### Fuel display naming
+
+Internal code identifiers (`PB_95`, `PB_98`, `ON`, `ON_PREMIUM`, `LPG`) are unchanged in the DB schema, API, and TypeScript types. Display labels updated in all three i18n locale files (en/pl/uk):
+
+| Internal key | Old label | New label | Rationale |
+|---|---|---|---|
+| `PB_95` | `PB 95` | `95` | Station boards and everyday Polish speech use just the octane number |
+| `PB_98` | `PB 98` | `98` | Same |
+| `ON` | `ON` | `ON` | Unchanged |
+| `ON_PREMIUM` | `ON+` | `ON+` | Unchanged — icon carries the premium signal |
+| `LPG` | `LPG` | `LPG` | Unchanged |
+
+---
+
+### Design decisions
+
+#### 1. Explicit close button
+
+**Problem:** The only way to dismiss the sheet was tapping the map background — a hidden affordance.
+
+**Implemented:** 30×30 circular button, `position: 'absolute'`, `top: 10`, `right: 14`. Background `tokens.neutral.n100`, `✕` character at 14 pt, color `tokens.neutral.n400`. The drag-handle and `Pressable` backdrop dismiss are both preserved alongside it. i18n key `stationDetail.close` added to all three locales.
+
+#### 2. Header area: brand logo + station name + address
+
+**Layout:** Horizontal `flexDirection: 'row'`, `gap: 12`. Left: `BrandLogo` (44×44). Right: stacked name + address.
+
+```
+┌──────────────────────────────────────────┐
+│ [Logo 44×44]  Station Name (bold 17sp)   │  [×]
+│               ul. Naftowa 3, Warszawa    │
+└──────────────────────────────────────────┘
+```
+
+**Brand logo — `BrandLogo` component (`src/components/BrandLogo.tsx`):**
+- Known brands render as a colour-coded text badge (44×44, `borderRadius: tokens.radius.sm`, hairline `n200` border)
+- Brand colour map covers 10 brands: `orlen`, `shell`, `bp`, `circle_k`, `lotos`, `huzar`, `moya`, `amic`, `auchan`, `carrefour`
+- When real PNG logo assets are sourced, they can replace the text badges inside `BrandLogo` without any changes to `StationDetailSheet`
+- **Fallback** (brand null or unrecognised): ⛽ emoji centred in a 44×44 `n100` grey square
+
+**Station name:** `fontSize: 17`, `fontWeight: '700'`, `color: tokens.brand.ink`, `numberOfLines: 2`
+
+**Address:** `fontSize: 12`, `color: tokens.neutral.n500`, `numberOfLines: 1` (truncates with `…`). If `address` is null the line is not rendered — no placeholder text.
+
+#### 3. Fuel type icons — `FuelBadge` component (`src/components/FuelBadge.tsx`)
+
+Rounded rectangle badge, always left of the fuel label. Two sizes: `lg` (38×28, primary row) and `sm` (30×22, secondary rows).
+
+| FuelType | Badge colour | Label | Premium indicator |
+|---|---|---|---|
+| `PB_95` | `#22c55e` (green) | `95` | — |
+| `PB_98` | `#15803d` (dark green) | `98` | — |
+| `ON` | `#1c1c1e` (near-black) | `ON` | — |
+| `ON_PREMIUM` | `#1c1c1e` (near-black) | `ON` | Amber `#f59e0b` circle with ★, top-right corner |
+| `LPG` | `#ef4444` (red) | `LPG` | — |
+
+PB_95 and PB_98 share the green family but use distinct shades — distinguishable at a glance without labels. The label remains alongside every badge; icons supplement, not replace, text.
+
+#### 4. Selected fuel: primary highlighted row
+
+**Prop added:** `selectedFuel: FuelType | null` on `StationDetailSheet`. Sourced from `useFuelTypePreference().fuelType` (`selectedFuelType` in the map screen) and passed down.
+
+**When highlighted** (selectedFuel non-null and station has a price for it):
+- Row background: `#fef3c7` (amber-100), `borderRadius: tokens.radius.md` (10)
+- `FuelBadge` size `lg` (38×28)
+- Label: `fontSize: 15`, `fontWeight: '600'`, `color: tokens.brand.ink`
+- Price: `fontSize: 19`, `fontWeight: '800'`
+- `paddingVertical: 11`, `paddingHorizontal: 13`
+- No hairline separator — the background sets it apart; 6 pt gap below before secondary rows begin
+
+**When no highlight** (selectedFuel null or no price for selected fuel): all rows render at equal secondary weight in standard order `PB_95 → PB_98 → ON → ON_PREMIUM → LPG`.
+
+#### 5. Secondary fuel rows
+
+- `FuelBadge` size `sm` (30×22)
+- Label: `fontSize: 14`, `fontWeight: '400'`, `color: tokens.neutral.n500`
+- Price: `fontSize: 14`, `fontWeight: '500'`, `color: tokens.brand.ink`
+- `paddingVertical: 7`, hairline `n200` bottom border between rows; last row has no border
+- Rows with no price at this station omitted (unchanged behaviour)
+
+---
+
+### Files changed
+
+| File | Change |
+|---|---|
+| `apps/api/src/station/station.service.ts` | Added `brand` to `StationInArea` interface and `findStationsInArea` SQL SELECT |
+| `apps/api/src/station/dto/station.dto.ts` | Added `brand: string \| null` |
+| `apps/mobile/src/api/stations.ts` | Added `brand: string \| null` to `StationDto` |
+| `apps/mobile/src/i18n/locales/en.ts` | `PB_95→'95'`, `PB_98→'98'`, added `stationDetail.close` |
+| `apps/mobile/src/i18n/locales/pl.ts` | Same |
+| `apps/mobile/src/i18n/locales/uk.ts` | Same |
+| `apps/mobile/src/components/FuelBadge.tsx` | **New** — coloured badge component, sizes `sm`/`lg` |
+| `apps/mobile/src/components/BrandLogo.tsx` | **New** — brand text badge + generic fallback |
+| `apps/mobile/src/components/StationDetailSheet.tsx` | Full redesign |
+| `apps/mobile/app/(app)/index.tsx` | Added `selectedFuel={selectedFuelType}` prop |
+
+---
+
+### Annotated wireframe (mobile, 390 pt wide)
+
+```
+┌─────────────────────────────────────────┐
+│              ▬▬▬  (handle)         [×]  │  ← close button absolute top-right
+├─────────────────────────────────────────┤
+│ ┌────────┐  Orlen Naftowa              │
+│ │ ORLEN  │  ul. Naftowa 3, Warszawa    │
+│ └────────┘                             │
+├─────────────────────────────────────────┤
+│ ┌──────────────────────────────────┐   │  ← amber-100 background, lg badge
+│ │ [■95]  95          ● 6.42 zł/l  │   │
+│ └──────────────────────────────────┘   │
+│  [■98]  98              ● 6.80 zł/l   │  ← secondary rows, sm badge
+│  ────────────────────────────────────  │
+│  [■ON]  ON              ● 6.18 zł/l   │
+│  ────────────────────────────────────  │
+│  [■ON★] ON+             ● ~6.35 zł/l  │
+│  ────────────────────────────────────  │
+│  [■LPG] LPG             ● 2.89 zł/l   │
+├─────────────────────────────────────────┤
+│            [ Navigate → ]               │
+└─────────────────────────────────────────┘
+```
+
+---
+
+### Edge cases
+
+| Scenario | Behaviour |
+|---|---|
+| `brand` is null | Generic ⛽ fallback in `BrandLogo`; no broken state |
+| `brand` value not in `BRAND_STYLES` map | Same ⛽ fallback |
+| Selected fuel has no price at this station | No highlighted row; all rows equal weight, standard order |
+| Station has only one fuel price | One row, no divider |
+| Station has no prices at all | Empty state: "No prices yet" |
+| Station name is very long (>40 chars) | Wraps to 2 lines (`numberOfLines: 2`) |
+| Address is null | Address line not rendered |
+
+---
+
+### Deferred: real brand logo PNGs
+
+When brand logo image files are sourced, add them inside `BrandLogo.tsx` as a static `require()` map. Recommended spec: 88×88 px @2x, transparent background, square crop. Known brands to cover: `orlen`, `shell`, `bp`, `circle_k`, `lotos`, `huzar`, `moya`, `amic`, `auchan`, `carrefour`.

@@ -8,7 +8,6 @@ import type { FuelType } from '@desert/types';
 import type { StationWithPrice } from '../lib/api';
 import type { Translations } from '../lib/i18n';
 import StationMarker from './StationMarker';
-import StationDetailPanel from './StationDetailPanel';
 import FuelTypePills from './FuelTypePills';
 
 type PriceColor = 'cheap' | 'mid' | 'expensive' | 'nodata';
@@ -56,7 +55,6 @@ interface Props {
   t: Translations;
   selected: StationWithPrice | null;
   onSelect: (station: StationWithPrice) => void;
-  onClose: () => void;
   selectedFuel: FuelType;
   onFuelChange: (ft: FuelType) => void;
 }
@@ -69,7 +67,6 @@ export default function MapView({
   t,
   selected,
   onSelect,
-  onClose,
   selectedFuel,
   onFuelChange,
 }: Props) {
@@ -133,15 +130,6 @@ export default function MapView({
 
       {/* Fuel type selector — floats at top-centre, always visible */}
       <FuelTypePills selected={selectedFuel} onChange={onFuelChange} t={t} />
-
-      {/* Station detail panel — outside ReactMap to avoid z-index issues */}
-      {selected && (
-        <StationDetailPanel
-          station={selected}
-          t={t}
-          onClose={onClose}
-        />
-      )}
 
       {/* Cheapest in viewport pill — mobile only, hidden while panel is open */}
       {!selected && (

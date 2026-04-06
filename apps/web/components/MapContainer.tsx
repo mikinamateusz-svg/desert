@@ -7,6 +7,7 @@ import type { StationWithPrice } from '../lib/api';
 import type { Locale, Translations } from '../lib/i18n';
 import MapView from './MapView';
 import MapSidebar from './MapSidebar';
+import StationDetailPanel from './StationDetailPanel';
 
 const MOBILE_SHEET_OFFSET_Y = -150;
 const MOBILE_SELECT_ZOOM = 15;
@@ -45,7 +46,7 @@ export default function MapContainer({ stations, defaultLat, defaultLng, t }: Pr
   }, []);
 
   return (
-    <div className="flex flex-1 min-h-0 min-w-0">
+    <div className="flex flex-1 min-h-0 min-w-0 relative">
       {/* Map */}
       <div className="flex-1 relative min-w-0">
         <ul className="sr-only">
@@ -68,7 +69,6 @@ export default function MapContainer({ stations, defaultLat, defaultLng, t }: Pr
           t={t}
           selected={selected}
           onSelect={handleSelect}
-          onClose={() => setSelected(null)}
           selectedFuel={selectedFuel}
           onFuelChange={setSelectedFuel}
         />
@@ -84,6 +84,16 @@ export default function MapContainer({ stations, defaultLat, defaultLng, t }: Pr
           onSelect={handleSelect}
         />
       </aside>
+
+      {/* Station detail panel — rendered here (not inside MapView) so it positions
+          relative to the full map+sidebar container, avoiding nested stacking issues */}
+      {selected && (
+        <StationDetailPanel
+          station={selected}
+          t={t}
+          onClose={() => setSelected(null)}
+        />
+      )}
     </div>
   );
 }

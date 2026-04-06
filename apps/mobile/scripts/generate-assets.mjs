@@ -54,11 +54,8 @@ function gaugeSvg({ size, bg = '#1a1a1a', pad = 0 }) {
   <!-- background -->
   <rect width="${size}" height="${size}" fill="${bg}"/>
 
-  <!-- gauge background circle -->
-  <circle cx="${cx}" cy="${cy}" r="${r}" fill="${bg}" stroke="#333333" stroke-width="${(tw * 0.3).toFixed(1)}"/>
-
-  <!-- track arc (background) -->
-  <path d="${arc}" fill="none" stroke="#333333" stroke-width="${tw.toFixed(1)}" stroke-linecap="round"/>
+  <!-- gauge ring (thin outline circle) -->
+  <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#333333" stroke-width="${(tw * 0.3).toFixed(1)}"/>
 
   <!-- coloured arc -->
   <path d="${arc}" fill="none" stroke="url(#${gradId})" stroke-width="${tw.toFixed(1)}" stroke-linecap="round"/>
@@ -119,12 +116,9 @@ function splashSvg({ w, h }) {
         font-family="Arial Black, Arial, sans-serif"
         font-weight="900" font-size="${fontSize}" fill="white" letter-spacing="-1">litr</text>
 
-  <!-- gauge background circle -->
+  <!-- gauge ring (thin outline circle) -->
   <circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r.toFixed(1)}"
-          fill="#1a1a1a" stroke="#333" stroke-width="1"/>
-
-  <!-- track arc -->
-  <path d="${arc}" fill="none" stroke="#333" stroke-width="${tw.toFixed(1)}" stroke-linecap="round"/>
+          fill="none" stroke="#333" stroke-width="1"/>
 
   <!-- coloured arc -->
   <path d="${arc}" fill="none" stroke="url(#sg)" stroke-width="${tw.toFixed(1)}" stroke-linecap="round"/>

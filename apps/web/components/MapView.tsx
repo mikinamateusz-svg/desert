@@ -2,7 +2,8 @@
 
 import ReactMap, { NavigationControl, type MapRef } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useState, useRef, useCallback } from 'react';
+import { useState } from 'react';
+import type { RefObject } from 'react';
 import type { FuelType } from '@desert/types';
 import type { StationWithPrice } from '../lib/api';
 import type { Translations } from '../lib/i18n';
@@ -47,45 +48,34 @@ function computePriceTiers(stations: StationWithPrice[], fuelType: string): Map<
   return result;
 }
 
-// On mobile the bottom sheet covers ~300px from the bottom of the map.
-// A negative y-offset pulls the target point above the map centre so the pin
-// lands in the middle of the visible area above the sheet.
-// Zoom 15 gives enough context to see the street the station is on.
-const MOBILE_SHEET_OFFSET_Y = -150;
-const MOBILE_SELECT_ZOOM = 15;
-
 interface Props {
+  mapRef: RefObject<MapRef | null>;
   stations: StationWithPrice[];
   defaultLat: number;
   defaultLng: number;
   t: Translations;
+  selected: StationWithPrice | null;
+  onSelect: (station: StationWithPrice) => void;
+  onClose: () => void;
+  selectedFuel: FuelType;
+  onFuelChange: (ft: FuelType) => void;
 }
 
-export default function MapView({ stations, defaultLat, defaultLng, t }: Props) {
-  const mapRef = useRef<MapRef>(null);
-  const [selected, setSelected] = useState<StationWithPrice | null>(null);
+export default function MapView({
+  mapRef,
+  stations,
+  defaultLat,
+  defaultLng,
+  t,
+  selected,
+  onSelect,
+  onClose,
+  selectedFuel,
+  onFuelChange,
+}: Props) {
   const [noneInView, setNoneInView] = useState(false);
-  const [selectedFuel, setSelectedFuel] = useState<FuelType>('PB_95');
 
   const priceTiers = computePriceTiers(stations, selectedFuel);
-
-  const selectStation = useCallback((station: StationWithPrice) => {
-    setSelected(station);
-    const map = mapRef.current;
-    if (!map) return;
-
-    // On mobile (<lg = <1024px) pan so the pin sits above the bottom sheet.
-    // On desktop the panel is a floating card and doesn't cover the pin.
-    const isMobile = window.innerWidth < 1024;
-    if (isMobile) {
-      map.flyTo({
-        center: [station.lng, station.lat],
-        offset: [0, MOBILE_SHEET_OFFSET_Y],
-        zoom: MOBILE_SELECT_ZOOM,
-        duration: 600,
-      });
-    }
-  }, []);
 
   function handleFindCheapest() {
     const map = mapRef.current;
@@ -111,7 +101,7 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
       getRepresentativePrice(s, selectedFuel)! < getRepresentativePrice(best, selectedFuel)! ? s : best,
     );
 
-    selectStation(cheapest);
+    onSelect(cheapest);
   }
 
   return (
@@ -136,20 +126,20 @@ export default function MapView({ stations, defaultLat, defaultLng, t }: Props) 
             priceColor={priceTiers.get(station.id) ?? 'nodata'}
             isSelected={selected?.id === station.id}
             selectedFuel={selectedFuel}
-            onClick={() => selectStation(station)}
+            onClick={() => onSelect(station)}
           />
         ))}
       </ReactMap>
 
       {/* Fuel type selector — floats at top-centre, always visible */}
-      <FuelTypePills selected={selectedFuel} onChange={setSelectedFuel} t={t} />
+      <FuelTypePills selected={selectedFuel} onChange={onFuelChange} t={t} />
 
       {/* Station detail panel — outside ReactMap to avoid z-index issues */}
       {selected && (
         <StationDetailPanel
           station={selected}
           t={t}
-          onClose={() => setSelected(null)}
+          onClose={onClose}
         />
       )}
 

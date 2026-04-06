@@ -1,30 +1,27 @@
-import Link from 'next/link';
+import type { FuelType } from '@desert/types';
 import type { StationWithPrice } from '../lib/api';
-import type { Locale, Translations } from '../lib/i18n';
+import type { Translations } from '../lib/i18n';
+
 interface Props {
   stations: StationWithPrice[];
   t: Translations;
-  locale: Locale;
+  selectedFuel: FuelType;
+  selected: StationWithPrice | null;
+  onSelect: (station: StationWithPrice) => void;
 }
 
-const FUEL_ORDER = ['PB_95', 'ON', 'LPG', 'PB_98', 'ON_PREMIUM'];
-
-function bestPrice(station: StationWithPrice): number | null {
-  const pb95 = station.price?.prices['PB_95'];
-  if (pb95 !== undefined) return pb95;
-  for (const f of FUEL_ORDER) {
-    const p = station.price?.prices[f];
-    if (p !== undefined) return p;
-  }
+function stationPrice(station: StationWithPrice, fuelType: string): number | null {
+  const exact = station.price?.prices[fuelType];
+  if (exact !== undefined) return exact;
+  const range = station.price?.priceRanges?.[fuelType];
+  if (range) return (range.low + range.high) / 2;
   return null;
 }
 
-export default function MapSidebar({ stations, t, locale }: Props) {
-  const stationPrefix = locale === 'en' ? '/en/stations' : locale === 'uk' ? '/uk/stations' : '/stacje';
-
+export default function MapSidebar({ stations, t, selectedFuel, selected, onSelect }: Props) {
   const sorted = [...stations]
-    .filter(s => bestPrice(s) !== null)
-    .sort((a, b) => (bestPrice(a) ?? Infinity) - (bestPrice(b) ?? Infinity))
+    .filter(s => stationPrice(s, selectedFuel) !== null)
+    .sort((a, b) => (stationPrice(a, selectedFuel) ?? Infinity) - (stationPrice(b, selectedFuel) ?? Infinity))
     .slice(0, 30);
 
   return (
@@ -32,7 +29,9 @@ export default function MapSidebar({ stations, t, locale }: Props) {
       {/* Header */}
       <div className="px-4 py-3 border-b border-gray-100">
         <h2 className="text-sm font-semibold text-gray-900">{t.sidebar.nearbyStations}</h2>
-        <p className="text-xs text-gray-400 mt-0.5">{t.sidebar.sortedByPrice}</p>
+        <p className="text-xs text-gray-400 mt-0.5">
+          {t.fuelTypes[selectedFuel]} · {t.sidebar.sortedByPrice.split('·')[1]?.trim() ?? t.sidebar.sortedByPrice}
+        </p>
       </div>
 
       {/* Station list */}
@@ -42,18 +41,23 @@ export default function MapSidebar({ stations, t, locale }: Props) {
         ) : (
           <ul className="divide-y divide-gray-50">
             {sorted.map(station => {
-              const price = bestPrice(station);
-              const range = station.price?.priceRanges?.['PB_95'];
-              const isEstimated = !!station.price?.estimateLabel?.['PB_95'];
+              const price = stationPrice(station, selectedFuel);
+              const range = station.price?.priceRanges?.[selectedFuel];
+              const isEstimated = !!station.price?.estimateLabel?.[selectedFuel];
+              const isSelected = selected?.id === station.id;
 
               return (
                 <li key={station.id}>
-                  <Link
-                    href={`${stationPrefix}/${station.id}`}
-                    className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors group"
+                  <button
+                    onClick={() => onSelect(station)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left group ${
+                      isSelected ? 'bg-blue-50' : ''
+                    }`}
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate group-hover:text-blue-700 transition-colors">
+                      <p className={`text-sm font-medium truncate transition-colors ${
+                        isSelected ? 'text-blue-700' : 'text-gray-900 group-hover:text-blue-700'
+                      }`}>
                         {station.name}
                       </p>
                       {station.address && (
@@ -74,14 +78,13 @@ export default function MapSidebar({ stations, t, locale }: Props) {
                         <p className="text-xs text-gray-400">{t.noData}</p>
                       )}
                     </div>
-                  </Link>
+                  </button>
                 </li>
               );
             })}
           </ul>
         )}
       </div>
-
     </div>
   );
 }

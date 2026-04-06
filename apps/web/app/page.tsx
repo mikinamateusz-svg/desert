@@ -1,8 +1,7 @@
 import { headers, cookies } from 'next/headers';
 import { detectLocale, translations } from '../lib/i18n';
 import { fetchStationsWithPrices } from '../lib/api';
-import MapView from '../components/MapView';
-import MapSidebar from '../components/MapSidebar';
+import MapContainer from '../components/MapContainer';
 import AdSlot from '../components/AdSlot';
 
 const DEFAULT_LAT = 52.0;
@@ -40,27 +39,14 @@ export default async function PublicMapPage() {
           <AdSlot slotId="left-skyscraper" className="w-[160px] h-[600px]" />
         </aside>
 
-        {/* Map */}
-        <div className="flex-1 relative min-w-0">
-          <ul className="sr-only">
-            {stations.map(s => {
-              const pb95 = s.price?.prices['PB_95'];
-              return (
-                <li key={s.id}>
-                  {s.name}
-                  {s.address ? `, ${s.address}` : ''}
-                  {pb95 !== undefined ? ` — PB 95: ${pb95.toFixed(2)} zł/l` : ''}
-                </li>
-              );
-            })}
-          </ul>
-          <MapView stations={stations} defaultLat={DEFAULT_LAT} defaultLng={DEFAULT_LNG} t={t} />
-        </div>
-
-        {/* Right sidebar — lg+ */}
-        <aside className="hidden lg:flex flex-col w-80 xl:w-96 border-l border-gray-200 bg-white overflow-y-auto flex-shrink-0">
-          <MapSidebar stations={stations} t={t} locale={locale} />
-        </aside>
+        {/* Map + sidebar (client component owns shared selection state) */}
+        <MapContainer
+          stations={stations}
+          defaultLat={DEFAULT_LAT}
+          defaultLng={DEFAULT_LNG}
+          t={t}
+          locale={locale}
+        />
 
       </div>
     </div>

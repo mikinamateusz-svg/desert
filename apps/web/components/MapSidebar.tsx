@@ -22,7 +22,7 @@ export default function MapSidebar({ stations, t, selectedFuel, selected, onSele
   const sorted = [...stations]
     .filter(s => stationPrice(s, selectedFuel) !== null)
     .sort((a, b) => (stationPrice(a, selectedFuel) ?? Infinity) - (stationPrice(b, selectedFuel) ?? Infinity))
-    .slice(0, 30);
+    .slice(0, 10);
 
   return (
     <div className="flex flex-col h-full">

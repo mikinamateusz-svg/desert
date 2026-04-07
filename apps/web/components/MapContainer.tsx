@@ -24,20 +24,25 @@ export default function MapContainer({ stations, defaultLat, defaultLng, t }: Pr
   const [selected, setSelected] = useState<StationWithPrice | null>(null);
   const [selectedFuel, setSelectedFuel] = useState<FuelType>('PB_95');
 
-  // Pan/zoom to selected station.
-  // Desktop: map is fully clear (detail in sidebar), simple centre + zoom.
-  // Mobile: offset upward so pin sits above the bottom sheet.
+  // Pan/zoom to selected station using fitBounds — padding semantics are unambiguous:
+  // excluded pixels from each edge, pin lands in the visible centre of what remains.
   useEffect(() => {
     if (!selected) return;
     const map = mapRef.current;
     if (!map) return;
     const isMobile = window.innerWidth < 1024;
-    map.flyTo({
-      center: [selected.lng, selected.lat],
-      zoom: MOBILE_SELECT_ZOOM,
-      offset: isMobile ? [0, -150] : [0, 0],
-      duration: 600,
-    });
+    const delta = 0.005; // ~500m bounding box, maxZoom keeps it at zoom 15
+    map.fitBounds(
+      [[selected.lng - delta, selected.lat - delta],
+       [selected.lng + delta, selected.lat + delta]],
+      {
+        padding: isMobile
+          ? { top: 80, bottom: 340, left: 40, right: 40 }
+          : { top: 80, bottom: 380, left: 40, right: 40 },
+        maxZoom: MOBILE_SELECT_ZOOM,
+        duration: 600,
+      },
+    );
   }, [selected]);
 
   const handleSelect = useCallback((station: StationWithPrice) => {
@@ -81,21 +86,17 @@ export default function MapContainer({ stations, defaultLat, defaultLng, t }: Pr
           selectedFuel={selectedFuel}
           selected={selected}
           onSelect={handleSelect}
-          onClose={() => setSelected(null)}
         />
       </aside>
 
       {/* Station detail panel — rendered here (not inside MapView) so it positions
           relative to the full map+sidebar container, avoiding nested stacking issues */}
-      {/* Mobile only — desktop shows detail in right sidebar */}
       {selected && (
-        <div className="lg:hidden">
-          <StationDetailPanel
-            station={selected}
-            t={t}
-            onClose={() => setSelected(null)}
-          />
-        </div>
+        <StationDetailPanel
+          station={selected}
+          t={t}
+          onClose={() => setSelected(null)}
+        />
       )}
     </div>
   );

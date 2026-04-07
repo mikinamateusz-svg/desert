@@ -25,23 +25,18 @@ export default function MapContainer({ stations, defaultLat, defaultLng, t }: Pr
   const [selectedFuel, setSelectedFuel] = useState<FuelType>('PB_95');
 
   // Pan/zoom to selected station.
-  // setPadding defines the "usable" viewport so flyTo centers within the visible area.
-  // Reset to zero when panel closes to avoid stale padding on the next selection.
+  // offset shifts the target coordinate relative to the canvas centre:
+  //   mobile — negative Y pushes pin above the bottom sheet
+  //   desktop — negative Y pushes pin above the bottom-left card
   useEffect(() => {
+    if (!selected) return;
     const map = mapRef.current;
     if (!map) return;
-    if (!selected) {
-      map.setPadding({ top: 0, bottom: 0, left: 0, right: 0 });
-      return;
-    }
     const isMobile = window.innerWidth < 1024;
-    map.setPadding(isMobile
-      ? { top: 60, bottom: 320, left: 0, right: 0 }
-      : { top: 0, bottom: 360, left: 0, right: 0 },
-    );
     map.flyTo({
       center: [selected.lng, selected.lat],
       zoom: MOBILE_SELECT_ZOOM,
+      offset: isMobile ? [0, -150] : [0, -200],
       duration: 600,
     });
   }, [selected]);

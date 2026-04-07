@@ -25,20 +25,18 @@ export default function MapContainer({ stations, defaultLat, defaultLng, t }: Pr
   const [selected, setSelected] = useState<StationWithPrice | null>(null);
   const [selectedFuel, setSelectedFuel] = useState<FuelType>('PB_95');
 
-  // On mobile, pan/zoom so the pin sits above the bottom sheet when selected.
-  // On desktop the panel is a floating card — no camera movement needed.
+  // Pan/zoom to selected station. Mobile offsets upward so pin sits above bottom sheet.
   useEffect(() => {
     if (!selected) return;
     const map = mapRef.current;
     if (!map) return;
-    if (window.innerWidth < 1024) {
-      map.flyTo({
-        center: [selected.lng, selected.lat],
-        offset: [0, MOBILE_SHEET_OFFSET_Y],
-        zoom: MOBILE_SELECT_ZOOM,
-        duration: 600,
-      });
-    }
+    const isMobile = window.innerWidth < 1024;
+    map.flyTo({
+      center: [selected.lng, selected.lat],
+      zoom: MOBILE_SELECT_ZOOM,
+      offset: isMobile ? [0, MOBILE_SHEET_OFFSET_Y] : [0, 0],
+      duration: 600,
+    });
   }, [selected]);
 
   const handleSelect = useCallback((station: StationWithPrice) => {

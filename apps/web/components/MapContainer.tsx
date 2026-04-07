@@ -36,7 +36,7 @@ export default function MapContainer({ stations, defaultLat, defaultLng, t }: Pr
     map.flyTo({
       center: [selected.lng, selected.lat],
       zoom: MOBILE_SELECT_ZOOM,
-      offset: isMobile ? [0, -150] : [0, -320],
+      offset: isMobile ? [0, -150] : [0, -260],
       duration: 600,
     });
   }, [selected]);

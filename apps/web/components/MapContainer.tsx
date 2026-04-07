@@ -10,6 +10,9 @@ import MapSidebar from './MapSidebar';
 import StationDetailPanel from './StationDetailPanel';
 
 const MOBILE_SHEET_OFFSET_Y = -150;
+// Desktop card is fixed bottom-16 (~64px) + ~260px tall = covers ~324px from bottom.
+// Shift center upward so the pin lands in the visible area above the card.
+const DESKTOP_CARD_OFFSET_Y = -120;
 const MOBILE_SELECT_ZOOM = 15;
 
 interface Props {
@@ -34,7 +37,7 @@ export default function MapContainer({ stations, defaultLat, defaultLng, t }: Pr
     map.flyTo({
       center: [selected.lng, selected.lat],
       zoom: MOBILE_SELECT_ZOOM,
-      offset: isMobile ? [0, MOBILE_SHEET_OFFSET_Y] : [0, 0],
+      offset: isMobile ? [0, MOBILE_SHEET_OFFSET_Y] : [0, DESKTOP_CARD_OFFSET_Y],
       duration: 600,
     });
   }, [selected]);

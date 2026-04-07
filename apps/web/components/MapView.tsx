@@ -119,12 +119,12 @@ export default function MapView({
         }}
         mapStyle="mapbox://styles/mapbox/streets-v12"
         style={{ width: '100%', height: '100%' }}
-        onLoad={() => {
-          const b = mapRef.current?.getBounds();
+        onLoad={e => {
+          const b = e.target.getBounds();
           if (b) onBoundsChange({ north: b.getNorth(), south: b.getSouth(), east: b.getEast(), west: b.getWest() });
         }}
-        onMoveEnd={() => {
-          const b = mapRef.current?.getBounds();
+        onMoveEnd={e => {
+          const b = e.target.getBounds();
           if (b) onBoundsChange({ north: b.getNorth(), south: b.getSouth(), east: b.getEast(), west: b.getWest() });
         }}
       >

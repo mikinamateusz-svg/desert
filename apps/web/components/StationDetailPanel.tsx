@@ -1,5 +1,6 @@
 'use client';
 
+import { forwardRef } from 'react';
 import type { StationWithPrice } from '../lib/api';
 import type { Translations } from '../lib/i18n';
 
@@ -33,7 +34,7 @@ interface Props {
   onClose: () => void;
 }
 
-export default function StationDetailPanel({ station, t, onClose }: Props) {
+const StationDetailPanel = forwardRef<HTMLDivElement, Props>(function StationDetailPanel({ station, t, onClose }, ref) {
   const { price } = station;
   const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${station.lat},${station.lng}`;
   const brandKey = station.brand?.toLowerCase();
@@ -41,7 +42,7 @@ export default function StationDetailPanel({ station, t, onClose }: Props) {
   const hasPrices = FUEL_ORDER.some(ft => price?.prices[ft] !== undefined);
 
   return (
-    <div className={[
+    <div ref={ref} className={[
       'fixed z-50 bg-white shadow-xl',
       // Mobile: full-width bottom sheet
       'bottom-0 left-0 right-0 rounded-t-2xl',
@@ -133,4 +134,6 @@ export default function StationDetailPanel({ station, t, onClose }: Props) {
       </div>
     </div>
   );
-}
+});
+
+export default StationDetailPanel;

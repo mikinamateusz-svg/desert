@@ -47,6 +47,10 @@ function computePriceTiers(stations: StationWithPrice[], fuelType: string): Map<
   return result;
 }
 
+export interface MapBounds {
+  north: number; south: number; east: number; west: number;
+}
+
 interface Props {
   mapRef: RefObject<MapRef | null>;
   stations: StationWithPrice[];
@@ -57,6 +61,7 @@ interface Props {
   onSelect: (station: StationWithPrice) => void;
   selectedFuel: FuelType;
   onFuelChange: (ft: FuelType) => void;
+  onBoundsChange: (bounds: MapBounds) => void;
 }
 
 export default function MapView({
@@ -69,6 +74,7 @@ export default function MapView({
   onSelect,
   selectedFuel,
   onFuelChange,
+  onBoundsChange,
 }: Props) {
   const [noneInView, setNoneInView] = useState(false);
 
@@ -113,6 +119,14 @@ export default function MapView({
         }}
         mapStyle="mapbox://styles/mapbox/streets-v12"
         style={{ width: '100%', height: '100%' }}
+        onLoad={() => {
+          const b = mapRef.current?.getBounds();
+          if (b) onBoundsChange({ north: b.getNorth(), south: b.getSouth(), east: b.getEast(), west: b.getWest() });
+        }}
+        onMoveEnd={() => {
+          const b = mapRef.current?.getBounds();
+          if (b) onBoundsChange({ north: b.getNorth(), south: b.getSouth(), east: b.getEast(), west: b.getWest() });
+        }}
       >
         <NavigationControl position="bottom-left" />
 

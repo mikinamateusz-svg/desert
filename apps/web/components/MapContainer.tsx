@@ -5,7 +5,7 @@ import type { FuelType } from '@desert/types';
 import type { MapRef } from 'react-map-gl';
 import type { StationWithPrice } from '../lib/api';
 import type { Locale, Translations } from '../lib/i18n';
-import MapView from './MapView';
+import MapView, { type MapBounds } from './MapView';
 import MapSidebar from './MapSidebar';
 import StationDetailPanel from './StationDetailPanel';
 
@@ -24,6 +24,14 @@ export default function MapContainer({ stations, defaultLat, defaultLng, t }: Pr
   const panelRef = useRef<HTMLDivElement>(null);
   const [selected, setSelected] = useState<StationWithPrice | null>(null);
   const [selectedFuel, setSelectedFuel] = useState<FuelType>('PB_95');
+  const [mapBounds, setMapBounds] = useState<MapBounds | null>(null);
+
+  const stationsInView = mapBounds
+    ? stations.filter(s =>
+        s.lat >= mapBounds.south && s.lat <= mapBounds.north &&
+        s.lng >= mapBounds.west  && s.lng <= mapBounds.east,
+      )
+    : stations;
 
   // Pan/zoom to selected station.
   // Mobile: fixed offset above bottom sheet.
@@ -84,13 +92,14 @@ export default function MapContainer({ stations, defaultLat, defaultLng, t }: Pr
           onSelect={handleSelect}
           selectedFuel={selectedFuel}
           onFuelChange={setSelectedFuel}
+          onBoundsChange={setMapBounds}
         />
       </div>
 
       {/* Right sidebar — lg+ */}
       <aside className="hidden lg:flex flex-col w-80 xl:w-96 border-l border-gray-200 bg-white overflow-y-auto flex-shrink-0">
         <MapSidebar
-          stations={stations}
+          stations={stationsInView}
           t={t}
           selectedFuel={selectedFuel}
           selected={selected}

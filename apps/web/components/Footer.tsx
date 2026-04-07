@@ -14,12 +14,12 @@ export default function Footer({ locale, t }: Props) {
   const termsHref = locale === 'en' ? '/en/terms' : locale === 'uk' ? '/uk/terms' : '/regulamin';
 
   return (
-    <footer className="bg-gray-50 border-t border-gray-200 mt-auto">
+    <footer className="bg-surface-page border-t border-neutral-border mt-auto">
       <div className="max-w-6xl mx-auto px-4 lg:px-6 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <span className="text-lg font-bold text-blue-600">Litro</span>
+            <span className="text-lg font-bold text-brand-ink">Litro</span>
             <p className="mt-1.5 text-sm text-gray-500">{t.footer.tagline}</p>
           </div>
 

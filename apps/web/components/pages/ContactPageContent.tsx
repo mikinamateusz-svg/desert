@@ -24,7 +24,7 @@ export default function ContactPageContent({ locale, t }: Props) {
                   <input
                     type="text"
                     name="name"
-                    className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent"
                   />
                 </div>
                 <div>
@@ -32,7 +32,7 @@ export default function ContactPageContent({ locale, t }: Props) {
                   <input
                     type="email"
                     name="email"
-                    className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent"
                   />
                 </div>
               </div>
@@ -41,7 +41,7 @@ export default function ContactPageContent({ locale, t }: Props) {
                 <input
                   type="text"
                   name="subject"
-                  className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent"
                 />
               </div>
               <div>
@@ -49,12 +49,12 @@ export default function ContactPageContent({ locale, t }: Props) {
                 <textarea
                   name="body"
                   rows={6}
-                  className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                  className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent resize-none"
                 />
               </div>
               <button
                 type="submit"
-                className="bg-blue-600 text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors"
+                className="bg-brand-ink text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-brand-ink-hover transition-colors"
               >
                 {c.send}
               </button>
@@ -65,7 +65,7 @@ export default function ContactPageContent({ locale, t }: Props) {
           <div className="space-y-4">
             <div className="bg-gray-50 rounded-xl p-4">
               <h2 className="text-sm font-semibold text-gray-900 mb-3">{c.infoTitle}</h2>
-              <a href={`mailto:${c.infoEmail}`} className="text-sm text-blue-600 hover:underline">
+              <a href={`mailto:${c.infoEmail}`} className="text-sm text-brand-accent hover:underline">
                 {c.infoEmail}
               </a>
               <p className="text-xs text-gray-400 mt-2">{c.infoResponse}</p>

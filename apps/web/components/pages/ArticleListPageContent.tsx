@@ -35,7 +35,7 @@ export default function ArticleListPageContent({
                 {!article.auto && article.excerpt && (
                   <p className="text-sm text-gray-600 mt-1 line-clamp-2">{article.excerpt}</p>
                 )}
-                <span className="text-sm text-blue-600 mt-2 inline-block group-hover:underline">
+                <span className="text-sm text-brand-accent mt-2 inline-block group-hover:underline">
                   {t.news.readMore}
                 </span>
               </Link>

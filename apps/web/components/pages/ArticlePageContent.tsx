@@ -21,7 +21,7 @@ export default function ArticlePageContent({
 }) {
   return (
     <main className="max-w-2xl mx-auto px-4 py-10">
-      <Link href={listHref(locale)} className="text-sm text-blue-600 hover:underline mb-6 inline-block">
+      <Link href={listHref(locale)} className="text-sm text-brand-accent hover:underline mb-6 inline-block">
         {t.news.backToNews}
       </Link>
 

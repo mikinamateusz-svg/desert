@@ -45,16 +45,16 @@ export default function PricingPageContent({ locale, t }: Props) {
             </ul>
             <Link
               href="/"
-              className="mt-6 block text-center text-sm font-semibold bg-blue-600 text-white px-4 py-3 rounded-xl hover:bg-blue-700 transition-colors"
+              className="mt-6 block text-center text-sm font-semibold bg-brand-ink text-white px-4 py-3 rounded-xl hover:bg-brand-ink-hover transition-colors"
             >
               {t.nav.map}
             </Link>
           </div>
 
           {/* Pro */}
-          <div className="border-2 border-blue-600 rounded-2xl p-6 flex flex-col relative">
+          <div className="border-2 border-brand-accent rounded-2xl p-6 flex flex-col relative">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-              <span className="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">Popular</span>
+              <span className="bg-brand-accent text-brand-ink text-xs font-semibold px-3 py-1 rounded-full">Popular</span>
             </div>
             <h2 className="text-lg font-bold text-gray-900">{p.pro}</h2>
             <p className="text-sm text-gray-500 mt-1 mb-4">{p.proDesc}</p>

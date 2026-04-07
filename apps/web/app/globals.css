@@ -1,1 +1,24 @@
 @import "tailwindcss";
+
+@theme {
+  /* ── Brand ─────────────────────────────────────────────────── */
+  --color-brand-ink:        #1a1a1a; /* primary text, nav, ink buttons  */
+  --color-brand-ink-hover:  #2a2a2a; /* hover state for ink surfaces     */
+  --color-brand-accent:     #f59e0b; /* amber — CTAs, active states      */
+  --color-brand-accent-hover: #d97706; /* amber hover                    */
+
+  /* ── Surfaces ──────────────────────────────────────────────── */
+  --color-surface-page:     #f4f4f4; /* screen / page background         */
+  --color-surface-card:     #ffffff; /* cards, sheets, inputs            */
+
+  /* ── Neutrals ──────────────────────────────────────────────── */
+  --color-neutral-border:   #e5e7eb; /* dividers, input borders          */
+  --color-neutral-secondary: #6b7280; /* secondary text                  */
+  --color-neutral-muted:    #9ca3af; /* placeholder, subtle text         */
+
+  /* ── Price spectrum (map pins only) ────────────────────────── */
+  --color-price-cheap:      #22c55e;
+  --color-price-mid:        #f59e0b;
+  --color-price-expensive:  #ef4444;
+  --color-price-nodata:     #94a3b8;
+}

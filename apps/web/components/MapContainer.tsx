@@ -24,21 +24,25 @@ export default function MapContainer({ stations, defaultLat, defaultLng, t }: Pr
   const [selected, setSelected] = useState<StationWithPrice | null>(null);
   const [selectedFuel, setSelectedFuel] = useState<FuelType>('PB_95');
 
-  // Pan/zoom to selected station.
-  // offset shifts the target coordinate relative to the canvas centre:
-  //   mobile — negative Y pushes pin above the bottom sheet
-  //   desktop — negative Y pushes pin above the bottom-left card
+  // Pan/zoom to selected station using fitBounds — padding semantics are unambiguous:
+  // excluded pixels from each edge, pin lands in the visible centre of what remains.
   useEffect(() => {
     if (!selected) return;
     const map = mapRef.current;
     if (!map) return;
     const isMobile = window.innerWidth < 1024;
-    map.flyTo({
-      center: [selected.lng, selected.lat],
-      zoom: MOBILE_SELECT_ZOOM,
-      offset: isMobile ? [0, -150] : [0, -260],
-      duration: 600,
-    });
+    const delta = 0.005; // ~500m bounding box, maxZoom keeps it at zoom 15
+    map.fitBounds(
+      [[selected.lng - delta, selected.lat - delta],
+       [selected.lng + delta, selected.lat + delta]],
+      {
+        padding: isMobile
+          ? { top: 80, bottom: 340, left: 40, right: 40 }
+          : { top: 80, bottom: 380, left: 40, right: 40 },
+        maxZoom: MOBILE_SELECT_ZOOM,
+        duration: 600,
+      },
+    );
   }, [selected]);
 
   const handleSelect = useCallback((station: StationWithPrice) => {

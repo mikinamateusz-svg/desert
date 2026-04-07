@@ -13,15 +13,15 @@ interface Props {
 
 export default function FuelTypePills({ selected, onChange, t }: Props) {
   return (
-    <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1 px-1.5 py-1.5 rounded-full bg-gray-900/80 backdrop-blur-sm shadow-lg">
+    <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 px-0">
       {FUEL_TYPES.map(ft => (
         <button
           key={ft}
           onClick={() => onChange(ft)}
-          className={`px-3 py-1 rounded-full text-xs font-semibold transition-all whitespace-nowrap ${
+          className={`px-3.5 py-1.5 rounded-full text-[13px] font-semibold transition-all whitespace-nowrap border ${
             selected === ft
-              ? 'bg-amber-400 text-gray-900'
-              : 'text-white hover:bg-white/15 active:bg-white/20'
+              ? 'bg-amber-500 border-amber-500 text-[#1a1a1a]'
+              : 'bg-black/85 border-white/15 text-white hover:bg-black/70'
           }`}
         >
           {t.fuelTypes[ft]}

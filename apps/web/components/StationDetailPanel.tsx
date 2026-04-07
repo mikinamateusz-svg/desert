@@ -42,7 +42,7 @@ export default function StationDetailPanel({ station, t, onClose }: Props) {
 
   return (
     <div className={[
-      'absolute z-50 bg-white shadow-xl',
+      'fixed z-50 bg-white shadow-xl',
       // Mobile: full-width bottom sheet
       'bottom-0 left-0 right-0 rounded-t-2xl',
       // Desktop: floating card bottom-left (above nav controls)

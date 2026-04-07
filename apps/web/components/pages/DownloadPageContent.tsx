@@ -14,19 +14,22 @@ export default function DownloadPageContent({ t }: Props) {
   const { title, subtitle, appStore, googlePlay, comingSoon } = t.download;
 
   return (
-    <main className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center px-4 py-16 text-center">
+    <main className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center px-4 py-16 text-center bg-[#f4f4f4]">
       <div className="mb-8">
         <LitroWordmark height={36} />
       </div>
 
-      <h1 className="text-3xl font-bold text-gray-900 mb-3">{title}</h1>
-      <p className="text-gray-500 text-lg max-w-sm mb-10">{subtitle}</p>
+      <span className="inline-block bg-amber-500 text-[#1a1a1a] text-xs font-bold px-3 py-1 rounded-full mb-4 tracking-wide">
+        {comingSoon}
+      </span>
+      <h1 className="text-3xl font-bold text-[#1a1a1a] mb-3">{title}</h1>
+      <p className="text-[#6b7280] text-lg max-w-sm mb-10">{subtitle}</p>
 
       <div className="flex flex-col sm:flex-row gap-4 mb-8">
         {/* App Store badge */}
         <a
           href={APP_STORE_URL}
-          className="flex items-center gap-3 bg-black text-white px-6 py-3.5 rounded-xl hover:bg-gray-900 transition-colors min-w-[200px]"
+          className="flex items-center gap-3 bg-[#1a1a1a] text-white px-6 py-3.5 rounded-xl hover:bg-[#2a2a2a] transition-colors min-w-[200px]"
           aria-label={appStore}
         >
           <svg viewBox="0 0 24 24" className="w-7 h-7 flex-shrink-0" fill="currentColor">
@@ -41,7 +44,7 @@ export default function DownloadPageContent({ t }: Props) {
         {/* Google Play badge */}
         <a
           href={GOOGLE_PLAY_URL}
-          className="flex items-center gap-3 bg-black text-white px-6 py-3.5 rounded-xl hover:bg-gray-900 transition-colors min-w-[200px]"
+          className="flex items-center gap-3 bg-[#1a1a1a] text-white px-6 py-3.5 rounded-xl hover:bg-[#2a2a2a] transition-colors min-w-[200px]"
           aria-label={googlePlay}
         >
           <svg viewBox="0 0 24 24" className="w-7 h-7 flex-shrink-0" fill="currentColor">
@@ -54,7 +57,6 @@ export default function DownloadPageContent({ t }: Props) {
         </a>
       </div>
 
-      <p className="text-sm text-gray-400">{comingSoon}</p>
     </main>
   );
 }

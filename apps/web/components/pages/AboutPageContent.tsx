@@ -13,9 +13,12 @@ export default function AboutPageContent({ locale, t }: Props) {
     <>
       <div className="flex-1">
         {/* Hero */}
-        <section className="bg-blue-600 text-white px-4 py-16 lg:py-24 text-center">
-          <h1 className="text-3xl lg:text-5xl font-bold mb-4">{a.hero}</h1>
-          <p className="text-lg lg:text-xl text-blue-100 max-w-2xl mx-auto">{a.heroSub}</p>
+        <section className="bg-[#f4f4f4] px-4 py-16 lg:py-24 text-center border-b border-[#e5e7eb]">
+          <span className="inline-block bg-amber-500 text-[#1a1a1a] text-xs font-bold px-3 py-1 rounded-full mb-6 tracking-wide">
+            {a.title}
+          </span>
+          <h1 className="text-3xl lg:text-5xl font-bold text-[#1a1a1a] mb-4">{a.hero}</h1>
+          <p className="text-lg lg:text-xl text-[#6b7280] max-w-2xl mx-auto">{a.heroSub}</p>
         </section>
 
         {/* How it works */}
@@ -28,7 +31,7 @@ export default function AboutPageContent({ locale, t }: Props) {
               { num: '3', title: a.step3Title, body: a.step3 },
             ].map(step => (
               <div key={step.num} className="text-center">
-                <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+                <div className="w-12 h-12 bg-amber-500 text-[#1a1a1a] rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
                   {step.num}
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2">{step.title}</h3>
@@ -45,7 +48,7 @@ export default function AboutPageContent({ locale, t }: Props) {
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[a.feature1, a.feature2, a.feature3, a.feature4].map((f, i) => (
                 <li key={i} className="flex items-start gap-3 bg-white rounded-xl p-4 shadow-sm">
-                  <svg className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-sm text-gray-700">{f}</span>
@@ -61,7 +64,7 @@ export default function AboutPageContent({ locale, t }: Props) {
           <p className="text-gray-500 mb-6">{a.ctaSub}</p>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 bg-blue-600 text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center gap-2 bg-[#1a1a1a] text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-[#2a2a2a] transition-colors"
           >
             {a.ctaButton}
           </Link>

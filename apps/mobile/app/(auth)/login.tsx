@@ -16,6 +16,7 @@ import { ApiError } from '../../src/api/auth';
 import { GoogleSignInButton } from '../../src/components/GoogleSignInButton';
 import { AppleSignInButton } from '../../src/components/AppleSignInButton';
 import { LitroLogo } from '../../src/components/LitroLogo';
+import { tokens } from '../../src/theme/tokens';
 
 export default function LoginScreen() {
   const { t } = useTranslation();
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
-    backgroundColor: '#fff',
+    backgroundColor: tokens.surface.page,
   },
   logoRow: {
     alignItems: 'center',
@@ -128,21 +129,22 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: tokens.neutral.n200,
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 16,
     marginBottom: 16,
-    color: '#000',
+    color: tokens.brand.ink,
+    backgroundColor: tokens.surface.card,
   },
   error: {
-    color: '#e53e3e',
+    color: tokens.price.expensive,
     marginBottom: 12,
     fontSize: 14,
   },
   button: {
-    backgroundColor: '#2563eb',
+    backgroundColor: tokens.brand.ink,
     borderRadius: 8,
     paddingVertical: 14,
     alignItems: 'center',
@@ -164,7 +166,7 @@ const styles = StyleSheet.create({
   },
   link: {
     textAlign: 'center',
-    color: '#2563eb',
+    color: tokens.brand.accent,
     fontSize: 14,
   },
 });

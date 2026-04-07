@@ -37,7 +37,7 @@ export default function MapContainer({ stations, defaultLat, defaultLng, t }: Pr
       zoom: MOBILE_SELECT_ZOOM,
       padding: isMobile
         ? { top: 60, bottom: 320, left: 20, right: 20 }
-        : { top: 80, bottom: 20, left: 320, right: 40 },
+        : { top: 80, bottom: 360, left: 20, right: 40 },
       duration: 600,
     });
   }, [selected]);

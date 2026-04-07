@@ -102,6 +102,8 @@ export default {
     openAlerts: 'Відкрити сповіщення',
     openMenu: 'Відкрити меню',
     recentre: 'Повернутися до моєї локації',
+    cheapestButton: 'Найдешевша у видимій зоні',
+    cheapestNone: 'Немає станцій з цінами у видимій зоні',
   },
   loading: {
     gps:      'Шукаю вас...',

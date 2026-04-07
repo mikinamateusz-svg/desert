@@ -58,6 +58,9 @@ export default function MapScreen() {
   // any: CameraRef not exported from @rnmapbox/maps package root (moduleResolution:bundler)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cameraRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mapViewRef = useRef<any>(null);
+  const [noneInView, setNoneInView] = useState(false);
 
   const {
     fuelType: selectedFuelType,
@@ -245,6 +248,40 @@ export default function MapScreen() {
     }
   }, [stations]);
 
+  const handleFindCheapest = useCallback(async () => {
+    const bounds = await mapViewRef.current?.getVisibleBounds();
+    if (!bounds) return;
+    // bounds = [[neLng, neLat], [swLng, swLat]]
+    const [ne, sw] = bounds;
+    const [east, north] = ne;
+    const [west, south] = sw;
+
+    const inView = stations.filter(s => {
+      if (s.lat < south || s.lat > north || s.lng < west || s.lng > east) return false;
+      const p = priceMap.get(s.id);
+      const exact = p?.prices[selectedFuelType];
+      const range = p?.priceRanges?.[selectedFuelType];
+      return exact !== undefined || range !== undefined;
+    });
+
+    if (inView.length === 0) {
+      setNoneInView(true);
+      setTimeout(() => setNoneInView(false), 2500);
+      return;
+    }
+
+    const getPrice = (s: StationDto): number => {
+      const p = priceMap.get(s.id);
+      const exact = p?.prices[selectedFuelType];
+      if (exact !== undefined) return exact;
+      const range = p?.priceRanges?.[selectedFuelType];
+      return range ? (range.low + range.high) / 2 : Infinity;
+    };
+
+    const cheapest = inView.reduce((best, s) => getPrice(s) < getPrice(best) ? s : best);
+    handlePinPress(cheapest.id);
+  }, [stations, priceMap, selectedFuelType, handlePinPress]);
+
   const showSheet = !accessToken && !hasSeenOnboarding && !sheetDismissed;
   // Show first-launch fuel picker once splash is gone, preference loaded, and prompt not yet seen
   const showFuelPicker = fuelTypeLoaded && !hasSeenFuelPrompt && !splashVisible && !showSheet;
@@ -265,6 +302,7 @@ export default function MapScreen() {
       <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
 
       <MapView
+        ref={mapViewRef}
         style={styles.map}
         onRegionDidChange={handleRegionChange}
       >
@@ -389,6 +427,24 @@ export default function MapScreen() {
         onLogFillup={() => {/* no-op: future story */}}
         isPanning={isMapPanning}
       />
+
+      {/* Cheapest in viewport pill — hidden while sheet open or splash visible */}
+      {!selectedStation && !splashVisible && (
+        <TouchableOpacity
+          style={styles.cheapestButton}
+          onPress={() => void handleFindCheapest()}
+          activeOpacity={0.85}
+        >
+          <Text style={styles.cheapestButtonText}>🏆 {t('map.cheapestButton')}</Text>
+        </TouchableOpacity>
+      )}
+
+      {/* "None in view" toast */}
+      {noneInView && (
+        <View style={styles.cheapestToast} pointerEvents="none">
+          <Text style={styles.cheapestToastText}>{t('map.cheapestNone')}</Text>
+        </View>
+      )}
 
       <SoftSignUpSheet
         visible={showSheet}
@@ -571,5 +627,43 @@ const styles = StyleSheet.create({
   },
   recentreFabDisabled: {
     opacity: 0.4,
+  },
+
+  // Cheapest in view button
+  cheapestButton: {
+    position: 'absolute',
+    bottom: 130,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: tokens.radius.full,
+    backgroundColor: tokens.surface.card,
+    borderWidth: 1,
+    borderColor: tokens.neutral.n200,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  cheapestButtonText: {
+    color: tokens.brand.ink,
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  cheapestToast: {
+    position: 'absolute',
+    bottom: 190,
+    alignSelf: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: tokens.radius.full,
+    backgroundColor: 'rgba(26,26,26,0.9)',
+  },
+  cheapestToastText: {
+    color: tokens.neutral.n0,
+    fontSize: 13,
   },
 });

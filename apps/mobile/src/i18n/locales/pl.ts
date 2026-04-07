@@ -102,6 +102,8 @@ export default {
     openAlerts: 'Otwórz alerty',
     openMenu: 'Otwórz menu',
     recentre: 'Wróć do mojej lokalizacji',
+    cheapestButton: 'Najtańsza w widoku',
+    cheapestNone: 'Brak stacji z cenami w widoku',
   },
   loading: {
     gps:      'Szukam Cię...',

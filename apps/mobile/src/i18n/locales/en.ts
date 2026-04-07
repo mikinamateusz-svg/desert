@@ -102,6 +102,8 @@ export default {
     openAlerts: 'Open alerts',
     openMenu: 'Open menu',
     recentre: 'Re-centre map',
+    cheapestButton: 'Cheapest in view',
+    cheapestNone: 'No priced stations in view',
   },
   loading: {
     gps:      'Locating you...',

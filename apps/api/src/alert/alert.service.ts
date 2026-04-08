@@ -125,13 +125,31 @@ export class PriceRiseAlertService {
       try {
         const tickets: ExpoPushTicket[] = await this.expoPush.sendChunk(chunk);
 
-        for (const ticket of tickets) {
+        for (let i = 0; i < tickets.length; i++) {
+          const ticket = tickets[i];
           if (ticket.status === 'error') {
             if (ticket.details?.error === 'DeviceNotRegistered') {
-              // Stale token — log for ops cleanup; token clearing deferred to a future story
-              this.logger.warn(
-                'DeviceNotRegistered error on push ticket — stale token detected, ops cleanup needed',
-              );
+              // Expo guarantees tickets are returned in the same order as the chunk messages.
+              // to is typed string | string[]; we always build single-token messages, but guard defensively.
+              const rawTo = chunk[i].to;
+              const staleToken = Array.isArray(rawTo) ? rawTo[0] : rawTo;
+              if (!staleToken) {
+                this.logger.warn('DeviceNotRegistered — token is empty, skipping cleanup');
+              } else {
+                try {
+                  await this.prisma.notificationPreference.updateMany({
+                    where: { expo_push_token: staleToken },
+                    data: { expo_push_token: null },
+                  });
+                  this.logger.warn(
+                    `DeviceNotRegistered — cleared stale token ${staleToken.slice(0, 20)}...`,
+                  );
+                } catch (e: unknown) {
+                  this.logger.error(
+                    `Failed to clear stale token ${staleToken.slice(0, 20)}...: ${e instanceof Error ? e.message : String(e)}`,
+                  );
+                }
+              }
             } else {
               this.logger.warn(`Push ticket error: ${ticket.message}`);
             }

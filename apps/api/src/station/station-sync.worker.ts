@@ -28,8 +28,9 @@ export class StationSyncWorker implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(StationSyncWorker.name);
   private queue!: Queue;
   private worker!: Worker;
-  // P5: dedicated Redis connection — BullMQ requires maxRetriesPerRequest: null
-  private redisForBullMQ!: Redis;
+  // BullMQ requires separate Redis connections for Queue and Worker
+  private redisForQueue!: Redis;
+  private redisForWorker!: Redis;
 
   constructor(
     private readonly syncService: StationSyncService,
@@ -38,19 +39,17 @@ export class StationSyncWorker implements OnModuleInit, OnModuleDestroy {
   ) {}
 
   async onModuleInit(): Promise<void> {
-    // P5: create a dedicated ioredis connection with maxRetriesPerRequest: null
-    // (the shared REDIS_CLIENT uses maxRetriesPerRequest: 3 which breaks BullMQ)
     const redisUrl = this.config.getOrThrow<string>('BULL_REDIS_URL');
-    this.redisForBullMQ = new Redis(redisUrl, {
-      maxRetriesPerRequest: null,
-    });
+    this.redisForQueue = new Redis(redisUrl, { maxRetriesPerRequest: null });
+    this.redisForWorker = new Redis(redisUrl, { maxRetriesPerRequest: null });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const connection = this.redisForBullMQ as any;
+    const queueConnection = this.redisForQueue as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const workerConnection = this.redisForWorker as any;
 
-    // P6: defaultJobOptions as belt-and-suspenders alongside job-level options
     this.queue = new Queue(STATION_SYNC_QUEUE, {
-      connection,
+      connection: queueConnection,
       defaultJobOptions: JOB_OPTIONS,
     });
 
@@ -72,7 +71,7 @@ export class StationSyncWorker implements OnModuleInit, OnModuleDestroy {
         await this.syncService.runSync();
       },
       {
-        connection,
+        connection: workerConnection,
         settings: {
           backoffStrategy: (attemptsMade: number): number =>
             RETRY_DELAYS[attemptsMade - 1] ?? RETRY_DELAYS[RETRY_DELAYS.length - 1],
@@ -115,7 +114,7 @@ export class StationSyncWorker implements OnModuleInit, OnModuleDestroy {
   async onModuleDestroy(): Promise<void> {
     await this.worker?.close();
     await this.queue?.close();
-    await this.redisForBullMQ?.quit();
+    await Promise.allSettled([this.redisForQueue?.quit(), this.redisForWorker?.quit()]);
   }
 
   /** Exposed for integration tests and manual trigger from ops */

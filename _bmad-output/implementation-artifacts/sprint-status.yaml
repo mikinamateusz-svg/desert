@@ -3,6 +3,16 @@ generated: 2026-03-23
 description: Sprint status for all stories in the implementation backlog
 
 epics:
+  - id: 0
+    name: Cross-Cutting / Pre-Launch Hardening
+    stories:
+      - id: hardening-1
+        title: "Pre-Launch Technical Hardening"
+        file: 0-1-pre-launch-hardening.md
+        status: ready-for-dev
+        ready_date: 2026-04-08
+        note: "Bundles 8 deferred fixes: ThrottlerGuard global registration, Submission+PriceHistory DB indexes, updated_at DB defaults, stale push token cleanup, market-signal rate limit, BullMQ separate Redis connections, StationFuelStaleness 7-day TTL."
+
   - id: 1
     name: User Registration & Authentication
     stories:
@@ -496,48 +506,37 @@ epics:
       - id: web-6
         title: User Account Dashboard
         file: web-6-account-dashboard.md
-        status: backlog
-        note: >
-          /konto: consumption log, price submission history, saved stations.
-          Auth-gated (redirect to login). No ads.
-          Links to mobile app for full consumption tracking.
+        status: ready-for-dev
+        ready_date: 2026-04-08
+        note: "Introduces web auth: /logowanie login page, web_token JWT cookie, middleware. /konto shows profile, submissions, fill-up summary (graceful empty state). Creates MeModule from scratch."
 
       - id: web-7
         title: Fleet Manager Dashboard
         file: web-7-fleet-dashboard.md
-        status: backlog
-        note: >
-          /flota: multi-vehicle fuel log, cost per km, monthly reports, CSV export.
-          Role-gated (FLEET_MANAGER). Upsell CTA for drivers to upgrade.
-          No ads.
+        status: ready-for-dev
+        ready_date: 2026-04-08
+        note: "/flota — role-conditional: FLEET_MANAGER sees quick stats + link to fleet.desert.app; others see upsell. Depends on web-6 auth."
 
       - id: web-8
         title: Data API & Data Buyer Page
         file: web-8-data-api.md
-        status: backlog
-        note: >
-          /dane: API documentation, pricing tiers, sample payloads.
-          Lead capture form → sales contact.
-          Role-gated API explorer for DATA_BUYER accounts.
+        status: ready-for-dev
+        ready_date: 2026-04-08
+        note: "/dane → redirect to /data (10.2). /dane/dokumentacja: ISR API docs. /dane/klucze: DATA_BUYER key management. Depends on web-6 auth and 10.3 DataApiKey."
 
       - id: web-9
         title: Station Manager Portal
         file: web-9-station-manager.md
-        status: backlog
-        note: >
-          /dla-stacji: landing page with value prop + sign-up CTA.
-          Authenticated portal: claim station, update hours/amenities,
-          view price submission history for your station.
-          Role-gated (STATION_MANAGER).
+        status: ready-for-dev
+        ready_date: 2026-04-08
+        note: "/dla-stacji public marketing + claim request form. /dla-stacji/konto: STATION_MANAGER station list. Depends on web-6 auth and 7.1 StationClaim model."
 
       - id: web-10
         title: Price Alerts & Notifications
         file: web-10-price-alerts.md
-        status: backlog
-        note: >
-          /powiadomienia: set fuel type + price threshold + location radius.
-          Email + push notification delivery.
-          Auth-gated. Links to mobile app for push setup.
+        status: ready-for-dev
+        ready_date: 2026-04-08
+        note: "/powiadomienia: PriceAlert model (new migration), GET/POST/DELETE /v1/me/alerts. Email delivery deferred to follow-up story. Depends on web-6 auth."
 
   - id: 3
     name: Photo Contribution Pipeline
@@ -726,3 +725,283 @@ epics:
         review_date: 2026-04-05
         review_findings: "2 intent gaps resolved: IG-1 low_trust routing applies 0 delta (not -25 — routing only, not verdict); IG-2 upsertAlert dedup Option C (suppress if any undismissed alert exists, no 24h window). 15 patches: P-1 adminId from JWT not body, P-2 audit log submission_id→notes for user actions, P-3 TOCTOU shadow-ban check wrapped in $transaction, P-4 forbid banning ADMIN-role users, P-5 checkHighFrequency excludes shadow_rejected, P-6 checkPriceVariance groups by fuel_type+COUNT(DISTINCT id), P-7 checkStationSpread uses toFixed(2) key grouping, P-8 encodeURIComponent on search in pagination, P-9 parseInt NaN guard, P-10 router.refresh after ban/unban, P-11 column header i18n fix, P-12/13 missing i18n keys added (nameColumn/statusColumn/submissionsColumn/alertsColumn/joinedColumn/activeStatus/searchPlaceholder/searchButton/noUsersFound), P-14 named trust constants TRUST_HIGH/TRUST_LOW, P-15 startup runDetection error logging. 3 deferred fixed: D-1 rejectSubmission nulls photo_r2_key, D-2 TrustScoreService logs 0-row updates, D-3 removed redundant submission count in getUser. 4 rejected as noise."
         patches_applied: "2026-04-05 — all patches applied; 720/720 tests passing, tsc clean"
+
+      - id: 4.6
+        title: Contribution Funnel, OCR Metrics & Pipeline Health
+        status: done
+        dev_completed: 2026-04-06
+        review_date: 2026-04-06
+
+      - id: 4.7
+        title: API Cost Tracking Dashboard
+        file: 4-7-api-cost-tracking-dashboard.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+
+      - id: 4.8
+        title: Data Freshness Dashboard
+        file: 4-8-data-freshness-dashboard.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+
+      - id: 4.10
+        title: Admin UI — Manual Station Sync Trigger
+        file: 4-10-admin-ui-station-sync-trigger.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+
+  - epic: 5
+    stories:
+      - id: 5.0
+        title: "Regional Benchmark Price Calculation & Storage"
+        file: 5-0-regional-benchmark-price-calculation.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 5.1
+        title: "Vehicle Setup & Car Recognition"
+        file: 5-1-vehicle-setup-car-recognition.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 5.2
+        title: "Pump Meter OCR & Fill-Up Recording"
+        file: 5-2-pump-meter-ocr-fillup-recording.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 5.3
+        title: "Savings vs. Area Average Calculation"
+        file: 5-3-savings-vs-area-average-calculation.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 5.4
+        title: "Odometer OCR & Consumption Tracking"
+        file: 5-4-odometer-ocr-consumption-tracking.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 5.5
+        title: "Personal History & Summaries"
+        file: 5-5-personal-history-summaries.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 5.6
+        title: "Real-World Consumption Benchmarks by Vehicle"
+        file: 5-6-consumption-benchmarks-by-vehicle.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 5.7
+        title: "Savings Summary Sharing"
+        file: 5-7-savings-summary-sharing.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+
+  - epic: 6
+    stories:
+      - id: 6.0
+        title: "Fuel Price Feed Ingestion"
+        file: 6-0-fuel-price-feed-ingestion.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 6.1
+        title: "Price Drop Alerts"
+        file: 6-1-price-drop-alerts.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 6.2
+        title: "Community-Confirmed Price Rise Alerts"
+        file: 6-2-community-confirmed-rise-alerts.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 6.3
+        title: "Predictive Price Rise Alerts"
+        file: 6-3-predictive-rise-alerts.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 6.5
+        title: "Monthly Savings Summary Notification"
+        file: 6-5-monthly-savings-summary-notification.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 6.6
+        title: "Smart Notification Re-prompting"
+        file: 6-6-smart-notification-reprompting.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 6.7
+        title: "Savings Leaderboard"
+        file: 6-7-savings-leaderboard.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 6.8
+        title: "Notification & Alert Engagement Analytics"
+        file: 6-8-notification-alert-engagement-analytics.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 6.4
+        title: "Alert Preferences & Settings Panel"
+        file: 6-4-alert-preferences-settings-panel.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 6.9
+        title: "Guest Conversion Nudges"
+        file: 6-9-guest-conversion-nudges.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+
+  - epic: 7
+    stories:
+      - id: 7.1
+        title: "Station Claim — Easy Path"
+        file: 7-1-station-claim-easy-path.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 7.2
+        title: "Station Claim — Hard Path"
+        file: 7-2-station-claim-hard-path.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 7.3
+        title: "Self-Service Price Update"
+        file: 7-3-self-service-price-update.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 7.4
+        title: "Station Performance Metrics"
+        file: 7-4-station-performance-metrics.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 7.5
+        title: "Owner Price Integrity Monitoring"
+        file: 7-5-owner-price-integrity-monitoring.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 7.6
+        title: "Chain Registration & Station Grouping"
+        file: 7-6-chain-registration-station-grouping.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+
+  - epic: 8
+    stories:
+      - id: 8.1
+        title: "Promotional Placement Purchase"
+        file: 8-1-promotional-placement-purchase.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 8.2
+        title: "Promoted Station Display"
+        file: 8-2-promoted-station-display.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 8.3
+        title: "Campaign Performance Dashboard"
+        file: 8-3-campaign-performance-dashboard.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 8.4
+        title: "Billing Portal"
+        file: 8-4-billing-portal.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 8.5
+        title: "Deal Creation & Submission"
+        file: 8-5-deal-creation-submission.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 8.6
+        title: "Deal Moderation"
+        file: 8-6-deal-moderation.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+      - id: 8.7
+        title: "Deal Display in Station Sheet"
+        file: 8-7-deal-display-station-sheet.md
+        status: ready-for-dev
+        ready_date: 2026-04-07
+
+  - epic: 10
+    stories:
+      - id: 10.1
+        title: "Public Fuel Price Web Portal"
+        file: 10-1-public-fuel-price-web-portal.md
+        status: ready-for-dev
+        ready_date: 2026-04-08
+
+  - epic: 9
+    stories:
+      - id: 9.1
+        title: "Fleet Account Setup & Vehicle Management"
+        file: 9-1-fleet-account-setup-vehicle-management.md
+        status: ready-for-dev
+        ready_date: 2026-04-08
+      - id: 9.2
+        title: "Driver Invite & Assignment"
+        file: 9-2-driver-invite-assignment.md
+        status: ready-for-dev
+        ready_date: 2026-04-08
+      - id: 9.3
+        title: "Fleet Dashboard & Cost Analytics"
+        file: 9-3-fleet-dashboard-cost-analytics.md
+        status: ready-for-dev
+        ready_date: 2026-04-08
+      - id: 9.4
+        title: "Expense Report Export"
+        file: 9-4-expense-report-export.md
+        status: ready-for-dev
+        ready_date: 2026-04-08
+      - id: 9.5
+        title: "Fleet Price Alerts"
+        file: 9-5-fleet-price-alerts.md
+        status: ready-for-dev
+        ready_date: 2026-04-08
+      - id: 9.6
+        title: "Route-Optimised Refuelling Suggestions"
+        file: 9-6-route-optimised-refuelling.md
+        status: ready-for-dev
+        ready_date: 2026-04-08
+      - id: 9.7
+        title: "Fleet API Access"
+        file: 9-7-fleet-api-access.md
+        status: ready-for-dev
+        ready_date: 2026-04-08
+      - id: 9.8
+        title: "Fleet Subscription Billing Portal"
+        file: 9-8-fleet-billing.md
+        status: ready-for-dev
+        ready_date: 2026-04-08
+
+  - epic: 11
+    title: "Station Picker"
+    stories:
+      - id: 11.1
+        title: "Station Picker — Recommendation Engine & API"
+        file: 11-1-station-picker-algorithm.md
+        status: ready-for-dev
+        ready_date: 2026-04-08
+      - id: 11.2
+        title: "Station Picker — Mobile UI"
+        file: 11-2-station-picker-ui.md
+        status: ready-for-dev
+        ready_date: 2026-04-08
+
+  - epic: 10
+    title: "Data Licensing & Public Portal"
+    stories:
+      - id: 10.1
+        title: "Public Fuel Price Web Portal"
+        file: 10-1-public-fuel-price-web-portal.md
+        status: ready-for-dev
+        ready_date: 2026-04-08
+      - id: 10.2
+        title: "Data Buyer Onboarding & Licensing"
+        file: 10-2-data-buyer-onboarding-licensing.md
+        status: ready-for-dev
+        ready_date: 2026-04-08
+      - id: 10.3
+        title: "Fuel Price Data API"
+        file: 10-3-fuel-price-data-api.md
+        status: ready-for-dev
+        ready_date: 2026-04-08
+      - id: 10.4
+        title: "Vehicle Consumption Data API"
+        file: 10-4-vehicle-consumption-data-api.md
+        status: ready-for-dev
+        ready_date: 2026-04-08

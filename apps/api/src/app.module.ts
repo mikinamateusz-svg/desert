@@ -17,6 +17,7 @@ import { MarketSignalModule } from './market-signal/market-signal.module.js';
 import { PhotoModule } from './photo/photo.module.js';
 import { AlertModule } from './alert/alert.module.js';
 import { AdminModule } from './admin/admin.module.js';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import { JwtAuthGuard } from './auth/jwt-auth.guard.js';
 import { RolesGuard } from './auth/guards/roles.guard.js';
 
@@ -44,6 +45,7 @@ import { RolesGuard } from './auth/guards/roles.guard.js';
     AdminModule,
   ],
   providers: [
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
   ],

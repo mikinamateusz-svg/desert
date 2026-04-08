@@ -26,8 +26,9 @@ export class StationClassificationWorker implements OnModuleInit, OnModuleDestro
   private readonly logger = new Logger(StationClassificationWorker.name);
   private queue!: Queue;
   private worker!: Worker;
-  // Dedicated Redis connection — BullMQ requires maxRetriesPerRequest: null
-  private redisForBullMQ!: Redis;
+  // BullMQ requires separate Redis connections for Queue and Worker
+  private redisForQueue!: Redis;
+  private redisForWorker!: Redis;
 
   constructor(
     private readonly classificationService: StationClassificationService,
@@ -37,13 +38,16 @@ export class StationClassificationWorker implements OnModuleInit, OnModuleDestro
 
   async onModuleInit(): Promise<void> {
     const redisUrl = this.config.getOrThrow<string>('BULL_REDIS_URL');
-    this.redisForBullMQ = new Redis(redisUrl, { maxRetriesPerRequest: null });
+    this.redisForQueue = new Redis(redisUrl, { maxRetriesPerRequest: null });
+    this.redisForWorker = new Redis(redisUrl, { maxRetriesPerRequest: null });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const connection = this.redisForBullMQ as any;
+    const queueConnection = this.redisForQueue as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const workerConnection = this.redisForWorker as any;
 
     this.queue = new Queue(STATION_CLASSIFICATION_QUEUE, {
-      connection,
+      connection: queueConnection,
       defaultJobOptions: {
         attempts: 3,
         backoff: { type: 'exponential', delay: 60_000 },
@@ -59,7 +63,7 @@ export class StationClassificationWorker implements OnModuleInit, OnModuleDestro
           await this.processClassification();
         }
       },
-      { connection },
+      { connection: workerConnection },
     );
 
     this.worker.on('completed', () =>
@@ -75,7 +79,7 @@ export class StationClassificationWorker implements OnModuleInit, OnModuleDestro
   async onModuleDestroy(): Promise<void> {
     await this.worker?.close();
     await this.queue?.close();
-    await this.redisForBullMQ?.quit();
+    await Promise.allSettled([this.redisForQueue?.quit(), this.redisForWorker?.quit()]);
   }
 
   /** Exposed for enqueueing from StationSyncWorker after sync completes */

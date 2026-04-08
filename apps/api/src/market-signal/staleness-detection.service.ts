@@ -112,9 +112,12 @@ export class StalenessDetectionService {
    * Returns all currently stale fuel types for a station.
    * Used by future story (2.9/3.x) to include stale status in API responses.
    */
+  private static readonly STALE_FLAG_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
   async getStaleFuelTypes(stationId: string): Promise<string[]> {
+    const cutoff = new Date(Date.now() - StalenessDetectionService.STALE_FLAG_TTL_MS);
     const records = await this.prisma.stationFuelStaleness.findMany({
-      where: { station_id: stationId },
+      where: { station_id: stationId, flagged_at: { gte: cutoff } },
       select: { fuel_type: true },
     });
     return records.map((r) => r.fuel_type);

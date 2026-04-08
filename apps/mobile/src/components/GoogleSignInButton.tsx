@@ -18,6 +18,10 @@ interface Props {
   onError?: (code: string) => void;
 }
 
+const GOOGLE_CONFIGURED =
+  !!process.env['EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID'] &&
+  process.env['EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID'] !== 'xxxx.apps.googleusercontent.com';
+
 export function GoogleSignInButton({ onError }: Props) {
   const { t } = useTranslation();
   const auth = useAuth();
@@ -44,6 +48,8 @@ export function GoogleSignInButton({ onError }: Props) {
       })
       .finally(() => setLoading(false));
   }, [response, auth]);
+
+  if (!GOOGLE_CONFIGURED) return null;
 
   return (
     <TouchableOpacity

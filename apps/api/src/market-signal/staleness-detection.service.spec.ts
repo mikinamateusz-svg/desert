@@ -246,7 +246,7 @@ describe('StalenessDetectionService', () => {
 
       expect(result).toEqual(['PB_95', 'ON']);
       expect(mockStaleFindMany).toHaveBeenCalledWith({
-        where: { station_id: 'station-xyz' },
+        where: { station_id: 'station-xyz', flagged_at: { gte: expect.any(Date) } },
         select: { fuel_type: true },
       });
     });

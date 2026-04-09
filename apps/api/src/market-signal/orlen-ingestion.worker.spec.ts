@@ -212,7 +212,7 @@ describe('OrlenIngestionWorker', () => {
       await workerService.onModuleDestroy();
       expect(mockWorkerClose).toHaveBeenCalledTimes(1);
       expect(mockQueueClose).toHaveBeenCalledTimes(1);
-      expect(mockRedisQuit).toHaveBeenCalledTimes(1);
+      expect(mockRedisQuit).toHaveBeenCalledTimes(2);
     });
   });
 });

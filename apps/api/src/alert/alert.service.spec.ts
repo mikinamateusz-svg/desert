@@ -10,9 +10,11 @@ import { EXPO_PUSH_CLIENT } from './expo-push.token.js';
 const mockMarketSignalFindMany = jest.fn();
 const mockNotificationPrefFindMany = jest.fn();
 
+const mockNotificationPrefUpdateMany = jest.fn().mockResolvedValue({ count: 1 });
+
 const mockPrisma = {
   marketSignal: { findMany: mockMarketSignalFindMany },
-  notificationPreference: { findMany: mockNotificationPrefFindMany },
+  notificationPreference: { findMany: mockNotificationPrefFindMany, updateMany: mockNotificationPrefUpdateMany },
 };
 
 const mockRedisGet = jest.fn();

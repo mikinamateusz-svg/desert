@@ -259,6 +259,22 @@ Public users browse a live fuel price map, SEO-optimised station pages, and regi
 **FRs covered:** FR51, FR52
 **Phase:** 2
 
+### Epic 11: Legal & Compliance *(Pre-launch)*
+Privacy policy and terms of service are published at public URLs, in-app consent checkboxes are wired into the signup flow, and data processing agreements with all hosting providers are activated. A hard prerequisite for App Store submission and for collecting any user data.
+**Phase:** Pre-launch (must complete before first public user)
+
+### Epic 12: App Store & Go-to-Market Launch Preparation *(Pre-launch)*
+The app is listed on the Apple App Store and Google Play under individual developer accounts (no D-U-N-S, no company required at launch), reachable at a custom domain, with all store assets, metadata, privacy declarations, and production builds complete. Migration to business account deferred to JDG/company registration. Only pre-launch timing constraint: Google Play 2-week new-account waiting period.
+**Phase:** Pre-launch
+
+### Epic 13: Scale to JDG *(Trigger: product shows traction)*
+Litro is formalised as a JDG (sole trader registered in CEIDG), legal documents are updated with the NIP, app store developer identity reflects the business, and basic operations (bookkeeping, VAT decision, invoicing) are in place.
+**Phase:** Post-launch, triggered by traction
+
+### Epic 14: Scale to Sp. z o.o. *(Trigger: hiring, investment, or significant B2B revenue)*
+Litro is incorporated as a sp. z o.o., all infrastructure and IP are transferred to the company, Apple Developer is re-enrolled as an Organisation (D-U-N-S required), and the business is structured for investment, employment, and enterprise contracts.
+**Phase:** Post-launch, triggered by commercial success
+
 ---
 
 ## Epic 1: User Registration & Authentication

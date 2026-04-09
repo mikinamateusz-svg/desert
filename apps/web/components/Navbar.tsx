@@ -78,7 +78,7 @@ export default function Navbar({ locale, t }: Props) {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100"
+          className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100"
           onClick={() => setMenuOpen(o => !o)}
           aria-label={t.nav.menu}
           aria-expanded={menuOpen}

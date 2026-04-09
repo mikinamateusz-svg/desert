@@ -27,15 +27,25 @@ async function request<T>(
   path: string,
   options: RequestInit,
 ): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+    });
+  } catch {
+    throw new ApiError('Network error', 0, 'NETWORK_ERROR');
+  }
 
-  const body = await res.json() as Record<string, unknown>;
+  let body: Record<string, unknown>;
+  try {
+    body = await res.json() as Record<string, unknown>;
+  } catch {
+    throw new ApiError('Invalid server response', res.status, 'INVALID_RESPONSE');
+  }
 
   if (!res.ok) {
     const message =

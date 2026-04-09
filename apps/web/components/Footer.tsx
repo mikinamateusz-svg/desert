@@ -9,7 +9,6 @@ interface Props {
 export default function Footer({ locale, t }: Props) {
   const aboutHref = locale === 'en' ? '/en/about' : locale === 'uk' ? '/uk/about' : '/o-nas';
   const contactHref = locale === 'en' ? '/en/contact' : locale === 'uk' ? '/uk/contact' : '/kontakt';
-  const pricingHref = locale === 'en' ? '/en/pricing' : locale === 'uk' ? '/uk/pricing' : '/cennik';
   const privacyHref = locale === 'en' ? '/en/privacy' : locale === 'uk' ? '/uk/privacy' : '/polityka-prywatnosci';
   const termsHref = locale === 'en' ? '/en/terms' : locale === 'uk' ? '/uk/terms' : '/regulamin';
 
@@ -30,7 +29,6 @@ export default function Footer({ locale, t }: Props) {
             </h3>
             <ul className="space-y-2 text-sm text-gray-600">
               <li><Link href="/" className="hover:text-gray-900 transition-colors">{t.nav.map}</Link></li>
-              <li><Link href={pricingHref} className="hover:text-gray-900 transition-colors">{t.footer.pricing}</Link></li>
             </ul>
           </div>
 

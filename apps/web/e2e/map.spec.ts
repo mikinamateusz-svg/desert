@@ -28,11 +28,15 @@ test.describe('Map page', () => {
     await expect(onPill).toHaveClass(/bg-amber-500/);
     await expect(pb95).not.toHaveClass(/bg-amber-500/);
   });
+});
+
+test.describe('Station marker click (desktop)', () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
 
   test('clicking a station marker opens the detail panel', async ({ page }) => {
     await waitForMap(page);
     const marker = page.locator('[data-testid="station-marker"]').first();
-    // Canvas/other markers intercept pointer events in headless CI; use dispatchEvent
+    // Canvas intercepts pointer events; dispatchEvent bypasses actionability check
     await marker.dispatchEvent('click');
 
     // Detail panel should appear with station name, prices, and navigate button

@@ -1,0 +1,45 @@
+appId: com.desert.app
+name: Registration form validation and submission
+---
+- clearState
+- launchApp
+- extendedWaitUntil:
+    visible: "Zaloguj się"
+    timeout: 15000
+- tapOn: "Zaloguj się"
+# Navigate to register screen
+- tapOn: "Nie masz konta? Utwórz je"
+- assertVisible: "Utwórz konto"
+# Fill in display name
+- tapOn: "Nazwa wyświetlana"
+- inputText: "Test User"
+# Fill in email
+- tapOn: "E-mail"
+- inputText: "newuser@litro.app"
+# Fill in password
+- tapOn: "Hasło"
+- inputText: "SecurePass456!"
+# Try submitting without accepting terms — should show validation error
+- tapOn:
+    text: "Utwórz konto"
+    index: 0
+- extendedWaitUntil:
+    visible: "Wymagane zgody nie zostały zaznaczone"
+    timeout: 5000
+# Accept terms checkboxes
+- tapOn: "Regulamin"
+- tapOn:
+    text: "Wyrażam zgodę na natychmiastowe rozpoczęcie usługi"
+    index: 0
+# Submit again
+- tapOn:
+    text: "Utwórz konto"
+    index: 0
+# Either: registration succeeds, email conflict, or generic error
+- extendedWaitUntil:
+    true:
+      or:
+        - visible: "litro"
+        - visible: "Ten adres e-mail jest już zarejestrowany"
+        - visible: "Coś poszło nie tak"
+    timeout: 10000

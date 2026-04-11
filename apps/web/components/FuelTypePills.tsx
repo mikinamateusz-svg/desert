@@ -13,7 +13,7 @@ interface Props {
 
 export default function FuelTypePills({ selected, onChange, t }: Props) {
   return (
-    <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 px-0">
+    <div data-testid="fuel-pills" className="absolute top-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 px-0">
       {FUEL_TYPES.map(ft => (
         <button
           key={ft}

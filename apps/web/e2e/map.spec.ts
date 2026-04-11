@@ -32,8 +32,8 @@ test.describe('Map page', () => {
   test('clicking a station marker opens the detail panel', async ({ page }) => {
     await waitForMap(page);
     const marker = page.locator('[data-testid="station-marker"]').first();
-    // Canvas intercepts pointer events; force the click on the marker button
-    await marker.click({ force: true });
+    // Canvas/other markers intercept pointer events in headless CI; use dispatchEvent
+    await marker.dispatchEvent('click');
 
     // Detail panel should appear with station name, prices, and navigate button
     const panel = page.locator('[data-testid="station-detail-panel"]');

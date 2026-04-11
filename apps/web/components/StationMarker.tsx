@@ -84,6 +84,7 @@ export default function StationMarker({ station, priceColor, isSelected, selecte
     >
       {/* button kept for accessibility label; click is handled by Marker */}
       <button
+        data-testid="station-marker"
         aria-label={`${station.name}: ${selectedFuel} ${pinLabel} zł/l`}
         style={{ ...pinStyle, border: 'none', padding: 0, outline: 'none' }}
         tabIndex={-1}

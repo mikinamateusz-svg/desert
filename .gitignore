@@ -40,6 +40,10 @@ pnpm-debug.log*
 # Test coverage
 coverage
 
+# Playwright
+playwright-report
+apps/web/e2e/test-results
+
 # Expo
 *.jks
 *.p8

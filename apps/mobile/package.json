@@ -9,7 +9,9 @@
     "lint": "echo 'Mobile lint skipped (no eslint config yet)'",
     "type-check": "tsc --noEmit",
     "android": "expo run:android",
-    "ios": "expo run:ios"
+    "ios": "expo run:ios",
+    "test:e2e": "maestro test .maestro/flows/",
+    "test:e2e:studio": "maestro studio"
   },
   "dependencies": {
     "@desert/types": "workspace:*",

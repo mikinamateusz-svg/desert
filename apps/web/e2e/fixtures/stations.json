@@ -1,0 +1,43 @@
+{
+  "stations": [
+    { "id": "s1", "name": "Shell Mokotów",      "address": "ul. Puławska 145, Warszawa",            "lat": 52.19, "lng": 21.02, "brand": "shell" },
+    { "id": "s2", "name": "Orlen Centrum",       "address": "ul. Marszałkowska 10, Warszawa",        "lat": 52.23, "lng": 21.01, "brand": "orlen" },
+    { "id": "s3", "name": "BP Wola",             "address": "ul. Wolska 80, Warszawa",               "lat": 52.24, "lng": 20.97, "brand": "bp" },
+    { "id": "s4", "name": "Circle K Praga",      "address": "ul. Grochowska 200, Warszawa",          "lat": 52.25, "lng": 21.07, "brand": "circle_k" },
+    { "id": "s5", "name": "Lotos Ursynów",       "address": "ul. Rosoła 50, Warszawa",               "lat": 52.16, "lng": 21.04, "brand": "lotos" }
+  ],
+  "prices": [
+    {
+      "stationId": "s1",
+      "prices": { "PB_95": 5.89, "PB_98": 6.49, "ON": 5.79, "LPG": 2.85 },
+      "sources": { "PB_95": "community" },
+      "updatedAt": "2026-04-11T10:00:00Z"
+    },
+    {
+      "stationId": "s2",
+      "prices": { "PB_95": 5.67, "PB_98": 6.29, "ON": 5.69, "ON_PREMIUM": 6.19 },
+      "sources": { "PB_95": "community" },
+      "updatedAt": "2026-04-11T10:00:00Z"
+    },
+    {
+      "stationId": "s3",
+      "prices": { "PB_95": 5.99, "ON": 5.89 },
+      "priceRanges": { "PB_95": { "low": 5.89, "high": 6.09 } },
+      "estimateLabel": { "PB_95": "estimated" },
+      "sources": { "PB_95": "scraper" },
+      "updatedAt": "2026-04-11T09:00:00Z"
+    },
+    {
+      "stationId": "s4",
+      "prices": { "PB_95": 5.72, "PB_98": 6.39, "ON": 5.75, "LPG": 2.79 },
+      "sources": { "PB_95": "community" },
+      "updatedAt": "2026-04-11T10:00:00Z"
+    },
+    {
+      "stationId": "s5",
+      "prices": { "PB_95": 5.95, "ON": 5.85, "LPG": 2.92 },
+      "sources": { "PB_95": "community" },
+      "updatedAt": "2026-04-11T08:00:00Z"
+    }
+  ]
+}

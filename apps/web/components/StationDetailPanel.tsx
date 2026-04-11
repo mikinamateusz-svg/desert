@@ -42,7 +42,7 @@ const StationDetailPanel = forwardRef<HTMLDivElement, Props>(function StationDet
   const hasPrices = FUEL_ORDER.some(ft => price?.prices[ft] !== undefined);
 
   return (
-    <div ref={ref} className={[
+    <div ref={ref} data-testid="station-detail-panel" className={[
       'fixed z-50 bg-white shadow-xl',
       // Mobile: full-width bottom sheet
       'bottom-0 left-0 right-0 rounded-t-2xl',

@@ -74,7 +74,6 @@ export default function MapScreen() {
   useEffect(() => () => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     if (errorDismissRef.current) clearTimeout(errorDismissRef.current);
-    if (panEndRef.current) clearTimeout(panEndRef.current);
   }, []);
 
   // Once GPS resolves (or is denied), initialise camera and fetch center
@@ -162,11 +161,6 @@ export default function MapScreen() {
       programmaticMoveRef.current = false;
       return;
     }
-    // FAB fade-out while panning
-    setIsMapPanning(true);
-    if (panEndRef.current) clearTimeout(panEndRef.current);
-    panEndRef.current = setTimeout(() => setIsMapPanning(false), 600);
-
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       const [lng, lat] = feature.geometry.coordinates;
@@ -188,8 +182,6 @@ export default function MapScreen() {
   };
 
   // ── Contribution FAB ─────────────────────────────────────────────────────
-  const [isMapPanning, setIsMapPanning] = useState(false);
-  const panEndRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { permissionGranted: cameraGranted, requestPermission: requestCamera } = useCameraPermission();
   // Separate gate for contribution flow — distinct from first-launch onboarding sheet
   const [showContributionGate, setShowContributionGate] = useState(false);
@@ -424,20 +416,9 @@ export default function MapScreen() {
 
       <MapFABGroup
         onAddPrice={() => void handleAddPrice()}
-        onLogFillup={() => {/* no-op: future story */}}
-        isPanning={isMapPanning}
+        onCheapest={() => void handleFindCheapest()}
+        showCheapest={!selectedStation && !splashVisible}
       />
-
-      {/* Cheapest in viewport pill — hidden while sheet open or splash visible */}
-      {!selectedStation && !splashVisible && (
-        <TouchableOpacity
-          style={styles.cheapestButton}
-          onPress={() => void handleFindCheapest()}
-          activeOpacity={0.85}
-        >
-          <Text style={styles.cheapestButtonText}>🏆 {t('map.cheapestButton')}</Text>
-        </TouchableOpacity>
-      )}
 
       {/* "None in view" toast */}
       {noneInView && (
@@ -629,33 +610,9 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
 
-  // Cheapest in view button
-  cheapestButton: {
-    position: 'absolute',
-    bottom: 130,
-    alignSelf: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: tokens.radius.full,
-    backgroundColor: tokens.surface.card,
-    borderWidth: 1,
-    borderColor: tokens.neutral.n200,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 6,
-    elevation: 4,
-  },
-  cheapestButtonText: {
-    color: tokens.brand.ink,
-    fontSize: 14,
-    fontWeight: '600',
-  },
   cheapestToast: {
     position: 'absolute',
-    bottom: 190,
+    bottom: 130,
     alignSelf: 'center',
     paddingHorizontal: 16,
     paddingVertical: 8,

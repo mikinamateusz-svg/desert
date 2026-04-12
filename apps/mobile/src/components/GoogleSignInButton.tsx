@@ -21,10 +21,14 @@ const GOOGLE_CONFIGURED =
 
 // Native Google Sign-In SDK — lazy-loaded to avoid crashes on devices
 // where the module initialisation fails when Google is not configured.
+// Use a variable for the module name so Metro bundler cannot statically
+// resolve it — prevents "module not found" errors in dev builds that
+// don't include the native Google Sign-In module.
+const GOOGLE_MODULE = '@react-native-google-signin/google-signin';
 let GoogleSignin: typeof import('@react-native-google-signin/google-signin').GoogleSignin | null = null;
 if (GOOGLE_CONFIGURED) {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const mod = require('@react-native-google-signin/google-signin') as typeof import('@react-native-google-signin/google-signin');
+  const mod = require(GOOGLE_MODULE) as typeof import('@react-native-google-signin/google-signin');
   GoogleSignin = mod.GoogleSignin;
   GoogleSignin.configure({ webClientId: GOOGLE_WEB_CLIENT_ID });
 }

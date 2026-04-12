@@ -21,7 +21,7 @@ module.exports = {
   devices: {
     emulator: {
       type: 'android.emulator',
-      device: { avdName: 'Pixel_7_API_34' },
+      device: { avdName: process.env.CI ? 'test' : 'Pixel_7' },
     },
   },
   configurations: {

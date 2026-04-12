@@ -39,10 +39,12 @@ function GoogleSignInButtonEnabled({ onError }: Props) {
   const auth = useAuth();
   const [loading, setLoading] = useState(false);
 
+  // expo-auth-session uses browser-based OAuth (Chrome Custom Tab).
+  // In standalone builds, the default redirectUri is a custom scheme (desert://)
+  // which Google's web client rejects. Force the Expo auth proxy HTTPS URI.
   const [request, response, promptAsync] = Google!.useIdTokenAuthRequest({
     clientId: process.env['EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID'],
-    androidClientId: process.env['EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID'],
-    iosClientId: process.env['EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID'],
+    redirectUri: 'https://auth.expo.io/@mmikina/desert',
   });
 
   useEffect(() => {

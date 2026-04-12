@@ -85,7 +85,7 @@ describe('AuthService', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     process.env['GOOGLE_WEB_CLIENT_ID'] = 'test-google-client-id';
-    process.env['APPLE_APP_BUNDLE_ID'] = 'com.desert.app.test';
+    process.env['APPLE_APP_BUNDLE_ID'] = 'com.litro.app.test';
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [

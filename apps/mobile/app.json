@@ -11,7 +11,7 @@
     "scheme": "desert",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.desert.app",
+      "bundleIdentifier": "com.litro.app",
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSUserNotificationUsageDescription": "We'll alert you when fuel prices drop near you.",
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1a1a1a"
       },
-      "package": "com.desert.app",
+      "package": "com.litro.app",
       "permissions": [
         "android.permission.POST_NOTIFICATIONS",
         "android.permission.ACCESS_FINE_LOCATION"
@@ -47,7 +47,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow desert to access your camera to photograph fuel station price boards."
+          "cameraPermission": "Allow Litro to access your camera to photograph fuel station price boards."
         }
       ]
     ],

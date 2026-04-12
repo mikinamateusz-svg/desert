@@ -91,7 +91,7 @@ export default function AccountScreen() {
               <Text style={styles.buttonText}>{t('account.signOut')}</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/(auth)/login')}>
+            <TouchableOpacity style={styles.button} onPress={() => router.replace('/(auth)/login')}>
               <Text style={styles.buttonText}>{t('account.signIn')}</Text>
             </TouchableOpacity>
           )}

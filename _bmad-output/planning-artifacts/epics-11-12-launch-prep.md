@@ -199,6 +199,10 @@ So that we satisfy app store support URL requirements, present a professional br
 **When** the web app, mobile app settings, and all legal documents are checked
 **Then** every public URL uses the custom domain — no references to `*.vercel.app` remain in user-facing surfaces
 
+**Pre-launch DNS note:** Domain `litro.pl` is registered (OVH) and configured in Cloudflare + Vercel, but DNS records are currently **removed** to keep the site hidden until launch. Before going public, re-add in Cloudflare DNS:
+- A record: `@` → `76.76.21.21` (DNS only, no proxy)
+- CNAME: `www` → `cname.vercel-dns.com` (DNS only, no proxy)
+
 ---
 
 ### Story 12.2: Account Migration to JDG / Company *(Deferred — trigger: JDG registration)*
@@ -248,9 +252,9 @@ So that we can submit the iOS app to the App Store and enable Sign In with Apple
 
 **Given** the developer account is active
 **When** the App ID is configured in App Store Connect
-**Then** the `com.desert.app` App ID is registered
+**Then** the `com.litro.app` App ID is registered
 **And** "Sign In with Apple" capability is enabled on the App ID
-**And** the EAS `APPLE_APP_BUNDLE_ID` env var is set in Railway (`com.desert.app`)
+**And** the EAS `APPLE_APP_BUNDLE_ID` env var is set in Railway (`com.litro.app`)
 **And** a distribution certificate and provisioning profile are generated and stored securely
 
 ---

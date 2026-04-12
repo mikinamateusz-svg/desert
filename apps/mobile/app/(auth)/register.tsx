@@ -8,6 +8,8 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  Linking,
+  ScrollView,
 } from 'react-native';
 import { Link, useRouter, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -33,8 +35,12 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [acceptedWithdrawal, setAcceptedWithdrawal] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const consentsValid = acceptedTerms && acceptedWithdrawal;
 
   function handleGoogleError(code: string) {
     if (code === 'SOCIAL_EMAIL_CONFLICT') {
@@ -51,6 +57,10 @@ export default function RegisterScreen() {
   }
 
   async function handleRegister() {
+    if (!consentsValid) {
+      setError(t('auth.register.consentRequired'));
+      return;
+    }
     setError(null);
     setIsSubmitting(true);
     try {
@@ -74,6 +84,11 @@ export default function RegisterScreen() {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
       <View style={styles.logoRow}>
         <LitroLogo size={36} />
       </View>
@@ -103,10 +118,50 @@ export default function RegisterScreen() {
         onChangeText={setPassword}
       />
 
+      {/* Consent checkboxes */}
+      <TouchableOpacity
+        style={styles.checkboxRow}
+        onPress={() => setAcceptedTerms(v => !v)}
+        activeOpacity={0.7}
+      >
+        <View style={[styles.checkbox, acceptedTerms && styles.checkboxChecked]}>
+          {acceptedTerms && <Text style={styles.checkmark}>✓</Text>}
+        </View>
+        <Text style={styles.checkboxLabel}>
+          {t('auth.register.acceptTermsPrefix')}
+          <Text
+            style={styles.checkboxLink}
+            onPress={() => Linking.openURL('https://litro.pl/regulamin')}
+          >
+            {t('auth.register.termsLink')}
+          </Text>
+          {t('auth.register.andWord')}
+          <Text
+            style={styles.checkboxLink}
+            onPress={() => Linking.openURL('https://litro.pl/polityka-prywatnosci')}
+          >
+            {t('auth.register.privacyLink')}
+          </Text>
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.checkboxRow}
+        onPress={() => setAcceptedWithdrawal(v => !v)}
+        activeOpacity={0.7}
+      >
+        <View style={[styles.checkbox, acceptedWithdrawal && styles.checkboxChecked]}>
+          {acceptedWithdrawal && <Text style={styles.checkmark}>✓</Text>}
+        </View>
+        <Text style={styles.checkboxLabel}>
+          {t('auth.register.acceptWithdrawal')}
+        </Text>
+      </TouchableOpacity>
+
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <TouchableOpacity
-        style={[styles.button, isSubmitting && styles.buttonDisabled]}
+        style={[styles.button, (isSubmitting || !consentsValid) && styles.buttonDisabled]}
         onPress={handleRegister}
         disabled={isSubmitting}
       >
@@ -125,6 +180,7 @@ export default function RegisterScreen() {
       <Link href="/(auth)/login" style={styles.link}>
         {t('auth.register.loginLink')}
       </Link>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
@@ -132,9 +188,13 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: tokens.surface.page,
+  },
+  scrollContent: {
+    flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
-    backgroundColor: tokens.surface.page,
+    paddingVertical: 32,
   },
   logoRow: {
     alignItems: 'center',
@@ -187,5 +247,43 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: tokens.brand.accent,
     fontSize: 14,
+  },
+  checkboxRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+    gap: 10,
+  },
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderRadius: 4,
+    borderWidth: 1.5,
+    borderColor: tokens.neutral.n200,
+    backgroundColor: tokens.surface.card,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 1,
+    flexShrink: 0,
+  },
+  checkboxChecked: {
+    backgroundColor: tokens.brand.ink,
+    borderColor: tokens.brand.ink,
+  },
+  checkmark: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '700' as const,
+    lineHeight: 18,
+  },
+  checkboxLabel: {
+    flex: 1,
+    fontSize: 13,
+    color: tokens.brand.ink,
+    lineHeight: 18,
+  },
+  checkboxLink: {
+    color: tokens.brand.accent,
+    textDecorationLine: 'underline' as const,
   },
 });

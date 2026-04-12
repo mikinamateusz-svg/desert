@@ -5,14 +5,9 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
-import * as WebBrowser from 'expo-web-browser';
-import * as Google from 'expo-auth-session/providers/google';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../store/auth.store';
 import { ApiError } from '../api/auth';
-
-// Must be called at module level — completes the OAuth session on redirect back to app
-WebBrowser.maybeCompleteAuthSession();
 
 interface Props {
   onError?: (code: string) => void;
@@ -22,12 +17,29 @@ const GOOGLE_CONFIGURED =
   !!process.env['EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID'] &&
   process.env['EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID'] !== 'xxxx.apps.googleusercontent.com';
 
-export function GoogleSignInButton({ onError }: Props) {
+// Lazy-loaded native modules — only imported when Google is actually configured.
+// Importing expo-auth-session / expo-web-browser at module scope crashes on some
+// Android devices (notably Xiaomi) even if the components are never rendered.
+let Google: typeof import('expo-auth-session/providers/google') | null = null;
+if (GOOGLE_CONFIGURED) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const WebBrowser = require('expo-web-browser') as typeof import('expo-web-browser');
+  WebBrowser.maybeCompleteAuthSession();
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  Google = require('expo-auth-session/providers/google') as typeof import('expo-auth-session/providers/google');
+}
+
+// Stub component when Google is not configured — avoids loading native modules entirely
+function GoogleSignInButtonDisabled() {
+  return null;
+}
+
+function GoogleSignInButtonEnabled({ onError }: Props) {
   const { t } = useTranslation();
   const auth = useAuth();
   const [loading, setLoading] = useState(false);
 
-  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+  const [request, response, promptAsync] = Google!.useIdTokenAuthRequest({
     clientId: process.env['EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID'],
     androidClientId: process.env['EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID'],
     iosClientId: process.env['EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID'],
@@ -49,8 +61,6 @@ export function GoogleSignInButton({ onError }: Props) {
       .finally(() => setLoading(false));
   }, [response, auth]);
 
-  if (!GOOGLE_CONFIGURED) return null;
-
   return (
     <TouchableOpacity
       style={[styles.button, (!request || loading) && styles.buttonDisabled]}
@@ -67,6 +77,10 @@ export function GoogleSignInButton({ onError }: Props) {
     </TouchableOpacity>
   );
 }
+
+export const GoogleSignInButton = GOOGLE_CONFIGURED
+  ? GoogleSignInButtonEnabled
+  : GoogleSignInButtonDisabled;
 
 const styles = StyleSheet.create({
   button: {

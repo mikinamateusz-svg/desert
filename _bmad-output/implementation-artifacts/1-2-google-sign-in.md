@@ -44,8 +44,8 @@ so that I can get started without creating a new password.
     | Type | Redirect URI / Identifier |
     |---|---|
     | Web application | `https://auth.expo.io` as Authorized Redirect URI |
-    | Android | SHA-1 fingerprint of debug keystore + `com.desert.app` package |
-    | iOS | `com.desert.app` bundle ID |
+    | Android | SHA-1 fingerprint of debug keystore + `com.litro.app` package |
+    | iOS | `com.litro.app` bundle ID |
 
   - For Android debug SHA-1: run `keytool -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore -storepass android`
   - Note all three Client IDs
@@ -599,7 +599,7 @@ jest.mock('supertokens-node/recipe/thirdparty/index.js', () => ({
 - [Source: ux-design-specification.md — Journey 3 First Open, Journey 4 Sign-Up at First Contribution]
 - [Source: apps/api/src/auth/auth.service.ts — existing register/login patterns to follow]
 - [Source: apps/api/src/auth/supertokens.ts — initSuperTokens to update]
-- [Source: apps/mobile/app.json — scheme: "desert", bundleIdentifier: "com.desert.app", package: "com.desert.app"]
+- [Source: apps/mobile/app.json — scheme: "desert", bundleIdentifier: "com.litro.app", package: "com.litro.app"]
 
 ## Dev Agent Record
 

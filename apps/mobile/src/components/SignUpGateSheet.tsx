@@ -30,7 +30,7 @@ export function SignUpGateSheet({ visible, onDismiss }: Props) {
 
   function handleUseEmail() {
     onDismiss();
-    router.push('/(auth)/register');
+    router.replace('/(auth)/register');
   }
 
   function handleSocialError(code: string) {

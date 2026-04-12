@@ -43,7 +43,7 @@ so that I can get started privately without sharing my email if I choose not to.
 
 - [ ] **HUMAN TASK**: Enable Sign in with Apple on App ID
   - Go to [developer.apple.com](https://developer.apple.com) → Certificates, Identifiers & Profiles → Identifiers
-  - Find your App ID matching `com.desert.app` (or create it)
+  - Find your App ID matching `com.litro.app` (or create it)
   - Edit → enable **Sign in with Apple** capability → Save
   - This is all that's needed for the native iOS flow — no Service ID required
 
@@ -152,7 +152,7 @@ Apple's identity token (`identityToken`) always contains the `email` claim (the 
 
 ### CRITICAL: Cannot Test in Expo Go
 
-In Expo Go, Apple's identity token has `aud: "host.exp.Exponent"` (Expo's bundle ID), not `com.desert.app`. Backend verification will fail because the audience doesn't match. **Apple Sign-In must be tested on a development build or TestFlight.** This is expected and not a bug.
+In Expo Go, Apple's identity token has `aud: "host.exp.Exponent"` (Expo's bundle ID), not `com.litro.app`. Backend verification will fail because the audience doesn't match. **Apple Sign-In must be tested on a development build or TestFlight.** This is expected and not a bug.
 
 For local development without a dev build, unit tests are the primary verification path.
 
@@ -165,7 +165,7 @@ For local development without a dev build, unit tests are the primary verificati
   "expo": {
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.desert.app",
+      "bundleIdentifier": "com.litro.app",
       "usesAppleSignIn": true
     }
   }
@@ -209,7 +209,7 @@ async appleSignIn(
   let applePayload: { sub: string; email?: string };
   try {
     applePayload = await appleSignin.verifyIdToken(identityToken, {
-      audience: process.env['APPLE_APP_BUNDLE_ID'] ?? 'com.desert.app',
+      audience: process.env['APPLE_APP_BUNDLE_ID'] ?? 'com.litro.app',
       ignoreExpiration: false,
     }) as { sub: string; email?: string };
   } catch {
@@ -444,10 +444,10 @@ appleEmailMissing: 'Ваш акаунт Apple не має email-адреси. С
 Add to `apps/api/.env.example`:
 ```
 # Apple Sign-In (for token audience verification — Story 1.3)
-APPLE_APP_BUNDLE_ID=com.desert.app
+APPLE_APP_BUNDLE_ID=com.litro.app
 ```
 
-Add `APPLE_APP_BUNDLE_ID=com.desert.app` to Railway Variables.
+Add `APPLE_APP_BUNDLE_ID=com.litro.app` to Railway Variables.
 
 Note: `apple-signin-auth` only needs the bundle ID for audience validation — no Apple private key or Team ID required for token verification.
 
@@ -525,7 +525,7 @@ mockVerifyAppleToken.mockRejectedValueOnce(new Error('bad token'));
 - [Source: architecture.md — Decision 3: Authentication & RBAC]
 - [Source: apps/api/src/auth/auth.service.ts — googleSignIn() pattern to follow]
 - [Source: apps/mobile/src/components/GoogleSignInButton.tsx — pattern reference]
-- [Source: apps/mobile/app.json — scheme: "desert", bundleIdentifier: "com.desert.app"]
+- [Source: apps/mobile/app.json — scheme: "desert", bundleIdentifier: "com.litro.app"]
 
 ## Dev Agent Record
 
@@ -549,7 +549,7 @@ _To be filled by dev agent during implementation_
 ### P-3 Applied — AppleAuthDto.identityToken missing @MaxLength
 `apps/api/src/auth/dto/apple-auth.dto.ts`: Added `@MaxLength(2048)` to `identityToken`, matching the same guard applied to `GoogleAuthDto` in Story 1.2 review. `MaxLength` was already imported for `FullNameDto` fields.
 
-**Note:** Several higher-severity issues were already fixed in commit `8689ebb` prior to this review (hardcoded `com.desert.app` fallback removed, P2002 guard added, `identityToken` null → `onError` call, `@MaxLength` on fullName fields, user field leak fixed in 1.1 review).
+**Note:** Several higher-severity issues were already fixed in commit `8689ebb` prior to this review (hardcoded `com.litro.app` fallback removed, P2002 guard added, `identityToken` null → `onError` call, `@MaxLength` on fullName fields, user field leak fixed in 1.1 review).
 
 ## Review Deferred Items (2026-04-04)
 

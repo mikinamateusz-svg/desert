@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   TouchableOpacity,
   Text,
@@ -13,23 +13,22 @@ interface Props {
   onError?: (code: string) => void;
 }
 
-const GOOGLE_CONFIGURED =
-  !!process.env['EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID'] &&
-  process.env['EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID'] !== 'xxxx.apps.googleusercontent.com';
+const GOOGLE_WEB_CLIENT_ID = process.env['EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID'];
 
-// Lazy-loaded native modules — only imported when Google is actually configured.
-// Importing expo-auth-session / expo-web-browser at module scope crashes on some
-// Android devices (notably Xiaomi) even if the components are never rendered.
-let Google: typeof import('expo-auth-session/providers/google') | null = null;
+const GOOGLE_CONFIGURED =
+  !!GOOGLE_WEB_CLIENT_ID &&
+  GOOGLE_WEB_CLIENT_ID !== 'xxxx.apps.googleusercontent.com';
+
+// Native Google Sign-In SDK — lazy-loaded to avoid crashes on devices
+// where the module initialisation fails when Google is not configured.
+let GoogleSignin: typeof import('@react-native-google-signin/google-signin').GoogleSignin | null = null;
 if (GOOGLE_CONFIGURED) {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const WebBrowser = require('expo-web-browser') as typeof import('expo-web-browser');
-  WebBrowser.maybeCompleteAuthSession();
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  Google = require('expo-auth-session/providers/google') as typeof import('expo-auth-session/providers/google');
+  const mod = require('@react-native-google-signin/google-signin') as typeof import('@react-native-google-signin/google-signin');
+  GoogleSignin = mod.GoogleSignin;
+  GoogleSignin.configure({ webClientId: GOOGLE_WEB_CLIENT_ID });
 }
 
-// Stub component when Google is not configured — avoids loading native modules entirely
 function GoogleSignInButtonDisabled() {
   return null;
 }
@@ -39,35 +38,38 @@ function GoogleSignInButtonEnabled({ onError }: Props) {
   const auth = useAuth();
   const [loading, setLoading] = useState(false);
 
-  // expo-auth-session uses browser-based OAuth (Chrome Custom Tab).
-  // In standalone builds, the default redirectUri is a custom scheme (desert://)
-  // which Google's web client rejects. Force the Expo auth proxy HTTPS URI.
-  const [request, response, promptAsync] = Google!.useIdTokenAuthRequest({
-    clientId: process.env['EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID'],
-    redirectUri: 'https://auth.expo.io/@mmikina/desert',
-  });
-
-  useEffect(() => {
-    if (response?.type !== 'success') return;
-    const idToken = response.params['id_token'];
-    if (!idToken) return;
-
+  async function handlePress() {
     setLoading(true);
-    auth
-      .googleSignIn(idToken)
-      .catch((err: unknown) => {
-        const code =
-          err instanceof ApiError ? err.error : 'UNKNOWN_ERROR';
-        onError?.(code);
-      })
-      .finally(() => setLoading(false));
-  }, [response, auth]);
+    try {
+      await GoogleSignin!.hasPlayServices();
+      const response = await GoogleSignin!.signIn();
+
+      if (response.type === 'cancelled') {
+        setLoading(false);
+        return;
+      }
+
+      const idToken = response.data?.idToken;
+      if (!idToken) {
+        onError?.('GOOGLE_EMAIL_MISSING');
+        setLoading(false);
+        return;
+      }
+
+      await auth.googleSignIn(idToken);
+    } catch (err: unknown) {
+      const code = err instanceof ApiError ? err.error : 'UNKNOWN_ERROR';
+      onError?.(code);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <TouchableOpacity
-      style={[styles.button, (!request || loading) && styles.buttonDisabled]}
-      disabled={!request || loading}
-      onPress={() => promptAsync()}
+      style={[styles.button, loading && styles.buttonDisabled]}
+      disabled={loading}
+      onPress={handlePress}
     >
       {loading ? (
         <ActivityIndicator color="#1a73e8" />

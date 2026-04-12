@@ -75,7 +75,13 @@ jobs:
           path: apps/web/playwright-report/
           retention-days: 7
 
+  # e2e-mobile: disabled — Detox requires native instrumentation not present in Expo dev builds.
+  # Test files in apps/mobile/e2e/ are ready for when EAS Build + Maestro Cloud is set up.
+  # e2e-mobile:
+  #   needs: ci
+  #   runs-on: ubuntu-latest
   e2e-mobile:
+    if: false  # disabled until Expo/Detox instrumentation is resolved
     needs: ci
     runs-on: ubuntu-latest
     steps:

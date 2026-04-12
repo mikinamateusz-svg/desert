@@ -103,6 +103,10 @@ jobs:
         run: npx expo prebuild --platform android --no-install
         working-directory: apps/mobile
 
+      - name: Increase Gradle heap for native build
+        run: echo "org.gradle.jvmargs=-Xmx4g" >> android/gradle.properties
+        working-directory: apps/mobile
+
       - name: Build debug APK + test APK
         run: cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug --no-daemon
         working-directory: apps/mobile

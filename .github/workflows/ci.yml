@@ -136,9 +136,8 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           disable-animations: true
-          script: |
-            cd apps/mobile
-            npx detox test --configuration android.emu.debug --headless
+          working-directory: apps/mobile
+          script: npx detox test --configuration android.emu.debug --headless
 
   deploy:
     needs: ci

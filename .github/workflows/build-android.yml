@@ -48,8 +48,8 @@ jobs:
         run: echo "org.gradle.jvmargs=-Xmx4g" >> android/gradle.properties
         working-directory: apps/mobile
 
-      - name: Build release APK
-        run: cd android && ./gradlew assembleRelease -x lint -x test --no-daemon --configure-on-demand --build-cache
+      - name: Build debug APK
+        run: cd android && ./gradlew assembleDebug -x lint -x test --no-daemon --configure-on-demand --build-cache
         working-directory: apps/mobile
         env:
           ANDROID_HOME: /usr/local/lib/android/sdk
@@ -58,5 +58,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: litro-android-${{ github.sha }}
-          path: apps/mobile/android/app/build/outputs/apk/release/*.apk
+          path: apps/mobile/android/app/build/outputs/apk/debug/*.apk
           retention-days: 30

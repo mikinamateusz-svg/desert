@@ -107,13 +107,13 @@ Na podstawie RODO przysluguja Ci nastepujace prawa:
 
 | Prawo | Opis | Jak skorzystac |
 |---|---|---|
-| **Dostep** (art. 15) | Mozesz dowiedziec sie, jakie dane o Tobie przetwarzamy | Eksport danych w aplikacji (Konto → Eksportuj dane) |
+| **Dostep** (art. 15) | Mozesz dowiedziec sie, jakie dane o Tobie przetwarzamy | Eksport danych w aplikacji w aplikacji |
 | **Sprostowanie** (art. 16) | Mozesz poprawic nieprawidlowe dane | Edycja profilu w aplikacji lub kontakt: privacy@litro.pl |
-| **Usuniecie** (art. 17) | Mozesz zadac usuniecia swoich danych | Usuniecie konta w aplikacji (Konto → Usun konto) |
+| **Usuniecie** (art. 17) | Mozesz zadac usuniecia swoich danych | Usuniecie konta w aplikacji w aplikacji |
 | **Ograniczenie** (art. 18) | Mozesz zadac ograniczenia przetwarzania | Kontakt: privacy@litro.pl |
 | **Przenoszenie** (art. 20) | Mozesz pobrac swoje dane w formacie elektronicznym | Eksport danych w aplikacji |
 | **Sprzeciw** (art. 21) | Mozesz wniesc sprzeciw wobec przetwarzania na podst. uzasadnionego interesu | Kontakt: privacy@litro.pl |
-| **Cofniecie zgody** | Mozesz cofnac zgode w kazdym momencie (bez wplywu na zgodnosc z prawem przetwarzania dokonanego przed cofnieciem) | Ustawienia powiadomien w aplikacji lub Konto → Zgody |
+| **Cofniecie zgody** | Mozesz cofnac zgode w kazdym momencie (bez wplywu na zgodnosc z prawem przetwarzania dokonanego przed cofnieciem) | Ustawienia w aplikacji |
 
 ### Skarga do organu nadzorczego
 

@@ -94,7 +94,7 @@
 - szacunkow opartych na danych rynkowych (ceny hurtowe ORLEN, historyczne trendy);
 - danych administracyjnych (korekty operatorow).
 
-7.3. Litro wyraznie rozroznia ceny zweryfikowane przez spolecznosc od cen szacunkowych (oznaczonych przedrostkiem „~").
+7.3. Litro wyraznie rozroznia ceny zweryfikowane przez spolecznosc od cen szacunkowych.
 
 7.4. Uslugodawca nie ponosi odpowiedzialnosci za:
 - decyzje podjete na podstawie cen wyswietlanych w Usludze;
@@ -111,7 +111,7 @@
 
 8.2. Rejestrujac sie w Usludze, Uzytkownik wyra za zgode na natychmiastowe rozpoczecie swiadczenia Uslugi i przyjmuje do wiadomosci, ze po rozpoczeciu korzystania z Uslugi traci prawo do odstapienia od umowy w zakresie juz swiadczonych uslug.
 
-8.3. Aby odstapic od umowy, wystarczy usunac konto w aplikacji (Konto → Usun konto) lub wyslac oswiadczenie na adres: contact@litro.pl.
+8.3. Aby odstapic od umowy, wystarczy usunac konto w aplikacji lub wyslac oswiadczenie na adres: contact@litro.pl.
 
 ---
 

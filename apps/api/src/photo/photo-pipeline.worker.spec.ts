@@ -232,7 +232,7 @@ describe('PhotoPipelineWorker', () => {
     // OcrSpendService — default: spend well below cap, no pausing
     mockOcrSpendService.computeCostUsd.mockReturnValue(0.001);
     mockOcrSpendService.recordSpend.mockResolvedValue(0.5);
-    mockOcrSpendService.getSpendCap.mockReturnValue(20);
+    mockOcrSpendService.getSpendCap.mockResolvedValue(20);
 
     // SubmissionDedupService — default: no duplicates, recording succeeds
     mockSubmissionDedupService.checkStationDedup.mockResolvedValue(false);
@@ -1711,7 +1711,7 @@ describe('PhotoPipelineWorker', () => {
         mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
         mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
         mockOcrSpendService.recordSpend.mockResolvedValueOnce(20.001); // at cap
-        mockOcrSpendService.getSpendCap.mockReturnValue(20);
+        mockOcrSpendService.getSpendCap.mockResolvedValue(20);
 
         await capturedProcessor!(makeJob('sub-123'));
 
@@ -1722,7 +1722,7 @@ describe('PhotoPipelineWorker', () => {
         mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
         mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
         mockOcrSpendService.recordSpend.mockResolvedValueOnce(20.5);
-        mockOcrSpendService.getSpendCap.mockReturnValue(20);
+        mockOcrSpendService.getSpendCap.mockResolvedValue(20);
         const errorSpy = jest.spyOn(worker['logger'], 'error');
 
         await capturedProcessor!(makeJob('sub-123'));
@@ -1737,7 +1737,7 @@ describe('PhotoPipelineWorker', () => {
         mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
         mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
         mockOcrSpendService.recordSpend.mockResolvedValueOnce(5.0);
-        mockOcrSpendService.getSpendCap.mockReturnValue(20);
+        mockOcrSpendService.getSpendCap.mockResolvedValue(20);
 
         await capturedProcessor!(makeJob('sub-123'));
 
@@ -1749,7 +1749,7 @@ describe('PhotoPipelineWorker', () => {
         mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
         mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
         mockOcrSpendService.recordSpend.mockResolvedValueOnce(21.0);
-        mockOcrSpendService.getSpendCap.mockReturnValue(20);
+        mockOcrSpendService.getSpendCap.mockResolvedValue(20);
         await capturedProcessor!(makeJob('sub-123'));
 
         expect(mockWorkerPause).toHaveBeenCalledTimes(1);
@@ -1771,7 +1771,7 @@ describe('PhotoPipelineWorker', () => {
         mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
         mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
         mockOcrSpendService.recordSpend.mockResolvedValueOnce(21.0);
-        mockOcrSpendService.getSpendCap.mockReturnValue(20);
+        mockOcrSpendService.getSpendCap.mockResolvedValue(20);
         await capturedProcessor!(makeJob('sub-123'));
         expect(mockWorkerPause).toHaveBeenCalledTimes(1);
 

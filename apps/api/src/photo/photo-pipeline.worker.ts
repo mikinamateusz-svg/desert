@@ -739,7 +739,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
    * Idempotent — only pauses once per cap breach.
    */
   private async checkSpendCap(dailySpend: number): Promise<void> {
-    const cap = this.ocrSpendService.getSpendCap();
+    const cap = await this.ocrSpendService.getSpendCap();
     if (dailySpend >= cap && !this.pausedForSpendCap) {
       this.pausedForSpendCap = true;
       await this.worker.pause().catch((e: Error) =>

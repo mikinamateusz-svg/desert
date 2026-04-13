@@ -13,6 +13,6 @@ import { UserModule } from '../user/user.module.js';
 @Module({
   imports: [StationModule, StorageModule, OcrModule, LogoModule, PriceModule, RedisModule, UserModule],
   providers: [PhotoPipelineWorker, OcrSpendService, SubmissionDedupService],
-  exports: [PhotoPipelineWorker, SubmissionDedupService],
+  exports: [PhotoPipelineWorker, SubmissionDedupService, OcrSpendService],
 })
 export class PhotoModule {}

@@ -133,12 +133,12 @@ describe('OcrSpendService', () => {
         ],
       }).compile();
       const svc = module.get<OcrSpendService>(OcrSpendService);
-      expect(svc.getSpendCap()).toBe(50);
+      expect(await svc.getSpendCap()).toBe(50);
     });
 
-    it('defaults to $20 when MAX_DAILY_OCR_SPEND_USD is not set', () => {
+    it('defaults to $20 when MAX_DAILY_OCR_SPEND_USD is not set', async () => {
       // ConfigService.get returns the default value ('20') when key not configured
-      expect(service.getSpendCap()).toBe(20);
+      expect(await service.getSpendCap()).toBe(20);
     });
 
     it('returns $20 default when MAX_DAILY_OCR_SPEND_USD is a non-numeric string (P-1)', async () => {
@@ -153,7 +153,7 @@ describe('OcrSpendService', () => {
         ],
       }).compile();
       const svc = module.get<OcrSpendService>(OcrSpendService);
-      expect(svc.getSpendCap()).toBe(20);
+      expect(await svc.getSpendCap()).toBe(20);
     });
 
     it('returns $20 default when MAX_DAILY_OCR_SPEND_USD is "$20" with dollar sign (P-1)', async () => {
@@ -169,7 +169,7 @@ describe('OcrSpendService', () => {
       }).compile();
       const svc = module.get<OcrSpendService>(OcrSpendService);
       // parseFloat('$20') = NaN → fallback to 20
-      expect(svc.getSpendCap()).toBe(20);
+      expect(await svc.getSpendCap()).toBe(20);
     });
   });
 });

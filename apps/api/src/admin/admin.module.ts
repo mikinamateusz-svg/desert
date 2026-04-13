@@ -10,6 +10,7 @@ import { AdminStationsService } from './admin-stations.service.js';
 import { AdminStationsController } from './admin-stations.controller.js';
 import { AdminMetricsService } from './admin-metrics.service.js';
 import { AdminMetricsController } from './admin-metrics.controller.js';
+import { AdminOcrSpendController } from './admin-ocr-spend.controller.js';
 import { PrismaModule } from '../prisma/prisma.module.js';
 import { PriceModule } from '../price/price.module.js';
 import { StorageModule } from '../storage/storage.module.js';
@@ -19,7 +20,7 @@ import { MetricsModule } from '../metrics/metrics.module.js';
 
 @Module({
   imports: [PrismaModule, PriceModule, StorageModule, UserModule, PhotoModule, MetricsModule],
-  controllers: [AdminSubmissionsController, AdminUsersController, AdminDlqController, AdminStationsController, AdminMetricsController],
+  controllers: [AdminSubmissionsController, AdminUsersController, AdminDlqController, AdminStationsController, AdminMetricsController, AdminOcrSpendController],
   providers: [AdminSubmissionsService, AdminUsersService, AnomalyDetectionService, AdminDlqService, AdminStationsService, AdminMetricsService],
 })
 export class AdminModule {}

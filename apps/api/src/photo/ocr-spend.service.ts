@@ -43,11 +43,27 @@ export class OcrSpendService {
     return val ? parseFloat(val) : 0;
   }
 
-  /** Returns the configured daily spend cap in USD (default: $20). */
-  getSpendCap(): number {
+  /** Returns the active daily spend cap in USD. Redis override (24h TTL) takes precedence over env var. */
+  async getSpendCap(): Promise<number> {
+    const override = await this.redis.get('ocr:spend-cap:override').catch(() => null);
+    if (override !== null) {
+      const val = parseFloat(override);
+      if (!isNaN(val) && val > 0) return val;
+    }
     const raw = this.config.get<string>('MAX_DAILY_OCR_SPEND_USD', '20');
     const cap = parseFloat(raw);
     return isNaN(cap) ? 20 : cap;
+  }
+
+  /** Override the daily spend cap for 24h. Set to null to clear the override. */
+  async setSpendCapOverride(capUsd: number | null): Promise<void> {
+    if (capUsd === null) {
+      await this.redis.del('ocr:spend-cap:override');
+      this.logger.log('OCR spend cap override cleared — using env var default');
+    } else {
+      await this.redis.set('ocr:spend-cap:override', capUsd.toString(), 'EX', 24 * 3600);
+      this.logger.log(`OCR spend cap overridden to $${capUsd} for 24h`);
+    }
   }
 
   private getSpendKey(): string {

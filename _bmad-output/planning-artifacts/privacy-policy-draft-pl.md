@@ -48,7 +48,7 @@ Litro to aplikacja mobilna i serwis internetowy do porownywania cen paliw na sta
 
 ## 4. Zdjecia i przetwarzanie OCR
 
-Zdjecia tablic cenowych sa przetwarzane przez sztuczna inteligencje wylacznie w celu odczytania cen paliw. System nie rozpoznaje osob, pojazdow ani tablic rejestracyjnych. Wspolrzedne GPS sa usuwane z bazy po dopasowaniu stacji. Zdjecia sa przechowywane na serwerze w regionie UE do celow audytu.
+Zdjecia tablic cenowych sa przetwarzane przez sztuczna inteligencje wylacznie w celu odczytania cen paliw. System nie rozpoznaje osob, pojazdow ani tablic rejestracyjnych. Wspolrzedne GPS sa usuwane z bazy po dopasowaniu stacji. Zdjecia sa przechowywane na serwerze w regionie UE przez 30 dni do celow audytu, a nastepnie automatycznie usuwane.
 
 ---
 
@@ -93,7 +93,7 @@ Tam, gdzie to mozliwe, wybieramy regiony UE dla przechowywania danych (Neon — 
 |---|---|
 | **Dane konta** | do momentu usuniec ia konta, a nastepnie zanonimizowane |
 | **Zgloszenia cen** | bezterminowo (zanonimizowane po usunieciu konta) |
-| **Zdjecia tablic** | bezterminowo (do celow audytu i moderacji) |
+| **Zdjecia tablic** | 30 dni od przeslania, nastepnie automatycznie usuwane |
 | **Wspolrzedne GPS ze zgloszen** | usuwane natychmiast po dopasowaniu stacji |
 | **Token push** | do momentu wyrejestrowania tokenu lub usuniecai konta |
 | **Preferencje powiadomien** | do momentu zmiany lub usuniecia konta |

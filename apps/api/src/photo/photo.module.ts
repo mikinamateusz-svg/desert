@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PhotoPipelineWorker } from './photo-pipeline.worker.js';
+import { PhotoCleanupWorker } from './photo-cleanup.worker.js';
 import { OcrSpendService } from './ocr-spend.service.js';
 import { SubmissionDedupService } from './submission-dedup.service.js';
 import { StationModule } from '../station/station.module.js';
@@ -12,7 +13,7 @@ import { UserModule } from '../user/user.module.js';
 
 @Module({
   imports: [StationModule, StorageModule, OcrModule, LogoModule, PriceModule, RedisModule, UserModule],
-  providers: [PhotoPipelineWorker, OcrSpendService, SubmissionDedupService],
+  providers: [PhotoPipelineWorker, PhotoCleanupWorker, OcrSpendService, SubmissionDedupService],
   exports: [PhotoPipelineWorker, SubmissionDedupService, OcrSpendService],
 })
 export class PhotoModule {}

@@ -1,110 +1,137 @@
-# Ocena Skutkow dla Ochrony Danych (DPIA)
-## Litro — aplikacja do porownywania cen paliw
+# Ocena Skutków dla Ochrony Danych (DPIA)
+## Litro — aplikacja do porównywania cen paliw
 
-*Data sporzadzenia: [DATA]*
+*Data sporządzenia: [DATA]*
 *Administrator: Mateusz Mikina*
 *IOD: privacy@litro.pl*
 
-Niniejsza ocena jest sporzadzona zgodnie z art. 35 RODO.
+Niniejsza ocena jest sporządzona zgodnie z art. 35 RODO. Inspektor Ochrony Danych został skonsultowany zgodnie z art. 35(2) RODO.
 
 ---
 
 ## 1. Opis przetwarzania
 
-### 1.1 Charakter uslugi
-Litro to aplikacja mobilna i serwis WWW do porownywania cen paliw na stacjach w Polsce. Uzytkownicy moga przegladac ceny na mapie oraz dobrowolnie przesylac zdjecia tablic cenowych, ktore sa przetwarzane przez sztuczna inteligencje (OCR) w celu automatycznego odczytania cen.
+### 1.1 Charakter usługi
+Litro to aplikacja mobilna i serwis WWW do porównywania cen paliw na stacjach w Polsce. Użytkownicy mogą przeglądać ceny na mapie oraz dobrowolnie przesyłać zdjęcia tablic cenowych, które są przetwarzane przez sztuczną inteligencję (OCR) w celu automatycznego odczytania cen.
 
-### 1.2 Kategorie danych osobowych
+### 1.2 Skala przetwarzania
+- Szacunkowa liczba użytkowników na starcie: do 1 000
+- Szacunkowa liczba zgłoszeń dziennie: do 100
+- Zasięg geograficzny: Polska (region łódzki na starcie)
 
-| Dane | Zrodlo | Okres przechowywania |
+### 1.3 Kategorie danych osobowych
+
+| Dane | Źródło | Okres przechowywania |
 |---|---|---|
-| E-mail, nazwa wyswietlana | rejestracja | do usuniecia konta |
-| Wspolrzedne GPS | urzadzenie uzytkownika | usuwane po dopasowaniu stacji |
-| Zdjecia tablic cenowych | aparat uzytkownika | 30 dni, potem usuwane |
-| Token push (Expo) | urzadzenie | do wyrejestrowania |
-| Preferencje paliwa, historia zgloszen | aktywnosc w aplikacji | do usuniecia konta |
+| E-mail, nazwa wyświetlana | rejestracja | do usunięcia konta |
+| Współrzędne GPS | urządzenie użytkownika | usuwane po przetworzeniu zgłoszenia |
+| Zdjęcia tablic cenowych | aparat użytkownika | 30 dni, potem usuwane |
+| Token push (Expo) | urządzenie | do wyrejestrowania |
+| Preferencje paliwa, historia zgłoszeń | aktywność w aplikacji | do usunięcia konta |
+| Wskaźnik zaufania (trust score) | obliczany przez system | do usunięcia konta |
+| Status shadow ban | decyzja systemu/administratora | do usunięcia konta |
 
-### 1.3 Kategorie osob, ktorych dane dotycza
-- Kierowcy (uzytkownicy aplikacji) — osoby fizyczne, 16+
-- Osoby trzecie przypadkowo uchwycone na zdjeciach (twarze, tablice rejestracyjne) — dane NIE sa wyodrebniane ani przechowywane
+### 1.4 Kategorie osób, których dane dotyczą
+- Kierowcy (użytkownicy aplikacji) — osoby fizyczne, 16+
+- Osoby trzecie przypadkowo uchwycone na zdjęciach (twarze, tablice rejestracyjne) — dane NIE są wyodrębniane ani przechowywane
 
-### 1.4 Odbiorcy danych
-Podmioty przetwarzajace wymienione w Polityce Prywatnosci sekcja 6 (Anthropic, Cloudflare, Railway, Vercel, Neon, Upstash, Expo, Google, Apple). Transfery poza EOG zabezpieczone SCC.
+### 1.5 Odbiorcy danych
+Podmioty przetwarzające wymienione w Polityce Prywatności sekcja 6 (Anthropic, Cloudflare, Railway, Vercel, Neon, Upstash, Expo, Google, Apple). Transfery poza EOG zabezpieczone SCC.
 
 ---
 
-## 2. Ocena koniecznosci i proporcjonalnosci
+## 2. Ocena konieczności i proporcjonalności
 
-| Pytanie | Odpowiedz |
+| Pytanie | Odpowiedź |
 |---|---|
-| Czy przetwarzanie jest konieczne do celu? | Tak — GPS jest niezbedny do wyswietlenia najblizszych stacji; zdjecia sa jedynym sposobem na masowe pozyskiwanie cen od uzytkownikow. |
-| Czy mozna osiagnac cel mniejsza iloscia danych? | GPS jest usuwany natychmiast po dopasowaniu stacji. Zdjecia usuwane po 30 dniach. Zakres danych jest minimalny. |
-| Jaka jest podstawa prawna? | Konto i mapa: art. 6(1)(b) umowa. Zdjecia OCR i powiadomienia: art. 6(1)(a) zgoda. Bezpieczenstwo: art. 6(1)(f) uzasadniony interes. |
-| Czy osoby, ktorych dane dotycza, sa informowane? | Tak — Polityka Prywatnosci dostepna przy rejestracji (obowiazkowy checkbox) i pod adresem litro.pl/polityka-prywatnosci. |
-| Jak realizowane sa prawa osob? | Eksport danych, usuniecie konta, cofniecie zgody — dostepne w aplikacji. Sprzeciw i ograniczenie — przez e-mail do IOD. |
+| Czy przetwarzanie jest konieczne do celu? | Tak — GPS jest niezbędny do wyświetlenia najbliższych stacji; zdjęcia są jedynym sposobem na masowe pozyskiwanie cen od użytkowników. |
+| Czy można osiągnąć cel mniejszą ilością danych? | GPS jest usuwany po przetworzeniu zgłoszenia. Zdjęcia usuwane po 30 dniach. Zakres danych jest minimalny. |
+| Jaka jest podstawa prawna? | Konto i mapa: art. 6(1)(b) umowa. Zdjęcia OCR i powiadomienia: art. 6(1)(a) zgoda. Bezpieczeństwo: art. 6(1)(f) uzasadniony interes. |
+| Czy osoby, których dane dotyczą, są informowane? | Tak — Polityka Prywatności dostępna przy rejestracji (obowiązkowy checkbox) i pod adresem litro.pl/polityka-prywatnosci. |
+| Jak realizowane są prawa osób? | Eksport danych, usunięcie konta, cofnięcie zgody — dostępne w aplikacji. Sprzeciw i ograniczenie — przez e-mail do IOD. |
 
 ---
 
 ## 3. Ocena ryzyka
 
-### 3.1 Ryzyko: Nieuprawniony dostep do danych lokalizacyjnych
+### 3.1 Ryzyko: Nieuprawniony dostęp do danych lokalizacyjnych
 
 | | |
 |---|---|
-| **Prawdopodobienstwo** | Niskie |
-| **Skutek** | Sredni (ujawnienie wzorcow przemieszczania sie) |
-| **Srodki zaradcze** | GPS usuwany z bazy natychmiast po dopasowaniu stacji. Transmisja szyfrowana (TLS). Kontrola dostepu (RBAC). Dane lokalizacyjne nie sa przechowywane dluzej niz kilka sekund. |
+| **Prawdopodobieństwo** | Niskie |
+| **Skutek** | Średni (ujawnienie wzorców przemieszczania się) |
+| **Środki zaradcze** | GPS usuwany z bazy po przetworzeniu zgłoszenia (dopasowanie do stacji). Transmisja szyfrowana (TLS). Kontrola dostępu (RBAC). |
 | **Ryzyko rezydualne** | Niskie |
 
-### 3.2 Ryzyko: Dane osobowe osob trzecich na zdjeciach (twarze, tablice rejestracyjne)
+### 3.2 Ryzyko: Dane osobowe osób trzecich na zdjęciach (twarze, tablice rejestracyjne)
 
 | | |
 |---|---|
-| **Prawdopodobienstwo** | Srednie (zdjecia tablic cenowych moga przypadkowo uchwyci c otoczenie) |
-| **Skutek** | Niski (system OCR nie wyodrebnia tych danych) |
-| **Srodki zaradcze** | OCR analizuje wylacznie tekst cenowy — nie rozpoznaje osob ani pojazdow. Zdjecia usuwane automatycznie po 30 dniach. Dostep do zdjec ograniczony do zespolu operacyjnego (moderacja). |
+| **Prawdopodobieństwo** | Średnie (zdjęcia tablic cenowych mogą przypadkowo uchwycić otoczenie) |
+| **Skutek** | Niski (system OCR nie wyodrębnia tych danych) |
+| **Środki zaradcze** | OCR analizuje wyłącznie tekst cenowy — nie rozpoznaje osób ani pojazdów. Zdjęcia usuwane automatycznie po 30 dniach. Dostęp do zdjęć ograniczony do zespołu operacyjnego (moderacja). |
 | **Ryzyko rezydualne** | Niskie |
 
-### 3.3 Ryzyko: Wyciek bazy danych (e-mail, historia zgloszen)
+### 3.3 Ryzyko: Wyciek bazy danych (e-mail, historia zgłoszeń)
 
 | | |
 |---|---|
-| **Prawdopodobienstwo** | Niskie |
-| **Skutek** | Sredni (ujawnienie adresow e-mail i historii zgloszen cenowych) |
-| **Srodki zaradcze** | Baza danych w regionie UE (Neon). Hasla zaszyfrowane (bcrypt). Kontrola dostepu oparta na rolach. Automatyczne wykrywanie naduzyc. Po usunieciu konta dane sa pseudonimizowane. |
+| **Prawdopodobieństwo** | Niskie |
+| **Skutek** | Średni (ujawnienie adresów e-mail i historii zgłoszeń cenowych) |
+| **Środki zaradcze** | Baza danych w regionie UE (Neon). Hasła zaszyfrowane (bcrypt). Kontrola dostępu oparta na rolach. Automatyczne wykrywanie nadużyć. Po usunięciu konta dane są pseudonimizowane. |
 | **Ryzyko rezydualne** | Niskie |
 
-### 3.4 Ryzyko: Transfer danych do USA (dostawcy uslug)
+### 3.4 Ryzyko: Transfer danych do USA (dostawcy usług)
 
 | | |
 |---|---|
-| **Prawdopodobienstwo** | — (transfer ma miejsce) |
-| **Skutek** | Niski (dane chronione SCC, dostawcy to duze firmy z wlasna infrastruktura bezpieczenstwa) |
-| **Srodki zaradcze** | SCC z kazdym dostawca USA. Wybor regionow UE tam, gdzie to mozliwe (Neon, Upstash, Cloudflare R2). Minimalizacja danych przesylanych do USA. |
+| **Prawdopodobieństwo** | Pewne (transfer ma miejsce w ramach normalnej pracy systemu) |
+| **Skutek** | Niski (dane chronione SCC, dostawcy to duże firmy z własną infrastrukturą bezpieczeństwa) |
+| **Środki zaradcze** | SCC z każdym dostawcą USA. Wybór regionów UE tam, gdzie to możliwe (Neon, Upstash, Cloudflare R2). Minimalizacja danych przesyłanych do USA. |
 | **Ryzyko rezydualne** | Niskie |
 
-### 3.5 Ryzyko: Przetwarzanie danych dzieci (ponizej 16 lat)
+### 3.5 Ryzyko: Przetwarzanie danych dzieci (poniżej 16 lat)
 
 | | |
 |---|---|
-| **Prawdopodobienstwo** | Niskie |
+| **Prawdopodobieństwo** | Niskie |
 | **Skutek** | Wysoki (naruszenie art. 8 RODO) |
-| **Srodki zaradcze** | Polityka prywatnosci i regulamin okreslaja minimalny wiek 16 lat. Aplikacja nie jest skierowana do dzieci (tematyka: paliwa, stacje benzynowe). Brak mechanizmu weryfikacji wieku (standard rynkowy — Waze, Yanosik rowniez nie weryfikuja). |
+| **Środki zaradcze** | Polityka prywatności i regulamin określają minimalny wiek 16 lat. Aplikacja nie jest skierowana do dzieci (tematyka: paliwa, stacje benzynowe). Brak mechanizmu weryfikacji wieku (standard rynkowy — Waze, Yanosik również nie weryfikują). |
+| **Ryzyko rezydualne** | Średnie (brak technicznej weryfikacji wieku) |
+
+### 3.6 Ryzyko: Przetwarzanie zdjęć przez dostawcę AI (Anthropic)
+
+| | |
+|---|---|
+| **Prawdopodobieństwo** | Niskie |
+| **Skutek** | Średni (zdjęcia mogą zawierać przypadkowe dane osobowe osób trzecich) |
+| **Środki zaradcze** | Anthropic deklaruje, że nie wykorzystuje danych z API do trenowania modeli. Zdjęcia przesyłane przez szyfrowane API. Zdjęcia usuwane z serwera Litro po 30 dniach. Przetwarzanie ograniczone do ekstrakcji tekstu cenowego. |
+| **Ryzyko rezydualne** | Niskie |
+
+### 3.7 Ryzyko: Shadow ban bez możliwości odwołania
+
+| | |
+|---|---|
+| **Prawdopodobieństwo** | Niskie (dotyczy wyłącznie użytkowników z wzorcami nadużyć) |
+| **Skutek** | Niski (użytkownik traci możliwość zgłaszania cen, ale zachowuje dostęp do przeglądania) |
+| **Środki zaradcze** | Automatyczne wykrywanie na podstawie obiektywnych wzorców (duplikaty, ceny poza zakresem rynkowym). Decyzje podlegają przeglądowi administratora w kolejce moderacji. Użytkownik może skontaktować się z IOD w sprawie ograniczenia konta. |
 | **Ryzyko rezydualne** | Niskie |
 
 ---
 
 ## 4. Podsumowanie
 
-| Ryzyko | Ocena przed srodkami | Srodki zaradcze | Ryzyko rezydualne |
+| Ryzyko | Ocena przed środkami | Środki zaradcze | Ryzyko rezydualne |
 |---|---|---|---|
-| Dostep do GPS | Srednie | Natychmiastowe usuwanie GPS | Niskie |
-| Dane osob trzecich na zdjeciach | Srednie | OCR nie wyodrebnia, zdjecia usuwane po 30 dn. | Niskie |
-| Wyciek bazy | Srednie | Szyfrowanie, RBAC, pseudonimizacja | Niskie |
-| Transfer do USA | Srednie | SCC, minimalizacja, regiony UE | Niskie |
-| Dane dzieci | Srednie | Deklaracja 16+, tematyka aplikacji | Niskie |
+| Dostęp do GPS | Średnie | Usuwanie GPS po przetworzeniu | Niskie |
+| Dane osób trzecich na zdjęciach | Średnie | OCR nie wyodrębnia, zdjęcia usuwane po 30 dn. | Niskie |
+| Wyciek bazy | Średnie | Szyfrowanie, RBAC, pseudonimizacja | Niskie |
+| Transfer do USA | Średnie | SCC, minimalizacja, regiony UE | Niskie |
+| Dane dzieci | Średnie | Deklaracja 16+, tematyka aplikacji | Średnie |
+| Przetwarzanie przez AI | Średnie | Brak trenowania na danych API, szyfrowanie | Niskie |
+| Shadow ban | Niskie | Kolejka moderacji, kontakt z IOD | Niskie |
 
-**Wniosek:** Ryzyka rezydualne sa niskie po zastosowaniu srodkow zaradczych. Przetwarzanie moze byc kontynuowane.
+**Wniosek:** Ryzyka rezydualne są niskie lub średnie po zastosowaniu środków zaradczych. Jedyne ryzyko rezydualne ocenione jako średnie (dane dzieci) wynika z braku technicznej weryfikacji wieku, co jest standardem rynkowym w tej kategorii aplikacji. Przetwarzanie może być kontynuowane.
 
 ---
 
@@ -112,6 +139,8 @@ Podmioty przetwarzajace wymienione w Polityce Prywatnosci sekcja 6 (Anthropic, C
 
 | | |
 |---|---|
-| **Sporzadzil** | Mateusz Mikina (Administrator / IOD) |
+| **Sporządził** | Mateusz Mikina (Administrator / IOD) |
 | **Data** | [DATA] |
-| **Nastepny przeglad** | [DATA + 12 miesiecy] |
+| **Następny przegląd** | [DATA + 12 miesięcy] |
+
+Niniejsza ocena będzie aktualizowana w przypadku istotnych zmian w przetwarzaniu danych (nowe kategorie danych, nowi odbiorcy, zmiana skali przetwarzania).

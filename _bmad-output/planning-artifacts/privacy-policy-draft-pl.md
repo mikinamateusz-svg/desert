@@ -8,7 +8,7 @@
 
 Administratorem Twoich danych osobowych jest **Mateusz Mikina**, zamieszkaly w Polsce (dalej: „Administrator", „my").
 
-Kontakt w sprawie danych osobowych: **privacy@litro.pl**
+Inspektor Ochrony Danych (IOD): **privacy@litro.pl**
 
 Litro to aplikacja mobilna i serwis internetowy do porownywania cen paliw na stacjach w Polsce, oparty na danych spolecznosciowych (zgloszeniach uzytkownikow) i sztucznej inteligencji (automatyczne odczytywanie cen ze zdjec tablic cenowych).
 
@@ -38,7 +38,7 @@ Litro to aplikacja mobilna i serwis internetowy do porownywania cen paliw na sta
 | Cel przetwarzania | Podstawa prawna (RODO) | Dane |
 |---|---|---|
 | **Swiadczenie uslugi** — wyswietlanie mapy stacji, cen paliw, obsluga konta | Art. 6(1)(b) — wykonanie umowy | konto, lokalizacja, zgloszenia |
-| **Przetwarzanie zdjec OCR** — automatyczne odczytywanie cen ze zdjec tablic cenowych | Art. 6(1)(b) — wykonanie umowy | zdjecia, GPS (tymczasowo) |
+| **Przetwarzanie zdjec OCR** — automatyczne odczytywanie cen ze zdjec tablic cenowych | Art. 6(1)(a) — zgoda (dobrowolne przeslanie zdjecia) | zdjecia, GPS (tymczasowo) |
 | **Powiadomienia push** — alerty o zmianach cen | Art. 6(1)(a) — zgoda | token push, preferencje |
 | **Bezpieczenstwo i integralnosc danych** — wykrywanie naduzyc, moderacja zgloszen | Art. 6(1)(f) — uzasadniony interes | dane konta, zgloszenia, wskaznik zaufania |
 | **Analityka zagregowana** — statystyki cen paliw dla regionow (bez danych osobowych) | Art. 6(1)(f) — uzasadniony interes | dane zagregowane i zanonimizowane |

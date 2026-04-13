@@ -56,7 +56,7 @@ Zdjecia tablic cenowych sa przetwarzane przez sztuczna inteligencje wylacznie w 
 
 Przesylajac zgloszenie ceny, udzielasz nam nieodplatnej licencji na wykorzystanie odczytanych cen w ramach uslugi Litro. Ceny sa wyswietlane anonimowo — inni uzytkownicy nie widza, kto zglosil dana cene.
 
-Twoje zgloszenia sa przechowywane w naszej bazie danych. Po usunieciu konta, zgloszenia zostaja zanonimizowane (powiazanie z Twoim kontem jest usuwane), ale dane cenowe pozostaja w systemie do celow statystycznych.
+Twoje zgloszenia sa przechowywane w naszej bazie danych. Po usunieciu konta, Twoje dane osobowe (e-mail, nazwa) sa usuwane, a zgloszenia cenowe pozostaja w systemie w formie spseudonimizowanej do celow statystycznych.
 
 ---
 
@@ -91,11 +91,11 @@ Tam, gdzie to mozliwe, wybieramy regiony UE dla przechowywania danych (Neon — 
 
 | Dane | Okres przechowywania |
 |---|---|
-| **Dane konta** | do momentu usuniec ia konta, a nastepnie zanonimizowane |
+| **Dane konta** | do momentu usuniecia konta, a nastepnie zanonimizowane |
 | **Zgloszenia cen** | bezterminowo (zanonimizowane po usunieciu konta) |
 | **Zdjecia tablic cenowych** | 30 dni od przeslania, nastepnie automatycznie usuwane |
 | **Wspolrzedne GPS ze zgloszen** | usuwane natychmiast po dopasowaniu stacji |
-| **Token push** | do momentu wyrejestrowania tokenu lub usuniecai konta |
+| **Token push** | do momentu wyrejestrowania tokenu lub usuniecia konta |
 | **Preferencje powiadomien** | do momentu zmiany lub usuniecia konta |
 | **Historia zgod** | bezterminowo (obowiazek dokumentacyjny RODO) |
 
@@ -141,7 +141,7 @@ Stosujemy odpowiednie srodki techniczne i organizacyjne w celu ochrony Twoich da
 
 ## 12. Dzieci
 
-Litro jest przeznaczone dla osob, ktore ukonczyly **16 lat**. Nie zbieramy swiadomie danych osobowych osob ponizej 16 roku zycia. Jezeli dowiem y sie, ze zebralismy dane osoby ponizej 16 lat, niezwlocznie je usun iemy.
+Litro jest przeznaczone dla osob, ktore ukonczyly **16 lat**. Nie zbieramy swiadomie danych osobowych osob ponizej 16 roku zycia. Jezeli dowiemy sie, ze zebralismy dane osoby ponizej 16 lat, niezwlocznie je usuniemy.
 
 ---
 

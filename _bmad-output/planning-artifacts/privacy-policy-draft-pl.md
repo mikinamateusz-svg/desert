@@ -135,13 +135,7 @@ Aplikacja mobilna nie uzywa plikow cookie. Przechowuje lokalnie na urzadzeniu pr
 
 ## 11. Bezpieczenstwo danych
 
-Stosujemy nastepujace srodki ochrony danych:
-- szyfrowanie transmisji (HTTPS/TLS)
-- szyfrowane przechowywanie hasel (bcrypt)
-- kontrola dostepu oparta na rolach (RBAC)
-- automatyczne wykrywanie naduzyc i podejrzanych wzorcow zgloszen
-- regularne kopie zapasowe bazy danych
-- ograniczenie dostepu do danych wylacznie do upowaznionych osob
+Stosujemy odpowiednie srodki techniczne i organizacyjne w celu ochrony Twoich danych, w tym szyfrowanie transmisji (HTTPS/TLS), szyfrowane przechowywanie hasel oraz kontrole dostepu oparta na rolach.
 
 ---
 

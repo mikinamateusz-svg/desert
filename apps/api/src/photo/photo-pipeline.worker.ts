@@ -330,9 +330,12 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       ocrResult.input_tokens,
       ocrResult.output_tokens,
     );
+    // Hard limit: if Redis is down and spend can't be tracked, let the error
+    // propagate so BullMQ retries the job later. Prevents uncapped OCR spend.
+    // To switch to soft limit, replace the throw with `return 0`.
     const dailySpend = await this.ocrSpendService.recordSpend(costUsd).catch((e: Error) => {
-      this.logger.warn(`Failed to record OCR spend: ${e.message}`);
-      return 0;
+      this.logger.error(`Failed to record OCR spend (hard limit): ${e.message} — job will retry`);
+      throw e;
     });
     await this.checkSpendCap(dailySpend);
 

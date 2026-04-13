@@ -147,11 +147,7 @@ Litro jest przeznaczone dla osob, ktore ukonczyly **16 lat**. Nie zbieramy swiad
 
 ## 13. Zmiany polityki
 
-O istotnych zmianach niniejszej polityki poinformujemy Cie poprzez:
-- powiadomienie w aplikacji
-- e-mail (jezeli podales adres e-mail)
-
-Aktualna wersja polityki jest zawsze dostepna pod adresem: https://litro.pl/polityka-prywatnosci
+O istotnych zmianach niniejszej polityki poinformujemy Cie z wyprzedzeniem. Aktualna wersja polityki jest zawsze dostepna pod adresem: https://litro.pl/polityka-prywatnosci
 
 ---
 

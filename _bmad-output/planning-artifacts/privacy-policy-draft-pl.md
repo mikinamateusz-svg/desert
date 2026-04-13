@@ -153,7 +153,4 @@ O istotnych zmianach niniejszej polityki poinformujemy Cie z wyprzedzeniem. Aktu
 
 ## 14. Kontakt
 
-W sprawach zwiazanych z ochrona danych osobowych:
-
-**E-mail:** privacy@litro.pl
-**Adres:** [adres korespondencyjny Administratora]
+W sprawach zwiazanych z ochrona danych osobowych: **privacy@litro.pl**

@@ -48,14 +48,7 @@ Litro to aplikacja mobilna i serwis internetowy do porownywania cen paliw na sta
 
 ## 4. Zdjecia i przetwarzanie OCR
 
-Litro umozliwia przesylanie zdjec tablic cenowych na stacjach paliw. Oto jak przetwarzamy te zdjecia:
-
-1. **Co fotografujesz:** tablice z cenami paliw na stacjach.
-2. **Przesylanie:** zdjecie jest przesylane na nasz serwer w formie zaszyfrowanej.
-3. **Przetwarzanie AI (OCR):** sztuczna inteligencja (Claude Haiku, Anthropic) analizuje zdjecie wylacznie w celu odczytania cen paliw i nazwy stacji. System NIE rozpoznaje osob, tablic rejestracyjnych ani innych danych osobowych widocznych na zdjeciu.
-4. **Lokalizacja GPS:** wspolrzedne GPS przeslane ze zdjeciem sa uzywane wylacznie do dopasowania zdjecia do najblizszej stacji (promien 200 m). Po dopasowaniu stacji wspolrzedne GPS sa **trwale usuwane** z naszej bazy danych.
-5. **Przechowywanie:** zdjecie jest przechowywane na serwerze Cloudflare R2 (region EU) do celow audytu i moderacji. Odczytane ceny sa zapisywane w bazie danych jako dane zagregowane stacji.
-6. **Dane przypadkowe:** jezeli na zdjeciu tablicy cenowej przypadkowo znajduja sie osoby, pojazdy lub tablice rejestracyjne, te informacje NIE sa wyodrebniane ani przetwarzane przez system OCR.
+Zdjecia tablic cenowych sa przetwarzane przez sztuczna inteligencje wylacznie w celu odczytania cen paliw. System nie rozpoznaje osob, pojazdow ani tablic rejestracyjnych. Wspolrzedne GPS sa usuwane z bazy po dopasowaniu stacji. Zdjecia sa przechowywane na serwerze w regionie UE do celow audytu.
 
 ---
 

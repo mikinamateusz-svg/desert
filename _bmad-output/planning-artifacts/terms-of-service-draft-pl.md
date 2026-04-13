@@ -18,7 +18,7 @@
 
 ## 2. Definicje
 
-- **Litro** — aplikacja mobilna i serwis internetowy do porownywania cen paliw na stacjach w Polsce.
+- **Litro** — aplikacja mobilna i serwis internetowy pomagajacy kierowcom w Polsce w zakresie cen paliw i powiazanych uslug.
 - **Uzytkownik** — osoba fizyczna, ktora korzysta z Uslugi po utworzeniu konta.
 - **Zgloszenie** — informacja o cenach paliw przeslana przez Uzytkownika, w tym zdjecie tablicy cenowej.
 - **Konto** — indywidualne konto Uzytkownika w Usludze.

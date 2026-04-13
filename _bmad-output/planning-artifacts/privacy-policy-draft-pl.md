@@ -125,25 +125,11 @@ www.uodo.gov.pl
 
 ---
 
-## 10. Pliki cookie i technologie sledzace
+## 10. Pliki cookie i dane lokalne
 
-### Strona internetowa (litro.pl)
+Strona internetowa litro.pl uzywa wylacznie niezbednych plikow cookie (sesja, dzialanie strony). Nie stosujemy plikow cookie reklamowych ani analitycznych.
 
-| Typ | Cel | Podstawa |
-|---|---|---|
-| **Niezbedne** | dzialanie strony, sesja logowania | uzasadniony interes |
-| **Analityczne** | analiza ruchu na stronie | zgoda |
-
-Nie stosujemy plikow cookie reklamowych ani nie wyswietlamy reklam targetowanych.
-
-Zgodnie z art. 173 Prawa telekomunikacyjnego, pliki cookie wymagajace zgody sa instalowane dopiero po jej wyrazeniu przez uzytkownika.
-
-### Aplikacja mobilna
-
-Aplikacja nie uzywa plikow cookie. Przechowujemy lokalnie na urzadzeniu:
-- preferencje typu paliwa (AsyncStorage)
-- token sesji logowania (SecureStore)
-- kolejke zgloszen offline (SQLite)
+Aplikacja mobilna nie uzywa plikow cookie. Przechowuje lokalnie na urzadzeniu preferencje uzytkownika, token sesji oraz kolejke zgloszen offline.
 
 ---
 

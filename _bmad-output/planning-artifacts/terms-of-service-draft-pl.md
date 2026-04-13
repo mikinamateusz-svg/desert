@@ -8,7 +8,7 @@
 
 1.1. Niniejszy regulamin (dalej: „Regulamin") okresla zasady korzystania z aplikacji mobilnej Litro oraz serwisu internetowego litro.pl (dalej lacznie: „Usluga").
 
-1.2. Usluga jest swiadczona przez **Mateusza Mikine**, zamieskalego w Polsce (dalej: „Uslu godawca", „my").
+1.2. Usluga jest swiadczona przez **Mateusza Mikine**, zamieskalego w Polsce (dalej: „Uslugodawca", „my").
 
 1.3. Kontakt: **contact@litro.pl**
 
@@ -28,7 +28,7 @@
 ## 3. Warunki korzystania
 
 3.1. Aby korzystac z Uslugi, musisz:
-- miec ukonczonne 16 lat;
+- miec ukonczone 16 lat;
 - utworzyc konto (rejestracja przez e-mail, Google lub Apple);
 - zaakceptowac niniejszy Regulamin i Polityke Prywatnosci.
 
@@ -109,7 +109,7 @@
 
 8.1. Zgodnie z art. 27 ustawy z dnia 30 maja 2014 r. o prawach konsumenta, Uzytkownik ma prawo odstapic od umowy w terminie 14 dni od dnia zawarcia umowy (utworzenia konta), bez podawania przyczyny.
 
-8.2. Rejestrujac sie w Usludze, Uzytkownik wyra za zgode na natychmiastowe rozpoczecie swiadczenia Uslugi i przyjmuje do wiadomosci, ze po rozpoczeciu korzystania z Uslugi traci prawo do odstapienia od umowy w zakresie juz swiadczonych uslug.
+8.2. Rejestrujac sie w Usludze, Uzytkownik wyraza zgode na natychmiastowe rozpoczecie swiadczenia Uslugi i przyjmuje do wiadomosci, ze po rozpoczeciu korzystania z Uslugi traci prawo do odstapienia od umowy w zakresie juz swiadczonych uslug.
 
 8.3. Aby odstapic od umowy, wystarczy usunac konto w aplikacji lub wyslac oswiadczenie na adres: contact@litro.pl.
 
@@ -137,9 +137,7 @@
 
 11.1. Uslugodawca zastrzega sobie prawo do zmiany niniejszego Regulaminu.
 
-11.2. O istotnych zmianach Uzytkownik zostanie poinformowany co najmniej 14 dni przed ich wejsciem w zycie, poprzez:
-- powiadomienie w aplikacji;
-- e-mail (jezeli Uzytkownik podal adres e-mail).
+11.2. O istotnych zmianach Uzytkownik zostanie poinformowany co najmniej 14 dni przed ich wejsciem w zycie.
 
 11.3. Kontynuowanie korzystania z Uslugi po wejsciu zmian w zycie oznacza ich akceptacje. W przypadku braku akceptacji, Uzytkownik moze usunac swoje konto.
 
@@ -149,7 +147,7 @@
 
 12.1. Regulamin podlega prawu polskiemu.
 
-12.2. W sprawach nieuregulowanych niniejszym Regulaminem maja zastosowanie przepisy prawa polskiego, w szczegolnosci Kodeksu cywilnego, ustawy o prawach konsumenta oraz RODO.
+12.2. W sprawach nieuregulowanych niniejszym Regulaminem maja zastosowanie przepisy prawa polskiego, w szczegolnosci Kodeksu cywilnego, ustawy o prawach konsumenta, ustawy o swiadczeniu uslug droga elektroniczna oraz RODO.
 
 12.3. Aktualna wersja Regulaminu jest zawsze dostepna pod adresem: https://litro.pl/regulamin
 

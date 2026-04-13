@@ -42,7 +42,7 @@ Litro to aplikacja mobilna i serwis internetowy do porownywania cen paliw na sta
 | **Powiadomienia push** — alerty o zmianach cen | Art. 6(1)(a) — zgoda | token push, preferencje |
 | **Bezpieczenstwo i integralnosc danych** — wykrywanie naduzyc, moderacja zgloszen | Art. 6(1)(f) — uzasadniony interes | dane konta, zgloszenia, wskaznik zaufania |
 | **Analityka zagregowana** — statystyki cen paliw dla regionow (bez danych osobowych) | Art. 6(1)(f) — uzasadniony interes | dane zagregowane i zanonimizowane |
-| **Obowiazki prawne** — odpowiedzi na zadania organow, dokumentacja podatkowa | Art. 6(1)(c) — obowiazek prawny | dane konta, faktury |
+| **Obowiazki prawne** — odpowiedzi na zadania organow | Art. 6(1)(c) — obowiazek prawny | dane konta |
 
 ---
 
@@ -93,12 +93,11 @@ Tam, gdzie to mozliwe, wybieramy regiony UE dla przechowywania danych (Neon — 
 |---|---|
 | **Dane konta** | do momentu usuniec ia konta, a nastepnie zanonimizowane |
 | **Zgloszenia cen** | bezterminowo (zanonimizowane po usunieciu konta) |
-| **Zdjecia tablic** | 30 dni od przeslania, nastepnie automatycznie usuwane |
+| **Zdjecia tablic cenowych** | 30 dni od przeslania, nastepnie automatycznie usuwane |
 | **Wspolrzedne GPS ze zgloszen** | usuwane natychmiast po dopasowaniu stacji |
 | **Token push** | do momentu wyrejestrowania tokenu lub usuniecai konta |
 | **Preferencje powiadomien** | do momentu zmiany lub usuniecia konta |
 | **Historia zgod** | bezterminowo (obowiazek dokumentacyjny RODO) |
-| **Dane do faktur** | 5 lat od konca roku podatkowego (Ordynacja podatkowa) |
 
 ---
 

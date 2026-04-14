@@ -113,8 +113,7 @@ export class StationClassificationWorker implements OnModuleInit, OnModuleDestro
           CAST(ST_Y(location::geometry) AS FLOAT) AS lat,
           CAST(ST_X(location::geometry) AS FLOAT) AS lng
         FROM "Station"
-        WHERE classification_version >= 1
-          AND location IS NOT NULL
+        WHERE location IS NOT NULL
         ORDER BY id
         LIMIT ${BATCH} OFFSET ${offset}
       `;

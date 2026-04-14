@@ -163,6 +163,7 @@ export default {
     exportDataButton: 'Download my data',
     privacySettings: 'Privacy settings',
     sendFeedback: 'Send feedback',
+    trademarkDisclaimer: 'Brand names and trademarks displayed in this app are the property of their respective owners and are used solely to identify fuel stations. Litro is not affiliated with any fuel station chain.',
     exportDataSuccess: 'Your data export has been prepared. Check your email for the download link.',
     exportDataError: 'Failed to prepare data export. Please try again.',
     exportDataSignInRequired: 'Sign in to export your data.',

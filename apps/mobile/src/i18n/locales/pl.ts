@@ -163,6 +163,7 @@ export default {
     exportDataButton: 'Pobierz moje dane',
     privacySettings: 'Ustawienia prywatności',
     sendFeedback: 'Wyślij opinię',
+    trademarkDisclaimer: 'Nazwy marek i znaki towarowe wyświetlane w aplikacji są własnością ich odpowiednich właścicieli i służą wyłącznie identyfikacji stacji paliw. Litro nie jest powiązane z żadną siecią stacji paliw.',
     exportDataSuccess: 'Eksport danych został przygotowany. Sprawdź swój e-mail, aby pobrać plik.',
     exportDataError: 'Nie udało się przygotować eksportu danych. Spróbuj ponownie.',
     exportDataSignInRequired: 'Zaloguj się, aby wyeksportować dane.',

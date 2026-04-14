@@ -127,6 +127,9 @@ export default function AccountScreen() {
             <Text style={styles.deleteText}>{t('account.deleteAccountButton')}</Text>
           </TouchableOpacity>
         )}
+
+        {/* ── Trademark disclaimer ── */}
+        <Text style={styles.trademarkDisclaimer}>{t('account.trademarkDisclaimer')}</Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -256,5 +259,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: tokens.price.expensive,
     fontWeight: '500',
+  },
+  trademarkDisclaimer: {
+    fontSize: 11,
+    color: tokens.neutral.n400,
+    textAlign: 'center',
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 16,
+    lineHeight: 16,
   },
 });

@@ -1293,7 +1293,7 @@ So that I can seed the database immediately after first deploy, recover from a f
 
 ---
 
-### Story 2.14: Admin Station Hiding (Data Cleanup)
+### Story 2.15: Admin Station Hiding (Data Cleanup)
 
 As an **admin / ops operator**,
 I want to hide stations that are duplicates, misclassified, or don't actually exist,
@@ -1340,7 +1340,7 @@ AC6: **Given** an ADMIN calls `GET /v1/admin/stations?search=<query>`
 
 ---
 
-### Story 2.15: Driver Station Reporting *(Phase 2)*
+### Story 2.16: Driver Station Reporting *(Phase 2)*
 
 As a **driver**,
 I want to report a station as non-existent, permanently closed, or incorrectly listed,

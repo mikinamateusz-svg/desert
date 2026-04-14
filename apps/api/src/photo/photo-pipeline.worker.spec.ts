@@ -1688,12 +1688,12 @@ describe('PhotoPipelineWorker', () => {
         expect(mockOcrSpendService.recordSpend).toHaveBeenCalledWith(0.0042);
       });
 
-      it('does not throw when recordSpend fails — spend tracking is non-critical', async () => {
+      it('throws when recordSpend fails — hard limit prevents uncapped OCR spend', async () => {
         mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
         mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
         mockOcrSpendService.recordSpend.mockRejectedValueOnce(new Error('Redis down'));
 
-        await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+        await expect(capturedProcessor!(makeJob('sub-123'))).rejects.toThrow('Redis down');
       });
 
       it('does NOT call computeCostUsd when OCR is skipped (no station match)', async () => {

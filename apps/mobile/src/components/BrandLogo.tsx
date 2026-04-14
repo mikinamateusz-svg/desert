@@ -23,16 +23,16 @@ interface BrandStyle {
 }
 
 const BRAND_STYLES: Record<string, BrandStyle> = {
-  orlen:      { bg: '#e30613', text: '#ffffff', label: 'ORLEN',    fontSize: 9  },
-  shell:      { bg: '#FFD500', text: '#cc0000', label: 'SHELL',    fontSize: 9  },
-  bp:         { bg: '#006600', text: '#ffffff', label: 'BP',       fontSize: 13 },
-  circle_k:   { bg: '#cc0000', text: '#ffffff', label: 'CIRCLE K', fontSize: 7  },
-  lotos:      { bg: '#003da5', text: '#ffffff', label: 'LOTOS',    fontSize: 9  },
-  huzar:      { bg: '#1a1a1a', text: '#f59e0b', label: 'HUZAR',   fontSize: 8  },
-  moya:       { bg: '#e30613', text: '#ffffff', label: 'MOYA',     fontSize: 10 },
-  amic:       { bg: '#e30613', text: '#ffffff', label: 'AMIC',     fontSize: 10 },
-  auchan:     { bg: '#e30613', text: '#ffffff', label: 'AUCHAN',   fontSize: 8  },
-  carrefour:  { bg: '#004f9f', text: '#ffffff', label: 'CARR.',    fontSize: 8  },
+  orlen:      { bg: '#e30613', text: '#ffffff', label: 'O',   fontSize: 22 },
+  shell:      { bg: '#FFD500', text: '#cc0000', label: 'S',   fontSize: 22 },
+  bp:         { bg: '#006600', text: '#ffffff', label: 'bp',  fontSize: 16 },
+  circle_k:   { bg: '#ee2e24', text: '#ffffff', label: 'CK',  fontSize: 14 },
+  lotos:      { bg: '#003da5', text: '#ffffff', label: 'L',   fontSize: 22 },
+  huzar:      { bg: '#1a1a1a', text: '#f59e0b', label: 'H',   fontSize: 22 },
+  moya:       { bg: '#ffffff', text: '#003366', label: 'M',   fontSize: 22 },
+  amic:       { bg: '#e84e0f', text: '#ffffff', label: 'A',   fontSize: 22 },
+  auchan:     { bg: '#ffffff', text: '#e30613', label: 'Au',  fontSize: 14 },
+  carrefour:  { bg: '#004f9f', text: '#ffffff', label: 'C',   fontSize: 22 },
 };
 
 export function BrandLogo({ brand }: Props) {

@@ -16,16 +16,16 @@ const FUEL_BADGE: Record<FuelType, { label: string; bg: string; color: string }>
 };
 
 const BRAND_BADGE: Record<string, { bg: string; color: string; label: string }> = {
-  orlen:     { bg: '#e30613', color: '#fff',    label: 'ORLEN' },
-  shell:     { bg: '#FFD500', color: '#cc0000', label: 'SHELL' },
-  bp:        { bg: '#006600', color: '#fff',    label: 'BP' },
-  circle_k:  { bg: '#cc0000', color: '#fff',    label: 'CK' },
-  lotos:     { bg: '#003da5', color: '#fff',    label: 'LOTOS' },
-  huzar:     { bg: '#1a1a1a', color: '#f59e0b', label: 'HUZAR' },
-  moya:      { bg: '#e30613', color: '#fff',    label: 'MOYA' },
-  amic:      { bg: '#e30613', color: '#fff',    label: 'AMIC' },
-  auchan:    { bg: '#e30613', color: '#fff',    label: 'AUCHAN' },
-  carrefour: { bg: '#004f9f', color: '#fff',    label: 'CARR.' },
+  orlen:     { bg: '#e30613', color: '#fff',    label: 'O' },
+  shell:     { bg: '#FFD500', color: '#cc0000', label: 'S' },
+  bp:        { bg: '#006600', color: '#fff',    label: 'bp' },
+  circle_k:  { bg: '#ee2e24', color: '#fff',    label: 'CK' },
+  lotos:     { bg: '#003da5', color: '#fff',    label: 'L' },
+  huzar:     { bg: '#1a1a1a', color: '#f59e0b', label: 'H' },
+  moya:      { bg: '#ffffff', color: '#003366', label: 'M' },
+  amic:      { bg: '#e84e0f', color: '#fff',    label: 'A' },
+  auchan:    { bg: '#ffffff', color: '#e30613', label: 'Au' },
+  carrefour: { bg: '#004f9f', color: '#fff',    label: 'C' },
 };
 
 interface Props {

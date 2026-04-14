@@ -1293,6 +1293,100 @@ So that I can seed the database immediately after first deploy, recover from a f
 
 ---
 
+### Story 2.14: Admin Station Hiding (Data Cleanup)
+
+As an **admin / ops operator**,
+I want to hide stations that are duplicates, misclassified, or don't actually exist,
+So that the map only shows real, active fuel stations — and hidden stations stay hidden even after the next Google Places sync.
+
+**Why:** Google Places data contains errors — some entries are convenience stores, car washes, or duplicate listings for the same physical station. Without a hide mechanism, these reappear every weekly sync. Deleting them from the DB is unsafe because the sync would re-insert them. A `hidden` flag persists across syncs and is reversible.
+
+**Phase:** 1 (MVP — needed for data quality at launch)
+
+**Acceptance Criteria:**
+
+AC1: **Given** an ADMIN calls `POST /v1/admin/stations/:id/hide`
+**When** the station exists
+**Then** the station's `hidden` field is set to `true`, response returns HTTP 200 with `{ "status": "hidden" }`
+
+AC2: **Given** an ADMIN calls `POST /v1/admin/stations/:id/unhide`
+**When** the station exists and is hidden
+**Then** the station's `hidden` field is set to `false`, response returns HTTP 200 with `{ "status": "visible" }`
+
+AC3: **Given** a station has `hidden = true`
+**When** any user calls `GET /v1/stations/nearby`
+**Then** the station is excluded from the results
+
+AC4: **Given** a station has `hidden = true`
+**When** the weekly Google Places sync runs
+**Then** the station's `hidden` flag is NOT overwritten — it remains hidden
+
+AC5: **Given** an ADMIN calls `GET /v1/admin/stations/hidden`
+**When** hidden stations exist
+**Then** the response returns a list of all hidden stations with their names, addresses, and the date they were hidden
+
+AC6: **Given** an ADMIN calls `GET /v1/admin/stations?search=<query>`
+**When** a search query is provided
+**Then** the response returns stations matching the query by name or address (including hidden stations, with `hidden` flag visible), for review purposes
+
+**Technical notes:**
+- Add `hidden Boolean @default(false)` to the Station model in Prisma schema
+- Add migration: `ALTER TABLE "Station" ADD COLUMN "hidden" BOOLEAN NOT NULL DEFAULT false;`
+- Update `findStationsInArea` / `findNearbyWithDistance` queries to add `WHERE hidden = false`
+- Update station sync `ON CONFLICT` to NOT overwrite the `hidden` column
+- Admin endpoints protected by `@Roles(UserRole.ADMIN)` + `x-admin-secret` header
+
+*Covers: data quality ops requirement. No FR mapping — new operational need identified during launch preparation. Depends on Story 2.1 (Station model), Story 2.13 (admin station endpoints).*
+
+---
+
+### Story 2.15: Driver Station Reporting *(Phase 2)*
+
+As a **driver**,
+I want to report a station as non-existent, permanently closed, or incorrectly listed,
+So that the map stays accurate and the ops team can review and hide bad data.
+
+**Why:** Community-driven data quality. Drivers are on the ground and can identify stations that Google Places lists incorrectly — closed stations, entries that aren't actually fuel stations, or duplicates. This complements the admin hide mechanism (Story 2.14) with a scalable user-driven signal.
+
+**Phase:** 2
+
+**Acceptance Criteria:**
+
+AC1: **Given** a logged-in driver views a station detail sheet
+**When** they tap a "Report station" button
+**Then** a report modal appears with options: "Doesn't exist / Permanently closed", "Not a fuel station", "Duplicate of another station", "Other"
+
+AC2: **Given** a driver submits a station report
+**When** the report is submitted
+**Then** the system creates a `StationReport` record with `station_id`, `user_id`, `reason`, `created_at` and returns HTTP 201
+
+AC3: **Given** a station accumulates 3+ reports from different users
+**When** the threshold is reached
+**Then** the station is flagged for admin review (but NOT auto-hidden — admin decides)
+
+AC4: **Given** an admin views the station report queue
+**When** reports exist
+**Then** the admin sees station name, address, report count, report reasons, and can choose to hide or dismiss
+
+AC5: **Given** a driver has already reported a station
+**When** they try to report the same station again
+**Then** the request is rejected with a message "You've already reported this station"
+
+AC6: **Given** a guest (not logged in) views a station detail sheet
+**When** they look for the report button
+**Then** the report button is not visible (reporting requires authentication)
+
+**Technical notes:**
+- New `StationReport` model: `id`, `station_id`, `user_id`, `reason` (enum), `note` (optional text), `created_at`
+- New endpoint: `POST /v1/stations/:id/report`
+- Admin endpoint: `GET /v1/admin/stations/reports` (grouped by station, sorted by report count)
+- Admin action: dismiss reports or hide station (Story 2.14)
+- Throttle: max 10 reports per user per day
+
+*Covers: community data quality. Extends FR47 (driver can report incorrect data) to station-level reporting. Depends on Story 2.14 (admin station hiding). Links to Epic 4 admin review workflows.*
+
+---
+
 ## Epic 3: Photo Contribution Pipeline
 
 Drivers photograph price boards; the system extracts prices via AI OCR, matches the GPS location to the nearest station, updates the database, and immediately confirms to the driver — all within 10 seconds from their perspective. Offline submissions queue and retry automatically.

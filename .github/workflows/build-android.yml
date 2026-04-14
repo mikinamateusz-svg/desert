@@ -44,6 +44,12 @@ jobs:
           EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID: ${{ secrets.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID }}
           EXPO_PUBLIC_MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
 
+      - name: Inject Mapbox access token into Android resources
+        run: |
+          mkdir -p android/app/src/main/res/values
+          echo '<?xml version="1.0" encoding="utf-8"?><resources><string name="mapbox_access_token" translatable="false">${{ secrets.MAPBOX_TOKEN }}</string></resources>' > android/app/src/main/res/values/mapbox_token.xml
+        working-directory: apps/mobile
+
       - name: Increase Gradle heap
         run: echo "org.gradle.jvmargs=-Xmx4g" >> android/gradle.properties
         working-directory: apps/mobile

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { detectLocale, getTranslations } from '../../../lib/i18n';
 import { adminFetch, AdminApiError } from '../../../lib/admin-api';
 import type { StationListResult, StationRow } from '../../../lib/types';
+import HideButton from './HideButton';
 
 interface SearchParams {
   page?: string;
@@ -71,13 +72,14 @@ export default async function StationsPage({
                   <th className="px-4 py-3 text-left font-medium text-gray-500">{t.stations.nameColumn}</th>
                   <th className="px-4 py-3 text-left font-medium text-gray-500">{t.stations.addressColumn}</th>
                   <th className="px-4 py-3 text-left font-medium text-gray-500">{t.stations.brandColumn}</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-500">Status</th>
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
                 {result.data.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="px-4 py-6 text-center text-gray-400">
+                    <td colSpan={5} className="px-4 py-6 text-center text-gray-400">
                       {t.stations.noResults}
                     </td>
                   </tr>
@@ -90,6 +92,14 @@ export default async function StationsPage({
                     </td>
                     <td className="px-4 py-3 text-gray-600">{station.brand ?? '—'}</td>
                     <td className="px-4 py-3">
+                      {station.hidden ? (
+                        <span className="text-xs px-2 py-0.5 rounded bg-red-50 text-red-600">Hidden</span>
+                      ) : (
+                        <span className="text-xs px-2 py-0.5 rounded bg-green-50 text-green-600">Visible</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 flex gap-2">
+                      <HideButton stationId={station.id} hidden={!!station.hidden} />
                       <Link
                         href={`/stations/${station.id}`}
                         className="text-blue-600 hover:underline text-xs"

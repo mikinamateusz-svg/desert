@@ -74,6 +74,7 @@ export interface StationRow {
   name: string;
   address: string | null;
   brand: string | null;
+  hidden?: boolean;
 }
 
 export interface StationListResult {

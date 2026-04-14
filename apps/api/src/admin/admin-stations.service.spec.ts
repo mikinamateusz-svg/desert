@@ -15,11 +15,14 @@ const mockQueryRaw = jest.fn();
 
 const mockTransaction = jest.fn().mockImplementation((ops: Promise<unknown>[]) => Promise.all(ops));
 
+const mockStationUpdate = jest.fn();
+
 const mockPrisma = {
   station: {
     findMany: mockStationFindMany,
     count: mockStationCount,
     findUnique: mockStationFindUnique,
+    update: mockStationUpdate,
   },
   priceHistory: {
     create: mockPriceHistoryCreate,
@@ -214,6 +217,66 @@ describe('AdminStationsService', () => {
 
       expect(mockAuditLogCreate).toHaveBeenCalledWith({
         data: expect.objectContaining({ action: 'CACHE_REFRESH' }),
+      });
+    });
+  });
+
+  // ── Story 2.15: Station Hiding ──────────────────────────────────────────────
+
+  describe('hideStation', () => {
+    it('sets hidden = true and returns status', async () => {
+      mockStationFindUnique.mockResolvedValueOnce(makeStation());
+      mockStationUpdate.mockResolvedValueOnce({});
+
+      const result = await service.hideStation(STATION_ID);
+
+      expect(result).toEqual({ status: 'hidden', stationId: STATION_ID, name: 'Test Station' });
+      expect(mockStationUpdate).toHaveBeenCalledWith({
+        where: { id: STATION_ID },
+        data: { hidden: true },
+      });
+    });
+
+    it('throws NotFoundException for non-existent station', async () => {
+      mockStationFindUnique.mockResolvedValueOnce(null);
+
+      await expect(service.hideStation('non-existent')).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('unhideStation', () => {
+    it('sets hidden = false and returns status', async () => {
+      mockStationFindUnique.mockResolvedValueOnce(makeStation());
+      mockStationUpdate.mockResolvedValueOnce({});
+
+      const result = await service.unhideStation(STATION_ID);
+
+      expect(result).toEqual({ status: 'visible', stationId: STATION_ID, name: 'Test Station' });
+      expect(mockStationUpdate).toHaveBeenCalledWith({
+        where: { id: STATION_ID },
+        data: { hidden: false },
+      });
+    });
+
+    it('throws NotFoundException for non-existent station', async () => {
+      mockStationFindUnique.mockResolvedValueOnce(null);
+
+      await expect(service.unhideStation('non-existent')).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('findHidden', () => {
+    it('returns all hidden stations sorted by updated_at DESC', async () => {
+      const hidden = [makeStation({ hidden: true }), makeStation({ id: 'station-2', name: 'Hidden 2', hidden: true })];
+      mockStationFindMany.mockResolvedValueOnce(hidden);
+
+      const result = await service.findHidden();
+
+      expect(result).toEqual(hidden);
+      expect(mockStationFindMany).toHaveBeenCalledWith({
+        where: { hidden: true },
+        select: { id: true, name: true, address: true, brand: true, hidden: true },
+        orderBy: { updated_at: 'desc' },
       });
     });
   });

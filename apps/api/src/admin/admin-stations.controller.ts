@@ -31,6 +31,11 @@ export class AdminStationsController {
     return this.service.searchStations(search, page, limit);
   }
 
+  @Get('hidden')
+  async listHidden() {
+    return this.service.findHidden();
+  }
+
   @Get(':id')
   async detail(@Param('id', ParseUUIDPipe) id: string) {
     return this.service.getStationDetail(id);
@@ -52,5 +57,17 @@ export class AdminStationsController {
   async refreshCache(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() admin: User) {
     await this.service.refreshCache(id, admin.id);
     return { status: 'cache_refreshed' };
+  }
+
+  @Post(':id/hide')
+  @HttpCode(HttpStatus.OK)
+  async hide(@Param('id', ParseUUIDPipe) id: string) {
+    return this.service.hideStation(id);
+  }
+
+  @Post(':id/unhide')
+  @HttpCode(HttpStatus.OK)
+  async unhide(@Param('id', ParseUUIDPipe) id: string) {
+    return this.service.unhideStation(id);
   }
 }

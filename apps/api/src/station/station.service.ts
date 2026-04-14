@@ -35,7 +35,8 @@ export class StationService {
     const results = await this.prisma.$queryRaw<NearbyStation[]>`
       SELECT id, name, address, google_places_id
       FROM "Station"
-      WHERE ST_DWithin(location, ST_Point(${lng}, ${lat})::geography, ${radiusMeters})
+      WHERE hidden = false
+        AND ST_DWithin(location, ST_Point(${lng}, ${lat})::geography, ${radiusMeters})
       ORDER BY location <-> ST_Point(${lng}, ${lat})::geography
       LIMIT 1
     `;
@@ -75,7 +76,8 @@ export class StationService {
         brand,
         ST_Distance(location, ST_Point(${lng}, ${lat})::geography) AS distance_m
       FROM "Station"
-      WHERE ST_DWithin(location, ST_Point(${lng}, ${lat})::geography, ${radiusMeters})
+      WHERE hidden = false
+        AND ST_DWithin(location, ST_Point(${lng}, ${lat})::geography, ${radiusMeters})
       ORDER BY location <-> ST_Point(${lng}, ${lat})::geography
       LIMIT ${limit}
     `;
@@ -93,6 +95,7 @@ export class StationService {
         ST_X(location::geometry) AS lng
       FROM "Station"
       WHERE location IS NOT NULL
+        AND hidden = false
         AND ST_DWithin(location, ST_Point(${lng}, ${lat})::geography, ${radiusMeters})
       ORDER BY location <-> ST_Point(${lng}, ${lat})::geography
       LIMIT 500

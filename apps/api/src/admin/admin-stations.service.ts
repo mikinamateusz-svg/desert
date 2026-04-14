@@ -7,6 +7,7 @@ export interface StationRow {
   name: string;
   address: string | null;
   brand: string | null;
+  hidden: boolean;
 }
 
 export interface StationListResult {
@@ -59,7 +60,7 @@ export class AdminStationsService {
     const [data, total] = await Promise.all([
       this.prisma.station.findMany({
         where,
-        select: { id: true, name: true, address: true, brand: true },
+        select: { id: true, name: true, address: true, brand: true, hidden: true },
         skip,
         take: safeLimit,
         orderBy: { name: 'asc' },
@@ -73,7 +74,7 @@ export class AdminStationsService {
   async getStationDetail(stationId: string): Promise<StationDetail> {
     const station = await this.prisma.station.findUnique({
       where: { id: stationId },
-      select: { id: true, name: true, address: true, brand: true },
+      select: { id: true, name: true, address: true, brand: true, hidden: true },
     });
 
     if (!station) {
@@ -184,6 +185,46 @@ export class AdminStationsService {
         `[OPS-ALERT] Failed to write audit log for ${action} by admin ${adminUserId}: ${e instanceof Error ? e.message : String(e)}`,
       );
     }
+  }
+
+  async hideStation(stationId: string): Promise<{ status: string; stationId: string; name: string }> {
+    const station = await this.prisma.station.findUnique({
+      where: { id: stationId },
+      select: { id: true, name: true },
+    });
+    if (!station) throw new NotFoundException(`Station ${stationId} not found`);
+
+    await this.prisma.station.update({
+      where: { id: stationId },
+      data: { hidden: true },
+    });
+
+    this.logger.log(`Station hidden: ${station.name} (${stationId})`);
+    return { status: 'hidden', stationId, name: station.name };
+  }
+
+  async unhideStation(stationId: string): Promise<{ status: string; stationId: string; name: string }> {
+    const station = await this.prisma.station.findUnique({
+      where: { id: stationId },
+      select: { id: true, name: true },
+    });
+    if (!station) throw new NotFoundException(`Station ${stationId} not found`);
+
+    await this.prisma.station.update({
+      where: { id: stationId },
+      data: { hidden: false },
+    });
+
+    this.logger.log(`Station unhidden: ${station.name} (${stationId})`);
+    return { status: 'visible', stationId, name: station.name };
+  }
+
+  async findHidden(): Promise<StationRow[]> {
+    return this.prisma.station.findMany({
+      where: { hidden: true },
+      select: { id: true, name: true, address: true, brand: true, hidden: true },
+      orderBy: { updated_at: 'desc' },
+    });
   }
 
   /** Exported only for tests */

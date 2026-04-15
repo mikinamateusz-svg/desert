@@ -23,8 +23,13 @@ import { useNearbyPrices } from '../../src/hooks/useNearbyPrices';
 import { computePriceColorMap } from '../../src/utils/priceColor';
 import type { StationDto } from '../../src/api/stations';
 
-// Mapbox token must be set before any MapView renders
-Mapbox.setAccessToken(process.env['EXPO_PUBLIC_MAPBOX_TOKEN'] ?? '');
+// Mapbox token must be set before any MapView renders.
+// In EAS builds, the token comes from eas.json env. In CI/local builds,
+// the native android string resource mapbox_access_token is used as fallback.
+const mapboxToken = process.env['EXPO_PUBLIC_MAPBOX_TOKEN'];
+if (mapboxToken) {
+  Mapbox.setAccessToken(mapboxToken);
+}
 
 const WARSAW: LocationCoords = { lat: 52.2297, lng: 21.0122 };
 

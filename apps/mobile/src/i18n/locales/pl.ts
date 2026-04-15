@@ -265,8 +265,7 @@ export default {
     storageFull: 'Nie można zapisać zdjęcia — brak miejsca na urządzeniu',
     cameraUnavailable: 'Aparat niedostępny',
     goBack: 'Wróć',
-    queuePending: '{{count}} zdjęć w kolejce',
-    queueFailed: '{{count}} zdjęć nie przesłano',
+    queuePending: '{{count}} czeka na przesłanie',
   },
   confirmation: {
     thankYou: 'Dzięki!',

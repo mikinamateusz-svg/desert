@@ -264,8 +264,7 @@ export default {
     storageFull: 'Unable to save photo — device storage is full',
     cameraUnavailable: 'Camera unavailable',
     goBack: 'Go back',
-    queuePending: '{{count}} photos queued',
-    queueFailed: '{{count}} photos failed to upload',
+    queuePending: '{{count}} waiting to upload',
   },
   confirmation: {
     thankYou: 'Thank you!',

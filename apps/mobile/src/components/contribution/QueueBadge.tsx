@@ -8,25 +8,21 @@ interface Props {
 }
 
 /**
- * Translucent pill shown above MapFABGroup when photos are queued or failed.
- * Shows pending count first; falls back to failed count if no pending items.
- * Renders nothing when both counts are 0.
+ * Neutral pill shown above MapFABGroup when photos are waiting to upload.
+ * Failed uploads are included in the count silently — the retry mechanism
+ * handles them in the background without alarming the user.
  */
 export function QueueBadge({ pending, failed }: Props) {
   const { t } = useTranslation();
 
-  if (pending === 0 && failed === 0) return null;
-
-  const label =
-    pending > 0
-      ? t('contribution.queuePending', { count: pending })
-      : t('contribution.queueFailed', { count: failed });
-
-  const isFailed = pending === 0 && failed > 0;
+  const total = pending + failed;
+  if (total === 0) return null;
 
   return (
-    <View style={[styles.badge, isFailed && styles.badgeFailed]}>
-      <Text style={styles.label}>{label}</Text>
+    <View style={styles.badge}>
+      <Text style={styles.label}>
+        {t('contribution.queuePending', { count: total })}
+      </Text>
     </View>
   );
 }
@@ -38,9 +34,6 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 12,
     alignSelf: 'flex-end',
-  },
-  badgeFailed: {
-    backgroundColor: 'rgba(239,68,68,0.80)', // red tint for failed state
   },
   label: {
     color: tokens.neutral.n0,

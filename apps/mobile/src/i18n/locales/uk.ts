@@ -266,8 +266,7 @@ export default {
     storageFull: 'Неможливо зберегти фото — недостатньо місця на пристрої',
     cameraUnavailable: 'Камера недоступна',
     goBack: 'Назад',
-    queuePending: '{{count}} фото в черзі',
-    queueFailed: '{{count}} фото не вдалося завантажити',
+    queuePending: '{{count}} очікує завантаження',
   },
   confirmation: {
     thankYou: 'Дякуємо!',

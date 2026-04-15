@@ -180,10 +180,23 @@ export default function CaptureScreen() {
       } else if (nearbyAtCapture.length >= 2) {
         setScreenState('disambiguation');
       } else {
-        if (nearbyAtCapture.length === 1) {
-          setPreselectedStationId(nearbyAtCapture[0]!.id);
+        // Exactly 0 or 1 station — fire-and-forget, skip confirmation card
+        const matchedId = nearbyAtCapture.length === 1 ? nearbyAtCapture[0]!.id : undefined;
+        const matchedName = nearbyAtCapture.length === 1 ? nearbyAtCapture[0]!.name : undefined;
+        try {
+          await enqueueSubmission({
+            photoUri: compressed.uri,
+            fuelType: selectedFuelType,
+            manualPrice: undefined,
+            preselectedStationId: matchedId,
+            gpsLat,
+            gpsLng,
+            capturedAt,
+          });
+          router.replace({ pathname: '/(app)/confirm', params: { stationName: matchedName } });
+        } catch {
+          Alert.alert(t('contribution.storageFull'));
         }
-        setScreenState('confirm');
       }
     } catch {
       setCameraError(true);
@@ -211,10 +224,24 @@ export default function CaptureScreen() {
     setScreenState('camera');
   }, []);
 
-  const handleDisambiguationSelect = useCallback((stationId: string) => {
-    setPreselectedStationId(stationId);
-    setScreenState('confirm');
-  }, []);
+  const handleDisambiguationSelect = useCallback(async (stationId: string) => {
+    if (!capturedPhoto) return;
+    const matchedStation = stations.find(s => s.id === stationId);
+    try {
+      await enqueueSubmission({
+        photoUri: capturedPhoto.uri,
+        fuelType: selectedFuelType,
+        manualPrice: undefined,
+        preselectedStationId: stationId,
+        gpsLat: capturedPhoto.gpsLat,
+        gpsLng: capturedPhoto.gpsLng,
+        capturedAt: capturedPhoto.capturedAt,
+      });
+      router.replace({ pathname: '/(app)/confirm', params: { stationName: matchedStation?.name } });
+    } catch {
+      Alert.alert(t('contribution.storageFull'));
+    }
+  }, [capturedPhoto, stations, selectedFuelType, t]);
 
   const handleDisambiguationDismiss = useCallback(() => {
     setPreselectedStationId(undefined);

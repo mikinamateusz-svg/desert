@@ -268,9 +268,8 @@ export default {
     queueFailed: '{{count}} photos failed to upload',
   },
   confirmation: {
-    title: 'Thank you for contributing!',
-    subtitle: "We'll process your photo and update the price shortly.",
-    done: 'Done',
-    fillupNudge: 'Did you fill up here? Log pump reading →',
+    thankYou: 'Thank you!',
+    impactMessage: 'Drivers nearby will see this update',
+    done: 'Back to map',
   },
 } as const;

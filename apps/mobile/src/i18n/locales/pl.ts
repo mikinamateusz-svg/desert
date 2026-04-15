@@ -269,9 +269,8 @@ export default {
     queueFailed: '{{count}} zdjęć nie przesłano',
   },
   confirmation: {
-    title: 'Dziękujemy za wkład!',
-    subtitle: 'Przetworzymy Twoje zdjęcie i wkrótce zaktualizujemy cenę.',
-    done: 'Gotowe',
-    fillupNudge: 'Czy tu tankowałeś? Zarejestruj odczyt pompy →',
+    thankYou: 'Dzięki!',
+    impactMessage: 'Kierowcy w okolicy zobaczą tę aktualizację',
+    done: 'Wróć do mapy',
   },
 } as const;

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { tokens } from '../../src/theme';
@@ -10,23 +10,15 @@ const AUTO_DISMISS_MS = 4_000;
 export default function ConfirmScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
+  const { stationName } = useLocalSearchParams<{ stationName?: string }>();
 
-  // Auto-navigate to map after 4 seconds if the driver taps nothing
+  // Auto-navigate to map after 4 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       router.replace('/(app)/');
     }, AUTO_DISMISS_MS);
     return () => clearTimeout(timer);
   }, []);
-
-  function goToMap() {
-    router.replace('/(app)/');
-  }
-
-  function goToCapture() {
-    // Placeholder — navigates to price board camera until fill-up flow is built
-    router.replace('/(app)/capture');
-  }
 
   return (
     <View
@@ -40,23 +32,20 @@ export default function ConfirmScreen() {
         <Text style={styles.checkmark}>✓</Text>
       </View>
 
-      <Text style={styles.title}>{t('confirmation.title')}</Text>
-      <Text style={styles.subtitle}>{t('confirmation.subtitle')}</Text>
+      <Text style={styles.title}>{t('confirmation.thankYou')}</Text>
+
+      {stationName && (
+        <Text style={styles.stationName}>{stationName}</Text>
+      )}
+
+      <Text style={styles.subtitle}>{t('confirmation.impactMessage')}</Text>
 
       <TouchableOpacity
         style={styles.doneButton}
-        onPress={goToMap}
+        onPress={() => router.replace('/(app)/')}
         accessibilityRole="button"
       >
         <Text style={styles.doneText}>{t('confirmation.done')}</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.nudge}
-        onPress={goToCapture}
-        accessibilityRole="button"
-      >
-        <Text style={styles.nudgeText}>{t('confirmation.fillupNudge')}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -89,11 +78,18 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: tokens.brand.ink,
     textAlign: 'center',
+    marginBottom: 8,
+  },
+  stationName: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: tokens.neutral.n500,
+    textAlign: 'center',
     marginBottom: 12,
   },
   subtitle: {
     fontSize: 15,
-    color: tokens.neutral.n500,
+    color: tokens.neutral.n400,
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: 36,
@@ -103,18 +99,10 @@ const styles = StyleSheet.create({
     borderRadius: tokens.radius.full,
     paddingVertical: 14,
     paddingHorizontal: 48,
-    marginBottom: 20,
   },
   doneText: {
     color: tokens.neutral.n0,
     fontSize: 16,
     fontWeight: '600',
-  },
-  nudge: {
-    paddingVertical: 8,
-  },
-  nudgeText: {
-    color: tokens.neutral.n500,
-    fontSize: 14,
   },
 });

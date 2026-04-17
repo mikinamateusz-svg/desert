@@ -84,6 +84,15 @@ export default function RegisterScreen() {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={() => router.replace('/(app)/')}
+        accessibilityLabel="Close"
+        accessibilityRole="button"
+      >
+        <Text style={styles.closeText}>✕</Text>
+      </TouchableOpacity>
+
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
@@ -189,6 +198,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: tokens.surface.page,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 48,
+    right: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: tokens.neutral.n200,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+  },
+  closeText: {
+    fontSize: 16,
+    fontWeight: '600' as const,
+    color: tokens.neutral.n500,
   },
   scrollContent: {
     flexGrow: 1,

@@ -9,7 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
 import { ApiError } from '../../src/api/auth';
@@ -62,6 +62,15 @@ export default function LoginScreen() {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={() => router.replace('/(app)/')}
+        accessibilityLabel="Close"
+        accessibilityRole="button"
+      >
+        <Text style={styles.closeText}>✕</Text>
+      </TouchableOpacity>
+
       <View style={styles.logoRow}>
         <LitroLogo size={36} />
       </View>
@@ -116,6 +125,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 24,
     backgroundColor: tokens.surface.page,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 48,
+    right: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: tokens.neutral.n200,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+  },
+  closeText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: tokens.neutral.n500,
   },
   logoRow: {
     alignItems: 'center',

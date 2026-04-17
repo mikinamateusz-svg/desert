@@ -14,7 +14,7 @@ Colour coding is the core value delivery of the map — it turns raw data into a
 
 ## Acceptance Criteria
 
-1. **Given** multiple stations are visible on the map **When** their prices are loaded **Then** each station pin is colour-coded relative to the others in the current view — green = cheapest third, amber = middle third, red = most expensive third.
+1. **Given** multiple stations are visible on the map **When** their prices are loaded **Then** each station pin is colour-coded using a 5-level quintile system relative to all stations within max(20km, viewport radius) of the user's GPS position — dark green (#1a9641) = cheapest 20%, light green (#a6d96a) = 20-40%, pale yellow (#ffffbf) = 40-60%, orange (#fdae61) = 60-80%, dark red (#d7191c) = most expensive 20%. If the price spread across the population is less than 0.10 PLN, all stations show pale yellow (no meaningful difference).
 
 2. **Given** a driver selects a specific fuel type **When** the filter is applied **Then** colour coding updates to reflect relative prices for that fuel type only.
 
@@ -22,7 +22,7 @@ Colour coding is the core value delivery of the map — it turns raw data into a
 
 4. **Given** a station with no price data (no verified submissions yet) **When** it is shown on the map **Then** it displays neutral slate-400 (`#94a3b8`) — never misleadingly coloured.
 
-5. **Given** a driver zooms out to see a wider area **When** many stations become visible **Then** colour coding recalculates based on all visible stations in the current viewport (driven by existing `fetchCenter` region change).
+5. **Given** a driver zooms out to see a wider area **When** many stations become visible **Then** colour coding recalculates based on all stations within max(20km, viewport radius) of the user's GPS — stations from previous viewports are merged and kept in memory so pins don't disappear while panning.
 
 6. **Given** a driver views colour-coded station pins **When** their selected language is Polish, English, or Ukrainian **Then** all UI labels (fuel type selector) are displayed in that language.
 

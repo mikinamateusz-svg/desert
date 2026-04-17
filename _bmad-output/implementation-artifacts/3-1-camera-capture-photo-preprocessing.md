@@ -21,11 +21,11 @@ So that I can contribute price data in one tap without switching to my camera ap
 ### AC1 — "Add price" FAB always visible on map
 **Given** a driver is on the map screen
 **When** the screen is displayed
-**Then** a `MapFABGroup` component renders at bottom-right with two stacked pills:
-- Primary (top): `＋ Add price` — `#1a1a1a` fill, white text, border-radius 99px
-- Secondary (bottom): `⛽ Log fill-up` — white fill, `#e5e7eb` border, `#6b7280` text (no-op placeholder for future story)
-- 8dp gap between pills, above safe area inset
-- Both pills fade out 300ms after map pan starts, reappear on pan end
+**Then** a `MapFABGroup` component renders as an inline row above the tab bar:
+- Left: `Cheapest in view` — white fill, light border, dark text (hidden when station detail sheet is open)
+- Right: `＋ Add price` — `#1a1a1a` fill, white text, border-radius full
+- `⛽ Log fill-up` removed in Phase 1 (deferred to Phase 2 — will stack above "Add price" on the right)
+- Buttons always visible (no pan fade animation)
 
 No station selection or pin tap is required — GPS matching happens automatically after capture.
 

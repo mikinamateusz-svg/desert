@@ -21,13 +21,13 @@ reinforces the litro brand from the very first frame.
 
 ## Design Notes
 
-**Visual concept — Fuel Drop (Variant A):**
+**Visual concept — Fuel Drop (static images):**
 - Full-screen `tokens.surface.warmPage` background (`#fdf6ee`)
 - "litro" wordmark centred, `tokens.brand.ink` with `tokens.brand.accent` "o"
-- A tall pill/oval shape (72×96 dp) below the wordmark
-  - Fill state: `tokens.neutral.n200` (empty/grey)
-  - Fill colour: `tokens.brand.accent` (amber, rises from bottom)
-  - 2.5pt ring in `tokens.neutral.n200` drawn on top to create an outline effect
+- A teardrop-shaped image (60×80 dp) below the wordmark, swapped between 4 pre-rendered PNGs at different fill levels (0%, 40%, 75%, 100%) as loading progresses
+  - Images generated via `scripts/generate-loading-drops.mjs` using sharp (SVG→PNG at 3x)
+  - Grey (#e5e5e5) background, amber gradient (#f59e0b→#fbbf24) fill, grey (#9ca3af) outline
+  - No CSS animation — static image swap avoids React Native teardrop shape rendering issues
 - A small stage label below the drop in `tokens.neutral.n400` (e.g. "Finding stations...")
 - Smooth fade-out into the map once all data is ready
 

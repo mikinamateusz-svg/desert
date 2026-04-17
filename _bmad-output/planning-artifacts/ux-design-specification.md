@@ -318,11 +318,15 @@ Contribution mental model: photographing a price board is already something some
 
 **Brand origin:** Derived from logo concept B — the gauge "o" arc runs green → amber → red, making the price spectrum integral to the brand identity itself.
 
-**Price spectrum** (semantic, fixed across all surfaces):
-- `color.price.cheap` — `#22c55e` (green-500) — cheapest nearby
-- `color.price.mid` — `#f59e0b` (amber-500) — average price
-- `color.price.expensive` — `#ef4444` (red-500) — most expensive nearby
+**Price spectrum** (5-level quintile system, cluster-aware):
+- `color.price.cheapest` — `#1a9641` (dark green) — quintile 1, best deal
+- `color.price.cheap` — `#a6d96a` (light green) — quintile 2
+- `color.price.mid` — `#ffffbf` (pale yellow) — quintile 3, average
+- `color.price.pricey` — `#fdae61` (orange) — quintile 4
+- `color.price.expensive` — `#d7191c` (dark red) — quintile 5, most expensive
 - `color.price.nodata` — `#94a3b8` (slate-400) — no data / old
+- Population: all stations within max(20km, viewport radius) of user GPS
+- Cluster guard: if price spread < 0.10 PLN, all show pale yellow (no meaningful difference)
 
 **Brand:**
 - `color.brand.ink` — `#1a1a1a` — wordmark, primary text, nav chrome

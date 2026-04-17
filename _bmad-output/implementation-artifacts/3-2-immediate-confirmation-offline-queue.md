@@ -18,22 +18,27 @@ So that I'm never left waiting or wondering if my contribution was received.
 
 ## Acceptance Criteria
 
-### AC1 — Immediate confirmation screen (before any network call)
-**Given** a driver taps "Confirm price" on `PriceConfirmationCard`
-**When** `enqueueSubmission(CaptureResult)` is called from `capture.tsx`
-**Then** the `CaptureResult` is written to the local SQLite queue synchronously
-**And** navigation immediately replaces to `/(app)/confirm` — before any upload attempt begins
-**And** the driver sees the confirmation screen within 300ms of tapping
+### AC1 — Fire-and-forget submission (no confirmation card)
+**Given** a driver takes a photo and exactly one station is within 200m GPS radius
+**When** the photo is captured and quality-checked
+**Then** `enqueueSubmission()` is called immediately with the GPS-matched station — the `PriceConfirmationCard` is skipped entirely
+**And** navigation replaces to `/(app)/confirm` with the station name as a param
+**And** the driver sees the thank-you screen within 300ms of the shutter
 
-### AC2 — Confirmation screen content
+**Given** multiple stations are within 200m
+**When** the photo is captured
+**Then** the `StationDisambiguationSheet` is shown — after the driver picks a station, submission is queued and navigation goes to the thank-you screen (no `PriceConfirmationCard`)
+
+### AC2 — Thank-you screen content
 **Given** the driver is on the `/(app)/confirm` screen
 **When** it is displayed
 **Then** the screen shows:
-- Headline: `t('confirmation.title')` — "Thank you for contributing!"
-- Subtitle: `t('confirmation.subtitle')` — "We'll process your photo and update the price shortly."
-- Primary CTA: `t('confirmation.done')` — "Done" — navigates to `/(app)/` (map)
-- Fill-up nudge: `t('confirmation.fillupNudge')` — "Did you fill up here? Log pump reading →" — one tap navigates to `/(app)/capture` (future fill-up flow, same as no-op for now)
-- Auto-dismiss: if user taps nothing for 4 seconds, auto-navigate to map — the screen does NOT wait for upload
+- Checkmark icon in amber circle
+- Headline: `t('confirmation.thankYou')` — "Thank you!" / "Dzięki!" / "Дякуємо!"
+- Station name (when GPS-matched): e.g. "Orlen Wola Rakowa"
+- Impact message: `t('confirmation.impactMessage')` — "Drivers nearby will see this update"
+- Primary CTA: `t('confirmation.done')` — "Back to map" — navigates to `/(app)/`
+- Auto-dismiss: if user taps nothing for 4 seconds, auto-navigate to map
 
 ### AC3 — Background upload on connectivity
 **Given** the device has network connectivity when a photo is enqueued

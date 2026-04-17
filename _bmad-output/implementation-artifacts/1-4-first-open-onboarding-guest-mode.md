@@ -15,7 +15,7 @@ so that I can explore fuel prices before deciding whether to create an account.
 1. **Given** a new user opens the app for the first time
    **When** the app finishes loading
    **Then** they see the map screen — no auth required
-   **And** a one-time `SoftSignUpSheet` (bottom sheet) is shown with: "Track your savings and streak" + CTAs: Continue with Google · Continue with Apple · Use Email · Skip
+   **And** a one-time `SoftSignUpSheet` (bottom sheet) is shown with: "Get the full experience" + CTAs: Continue with Google · Continue with Apple · Use Email · Skip
 
 2. **Given** a new user sees the `SoftSignUpSheet`
    **When** they tap Skip
@@ -82,7 +82,7 @@ so that I can explore fuel prices before deciding whether to create an account.
 - [x] **3.1** Create `apps/mobile/src/components/SoftSignUpSheet.tsx`:
   - Props: `visible: boolean`, `onDismiss: () => void`
   - Renders as a `Modal` (or `View` overlay) with bottom-sheet style
-  - Title: `t('auth.onboarding.title')` — "Track your savings and streak"
+  - Title: `t('auth.onboarding.title')` — "Get the full experience"
   - Subtitle: `t('auth.onboarding.subtitle')`
   - Contains `<GoogleSignInButton>` (reuse existing component)
   - Contains `<AppleSignInButton>` (reuse existing component, iOS only)
@@ -116,7 +116,7 @@ so that I can explore fuel prices before deciding whether to create an account.
 ```ts
 auth: {
   onboarding: {
-    title: 'Track your savings and streak',
+    title: 'Get the full experience',
     subtitle: 'See which station near you is cheapest right now.',
     useEmail: 'Use Email',
     skip: 'Skip',

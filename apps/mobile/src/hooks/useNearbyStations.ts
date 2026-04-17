@@ -50,7 +50,13 @@ export function useNearbyStations(
         );
         if (controller.signal.aborted) return;
 
-        setStations(data);
+        // Merge new stations with existing ones so pins don't vanish
+        // while panning — stations from previous viewports stay in memory
+        setStations(prev => {
+          const map = new Map(prev.map(s => [s.id, s]));
+          for (const s of data) map.set(s.id, s);
+          return Array.from(map.values());
+        });
         setError(false);
         await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(data));
       } catch (err) {

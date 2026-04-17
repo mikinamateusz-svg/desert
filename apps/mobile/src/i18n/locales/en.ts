@@ -39,10 +39,14 @@ export default {
       genericError: 'Something went wrong. Please try again.',
     },
     onboarding: {
-      title: 'Track your savings and streak',
-      subtitle: 'See which station near you is cheapest right now.',
+      title: 'Get the full experience',
+      subtitle: 'Sign in to submit prices and help drivers find the cheapest fuel.',
       useEmail: 'Use Email',
       skip: 'Skip',
+    },
+    contributionGate: {
+      title: 'Sign in to share prices',
+      subtitle: 'Your contributions help thousands of drivers find cheaper fuel.',
     },
     gate: {
       title: 'Your photo is ready to submit',

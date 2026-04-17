@@ -6,10 +6,12 @@
 export const tokens = {
   // ── Price spectrum — fixed functional signals, never used for branding ──
   price: {
-    cheap:     '#22c55e', // green-500  — cheapest third in viewport
-    mid:       '#f59e0b', // amber-500  — middle third (same hue as brand.accent; context separates them)
-    expensive: '#ef4444', // red-500    — most expensive third
-    noData:    '#94a3b8', // slate-400  — unverified / estimated
+    cheapest:  '#1a9641', // dark green  — quintile 1 (best deal)
+    cheap:     '#a6d96a', // light green — quintile 2
+    mid:       '#ffffbf', // pale yellow — quintile 3 (average)
+    pricey:    '#fdae61', // orange      — quintile 4
+    expensive: '#d7191c', // dark red    — quintile 5 (most expensive)
+    noData:    '#94a3b8', // slate-400   — no price data
   },
 
   // ── Brand ───────────────────────────────────────────────────────────────

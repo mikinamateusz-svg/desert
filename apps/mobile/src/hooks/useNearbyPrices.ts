@@ -35,7 +35,13 @@ export function useNearbyPrices(
           controller.signal,
         );
         if (controller.signal.aborted) return;
-        setPrices(data);
+        // Merge new prices with existing — keeps prices for stations
+        // from previous viewports so pins don't lose their colours
+        setPrices(prev => {
+          const map = new Map(prev.map(p => [p.stationId, p]));
+          for (const p of data) map.set(p.stationId, p);
+          return Array.from(map.values());
+        });
         setError(false);
       } catch (err) {
         if (controller.signal.aborted) return;

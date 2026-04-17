@@ -2,15 +2,27 @@ import type { FuelType } from '@desert/types';
 import { tokens } from '../theme';
 import type { StationPriceDto } from '../api/prices';
 
-export type PriceColor = 'cheap' | 'mid' | 'expensive' | 'nodata';
+export type PriceColor = 'cheapest' | 'cheap' | 'mid' | 'pricey' | 'expensive' | 'nodata';
 
 export const PRICE_COLORS: Record<PriceColor, string> = {
+  cheapest:  tokens.price.cheapest,
   cheap:     tokens.price.cheap,
   mid:       tokens.price.mid,
+  pricey:    tokens.price.pricey,
   expensive: tokens.price.expensive,
   nodata:    tokens.price.noData,
 };
 
+/** Minimum price spread (PLN) to distinguish quintiles. Below this, all stations show as 'mid'. */
+const MIN_SPREAD_PLN = 0.10;
+
+/**
+ * Compute price color for each station using cluster-aware quintile ranking.
+ *
+ * - If the price spread is < MIN_SPREAD_PLN, all stations get 'mid' (no meaningful difference).
+ * - Otherwise, stations are sorted by price and assigned to quintiles by rank.
+ * - Stations without price data get 'nodata'.
+ */
 export function computePriceColorMap(
   stationIds: string[],
   prices: StationPriceDto[],
@@ -27,26 +39,41 @@ export function computePriceColorMap(
     return [p.stationId, undefined] as const;
   }));
 
-  const validPrices = stationIds
-    .map(id => priceByStation.get(id))
-    .filter((p): p is number => typeof p === 'number' && !isNaN(p));
+  // Collect stations that have a valid price
+  const withPrice: { id: string; price: number }[] = [];
+  for (const id of stationIds) {
+    const price = priceByStation.get(id);
+    if (typeof price === 'number' && !isNaN(price)) {
+      withPrice.push({ id, price });
+    } else {
+      result.set(id, 'nodata');
+    }
+  }
 
-  if (validPrices.length < 2) {
-    stationIds.forEach(id => result.set(id, 'nodata'));
+  if (withPrice.length < 2) {
+    withPrice.forEach(s => result.set(s.id, 'nodata'));
     return result;
   }
 
-  const min = Math.min(...validPrices);
-  const max = Math.max(...validPrices);
-  const range = max - min;
+  // Cluster guard: if all prices are within MIN_SPREAD_PLN, show all as 'mid'
+  const min = Math.min(...withPrice.map(s => s.price));
+  const max = Math.max(...withPrice.map(s => s.price));
+  if (max - min < MIN_SPREAD_PLN) {
+    withPrice.forEach(s => result.set(s.id, 'mid'));
+    return result;
+  }
 
-  stationIds.forEach(id => {
-    const price = priceByStation.get(id);
-    if (price === undefined) { result.set(id, 'nodata'); return; }
-    if (range === 0)         { result.set(id, 'mid'); return; }
-    const ratio = (price - min) / range;
-    result.set(id, ratio <= 0.33 ? 'cheap' : ratio <= 0.66 ? 'mid' : 'expensive');
-  });
+  // Sort by price ascending and assign quintiles by percentile rank
+  withPrice.sort((a, b) => a.price - b.price);
+  const count = withPrice.length;
+
+  const QUINTILES: PriceColor[] = ['cheapest', 'cheap', 'mid', 'pricey', 'expensive'];
+
+  for (let i = 0; i < count; i++) {
+    const rank = i / (count - 1); // 0.0 = cheapest, 1.0 = most expensive
+    const bucket = Math.min(Math.floor(rank * 5), 4);
+    result.set(withPrice[i]!.id, QUINTILES[bucket]!);
+  }
 
   return result;
 }

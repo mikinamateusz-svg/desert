@@ -39,10 +39,14 @@ export default {
       genericError: 'Coś poszło nie tak. Spróbuj ponownie.',
     },
     onboarding: {
-      title: 'Śledź swoje oszczędności',
-      subtitle: 'Zobacz, która stacja w pobliżu jest najtańsza.',
+      title: 'Korzystaj w pełni',
+      subtitle: 'Zaloguj się, aby dodawać ceny i pomagać kierowcom znaleźć najtańsze paliwo.',
       useEmail: 'Użyj e-maila',
       skip: 'Pomiń',
+    },
+    contributionGate: {
+      title: 'Zaloguj się, aby dodać cenę',
+      subtitle: 'Twoje zgłoszenia pomagają tysiącom kierowców znaleźć tańsze paliwo.',
     },
     gate: {
       title: 'Twoje zdjęcie jest gotowe do wysłania',

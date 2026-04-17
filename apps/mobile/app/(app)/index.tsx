@@ -9,6 +9,7 @@ import type GeoJSON from 'geojson';
 import type { FuelType } from '@desert/types';
 import { MapFABGroup } from '../../src/components/contribution/MapFABGroup';
 import { useCameraPermission } from '../../src/hooks/useCameraPermission';
+import { haversineMetres } from '../../src/utils/haversine';
 import { StationPin } from '../../src/components/map/StationPin';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
@@ -48,6 +49,7 @@ export default function MapScreen() {
   const [locationDeniedVisible, setLocationDeniedVisible] = useState(false);
   const [sheetDismissed, setSheetDismissed] = useState(false);
   const programmaticMoveRef = useRef(false);
+  const [viewportRadiusM, setViewportRadiusM] = useState(20_000);
 
   // Loading screen stage
   const [loadingStage, setLoadingStage] = useState<LoadingStage>('gps');
@@ -139,11 +141,19 @@ export default function MapScreen() {
     return () => clearTimeout(t);
   }, [splashVisible]);
 
-  // Compute relative price colour map for current viewport
-  const priceColorMap = useMemo(
-    () => computePriceColorMap(stations.map(s => s.id), prices, selectedFuelType),
-    [stations, prices, selectedFuelType],
-  );
+  // Compute relative price colours using stations within max(20km, viewport radius)
+  // of the user's GPS position. This keeps colors stable while panning and ensures
+  // a meaningful population for quintile ranking.
+  const MIN_COLOR_RADIUS_M = 20_000;
+  const priceColorMap = useMemo(() => {
+    const anchor = location ?? fetchCenter;
+    if (!anchor) return computePriceColorMap(stations.map(s => s.id), prices, selectedFuelType);
+    const radius = Math.max(MIN_COLOR_RADIUS_M, viewportRadiusM);
+    const inRange = stations.filter(
+      s => haversineMetres(anchor.lat, anchor.lng, s.lat, s.lng) <= radius,
+    );
+    return computePriceColorMap(inRange.map(s => s.id), prices, selectedFuelType);
+  }, [stations, prices, selectedFuelType, location, fetchCenter, viewportRadiusM]);
 
   // Quick price lookup by stationId for pin labels
   const priceMap = useMemo(
@@ -166,6 +176,17 @@ export default function MapScreen() {
       programmaticMoveRef.current = false;
       return;
     }
+
+    // Estimate viewport radius from the visible bounds
+    const props = feature.properties as { visibleBounds?: [[number, number], [number, number]] } | null;
+    if (props?.visibleBounds) {
+      const [[neLng, neLat], [swLng, swLat]] = props.visibleBounds;
+      const centerLat = (neLat + swLat) / 2;
+      const centerLng = (neLng + swLng) / 2;
+      const radiusM = haversineMetres(centerLat, centerLng, neLat, neLng);
+      setViewportRadiusM(radiusM);
+    }
+
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       const [lng, lat] = feature.geometry.coordinates;
@@ -440,6 +461,7 @@ export default function MapScreen() {
       <SoftSignUpSheet
         visible={showContributionGate}
         onDismiss={() => setShowContributionGate(false)}
+        context="contribution"
       />
 
       <FuelTypePickerSheet
@@ -474,11 +496,11 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 40,
-    paddingBottom: 10,
+    paddingBottom: 6,
     paddingHorizontal: 16,
     backgroundColor: tokens.surface.card,
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     justifyContent: 'space-between',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },

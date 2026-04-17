@@ -17,9 +17,10 @@ import { AppleSignInButton } from './AppleSignInButton';
 interface Props {
   visible: boolean;
   onDismiss: () => void;
+  context?: 'onboarding' | 'contribution';
 }
 
-export function SoftSignUpSheet({ visible, onDismiss }: Props) {
+export function SoftSignUpSheet({ visible, onDismiss, context = 'onboarding' }: Props) {
   const { t } = useTranslation();
   const { skipOnboarding } = useAuth();
   const router = useRouter();
@@ -66,8 +67,12 @@ export function SoftSignUpSheet({ visible, onDismiss }: Props) {
       <View style={styles.sheet}>
         <View style={styles.handle} />
 
-        <Text style={styles.title}>{t('auth.onboarding.title')}</Text>
-        <Text style={styles.subtitle}>{t('auth.onboarding.subtitle')}</Text>
+        <Text style={styles.title}>
+          {t(context === 'contribution' ? 'auth.contributionGate.title' : 'auth.onboarding.title')}
+        </Text>
+        <Text style={styles.subtitle}>
+          {t(context === 'contribution' ? 'auth.contributionGate.subtitle' : 'auth.onboarding.subtitle')}
+        </Text>
 
         {error ? <Text style={styles.error}>{error}</Text> : null}
 

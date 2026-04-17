@@ -2199,6 +2199,50 @@ So that I can seed or re-populate station data without leaving the browser or us
 
 ---
 
+### Story 4.11: Admin Panel Two-Factor Authentication *(Phase 2)*
+
+As an **ops admin**,
+I want to protect the admin panel with two-factor authentication (2FA),
+So that even if my password is compromised, an attacker cannot access admin functions (station hiding, user management, submission moderation).
+
+**Why:** The admin panel controls data integrity — hiding stations, managing shadow bans, overriding prices. A single-factor login (email/password) is sufficient while there's one admin (founder), but becomes a risk when adding team members or if credentials are leaked. 2FA is an industry-standard security layer and a strong GDPR Art. 32 "appropriate technical measure."
+
+**Phase:** 2 (implement before adding any non-founder admin users)
+
+**Acceptance Criteria:**
+
+AC1: **Given** an ADMIN logs into the admin panel for the first time after 2FA is enabled
+**When** they enter correct email/password
+**Then** they are prompted to set up 2FA by scanning a QR code with an authenticator app (Google Authenticator, Authy, etc.)
+
+AC2: **Given** an ADMIN with 2FA enabled logs in
+**When** they enter correct email/password
+**Then** they are prompted for a 6-digit TOTP code before gaining access
+
+AC3: **Given** an ADMIN enters an incorrect TOTP code
+**When** submitting the 2FA form
+**Then** access is denied with "Invalid code" error, and the attempt is logged
+
+AC4: **Given** an ADMIN loses access to their authenticator
+**When** they need to recover access
+**Then** they can use a one-time recovery code (generated during 2FA setup) to bypass TOTP and reconfigure
+
+AC5: **Given** a non-ADMIN user somehow reaches the 2FA setup page
+**When** they attempt to configure 2FA
+**Then** the request is rejected (2FA is admin-only)
+
+**Technical notes:**
+- Use TOTP (RFC 6238) — standard time-based one-time passwords
+- Libraries: `otpauth` or `speakeasy` for Node.js TOTP generation/verification
+- Store TOTP secret encrypted in the User model (new field: `totp_secret`)
+- Recovery codes: generate 8 single-use codes at setup, store hashed
+- Session token (`admin_token` cookie) only issued after both password AND TOTP are verified
+- Consider: should 2FA be mandatory for all ADMIN users, or opt-in? Recommend mandatory.
+
+*Covers: GDPR Art. 32 "appropriate technical and organisational measures." No FR mapping — security infrastructure. Depends on Story 4.1 (admin dashboard, login flow).*
+
+---
+
 ## Epic 5: Personal Savings & Consumption Intelligence *(Phase 2)*
 
 Drivers who submit pump meter and odometer photos unlock personal savings summaries, fuel consumption history (l/100km), and cost trend visualisations — all independent of community participation.

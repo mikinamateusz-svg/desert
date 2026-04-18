@@ -4,18 +4,19 @@ import { test, expect } from '@playwright/test';
 async function waitForMap(page: import('@playwright/test').Page) {
   await page.goto('/');
   await page.waitForSelector('canvas', { timeout: 15_000 });
-  await page.waitForTimeout(1500); // allow map to initialize and stations to load
 
-  // At low zoom pins are clustered. Double-click repeatedly to zoom in so
-  // individual station markers appear (Mapbox natively zooms on double-click).
-  const canvas = page.locator('canvas').first();
-  const box = await canvas.boundingBox();
-  if (box) {
-    for (let i = 0; i < 8; i++) {
-      await canvas.dblclick({ position: { x: box.width / 2, y: box.height / 2 }, force: true });
-      await page.waitForTimeout(200);
-    }
-  }
+  // Wait for the map instance to be exposed on window (set in onLoad)
+  await page.waitForFunction(
+    () => (window as unknown as { __mapbox_map?: { setZoom: (z: number) => void } }).__mapbox_map !== undefined,
+    { timeout: 15_000 },
+  );
+
+  // Zoom in past the cluster maxZoom threshold (10) so individual pins render
+  await page.evaluate(() => {
+    const map = (window as unknown as { __mapbox_map: { setZoom: (z: number) => void; setCenter: (c: [number, number]) => void } }).__mapbox_map;
+    map.setCenter([19.4560, 51.7592]); // Lodz — dense with stations
+    map.setZoom(12);
+  });
 
   // Station markers are rendered as DOM buttons by react-map-gl's <Marker>
   await page.waitForSelector('[data-testid="station-marker"]', { timeout: 15_000 });

@@ -208,7 +208,13 @@ export default function MapView({
         }}
         mapStyle="mapbox://styles/mapbox/streets-v12"
         style={{ width: '100%', height: '100%' }}
-        onLoad={e => handleMoveEnd(e)}
+        onLoad={e => {
+          handleMoveEnd(e);
+          // Expose the map instance to window for e2e tests to control zoom
+          if (typeof window !== 'undefined') {
+            (window as unknown as { __mapbox_map?: mapboxgl.Map }).__mapbox_map = e.target;
+          }
+        }}
         onMoveEnd={e => handleMoveEnd(e)}
       >
         {/* Zoom/compass controls — hidden on mobile via CSS (pinch-to-zoom is native) */}

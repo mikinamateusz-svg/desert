@@ -129,7 +129,11 @@ export class EstimatedPriceService {
       const sources: Record<string, 'community' | 'seeded'> = {};
       const estimateLabel: Record<string, 'market_estimate' | 'estimated'> = {};
 
-      const isLpgOnly = /\bLPG\b/i.test(station.name);
+      // LPG/gas-only stations should only receive LPG estimates, never PB/ON.
+      // Matches (case-insensitive): "LPG", "GAZ" (standalone word), "AUTOGAZ",
+      // "AUTO-GAZ", "AUTO GAZ", "CNG", "STACJA GAZU", "GAZ-POINT".
+      const isLpgOnly = /\b(LPG|GAZ|AUTOGAZ|AUTO[ -]GAZ|CNG|GAZU)\b/i.test(station.name)
+        || /GAZ[- ]?POINT/i.test(station.name);
 
       for (const fuelType of ESTIMABLE_FUEL_TYPES) {
         if (coveredFuels?.has(fuelType)) continue;

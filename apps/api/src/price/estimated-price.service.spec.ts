@@ -231,6 +231,32 @@ describe('EstimatedPriceService', () => {
       }
     });
 
+    it.each([
+      'Stacja LPG Kowalski',
+      'AUTOGAZ Nowak',
+      'Auto-Gaz Warszawa',
+      'Gaz-Point Kraków',
+      'CNG Station Gdańsk',
+      'Stacja Gazu Poznań',
+      'LPG/Autogaz',
+    ])('only generates LPG estimate for gas-only station: %s', async (name) => {
+      mockQueryRaw.mockResolvedValueOnce([
+        { signal_type: 'orlen_rack_pb95', value: 5.80 },
+        { signal_type: 'orlen_rack_on',   value: 5.90 },
+        { signal_type: 'orlen_rack_lpg',  value: 2.40 },
+      ]);
+
+      const lpgStation: StationClassificationRow = { ...baseStation, name };
+      const result = await service.computeEstimatesForStations([lpgStation]);
+      const row = result.get('station-1');
+
+      expect(row).toBeDefined();
+      expect(Object.keys(row!.priceRanges ?? {})).toEqual(['LPG']);
+      expect(row!.sources?.PB_95).toBeUndefined();
+      expect(row!.sources?.ON).toBeUndefined();
+      expect(row!.sources?.LPG).toBe('seeded');
+    });
+
     it('returns estimated rows (fallback) when no rack prices available', async () => {
       mockQueryRaw.mockResolvedValueOnce([]); // no rack data
 

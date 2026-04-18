@@ -133,8 +133,8 @@ export default function MapView({
   // Build cluster index from stations — recomputes when station list changes
   const clusterIndex = useMemo(() => {
     const index = new Supercluster<{ station: StationWithPrice }>({
-      radius: 40, // pixel radius for clustering — tighter = more individual pins visible
-      maxZoom: 10, // above this zoom, every station is its own pin (regional view only clusters)
+      radius: 35, // pixel radius for clustering — tighter = more individual pins visible
+      maxZoom: 9, // above this zoom, every station is its own pin (country view only clusters)
     });
     index.load(
       stations.map(s => ({

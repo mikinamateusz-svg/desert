@@ -12,11 +12,11 @@ async function waitForMap(page: import('@playwright/test').Page) {
   );
 
   // Zoom in past the cluster maxZoom threshold (9) so individual pins render.
-  // Also center on Lodz — dense with stations from the initial server-side fetch.
+  // Center on Warsaw — the mock server's 5 stations all live in lat 52.16–52.25, lng 20.97–21.07.
   await page.evaluate(() => {
     const map = (window as unknown as { __mapbox_map: { setZoom: (z: number) => void; setCenter: (c: [number, number]) => void } }).__mapbox_map;
-    map.setCenter([19.4560, 51.7592]); // Lodz
-    map.setZoom(12);
+    map.setCenter([21.02, 52.21]); // Warsaw
+    map.setZoom(11);
   });
 
   // Bounds change triggers debounced station refetch (500ms). Wait a bit for

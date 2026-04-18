@@ -396,7 +396,7 @@ So that Android users in Poland can find and install Litro.
 
 ---
 
-### Story 12.8: Staging Environment Setup *(Pre-Phase 2)*
+### Story 12.8: Staging Environment Setup *(⚠️ Phase 2 prerequisite — MUST be completed before the first Phase 2 story starts)*
 
 As an **operator**,
 I want a dedicated staging environment (`main` branch) separate from production (`prod` branch),
@@ -412,3 +412,21 @@ So that Phase 2 migrations, paid features, and risky changes can be tested befor
 - Google Places API disabled in staging (avoid the 2,000 PLN surprise bill pattern)
 - OCR spend cap set lower in staging ($5/day vs prod)
 - Setup time ~90 minutes; rollback is trivial (just keep deploying from `main`)
+
+---
+
+## Phase 2 Epic Sequencing (decided 2026-04-18)
+
+**Order: 4 → 6 → 5 → 7 → 10 → 8**
+
+1. **Epic 4 (Phase 2 extensions)** — admin cost tracking, data freshness dashboard, station sync trigger. Operational visibility before scaling.
+2. **Epic 6 (Community, Alerts & Engagement)** — price drop / rise / predictive alerts + alert preferences. Drives retention on existing price data; validates push-notification infra. **Phased:** Story 6.5 (monthly savings summary notification) deferred to after Epic 5, since it depends on savings-calc data.
+3. **Epic 5 (Personal Savings & Consumption Intelligence)** — vehicle setup, pump-meter OCR, odometer OCR, savings vs area average, consumption benchmarks. Heaviest epic; benefits from notification infra already landing.
+4. **Epic 6.5 backfill** — ship monthly savings summary notification using Epic 5 data.
+5. **Epic 7 (Station Partner Portal)** — claim & self-update flow for station owners.
+6. **Epic 10 (Data Licensing & Public Portal)** — public web portal + licensed API products.
+7. **Epic 8 (Station Promotions & Advertising)** — promoted placement + deal advertising (revenue layer; Station Picker deferred to Phase 3).
+
+**Reasoning:**
+- 4-6-5 over 4-5-6: alerts land retention wins on week one while Epic 5's multi-week OCR + vehicle-setup build proceeds later with notification infra already proven.
+- Epic 9 (Fleet) stays deferred to Phase 3 — revisit when fleet drivers signal demand in-app.

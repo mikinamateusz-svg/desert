@@ -43,10 +43,16 @@ A shared tokens file makes future visual changes a one-line edit and unblocks st
 export const tokens = {
   // ── Price spectrum — fixed functional signals, never used for branding ──
   price: {
-    cheap:     '#22c55e', // green-500  — cheapest third in viewport
-    mid:       '#f59e0b', // amber-500  — middle third (same hue as brand.accent; context separates them)
-    expensive: '#ef4444', // red-500    — most expensive third
-    noData:    '#94a3b8', // slate-400  — unverified / estimated
+    // 5-level quintile palette (updated 2026-04-18) — saturated colors for map pin readability.
+    // Population: all stations within max(20km, viewport radius) of user GPS.
+    // Cluster guard: if price spread < 0.10 PLN, all show mid (amber/gold).
+    // Estimated pins use dark grey #6b7280 background + colored border + white text (WCAG AA).
+    cheapest:  '#1a9641', // dark green   — quintile 1 (best deal)
+    cheap:     '#66bd63', // medium green — quintile 2
+    mid:       '#f5c542', // amber/gold   — quintile 3 (average)
+    pricey:    '#f46d43', // warm orange  — quintile 4
+    expensive: '#d7191c', // dark red     — quintile 5 (most expensive)
+    noData:    '#94a3b8', // slate-400    — unverified / estimated
   },
 
   // ── Brand ───────────────────────────────────────────────────────────────

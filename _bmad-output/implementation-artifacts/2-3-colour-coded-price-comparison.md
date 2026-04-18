@@ -14,7 +14,7 @@ Colour coding is the core value delivery of the map — it turns raw data into a
 
 ## Acceptance Criteria
 
-1. **Given** multiple stations are visible on the map **When** their prices are loaded **Then** each station pin is colour-coded using a 5-level quintile system relative to all stations within max(20km, viewport radius) of the user's GPS position — dark green (#1a9641) = cheapest 20%, light green (#a6d96a) = 20-40%, pale yellow (#ffffbf) = 40-60%, orange (#fdae61) = 60-80%, dark red (#d7191c) = most expensive 20%. If the price spread across the population is less than 0.10 PLN, all stations show pale yellow (no meaningful difference).
+1. **Given** multiple stations are visible on the map **When** their prices are loaded **Then** each station pin is colour-coded using a 5-level quintile system relative to all stations within max(20km, viewport radius) of the user's GPS position — dark green (#1a9641) = cheapest 20%, medium green (#66bd63) = 20-40%, amber/gold (#f5c542) = 40-60%, warm orange (#f46d43) = 60-80%, dark red (#d7191c) = most expensive 20%. If the price spread across the population is less than 0.10 PLN, all stations show amber (no meaningful difference). Estimated pins use dark grey `#6b7280` background with colored quintile border and white text (WCAG AA compliant). The algorithm is implemented identically on web and mobile.
 
 2. **Given** a driver selects a specific fuel type **When** the filter is applied **Then** colour coding updates to reflect relative prices for that fuel type only.
 

@@ -318,15 +318,18 @@ Contribution mental model: photographing a price board is already something some
 
 **Brand origin:** Derived from logo concept B — the gauge "o" arc runs green → amber → red, making the price spectrum integral to the brand identity itself.
 
-**Price spectrum** (5-level quintile system, cluster-aware):
+**Price spectrum** (5-level quintile system, cluster-aware, saturated palette):
 - `color.price.cheapest` — `#1a9641` (dark green) — quintile 1, best deal
-- `color.price.cheap` — `#a6d96a` (light green) — quintile 2
-- `color.price.mid` — `#ffffbf` (pale yellow) — quintile 3, average
-- `color.price.pricey` — `#fdae61` (orange) — quintile 4
+- `color.price.cheap` — `#66bd63` (medium green) — quintile 2
+- `color.price.mid` — `#f5c542` (amber/gold) — quintile 3, average
+- `color.price.pricey` — `#f46d43` (warm orange) — quintile 4
 - `color.price.expensive` — `#d7191c` (dark red) — quintile 5, most expensive
 - `color.price.nodata` — `#94a3b8` (slate-400) — no data / old
 - Population: all stations within max(20km, viewport radius) of user GPS
-- Cluster guard: if price spread < 0.10 PLN, all show pale yellow (no meaningful difference)
+- Cluster guard: if price spread < 0.10 PLN, all show amber/gold (no meaningful difference)
+- Estimated pins: dark grey background `#6b7280` + colored border (quintile color) + white text (WCAG AA compliant at 4.9:1)
+- Pin text color adapts for WCAG: white on cheapest/pricey/expensive, dark ink on cheap/mid
+- Applied identically across web and mobile via shared quintile algorithm
 
 **Brand:**
 - `color.brand.ink` — `#1a1a1a` — wordmark, primary text, nav chrome

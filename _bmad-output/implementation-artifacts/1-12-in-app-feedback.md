@@ -26,7 +26,9 @@ The cheapest and most reliable product research is a feedback button shipped on 
 3. **Given** a driver submits feedback,
    **When** it is sent successfully,
    **Then** they see a brief confirmation: "Thanks — we read every message",
-   **And** the feedback is delivered to the team's designated inbox via a Slack webhook (configured via `FEEDBACK_WEBHOOK_URL` env var).
+   **And** the feedback is delivered via email (Resend) to `FEEDBACK_EMAIL` (defaults to `kontakt@litro.pl`). Optional secondary delivery to Slack if `FEEDBACK_WEBHOOK_URL` is set.
+
+   *Updated 2026-04-18:* Email via Resend is now the primary channel. Slack webhook is optional secondary. Contact form on web uses the same service via the public `POST /v1/contact` endpoint.
 
 4. **Given** a driver submits feedback,
    **When** it is processed,
@@ -36,9 +38,13 @@ The cheapest and most reliable product research is a feedback button shipped on 
    **When** it is Polish, English, or Ukrainian,
    **Then** all labels and confirmation messages are displayed in that language.
 
-6. **Given** `FEEDBACK_WEBHOOK_URL` is not set in the API environment,
+6. **Given** neither `RESEND_API_KEY` nor `FEEDBACK_WEBHOOK_URL` is set in the API environment,
    **When** a feedback submission arrives,
    **Then** the API logs a warning and returns 202 (feedback is not silently dropped — the warning is observable).
+
+7. **Given** a website visitor submits the public contact form,
+   **When** they POST `{name, email, subject, message}` to `POST /v1/contact` (public endpoint, no auth required, rate-limited 3/hour per IP),
+   **Then** an email is sent via Resend with `replyTo` set to the sender's email, and the response is 202.
 
 ## Tasks / Subtasks
 

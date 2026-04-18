@@ -50,7 +50,7 @@ export default function Navbar({ locale, t }: Props) {
       {/* Right side */}
       <div className="flex items-center gap-2 ml-auto">
         {/* Lang switcher — pill buttons matching mobile style */}
-        <div className="hidden sm:flex items-center gap-1">
+        <div className="hidden sm:flex items-center gap-1 sm:mr-4">
           {(['pl', 'en', 'uk'] as Locale[]).map(l => (
             l === locale ? (
               <span
@@ -98,45 +98,54 @@ export default function Navbar({ locale, t }: Props) {
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu overlay + drawer */}
       {menuOpen && (
-        <div className="absolute top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-lg md:hidden z-50">
-          <nav className="px-4 py-3 flex flex-col gap-1">
-            {NAV_LINKS(t, locale).map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                onClick={() => setMenuOpen(false)}
-                className={`px-3 py-2.5 rounded-md text-sm font-medium ${
-                  pathname === href
-                    ? 'bg-amber-50 text-brand-ink font-semibold'
-                    : 'text-gray-700 hover:bg-gray-50'
-                }`}
-              >
-                {label}
-              </Link>
-            ))}
-            <div className="border-t border-gray-100 mt-2 pt-2 flex items-center justify-between">
-              <div className="flex items-center gap-1">
-                {(['pl', 'en', 'uk'] as Locale[]).map(l => (
-                  l === locale ? (
-                    <span key={l} className="px-2.5 py-1 rounded-full text-xs font-semibold uppercase border border-brand-accent bg-amber-50 text-brand-accent">{l}</span>
-                  ) : (
-                    <a key={l} href={`/api/set-locale?l=${l}`} className="px-2.5 py-1 rounded-full text-xs font-medium uppercase border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-400 transition-colors">
-                      {l}
-                    </a>
-                  )
-                ))}
+        <>
+          {/* Dark overlay */}
+          <div
+            className="fixed inset-0 top-16 bg-black/40 md:hidden z-40"
+            onClick={() => setMenuOpen(false)}
+            aria-hidden="true"
+          />
+          {/* Right-aligned drawer, capped at 320px */}
+          <div className="fixed top-16 right-0 bottom-0 w-80 max-w-[85vw] bg-white border-l border-gray-200 shadow-xl md:hidden z-50 overflow-y-auto">
+            <nav className="px-4 py-4 flex flex-col gap-1">
+              {NAV_LINKS(t, locale).map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setMenuOpen(false)}
+                  className={`px-3 py-2.5 rounded-md text-sm font-medium ${
+                    pathname === href
+                      ? 'bg-amber-50 text-brand-ink font-semibold'
+                      : 'text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  {label}
+                </Link>
+              ))}
+              <div className="border-t border-gray-100 mt-3 pt-3 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1">
+                  {(['pl', 'en', 'uk'] as Locale[]).map(l => (
+                    l === locale ? (
+                      <span key={l} className="px-2.5 py-1 rounded-full text-xs font-semibold uppercase border border-brand-accent bg-amber-50 text-brand-accent">{l}</span>
+                    ) : (
+                      <a key={l} href={`/api/set-locale?l=${l}`} className="px-2.5 py-1 rounded-full text-xs font-medium uppercase border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-400 transition-colors">
+                        {l}
+                      </a>
+                    )
+                  ))}
+                </div>
+                <a
+                  href={locale === 'en' ? '/en/download' : locale === 'uk' ? '/uk/download' : '/pobierz'}
+                  className="bg-brand-ink text-white text-sm font-medium px-3 py-1.5 rounded-lg whitespace-nowrap"
+                >
+                  {t.nav.getApp}
+                </a>
               </div>
-              <a
-                href={locale === 'en' ? '/en/download' : locale === 'uk' ? '/uk/download' : '/pobierz'}
-                className="bg-brand-ink text-white text-sm font-medium px-3 py-1.5 rounded-lg"
-              >
-                {t.nav.getApp}
-              </a>
-            </div>
-          </nav>
-        </div>
+            </nav>
+          </div>
+        </>
       )}
     </header>
   );

@@ -180,6 +180,7 @@ export default function MapView({
         onLoad={e => handleMoveEnd(e)}
         onMoveEnd={e => handleMoveEnd(e)}
       >
+        {/* Zoom/compass controls — hidden on mobile via CSS (pinch-to-zoom is native) */}
         <NavigationControl position="bottom-left" />
 
         {stations.map(station => (

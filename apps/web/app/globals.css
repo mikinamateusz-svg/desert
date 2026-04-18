@@ -16,9 +16,21 @@
   --color-neutral-secondary: #6b7280; /* secondary text                  */
   --color-neutral-muted:    #9ca3af; /* placeholder, subtle text         */
 
-  /* ── Price spectrum (map pins only) ────────────────────────── */
-  --color-price-cheap:      #22c55e;
-  --color-price-mid:        #f59e0b;
-  --color-price-expensive:  #ef4444;
+  /* ── Price spectrum (5-level quintile system, map pins only) ── */
+  --color-price-cheapest:   #1a9641;
+  --color-price-cheap:      #66bd63;
+  --color-price-mid:        #f5c542;
+  --color-price-pricey:     #f46d43;
+  --color-price-expensive:  #d7191c;
   --color-price-nodata:     #94a3b8;
+}
+
+/* Hide Mapbox zoom/compass controls on mobile — pinch-to-zoom is native */
+@media (max-width: 1023px) {
+  .mapboxgl-ctrl-top-right,
+  .mapboxgl-ctrl-top-left,
+  .mapboxgl-ctrl-bottom-right,
+  .mapboxgl-ctrl-bottom-left {
+    display: none !important;
+  }
 }

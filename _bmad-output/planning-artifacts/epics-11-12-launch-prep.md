@@ -392,3 +392,23 @@ So that Android users in Poland can find and install Litro.
 **When** Google approves the app
 **Then** it is rolled out to 100% of eligible users in Poland
 **And** the Play Store URL is recorded and added to the website and marketing materials
+
+
+---
+
+### Story 12.8: Staging Environment Setup *(Pre-Phase 2)*
+
+As an **operator**,
+I want a dedicated staging environment (`main` branch) separate from production (`prod` branch),
+So that Phase 2 migrations, paid features, and risky changes can be tested before reaching real users.
+
+**Why:** Phase 2 introduces DB schema changes (fill-up, consumption), paid features (ads, data licensing), and API integrations. A bad migration or uncapped API call in production could corrupt user data or cost real money. Staging is cheap insurance (~$5-10/month) against these risks.
+
+**Full story details:** see `_bmad-output/implementation-artifacts/12-8-staging-environment-setup.md`
+
+**Key points:**
+- `main` → staging, `prod` → production (promotion by merge)
+- Neon `staging` branch (free), second Upstash Redis (free), second R2 bucket (free), second Railway API (~$5-10/mo), second Vercel project (free)
+- Google Places API disabled in staging (avoid the 2,000 PLN surprise bill pattern)
+- OCR spend cap set lower in staging ($5/day vs prod)
+- Setup time ~90 minutes; rollback is trivial (just keep deploying from `main`)

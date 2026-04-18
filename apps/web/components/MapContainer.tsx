@@ -19,22 +19,10 @@ interface Props {
   locale: Locale;
 }
 
-const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? '';
-
 async function fetchStationsAt(lat: number, lng: number, radius: number): Promise<StationWithPrice[]> {
-  const [sRes, pRes] = await Promise.all([
-    fetch(`${API_BASE}/v1/stations/nearby?lat=${lat}&lng=${lng}&radius=${radius}`),
-    fetch(`${API_BASE}/v1/prices/nearby?lat=${lat}&lng=${lng}&radius=${radius}`),
-  ]);
-  if (!sRes.ok || !pRes.ok) return [];
-  const [rawStations, rawPrices] = await Promise.all([sRes.json(), pRes.json()]) as [unknown, unknown];
-  const stationsList = (rawStations as { id: string; [k: string]: unknown }[]) ?? [];
-  const pricesList = (rawPrices as { stationId: string; [k: string]: unknown }[]) ?? [];
-  const priceMap = new Map(pricesList.map(p => [p.stationId, p]));
-  return stationsList.map(s => ({
-    ...(s as unknown as StationWithPrice),
-    price: (priceMap.get(s.id) as unknown as StationWithPrice['price']) ?? null,
-  }));
+  const res = await fetch(`/api/stations?lat=${lat}&lng=${lng}&radius=${radius}`);
+  if (!res.ok) return [];
+  return (await res.json()) as StationWithPrice[];
 }
 
 export default function MapContainer({ stations: initialStations, defaultLat, defaultLng, t }: Props) {

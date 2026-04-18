@@ -20,7 +20,9 @@ The map view is the core of the product — it's what drivers open the app for. 
 
 3. **Given** a driver who has previously opened the app, **When** they open it again without connectivity or with GPS/API failure, **Then** the last-known station positions are shown from AsyncStorage cache — the app does not hard-fail or show an empty screen.
 
-4. **Given** a driver moves to a new area, **When** they pan or zoom the map, **Then** station pins update to reflect the new visible area (fresh API fetch on region change, debounced 500ms).
+4. **Given** a driver moves to a new area, **When** they pan or zoom the map, **Then** station pins update to reflect the new visible area (fresh API fetch on region change, debounced 500ms). Previously-loaded stations are merged with new results so pins don't vanish during pan.
+
+5a. **Pin clustering (added 2026-04-18):** At low zoom levels (zoom < 12 on mobile), nearby stations are grouped into amber circular clusters showing the count. Tapping a cluster flies to its expansion zoom. Individual pins render starting at zoom 12. Uses `supercluster` with `radius: 60px` and `maxZoom: 11`.
 
 5. **Given** the map is displayed, **When** station pins are rendered, **Then** each pin is tappable — logs station name to console as placeholder (full station detail sheet is Story 2.5).
 

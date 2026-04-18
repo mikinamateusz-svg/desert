@@ -23,7 +23,11 @@ So that I can quickly check prices before heading out, and search engines can in
 
 - **AC2 — SEO indexability:** Given a search engine crawler visits the public map, when it indexes the page, then station names, locations, and current prices are present in the HTML — fully indexable without JavaScript execution
 
-- **AC3 — No client-side price API call:** Given the public map page, when it is inspected via browser dev tools (Network tab), then there is no `/v1/prices` or equivalent JSON API endpoint being called — all price data is fetched server-side via Next.js Server Components
+- **AC3 — No direct client→backend price API call:** Given the public map page, when inspected via browser dev tools, then there is no direct call to the backend `/v1/prices` or `/v1/stations` API. Initial render uses Next.js Server Components for SEO indexability. Updated 2026-04-18: panning/zooming triggers a debounced fetch to the Next.js `/api/stations` route handler which proxies the backend — keeps `INTERNAL_API_URL` server-only and allows future rate limiting at the Next.js edge.
+
+- **AC6 — Pin clustering (added 2026-04-18):** At low zoom levels (zoom < 10), nearby stations are grouped into amber circular clusters showing the count. Tapping a cluster flies to its expansion zoom. Individual pins render starting at zoom 10. Uses `supercluster` with `radius: 35px` and `maxZoom: 9`.
+
+- **AC7 — Viewport-aware station fetch (added 2026-04-18):** On pan/zoom, the map debounces 500ms then fetches stations for the current viewport via `/api/stations?lat&lng&radius` (radius capped at 50km). New results are merged with existing loaded stations so pins don't vanish during pan.
 
 - **AC4 — Contribution CTA:** Given a public user who wants to submit a price, when they tap the contribution button, then they are prompted to create an account — unauthenticated price submission is not permitted
 

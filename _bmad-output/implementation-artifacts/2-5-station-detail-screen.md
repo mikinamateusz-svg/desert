@@ -58,9 +58,11 @@ The sheet must handle this gracefully.
 
 2. **Given** a station has price data
    **When** the detail sheet is open
-   **Then** one row per fuel type is shown — only fuel types with a known price are
-   displayed; no placeholder rows for unknown types. Fuel type order: PB 95, PB 98, ON,
-   ON+, LPG (canonical order, matching pill bar).
+   **Then** all 5 fuel types are rendered (PB 95, PB 98, ON, ON+, LPG) in three groups:
+   (a) the currently selected fuel type appears first with amber highlight background if it has a price,
+   (b) other fuels with prices follow in canonical order,
+   (c) fuels with no data are pushed to the bottom at 40% opacity with the ∅ (empty set) symbol in place of the price.
+   *Updated 2026-04-18: previously only rendered fuels with prices on web; now aligned across web + mobile to always show all 5.*
 
 3. **Given** prices are displayed
    **When** the sheet renders

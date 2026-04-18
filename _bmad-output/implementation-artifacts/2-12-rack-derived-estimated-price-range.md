@@ -30,6 +30,8 @@ A blank screen on day one kills the product before it starts. A rack-derived pri
 
 8. **Community replacement:** When a community-verified submission exists for a station (any fuel type), community prices continue to be returned as-is (source='community'). Estimated ranges are only generated for stations with NO community-verified submission.
 
+8a. **LPG/gas-only station filter (added 2026-04-18):** Stations whose name matches any of the patterns `LPG`, `GAZ` (standalone), `AUTOGAZ`, `AUTO-GAZ`, `AUTO GAZ`, `CNG`, `GAZU` (standalone), or `GAZ-POINT` only receive LPG estimates — never PB_95 or ON estimates. This prevents showing misleading estimates for fuels the station does not actually sell. Regex: `/\b(LPG|GAZ|AUTOGAZ|AUTO[ -]GAZ|CNG|GAZU)\b/i` OR `/GAZ[- ]?POINT/i`.
+
 9. **Staleness invalidation:** When rack price changes significantly (Story 2.8), estimated ranges shift automatically — no stale data is ever shown since ranges are computed fresh from the latest MarketSignal on each request.
 
 10. **i18n:** All new labels and explanation text available in English, Polish, Ukrainian.

@@ -1,9 +1,10 @@
 'use client';
 
-import ReactMap, { NavigationControl, type MapRef } from 'react-map-gl';
+import ReactMap, { Marker, NavigationControl, type MapRef } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useState, useMemo } from 'react';
 import type { RefObject } from 'react';
+import Supercluster from 'supercluster';
 import type { FuelType } from '@desert/types';
 import type { StationWithPrice } from '../lib/api';
 import type { Translations } from '../lib/i18n';
@@ -121,11 +122,32 @@ export default function MapView({
   const [noneInView, setNoneInView] = useState(false);
   const [viewCenter, setViewCenter] = useState<{ lat: number; lng: number }>({ lat: defaultLat, lng: defaultLng });
   const [viewportRadiusM, setViewportRadiusM] = useState(MIN_COLOR_RADIUS_M);
+  const [zoom, setZoom] = useState(6);
+  const [bbox, setBbox] = useState<[number, number, number, number]>([-180, -90, 180, 90]);
 
   const priceTiers = useMemo(
     () => computePriceTiers(stations, selectedFuel, viewCenter.lat, viewCenter.lng, viewportRadiusM),
     [stations, selectedFuel, viewCenter.lat, viewCenter.lng, viewportRadiusM],
   );
+
+  // Build cluster index from stations — recomputes when station list changes
+  const clusterIndex = useMemo(() => {
+    const index = new Supercluster<{ station: StationWithPrice }>({
+      radius: 60, // pixel radius for clustering
+      maxZoom: 13, // above this zoom, every station is its own pin
+    });
+    index.load(
+      stations.map(s => ({
+        type: 'Feature' as const,
+        properties: { station: s },
+        geometry: { type: 'Point' as const, coordinates: [s.lng, s.lat] },
+      })),
+    );
+    return index;
+  }, [stations]);
+
+  // Get clusters visible in the current viewport
+  const clusters = useMemo(() => clusterIndex.getClusters(bbox, Math.floor(zoom)), [clusterIndex, bbox, zoom]);
 
   function handleMoveEnd(e: { target: mapboxgl.Map }) {
     const b = e.target.getBounds();
@@ -135,7 +157,16 @@ export default function MapView({
       const cLng = b.getCenter().lng;
       setViewCenter({ lat: cLat, lng: cLng });
       setViewportRadiusM(haversineMetres(cLat, cLng, b.getNorth(), b.getEast()));
+      setZoom(e.target.getZoom());
+      setBbox([b.getWest(), b.getSouth(), b.getEast(), b.getNorth()]);
     }
+  }
+
+  function handleClusterClick(clusterId: number, lng: number, lat: number) {
+    const map = mapRef.current;
+    if (!map) return;
+    const expansionZoom = Math.min(clusterIndex.getClusterExpansionZoom(clusterId), 16);
+    map.flyTo({ center: [lng, lat], zoom: expansionZoom, duration: 500 });
   }
 
   function handleFindCheapest() {
@@ -183,16 +214,50 @@ export default function MapView({
         {/* Zoom/compass controls — hidden on mobile via CSS (pinch-to-zoom is native) */}
         <NavigationControl position="bottom-left" />
 
-        {stations.map(station => (
-          <StationMarker
-            key={station.id}
-            station={station}
-            priceColor={priceTiers.get(station.id) ?? 'nodata'}
-            isSelected={selected?.id === station.id}
-            selectedFuel={selectedFuel}
-            onClick={() => onSelect(station)}
-          />
-        ))}
+        {clusters.map(feature => {
+          const [lng, lat] = feature.geometry.coordinates;
+          const isCluster = (feature.properties as { cluster?: boolean }).cluster === true;
+
+          if (isCluster) {
+            const { cluster_id, point_count } = feature.properties as unknown as { cluster_id: number; point_count: number };
+            const size = point_count < 10 ? 36 : point_count < 50 ? 44 : point_count < 200 ? 52 : 60;
+            return (
+              <Marker
+                key={`cluster-${cluster_id}`}
+                longitude={lng}
+                latitude={lat}
+                anchor="center"
+                onClick={e => { e.originalEvent.stopPropagation(); handleClusterClick(cluster_id, lng, lat); }}
+              >
+                <button
+                  aria-label={`Cluster of ${point_count} stations`}
+                  className="rounded-full border-2 border-white flex items-center justify-center font-bold text-white shadow-lg"
+                  style={{
+                    width: size,
+                    height: size,
+                    fontSize: point_count < 100 ? 13 : 11,
+                    backgroundColor: '#1a1a1a',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {point_count}
+                </button>
+              </Marker>
+            );
+          }
+
+          const station = (feature.properties as { station: StationWithPrice }).station;
+          return (
+            <StationMarker
+              key={station.id}
+              station={station}
+              priceColor={priceTiers.get(station.id) ?? 'nodata'}
+              isSelected={selected?.id === station.id}
+              selectedFuel={selectedFuel}
+              onClick={() => onSelect(station)}
+            />
+          );
+        })}
       </ReactMap>
 
       {/* Fuel type selector — floats at top-centre, always visible */}

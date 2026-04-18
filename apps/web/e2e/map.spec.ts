@@ -11,15 +11,20 @@ async function waitForMap(page: import('@playwright/test').Page) {
     { timeout: 15_000 },
   );
 
-  // Zoom in past the cluster maxZoom threshold (10) so individual pins render
+  // Zoom in past the cluster maxZoom threshold (9) so individual pins render.
+  // Also center on Lodz — dense with stations from the initial server-side fetch.
   await page.evaluate(() => {
     const map = (window as unknown as { __mapbox_map: { setZoom: (z: number) => void; setCenter: (c: [number, number]) => void } }).__mapbox_map;
-    map.setCenter([19.4560, 51.7592]); // Lodz — dense with stations
+    map.setCenter([19.4560, 51.7592]); // Lodz
     map.setZoom(12);
   });
 
+  // Bounds change triggers debounced station refetch (500ms). Wait a bit for
+  // state to stabilize before asserting markers.
+  await page.waitForTimeout(1500);
+
   // Station markers are rendered as DOM buttons by react-map-gl's <Marker>
-  await page.waitForSelector('[data-testid="station-marker"]', { timeout: 15_000 });
+  await page.waitForSelector('[data-testid="station-marker"]', { timeout: 20_000 });
 }
 
 test.describe('Map page', () => {

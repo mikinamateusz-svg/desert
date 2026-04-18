@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView, Linking, Alert } from 'react-native';
 import Mapbox, { MapView, Camera, MarkerView } from '@rnmapbox/maps';
+import Supercluster from 'supercluster';
 import { router } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -50,6 +51,8 @@ export default function MapScreen() {
   const [sheetDismissed, setSheetDismissed] = useState(false);
   const programmaticMoveRef = useRef(false);
   const [viewportRadiusM, setViewportRadiusM] = useState(20_000);
+  const [mapZoom, setMapZoom] = useState(13);
+  const [mapBbox, setMapBbox] = useState<[number, number, number, number]>([-180, -90, 180, 90]);
 
   // Loading screen stage
   const [loadingStage, setLoadingStage] = useState<LoadingStage>('gps');
@@ -161,6 +164,28 @@ export default function MapScreen() {
     [prices],
   );
 
+  // Build cluster index from stations — recomputes when station list changes
+  const clusterIndex = useMemo(() => {
+    const index = new Supercluster<{ station: StationDto }>({
+      radius: 60, // pixels — slightly wider than web because mobile screens are denser
+      maxZoom: 11, // above this zoom every station is an individual pin
+    });
+    index.load(
+      stations.map(s => ({
+        type: 'Feature' as const,
+        properties: { station: s },
+        geometry: { type: 'Point' as const, coordinates: [s.lng, s.lat] },
+      })),
+    );
+    return index;
+  }, [stations]);
+
+  // Get visible clusters/points for the current viewport + zoom
+  const clusters = useMemo(
+    () => clusterIndex.getClusters(mapBbox, Math.floor(mapZoom)),
+    [clusterIndex, mapBbox, mapZoom],
+  );
+
   // Auto-dismiss error banner after 4s (stations or prices failure)
   useEffect(() => {
     if (stationsError || pricesError) {
@@ -177,14 +202,18 @@ export default function MapScreen() {
       return;
     }
 
-    // Estimate viewport radius from the visible bounds
-    const props = feature.properties as { visibleBounds?: [[number, number], [number, number]] } | null;
+    // Track viewport radius, bbox, and zoom for clustering + price color population
+    const props = feature.properties as { visibleBounds?: [[number, number], [number, number]]; zoomLevel?: number } | null;
     if (props?.visibleBounds) {
       const [[neLng, neLat], [swLng, swLat]] = props.visibleBounds;
       const centerLat = (neLat + swLat) / 2;
       const centerLng = (neLng + swLng) / 2;
       const radiusM = haversineMetres(centerLat, centerLng, neLat, neLng);
       setViewportRadiusM(radiusM);
+      setMapBbox([swLng, swLat, neLng, neLat]);
+    }
+    if (typeof props?.zoomLevel === 'number') {
+      setMapZoom(props.zoomLevel);
     }
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -193,6 +222,18 @@ export default function MapScreen() {
       setFetchCenter({ lat, lng });
     }, 500);
   };
+
+  const handleClusterPress = useCallback((clusterId: number, lng: number, lat: number) => {
+    const expansionZoom = Math.min(clusterIndex.getClusterExpansionZoom(clusterId), 16);
+    programmaticMoveRef.current = true;
+    setCameraCenter([lng, lat]);
+    cameraRef.current?.setCamera({
+      centerCoordinate: [lng, lat],
+      zoomLevel: expansionZoom,
+      animationMode: 'flyTo',
+      animationDuration: 500,
+    });
+  }, [clusterIndex]);
 
   const handleRecentre = () => {
     if (!location) return;
@@ -332,7 +373,34 @@ export default function MapScreen() {
           animationDuration={800}
         />
 
-        {stations.map(station => {
+        {clusters.map(feature => {
+          const [lng, lat] = feature.geometry.coordinates;
+          const isCluster = (feature.properties as { cluster?: boolean }).cluster === true;
+
+          if (isCluster) {
+            const { cluster_id, point_count } = feature.properties as unknown as { cluster_id: number; point_count: number };
+            const size = point_count < 10 ? 36 : point_count < 50 ? 44 : point_count < 200 ? 52 : 60;
+            return (
+              <MarkerView
+                key={`cluster-${cluster_id}`}
+                coordinate={[lng, lat]}
+                anchor={{ x: 0.5, y: 0.5 }}
+              >
+                <TouchableOpacity
+                  onPress={() => handleClusterPress(cluster_id, lng, lat)}
+                  style={[styles.clusterBubble, { width: size, height: size, borderRadius: size / 2 }]}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Cluster of ${point_count} stations`}
+                >
+                  <Text style={[styles.clusterText, point_count >= 100 && styles.clusterTextSmall]}>
+                    {point_count}
+                  </Text>
+                </TouchableOpacity>
+              </MarkerView>
+            );
+          }
+
+          const station = (feature.properties as { station: StationDto }).station;
           const priceData = priceMap.get(station.id);
           const priceColor = priceColorMap.get(station.id) ?? 'nodata';
           const range = priceData?.priceRanges?.[selectedFuelType];
@@ -482,6 +550,28 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
+  },
+
+  // Cluster bubble — amber brand-matching style
+  clusterBubble: {
+    backgroundColor: tokens.brand.accent,
+    borderWidth: 3,
+    borderColor: '#ffffff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 6,
+  },
+  clusterText: {
+    color: tokens.brand.ink,
+    fontWeight: '700' as const,
+    fontSize: 14,
+  },
+  clusterTextSmall: {
+    fontSize: 12,
   },
 
   // Top bar

@@ -6,6 +6,7 @@ import { SubmitFeedbackDto } from './dto/submit-feedback.dto.js';
 
 const mockFeedbackService = {
   submitFeedback: jest.fn(),
+  submitContact: jest.fn(),
 };
 
 describe('FeedbackController', () => {

@@ -17,6 +17,21 @@ const mockDto: SubmitFeedbackDto = {
   os: 'ios',
 };
 
+/** Helper: config mock that only returns webhook URL, no email key — Slack-only path */
+function slackOnlyConfig(webhookUrl: string | undefined): jest.Mock {
+  return jest.fn((key: string) => {
+    if (key === 'FEEDBACK_WEBHOOK_URL') return webhookUrl;
+    return undefined;
+  });
+}
+
+/** Flush pending microtasks so fire-and-forget void fetch().then() completes */
+async function flushPromises(): Promise<void> {
+  for (let i = 0; i < 5; i++) {
+    await new Promise(resolve => setImmediate(resolve));
+  }
+}
+
 describe('FeedbackService', () => {
   let service: FeedbackService;
 
@@ -33,13 +48,14 @@ describe('FeedbackService', () => {
     service = module.get<FeedbackService>(FeedbackService);
   });
 
-  describe('submitFeedback', () => {
+  describe('submitFeedback — Slack webhook', () => {
     it('should call fetch with correct Slack payload when FEEDBACK_WEBHOOK_URL is set', async () => {
       const webhookUrl = 'https://hooks.slack.com/services/TEST/HOOK/URL';
-      mockConfigService.get.mockReturnValue(webhookUrl);
+      mockConfigService.get.mockImplementation(slackOnlyConfig(webhookUrl));
       (global.fetch as jest.Mock).mockResolvedValueOnce({ ok: true, status: 200 });
 
       await service.submitFeedback(mockDto);
+      await flushPromises();
 
       expect(global.fetch).toHaveBeenCalledTimes(1);
       const [calledUrl, calledOptions] = (global.fetch as jest.Mock).mock.calls[0] as [string, RequestInit];
@@ -55,10 +71,11 @@ describe('FeedbackService', () => {
 
     it('should NOT include any user identity fields in the webhook payload', async () => {
       const webhookUrl = 'https://hooks.slack.com/services/TEST/HOOK/URL';
-      mockConfigService.get.mockReturnValue(webhookUrl);
+      mockConfigService.get.mockImplementation(slackOnlyConfig(webhookUrl));
       (global.fetch as jest.Mock).mockResolvedValueOnce({ ok: true, status: 200 });
 
       await service.submitFeedback(mockDto);
+      await flushPromises();
 
       const [, calledOptions] = (global.fetch as jest.Mock).mock.calls[0] as [string, RequestInit];
       const body = JSON.parse(calledOptions.body as string) as Record<string, unknown>;
@@ -68,42 +85,45 @@ describe('FeedbackService', () => {
       expect(bodyStr).not.toContain('display_name');
     });
 
-    it('should log warn and return without calling fetch when FEEDBACK_WEBHOOK_URL is not set', async () => {
-      mockConfigService.get.mockReturnValue(undefined);
+    it('should NOT call fetch when neither RESEND_API_KEY nor FEEDBACK_WEBHOOK_URL is set', async () => {
+      mockConfigService.get.mockImplementation(slackOnlyConfig(undefined));
       const warnSpy = jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
 
       await service.submitFeedback(mockDto);
+      await flushPromises();
 
       expect(global.fetch).not.toHaveBeenCalled();
-      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('FEEDBACK_WEBHOOK_URL not set'));
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('RESEND_API_KEY not set'));
       warnSpy.mockRestore();
     });
 
-    it('should NOT throw when FEEDBACK_WEBHOOK_URL is not set', async () => {
-      mockConfigService.get.mockReturnValue(undefined);
+    it('should NOT throw when no webhook is configured', async () => {
+      mockConfigService.get.mockImplementation(slackOnlyConfig(undefined));
       await expect(service.submitFeedback(mockDto)).resolves.toBeUndefined();
     });
 
     it('should log error (no throw) when fetch returns non-ok status', async () => {
       const webhookUrl = 'https://hooks.slack.com/services/TEST/HOOK/URL';
-      mockConfigService.get.mockReturnValue(webhookUrl);
+      mockConfigService.get.mockImplementation(slackOnlyConfig(webhookUrl));
       (global.fetch as jest.Mock).mockResolvedValueOnce({ ok: false, status: 500 });
 
       const errorSpy = jest.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
 
       await expect(service.submitFeedback(mockDto)).resolves.toBeUndefined();
+      await flushPromises();
       expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('500'));
       errorSpy.mockRestore();
     });
 
     it('should log error (no throw) when fetch throws a network error', async () => {
       const webhookUrl = 'https://hooks.slack.com/services/TEST/HOOK/URL';
-      mockConfigService.get.mockReturnValue(webhookUrl);
+      mockConfigService.get.mockImplementation(slackOnlyConfig(webhookUrl));
       (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
 
       const errorSpy = jest.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
 
       await expect(service.submitFeedback(mockDto)).resolves.toBeUndefined();
+      await flushPromises();
       expect(errorSpy).toHaveBeenCalled();
       errorSpy.mockRestore();
     });

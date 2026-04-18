@@ -167,8 +167,8 @@ export default function MapScreen() {
   // Build cluster index from stations — recomputes when station list changes
   const clusterIndex = useMemo(() => {
     const index = new Supercluster<{ station: StationDto }>({
-      radius: 60, // pixels — slightly wider than web because mobile screens are denser
-      maxZoom: 11, // above this zoom every station is an individual pin
+      radius: 35, // pixel radius for clustering — aligned with web
+      maxZoom: 9, // above this zoom every station is an individual pin (country view only clusters)
     });
     index.load(
       stations.map(s => ({

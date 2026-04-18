@@ -19,12 +19,59 @@ interface Props {
   locale: Locale;
 }
 
-export default function MapContainer({ stations, defaultLat, defaultLng, t }: Props) {
+const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? '';
+
+async function fetchStationsAt(lat: number, lng: number, radius: number): Promise<StationWithPrice[]> {
+  const [sRes, pRes] = await Promise.all([
+    fetch(`${API_BASE}/v1/stations/nearby?lat=${lat}&lng=${lng}&radius=${radius}`),
+    fetch(`${API_BASE}/v1/prices/nearby?lat=${lat}&lng=${lng}&radius=${radius}`),
+  ]);
+  if (!sRes.ok || !pRes.ok) return [];
+  const [rawStations, rawPrices] = await Promise.all([sRes.json(), pRes.json()]) as [unknown, unknown];
+  const stationsList = (rawStations as { id: string; [k: string]: unknown }[]) ?? [];
+  const pricesList = (rawPrices as { stationId: string; [k: string]: unknown }[]) ?? [];
+  const priceMap = new Map(pricesList.map(p => [p.stationId, p]));
+  return stationsList.map(s => ({
+    ...(s as unknown as StationWithPrice),
+    price: (priceMap.get(s.id) as unknown as StationWithPrice['price']) ?? null,
+  }));
+}
+
+export default function MapContainer({ stations: initialStations, defaultLat, defaultLng, t }: Props) {
   const mapRef = useRef<MapRef>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const [selected, setSelected] = useState<StationWithPrice | null>(null);
   const [selectedFuel, setSelectedFuel] = useState<FuelType>('PB_95');
   const [mapBounds, setMapBounds] = useState<MapBounds | null>(null);
+  const [stations, setStations] = useState<StationWithPrice[]>(initialStations);
+  const fetchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Refetch stations when viewport changes — merge with existing so pins don't vanish.
+  // Debounced to avoid spamming the API during pan/zoom.
+  useEffect(() => {
+    if (!mapBounds) return;
+    if (fetchTimerRef.current) clearTimeout(fetchTimerRef.current);
+    fetchTimerRef.current = setTimeout(() => {
+      const centerLat = (mapBounds.north + mapBounds.south) / 2;
+      const centerLng = (mapBounds.east + mapBounds.west) / 2;
+      // Radius = distance from centre to north-east corner (metres)
+      const EARTH_M = 6_371_000;
+      const toRad = (d: number) => (d * Math.PI) / 180;
+      const dLat = toRad(mapBounds.north - centerLat);
+      const dLng = toRad(mapBounds.east - centerLng);
+      const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(centerLat)) ** 2 * Math.sin(dLng / 2) ** 2;
+      const radius = Math.min(50_000, 2 * EARTH_M * Math.asin(Math.sqrt(a)));
+      void fetchStationsAt(centerLat, centerLng, radius).then(fresh => {
+        if (fresh.length === 0) return;
+        setStations(prev => {
+          const map = new Map(prev.map(s => [s.id, s]));
+          for (const s of fresh) map.set(s.id, s);
+          return Array.from(map.values());
+        });
+      });
+    }, 500);
+    return () => { if (fetchTimerRef.current) clearTimeout(fetchTimerRef.current); };
+  }, [mapBounds]);
 
   const stationsInView = mapBounds
     ? stations.filter(s =>

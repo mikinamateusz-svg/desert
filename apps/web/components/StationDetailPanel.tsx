@@ -7,12 +7,12 @@ import type { Translations } from '../lib/i18n';
 const FUEL_ORDER = ['PB_95', 'PB_98', 'ON', 'ON_PREMIUM', 'LPG'] as const;
 type FuelType = typeof FUEL_ORDER[number];
 
-const FUEL_BADGE: Record<FuelType, { label: string; bg: string; color: string }> = {
-  PB_95:      { label: '95',  bg: '#22c55e', color: '#fff' },
-  PB_98:      { label: '98',  bg: '#15803d', color: '#fff' },
-  ON:         { label: 'ON',  bg: '#1c1c1e', color: '#fff' },
-  ON_PREMIUM: { label: 'ON+', bg: '#1c1c1e', color: '#f59e0b' },
-  LPG:        { label: 'LPG', bg: '#ef4444', color: '#fff' },
+const FUEL_BADGE: Record<FuelType, { label: string; bg: string; star?: boolean }> = {
+  PB_95:      { label: '95',  bg: '#22c55e' },
+  PB_98:      { label: '98',  bg: '#15803d' },
+  ON:         { label: 'ON',  bg: '#1c1c1e' },
+  ON_PREMIUM: { label: 'ON',  bg: '#1c1c1e', star: true },
+  LPG:        { label: 'LPG', bg: '#ef4444' },
 };
 
 const BRAND_BADGE: Record<string, { bg: string; color: string; label: string }> = {
@@ -39,8 +39,6 @@ const StationDetailPanel = forwardRef<HTMLDivElement, Props>(function StationDet
   const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${station.lat},${station.lng}`;
   const brandKey = station.brand?.toLowerCase();
   const brandStyle = brandKey ? BRAND_BADGE[brandKey] : null;
-  const hasPrices = FUEL_ORDER.some(ft => price?.prices[ft] !== undefined);
-
   return (
     <div ref={ref} data-testid="station-detail-panel" className={[
       'fixed z-50 bg-white shadow-xl',
@@ -92,33 +90,42 @@ const StationDetailPanel = forwardRef<HTMLDivElement, Props>(function StationDet
 
       {/* Fuel prices */}
       <div className="px-4 py-3 space-y-2">
-        {hasPrices ? FUEL_ORDER.map(ft => {
+        {FUEL_ORDER.map(ft => {
           const val = price?.prices[ft];
-          if (val === undefined) return null;
           const badge = FUEL_BADGE[ft];
+          const isUnavailable = val === undefined;
           const isEst = price?.estimateLabel?.[ft] !== undefined;
           const range = price?.priceRanges?.[ft];
-          const display = range
-            ? `~${range.low.toFixed(2)}–${range.high.toFixed(2)}`
-            : isEst ? `~${val.toFixed(2)}` : val.toFixed(2);
+          const display = isUnavailable
+            ? null
+            : range
+              ? `~${range.low.toFixed(2)}–${range.high.toFixed(2)}`
+              : isEst ? `~${val!.toFixed(2)}` : val!.toFixed(2);
 
           return (
-            <div key={ft} className="flex items-center gap-2.5">
+            <div key={ft} className={`flex items-center gap-2.5 ${isUnavailable ? 'opacity-40' : ''}`}>
               <span
-                className="flex-shrink-0 w-9 h-6 rounded text-xs font-black flex items-center justify-center"
-                style={{ backgroundColor: badge.bg, color: badge.color }}
+                className="relative flex-shrink-0 w-9 h-6 rounded text-xs font-black flex items-center justify-center text-white"
+                style={{ backgroundColor: badge.bg }}
               >
                 {badge.label}
+                {badge.star && (
+                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-500 flex items-center justify-center text-[7px] leading-none text-white font-black">
+                    ★
+                  </span>
+                )}
               </span>
               <span className="flex-1 text-sm text-gray-600">{t.fuelTypes[ft] ?? ft}</span>
-              <span className={`text-sm font-semibold tabular-nums ${isEst ? 'text-gray-400' : 'text-gray-900'}`}>
-                {display} <span className="text-xs font-normal text-gray-400">zł/l</span>
-              </span>
+              {isUnavailable ? (
+                <span className="text-sm text-gray-400 tabular-nums">∅</span>
+              ) : (
+                <span className={`text-sm font-semibold tabular-nums ${isEst ? 'text-gray-400' : 'text-gray-900'}`}>
+                  {display} <span className="text-xs font-normal text-gray-400">zł/l</span>
+                </span>
+              )}
             </div>
           );
-        }) : (
-          <p className="text-sm text-gray-400 text-center py-2">{t.noData}</p>
-        )}
+        })}
       </div>
 
       {/* Navigate button */}

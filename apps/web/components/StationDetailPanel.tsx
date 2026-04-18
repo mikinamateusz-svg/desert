@@ -157,7 +157,7 @@ const StationDetailPanel = forwardRef<HTMLDivElement, Props>(function StationDet
           href={mapsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="block w-full text-sm font-semibold text-center py-2.5 rounded-xl bg-brand-ink hover:bg-brand-ink-hover text-white transition-colors"
+          className="block w-full text-sm font-bold text-center py-2.5 rounded-xl bg-brand-accent hover:bg-brand-accent-hover text-brand-ink transition-colors"
         >
           {t.station.navigate} →
         </a>

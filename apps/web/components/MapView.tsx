@@ -133,8 +133,8 @@ export default function MapView({
   // Build cluster index from stations — recomputes when station list changes
   const clusterIndex = useMemo(() => {
     const index = new Supercluster<{ station: StationWithPrice }>({
-      radius: 60, // pixel radius for clustering
-      maxZoom: 13, // above this zoom, every station is its own pin
+      radius: 40, // pixel radius for clustering — tighter = more individual pins visible
+      maxZoom: 10, // above this zoom, every station is its own pin (regional view only clusters)
     });
     index.load(
       stations.map(s => ({
@@ -231,12 +231,15 @@ export default function MapView({
               >
                 <button
                   aria-label={`Cluster of ${point_count} stations`}
-                  className="rounded-full border-2 border-white flex items-center justify-center font-bold text-white shadow-lg"
+                  className="rounded-full flex items-center justify-center font-bold transition-transform hover:scale-105"
                   style={{
                     width: size,
                     height: size,
-                    fontSize: point_count < 100 ? 13 : 11,
-                    backgroundColor: '#1a1a1a',
+                    fontSize: point_count < 100 ? 14 : 12,
+                    backgroundColor: '#f59e0b',
+                    color: '#1a1a1a',
+                    border: '3px solid #fff',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.25), 0 0 0 1px rgba(245, 158, 11, 0.3)',
                     cursor: 'pointer',
                   }}
                 >

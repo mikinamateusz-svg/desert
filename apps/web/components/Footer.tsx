@@ -9,6 +9,7 @@ interface Props {
 export default function Footer({ locale, t }: Props) {
   const aboutHref = locale === 'en' ? '/en/about' : locale === 'uk' ? '/uk/about' : '/o-nas';
   const contactHref = locale === 'en' ? '/en/contact' : locale === 'uk' ? '/uk/contact' : '/kontakt';
+  const downloadHref = locale === 'en' ? '/en/download' : locale === 'uk' ? '/uk/download' : '/pobierz';
   const privacyHref = locale === 'en' ? '/en/privacy' : locale === 'uk' ? '/uk/privacy' : '/polityka-prywatnosci';
   const termsHref = locale === 'en' ? '/en/terms' : locale === 'uk' ? '/uk/terms' : '/regulamin';
 
@@ -22,17 +23,18 @@ export default function Footer({ locale, t }: Props) {
             <p className="mt-1.5 text-sm text-gray-500">{t.footer.tagline}</p>
           </div>
 
-          {/* Product */}
+          {/* Litro — product links */}
           <div>
             <h3 className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-3">
               {t.footer.product}
             </h3>
             <ul className="space-y-2 text-sm text-gray-600">
               <li><Link href="/" className="hover:text-gray-900 transition-colors">{t.nav.map}</Link></li>
+              <li><Link href={downloadHref} className="hover:text-gray-900 transition-colors">{t.nav.getApp}</Link></li>
             </ul>
           </div>
 
-          {/* Company */}
+          {/* About us */}
           <div>
             <h3 className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-3">
               {t.footer.company}
@@ -43,7 +45,7 @@ export default function Footer({ locale, t }: Props) {
             </ul>
           </div>
 
-          {/* Legal */}
+          {/* Documents */}
           <div>
             <h3 className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-3">
               {t.footer.legal}
@@ -65,12 +67,12 @@ export default function Footer({ locale, t }: Props) {
 
         <div className="mt-10 pt-6 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-gray-400">{t.footer.copyright}</p>
-          <div className="flex items-center gap-3 text-xs text-gray-400">
+          <div className="flex items-center gap-1">
             {(['pl', 'en', 'uk'] as Locale[]).map(l => (
               l === locale ? (
-                <span key={l} className="font-semibold text-gray-600 uppercase">{l}</span>
+                <span key={l} className="px-2.5 py-1 rounded-full text-xs font-semibold uppercase border border-brand-accent bg-amber-50 text-brand-accent">{l}</span>
               ) : (
-                <a key={l} href={`/api/set-locale?l=${l}`} className="uppercase hover:text-gray-600 transition-colors">
+                <a key={l} href={`/api/set-locale?l=${l}`} className="px-2.5 py-1 rounded-full text-xs font-medium uppercase border border-gray-200 text-gray-400 hover:text-gray-900 hover:border-gray-400 transition-colors">
                   {l}
                 </a>
               )

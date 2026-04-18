@@ -26,8 +26,8 @@ export default function Navbar({ locale, t }: Props) {
     <header className="sticky top-0 z-50 h-16 bg-white border-b border-gray-200 flex items-center px-4 lg:px-6">
       {/* Logo */}
       <Link href="/" className="flex items-center gap-2 mr-8 flex-shrink-0">
-        <LitroWordmark height={22} />
-        <span className="hidden sm:inline text-xs text-gray-400 font-normal">ceny paliw</span>
+        <LitroWordmark height={30} />
+        <span className="hidden sm:inline text-xs text-gray-400 font-normal">od kierowców, dla kierowców</span>
       </Link>
 
       {/* Desktop nav */}
@@ -49,22 +49,25 @@ export default function Navbar({ locale, t }: Props) {
 
       {/* Right side */}
       <div className="flex items-center gap-2 ml-auto">
-        {/* Lang switcher */}
-        <div className="hidden sm:flex items-center gap-0.5 text-xs text-gray-500">
-          {(['pl', 'en', 'uk'] as Locale[]).map((l, i) => (
-            <span key={l} className="flex items-center">
-              {i > 0 && <span className="mx-0.5 text-gray-300">|</span>}
-              {l === locale ? (
-                <span className="font-semibold text-gray-900 uppercase">{l}</span>
-              ) : (
-                <a
-                  href={`/api/set-locale?l=${l}`}
-                  className="uppercase hover:text-gray-900 transition-colors"
-                >
-                  {l}
-                </a>
-              )}
-            </span>
+        {/* Lang switcher — pill buttons matching mobile style */}
+        <div className="hidden sm:flex items-center gap-1">
+          {(['pl', 'en', 'uk'] as Locale[]).map(l => (
+            l === locale ? (
+              <span
+                key={l}
+                className="px-2.5 py-1 rounded-full text-xs font-semibold uppercase border border-brand-accent bg-amber-50 text-brand-accent"
+              >
+                {l}
+              </span>
+            ) : (
+              <a
+                key={l}
+                href={`/api/set-locale?l=${l}`}
+                className="px-2.5 py-1 rounded-full text-xs font-medium uppercase border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-400 transition-colors"
+              >
+                {l}
+              </a>
+            )
           ))}
         </div>
 
@@ -114,12 +117,12 @@ export default function Navbar({ locale, t }: Props) {
               </Link>
             ))}
             <div className="border-t border-gray-100 mt-2 pt-2 flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs text-gray-500">
+              <div className="flex items-center gap-1">
                 {(['pl', 'en', 'uk'] as Locale[]).map(l => (
                   l === locale ? (
-                    <span key={l} className="font-semibold text-gray-900 uppercase">{l}</span>
+                    <span key={l} className="px-2.5 py-1 rounded-full text-xs font-semibold uppercase border border-brand-accent bg-amber-50 text-brand-accent">{l}</span>
                   ) : (
-                    <a key={l} href={`/api/set-locale?l=${l}`} className="uppercase hover:text-gray-900">
+                    <a key={l} href={`/api/set-locale?l=${l}`} className="px-2.5 py-1 rounded-full text-xs font-medium uppercase border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-400 transition-colors">
                       {l}
                     </a>
                   )

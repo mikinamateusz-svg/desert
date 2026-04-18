@@ -7,9 +7,9 @@ export const tokens = {
   // ── Price spectrum — fixed functional signals, never used for branding ──
   price: {
     cheapest:  '#1a9641', // dark green  — quintile 1 (best deal)
-    cheap:     '#a6d96a', // light green — quintile 2
-    mid:       '#ffffbf', // pale yellow — quintile 3 (average)
-    pricey:    '#fdae61', // orange      — quintile 4
+    cheap:     '#66bd63', // medium green — quintile 2
+    mid:       '#f5c542', // amber/gold  — quintile 3 (average)
+    pricey:    '#f46d43', // warm orange — quintile 4
     expensive: '#d7191c', // dark red    — quintile 5 (most expensive)
     noData:    '#94a3b8', // slate-400   — no price data
   },

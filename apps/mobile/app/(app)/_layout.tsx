@@ -74,11 +74,7 @@ export default function AppLayout() {
         name="account"
         options={{
           href: null,
-          headerShown: true,
-          title: t('nav.account'),
-          headerStyle: hiddenHeaderStyle,
-          headerTintColor: tokens.brand.ink,
-          headerTitleStyle: { fontWeight: '600' as const },
+          headerShown: false,
         }}
       />
 

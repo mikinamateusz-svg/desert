@@ -39,6 +39,15 @@ export default function AccountScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={() => router.back()}
+        accessibilityLabel="Close"
+        accessibilityRole="button"
+      >
+        <Text style={styles.closeText}>✕</Text>
+      </TouchableOpacity>
+
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}
@@ -68,7 +77,6 @@ export default function AccountScreen() {
         </View>
 
         {/* ── Language selector ── */}
-        <Text style={styles.sectionLabel}>{t('account.languageLabel')}</Text>
         <View style={styles.langRow}>
           {SUPPORTED_LOCALES.map((lang) => (
             <TouchableOpacity
@@ -128,8 +136,6 @@ export default function AccountScreen() {
           </TouchableOpacity>
         )}
 
-        {/* ── Trademark disclaimer ── */}
-        <Text style={styles.trademarkDisclaimer}>{t('account.trademarkDisclaimer')}</Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -139,6 +145,23 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: tokens.surface.page,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 48,
+    right: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: tokens.neutral.n200,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+  },
+  closeText: {
+    fontSize: 16,
+    fontWeight: '600' as const,
+    color: tokens.neutral.n500,
   },
   scroll: {
     flex: 1,
@@ -259,14 +282,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: tokens.price.expensive,
     fontWeight: '500',
-  },
-  trademarkDisclaimer: {
-    fontSize: 11,
-    color: tokens.neutral.n400,
-    textAlign: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 24,
-    paddingBottom: 16,
-    lineHeight: 16,
   },
 });

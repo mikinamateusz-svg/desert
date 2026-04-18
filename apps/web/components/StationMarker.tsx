@@ -4,14 +4,25 @@ import { Marker } from 'react-map-gl';
 import type { CSSProperties } from 'react';
 import type { FuelType } from '@desert/types';
 import type { StationWithPrice } from '../lib/api';
-
-type PriceColor = 'cheap' | 'mid' | 'expensive' | 'nodata';
+import type { PriceColor } from './MapView';
 
 const COLORS: Record<PriceColor, string> = {
-  cheap:     '#22c55e',
-  mid:       '#f59e0b',
-  expensive: '#ef4444',
+  cheapest:  '#1a9641',
+  cheap:     '#66bd63',
+  mid:       '#f5c542',
+  pricey:    '#f46d43',
+  expensive: '#d7191c',
   nodata:    '#94a3b8',
+};
+
+// Dark text on light pin backgrounds, white on dark
+const TEXT_COLORS: Record<PriceColor, string> = {
+  cheapest:  '#ffffff',
+  cheap:     '#1a1a1a',
+  mid:       '#1a1a1a',
+  pricey:    '#ffffff',
+  expensive: '#ffffff',
+  nodata:    '#ffffff',
 };
 
 // Pin is a 32×32 square with border-radius 50% 50% 50% 0 (sharp bottom-left)
@@ -53,7 +64,7 @@ export default function StationMarker({ station, priceColor, isSelected, selecte
     display:         'flex',
     alignItems:      'center',
     justifyContent:  'center',
-    backgroundColor: isEstimatedWithColor ? '#e5e7eb' : color,
+    backgroundColor: isEstimatedWithColor ? '#6b7280' : color,
     boxShadow: isSelected
       ? `0 0 0 3px #fff, 0 0 0 5px ${color}, 0 4px 12px rgba(0,0,0,0.30)`
       : isEstimatedWithColor
@@ -68,7 +79,7 @@ export default function StationMarker({ station, priceColor, isSelected, selecte
     transform:  'rotate(45deg)',
     fontSize:   isSelected ? '8px' : '7px',
     fontWeight: 800,
-    color:      isEstimatedWithColor ? color : 'white',
+    color:      isEstimatedWithColor ? '#ffffff' : TEXT_COLORS[priceColor],
     lineHeight: 1,
     textAlign:  'center',
     userSelect: 'none',

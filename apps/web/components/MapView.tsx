@@ -2,7 +2,7 @@
 
 import ReactMap, { NavigationControl, type MapRef } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { RefObject } from 'react';
 import type { FuelType } from '@desert/types';
 import type { StationWithPrice } from '../lib/api';
@@ -10,7 +10,13 @@ import type { Translations } from '../lib/i18n';
 import StationMarker from './StationMarker';
 import FuelTypePills from './FuelTypePills';
 
-type PriceColor = 'cheap' | 'mid' | 'expensive' | 'nodata';
+export type PriceColor = 'cheapest' | 'cheap' | 'mid' | 'pricey' | 'expensive' | 'nodata';
+
+/** Minimum price spread (PLN) to distinguish quintiles. Below this, all stations show as 'mid'. */
+const MIN_SPREAD_PLN = 0.10;
+
+/** Minimum radius in metres for the color population. */
+const MIN_COLOR_RADIUS_M = 20_000;
 
 function getRepresentativePrice(station: StationWithPrice, fuelType: string): number | undefined {
   const exact = station.price?.prices[fuelType];
@@ -20,29 +26,65 @@ function getRepresentativePrice(station: StationWithPrice, fuelType: string): nu
   return undefined;
 }
 
-function computePriceTiers(stations: StationWithPrice[], fuelType: string): Map<string, PriceColor> {
-  const result = new Map<string, PriceColor>();
-  const withPrices = stations
-    .map(s => ({ id: s.id, price: getRepresentativePrice(s, fuelType) }))
-    .filter((x): x is { id: string; price: number } => x.price !== undefined);
+function haversineMetres(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return 2 * 6_371_000 * Math.asin(Math.sqrt(a));
+}
 
-  if (withPrices.length < 2) {
-    stations.forEach(s => result.set(s.id, 'nodata'));
+const QUINTILES: PriceColor[] = ['cheapest', 'cheap', 'mid', 'pricey', 'expensive'];
+
+function computePriceTiers(
+  stations: StationWithPrice[],
+  fuelType: string,
+  centerLat?: number,
+  centerLng?: number,
+  viewportRadiusM?: number,
+): Map<string, PriceColor> {
+  const result = new Map<string, PriceColor>();
+
+  // Determine population: stations within max(20km, viewport radius) of center
+  let population = stations;
+  if (centerLat !== undefined && centerLng !== undefined) {
+    const radius = Math.max(MIN_COLOR_RADIUS_M, viewportRadiusM ?? MIN_COLOR_RADIUS_M);
+    population = stations.filter(
+      s => haversineMetres(centerLat, centerLng, s.lat, s.lng) <= radius,
+    );
+  }
+
+  const withPrice: { id: string; price: number }[] = [];
+  for (const s of population) {
+    const price = getRepresentativePrice(s, fuelType);
+    if (price !== undefined) {
+      withPrice.push({ id: s.id, price });
+    } else {
+      result.set(s.id, 'nodata');
+    }
+  }
+
+  if (withPrice.length < 2) {
+    withPrice.forEach(s => result.set(s.id, 'nodata'));
     return result;
   }
 
-  const prices = withPrices.map(x => x.price);
-  const min = Math.min(...prices);
-  const max = Math.max(...prices);
-  const spread = max - min;
+  // Cluster guard
+  const min = Math.min(...withPrice.map(s => s.price));
+  const max = Math.max(...withPrice.map(s => s.price));
+  if (max - min < MIN_SPREAD_PLN) {
+    withPrice.forEach(s => result.set(s.id, 'mid'));
+    return result;
+  }
 
-  stations.forEach(s => {
-    const price = getRepresentativePrice(s, fuelType);
-    if (price === undefined) { result.set(s.id, 'nodata'); return; }
-    if (spread === 0) { result.set(s.id, 'mid'); return; }
-    const ratio = (price - min) / spread;
-    result.set(s.id, ratio <= 0.33 ? 'cheap' : ratio <= 0.66 ? 'mid' : 'expensive');
-  });
+  // Percentile-based quintiles
+  withPrice.sort((a, b) => a.price - b.price);
+  const count = withPrice.length;
+  for (let i = 0; i < count; i++) {
+    const rank = i / (count - 1);
+    const bucket = Math.min(Math.floor(rank * 5), 4);
+    result.set(withPrice[i]!.id, QUINTILES[bucket]!);
+  }
 
   return result;
 }
@@ -77,8 +119,24 @@ export default function MapView({
   onBoundsChange,
 }: Props) {
   const [noneInView, setNoneInView] = useState(false);
+  const [viewCenter, setViewCenter] = useState<{ lat: number; lng: number }>({ lat: defaultLat, lng: defaultLng });
+  const [viewportRadiusM, setViewportRadiusM] = useState(MIN_COLOR_RADIUS_M);
 
-  const priceTiers = computePriceTiers(stations, selectedFuel);
+  const priceTiers = useMemo(
+    () => computePriceTiers(stations, selectedFuel, viewCenter.lat, viewCenter.lng, viewportRadiusM),
+    [stations, selectedFuel, viewCenter.lat, viewCenter.lng, viewportRadiusM],
+  );
+
+  function handleMoveEnd(e: { target: mapboxgl.Map }) {
+    const b = e.target.getBounds();
+    if (b) {
+      onBoundsChange({ north: b.getNorth(), south: b.getSouth(), east: b.getEast(), west: b.getWest() });
+      const cLat = b.getCenter().lat;
+      const cLng = b.getCenter().lng;
+      setViewCenter({ lat: cLat, lng: cLng });
+      setViewportRadiusM(haversineMetres(cLat, cLng, b.getNorth(), b.getEast()));
+    }
+  }
 
   function handleFindCheapest() {
     const map = mapRef.current;
@@ -119,14 +177,8 @@ export default function MapView({
         }}
         mapStyle="mapbox://styles/mapbox/streets-v12"
         style={{ width: '100%', height: '100%' }}
-        onLoad={e => {
-          const b = e.target.getBounds();
-          if (b) onBoundsChange({ north: b.getNorth(), south: b.getSouth(), east: b.getEast(), west: b.getWest() });
-        }}
-        onMoveEnd={e => {
-          const b = e.target.getBounds();
-          if (b) onBoundsChange({ north: b.getNorth(), south: b.getSouth(), east: b.getEast(), west: b.getWest() });
-        }}
+        onLoad={e => handleMoveEnd(e)}
+        onMoveEnd={e => handleMoveEnd(e)}
       >
         <NavigationControl position="bottom-left" />
 
@@ -151,7 +203,7 @@ export default function MapView({
           onClick={handleFindCheapest}
           className="lg:hidden absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white shadow-lg border border-gray-200 text-sm font-semibold text-gray-900 hover:bg-gray-50 active:scale-95 transition-all whitespace-nowrap"
         >
-          🏆 {t.cheapestFinder.button}
+          {t.cheapestFinder.button}
         </button>
       )}
 

@@ -11,9 +11,9 @@ const PIN_SIZE_SELECTED = 38;
 
 const FILL: Record<PriceColor, string> = {
   cheapest:  '#1a9641',
-  cheap:     '#a6d96a',
-  mid:       '#ffffbf',
-  pricey:    '#fdae61',
+  cheap:     '#66bd63',
+  mid:       '#f5c542',
+  pricey:    '#f46d43',
   expensive: '#d7191c',
   nodata:    '#94a3b8',
 };
@@ -23,7 +23,7 @@ const TEXT_COLOR: Record<PriceColor, string> = {
   cheapest:  '#ffffff',
   cheap:     '#1a1a1a',
   mid:       '#1a1a1a',
-  pricey:    '#1a1a1a',
+  pricey:    '#ffffff',
   expensive: '#ffffff',
   nodata:    '#ffffff',
 };
@@ -70,7 +70,7 @@ export function StationPin({ priceColor, label, isEstimated, isSelected = false,
             elevation: isSelected ? 8 : 4,
           },
           showEstimated
-            ? { backgroundColor: '#e5e7eb', borderWidth: isSelected ? 3 : 2.5, borderColor: color }
+            ? { backgroundColor: '#6b7280', borderWidth: isSelected ? 3 : 2.5, borderColor: color }
             : { backgroundColor: color, borderWidth: isSelected ? 3 : 0, borderColor: 'white' },
         ]}
       >
@@ -78,7 +78,7 @@ export function StationPin({ priceColor, label, isEstimated, isSelected = false,
           style={{
             fontSize: isSelected ? 8 : 7,
             fontWeight: '800',
-            color: showEstimated ? color : TEXT_COLOR[priceColor],
+            color: showEstimated ? '#ffffff' : TEXT_COLOR[priceColor],
             transform: [{ rotate: '45deg' }],
             textAlign: 'center',
             includeFontPadding: false,

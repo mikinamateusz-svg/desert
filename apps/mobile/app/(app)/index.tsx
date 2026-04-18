@@ -413,13 +413,8 @@ export default function MapScreen() {
           litr<Text style={styles.wordmarkAccent}>o</Text>
         </Text>
         <View style={styles.topBarActions}>
-          <TouchableOpacity
-            style={styles.topBarButton}
-            onPress={() => router.push('/(app)/alerts')}
-            accessibilityLabel={t('map.openAlerts')}
-          >
-            <Ionicons name="notifications-outline" size={22} color={tokens.brand.ink} />
-          </TouchableOpacity>
+          {/* Bell icon hidden for Phase 1 — alerts are Epic 6 (Phase 2).
+              Re-enable when alert preferences and push notifications are implemented. */}
           <TouchableOpacity
             style={styles.topBarButton}
             onPress={() => router.push('/(app)/account')}

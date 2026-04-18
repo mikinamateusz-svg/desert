@@ -14,6 +14,11 @@ export class AnomalyDetectionService implements OnModuleInit, OnModuleDestroy {
   constructor(private readonly prisma: PrismaService) {}
 
   onModuleInit(): void {
+    if (process.env['DISABLE_ANOMALY_DETECTION'] === 'true') {
+      this.logger.log('AnomalyDetectionService skipped (DISABLE_ANOMALY_DETECTION=true)');
+      return;
+    }
+
     // 30-min cadence lets Neon's free-tier compute autosuspend between ticks (5-min idle threshold).
     // Checks use 30/60-min scan windows so this cadence catches everything without gaps.
     this.intervalHandle = setInterval(() => {

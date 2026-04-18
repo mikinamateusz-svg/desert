@@ -65,6 +65,13 @@ Day-to-day dev on `main`. When ready to ship, PR `main` → `prod`.
 **And** any station classification / sync background jobs are disabled in staging env
 **And** an env variable guard `DISABLE_PLACES_API=true` is checked in `StationSyncWorker.onModuleInit()` — throws on startup if places key is configured alongside this flag
 
+### AC5a — Anomaly detection disabled on staging
+**Given** anomaly detection wakes the Neon branch every 30 min and the free-tier 100 CU-hr cap is shared across branches
+**When** staging is set up
+**Then** staging API sets `DISABLE_ANOMALY_DETECTION=true` so the service skips `onModuleInit` entirely
+**And** the staging Neon branch can autosuspend fully when no tests are actively running
+**And** the env var is NOT set (or explicitly `false`) in production so checks keep running there
+
 ### AC6 — Separate secrets per environment
 **Given** each environment needs distinct credentials
 **When** staging is set up

@@ -30,15 +30,28 @@ const BRAND_BADGE: Record<string, { bg: string; color: string; label: string }> 
 
 interface Props {
   station: StationWithPrice;
+  selectedFuel: FuelType;
   t: Translations;
   onClose: () => void;
 }
 
-const StationDetailPanel = forwardRef<HTMLDivElement, Props>(function StationDetailPanel({ station, t, onClose }, ref) {
+const StationDetailPanel = forwardRef<HTMLDivElement, Props>(function StationDetailPanel({ station, selectedFuel, t, onClose }, ref) {
   const { price } = station;
   const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${station.lat},${station.lng}`;
   const brandKey = station.brand?.toLowerCase();
   const brandStyle = brandKey ? BRAND_BADGE[brandKey] : null;
+
+  // Render order: highlighted selected fuel (if has price), then other available, then unavailable
+  const availableFuels = FUEL_ORDER.filter(ft => price?.prices[ft] !== undefined);
+  const unavailableFuels = FUEL_ORDER.filter(ft => price?.prices[ft] === undefined);
+  const highlightedFuel = availableFuels.includes(selectedFuel) ? selectedFuel : null;
+  const secondaryFuels = availableFuels.filter(ft => ft !== highlightedFuel);
+  const orderedFuels = [
+    ...(highlightedFuel ? [highlightedFuel] : []),
+    ...secondaryFuels,
+    ...unavailableFuels,
+  ];
+
   return (
     <div ref={ref} data-testid="station-detail-panel" className={[
       'fixed z-50 bg-white shadow-xl',
@@ -89,11 +102,12 @@ const StationDetailPanel = forwardRef<HTMLDivElement, Props>(function StationDet
       <div className="border-t border-gray-100 mx-4" />
 
       {/* Fuel prices */}
-      <div className="px-4 py-3 space-y-2">
-        {FUEL_ORDER.map(ft => {
+      <div className="px-4 py-3 space-y-1">
+        {orderedFuels.map(ft => {
           const val = price?.prices[ft];
           const badge = FUEL_BADGE[ft];
           const isUnavailable = val === undefined;
+          const isHighlighted = ft === highlightedFuel;
           const isEst = price?.estimateLabel?.[ft] !== undefined;
           const range = price?.priceRanges?.[ft];
           const display = isUnavailable
@@ -103,7 +117,14 @@ const StationDetailPanel = forwardRef<HTMLDivElement, Props>(function StationDet
               : isEst ? `~${val!.toFixed(2)}` : val!.toFixed(2);
 
           return (
-            <div key={ft} className={`flex items-center gap-2.5 ${isUnavailable ? 'opacity-40' : ''}`}>
+            <div
+              key={ft}
+              className={[
+                'flex items-center gap-2.5 px-2 py-1.5 rounded-lg',
+                isHighlighted ? 'bg-amber-50' : '',
+                isUnavailable ? 'opacity-40' : '',
+              ].filter(Boolean).join(' ')}
+            >
               <span
                 className="relative flex-shrink-0 w-9 h-6 rounded text-xs font-black flex items-center justify-center text-white"
                 style={{ backgroundColor: badge.bg }}
@@ -115,7 +136,9 @@ const StationDetailPanel = forwardRef<HTMLDivElement, Props>(function StationDet
                   </span>
                 )}
               </span>
-              <span className="flex-1 text-sm text-gray-600">{t.fuelTypes[ft] ?? ft}</span>
+              <span className={`flex-1 text-sm ${isHighlighted ? 'font-semibold text-gray-900' : 'text-gray-600'}`}>
+                {t.fuelTypes[ft] ?? ft}
+              </span>
               {isUnavailable ? (
                 <span className="text-sm text-gray-400 tabular-nums">∅</span>
               ) : (

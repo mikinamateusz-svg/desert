@@ -113,6 +113,7 @@ export default function MapContainer({ stations, defaultLat, defaultLng, t }: Pr
         <StationDetailPanel
           ref={panelRef}
           station={selected}
+          selectedFuel={selectedFuel}
           t={t}
           onClose={() => setSelected(null)}
         />

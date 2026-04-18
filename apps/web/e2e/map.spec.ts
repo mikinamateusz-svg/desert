@@ -87,8 +87,8 @@ test.describe('Mobile cheapest button', () => {
   test('cheapest-in-view button selects a station', async ({ page }) => {
     await waitForMap(page);
 
-    // The cheapest button should be visible on mobile
-    const cheapestBtn = page.locator('button', { hasText: '🏆' });
+    // The cheapest button should be visible on mobile (label from t.cheapestFinder.button)
+    const cheapestBtn = page.locator('button', { hasText: /Najtańsza|Cheapest|Найдешевша/ });
     await expect(cheapestBtn).toBeVisible();
     await cheapestBtn.click();
 

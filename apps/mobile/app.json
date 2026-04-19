@@ -15,7 +15,7 @@
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSUserNotificationUsageDescription": "We'll alert you when fuel prices drop near you.",
-        "NSLocationWhenInUseUsageDescription": "We use your location to show nearby fuel stations."
+        "NSLocationWhenInUseUsageDescription": "Litro uses your location to find fuel stations near you and show local prices."
       }
     },
     "android": {

@@ -32,6 +32,9 @@ Thumbs.db
 .idea
 *.swp
 
+# Claude Code internal state
+.claude/scheduled_tasks.lock
+
 # Logs
 *.log
 npm-debug.log*

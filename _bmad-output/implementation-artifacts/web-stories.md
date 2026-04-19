@@ -479,20 +479,24 @@ So that I can review my activity without opening the mobile app.
 
 ## Story web-7 — Fleet Manager Dashboard
 
-**Status:** backlog
+**Status:** ready-for-dev
+**Full spec:** [web-7-fleet-dashboard.md](web-7-fleet-dashboard.md)
 
 ### User Story
 
 As a **fleet manager**,
-I want a web dashboard for managing multiple vehicles and viewing fuel cost reports,
-So that I can track fleet fuel spend without needing the mobile app.
+I want a lightweight fleet overview page on the Litro website,
+So that I can see a quick summary of my fleet's fuel activity and navigate to the full fleet portal without opening the mobile app.
 
 ### Acceptance Criteria
 
-- `/flota` is role-gated (FLEET_MANAGER)
-- Shows multi-vehicle log, cost per km, monthly reports, CSV export
-- Upsell CTA for drivers to upgrade to fleet plan
+- `/flota` is protected by middleware (redirects to `/logowanie` if no `web_token`)
+- Users without FLEET_MANAGER role see marketing page with "Zarejestruj flotę" CTA linking to `fleet.desert.app/register`
+- FLEET_MANAGER users see: vehicle count, monthly spend, avg price per litre, last 5 fill-ups
+- Prominent "Otwórz Portal Flotowy" button links to `fleet.desert.app`
+- All strings in `lib/i18n.ts` under `fleet` key (PL/EN/UK)
 - No ads
+- `FLEET_APP_URL` env var added to `apps/web/.env.example`
 
 ---
 
@@ -534,17 +538,25 @@ So that drivers see accurate details and I can monitor price submissions.
 
 ## Story web-10 — Price Alerts & Notifications
 
-**Status:** backlog
+**Status:** ready-for-dev
+**Full spec:** [web-10-price-alerts.md](web-10-price-alerts.md)
 
 ### User Story
 
 As an **authenticated driver**,
-I want to set price alerts for specific fuel types and locations on the web,
-So that I get notified when prices drop below my threshold.
+I want to create and manage price alerts on the Litro website,
+So that I receive an email when fuel prices drop below my chosen threshold — without needing the mobile app.
 
 ### Acceptance Criteria
 
-- `/powiadomienia` is auth-gated
-- User sets: fuel type, price threshold, location radius
-- Delivery: email + push notification
-- Links to mobile app for push setup
+- `/powiadomienia` is auth-gated (redirects to `/logowanie`)
+- Alert list shows all active alerts with fuel type, threshold, location context, status
+- Alert can be deleted with confirmation
+- Create alert form validates: fuel type required, threshold 1.00–15.00, location required
+- Location can be set by: specific station search, voivodeship dropdown, or coordinates (geolocation or address search)
+- Submit creates alert via `POST /v1/me/alerts`; error if >10 alerts
+- Email notification delivery only (push disabled, tooltip explains mobile app)
+- Mobile app CTA shown at bottom
+- `GET /v1/me/alerts` returns user's alerts
+- `DELETE /v1/me/alerts/:alertId` deletes with ownership check
+- All strings in `lib/i18n.ts` under `alerts` key (PL/EN/UK)

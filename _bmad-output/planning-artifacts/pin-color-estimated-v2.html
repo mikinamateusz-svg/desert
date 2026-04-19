@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Estimated Pins — Dark Grey Background</title>
+<style>
+  body { font-family: -apple-system, sans-serif; background: #e8e4d8; padding: 40px; }
+  h1 { text-align: center; margin-bottom: 8px; }
+  .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 14px; }
+  .comparison { display: flex; gap: 60px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
+  .group { text-align: center; }
+  .group h2 { font-size: 16px; margin-bottom: 16px; }
+  .pins { display: flex; gap: 20px; align-items: flex-end; justify-content: center; }
+  .pin-wrapper { text-align: center; }
+  .pin {
+    width: 36px;
+    height: 36px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    margin: 0 auto 8px;
+  }
+  .pin span {
+    transform: rotate(45deg);
+    font-size: 7px;
+    font-weight: 800;
+    display: block;
+  }
+  .label { font-size: 11px; color: #555; font-weight: 500; }
+  .sublabel { font-size: 10px; color: #999; }
+
+  .map-bg {
+    background:
+      linear-gradient(135deg, #d4e6c3 25%, transparent 25%),
+      linear-gradient(225deg, #c8deb5 25%, transparent 25%),
+      linear-gradient(45deg, #dde8d0 25%, transparent 25%),
+      #e2ebd5;
+    padding: 30px;
+    border-radius: 12px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Estimated Pins — Dark Grey Background</h1>
+<p class="subtitle">Colored border for quintile, white text on dark grey (#6b7280) for readability. Contrast ratio: 4.9:1 (passes AA).</p>
+
+<div class="map-bg">
+
+  <div class="comparison">
+    <div class="group">
+      <h2>Verified (solid fill) — unchanged</h2>
+      <div class="pins">
+        <div class="pin-wrapper">
+          <div class="pin" style="background: #1a9641"><span style="color:#fff">5.50</span></div>
+          <div class="label">Cheapest</div>
+        </div>
+        <div class="pin-wrapper">
+          <div class="pin" style="background: #66bd63"><span style="color:#1a1a1a">5.70</span></div>
+          <div class="label">Cheap</div>
+        </div>
+        <div class="pin-wrapper">
+          <div class="pin" style="background: #f5c542"><span style="color:#1a1a1a">5.90</span></div>
+          <div class="label">Mid</div>
+        </div>
+        <div class="pin-wrapper">
+          <div class="pin" style="background: #f46d43"><span style="color:#fff">6.10</span></div>
+          <div class="label">Pricey</div>
+        </div>
+        <div class="pin-wrapper">
+          <div class="pin" style="background: #d7191c"><span style="color:#fff">6.30</span></div>
+          <div class="label">Expensive</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comparison">
+    <div class="group">
+      <h2>Estimated — dark grey + colored border + white text</h2>
+      <div class="pins">
+        <div class="pin-wrapper">
+          <div class="pin" style="background: #6b7280; border: 2.5px solid #1a9641"><span style="color:#fff">~5.50</span></div>
+          <div class="label">Cheapest</div>
+        </div>
+        <div class="pin-wrapper">
+          <div class="pin" style="background: #6b7280; border: 2.5px solid #66bd63"><span style="color:#fff">~5.70</span></div>
+          <div class="label">Cheap</div>
+        </div>
+        <div class="pin-wrapper">
+          <div class="pin" style="background: #6b7280; border: 2.5px solid #f5c542"><span style="color:#fff">~5.90</span></div>
+          <div class="label">Mid</div>
+        </div>
+        <div class="pin-wrapper">
+          <div class="pin" style="background: #6b7280; border: 2.5px solid #f46d43"><span style="color:#fff">~6.10</span></div>
+          <div class="label">Pricey</div>
+        </div>
+        <div class="pin-wrapper">
+          <div class="pin" style="background: #6b7280; border: 2.5px solid #d7191c"><span style="color:#fff">~6.30</span></div>
+          <div class="label">Expensive</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comparison">
+    <div class="group">
+      <h2>Mixed — real-world view</h2>
+      <div class="pins">
+        <div class="pin-wrapper">
+          <div class="pin" style="background: #1a9641"><span style="color:#fff">5.50</span></div>
+          <div class="label">Verified</div>
+        </div>
+        <div class="pin-wrapper">
+          <div class="pin" style="background: #6b7280; border: 2.5px solid #66bd63"><span style="color:#fff">~5.70</span></div>
+          <div class="label">Estimated</div>
+        </div>
+        <div class="pin-wrapper">
+          <div class="pin" style="background: #f5c542"><span style="color:#1a1a1a">5.90</span></div>
+          <div class="label">Verified</div>
+        </div>
+        <div class="pin-wrapper">
+          <div class="pin" style="background: #6b7280; border: 2.5px solid #f5c542"><span style="color:#fff">~5.95</span></div>
+          <div class="label">Estimated</div>
+        </div>
+        <div class="pin-wrapper">
+          <div class="pin" style="background: #f46d43"><span style="color:#fff">6.10</span></div>
+          <div class="label">Verified</div>
+        </div>
+        <div class="pin-wrapper">
+          <div class="pin" style="background: #6b7280; border: 2.5px solid #d7191c"><span style="color:#fff">~6.30</span></div>
+          <div class="label">Estimated</div>
+        </div>
+        <div class="pin-wrapper">
+          <div class="pin" style="background: #94a3b8"><span style="color:#fff">?</span></div>
+          <div class="label">No data</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

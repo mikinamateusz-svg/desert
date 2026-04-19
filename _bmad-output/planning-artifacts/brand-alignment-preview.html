@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Litro — Brand Alignment Preview</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #e0e0e0;
+    font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+    padding: 48px 28px 72px;
+    color: #1a1a1a;
+  }
+  header { text-align: center; margin-bottom: 48px; }
+  header h1 { font-size: 11px; font-weight: 700; color: #aaa; letter-spacing: 4px; text-transform: uppercase; }
+  header p  { font-size: 13px; color: #999; margin-top: 6px; }
+
+  .wrap { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px; }
+
+  .section {
+    background: white;
+    border-radius: 20px;
+    padding: 28px 28px 28px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  }
+  .section-title {
+    font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+    text-transform: uppercase; color: #ccc; margin-bottom: 24px;
+  }
+
+  /* Before/After grid */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .compare-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .compare-label.before { color: #ef4444; }
+  .compare-label.after  { color: #22c55e; }
+
+  /* ── Web page frames ── */
+  .browser-frame {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    border: 1px solid #e5e7eb;
+  }
+  .browser-bar {
+    background: #f4f4f4;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ef4444; }
+  .dot-y { background: #f59e0b; }
+  .dot-g { background: #22c55e; }
+  .url-bar {
+    flex: 1; background: white; border-radius: 6px;
+    padding: 3px 10px; font-size: 10px; color: #9ca3af;
+    border: 1px solid #e5e7eb; margin-left: 6px;
+  }
+
+  /* ── DOWNLOAD PAGE ── */
+  .download-page {
+    padding: 48px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 320px;
+    justify-content: center;
+  }
+  .download-page.before { background: #ffffff; }
+  .download-page.after  { background: #f4f4f4; }
+
+  .wordmark {
+    font-size: 22px; font-weight: 900; letter-spacing: -0.5px;
+    color: #1a1a1a; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 3px;
+  }
+  .wordmark-o-before {
+    display: inline-block; width: 16px; height: 16px; border-radius: 50%;
+    background: #2563eb; vertical-align: middle; margin: 0 1px;
+  }
+  .wordmark-o-after {
+    display: inline-block; width: 16px; height: 16px; border-radius: 50%;
+    background: conic-gradient(#22c55e 0deg 120deg, #f59e0b 120deg 240deg, #ef4444 240deg 360deg);
+    vertical-align: middle; margin: 0 1px;
+  }
+  .dl-title { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+  .dl-subtitle { font-size: 13px; color: #6b7280; max-width: 240px; margin-bottom: 24px; line-height: 1.5; }
+  .store-btns { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; justify-content: center; }
+  .store-btn {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px; border-radius: 10px;
+    min-width: 140px;
+  }
+  .store-btn.before { background: #000; color: white; }
+  .store-btn.after  { background: #1a1a1a; color: white; }
+  .store-btn-text-sm { font-size: 9px; opacity: 0.75; line-height: 1; margin-bottom: 2px; }
+  .store-btn-text-lg { font-size: 13px; font-weight: 600; line-height: 1; }
+  .apple-icon { font-size: 20px; }
+  .coming-soon { font-size: 11px; color: #9ca3af; }
+
+  /* AFTER: dark hero strip */
+  .dl-hero-strip {
+    background: #1a1a1a;
+    width: 100%;
+    padding: 32px 24px 28px;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center;
+  }
+  .dl-hero-strip .dl-title { color: #ffffff; margin-bottom: 6px; }
+  .dl-hero-strip .dl-subtitle { color: #9ca3af; }
+  .dl-content-strip {
+    background: #f4f4f4;
+    padding: 28px 24px 32px;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center;
+  }
+
+  /* ── ABOUT PAGE ── */
+  .about-page { min-height: 400px; }
+
+  .about-hero-before {
+    background: #2563eb;
+    padding: 32px 24px;
+    text-align: center;
+    color: white;
+  }
+  .about-hero-after {
+    background: #1a1a1a;
+    padding: 32px 24px;
+    text-align: center;
+    color: white;
+  }
+  .about-hero h1 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .about-hero p  { font-size: 13px; opacity: 0.8; max-width: 280px; margin: 0 auto; line-height: 1.5; }
+
+  .about-hero-before p { color: #bfdbfe; }
+  .about-hero-after  p { color: #9ca3af; }
+
+  /* amber accent line under ink hero */
+  .hero-accent-bar {
+    height: 3px;
+    background: linear-gradient(to right, #f59e0b, #f59e0b 33%, transparent 33%);
+  }
+
+  .about-steps {
+    padding: 24px 20px;
+    background: white;
+  }
+  .about-steps h2 { font-size: 14px; font-weight: 700; text-align: center; margin-bottom: 18px; color: #1a1a1a; }
+  .steps-row { display: flex; gap: 12px; }
+  .step { flex: 1; text-align: center; }
+  .step-num-before {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #2563eb; color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    margin: 0 auto 8px;
+  }
+  .step-num-after {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #f59e0b; color: #1a1a1a;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    margin: 0 auto 8px;
+  }
+  .step h3 { font-size: 11px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+  .step p  { font-size: 10px; color: #6b7280; line-height: 1.4; }
+
+  .about-features {
+    background: #f4f4f4;
+    padding: 20px;
+  }
+  .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .feature-card {
+    background: white; border-radius: 10px; padding: 10px 12px;
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 11px; color: #374151;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .check-before { color: #2563eb; font-size: 12px; flex-shrink: 0; margin-top: 1px; }
+  .check-after  { color: #f59e0b; font-size: 12px; flex-shrink: 0; margin-top: 1px; }
+
+  .about-cta {
+    padding: 24px 20px;
+    text-align: center;
+    background: white;
+  }
+  .about-cta h2 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .about-cta p  { font-size: 11px; color: #6b7280; margin-bottom: 14px; }
+  .cta-btn-before {
+    display: inline-block; background: #2563eb; color: white;
+    padding: 10px 20px; border-radius: 10px;
+    font-size: 12px; font-weight: 700;
+  }
+  .cta-btn-after {
+    display: inline-block; background: #1a1a1a; color: white;
+    padding: 10px 20px; border-radius: 10px;
+    font-size: 12px; font-weight: 700;
+  }
+
+  /* ── MOBILE FRAMES ── */
+  .mobile-frame {
+    width: 220px;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    border: 6px solid #1a1a1a;
+    background: white;
+    margin: 0 auto;
+  }
+  .mobile-status {
+    background: white;
+    padding: 10px 16px 4px;
+    font-size: 9px;
+    font-weight: 700;
+    color: #1a1a1a;
+    display: flex;
+    justify-content: space-between;
+  }
+  .mobile-screen {
+    padding: 12px 16px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 400px;
+    background: white;
+  }
+  .mobile-logo { font-size: 16px; font-weight: 900; color: #1a1a1a; margin-bottom: 20px; text-align: center; }
+  .mobile-title { font-size: 17px; font-weight: 700; color: #1a1a1a; margin-bottom: 20px; text-align: center; }
+  .mobile-input {
+    width: 100%; padding: 10px 12px;
+    border-radius: 8px; font-size: 12px;
+    margin-bottom: 10px;
+    color: #1a1a1a;
+  }
+  .mobile-input.before { border: 1px solid #ccc; color: #000; background: white; }
+  .mobile-input.after  { border: 1px solid #e5e7eb; color: #1a1a1a; background: white; }
+  .mobile-error-before { font-size: 10px; color: #e53e3e; margin-bottom: 8px; align-self: flex-start; }
+  .mobile-error-after  { font-size: 10px; color: #ef4444; margin-bottom: 8px; align-self: flex-start; }
+  .mobile-btn {
+    width: 100%; padding: 13px;
+    border-radius: 8px; font-size: 13px; font-weight: 600;
+    text-align: center; color: white; margin-bottom: 12px;
+  }
+  .mobile-btn.before { background: #2563eb; }
+  .mobile-btn.after  { background: #1a1a1a; }
+  .mobile-divider { font-size: 10px; color: #9ca3af; margin-bottom: 12px; }
+  .mobile-social {
+    width: 100%; padding: 11px;
+    border-radius: 8px; font-size: 11px; font-weight: 600;
+    text-align: center; margin-bottom: 8px;
+    border: 1px solid #dadce0; background: white; color: #3c4043;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .mobile-link { font-size: 11px; margin-top: 8px; }
+  .mobile-link.before { color: #2563eb; }
+  .mobile-link.after  { color: #f59e0b; }
+
+  /* change callout */
+  .change-tag {
+    display: inline-block;
+    font-size: 9px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; padding: 2px 8px;
+    border-radius: 99px; margin-left: 8px;
+    vertical-align: middle;
+  }
+  .change-tag.fixed { background: #fef3c7; color: #92400e; }
+  .change-tag.ok    { background: #f0fdf4; color: #166534; }
+
+  .legend {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    margin-top: 20px; padding-top: 16px; border-top: 1px solid #f0f0f0;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #6b7280; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+  .mobile-compare { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; }
+  .mobile-col { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Litro · Brand Alignment Preview</h1>
+  <p>Before → After for web pages and mobile auth screens</p>
+</header>
+
+<div class="wrap">
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 1. Download page                                           -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">01 · Web — Download Page <span class="change-tag fixed">2 changes</span></div>
+    <div class="compare">
+
+      <!-- BEFORE -->
+      <div>
+        <div class="compare-label before">Before</div>
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+            <div class="url-bar">litro.app/pobierz</div>
+          </div>
+          <div class="download-page before">
+            <div class="wordmark">litr<span class="wordmark-o-before"></span></div>
+            <div class="dl-title">Pobierz Litro</div>
+            <div class="dl-subtitle">Zawsze wiesz, gdzie jest najtaniej. Dołącz do społeczności kierowców.</div>
+            <div class="store-btns">
+              <div class="store-btn before">
+                <span class="apple-icon">&#xf8ff;</span>
+                <div>
+                  <div class="store-btn-text-sm">Download on the</div>
+                  <div class="store-btn-text-lg">App Store</div>
+                </div>
+              </div>
+              <div class="store-btn before">
+                <span style="font-size:16px;">▶</span>
+                <div>
+                  <div class="store-btn-text-sm">Get it on</div>
+                  <div class="store-btn-text-lg">Google Play</div>
+                </div>
+              </div>
+            </div>
+            <div class="coming-soon">Aplikacja pojawi się w sklepach wkrótce.</div>
+          </div>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#ffffff;border:1px solid #e5e7eb;"></div> Page bg: pure #ffffff</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#000;"></div> Store btn: #000 (close but not ink)</div>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div>
+        <div class="compare-label after">After</div>
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+            <div class="url-bar">litro.app/pobierz</div>
+          </div>
+          <!-- dark hero strip -->
+          <div class="dl-hero-strip">
+            <div class="wordmark" style="color:white; margin-bottom:12px;">litr<span class="wordmark-o-after" style="display:inline-block;"></span></div>
+            <div class="dl-title">Pobierz Litro</div>
+            <div class="dl-subtitle">Zawsze wiesz, gdzie jest najtaniej. Dołącz do społeczności kierowców.</div>
+          </div>
+          <!-- amber accent rule -->
+          <div style="height:3px; background:#f59e0b;"></div>
+          <!-- light content area -->
+          <div class="dl-content-strip">
+            <div class="store-btns" style="margin-bottom:12px;">
+              <div class="store-btn after">
+                <span class="apple-icon">&#xf8ff;</span>
+                <div>
+                  <div class="store-btn-text-sm">Download on the</div>
+                  <div class="store-btn-text-lg">App Store</div>
+                </div>
+              </div>
+              <div class="store-btn after">
+                <span style="font-size:16px;">▶</span>
+                <div>
+                  <div class="store-btn-text-sm">Get it on</div>
+                  <div class="store-btn-text-lg">Google Play</div>
+                </div>
+              </div>
+            </div>
+            <div class="coming-soon">Aplikacja pojawi się w sklepach wkrótce.</div>
+          </div>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#1a1a1a;"></div> Hero: #1a1a1a ink</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;"></div> Accent rule: #f59e0b amber</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f4f4f4;border:1px solid #e5e7eb;"></div> Content bg: #f4f4f4</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#1a1a1a;"></div> Store btn: #1a1a1a (exact ink)</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 2. About page                                              -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">02 · Web — About Page <span class="change-tag fixed">4 changes</span></div>
+    <div class="compare">
+
+      <!-- BEFORE -->
+      <div>
+        <div class="compare-label before">Before</div>
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+            <div class="url-bar">litro.app/o-nas</div>
+          </div>
+          <div class="about-page">
+            <div class="about-hero about-hero-before">
+              <h1>Sprawdzaj ceny paliw w czasie rzeczywistym</h1>
+              <p>Litro agreguje ceny paliw od kierowców i stacji w całej Polsce.</p>
+            </div>
+            <div class="about-steps">
+              <h2>Jak to działa?</h2>
+              <div class="steps-row">
+                <div class="step">
+                  <div class="step-num-before">1</div>
+                  <h3>Otwórz mapę</h3>
+                  <p>Zobacz ceny w okolicy na mapie</p>
+                </div>
+                <div class="step">
+                  <div class="step-num-before">2</div>
+                  <h3>Wybierz stację</h3>
+                  <p>Porównaj ceny i dojedź najtaniej</p>
+                </div>
+                <div class="step">
+                  <div class="step-num-before">3</div>
+                  <h3>Zaktualizuj cenę</h3>
+                  <p>Pomóż innym kierowcom</p>
+                </div>
+              </div>
+            </div>
+            <div class="about-features">
+              <div class="features-grid">
+                <div class="feature-card"><span class="check-before">✓</span> Ceny w czasie rzeczywistym</div>
+                <div class="feature-card"><span class="check-before">✓</span> Wszystkie rodzaje paliw</div>
+                <div class="feature-card"><span class="check-before">✓</span> Bezpłatna aplikacja</div>
+                <div class="feature-card"><span class="check-before">✓</span> Społeczność kierowców</div>
+              </div>
+            </div>
+            <div class="about-cta">
+              <h2>Sprawdź ceny teraz</h2>
+              <p>Dołącz do tysięcy kierowców oszczędzających na paliwie.</p>
+              <div class="cta-btn-before">Otwórz mapę →</div>
+            </div>
+          </div>
+        </div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#2563eb;"></div> Hero/steps/icons/CTA: #2563eb — NOT in palette</div>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div>
+        <div class="compare-label after">After</div>
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+            <div class="url-bar">litro.app/o-nas</div>
+          </div>
+          <div class="about-page">
+            <div class="about-hero about-hero-after">
+              <h1>Sprawdzaj ceny paliw w czasie rzeczywistym</h1>
+              <p>Litro agreguje ceny paliw od kierowców i stacji w całej Polsce.</p>
+            </div>
+            <div style="height:3px; background:#f59e0b;"></div>
+            <div class="about-steps">
+              <h2>Jak to działa?</h2>
+              <div class="steps-row">
+                <div class="step">
+                  <div class="step-num-after">1</div>
+                  <h3>Otwórz mapę</h3>
+                  <p>Zobacz ceny w okolicy na mapie</p>
+                </div>
+                <div class="step">
+                  <div class="step-num-after">2</div>
+                  <h3>Wybierz stację</h3>
+                  <p>Porównaj ceny i dojedź najtaniej</p>
+                </div>
+                <div class="step">
+                  <div class="step-num-after">3</div>
+                  <h3>Zaktualizuj cenę</h3>
+                  <p>Pomóż innym kierowcom</p>
+                </div>
+              </div>
+            </div>
+            <div class="about-features">
+              <div class="features-grid">
+                <div class="feature-card"><span class="check-after">✓</span> Ceny w czasie rzeczywistym</div>
+                <div class="feature-card"><span class="check-after">✓</span> Wszystkie rodzaje paliw</div>
+                <div class="feature-card"><span class="check-after">✓</span> Bezpłatna aplikacja</div>
+                <div class="feature-card"><span class="check-after">✓</span> Społeczność kierowców</div>
+              </div>
+            </div>
+            <div class="about-cta">
+              <h2>Sprawdź ceny teraz</h2>
+              <p>Dołącz do tysięcy kierowców oszczędzających na paliwie.</p>
+              <div class="cta-btn-after">Otwórz mapę →</div>
+            </div>
+          </div>
+        </div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#1a1a1a;"></div> Hero: #1a1a1a ink</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;"></div> Step circles + icons + accent rule: #f59e0b amber</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#1a1a1a;"></div> CTA button: #1a1a1a ink (primary button per palette §05)</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 3. Mobile login                                            -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">03 · Mobile — Login &amp; Register Screens <span class="change-tag fixed">5 changes per screen</span></div>
+
+    <div class="mobile-compare">
+
+      <!-- BEFORE -->
+      <div class="mobile-col">
+        <div class="compare-label before" style="text-align:center;">Before</div>
+        <div class="mobile-frame">
+          <div class="mobile-status">
+            <span>9:41</span><span>●●●</span>
+          </div>
+          <div class="mobile-screen">
+            <div class="mobile-logo">litr●</div>
+            <div class="mobile-title">Zaloguj się</div>
+            <input class="mobile-input before" type="email" placeholder="Email" style="width:100%;margin-bottom:10px;padding:10px 12px;border-radius:8px;border:1px solid #ccc;font-size:12px;color:#000;" disabled>
+            <input class="mobile-input before" type="password" placeholder="Hasło" style="width:100%;margin-bottom:10px;padding:10px 12px;border-radius:8px;border:1px solid #ccc;font-size:12px;color:#000;" disabled>
+            <div class="mobile-error-before">Nieprawidłowe dane logowania</div>
+            <div class="mobile-btn before">Zaloguj się</div>
+            <div class="mobile-divider">lub</div>
+            <div class="mobile-social">
+              <span style="font-size:14px;">G</span> Kontynuuj z Google
+            </div>
+            <div class="mobile-social">
+              <span style="font-size:14px;">&#xf8ff;</span> Kontynuuj z Apple
+            </div>
+            <div class="mobile-link before">Nie masz konta? Zarejestruj się</div>
+          </div>
+        </div>
+        <div class="legend" style="max-width:220px;">
+          <div class="legend-item"><div class="legend-dot" style="background:#2563eb;"></div> Button + link: #2563eb (not in palette)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#e53e3e;"></div> Error: #e53e3e (close but wrong shade)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#ccc;border:1px solid #aaa;"></div> Input border: #ccc (not tokenised)</div>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="mobile-col">
+        <div class="compare-label after" style="text-align:center;">After</div>
+        <div class="mobile-frame">
+          <div class="mobile-status">
+            <span>9:41</span><span>●●●</span>
+          </div>
+          <div class="mobile-screen" style="background:#f4f4f4;">
+            <div class="mobile-logo" style="font-size:16px;font-weight:900;color:#1a1a1a;">litr<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:conic-gradient(#22c55e 0deg 120deg,#f59e0b 120deg 240deg,#ef4444 240deg 360deg);vertical-align:middle;"></span></div>
+            <div class="mobile-title">Zaloguj się</div>
+            <input class="mobile-input after" type="email" placeholder="Email" style="width:100%;margin-bottom:10px;padding:10px 12px;border-radius:8px;border:1px solid #e5e7eb;font-size:12px;color:#1a1a1a;background:white;" disabled>
+            <input class="mobile-input after" type="password" placeholder="Hasło" style="width:100%;margin-bottom:10px;padding:10px 12px;border-radius:8px;border:1px solid #e5e7eb;font-size:12px;color:#1a1a1a;background:white;" disabled>
+            <div class="mobile-error-after">Nieprawidłowe dane logowania</div>
+            <div class="mobile-btn after">Zaloguj się</div>
+            <div class="mobile-divider">lub</div>
+            <div class="mobile-social">
+              <span style="font-size:14px;">G</span> Kontynuuj z Google
+            </div>
+            <div class="mobile-social">
+              <span style="font-size:14px;">&#xf8ff;</span> Kontynuuj z Apple
+            </div>
+            <div class="mobile-link after">Nie masz konta? Zarejestruj się</div>
+          </div>
+        </div>
+        <div class="legend" style="max-width:220px;">
+          <div class="legend-item"><div class="legend-dot" style="background:#1a1a1a;"></div> Button: #1a1a1a ink (primary button)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;"></div> Link: #f59e0b amber (brand action)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div> Error: #ef4444 (tokens.price.expensive)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#e5e7eb;border:1px solid #ccc;"></div> Input border: #e5e7eb (tokens.neutral.n200)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f4f4f4;border:1px solid #ddd;"></div> Screen bg: #f4f4f4 (tokens.surface.page)</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- Summary                                                    -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">04 · Change Summary</div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <thead>
+        <tr style="border-bottom:2px solid #f0f0f0;">
+          <th style="text-align:left;padding:8px 12px;color:#9ca3af;font-weight:600;">File</th>
+          <th style="text-align:left;padding:8px 12px;color:#9ca3af;font-weight:600;">Before</th>
+          <th style="text-align:left;padding:8px 12px;color:#9ca3af;font-weight:600;">After</th>
+          <th style="text-align:left;padding:8px 12px;color:#9ca3af;font-weight:600;">Reason</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #f4f4f4;">
+          <td style="padding:8px 12px;font-weight:600;">DownloadPageContent.tsx</td>
+          <td style="padding:8px 12px;color:#ef4444;">bg #ffffff, btn #000</td>
+          <td style="padding:8px 12px;color:#22c55e;">ink hero + amber rule + #f4f4f4 bg</td>
+          <td style="padding:8px 12px;color:#6b7280;">surface.page, brand.ink, brand.accent</td>
+        </tr>
+        <tr style="border-bottom:1px solid #f4f4f4;">
+          <td style="padding:8px 12px;font-weight:600;">AboutPageContent.tsx</td>
+          <td style="padding:8px 12px;color:#ef4444;">hero/steps/icons/CTA: blue-600</td>
+          <td style="padding:8px 12px;color:#22c55e;">hero ink, steps/icons amber, CTA ink</td>
+          <td style="padding:8px 12px;color:#6b7280;">blue not in palette</td>
+        </tr>
+        <tr style="border-bottom:1px solid #f4f4f4;">
+          <td style="padding:8px 12px;font-weight:600;">login.tsx</td>
+          <td style="padding:8px 12px;color:#ef4444;">btn #2563eb, link #2563eb</td>
+          <td style="padding:8px 12px;color:#22c55e;">btn brand.ink, link brand.accent</td>
+          <td style="padding:8px 12px;color:#6b7280;">blue not in palette</td>
+        </tr>
+        <tr style="border-bottom:1px solid #f4f4f4;">
+          <td style="padding:8px 12px;font-weight:600;">register.tsx</td>
+          <td style="padding:8px 12px;color:#ef4444;">btn #2563eb, link #2563eb</td>
+          <td style="padding:8px 12px;color:#22c55e;">btn brand.ink, link brand.accent</td>
+          <td style="padding:8px 12px;color:#6b7280;">blue not in palette</td>
+        </tr>
+        <tr style="border-bottom:1px solid #f4f4f4;">
+          <td style="padding:8px 12px;font-weight:600;">login.tsx + register.tsx</td>
+          <td style="padding:8px 12px;color:#ef4444;">input border #ccc, text #000, error #e53e3e, bg #fff</td>
+          <td style="padding:8px 12px;color:#22c55e;">n200, brand.ink, price.expensive, surface.page</td>
+          <td style="padding:8px 12px;color:#6b7280;">align to tokens throughout</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px;font-weight:600;">PriceConfirmationCard.tsx:189</td>
+          <td style="padding:8px 12px;color:#ef4444;">hardcoded #f59e0b</td>
+          <td style="padding:8px 12px;color:#22c55e;">tokens.brand.accent</td>
+          <td style="padding:8px 12px;color:#6b7280;">trivial token alignment</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:16px;padding:12px 16px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;font-size:12px;color:#92400e;line-height:1.6;">
+      <strong>Deferred:</strong> amber-50/red-50 highlight surfaces in alerts.tsx + account.tsx — these are semantic states with no existing token. Worth adding <code>surface.highlight</code> and <code>surface.error</code> tokens to tokens.ts in a separate pass.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Litro Loading Screen Concepts</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #1a1a1a; color: #fff; }
+
+  .concepts { display: flex; gap: 40px; justify-content: center; padding: 40px; flex-wrap: wrap; }
+
+  .concept { text-align: center; }
+  .concept h2 { margin-bottom: 8px; font-size: 18px; color: #f59e0b; }
+  .concept p { margin-bottom: 20px; font-size: 13px; color: #999; max-width: 300px; }
+
+  .stages { display: flex; gap: 16px; }
+
+  .phone {
+    width: 200px;
+    height: 400px;
+    background: #f4f4f4;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    position: relative;
+    border: 2px solid #333;
+  }
+  .phone .stage-label-top {
+    position: absolute;
+    top: -24px;
+    font-size: 11px;
+    color: #f59e0b;
+    font-weight: 600;
+  }
+
+  .wordmark {
+    font-size: 36px;
+    font-weight: 900;
+    color: #1a1a1a;
+    letter-spacing: -1.5px;
+  }
+  .wordmark .accent { color: #f59e0b; }
+
+  .stage-text {
+    font-size: 11px;
+    color: #999;
+    font-weight: 500;
+  }
+
+  /* ── Concept A: Fuel Drop ── */
+  .drop-container {
+    width: 60px;
+    height: 80px;
+    position: relative;
+  }
+  .drop-shape {
+    width: 60px;
+    height: 80px;
+    background: #e5e5e5;
+    clip-path: path('M30 0 C30 0 60 30 60 50 C60 66.57 46.57 80 30 80 C13.43 80 0 66.57 0 50 C0 30 30 0 30 0Z');
+    position: relative;
+    overflow: hidden;
+  }
+  .drop-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, #f59e0b, #fbbf24);
+    transition: height 0.5s ease;
+  }
+  .drop-outline {
+    position: absolute;
+    top: 0; left: 0;
+    width: 60px;
+    height: 80px;
+    clip-path: path('M30 0 C30 0 60 30 60 50 C60 66.57 46.57 80 30 80 C13.43 80 0 66.57 0 50 C0 30 30 0 30 0Z');
+    border: 2px solid #888;
+    box-shadow: inset 0 0 0 2px #888;
+  }
+
+  /* ── Concept B: Gauge ── */
+  .gauge-container {
+    width: 70px;
+    height: 70px;
+    position: relative;
+  }
+  .gauge-svg {
+    width: 70px;
+    height: 70px;
+  }
+
+  /* Animation controls */
+  .controls {
+    text-align: center;
+    padding: 20px;
+  }
+  .controls button {
+    background: #f59e0b;
+    color: #1a1a1a;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .controls button:hover { background: #d97706; }
+
+  h1 {
+    text-align: center;
+    padding: 30px 0 0;
+    font-size: 24px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Loading Screen Concepts</h1>
+<p class="subtitle">Click "Animate" to see the loading progression</p>
+
+<div class="controls">
+  <button onclick="animate()">Animate</button>
+  <button onclick="reset()" style="background:#555;color:#fff;margin-left:8px;">Reset</button>
+</div>
+
+<div class="concepts">
+
+  <!-- ── Concept A: Fuel Drop ── -->
+  <div class="concept">
+    <h2>Concept A: Fuel Drop</h2>
+    <p>Drop fills from bottom to top as data loads. Uses clip-path for the teardrop shape — rendered as static images in the app.</p>
+    <div class="stages">
+
+      <div class="phone">
+        <span class="stage-label-top">GPS</span>
+        <span class="wordmark">litr<span class="accent">o</span></span>
+        <div class="drop-container">
+          <div class="drop-shape">
+            <div class="drop-fill" id="dropA1" style="height: 0%"></div>
+          </div>
+        </div>
+        <span class="stage-text">Finding your location...</span>
+      </div>
+
+      <div class="phone">
+        <span class="stage-label-top">Stations</span>
+        <span class="wordmark">litr<span class="accent">o</span></span>
+        <div class="drop-container">
+          <div class="drop-shape">
+            <div class="drop-fill" id="dropA2" style="height: 0%"></div>
+          </div>
+        </div>
+        <span class="stage-text">Loading stations...</span>
+      </div>
+
+      <div class="phone">
+        <span class="stage-label-top">Prices</span>
+        <span class="wordmark">litr<span class="accent">o</span></span>
+        <div class="drop-container">
+          <div class="drop-shape">
+            <div class="drop-fill" id="dropA3" style="height: 0%"></div>
+          </div>
+        </div>
+        <span class="stage-text">Fetching prices...</span>
+      </div>
+
+      <div class="phone">
+        <span class="stage-label-top">Done</span>
+        <span class="wordmark">litr<span class="accent">o</span></span>
+        <div class="drop-container">
+          <div class="drop-shape">
+            <div class="drop-fill" id="dropA4" style="height: 0%"></div>
+          </div>
+        </div>
+        <span class="stage-text">Ready!</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Concept B: Gauge ── -->
+  <div class="concept">
+    <h2>Concept B: Litro Gauge</h2>
+    <p>The brand gauge arc fills progressively. Needle sweeps from red to green. On-brand — matches the app icon and wordmark.</p>
+    <div class="stages">
+
+      <div class="phone">
+        <span class="stage-label-top">GPS</span>
+        <span class="wordmark">litr<span class="accent">o</span></span>
+        <div class="gauge-container">
+          <svg class="gauge-svg" viewBox="0 0 70 70">
+            <!-- Background circle -->
+            <circle cx="35" cy="35" r="28" fill="#e5e5e5" stroke="#ccc" stroke-width="1"/>
+            <!-- Track -->
+            <path d="M 10.76 52 A 28 28 0 1 1 59.24 52" fill="none" stroke="#ddd" stroke-width="8" stroke-linecap="round"/>
+            <!-- Filled arc -->
+            <path d="M 10.76 52 A 28 28 0 1 1 59.24 52" fill="none" stroke="url(#gaugeGrad)" stroke-width="8" stroke-linecap="round"
+              stroke-dasharray="131.95" id="gaugeB1" stroke-dashoffset="131.95"/>
+            <!-- Needle -->
+            <line id="needleB1" x1="35" y1="35" x2="15" y2="50" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Pivot -->
+            <circle cx="35" cy="35" r="4" fill="#1a1a1a"/>
+            <defs>
+              <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#22c55e"/>
+                <stop offset="50%" stop-color="#f59e0b"/>
+                <stop offset="100%" stop-color="#ef4444"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="stage-text">Finding your location...</span>
+      </div>
+
+      <div class="phone">
+        <span class="stage-label-top">Stations</span>
+        <span class="wordmark">litr<span class="accent">o</span></span>
+        <div class="gauge-container">
+          <svg class="gauge-svg" viewBox="0 0 70 70">
+            <circle cx="35" cy="35" r="28" fill="#e5e5e5" stroke="#ccc" stroke-width="1"/>
+            <path d="M 10.76 52 A 28 28 0 1 1 59.24 52" fill="none" stroke="#ddd" stroke-width="8" stroke-linecap="round"/>
+            <path d="M 10.76 52 A 28 28 0 1 1 59.24 52" fill="none" stroke="url(#gaugeGrad)" stroke-width="8" stroke-linecap="round"
+              stroke-dasharray="131.95" id="gaugeB2" stroke-dashoffset="131.95"/>
+            <line id="needleB2" x1="35" y1="35" x2="15" y2="50" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="35" cy="35" r="4" fill="#1a1a1a"/>
+          </svg>
+        </div>
+        <span class="stage-text">Loading stations...</span>
+      </div>
+
+      <div class="phone">
+        <span class="stage-label-top">Prices</span>
+        <span class="wordmark">litr<span class="accent">o</span></span>
+        <div class="gauge-container">
+          <svg class="gauge-svg" viewBox="0 0 70 70">
+            <circle cx="35" cy="35" r="28" fill="#e5e5e5" stroke="#ccc" stroke-width="1"/>
+            <path d="M 10.76 52 A 28 28 0 1 1 59.24 52" fill="none" stroke="#ddd" stroke-width="8" stroke-linecap="round"/>
+            <path d="M 10.76 52 A 28 28 0 1 1 59.24 52" fill="none" stroke="url(#gaugeGrad)" stroke-width="8" stroke-linecap="round"
+              stroke-dasharray="131.95" id="gaugeB3" stroke-dashoffset="131.95"/>
+            <line id="needleB3" x1="35" y1="35" x2="15" y2="50" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="35" cy="35" r="4" fill="#1a1a1a"/>
+          </svg>
+        </div>
+        <span class="stage-text">Fetching prices...</span>
+      </div>
+
+      <div class="phone">
+        <span class="stage-label-top">Done</span>
+        <span class="wordmark">litr<span class="accent">o</span></span>
+        <div class="gauge-container">
+          <svg class="gauge-svg" viewBox="0 0 70 70">
+            <circle cx="35" cy="35" r="28" fill="#e5e5e5" stroke="#ccc" stroke-width="1"/>
+            <path d="M 10.76 52 A 28 28 0 1 1 59.24 52" fill="none" stroke="#ddd" stroke-width="8" stroke-linecap="round"/>
+            <path d="M 10.76 52 A 28 28 0 1 1 59.24 52" fill="none" stroke="url(#gaugeGrad)" stroke-width="8" stroke-linecap="round"
+              stroke-dasharray="131.95" id="gaugeB4" stroke-dashoffset="131.95"/>
+            <line id="needleB4" x1="35" y1="35" x2="15" y2="50" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="35" cy="35" r="4" fill="#1a1a1a"/>
+          </svg>
+        </div>
+        <span class="stage-text">Ready!</span>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const stages = [
+    { fill: 0,   offset: 131.95, angle: 210 },  // gps (empty)
+    { fill: 40,  offset: 79.17,  angle: 260 },  // stations (40%)
+    { fill: 75,  offset: 33.0,   angle: 310 },  // prices (75%)
+    { fill: 100, offset: 0,      angle: 330 },  // done (100%, green zone)
+  ];
+
+  function needleXY(angle, cx, cy, len) {
+    const rad = angle * Math.PI / 180;
+    return {
+      x: cx + len * Math.cos(rad),
+      y: cy + len * Math.sin(rad),
+    };
+  }
+
+  function setStage(i, s) {
+    // Drop
+    const drop = document.getElementById('dropA' + (i + 1));
+    if (drop) drop.style.height = s.fill + '%';
+
+    // Gauge
+    const gauge = document.getElementById('gaugeB' + (i + 1));
+    if (gauge) gauge.setAttribute('stroke-dashoffset', s.offset);
+
+    const needle = document.getElementById('needleB' + (i + 1));
+    if (needle) {
+      const p = needleXY(s.angle, 35, 35, 20);
+      needle.setAttribute('x2', p.x);
+      needle.setAttribute('y2', p.y);
+    }
+  }
+
+  function animate() {
+    reset();
+    stages.forEach((s, i) => {
+      setTimeout(() => setStage(i, s), i * 800);
+    });
+  }
+
+  function reset() {
+    stages.forEach((_, i) => {
+      setStage(i, stages[0]);
+    });
+  }
+
+  // Initial state
+  reset();
+  // Show final states immediately
+  setTimeout(() => {
+    stages.forEach((s, i) => setStage(i, s));
+  }, 100);
+</script>
+
+</body>
+</html>

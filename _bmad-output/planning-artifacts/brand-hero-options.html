@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Litro — Hero Options</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #e0e0e0;
+    font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+    padding: 48px 28px 72px;
+    color: #1a1a1a;
+  }
+  header { text-align: center; margin-bottom: 48px; }
+  header h1 { font-size: 11px; font-weight: 700; color: #aaa; letter-spacing: 4px; text-transform: uppercase; }
+  header p  { font-size: 13px; color: #999; margin-top: 6px; }
+
+  .wrap { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+
+  .section {
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  }
+  .section-title {
+    font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+    text-transform: uppercase; color: #ccc; margin-bottom: 6px;
+  }
+  .section-desc {
+    font-size: 13px; color: #6b7280; margin-bottom: 24px; line-height: 1.5;
+  }
+  .section-desc strong { color: #1a1a1a; }
+
+  /* 4-column grid for options */
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .option-col { display: flex; flex-direction: column; gap: 10px; }
+  .option-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; text-align: center;
+  }
+  .option-label.current { color: #9ca3af; }
+  .option-label.a { color: #f59e0b; }
+  .option-label.b { color: #6b7280; }
+  .option-label.c { color: #1a1a1a; }
+
+  /* Browser chrome */
+  .browser-frame {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    border: 1px solid #e5e7eb;
+  }
+  .browser-bar {
+    background: #f4f4f4;
+    padding: 7px 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .dot-r { background: #ef4444; }
+  .dot-y { background: #f59e0b; }
+  .dot-g { background: #22c55e; }
+  .url-bar {
+    flex: 1; background: white; border-radius: 5px;
+    padding: 3px 8px; font-size: 9px; color: #9ca3af;
+    border: 1px solid #e5e7eb; margin-left: 5px;
+  }
+
+  /* ── Shared page elements ── */
+  .wordmark {
+    font-size: 18px; font-weight: 900; letter-spacing: -0.5px;
+    display: flex; align-items: center; gap: 2px;
+  }
+  .gauge-o {
+    display: inline-block; width: 13px; height: 13px; border-radius: 50%;
+    background: conic-gradient(#22c55e 0deg 120deg, #f59e0b 120deg 240deg, #ef4444 240deg 360deg);
+    vertical-align: middle; margin: 0 1px;
+  }
+
+  /* Store buttons */
+  .store-btns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .store-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; border-radius: 9px;
+    font-size: 11px;
+  }
+  .store-btn-ink { background: #1a1a1a; color: white; }
+  .store-btn-outline { background: transparent; color: #1a1a1a; border: 1.5px solid #1a1a1a; }
+  .store-btn-white { background: white; color: #1a1a1a; }
+  .store-btn-text { display: flex; flex-direction: column; }
+  .store-btn-sm { font-size: 8px; opacity: 0.7; line-height: 1; margin-bottom: 1px; }
+  .store-btn-lg { font-size: 11px; font-weight: 700; line-height: 1; }
+
+  /* ──────────────────────────────────────────
+     DOWNLOAD PAGE variants
+  ────────────────────────────────────────── */
+
+  /* Current (dark ink hero — previous proposal) */
+  .dl-current .hero {
+    background: #1a1a1a;
+    padding: 28px 18px 22px;
+    text-align: center;
+    color: white;
+  }
+  .dl-current .accent-rule { height: 3px; background: #f59e0b; }
+  .dl-current .body {
+    background: #f4f4f4;
+    padding: 20px 18px 24px;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+  }
+
+  /* Option A (amber hero) */
+  .dl-a .hero {
+    background: #f59e0b;
+    padding: 28px 18px 22px;
+    text-align: center;
+    color: #1a1a1a;
+  }
+  .dl-a .body {
+    background: #f4f4f4;
+    padding: 20px 18px 24px;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+  }
+
+  /* Option B (light page + amber accents) */
+  .dl-b .hero {
+    background: #f4f4f4;
+    padding: 28px 18px 22px;
+    text-align: center;
+    color: #1a1a1a;
+  }
+  .dl-b .amber-pill {
+    display: inline-block;
+    background: #f59e0b;
+    color: #1a1a1a;
+    font-size: 10px; font-weight: 700;
+    padding: 3px 10px; border-radius: 99px;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .dl-b .body {
+    background: white;
+    padding: 20px 18px 24px;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+  }
+
+  /* Option C (minimal — accent strip only) */
+  .dl-c .top-strip {
+    height: 4px;
+    background: #f59e0b;
+  }
+  .dl-c .page {
+    background: white;
+    padding: 32px 18px 28px;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+  }
+  .dl-c .amber-border-btn {
+    display: inline-block;
+    border: 2px solid #f59e0b;
+    color: #1a1a1a;
+    border-radius: 9px; padding: 8px 14px;
+    font-size: 10px; font-weight: 700;
+  }
+
+  /* Shared text styles */
+  .hero-title-light  { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .hero-title-dark   { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: white; }
+  .hero-sub-light    { font-size: 11px; color: #6b7280; line-height: 1.5; margin-bottom: 0; max-width: 220px; }
+  .hero-sub-muted    { font-size: 11px; color: rgba(26,26,26,0.6); line-height: 1.5; max-width: 220px; }
+  .hero-sub-white    { font-size: 11px; color: rgba(255,255,255,0.75); line-height: 1.5; max-width: 220px; }
+  .coming-soon       { font-size: 10px; color: #9ca3af; }
+
+  /* ──────────────────────────────────────────
+     ABOUT PAGE variants
+  ────────────────────────────────────────── */
+  .about-page { display: flex; flex-direction: column; }
+
+  /* Shared about sections */
+  .steps-section { padding: 16px 16px; background: white; }
+  .steps-section h2 { font-size: 12px; font-weight: 700; text-align: center; margin-bottom: 14px; color: #1a1a1a; }
+  .steps-row { display: flex; gap: 8px; }
+  .step { flex: 1; text-align: center; }
+  .step h3 { font-size: 10px; font-weight: 600; color: #1a1a1a; margin-bottom: 3px; }
+  .step p  { font-size: 9px; color: #6b7280; line-height: 1.4; }
+  .step-num {
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    margin: 0 auto 8px;
+  }
+  .step-num-amber { background: #f59e0b; color: #1a1a1a; }
+  .step-num-ink   { background: #1a1a1a; color: white; }
+  .step-num-outline { background: transparent; color: #1a1a1a; border: 2px solid #f59e0b; }
+
+  .features-section { background: #f4f4f4; padding: 14px 16px; }
+  .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .feature-card {
+    background: white; border-radius: 8px; padding: 8px 10px;
+    display: flex; align-items: flex-start; gap: 6px;
+    font-size: 10px; color: #374151; line-height: 1.4;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .check-amber { color: #f59e0b; flex-shrink: 0; font-weight: 700; }
+  .check-ink   { color: #1a1a1a; flex-shrink: 0; font-weight: 700; }
+
+  .cta-section { padding: 16px; text-align: center; background: white; }
+  .cta-section h2 { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+  .cta-section p  { font-size: 10px; color: #6b7280; margin-bottom: 12px; }
+
+  .cta-btn-ink    { display: inline-block; background: #1a1a1a; color: white; padding: 9px 18px; border-radius: 9px; font-size: 11px; font-weight: 700; }
+  .cta-btn-amber  { display: inline-block; background: #f59e0b; color: #1a1a1a; padding: 9px 18px; border-radius: 9px; font-size: 11px; font-weight: 700; }
+  .cta-btn-outline{ display: inline-block; border: 2px solid #1a1a1a; color: #1a1a1a; padding: 9px 18px; border-radius: 9px; font-size: 11px; font-weight: 700; background: transparent; }
+
+  /* About hero variants */
+  .about-hero-dark {
+    background: #1a1a1a; padding: 24px 16px; text-align: center; color: white;
+  }
+  .about-hero-dark h1 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .about-hero-dark p  { font-size: 11px; color: #9ca3af; line-height: 1.5; }
+
+  .about-hero-amber {
+    background: #f59e0b; padding: 24px 16px; text-align: center; color: #1a1a1a;
+  }
+  .about-hero-amber h1 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .about-hero-amber p  { font-size: 11px; color: rgba(26,26,26,0.65); line-height: 1.5; }
+
+  .about-hero-light {
+    background: #f4f4f4; padding: 24px 16px; text-align: center; color: #1a1a1a;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .about-hero-light h1 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .about-hero-light p  { font-size: 11px; color: #6b7280; line-height: 1.5; }
+  .about-hero-light .amber-pill {
+    display: inline-block; background: #f59e0b; color: #1a1a1a;
+    font-size: 9px; font-weight: 700; padding: 2px 8px;
+    border-radius: 99px; margin-bottom: 10px;
+  }
+
+  .about-hero-minimal {
+    background: white; padding: 24px 16px 20px; text-align: center; color: #1a1a1a;
+    border-top: 4px solid #f59e0b;
+  }
+  .about-hero-minimal h1 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .about-hero-minimal p  { font-size: 11px; color: #6b7280; line-height: 1.5; }
+
+  .accent-rule-amber { height: 3px; background: #f59e0b; }
+
+  /* Pro/con tags */
+  .verdict {
+    background: #f4f4f4; border-radius: 10px; padding: 12px 14px;
+    font-size: 11px; color: #6b7280; line-height: 1.6;
+  }
+  .verdict strong { display: block; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+  .verdict .pro { color: #22c55e; }
+  .verdict .con { color: #ef4444; }
+
+  /* Divider */
+  .divider { border: none; border-top: 1px solid #f0f0f0; margin: 28px 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Litro · Hero Options</h1>
+  <p>Current proposal vs. Option A (amber) · B (light+accent) · C (minimal)</p>
+</header>
+
+<div class="wrap">
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- DOWNLOAD PAGE                                              -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">01 · Download Page — all options</div>
+    <div class="section-desc">
+      <strong>Current</strong> uses a dark ink hero which feels heavy.
+      Compare against A (amber warmth), B (light functional), C (minimal accent only).
+    </div>
+
+    <div class="options-grid">
+
+      <!-- Current -->
+      <div class="option-col">
+        <div class="option-label current">Current (dark)</div>
+        <div class="browser-frame dl-current">
+          <div class="browser-bar">
+            <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+            <div class="url-bar">litro.app/pobierz</div>
+          </div>
+          <div class="hero">
+            <div class="wordmark" style="color:white;justify-content:center;margin-bottom:14px;">litr<span class="gauge-o"></span></div>
+            <div class="hero-title-dark">Pobierz Litro</div>
+            <div class="hero-sub-white">Zawsze wiesz, gdzie jest najtaniej.</div>
+          </div>
+          <div class="accent-rule"></div>
+          <div class="body">
+            <div class="store-btns">
+              <div class="store-btn store-btn-ink">
+                <span style="font-size:16px;">&#xf8ff;</span>
+                <div class="store-btn-text"><div class="store-btn-sm">Download on the</div><div class="store-btn-lg">App Store</div></div>
+              </div>
+              <div class="store-btn store-btn-ink">
+                <span style="font-size:13px;">▶</span>
+                <div class="store-btn-text"><div class="store-btn-sm">Get it on</div><div class="store-btn-lg">Google Play</div></div>
+              </div>
+            </div>
+            <div class="coming-soon">Aplikacja pojawi się wkrótce.</div>
+          </div>
+        </div>
+        <div class="verdict">
+          <strong>Current</strong>
+          <span class="pro">✓ On-brand ink colour</span><br>
+          <span class="con">✗ Heavy for a utility app</span><br>
+          <span class="con">✗ Can feel unwelcoming</span>
+        </div>
+      </div>
+
+      <!-- Option A -->
+      <div class="option-col">
+        <div class="option-label a">A · Amber hero</div>
+        <div class="browser-frame dl-a">
+          <div class="browser-bar">
+            <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+            <div class="url-bar">litro.app/pobierz</div>
+          </div>
+          <div class="hero">
+            <div class="wordmark" style="color:#1a1a1a;justify-content:center;margin-bottom:14px;">litr<span class="gauge-o"></span></div>
+            <div class="hero-title-light" style="color:#1a1a1a;">Pobierz Litro</div>
+            <div class="hero-sub-muted">Zawsze wiesz, gdzie jest najtaniej.</div>
+          </div>
+          <div class="body">
+            <div class="store-btns">
+              <div class="store-btn store-btn-ink">
+                <span style="font-size:16px;">&#xf8ff;</span>
+                <div class="store-btn-text"><div class="store-btn-sm">Download on the</div><div class="store-btn-lg">App Store</div></div>
+              </div>
+              <div class="store-btn store-btn-ink">
+                <span style="font-size:13px;">▶</span>
+                <div class="store-btn-text"><div class="store-btn-sm">Get it on</div><div class="store-btn-lg">Google Play</div></div>
+              </div>
+            </div>
+            <div class="coming-soon">Aplikacja pojawi się wkrótce.</div>
+          </div>
+        </div>
+        <div class="verdict">
+          <strong>A — Amber hero</strong>
+          <span class="pro">✓ Warm, energetic, distinctive</span><br>
+          <span class="pro">✓ Ink text highly readable</span><br>
+          <span class="con">✗ Amber = mid-price pin (but context differs)</span>
+        </div>
+      </div>
+
+      <!-- Option B -->
+      <div class="option-col">
+        <div class="option-label b">B · Light + accent</div>
+        <div class="browser-frame dl-b">
+          <div class="browser-bar">
+            <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+            <div class="url-bar">litro.app/pobierz</div>
+          </div>
+          <div class="hero">
+            <div class="wordmark" style="color:#1a1a1a;justify-content:center;margin-bottom:12px;">litr<span class="gauge-o"></span></div>
+            <div class="amber-pill">Już dostępne</div>
+            <div class="hero-title-light">Pobierz Litro</div>
+            <div class="hero-sub-light">Zawsze wiesz, gdzie jest najtaniej.</div>
+          </div>
+          <div class="body">
+            <div class="store-btns">
+              <div class="store-btn store-btn-ink">
+                <span style="font-size:16px;">&#xf8ff;</span>
+                <div class="store-btn-text"><div class="store-btn-sm">Download on the</div><div class="store-btn-lg">App Store</div></div>
+              </div>
+              <div class="store-btn store-btn-ink">
+                <span style="font-size:13px;">▶</span>
+                <div class="store-btn-text"><div class="store-btn-sm">Get it on</div><div class="store-btn-lg">Google Play</div></div>
+              </div>
+            </div>
+            <div class="coming-soon">Aplikacja pojawi się wkrótce.</div>
+          </div>
+        </div>
+        <div class="verdict">
+          <strong>B — Light + amber pill</strong>
+          <span class="pro">✓ Approachable, easy to read</span><br>
+          <span class="pro">✓ Familiar download page pattern</span><br>
+          <span class="con">✗ Less distinctive, could be any app</span>
+        </div>
+      </div>
+
+      <!-- Option C -->
+      <div class="option-col">
+        <div class="option-label c">C · Minimal</div>
+        <div class="browser-frame dl-c">
+          <div class="browser-bar">
+            <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+            <div class="url-bar">litro.app/pobierz</div>
+          </div>
+          <div class="top-strip"></div>
+          <div class="page">
+            <div class="wordmark" style="color:#1a1a1a;justify-content:center;margin-bottom:14px;">litr<span class="gauge-o"></span></div>
+            <div class="hero-title-light">Pobierz Litro</div>
+            <div class="hero-sub-light" style="margin-bottom:6px;">Zawsze wiesz, gdzie jest najtaniej.</div>
+            <div class="store-btns">
+              <div class="store-btn store-btn-ink">
+                <span style="font-size:16px;">&#xf8ff;</span>
+                <div class="store-btn-text"><div class="store-btn-sm">Download on the</div><div class="store-btn-lg">App Store</div></div>
+              </div>
+              <div class="store-btn store-btn-ink">
+                <span style="font-size:13px;">▶</span>
+                <div class="store-btn-text"><div class="store-btn-sm">Get it on</div><div class="store-btn-lg">Google Play</div></div>
+              </div>
+            </div>
+            <div class="coming-soon">Aplikacja pojawi się wkrótce.</div>
+          </div>
+        </div>
+        <div class="verdict">
+          <strong>C — Minimal strip</strong>
+          <span class="pro">✓ Clean, fast to scan</span><br>
+          <span class="pro">✓ Map page does the visual work</span><br>
+          <span class="con">✗ Very plain, low brand presence</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- ABOUT PAGE                                                 -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">02 · About Page — all options</div>
+    <div class="section-desc">
+      Same four approaches applied to the hero section. Steps and features stay consistent (amber circles, amber checkmarks) across all options — only the hero background changes.
+    </div>
+
+    <div class="options-grid">
+
+      <!-- Current -->
+      <div class="option-col">
+        <div class="option-label current">Current (dark)</div>
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+            <div class="url-bar">litro.app/o-nas</div>
+          </div>
+          <div class="about-page">
+            <div class="about-hero-dark">
+              <h1>Sprawdzaj ceny paliw w czasie rzeczywistym</h1>
+              <p>Litro agreguje ceny od kierowców w całej Polsce.</p>
+            </div>
+            <div class="accent-rule-amber"></div>
+            <div class="steps-section">
+              <h2>Jak to działa?</h2>
+              <div class="steps-row">
+                <div class="step"><div class="step-num step-num-amber">1</div><h3>Otwórz mapę</h3><p>Ceny w okolicy</p></div>
+                <div class="step"><div class="step-num step-num-amber">2</div><h3>Wybierz stację</h3><p>Jedź najtaniej</p></div>
+                <div class="step"><div class="step-num step-num-amber">3</div><h3>Zaktualizuj</h3><p>Pomóż innym</p></div>
+              </div>
+            </div>
+            <div class="features-section">
+              <div class="features-grid">
+                <div class="feature-card"><span class="check-amber">✓</span>Czas rzeczywisty</div>
+                <div class="feature-card"><span class="check-amber">✓</span>Wszystkie paliwa</div>
+                <div class="feature-card"><span class="check-amber">✓</span>Bezpłatna</div>
+                <div class="feature-card"><span class="check-amber">✓</span>Społeczność</div>
+              </div>
+            </div>
+            <div class="cta-section">
+              <h2>Sprawdź ceny teraz</h2>
+              <p>Dołącz do tysięcy kierowców.</p>
+              <div class="cta-btn-ink">Otwórz mapę →</div>
+            </div>
+          </div>
+        </div>
+        <div class="verdict">
+          <strong>Current</strong>
+          <span class="pro">✓ Strong brand statement</span><br>
+          <span class="con">✗ Heavy, feels corporate</span>
+        </div>
+      </div>
+
+      <!-- Option A -->
+      <div class="option-col">
+        <div class="option-label a">A · Amber hero</div>
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+            <div class="url-bar">litro.app/o-nas</div>
+          </div>
+          <div class="about-page">
+            <div class="about-hero-amber">
+              <h1>Sprawdzaj ceny paliw w czasie rzeczywistym</h1>
+              <p>Litro agreguje ceny od kierowców w całej Polsce.</p>
+            </div>
+            <div class="steps-section">
+              <h2>Jak to działa?</h2>
+              <div class="steps-row">
+                <div class="step"><div class="step-num step-num-ink">1</div><h3>Otwórz mapę</h3><p>Ceny w okolicy</p></div>
+                <div class="step"><div class="step-num step-num-ink">2</div><h3>Wybierz stację</h3><p>Jedź najtaniej</p></div>
+                <div class="step"><div class="step-num step-num-ink">3</div><h3>Zaktualizuj</h3><p>Pomóż innym</p></div>
+              </div>
+            </div>
+            <div class="features-section">
+              <div class="features-grid">
+                <div class="feature-card"><span class="check-ink">✓</span>Czas rzeczywisty</div>
+                <div class="feature-card"><span class="check-ink">✓</span>Wszystkie paliwa</div>
+                <div class="feature-card"><span class="check-ink">✓</span>Bezpłatna</div>
+                <div class="feature-card"><span class="check-ink">✓</span>Społeczność</div>
+              </div>
+            </div>
+            <div class="cta-section">
+              <h2>Sprawdź ceny teraz</h2>
+              <p>Dołącz do tysięcy kierowców.</p>
+              <div class="cta-btn-amber">Otwórz mapę →</div>
+            </div>
+          </div>
+        </div>
+        <div class="verdict">
+          <strong>A — Amber hero</strong>
+          <span class="pro">✓ Warm, high energy</span><br>
+          <span class="pro">✓ CTA inverts nicely to amber</span><br>
+          <span class="con">✗ Long amber hero can feel loud</span>
+        </div>
+      </div>
+
+      <!-- Option B -->
+      <div class="option-col">
+        <div class="option-label b">B · Light + accent</div>
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+            <div class="url-bar">litro.app/o-nas</div>
+          </div>
+          <div class="about-page">
+            <div class="about-hero-light">
+              <div class="amber-pill">O aplikacji</div>
+              <h1>Sprawdzaj ceny paliw w czasie rzeczywistym</h1>
+              <p>Litro agreguje ceny od kierowców w całej Polsce.</p>
+            </div>
+            <div class="steps-section">
+              <h2>Jak to działa?</h2>
+              <div class="steps-row">
+                <div class="step"><div class="step-num step-num-amber">1</div><h3>Otwórz mapę</h3><p>Ceny w okolicy</p></div>
+                <div class="step"><div class="step-num step-num-amber">2</div><h3>Wybierz stację</h3><p>Jedź najtaniej</p></div>
+                <div class="step"><div class="step-num step-num-amber">3</div><h3>Zaktualizuj</h3><p>Pomóż innym</p></div>
+              </div>
+            </div>
+            <div class="features-section">
+              <div class="features-grid">
+                <div class="feature-card"><span class="check-amber">✓</span>Czas rzeczywisty</div>
+                <div class="feature-card"><span class="check-amber">✓</span>Wszystkie paliwa</div>
+                <div class="feature-card"><span class="check-amber">✓</span>Bezpłatna</div>
+                <div class="feature-card"><span class="check-amber">✓</span>Społeczność</div>
+              </div>
+            </div>
+            <div class="cta-section">
+              <h2>Sprawdź ceny teraz</h2>
+              <p>Dołącz do tysięcy kierowców.</p>
+              <div class="cta-btn-ink">Otwórz mapę →</div>
+            </div>
+          </div>
+        </div>
+        <div class="verdict">
+          <strong>B — Light + amber accents</strong>
+          <span class="pro">✓ Easiest to read</span><br>
+          <span class="pro">✓ Amber pill adds brand touch</span><br>
+          <span class="con">✗ Least visually distinctive</span>
+        </div>
+      </div>
+
+      <!-- Option C -->
+      <div class="option-col">
+        <div class="option-label c">C · Minimal</div>
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+            <div class="url-bar">litro.app/o-nas</div>
+          </div>
+          <div class="about-page">
+            <div class="about-hero-minimal">
+              <h1>Sprawdzaj ceny paliw w czasie rzeczywistym</h1>
+              <p>Litro agreguje ceny od kierowców w całej Polsce.</p>
+            </div>
+            <div class="steps-section">
+              <h2>Jak to działa?</h2>
+              <div class="steps-row">
+                <div class="step"><div class="step-num step-num-outline">1</div><h3>Otwórz mapę</h3><p>Ceny w okolicy</p></div>
+                <div class="step"><div class="step-num step-num-outline">2</div><h3>Wybierz stację</h3><p>Jedź najtaniej</p></div>
+                <div class="step"><div class="step-num step-num-outline">3</div><h3>Zaktualizuj</h3><p>Pomóż innym</p></div>
+              </div>
+            </div>
+            <div class="features-section">
+              <div class="features-grid">
+                <div class="feature-card"><span class="check-amber">✓</span>Czas rzeczywisty</div>
+                <div class="feature-card"><span class="check-amber">✓</span>Wszystkie paliwa</div>
+                <div class="feature-card"><span class="check-amber">✓</span>Bezpłatna</div>
+                <div class="feature-card"><span class="check-amber">✓</span>Społeczność</div>
+              </div>
+            </div>
+            <div class="cta-section">
+              <h2>Sprawdź ceny teraz</h2>
+              <p>Dołącz do tysięcy kierowców.</p>
+              <div class="cta-btn-outline">Otwórz mapę →</div>
+            </div>
+          </div>
+        </div>
+        <div class="verdict">
+          <strong>C — Minimal amber border</strong>
+          <span class="pro">✓ Very clean, editorial feel</span><br>
+          <span class="pro">✓ Amber border is subtle signal</span><br>
+          <span class="con">✗ Risk of feeling unfinished</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- Comparison summary                                         -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">03 · At a glance</div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <thead>
+        <tr style="border-bottom:2px solid #f0f0f0;">
+          <th style="text-align:left;padding:10px 14px;color:#9ca3af;font-weight:600;"></th>
+          <th style="text-align:center;padding:10px 14px;color:#9ca3af;font-weight:600;">Brand presence</th>
+          <th style="text-align:center;padding:10px 14px;color:#9ca3af;font-weight:600;">Warmth</th>
+          <th style="text-align:center;padding:10px 14px;color:#9ca3af;font-weight:600;">Readability</th>
+          <th style="text-align:center;padding:10px 14px;color:#9ca3af;font-weight:600;">Palette fidelity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #f4f4f4;">
+          <td style="padding:10px 14px;font-weight:700;">Current (dark ink)</td>
+          <td style="padding:10px 14px;text-align:center;">★★★★★</td>
+          <td style="padding:10px 14px;text-align:center;color:#ef4444;">★★☆☆☆</td>
+          <td style="padding:10px 14px;text-align:center;">★★★★☆</td>
+          <td style="padding:10px 14px;text-align:center;">★★★★★</td>
+        </tr>
+        <tr style="border-bottom:1px solid #f4f4f4;background:#fffbeb;">
+          <td style="padding:10px 14px;font-weight:700;color:#92400e;">A · Amber hero</td>
+          <td style="padding:10px 14px;text-align:center;">★★★★★</td>
+          <td style="padding:10px 14px;text-align:center;color:#22c55e;">★★★★★</td>
+          <td style="padding:10px 14px;text-align:center;">★★★★★</td>
+          <td style="padding:10px 14px;text-align:center;">★★★★★</td>
+        </tr>
+        <tr style="border-bottom:1px solid #f4f4f4;">
+          <td style="padding:10px 14px;font-weight:700;">B · Light + accents</td>
+          <td style="padding:10px 14px;text-align:center;">★★★☆☆</td>
+          <td style="padding:10px 14px;text-align:center;">★★★★☆</td>
+          <td style="padding:10px 14px;text-align:center;color:#22c55e;">★★★★★</td>
+          <td style="padding:10px 14px;text-align:center;">★★★★☆</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 14px;font-weight:700;">C · Minimal</td>
+          <td style="padding:10px 14px;text-align:center;color:#ef4444;">★★☆☆☆</td>
+          <td style="padding:10px 14px;text-align:center;">★★★☆☆</td>
+          <td style="padding:10px 14px;text-align:center;color:#22c55e;">★★★★★</td>
+          <td style="padding:10px 14px;text-align:center;">★★★☆☆</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:16px;padding:12px 16px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;font-size:12px;color:#92400e;line-height:1.6;">
+      <strong>My read:</strong> Option A (amber hero) scores best overall and aligns most directly with the palette's intent — amber as the brand action colour. The palette note says "amber on a button/chip = brand action, not price" and a hero is the ultimate brand action surface. Option B is the safe choice if you want to preserve the light, functional feel of the map page across the whole site.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

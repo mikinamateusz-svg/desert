@@ -30,7 +30,7 @@ Add these in: GitHub repo → Settings → Secrets and variables → Actions
 | `R2_ACCOUNT_ID` | Cloudflare account ID | Cloudflare dashboard → R2 |
 | `R2_ACCESS_KEY_ID` | R2 API token access key | Cloudflare → R2 → Manage R2 API Tokens |
 | `R2_SECRET_ACCESS_KEY` | R2 API token secret | Cloudflare → R2 → Manage R2 API Tokens |
-| `R2_BUCKET_NAME` | R2 bucket name | `desert-photos` |
+| `R2_BUCKET_NAME` | R2 bucket name | `litro-photos-production` |
 
 ---
 
@@ -62,7 +62,7 @@ Add these in: GitHub repo → Settings → Secrets and variables → Actions
 ### Cloudflare R2
 
 - S3-compatible storage for fuel price photos
-- Bucket: `desert-photos`
+- Bucket: `litro-photos-production` (prod), `litro-photos-staging` (staging)
 - API endpoint: `https://<account-id>.r2.cloudflarestorage.com`
 
 ---

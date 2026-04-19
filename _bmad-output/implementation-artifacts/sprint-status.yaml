@@ -2,6 +2,22 @@ project: desert
 generated: 2026-03-23
 description: Sprint status for all stories in the implementation backlog
 
+# ── Rollout Phase Gates ──────────────────────────────────────────────
+# Step 1: Solo field testing (Mateusz only)
+#   Prerequisites: Build APK, install on device. No blockers — app is functional.
+#   Gate to Step 2: Complete Story 0.1 (Pre-Launch Technical Hardening)
+#
+# Step 2: Friends & family beta (~10-30 people)
+#   Prerequisites: Story 0.1 done, Google Play Internal Testing (account paid),
+#                  Apple Developer enrollment ($99) + TestFlight
+#   Gate to Step 3: Beta feedback addressed, App Store review notes prepared
+#
+# Step 3: Public launch in Łódź
+#   Prerequisites: Full App Store + Play Store review passed
+#   App Store notes: Set reviewer location to Łódź (51.7592, 19.4560);
+#                    geo-restrict to Poland only in App Store Connect
+# ─────────────────────────────────────────────────────────────────────
+
 epics:
   - id: 0
     name: Cross-Cutting / Pre-Launch Hardening
@@ -11,6 +27,7 @@ epics:
         file: 0-1-pre-launch-hardening.md
         status: ready-for-dev
         ready_date: 2026-04-08
+        rollout_gate: "Must complete AFTER Step 1 (solo testing) and BEFORE Step 2 (friends & family beta)"
         note: "Bundles 8 deferred fixes: ThrottlerGuard global registration, Submission+PriceHistory DB indexes, updated_at DB defaults, stale push token cleanup, market-signal rate limit, BullMQ separate Redis connections, StationFuelStaleness 7-day TTL."
 
   - id: 1
@@ -439,6 +456,16 @@ epics:
         file: 2-14-station-classification-enrichment.md
         status: done
         dev_completed: 2026-03-27
+
+      - id: 2.16
+        title: Mobile Map Performance — Quick Wins & Grey Pin Fix
+        file: 2-16-mobile-map-performance.md
+        status: done
+        dev_completed: 2026-04-15
+        review_date: 2026-04-15
+        review_findings: "Acceptance Auditor clean. 28 adversarial findings → 4 patches (P-1 abort before cache-hit return, P-2 token-scoped cache key, P-3 don't cache empty results, P-4 NaN/Infinity coord guard), 7 deferred (D-1 unbounded cache, D-2 station/price TTL mismatch, D-3 cache-hit clears unrelated errors, D-4 no defensive array copy, D-5 AsyncStorage incoherent with in-memory, D-6 pre-existing unbounded stations merge, D-7 no invalidation hook for user-posted prices), 5 rejected as noise (intended anchor flicker, intended debounce, latitude grid comment, Map ordering, hooks use default radius)."
+        patches_applied: "2026-04-15 — P-1/P-2/P-3/P-4 applied to both useNearbyStations and useNearbyPrices"
+        note: "Field-test driven: debounce 500→250ms, in-memory coord cache (skip refetch on pan-back), priceColorMap anchor priority swap (fetchCenter ?? location) so visible viewport drives colour comparison when panning >20km from GPS. Bundled /v1/map/nearby endpoint deferred (logged in memory)."
 
   - id: web
     name: Web App — Public Site & Content

@@ -5,6 +5,13 @@ import type { LocationCoords } from './useLocation';
 
 const CACHE_KEY = 'desert.stations_cache';
 
+// In-memory coord-keyed cache to skip refetches when panning back to a recent area.
+// Key rounds coords to ~1.1km grid (P-2: token-scoped to prevent cross-account leak).
+const COORD_CACHE_TTL_MS = 5 * 60 * 1000;
+const coordCache = new Map<string, { data: StationDto[]; ts: number }>();
+const coordKey = (lat: number, lng: number, token: string | null) =>
+  `${token ?? 'guest'}|${lat.toFixed(2)}_${lng.toFixed(2)}`;
+
 export function useNearbyStations(
   accessToken: string | null,
   center: LocationCoords | null,
@@ -30,9 +37,26 @@ export function useNearbyStations(
 
   useEffect(() => {
     if (!center) return;
+    // P-4: guard against NaN/Infinity coords producing a shared cache key
+    if (!Number.isFinite(center.lat) || !Number.isFinite(center.lng)) return;
 
-    // Cancel previous in-flight request
+    // P-1: cancel any previous in-flight fetch before serving from cache,
+    // otherwise a stale response can resolve later and clobber the cached merge.
     abortRef.current?.abort();
+
+    // Cache hit: skip the network call entirely and merge cached stations.
+    const cached = coordCache.get(coordKey(center.lat, center.lng, accessToken));
+    if (cached && Date.now() - cached.ts < COORD_CACHE_TTL_MS) {
+      setStations(prev => {
+        const map = new Map(prev.map(s => [s.id, s]));
+        for (const s of cached.data) map.set(s.id, s);
+        return Array.from(map.values());
+      });
+      setError(false);
+      setLoading(false);
+      return;
+    }
+
     const controller = new AbortController();
     abortRef.current = controller;
 
@@ -58,7 +82,11 @@ export function useNearbyStations(
           return Array.from(map.values());
         });
         setError(false);
-        await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(data));
+        // P-3: don't cache empty results — masks transient API failures for full TTL
+        if (data.length > 0) {
+          coordCache.set(coordKey(center.lat, center.lng, accessToken), { data, ts: Date.now() });
+          await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(data));
+        }
       } catch (err) {
         if (controller.signal.aborted) return;
         // Silent degradation if we have cached stations; error state if not

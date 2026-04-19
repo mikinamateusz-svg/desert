@@ -145,11 +145,13 @@ export default function MapScreen() {
   }, [splashVisible]);
 
   // Compute relative price colours using stations within max(20km, viewport radius)
-  // of the user's GPS position. This keeps colors stable while panning and ensures
-  // a meaningful population for quintile ranking.
+  // of the relevant anchor. Prefer the panned-to fetchCenter so the visible
+  // viewport drives the comparison; fall back to GPS only before any pan happens.
+  // (Previously anchored on GPS, which caused all visible pins to fall outside
+  // the radius and render as 'nodata' when panning >20km from the user.)
   const MIN_COLOR_RADIUS_M = 20_000;
   const priceColorMap = useMemo(() => {
-    const anchor = location ?? fetchCenter;
+    const anchor = fetchCenter ?? location;
     if (!anchor) return computePriceColorMap(stations.map(s => s.id), prices, selectedFuelType);
     const radius = Math.max(MIN_COLOR_RADIUS_M, viewportRadiusM);
     const inRange = stations.filter(
@@ -220,7 +222,7 @@ export default function MapScreen() {
     debounceRef.current = setTimeout(() => {
       const [lng, lat] = feature.geometry.coordinates;
       setFetchCenter({ lat, lng });
-    }, 500);
+    }, 250);
   };
 
   const handleClusterPress = useCallback((clusterId: number, lng: number, lat: number) => {

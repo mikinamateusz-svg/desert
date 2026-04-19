@@ -2,6 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import { apiGetNearbyPrices, type StationPriceDto } from '../api/prices';
 import type { LocationCoords } from './useLocation';
 
+// In-memory coord-keyed cache to skip refetches when panning back to a recent area.
+// Shorter TTL than stations because prices change more often.
+// (P-2: token-scoped to prevent cross-account leak.)
+const COORD_CACHE_TTL_MS = 2 * 60 * 1000;
+const coordCache = new Map<string, { data: StationPriceDto[]; ts: number }>();
+const coordKey = (lat: number, lng: number, token: string | null) =>
+  `${token ?? 'guest'}|${lat.toFixed(2)}_${lng.toFixed(2)}`;
+
 export function useNearbyPrices(
   accessToken: string | null,
   center: LocationCoords | null,
@@ -16,9 +24,29 @@ export function useNearbyPrices(
       setLoading(false);
       return;
     }
+    // P-4: guard against NaN/Infinity coords producing a shared cache key
+    if (!Number.isFinite(center.lat) || !Number.isFinite(center.lng)) {
+      setLoading(false);
+      return;
+    }
 
-    // Cancel previous in-flight request
+    // P-1: cancel any previous in-flight fetch before serving from cache,
+    // otherwise a stale response can resolve later and clobber the cached merge.
     abortRef.current?.abort();
+
+    // Cache hit: skip the network call entirely and merge cached prices.
+    const cached = coordCache.get(coordKey(center.lat, center.lng, accessToken));
+    if (cached && Date.now() - cached.ts < COORD_CACHE_TTL_MS) {
+      setPrices(prev => {
+        const map = new Map(prev.map(p => [p.stationId, p]));
+        for (const p of cached.data) map.set(p.stationId, p);
+        return Array.from(map.values());
+      });
+      setError(false);
+      setLoading(false);
+      return;
+    }
+
     const controller = new AbortController();
     abortRef.current = controller;
 
@@ -43,6 +71,10 @@ export function useNearbyPrices(
           return Array.from(map.values());
         });
         setError(false);
+        // P-3: don't cache empty results — masks transient API failures for full TTL
+        if (data.length > 0) {
+          coordCache.set(coordKey(center.lat, center.lng, accessToken), { data, ts: Date.now() });
+        }
       } catch (err) {
         if (controller.signal.aborted) return;
         setError(true);

@@ -3,7 +3,7 @@ builder = "dockerfile"
 dockerfilePath = "apps/api/Dockerfile"
 
 [deploy]
-preDeployCommand = "cd /app/packages/db && npx prisma migrate deploy"
+preDeployCommand = "cd /app/packages/db && echo '[pre-deploy] starting prisma migrate deploy' && npx prisma migrate deploy 2>&1 && echo '[pre-deploy] success'"
 startCommand = "node dist/main.js"
 healthcheckPath = "/health"
 healthcheckTimeout = 30

@@ -30,6 +30,11 @@ export class OrlenIngestionWorker implements OnModuleInit, OnModuleDestroy {
   ) {}
 
   async onModuleInit(): Promise<void> {
+    if (process.env['MINIMAL_WORKERS'] === 'true') {
+      this.logger.log('OrlenIngestionWorker skipped (MINIMAL_WORKERS=true)');
+      return;
+    }
+
     const redisUrl = this.config.getOrThrow<string>('BULL_REDIS_URL');
     this.redisForQueue = new Redis(redisUrl, { maxRetriesPerRequest: null });
     this.redisForWorker = new Redis(redisUrl, { maxRetriesPerRequest: null });

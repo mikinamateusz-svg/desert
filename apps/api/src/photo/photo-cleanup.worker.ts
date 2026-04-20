@@ -27,6 +27,11 @@ export class PhotoCleanupWorker implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
+    if (process.env['MINIMAL_WORKERS'] === 'true') {
+      this.logger.log('PhotoCleanupWorker skipped (MINIMAL_WORKERS=true)');
+      return;
+    }
+
     const redisUrl = this.config.getOrThrow<string>('BULL_REDIS_URL');
     const queueRedis = new Redis(redisUrl, { maxRetriesPerRequest: null });
     const workerRedis = new Redis(redisUrl, { maxRetriesPerRequest: null });

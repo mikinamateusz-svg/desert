@@ -2,9 +2,9 @@ name: CI/CD
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, prod]
   push:
-    branches: [main]
+    branches: [main, prod]
 
 jobs:
   ci:
@@ -145,7 +145,7 @@ jobs:
           working-directory: apps/mobile
           script: npx detox test --configuration android.emu.debug --headless
 
-  deploy:
+  deploy-staging:
     needs: ci
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -164,13 +164,38 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Deploy web to Vercel
+      - name: Deploy web to Vercel (staging)
+        run: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_STAGING_PROJECT_ID }}
+
+  deploy-production:
+    needs: ci
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/prod' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Deploy web to Vercel (production)
         run: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_PROJECT_ID }}
 
-      - name: Deploy admin to Vercel
+      - name: Deploy admin to Vercel (production)
         run: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}

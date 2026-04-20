@@ -67,6 +67,38 @@ Add these in: GitHub repo → Settings → Secrets and variables → Actions
 
 ---
 
+## Environments & Promotion Flow
+
+The project has two environments, driven by two Git branches:
+
+| Environment | Branch | Vercel project | Railway API service | Neon branch | Redis |
+|---|---|---|---|---|---|
+| **Staging** | `main` | `litro-web-staging` | `litro-api-staging` | `staging` | Redis Cloud `litro-staging` |
+| **Production** | `prod` | prod web + admin | `desert-api` | `production` | Upstash (prod) |
+
+### Day-to-day workflow
+
+- Commit and push to `main`. CI runs tests, then auto-deploys to staging (Railway API + Vercel web).
+- Staging is isolated: separate DB, separate Redis, no Google Places API access, $5/day OCR cap, `MINIMAL_WORKERS=true` (BullMQ skips non-essential workers to fit Redis Cloud's 30-connection free tier cap).
+
+### Promoting to production
+
+1. Smoke-test staging — confirm feature works end-to-end.
+2. Open a PR from `main` → `prod` on GitHub. CI runs on the PR.
+3. Review and merge. The push to `prod` triggers CI which deploys web to production Vercel, and Railway auto-deploys the API from the `prod` branch.
+4. If a new Prisma migration is part of the promotion, run it manually via Railway shell before or immediately after the deploy (migrations are currently not auto-run on startup — see Known Gap below).
+
+### Known Gap — Migrations
+
+`prisma migrate deploy` currently runs neither on pre-deploy nor on startup. When a new migration is merged to `prod`, run it manually:
+
+```bash
+# from Railway shell on desert-api
+cd /app/packages/db && npx prisma migrate deploy
+```
+
+Long-term fix: add a `DIRECT_URL` env var pointing at the non-pooled Neon URL and update `prisma.config.js` to use it for migrations. Runtime continues to use the pooled `DATABASE_URL`.
+
 ## Local Development
 
 Copy `apps/api/.env.example` to `apps/api/.env` and fill in values. Local defaults use PostgreSQL and Redis running via Docker Compose.

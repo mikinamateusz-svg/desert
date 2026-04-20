@@ -3,9 +3,9 @@ builder = "dockerfile"
 dockerfilePath = "apps/api/Dockerfile"
 
 [deploy]
-# Migrations run in a separate step (see `pnpm db:migrate:deploy`) — starting the app
-# directly lets us confirm runtime config independently of Prisma connection issues.
-startCommand = "node dist/main.js"
+# Run Prisma migrations before the app starts. `&&` aborts the chain (and the deploy)
+# if migrate fails, so a bad migration cannot ship a half-working container.
+startCommand = "echo '[startup] running migrations' && cd /app/packages/db && npx prisma migrate deploy && echo '[startup] starting api' && cd /app/apps/api && node dist/main.js"
 healthcheckPath = "/health"
 healthcheckTimeout = 30
 restartPolicyType = "on_failure"

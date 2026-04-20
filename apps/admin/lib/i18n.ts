@@ -28,6 +28,7 @@ const translations = {
       deadLetter: 'Kolejka błędów',
       stations: 'Stacje',
       metrics: 'Metryki',
+      stationSync: 'Synchronizacja stacji',
     },
     login: {
       title: 'Panel admina',
@@ -49,6 +50,22 @@ const translations = {
       deadLetter: { title: 'Kolejka błędów', description: 'Przeglądaj nieprzetworzone zadania.' },
       stations: { title: 'Stacje', description: 'Zarządzaj stacjami paliw.' },
       metrics: { title: 'Metryki', description: 'Przegląd operacyjnych wskaźników produktu.' },
+      stationSync: { title: 'Synchronizacja stacji', description: 'Wyzwól synchronizację z Google Places i monitoruj status.' },
+    },
+    stationSync: {
+      statusLabel: 'Status',
+      statusIdle: 'Bezczynny',
+      statusRunning: 'Synchronizacja w toku…',
+      statusFailed: 'Ostatnia synchronizacja nie powiodła się',
+      lastCompleted: 'Ostatnia udana synchronizacja',
+      lastFailed: 'Ostatni błąd',
+      stationCount: 'Stacji w bazie',
+      triggerButton: 'Uruchom synchronizację',
+      syncRunning: 'Synchronizacja w toku…',
+      alreadyRunningTooltip: 'Synchronizacja już trwa',
+      errorBanner: 'Ostatnia synchronizacja nie powiodła się — sprawdź logi Railway.',
+      dismissError: 'Zamknij',
+      never: 'Nigdy',
     },
     users: {
       trustScore: 'Wynik zaufania',
@@ -224,6 +241,7 @@ const translations = {
       deadLetter: 'Dead-Letter Queue',
       stations: 'Stations',
       metrics: 'Metrics',
+      stationSync: 'Station Sync',
     },
     login: {
       title: 'Admin panel',
@@ -245,6 +263,22 @@ const translations = {
       deadLetter: { title: 'Dead-Letter Queue', description: 'Review unprocessed jobs.' },
       stations: { title: 'Stations', description: 'Manage fuel stations.' },
       metrics: { title: 'Metrics', description: 'Operational product metrics overview.' },
+      stationSync: { title: 'Station Sync', description: 'Trigger a Google Places sync and monitor progress.' },
+    },
+    stationSync: {
+      statusLabel: 'Status',
+      statusIdle: 'Idle',
+      statusRunning: 'Sync running…',
+      statusFailed: 'Last sync failed',
+      lastCompleted: 'Last completed',
+      lastFailed: 'Last failed',
+      stationCount: 'Stations in database',
+      triggerButton: 'Run Sync Now',
+      syncRunning: 'Sync running…',
+      alreadyRunningTooltip: 'Sync already in progress',
+      errorBanner: 'Last sync failed — check Railway logs.',
+      dismissError: 'Dismiss',
+      never: 'Never',
     },
     users: {
       trustScore: 'Trust score',
@@ -420,6 +454,7 @@ const translations = {
       deadLetter: 'Черга помилок',
       stations: 'Станції',
       metrics: 'Метрики',
+      stationSync: 'Синхронізація станцій',
     },
     login: {
       title: 'Панель адміна',
@@ -441,6 +476,22 @@ const translations = {
       deadLetter: { title: 'Черга помилок', description: 'Перегляд необроблених задач.' },
       stations: { title: 'Станції', description: 'Управління автозаправними станціями.' },
       metrics: { title: 'Метрики', description: 'Огляд операційних показників продукту.' },
+      stationSync: { title: 'Синхронізація станцій', description: 'Запустіть синхронізацію з Google Places та відстежуйте статус.' },
+    },
+    stationSync: {
+      statusLabel: 'Статус',
+      statusIdle: 'Бездіяльний',
+      statusRunning: 'Синхронізація…',
+      statusFailed: 'Остання синхронізація не вдалася',
+      lastCompleted: 'Остання успішна',
+      lastFailed: 'Остання помилка',
+      stationCount: 'Станцій у базі',
+      triggerButton: 'Запустити синхронізацію',
+      syncRunning: 'Синхронізація…',
+      alreadyRunningTooltip: 'Синхронізація вже виконується',
+      errorBanner: 'Остання синхронізація не вдалася — перевірте логи Railway.',
+      dismissError: 'Закрити',
+      never: 'Ніколи',
     },
     users: {
       trustScore: 'Рейтинг довіри',
@@ -688,8 +739,24 @@ export interface StationsTranslations {
   detailAction: string;
 }
 
+export interface StationSyncTranslations {
+  statusLabel: string;
+  statusIdle: string;
+  statusRunning: string;
+  statusFailed: string;
+  lastCompleted: string;
+  lastFailed: string;
+  stationCount: string;
+  triggerButton: string;
+  syncRunning: string;
+  alreadyRunningTooltip: string;
+  errorBanner: string;
+  dismissError: string;
+  never: string;
+}
+
 export interface Translations {
-  nav: { submissions: string; users: string; deadLetter: string; stations: string; metrics: string };
+  nav: { submissions: string; users: string; deadLetter: string; stations: string; metrics: string; stationSync: string };
   login: {
     title: string;
     emailLabel: string;
@@ -702,6 +769,7 @@ export interface Translations {
   common: { logout: string; loading: string; comingSoon: string };
   stations: StationsTranslations;
   metrics: MetricsTranslations;
+  stationSync: StationSyncTranslations;
   users: {
     trustScore: string;
     shadowBanned: string;
@@ -783,6 +851,7 @@ export interface Translations {
     deadLetter: { title: string; description: string };
     stations: { title: string; description: string };
     metrics: { title: string; description: string };
+    stationSync: { title: string; description: string };
   };
 }
 

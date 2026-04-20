@@ -150,7 +150,7 @@ const translations = {
       detailAction: 'Szczegóły',
     },
     metrics: {
-      tabs: { pipeline: 'Zdrowie pipeline', funnel: 'Lejek zgłoszeń', product: 'Metryki produktu' },
+      tabs: { pipeline: 'Zdrowie pipeline', funnel: 'Lejek zgłoszeń', product: 'Metryki produktu', cost: 'Koszty API' },
       period: { today: 'Dziś', '7d': 'Ostatnie 7 dni', '30d': 'Ostatnie 30 dni' },
       pipeline: {
         successRate: 'Skuteczność (ostatnia godz.)',
@@ -197,6 +197,15 @@ const translations = {
         gps_no_match: 'Brak dopasowania GPS',
         low_confidence: 'Niska pewność OCR',
         dead_letter_discarded: 'Odrzucone z DLQ',
+      },
+      cost: {
+        today: 'Dziś',
+        currentWeek: 'Bieżący tydzień',
+        currentMonth: 'Bieżący miesiąc',
+        last3Months: 'Ostatnie 3 miesiące',
+        spendLabel: 'Koszt (USD)',
+        imagesLabel: 'Zdjęcia',
+        noData: 'Brak danych.',
       },
       errorGeneric: 'Błąd ładowania. Spróbuj ponownie.',
     },
@@ -363,7 +372,7 @@ const translations = {
       detailAction: 'View',
     },
     metrics: {
-      tabs: { pipeline: 'Pipeline Health', funnel: 'Contribution Funnel', product: 'Product Metrics' },
+      tabs: { pipeline: 'Pipeline Health', funnel: 'Contribution Funnel', product: 'Product Metrics', cost: 'API Cost' },
       period: { today: 'Today', '7d': 'Last 7 days', '30d': 'Last 30 days' },
       pipeline: {
         successRate: 'Success rate (last 1h)',
@@ -410,6 +419,15 @@ const translations = {
         gps_no_match: 'GPS no match',
         low_confidence: 'Low OCR confidence',
         dead_letter_discarded: 'Discarded from DLQ',
+      },
+      cost: {
+        today: 'Today',
+        currentWeek: 'This week',
+        currentMonth: 'This month',
+        last3Months: 'Last 3 months',
+        spendLabel: 'Spend (USD)',
+        imagesLabel: 'Images',
+        noData: 'No data.',
       },
       errorGeneric: 'Failed to load. Try again.',
     },
@@ -576,7 +594,7 @@ const translations = {
       detailAction: 'Деталі',
     },
     metrics: {
-      tabs: { pipeline: 'Здоров\'я pipeline', funnel: 'Воронка внесків', product: 'Метрики продукту' },
+      tabs: { pipeline: 'Здоров\'я pipeline', funnel: 'Воронка внесків', product: 'Метрики продукту', cost: 'Витрати API' },
       period: { today: 'Сьогодні', '7d': 'Останні 7 днів', '30d': 'Останні 30 днів' },
       pipeline: {
         successRate: 'Ефективність (остання год.)',
@@ -624,6 +642,15 @@ const translations = {
         low_confidence: 'Низька точність OCR',
         dead_letter_discarded: 'Відхилено з DLQ',
       },
+      cost: {
+        today: 'Сьогодні',
+        currentWeek: 'Поточний тиждень',
+        currentMonth: 'Поточний місяць',
+        last3Months: 'Останні 3 місяці',
+        spendLabel: 'Витрати (USD)',
+        imagesLabel: 'Зображення',
+        noData: 'Немає даних.',
+      },
       errorGeneric: 'Помилка завантаження. Спробуйте ще раз.',
     },
     review: {
@@ -663,7 +690,7 @@ const translations = {
 } as const;
 
 export interface MetricsTranslations {
-  tabs: { pipeline: string; funnel: string; product: string };
+  tabs: { pipeline: string; funnel: string; product: string; cost: string };
   period: { today: string; '7d': string; '30d': string };
   pipeline: {
     successRate: string;
@@ -704,6 +731,15 @@ export interface MetricsTranslations {
     newRegs: string;
   };
   flagReasons: Record<string, string>;
+  cost: {
+    today: string;
+    currentWeek: string;
+    currentMonth: string;
+    last3Months: string;
+    spendLabel: string;
+    imagesLabel: string;
+    noData: string;
+  };
   errorGeneric: string;
 }
 

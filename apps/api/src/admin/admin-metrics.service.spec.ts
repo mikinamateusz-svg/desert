@@ -3,6 +3,7 @@ import { AdminMetricsService } from './admin-metrics.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { MetricsCounterService } from '../metrics/metrics-counter.service.js';
 import { PhotoPipelineWorker } from '../photo/photo-pipeline.worker.js';
+import { OcrSpendService } from '../photo/ocr-spend.service.js';
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
 
@@ -17,6 +18,7 @@ const mockPhotoPipelineWorker = {
 const mockQueryRaw = jest.fn();
 const mockSubmissionFindMany = jest.fn();
 const mockSubmissionCount = jest.fn();
+const mockDailyApiCostFindMany = jest.fn();
 
 const mockPrisma = {
   $queryRaw: mockQueryRaw,
@@ -24,12 +26,20 @@ const mockPrisma = {
     findMany: mockSubmissionFindMany,
     count: mockSubmissionCount,
   },
+  dailyApiCost: {
+    findMany: mockDailyApiCostFindMany,
+  },
 };
 
 const mockGetMapViewsByDate = jest.fn();
 
 const mockMetricsCounter = {
   getMapViewsByDate: mockGetMapViewsByDate,
+};
+
+const mockGetDailySpend = jest.fn();
+const mockOcrSpend = {
+  getDailySpend: mockGetDailySpend,
 };
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
@@ -52,6 +62,7 @@ describe('AdminMetricsService', () => {
         { provide: PrismaService, useValue: mockPrisma },
         { provide: MetricsCounterService, useValue: mockMetricsCounter },
         { provide: PhotoPipelineWorker, useValue: mockPhotoPipelineWorker },
+        { provide: OcrSpendService, useValue: mockOcrSpend },
       ],
     }).compile();
 
@@ -207,6 +218,62 @@ describe('AdminMetricsService', () => {
 
       expect(result.totalMapViews).toBe(0);
       expect(result.avgAuthPct).toBe(0);
+    });
+  });
+
+  // ── getApiCostMetrics ──────────────────────────────────────────────────────
+
+  describe('getApiCostMetrics', () => {
+    it('falls back to Redis daily spend when today has no DB row', async () => {
+      mockDailyApiCostFindMany.mockResolvedValueOnce([]);
+      mockGetDailySpend.mockResolvedValueOnce(0.42);
+
+      const result = await service.getApiCostMetrics();
+
+      expect(result.today.spendUsd).toBeCloseTo(0.42, 5);
+      expect(result.today.imageCount).toBe(0);
+      expect(mockGetDailySpend).toHaveBeenCalled();
+    });
+
+    it('uses the DB row for today when present (does not call Redis fallback)', async () => {
+      const now = new Date();
+      const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+      mockDailyApiCostFindMany.mockResolvedValueOnce([
+        { date: today, spend_usd: 1.25, image_count: 42 },
+      ]);
+
+      const result = await service.getApiCostMetrics();
+
+      expect(result.today).toEqual({ spendUsd: 1.25, imageCount: 42 });
+      expect(mockGetDailySpend).not.toHaveBeenCalled();
+    });
+
+    it('returns 3 monthly buckets oldest-first', async () => {
+      mockDailyApiCostFindMany.mockResolvedValueOnce([]);
+      mockGetDailySpend.mockResolvedValueOnce(0);
+
+      const result = await service.getApiCostMetrics();
+
+      expect(result.last3Months).toHaveLength(3);
+      expect(result.last3Months[0].month < result.last3Months[1].month).toBe(true);
+      expect(result.last3Months[1].month < result.last3Months[2].month).toBe(true);
+    });
+
+    it('aggregates spend across the current week correctly', async () => {
+      const now = new Date();
+      const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+      const threeDaysAgo = new Date(today);
+      threeDaysAgo.setUTCDate(threeDaysAgo.getUTCDate() - 3);
+
+      mockDailyApiCostFindMany.mockResolvedValueOnce([
+        { date: threeDaysAgo, spend_usd: 0.50, image_count: 10 },
+        { date: today, spend_usd: 0.20, image_count: 5 },
+      ]);
+
+      const result = await service.getApiCostMetrics();
+
+      expect(result.currentWeek.spendUsd).toBeCloseTo(0.70, 5);
+      expect(result.currentWeek.imageCount).toBe(15);
     });
   });
 });

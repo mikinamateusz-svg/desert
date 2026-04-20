@@ -48,4 +48,10 @@ export class AdminMetricsController {
   async product(@Query('period') period?: string) {
     return this.service.getProductMetrics(parsePeriod(period));
   }
+
+  /** Claude API spend aggregated by today / current-week / current-month / last-3-months. */
+  @Get('cost')
+  async cost() {
+    return this.service.getApiCostMetrics();
+  }
 }

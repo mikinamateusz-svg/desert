@@ -3,6 +3,7 @@ import { Queue } from 'bullmq';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { MetricsCounterService } from '../metrics/metrics-counter.service.js';
 import { PhotoPipelineWorker } from '../photo/photo-pipeline.worker.js';
+import { OcrSpendService } from '../photo/ocr-spend.service.js';
 
 export type MetricsPeriod = 'today' | '7d' | '30d';
 
@@ -58,6 +59,24 @@ export interface ProductMetricsDto {
   totalNewRegistrations: number;
 }
 
+export interface ApiCostPeriodDto {
+  spendUsd: number;
+  imageCount: number;
+}
+
+export interface ApiCostMonthDto {
+  month: string; // 'YYYY-MM'
+  spendUsd: number;
+  imageCount: number;
+}
+
+export interface ApiCostMetricsDto {
+  today: ApiCostPeriodDto;
+  currentWeek: ApiCostPeriodDto;
+  currentMonth: ApiCostPeriodDto;
+  last3Months: ApiCostMonthDto[]; // oldest first
+}
+
 @Injectable()
 export class AdminMetricsService implements OnModuleInit {
   private readonly logger = new Logger(AdminMetricsService.name);
@@ -67,6 +86,7 @@ export class AdminMetricsService implements OnModuleInit {
     private readonly prisma: PrismaService,
     private readonly metricsCounter: MetricsCounterService,
     private readonly photoPipelineWorker: PhotoPipelineWorker,
+    private readonly ocrSpend: OcrSpendService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -294,5 +314,74 @@ export class AdminMetricsService implements OnModuleInit {
       cur.setUTCDate(cur.getUTCDate() + 1);
     }
     return dates;
+  }
+
+  // ── API Cost ──────────────────────────────────────────────────────────────
+
+  /** Aggregates DailyApiCost rows into today / current-week / current-month / last-3-months buckets. */
+  async getApiCostMetrics(): Promise<ApiCostMetricsDto> {
+    const now = new Date();
+    const todayUtc = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+
+    // Week = 7-day window ending today (inclusive)
+    const weekStart = new Date(todayUtc);
+    weekStart.setUTCDate(weekStart.getUTCDate() - 6);
+
+    // Month-start = 1st of current UTC month
+    const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+
+    // 3-month window start = 1st of the month 2 months ago (→ current month is the 3rd bucket)
+    const threeMonthsStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 2, 1));
+
+    const rows = await this.prisma.dailyApiCost.findMany({
+      where: { date: { gte: threeMonthsStart, lte: todayUtc } },
+      orderBy: { date: 'asc' },
+      select: { date: true, spend_usd: true, image_count: true },
+    });
+
+    const todayIso = todayUtc.toISOString().slice(0, 10);
+    const inDay = rows.find(r => r.date.toISOString().slice(0, 10) === todayIso);
+
+    // Fall back to Redis counter when today's DB row doesn't exist yet
+    let todayBucket: ApiCostPeriodDto;
+    if (inDay) {
+      todayBucket = { spendUsd: inDay.spend_usd, imageCount: inDay.image_count };
+    } else {
+      const redisTotal = await this.ocrSpend.getDailySpend();
+      todayBucket = { spendUsd: redisTotal, imageCount: 0 };
+    }
+
+    const weekBucket = this.sumRows(rows, weekStart, todayUtc);
+    const monthBucket = this.sumRows(rows, monthStart, todayUtc);
+
+    // last3Months: one bucket per month over the 3-month window, oldest first
+    const last3Months: ApiCostMonthDto[] = [];
+    for (let offset = 2; offset >= 0; offset--) {
+      const bucketStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - offset, 1));
+      const bucketEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - offset + 1, 0));
+      const bucket = this.sumRows(rows, bucketStart, bucketEnd);
+      last3Months.push({
+        month: bucketStart.toISOString().slice(0, 7),
+        spendUsd: bucket.spendUsd,
+        imageCount: bucket.imageCount,
+      });
+    }
+
+    return { today: todayBucket, currentWeek: weekBucket, currentMonth: monthBucket, last3Months };
+  }
+
+  private sumRows(
+    rows: { date: Date; spend_usd: number; image_count: number }[],
+    startInclusive: Date,
+    endInclusive: Date,
+  ): ApiCostPeriodDto {
+    let spendUsd = 0;
+    let imageCount = 0;
+    for (const r of rows) {
+      if (r.date < startInclusive || r.date > endInclusive) continue;
+      spendUsd += r.spend_usd;
+      imageCount += r.image_count;
+    }
+    return { spendUsd, imageCount };
   }
 }

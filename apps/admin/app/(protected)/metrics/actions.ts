@@ -6,9 +6,16 @@ import type {
   FunnelMetricsDto,
   FunnelDrilldownDto,
   ProductMetricsDto,
+  ApiCostMetricsDto,
 } from './types';
 
-export type { PipelineHealthDto, FunnelMetricsDto, FunnelDrilldownDto, ProductMetricsDto };
+export type {
+  PipelineHealthDto,
+  FunnelMetricsDto,
+  FunnelDrilldownDto,
+  ProductMetricsDto,
+  ApiCostMetricsDto,
+};
 
 export async function fetchPipelineHealth(): Promise<{ data?: PipelineHealthDto; error?: string }> {
   try {
@@ -53,5 +60,14 @@ export async function fetchProductMetrics(
     return { data };
   } catch (e) {
     return { error: e instanceof Error ? e.message : 'Failed to load product metrics.' };
+  }
+}
+
+export async function fetchApiCostMetrics(): Promise<{ data?: ApiCostMetricsDto; error?: string }> {
+  try {
+    const data = await adminFetch<ApiCostMetricsDto>('/v1/admin/metrics/cost');
+    return { data };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Failed to load API cost metrics.' };
   }
 }

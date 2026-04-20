@@ -203,3 +203,13 @@ model PriceHistory {
 
   @@index([station_id, fuel_type, recorded_at(sort: Desc)])
 }
+
+
+model DailyApiCost {
+  id          String   @id @default(cuid())
+  date        DateTime @unique @db.Date
+  spend_usd   Float    @default(0)
+  image_count Int      @default(0)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}

@@ -51,3 +51,21 @@ export interface ProductMetricsDto {
   avgAuthPct: number;
   totalNewRegistrations: number;
 }
+
+export interface ApiCostPeriodDto {
+  spendUsd: number;
+  imageCount: number;
+}
+
+export interface ApiCostMonthDto {
+  month: string;
+  spendUsd: number;
+  imageCount: number;
+}
+
+export interface ApiCostMetricsDto {
+  today: ApiCostPeriodDto;
+  currentWeek: ApiCostPeriodDto;
+  currentMonth: ApiCostPeriodDto;
+  last3Months: ApiCostMonthDto[];
+}

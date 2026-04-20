@@ -7,6 +7,7 @@ import { fetchSyncStatus, triggerSync, type SyncStatusResult } from './actions';
 interface Props {
   t: StationSyncTranslations;
   initialStatus: SyncStatusResult | null;
+  initialError: string | null;
 }
 
 function formatDateTime(iso: string | null, never: string): string {
@@ -16,11 +17,13 @@ function formatDateTime(iso: string | null, never: string): string {
   return d.toLocaleString();
 }
 
-export function StationSyncDashboard({ t, initialStatus }: Props) {
+export function StationSyncDashboard({ t, initialStatus, initialError }: Props) {
   const [status, setStatus] = useState<SyncStatusResult | null>(initialStatus);
   const [isTriggering, setIsTriggering] = useState(false);
-  const [errorBanner, setErrorBanner] = useState<string | null>(null);
-  const [errorDismissed, setErrorDismissed] = useState(false);
+  const [errorBanner, setErrorBanner] = useState<string | null>(initialError);
+  // Track which failure timestamp the admin has dismissed. Banner reappears only if a
+  // newer lastFailedAt comes in — not on every navigation.
+  const [dismissedFailedAt, setDismissedFailedAt] = useState<string | null>(null);
 
   // Poll status every 5s while running
   useEffect(() => {
@@ -31,11 +34,6 @@ export function StationSyncDashboard({ t, initialStatus }: Props) {
     }, 5_000);
     return () => clearInterval(id);
   }, [status?.status]);
-
-  // Reset dismissed banner when a new failure shows up (different lastFailedAt timestamp)
-  useEffect(() => {
-    if (status?.status === 'failed') setErrorDismissed(false);
-  }, [status?.status, status?.lastFailedAt]);
 
   const handleTrigger = useCallback(async () => {
     setIsTriggering(true);
@@ -56,6 +54,8 @@ export function StationSyncDashboard({ t, initialStatus }: Props) {
   const isRunning = status?.status === 'running';
   const isFailed = status?.status === 'failed';
   const buttonDisabled = isRunning || isTriggering;
+  const showFailureBanner =
+    isFailed && status?.lastFailedAt != null && dismissedFailedAt !== status.lastFailedAt;
 
   const statusBadge = (() => {
     if (!status) return null;
@@ -82,12 +82,12 @@ export function StationSyncDashboard({ t, initialStatus }: Props) {
 
   return (
     <div className="space-y-4">
-      {isFailed && !errorDismissed && (
+      {showFailureBanner && (
         <div className="flex items-start justify-between gap-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">
           <p>{t.errorBanner}</p>
           <button
             type="button"
-            onClick={() => setErrorDismissed(true)}
+            onClick={() => setDismissedFailedAt(status?.lastFailedAt ?? null)}
             className="text-red-700 hover:text-red-900"
           >
             {t.dismissError}
@@ -141,7 +141,7 @@ export function StationSyncDashboard({ t, initialStatus }: Props) {
               type="button"
               onClick={handleTrigger}
               disabled={buttonDisabled}
-              className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-400"
+              className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
             >
               {isRunning ? t.syncRunning : t.triggerButton}
             </button>

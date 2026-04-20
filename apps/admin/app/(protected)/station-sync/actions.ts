@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { adminFetch, AdminApiError } from '../../../lib/admin-api';
 
 export interface SyncStatusResult {
@@ -21,6 +22,7 @@ export async function fetchSyncStatus(): Promise<{ data?: SyncStatusResult; erro
 export async function triggerSync(): Promise<{ error?: string }> {
   try {
     await adminFetch('/v1/admin/stations/sync', { method: 'POST' });
+    revalidatePath('/station-sync');
     return {};
   } catch (e) {
     if (e instanceof AdminApiError && e.status === 409) return { error: 'already_running' };

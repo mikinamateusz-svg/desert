@@ -5,7 +5,7 @@ import { StationSyncDashboard } from './StationSyncDashboard';
 export default async function StationSyncPage() {
   const locale = await detectLocale();
   const t = getTranslations(locale);
-  const { data: initialStatus } = await fetchSyncStatus();
+  const { data: initialStatus, error: initialError } = await fetchSyncStatus();
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -14,7 +14,11 @@ export default async function StationSyncPage() {
       </h1>
       <p className="mt-1 text-sm text-gray-600">{t.sections.stationSync.description}</p>
       <div className="mt-6">
-        <StationSyncDashboard t={t.stationSync} initialStatus={initialStatus ?? null} />
+        <StationSyncDashboard
+          t={t.stationSync}
+          initialStatus={initialStatus ?? null}
+          initialError={initialError ?? null}
+        />
       </div>
     </div>
   );

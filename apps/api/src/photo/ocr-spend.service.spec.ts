@@ -222,6 +222,39 @@ describe('OcrSpendService', () => {
       expect(args.update.spend_usd).toEqual({ increment: 0.42 });
       expect(args.update.image_count).toEqual({ increment: 1 });
     });
+
+    it('image_count increments by 1 on each call (accumulates across same-day calls)', async () => {
+      await service.persistDailySpend(0.10);
+      await service.persistDailySpend(0.20);
+      await service.persistDailySpend(0.05);
+      expect(mockDailyApiCostUpsert).toHaveBeenCalledTimes(3);
+      for (const call of mockDailyApiCostUpsert.mock.calls) {
+        expect(call[0].update.image_count).toEqual({ increment: 1 });
+      }
+    });
+  });
+
+  // ── recordSpend fire-and-forget safety ──────────────────────────────────────
+
+  describe('recordSpend — fire-and-forget side effects', () => {
+    it('returns the total even when persistDailySpend throws', async () => {
+      mockRedisIncrbyfloat.mockResolvedValue('0.42');
+      mockDailyApiCostUpsert.mockRejectedValueOnce(new Error('DB down'));
+      // Wait for microtasks so the .catch path runs before we assert
+      const total = await service.recordSpend(0.42);
+      await new Promise(resolve => setImmediate(resolve));
+      expect(total).toBeCloseTo(0.42, 5);
+    });
+
+    it('returns the total even when checkMonthlyAlert throws', async () => {
+      mockRedisIncrbyfloat.mockResolvedValue('1.00');
+      // Force checkMonthlyAlert onto a code path that would throw when fetching
+      const svc = await buildService({ SLACK_WEBHOOK_URL: 'https://hooks.slack.com/services/xxx' });
+      mockDailyApiCostFindMany.mockRejectedValueOnce(new Error('DB down'));
+      const total = await svc.recordSpend(1.00);
+      await new Promise(resolve => setImmediate(resolve));
+      expect(total).toBeCloseTo(1.00, 5);
+    });
   });
 
   // ── getMonthlySpend ─────────────────────────────────────────────────────────
@@ -254,7 +287,7 @@ describe('OcrSpendService', () => {
 
     beforeEach(() => {
       fetchMock.mockReset();
-      fetchMock.mockResolvedValue({ ok: true });
+      fetchMock.mockResolvedValue({ ok: true, status: 200 });
       (global as unknown as { fetch: typeof fetch }).fetch = fetchMock as unknown as typeof fetch;
     });
 
@@ -312,6 +345,19 @@ describe('OcrSpendService', () => {
         'EX',
         32 * 24 * 3600,
       );
+    });
+
+    it('does NOT set the Redis dedup flag when Slack returns a non-2xx response', async () => {
+      mockRedisGet.mockResolvedValue(null);
+      mockDailyApiCostFindMany.mockResolvedValueOnce([{ spend_usd: 75 }]);
+      fetchMock.mockResolvedValueOnce({ ok: false, status: 404 });
+      const svc = await buildService({
+        SLACK_WEBHOOK_URL: 'https://hooks.slack.com/services/xxx',
+        COST_ALERT_THRESHOLD_USD: '50',
+      });
+      await svc.checkMonthlyAlert();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(mockRedisSet).not.toHaveBeenCalled();
     });
   });
 });

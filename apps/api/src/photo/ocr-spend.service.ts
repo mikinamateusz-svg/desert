@@ -127,12 +127,19 @@ export class OcrSpendService {
       text: `[COST-ALERT] Claude API monthly spend $${monthlySpend.toFixed(2)} exceeded threshold $${threshold.toFixed(2)}. ${dashboardUrl}/metrics`,
     };
 
-    await fetch(url, {
+    const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(5000),
     });
+
+    // Only dedup-flag on a successful post. A 4xx/5xx means the webhook rejected us;
+    // re-trying next time OCR fires is safer than muting future alerts for 32 days.
+    if (!res.ok) {
+      this.logger.warn(`Slack alert POST returned ${res.status} — skipping dedup flag so the next call retries.`);
+      return;
+    }
 
     await this.redis.set(flagKey, '1', 'EX', MONTHLY_ALERT_TTL_SECONDS);
     this.logger.warn(`Monthly cost alert sent for ${yearMonth}: $${monthlySpend.toFixed(2)} over $${threshold.toFixed(2)}`);

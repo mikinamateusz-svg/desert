@@ -28,8 +28,11 @@ export function ApiCostTab({ t }: Props) {
   }, []);
 
   const maxMonthlySpend = data
-    ? Math.max(...data.last3Months.map(m => m.spendUsd), 0.01)
+    ? Math.max(...data.last3Months.map(m => m.spendUsd), 0)
     : 0;
+  // When all three months are zero the chart is meaningless — suppress it so the user
+  // sees the noData-ish fallback rather than a row of flat 2% bars.
+  const showChart = data != null && maxMonthlySpend > 0;
 
   return (
     <div className="space-y-6">
@@ -71,31 +74,33 @@ export function ApiCostTab({ t }: Props) {
             </div>
           </div>
 
-          <div className="rounded-lg border border-gray-200 bg-white p-5">
-            <p className="mb-3 text-sm font-medium text-gray-900">{tc.last3Months}</p>
-            <div className="flex h-32 items-end gap-3">
-              {data.last3Months.map(m => {
-                const heightPct = Math.max(Math.round((m.spendUsd / maxMonthlySpend) * 100), 2);
-                return (
-                  <div key={m.month} className="flex flex-1 flex-col items-center gap-1">
-                    <span className="text-xs font-medium text-gray-700">
-                      {formatUsd(m.spendUsd)}
-                    </span>
-                    <div className="flex w-full flex-1 items-end">
-                      <div
-                        className="w-full rounded-t bg-blue-600"
-                        style={{ height: `${heightPct}%` }}
-                      />
+          {showChart && (
+            <div className="rounded-lg border border-gray-200 bg-white p-5">
+              <p className="mb-3 text-sm font-medium text-gray-900">{tc.last3Months}</p>
+              <div className="flex h-32 items-end gap-3">
+                {data.last3Months.map(m => {
+                  const heightPct = Math.max(Math.round((m.spendUsd / maxMonthlySpend) * 100), 2);
+                  return (
+                    <div key={m.month} className="flex flex-1 flex-col items-center gap-1">
+                      <span className="text-xs font-medium text-gray-700">
+                        {formatUsd(m.spendUsd)}
+                      </span>
+                      <div className="flex w-full flex-1 items-end">
+                        <div
+                          className="w-full rounded-t bg-blue-600"
+                          style={{ height: `${heightPct}%` }}
+                        />
+                      </div>
+                      <span className="text-xs text-gray-500">{m.month}</span>
+                      <span className="text-[10px] text-gray-400">
+                        {m.imageCount.toLocaleString()}
+                      </span>
                     </div>
-                    <span className="text-xs text-gray-500">{m.month}</span>
-                    <span className="text-[10px] text-gray-400">
-                      {m.imageCount.toLocaleString()}
-                    </span>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          )}
         </>
       )}
     </div>

@@ -3,10 +3,9 @@ builder = "dockerfile"
 dockerfilePath = "apps/api/Dockerfile"
 
 [deploy]
-# Moved prisma migrate into startCommand so migration output lands in runtime logs
-# (Railway's preDeployCommand logs were silent for unknown reasons). Errors still fail
-# the deploy because && stops the chain on non-zero exit.
-startCommand = "echo '[startup] running migrations' && cd /app/packages/db && npx prisma migrate deploy && echo '[startup] starting api' && cd /app/apps/api && node dist/main.js"
+# Migrations run in a separate step (see `pnpm db:migrate:deploy`) — starting the app
+# directly lets us confirm runtime config independently of Prisma connection issues.
+startCommand = "node dist/main.js"
 healthcheckPath = "/health"
 healthcheckTimeout = 30
 restartPolicyType = "on_failure"

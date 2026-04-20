@@ -19,19 +19,19 @@ export class AnomalyDetectionService implements OnModuleInit, OnModuleDestroy {
       return;
     }
 
-    // 30-min cadence lets Neon's free-tier compute autosuspend between ticks (5-min idle threshold).
-    // Checks use 30/60-min scan windows so this cadence catches everything without gaps.
+    // 60-min cadence lets Neon's free-tier compute autosuspend for long stretches between ticks.
+    // Both checks scan a 60-min window to avoid gaps at this cadence.
     this.intervalHandle = setInterval(() => {
       this.runChecks().catch((e: Error) =>
         this.logger.error(`AnomalyDetectionService runChecks error: ${e.message}`),
       );
-    }, 30 * 60_000);
+    }, 60 * 60_000);
 
     this.runDetection().catch((e: unknown) =>
       this.logger.error(`Anomaly detection startup run failed: ${e instanceof Error ? e.message : String(e)}`)
     );
 
-    this.logger.log('AnomalyDetectionService started (runs every 30 minutes)');
+    this.logger.log('AnomalyDetectionService started (runs every 60 minutes)');
   }
 
   onModuleDestroy(): void {
@@ -78,10 +78,10 @@ export class AnomalyDetectionService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  // Rule 2: 3+ submissions for same user+station+fuel_type in 30min with prices varying >15%
+  // Rule 2: 3+ submissions for same user+station+fuel_type in 60min with prices varying >15%
   private async checkPriceVariance(): Promise<void> {
     try {
-      const cutoff = new Date(Date.now() - 30 * 60_000);
+      const cutoff = new Date(Date.now() - 60 * 60_000);
       const rows = await this.prisma.$queryRaw<Array<{
         user_id: string;
         station_id: string;
@@ -113,7 +113,7 @@ export class AnomalyDetectionService implements OnModuleInit, OnModuleDestroy {
           min_price: row.min_price,
           max_price: row.max_price,
           variance_pct: Math.round(variance * 100),
-          window_minutes: 30,
+          window_minutes: 60,
         });
       }
     } catch (e: unknown) {

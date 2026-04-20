@@ -170,6 +170,12 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_STAGING_PROJECT_ID }}
 
+      - name: Deploy admin to Vercel (staging)
+        run: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_ADMIN_STAGING_PROJECT_ID }}
+
   deploy-production:
     needs: ci
     runs-on: ubuntu-latest

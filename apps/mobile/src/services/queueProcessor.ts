@@ -1,8 +1,9 @@
 import NetInfo from '@react-native-community/netinfo';
 import { AppState, type AppStateStatus } from 'react-native';
 import { getToken } from '../lib/secure-storage';
-import { getDueEntries, markFailed, markRetry, markSuccess } from './queueDb';
-import { PermanentUploadError, uploadSubmission } from '../api/submissions';
+import { refreshSessionFromModule } from '../store/auth.store';
+import { getDueEntries, markFailed, markRetry, markSuccess, unfailAllQueueEntries } from './queueDb';
+import { PermanentUploadError, TokenExpiredError, uploadSubmission } from '../api/submissions';
 
 let _running = false;
 let _unsubscribeNetInfo: (() => void) | null = null;
@@ -12,6 +13,14 @@ let _processingLock = false;
 export function startQueueProcessor(): void {
   if (_running) return;
   _running = true;
+
+  // One-off recovery for the Story 3.11 fix: reset any `failed` entries that
+  // were likely killed by the old 401-as-permanent bug. Cheap UPDATE — safe to
+  // run every boot. Future genuine failures will re-fail on their own retries.
+  const unfailed = unfailAllQueueEntries();
+  if (unfailed > 0) {
+    console.log(`[queueProcessor] Revived ${unfailed} previously-failed queue entries`);
+  }
 
   // Attempt immediately in case there are queued items from a prior session
   void processQueue();
@@ -46,7 +55,7 @@ export async function processQueue(): Promise<void> {
   _processingLock = true;
 
   try {
-    const accessToken = await getToken();
+    let accessToken = await getToken();
     if (!accessToken) return; // not signed in — skip silently
 
     const entries = getDueEntries();
@@ -55,6 +64,35 @@ export async function processQueue(): Promise<void> {
         await uploadSubmission(accessToken, entry);
         markSuccess(entry.id);
       } catch (err) {
+        if (err instanceof TokenExpiredError) {
+          // Access token expired mid-loop. Refresh once; if it works, retry this
+          // same entry with the new token. If refresh fails, schedule this entry
+          // for a later retry (NOT permanent — the user may re-login later and
+          // we want their photos to still upload then).
+          const refreshed = await refreshSessionFromModule();
+          if (refreshed) {
+            accessToken = refreshed;
+            try {
+              await uploadSubmission(accessToken, entry);
+              markSuccess(entry.id);
+              continue;
+            } catch (retryErr) {
+              if (retryErr instanceof PermanentUploadError) {
+                markFailed(entry.id);
+              } else {
+                markRetry(entry.id, entry.retry_count);
+              }
+              continue;
+            }
+          }
+          // No refresh token available or refresh failed. Leave the entry as
+          // pending with a backoff so a later login can pick it up.
+          markRetry(entry.id, entry.retry_count);
+          // Bail out of the loop — no point trying the remaining entries with
+          // a dead session; they'd all hit the same error.
+          break;
+        }
+
         if (err instanceof PermanentUploadError || entry.retry_count >= 3) {
           markFailed(entry.id);
         } else {

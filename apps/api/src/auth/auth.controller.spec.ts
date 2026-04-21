@@ -30,6 +30,7 @@ const mockAuthService = {
   getMe: jest.fn(),
   googleSignIn: jest.fn(),
   appleSignIn: jest.fn(),
+  refreshSession: jest.fn(),
 };
 
 describe('AuthController', () => {
@@ -176,6 +177,30 @@ describe('AuthController', () => {
 
       await expect(
         controller.appleAuth({ identityToken: 'bad-token' }),
+      ).rejects.toThrow(UnauthorizedException);
+    });
+  });
+
+  describe('refresh', () => {
+    it('forwards refreshToken to service and returns result', async () => {
+      mockAuthService.refreshSession.mockResolvedValueOnce({
+        accessToken: 'new-access',
+        refreshToken: 'new-refresh',
+      });
+
+      const result = await controller.refresh({ refreshToken: 'old-refresh' });
+
+      expect(result).toEqual({ accessToken: 'new-access', refreshToken: 'new-refresh' });
+      expect(mockAuthService.refreshSession).toHaveBeenCalledWith('old-refresh');
+    });
+
+    it('propagates UnauthorizedException from service when refresh fails', async () => {
+      mockAuthService.refreshSession.mockRejectedValueOnce(
+        new UnauthorizedException({ error: 'REFRESH_TOKEN_INVALID' }),
+      );
+
+      await expect(
+        controller.refresh({ refreshToken: 'expired' }),
       ).rejects.toThrow(UnauthorizedException);
     });
   });

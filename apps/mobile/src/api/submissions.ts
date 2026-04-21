@@ -42,6 +42,10 @@ async function request<T>(path: string, options: RequestInit): Promise<T> {
     },
   });
 
+  if (res.status === 401 && await is401RefreshSignal(res)) {
+    throw new TokenExpiredError();
+  }
+
   const body = (await res.json()) as Record<string, unknown>;
 
   if (!res.ok) {
@@ -59,6 +63,26 @@ export class PermanentUploadError extends Error {
   constructor(public readonly statusCode: number) {
     super(`Permanent upload failure: ${statusCode}`);
     this.name = 'PermanentUploadError';
+  }
+}
+
+/** 401 with SuperTokens `type: 'TRY_REFRESH_TOKEN'` — retriable after token refresh. */
+export class TokenExpiredError extends Error {
+  constructor() {
+    super('Access token expired — needs refresh');
+    this.name = 'TokenExpiredError';
+  }
+}
+
+/** Parse a 401 body to decide whether it's a refresh-needed (retriable) or a genuine auth failure. */
+async function is401RefreshSignal(res: Response): Promise<boolean> {
+  try {
+    const text = await res.clone().text();
+    // SuperTokens signals with either `type: "TRY_REFRESH_TOKEN"` in the body
+    // or a `try refresh token` string. Cover both.
+    return /TRY_REFRESH_TOKEN|try refresh token/i.test(text);
+  } catch {
+    return false;
   }
 }
 
@@ -96,6 +120,12 @@ export async function uploadSubmission(
   });
 
   if (res.status === 202) return;
+
+  // 401 + TRY_REFRESH_TOKEN is retriable after a session refresh, NOT a permanent failure.
+  // Treating it as permanent was the root cause of 10 photos silently dying during field testing.
+  if (res.status === 401 && await is401RefreshSignal(res)) {
+    throw new TokenExpiredError();
+  }
 
   if (res.status === 400 || res.status === 401 || res.status === 403) {
     throw new PermanentUploadError(res.status);

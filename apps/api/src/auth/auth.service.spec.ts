@@ -43,12 +43,16 @@ jest.mock('supertokens-node/recipe/emailpassword/index.js', () => ({
   },
 }));
 
+const mockRefreshSession = jest.fn();
+
 jest.mock('supertokens-node/recipe/session/index.js', () => ({
   __esModule: true,
   default: {
     createNewSessionWithoutRequestResponse: (...args: unknown[]) =>
       mockCreateSession(...args),
     revokeSession: (...args: unknown[]) => mockRevokeSession(...args),
+    refreshSessionWithoutRequestResponse: (...args: unknown[]) =>
+      mockRefreshSession(...args),
   },
 }));
 
@@ -108,6 +112,7 @@ describe('AuthService', () => {
       mockPrismaService.user.create.mockResolvedValueOnce(mockUser);
       mockCreateSession.mockResolvedValueOnce({
         getAccessToken: () => 'mock-access-token',
+        getAllSessionTokensDangerously: () => ({ accessToken: 'mock-access-token', refreshToken: 'mock-refresh-token' }),
       });
 
       const result = await service.register('test@example.com', 'password123', 'Test User');
@@ -133,6 +138,7 @@ describe('AuthService', () => {
       mockPrismaService.user.create.mockResolvedValueOnce(mockUser);
       mockCreateSession.mockResolvedValueOnce({
         getAccessToken: () => 'mock-access-token',
+        getAllSessionTokensDangerously: () => ({ accessToken: 'mock-access-token', refreshToken: 'mock-refresh-token' }),
       });
 
       await service.register('test@example.com', 'password123', 'Test User');
@@ -150,6 +156,7 @@ describe('AuthService', () => {
       mockUserService.createCoreServiceConsent.mockRejectedValueOnce(new Error('DB error'));
       mockCreateSession.mockResolvedValueOnce({
         getAccessToken: () => 'mock-access-token',
+        getAllSessionTokensDangerously: () => ({ accessToken: 'mock-access-token', refreshToken: 'mock-refresh-token' }),
       });
 
       const result = await service.register('test@example.com', 'password123', 'Test User');
@@ -176,6 +183,7 @@ describe('AuthService', () => {
       mockPrismaService.user.findUnique.mockResolvedValueOnce(mockUser);
       mockCreateSession.mockResolvedValueOnce({
         getAccessToken: () => 'mock-access-token',
+        getAllSessionTokensDangerously: () => ({ accessToken: 'mock-access-token', refreshToken: 'mock-refresh-token' }),
       });
 
       const result = await service.login('test@example.com', 'password123');
@@ -231,6 +239,7 @@ describe('AuthService', () => {
       });
       mockCreateSession.mockResolvedValueOnce({
         getAccessToken: () => 'google-access-token',
+        getAllSessionTokensDangerously: () => ({ accessToken: 'google-access-token', refreshToken: 'google-refresh-token' }),
       });
 
       const result = await service.googleSignIn('valid-id-token');
@@ -257,7 +266,7 @@ describe('AuthService', () => {
         createdNewRecipeUser: true,
       });
       mockPrismaService.user.create.mockResolvedValueOnce(newGoogleUser);
-      mockCreateSession.mockResolvedValueOnce({ getAccessToken: () => 'google-access-token' });
+      mockCreateSession.mockResolvedValueOnce({ getAccessToken: () => 'google-access-token', getAllSessionTokensDangerously: () => ({ accessToken: 'google-access-token', refreshToken: 'google-refresh-token' }) });
 
       await service.googleSignIn('valid-id-token');
 
@@ -273,7 +282,7 @@ describe('AuthService', () => {
         createdNewRecipeUser: false,
       });
       mockPrismaService.user.findUnique.mockResolvedValueOnce(mockUser);
-      mockCreateSession.mockResolvedValueOnce({ getAccessToken: () => 'google-access-token' });
+      mockCreateSession.mockResolvedValueOnce({ getAccessToken: () => 'google-access-token', getAllSessionTokensDangerously: () => ({ accessToken: 'google-access-token', refreshToken: 'google-refresh-token' }) });
 
       await service.googleSignIn('valid-id-token');
 
@@ -291,6 +300,7 @@ describe('AuthService', () => {
       mockPrismaService.user.findUnique.mockResolvedValueOnce(mockUser);
       mockCreateSession.mockResolvedValueOnce({
         getAccessToken: () => 'google-access-token',
+        getAllSessionTokensDangerously: () => ({ accessToken: 'google-access-token', refreshToken: 'google-refresh-token' }),
       });
 
       const result = await service.googleSignIn('valid-id-token');
@@ -345,6 +355,7 @@ describe('AuthService', () => {
       });
       mockCreateSession.mockResolvedValueOnce({
         getAccessToken: () => 'apple-access-token',
+        getAllSessionTokensDangerously: () => ({ accessToken: 'apple-access-token', refreshToken: 'apple-refresh-token' }),
       });
 
       const result = await service.appleSignIn('valid-identity-token', {
@@ -373,7 +384,7 @@ describe('AuthService', () => {
         createdNewRecipeUser: true,
       });
       mockPrismaService.user.create.mockResolvedValueOnce(newAppleUser);
-      mockCreateSession.mockResolvedValueOnce({ getAccessToken: () => 'apple-access-token' });
+      mockCreateSession.mockResolvedValueOnce({ getAccessToken: () => 'apple-access-token', getAllSessionTokensDangerously: () => ({ accessToken: 'apple-access-token', refreshToken: 'apple-refresh-token' }) });
 
       await service.appleSignIn('valid-identity-token', { givenName: 'Jane', familyName: 'Doe' });
 
@@ -391,6 +402,7 @@ describe('AuthService', () => {
       mockPrismaService.user.findUnique.mockResolvedValueOnce(mockUser);
       mockCreateSession.mockResolvedValueOnce({
         getAccessToken: () => 'apple-access-token',
+        getAllSessionTokensDangerously: () => ({ accessToken: 'apple-access-token', refreshToken: 'apple-refresh-token' }),
       });
 
       const result = await service.appleSignIn('valid-identity-token', null);
@@ -420,6 +432,41 @@ describe('AuthService', () => {
 
       await expect(service.appleSignIn('valid-identity-token')).rejects.toThrow(
         ConflictException,
+      );
+    });
+  });
+
+  describe('refreshSession', () => {
+    it('exchanges a valid refresh token for new access + refresh tokens', async () => {
+      mockRefreshSession.mockResolvedValueOnce({
+        getAllSessionTokensDangerously: () => ({
+          accessToken: 'new-access-token',
+          refreshToken: 'new-refresh-token',
+        }),
+      });
+
+      const result = await service.refreshSession('old-refresh-token');
+      expect(result.accessToken).toBe('new-access-token');
+      expect(result.refreshToken).toBe('new-refresh-token');
+      expect(mockRefreshSession).toHaveBeenCalledWith('old-refresh-token', true);
+    });
+
+    it('falls back to the incoming refresh token when SuperTokens returns none', async () => {
+      mockRefreshSession.mockResolvedValueOnce({
+        getAllSessionTokensDangerously: () => ({
+          accessToken: 'new-access-token',
+          refreshToken: undefined,
+        }),
+      });
+
+      const result = await service.refreshSession('still-valid-refresh-token');
+      expect(result.refreshToken).toBe('still-valid-refresh-token');
+    });
+
+    it('throws UnauthorizedException when refresh fails', async () => {
+      mockRefreshSession.mockRejectedValueOnce(new Error('token expired'));
+      await expect(service.refreshSession('expired-refresh-token')).rejects.toThrow(
+        UnauthorizedException,
       );
     });
   });

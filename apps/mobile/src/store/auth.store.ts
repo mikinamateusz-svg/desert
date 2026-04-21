@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { apiAppleSignIn, apiGetMe, apiGoogleSignIn, apiLogin, apiLogout, apiRegister, type AuthUser } from '../api/auth';
-import { deleteToken, getToken, saveToken } from '../lib/secure-storage';
+import { apiAppleSignIn, apiGetMe, apiGoogleSignIn, apiLogin, apiLogout, apiRefreshSession, apiRegister, type AuthResponse, type AuthUser } from '../api/auth';
+import { deleteRefreshToken, deleteToken, getRefreshToken, getToken, saveRefreshToken, saveToken } from '../lib/secure-storage';
 
 const ONBOARDING_KEY = 'desert:hasSeenOnboarding';
 
@@ -24,6 +24,13 @@ interface AuthState {
   ) => Promise<void>;
   skipOnboarding: () => Promise<void>;
   logout: () => Promise<void>;
+  /**
+   * Exchanges the stored refresh token for a fresh access token. Returns the new
+   * access token on success, or null if no refresh token exists / refresh failed —
+   * callers should treat null as "re-login required".
+   * Safe to call concurrently; de-duped via an in-flight promise.
+   */
+  refreshSession: () => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthState | null>(null);
@@ -70,32 +77,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setHasSeenOnboarding(true);
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
-    const res = await apiLogin(email, password);
+  const persistSession = useCallback(async (res: AuthResponse) => {
     await saveToken(res.accessToken);
+    if (res.refreshToken) {
+      await saveRefreshToken(res.refreshToken);
+    } else {
+      await deleteRefreshToken();
+    }
     await markOnboardingSeen();
     setAccessToken(res.accessToken);
     setUser(res.user);
   }, [markOnboardingSeen]);
+
+  const login = useCallback(async (email: string, password: string) => {
+    const res = await apiLogin(email, password);
+    await persistSession(res);
+  }, [persistSession]);
 
   const register = useCallback(
     async (email: string, password: string, displayName: string) => {
       const res = await apiRegister(email, password, displayName);
-      await saveToken(res.accessToken);
-      await markOnboardingSeen();
-      setAccessToken(res.accessToken);
-      setUser(res.user);
+      await persistSession(res);
     },
-    [markOnboardingSeen],
+    [persistSession],
   );
 
   const googleSignIn = useCallback(async (idToken: string) => {
     const res = await apiGoogleSignIn(idToken);
-    await saveToken(res.accessToken);
-    await markOnboardingSeen();
-    setAccessToken(res.accessToken);
-    setUser(res.user);
-  }, [markOnboardingSeen]);
+    await persistSession(res);
+  }, [persistSession]);
 
   const appleSignIn = useCallback(
     async (
@@ -103,12 +113,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       fullName?: { givenName?: string | null; familyName?: string | null } | null,
     ) => {
       const res = await apiAppleSignIn(identityToken, fullName);
-      await saveToken(res.accessToken);
-      await markOnboardingSeen();
-      setAccessToken(res.accessToken);
-      setUser(res.user);
+      await persistSession(res);
     },
-    [markOnboardingSeen],
+    [persistSession],
   );
 
   const skipOnboarding = useCallback(async () => {
@@ -125,9 +132,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
     await deleteToken();
+    await deleteRefreshToken();
     setAccessToken(null);
     setUser(null);
   }, [accessToken]);
+
+  // De-dup concurrent refreshes — if queue processor + Activity screen both hit a
+  // 401 at once we only want ONE /v1/auth/refresh roundtrip.
+  const refreshInFlight = React.useRef<Promise<string | null> | null>(null);
+
+  const refreshSession = useCallback(async (): Promise<string | null> => {
+    if (refreshInFlight.current) return refreshInFlight.current;
+
+    const run = (async () => {
+      const stored = await getRefreshToken();
+      if (!stored) return null;
+      try {
+        const res = await apiRefreshSession(stored);
+        await saveToken(res.accessToken);
+        await saveRefreshToken(res.refreshToken);
+        setAccessToken(res.accessToken);
+        return res.accessToken;
+      } catch {
+        // Refresh failed — the refresh token is invalid/expired. Clear everything;
+        // the next authenticated action will see no token and prompt a re-login flow.
+        await deleteToken();
+        await deleteRefreshToken();
+        setAccessToken(null);
+        setUser(null);
+        return null;
+      } finally {
+        refreshInFlight.current = null;
+      }
+    })();
+    refreshInFlight.current = run;
+    return run;
+  }, []);
+
+  // Register this store's refreshSession as the module-level singleton so non-React
+  // callers (e.g. queueProcessor) can drive a refresh through the same in-flight
+  // de-dup without reaching into React context.
+  useEffect(() => {
+    _moduleRefreshSession = refreshSession;
+    return () => {
+      if (_moduleRefreshSession === refreshSession) _moduleRefreshSession = null;
+    };
+  }, [refreshSession]);
 
   return React.createElement(AuthContext.Provider, {
     value: {
@@ -142,9 +192,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       appleSignIn,
       skipOnboarding,
       logout,
+      refreshSession,
     },
     children,
   });
+}
+
+// Module-level accessor for non-React callers (queue processor, background tasks)
+// that need to trigger a session refresh. Populated by AuthProvider on mount.
+let _moduleRefreshSession: (() => Promise<string | null>) | null = null;
+
+/**
+ * Ask the live AuthProvider to refresh the SuperTokens session.
+ * Returns the new access token, or null if no refresh token exists / refresh failed.
+ * Safe to call from the queue processor — de-duped with React-land refresh calls.
+ */
+export async function refreshSessionFromModule(): Promise<string | null> {
+  if (!_moduleRefreshSession) return null;
+  return _moduleRefreshSession();
 }
 
 export function useAuth(): AuthState {

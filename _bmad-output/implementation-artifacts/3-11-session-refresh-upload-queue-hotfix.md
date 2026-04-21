@@ -127,3 +127,29 @@ Then those entries are flipped back to `status='pending'` on boot and processed 
 
 ### Story spec
 - `_bmad-output/implementation-artifacts/3-11-session-refresh-upload-queue-hotfix.md` — this file
+
+---
+
+## Field-Test Follow-ups (same session, separate commits)
+
+The 2026-04-21 bike test surfaced three more issues beyond the queue bug. Two are fixed as direct follow-ups (same incident, shared context); the third needs its own story.
+
+### ✅ #2 — FAB layout overlap and bottom-edge alignment
+
+**Symptom:** "Add price" pill and the locate-me FAB sat in the same bottom-right corner and partially overlapped on smaller devices. Layout felt too high above the tab bar.
+
+**Fix:** Consolidated all three controls into a single `MapFABGroup` row with explicit slot-based layout `[cheapest-pill]  ·  [+ add price]  ·  [locate-me FAB]`. "Add Price" sits visually centred (primary CTA). Row anchors at `insets.bottom + 16` so it hugs the tab bar instead of floating mid-screen. Standalone re-centre FAB removed from `index.tsx`; its styles cleaned up.
+
+### ✅ #4 — Stale nearest-station banner on the capture screen
+
+**Root cause:** `useLocation` called `Location.getCurrentPositionAsync()` exactly once on mount and never updated. While biking past multiple stations, the banner stayed pinned to the first station whose GPS fix was captured — sometimes hundreds of metres away from the user's actual location.
+
+**Fix:** `useLocation` now subscribes to `Location.watchPositionAsync` with `distanceInterval: 15 m` and `timeInterval: 4 s` (Balanced accuracy). Seeds with a single `getCurrentPositionAsync` on mount so consumers get an immediate fix instead of waiting for the first watch callback. The hook now returns updated coords as the user moves, which propagates through `useNearbyStations(accessToken, location)` → recomputes `nearbyStations` → updates the station banner on the capture screen.
+
+**Battery impact:** acceptable — the `distanceInterval` gate prevents chatty updates while stationary. Subscription is cleaned up when the consuming component unmounts (standard hook cleanup).
+
+### ⚠️ #3 — Fuel inference from area price ranking (not fixed — deferred)
+
+When OCR extracts prices but can't confidently read the fuel-type labels on a pump display, fall back to inferring types from the **relative price ordering** of fuels in the surrounding area. Example: if the area's median prices rank as ON+ > PB98 > PB95 > ON > LPG, and the photo shows two unlabelled prices, map the higher price to ON+ and the lower to PB98.
+
+Works best with 2–4 visible prices; breaks down when only one price is visible or the station's ordering is genuinely anomalous. Needs UX design — fully automatic vs. "suggested match — please confirm". Parked as its own future story.

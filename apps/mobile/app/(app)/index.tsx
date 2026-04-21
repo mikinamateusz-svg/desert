@@ -495,20 +495,12 @@ export default function MapScreen() {
         </View>
       </View>
 
-      {/* GPS re-centre FAB */}
-      <TouchableOpacity
-        style={[styles.recentreFab, !location && styles.recentreFabDisabled]}
-        onPress={handleRecentre}
-        disabled={!location}
-        accessibilityLabel={t('map.recentre')}
-      >
-        <Ionicons name="locate" size={22} color={tokens.neutral.n0} />
-      </TouchableOpacity>
-
       <MapFABGroup
         onAddPrice={() => void handleAddPrice()}
         onCheapest={() => void handleFindCheapest()}
+        onRecentre={handleRecentre}
         showCheapest={!selectedStation && !splashVisible}
+        recentreEnabled={location != null}
       />
 
       {/* "None in view" toast */}
@@ -701,27 +693,6 @@ const styles = StyleSheet.create({
   },
   locationDeniedDismiss: {
     padding: 2,
-  },
-
-  // GPS re-centre FAB
-  recentreFab: {
-    position: 'absolute',
-    bottom: 70,
-    right: 14,
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: tokens.brand.accent,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.20,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-  recentreFabDisabled: {
-    opacity: 0.4,
   },
 
   cheapestToast: {

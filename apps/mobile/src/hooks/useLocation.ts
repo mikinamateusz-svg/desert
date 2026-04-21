@@ -30,6 +30,9 @@ export function useLocation(): {
   useEffect(() => {
     let cancelled = false;
     let subscription: Location.LocationSubscription | null = null;
+    // Once the watch subscription has produced a fix, the seed (which may still
+    // be in flight) must not overwrite it with an older coordinate.
+    let watchHasFired = false;
 
     void (async () => {
       try {
@@ -48,7 +51,7 @@ export function useLocation(): {
           const pos = await Location.getCurrentPositionAsync({
             accuracy: Location.Accuracy.Balanced,
           });
-          if (!cancelled) {
+          if (!cancelled && !watchHasFired) {
             setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
           }
         } catch {
@@ -65,6 +68,7 @@ export function useLocation(): {
           },
           pos => {
             if (cancelled) return;
+            watchHasFired = true;
             setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
           },
         );

@@ -63,7 +63,12 @@ export class AuthService {
     );
 
     const { id, email: userEmail, display_name, role } = user;
-    return { user: { id, email: userEmail, display_name, role }, accessToken: session.getAccessToken() };
+    const tokens = session.getAllSessionTokensDangerously();
+    return {
+      user: { id, email: userEmail, display_name, role },
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken ?? null,
+    };
   }
 
   async login(email: string, password: string) {
@@ -100,7 +105,12 @@ export class AuthService {
     );
 
     const { id, email: safeEmail, display_name, role } = user;
-    return { user: { id, email: safeEmail, display_name, role }, accessToken: session.getAccessToken() };
+    const tokens = session.getAllSessionTokensDangerously();
+    return {
+      user: { id, email: safeEmail, display_name, role },
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken ?? null,
+    };
   }
 
   async logout(sessionHandle: string) {
@@ -223,7 +233,12 @@ export class AuthService {
     );
 
     const { id, email: safeEmail, display_name, role } = user;
-    return { user: { id, email: safeEmail, display_name, role }, accessToken: session.getAccessToken() };
+    const tokens = session.getAllSessionTokensDangerously();
+    return {
+      user: { id, email: safeEmail, display_name, role },
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken ?? null,
+    };
   }
 
   async appleSignIn(
@@ -339,6 +354,37 @@ export class AuthService {
     );
 
     const { id, email: safeEmail, display_name, role } = user;
-    return { user: { id, email: safeEmail, display_name, role }, accessToken: session.getAccessToken() };
+    const tokens = session.getAllSessionTokensDangerously();
+    return {
+      user: { id, email: safeEmail, display_name, role },
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken ?? null,
+    };
+  }
+
+  /**
+   * Exchange a refresh token for a fresh access token. Also rotates the refresh
+   * token per SuperTokens best practice. Throws 401 if the refresh token is
+   * invalid/expired — client must force re-login.
+   */
+  async refreshSession(refreshToken: string) {
+    try {
+      const session = await Session.refreshSessionWithoutRequestResponse(
+        refreshToken,
+        true, // disableAntiCsrf — we use Bearer tokens on mobile, no CSRF surface
+      );
+      const tokens = session.getAllSessionTokensDangerously();
+      return {
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken ?? refreshToken,
+      };
+    } catch (err) {
+      this.logger.warn(`refreshSession failed: ${err instanceof Error ? err.message : String(err)}`);
+      throw new UnauthorizedException({
+        statusCode: 401,
+        error: 'REFRESH_TOKEN_INVALID',
+        message: 'Refresh token is invalid or expired — please sign in again',
+      });
+    }
   }
 }

@@ -10,6 +10,13 @@ export interface AuthUser {
 export interface AuthResponse {
   user: AuthUser;
   accessToken: string;
+  /** Null for legacy API responses; present once server issues rotating refresh tokens. */
+  refreshToken: string | null;
+}
+
+export interface RefreshResponse {
+  accessToken: string;
+  refreshToken: string;
 }
 
 export class ApiError extends Error {
@@ -107,5 +114,12 @@ export async function apiAppleSignIn(
   return request<AuthResponse>('/v1/auth/apple', {
     method: 'POST',
     body: JSON.stringify({ identityToken, fullName }),
+  });
+}
+
+export async function apiRefreshSession(refreshToken: string): Promise<RefreshResponse> {
+  return request<RefreshResponse>('/v1/auth/refresh', {
+    method: 'POST',
+    body: JSON.stringify({ refreshToken }),
   });
 }

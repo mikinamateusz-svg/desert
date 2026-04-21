@@ -108,3 +108,17 @@ export function getFailedCount(): number {
   );
   return row?.count ?? 0;
 }
+
+/**
+ * One-off recovery: flip all `failed` entries back to `pending` with retry_count
+ * reset, so they get another chance on the next processQueue tick. Intended for
+ * the Story 3.11 fix — the old 401 bug permanently-failed submissions that were
+ * actually just waiting on a token refresh. Safe to call repeatedly.
+ */
+export function unfailAllQueueEntries(): number {
+  const result = db.runSync(
+    `UPDATE capture_queue SET status = 'pending', retry_count = 0, next_retry_at = NULL
+     WHERE status = 'failed'`,
+  );
+  return result.changes;
+}

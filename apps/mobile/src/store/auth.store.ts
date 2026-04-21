@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { apiAppleSignIn, apiGetMe, apiGoogleSignIn, apiLogin, apiLogout, apiRefreshSession, apiRegister, type AuthResponse, type AuthUser } from '../api/auth';
+import { ApiError, apiAppleSignIn, apiGetMe, apiGoogleSignIn, apiLogin, apiLogout, apiRefreshSession, apiRegister, type AuthResponse, type AuthUser } from '../api/auth';
 import { deleteRefreshToken, deleteToken, getRefreshToken, getToken, saveRefreshToken, saveToken } from '../lib/secure-storage';
 
 const ONBOARDING_KEY = 'desert:hasSeenOnboarding';
@@ -153,13 +153,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await saveRefreshToken(res.refreshToken);
         setAccessToken(res.accessToken);
         return res.accessToken;
-      } catch {
-        // Refresh failed — the refresh token is invalid/expired. Clear everything;
-        // the next authenticated action will see no token and prompt a re-login flow.
-        await deleteToken();
-        await deleteRefreshToken();
-        setAccessToken(null);
-        setUser(null);
+      } catch (err) {
+        // Only wipe tokens when the server definitively says the refresh token
+        // itself is invalid (401). For 5xx / network errors the refresh token
+        // is still potentially valid — keep it so a later retry can succeed
+        // rather than forcing the user to re-login after a transient outage.
+        if (err instanceof ApiError && err.statusCode === 401) {
+          await deleteToken();
+          await deleteRefreshToken();
+          setAccessToken(null);
+          setUser(null);
+        }
         return null;
       } finally {
         refreshInFlight.current = null;

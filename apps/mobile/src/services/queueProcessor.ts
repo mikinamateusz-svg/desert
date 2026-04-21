@@ -1,9 +1,13 @@
 import NetInfo from '@react-native-community/netinfo';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AppState, type AppStateStatus } from 'react-native';
 import { getToken } from '../lib/secure-storage';
 import { refreshSessionFromModule } from '../store/auth.store';
 import { getDueEntries, markFailed, markRetry, markSuccess, unfailAllQueueEntries } from './queueDb';
 import { PermanentUploadError, TokenExpiredError, uploadSubmission } from '../api/submissions';
+
+/** One-shot recovery flag for the Story 3.11 401-as-permanent bug. */
+const UNFAIL_MIGRATION_KEY = 'desert:migration:3.11-unfail-done';
 
 let _running = false;
 let _unsubscribeNetInfo: (() => void) | null = null;
@@ -14,13 +18,10 @@ export function startQueueProcessor(): void {
   if (_running) return;
   _running = true;
 
-  // One-off recovery for the Story 3.11 fix: reset any `failed` entries that
-  // were likely killed by the old 401-as-permanent bug. Cheap UPDATE — safe to
-  // run every boot. Future genuine failures will re-fail on their own retries.
-  const unfailed = unfailAllQueueEntries();
-  if (unfailed > 0) {
-    console.log(`[queueProcessor] Revived ${unfailed} previously-failed queue entries`);
-  }
+  // One-shot recovery for the Story 3.11 401-as-permanent bug. Run at most once
+  // per install so future genuine `failed` entries (e.g. markFailed after a
+  // permanent 4xx, or retry_count exhaustion) stay failed across restarts.
+  void runUnfailMigrationOnce();
 
   // Attempt immediately in case there are queued items from a prior session
   void processQueue();
@@ -35,6 +36,20 @@ export function startQueueProcessor(): void {
   _appStateSubscription = AppState.addEventListener('change', (nextState: AppStateStatus) => {
     if (nextState === 'active') void processQueue();
   });
+}
+
+async function runUnfailMigrationOnce(): Promise<void> {
+  try {
+    const done = await AsyncStorage.getItem(UNFAIL_MIGRATION_KEY);
+    if (done === 'true') return;
+    const revived = unfailAllQueueEntries();
+    await AsyncStorage.setItem(UNFAIL_MIGRATION_KEY, 'true');
+    if (revived > 0) {
+      console.log(`[queueProcessor] 3.11 migration revived ${revived} previously-failed queue entries`);
+    }
+  } catch {
+    // If AsyncStorage fails, skip rather than run the migration on every boot.
+  }
 }
 
 export function stopQueueProcessor(): void {

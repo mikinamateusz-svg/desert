@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ApiError, apiAppleSignIn, apiGetMe, apiGoogleSignIn, apiLogin, apiLogout, apiRefreshSession, apiRegister, type AuthResponse, type AuthUser } from '../api/auth';
 import { deleteRefreshToken, deleteToken, getRefreshToken, getToken, saveRefreshToken, saveToken } from '../lib/secure-storage';
+import { processQueue } from '../services/queueProcessor';
 
 const ONBOARDING_KEY = 'desert:hasSeenOnboarding';
 
@@ -87,6 +88,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await markOnboardingSeen();
     setAccessToken(res.accessToken);
     setUser(res.user);
+    // Kick any queued uploads that have been parked waiting for a valid session.
+    // startQueueProcessor runs at app mount — before login — so the initial
+    // processQueue tick sees no token and bails; nothing else fires it until
+    // NetInfo/AppState events happen. Without this nudge, users with pre-login
+    // queued entries have to force-close and reopen the app to flush them.
+    void processQueue();
   }, [markOnboardingSeen]);
 
   const login = useCallback(async (email: string, password: string) => {

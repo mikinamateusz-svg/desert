@@ -6,8 +6,11 @@ import { refreshSessionFromModule } from '../store/auth.store';
 import { getDueEntries, markFailed, markRetry, markSuccess, unfailAllQueueEntries } from './queueDb';
 import { PermanentUploadError, TokenExpiredError, uploadSubmission } from '../api/submissions';
 
-/** One-shot recovery flag for the Story 3.11 401-as-permanent bug. */
-const UNFAIL_MIGRATION_KEY = 'desert:migration:3.11-unfail-done';
+/** One-shot recovery flag for the Story 3.11 401-as-permanent bug.
+ *  v2 bump: first round revived entries, but then the API's submissions endpoint
+ *  was returning 403 to ADMIN users, so entries got markFailed'd a second time.
+ *  Revive them once more now that the API allows ADMIN to submit. */
+const UNFAIL_MIGRATION_KEY = 'desert:migration:3.11-unfail-done-v2';
 
 let _running = false;
 let _unsubscribeNetInfo: (() => void) | null = null;

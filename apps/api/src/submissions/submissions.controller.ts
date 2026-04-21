@@ -20,7 +20,7 @@ export class SubmissionsController {
   constructor(private readonly submissionsService: SubmissionsService) {}
 
   @Get()
-  @Roles(UserRole.DRIVER)
+  @Roles(UserRole.DRIVER, UserRole.ADMIN)
   getMySubmissions(
     @CurrentUser('id') userId: string,
     @Query() dto: GetSubmissionsDto,
@@ -29,7 +29,7 @@ export class SubmissionsController {
   }
 
   @Post()
-  @Roles(UserRole.DRIVER)
+  @Roles(UserRole.DRIVER, UserRole.ADMIN)
   @HttpCode(HttpStatus.ACCEPTED)
   async create(
     @Req() req: FastifyRequest,

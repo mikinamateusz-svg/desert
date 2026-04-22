@@ -243,8 +243,8 @@ describe('PhotoPipelineWorker', () => {
     // TrustScoreService — default: update succeeds
     mockTrustScoreService.updateScore.mockResolvedValue(undefined);
 
-    // User — default: trust_score = 100 (normal user, not low-trust)
-    mockPrismaService.user.findUnique.mockResolvedValue({ trust_score: 100 });
+    // User — default: trust_score = 100, role = DRIVER (normal user, not low-trust)
+    mockPrismaService.user.findUnique.mockResolvedValue({ trust_score: 100, role: 'DRIVER' });
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -1035,6 +1035,53 @@ describe('PhotoPipelineWorker', () => {
         await capturedProcessor!(makeJob('sub-123'));
 
         expect(mockOcrService.extractPrices).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('trust-score gating', () => {
+      it('routes DRIVER with trust_score < 50 to shadow_rejected (low_trust)', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockPrismaService.user.findUnique.mockResolvedValueOnce({ trust_score: 30, role: 'DRIVER' });
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+          expect.objectContaining({
+            where: { id: 'sub-123' },
+            data: expect.objectContaining({
+              status: 'shadow_rejected',
+              flag_reason: 'low_trust',
+            }),
+          }),
+        );
+        // Pipeline must short-circuit — price validation must not run
+        expect(mockPriceValidationService.validatePrices).not.toHaveBeenCalled();
+      });
+
+      it('bypasses trust-gate for ADMIN role and proceeds through pipeline', async () => {
+        // Admin with trust=0 should still flow through OCR → logo → price validation.
+        // Without the bypass this would have landed in shadow_rejected (low_trust)
+        // and price_data would never be saved.
+        mockPrismaService.submission.findUnique
+          .mockResolvedValueOnce(pendingSubmission)   // initial processJob fetch
+          .mockResolvedValueOnce(submissionAfterOcr); // re-fetch inside runPriceValidationAndUpdate
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockPrismaService.user.findUnique.mockResolvedValueOnce({ trust_score: 0, role: 'ADMIN' });
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        // No shadow_rejected write
+        expect(mockPrismaService.submission.update).not.toHaveBeenCalledWith(
+          expect.objectContaining({
+            data: expect.objectContaining({
+              status: 'shadow_rejected',
+              flag_reason: 'low_trust',
+            }),
+          }),
+        );
+        // Pipeline ran through to price validation
+        expect(mockPriceValidationService.validatePrices).toHaveBeenCalled();
       });
     });
   });

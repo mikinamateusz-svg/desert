@@ -2,7 +2,7 @@ import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/commo
 import { ConfigService } from '@nestjs/config';
 import { Queue, Worker, type Job } from 'bullmq';
 import Redis from 'ioredis';
-import { SubmissionStatus, type Submission, type Prisma } from '@prisma/client';
+import { SubmissionStatus, UserRole, type Submission, type Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
 import { StationService, type NearbyStationWithDistance } from '../station/station.service.js';
@@ -344,20 +344,35 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         `prices found=${ocrResult.prices.length}`,
     );
 
-    // Story 4.3: Trust score gating — fetch user trust score
+    // Story 4.3: Trust score gating — fetch user trust score + role
     const userRecord = await this.prisma.user.findUnique({
       where: { id: submission.user_id },
-      select: { trust_score: true },
+      select: { trust_score: true, role: true },
     });
     const trustScore = userRecord?.trust_score ?? 100;
+    const userRole = userRecord?.role ?? UserRole.DRIVER;
 
-    // Low-trust users → review queue regardless of confidence
+    // Low-trust users → review queue regardless of confidence.
+    // ADMIN role bypasses trust-gating: admins are internal operators whose
+    // submissions should flow through the normal pipeline so they can smoke-test
+    // end-to-end. Otherwise every admin-taken photo lands in a shadow_rejected
+    // queue that only the admin UI can drain — bootstrap problem if that UI is
+    // itself broken. Log the bypass so it's visible in ops review.
     if (trustScore < 50) {
-      await this.prisma.submission.update({
-        where: { id: submission.id },
-        data: { status: SubmissionStatus.shadow_rejected, flag_reason: 'low_trust' },
-      });
-      return null;
+      if (userRole === UserRole.ADMIN) {
+        this.logger.log(
+          `Submission ${submission.id}: trust score ${trustScore} below threshold but user is ADMIN — bypassing trust-gate`,
+        );
+      } else {
+        this.logger.log(
+          `Submission ${submission.id}: trust score ${trustScore} below threshold 50 — routing to shadow_rejected (low_trust)`,
+        );
+        await this.prisma.submission.update({
+          where: { id: submission.id },
+          data: { status: SubmissionStatus.shadow_rejected, flag_reason: 'low_trust' },
+        });
+        return null;
+      }
     }
 
     // AC3: low confidence → reject, delete photo, no retry

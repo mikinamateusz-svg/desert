@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import {
   View,
   Text,
@@ -7,53 +7,16 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
+import { router } from 'expo-router';
 import { tokens } from '../../src/theme';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
 import { apiGetSubmissions, type Submission } from '../../src/api/submissions';
+import { SummaryHeader } from '../../src/components/activity/SummaryHeader';
+import { SubmissionRow } from '../../src/components/activity/SubmissionRow';
+import { deriveSummary } from '../../src/components/activity/deriveSummary';
 
 const LIMIT = 20;
-
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString(undefined, {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
-}
-
-function SubmissionRow({ item, t }: { item: Submission; t: (k: string, opts?: Record<string, unknown>) => string }) {
-  const stationName =
-    item.station?.name ?? t('submissions.stationUnknown');
-
-  // Filter out entries where OCR didn't read a price value — they'd otherwise
-  // crash the screen via .toFixed() on null. Backend types price_per_litre as
-  // nullable; client must respect that.
-  const prices = item.price_data
-    .filter((p): p is { fuel_type: string; price_per_litre: number } => p.price_per_litre != null)
-    .map((p) => `${t(`fuelTypes.${p.fuel_type}`, { defaultValue: p.fuel_type })}: ${p.price_per_litre.toFixed(2)}`)
-    .join('  ');
-
-  return (
-    <View style={styles.row}>
-      <View style={styles.rowMain}>
-        <Text style={styles.stationName} numberOfLines={1}>
-          {stationName}
-        </Text>
-        <Text style={styles.date}>{formatDate(item.created_at)}</Text>
-      </View>
-      <Text style={styles.prices} numberOfLines={1}>
-        {prices || '—'}
-      </Text>
-      {item.status === 'rejected' && (
-        <Text style={styles.rejectedBadge}>{t('submissions.statusRejected')}</Text>
-      )}
-      {item.status === 'pending' && (
-        <Text style={styles.pendingBadge}>{t('submissions.statusPending')}</Text>
-      )}
-    </View>
-  );
-}
 
 export default function ActivityScreen() {
   const { t } = useTranslation();
@@ -85,7 +48,7 @@ export default function ActivityScreen() {
         setTotal(res.total);
         setPage(targetPage);
       } catch {
-        setError(t('submissions.errorLoading'));
+        setError(t('activity.errorLoading'));
       } finally {
         setIsLoading(false);
         setIsLoadingMore(false);
@@ -99,6 +62,28 @@ export default function ActivityScreen() {
     void loadPage(1, true);
   }, [loadPage]);
 
+  const hasMore = page * LIMIT < total;
+  const summary = useMemo(() => deriveSummary(submissions), [submissions]);
+
+  const handleRowPress = useCallback((item: Submission) => {
+    // Guard empty station.id from backend drift — pushing `stationId=''` would
+    // navigate but the map effect would treat it as absent and no-op silently.
+    if (!item.station?.id) return;
+    // Tabs navigation: push to map index with stationId param so map opens the
+    // station detail sheet once its nearby-stations fetch returns that id.
+    router.push({ pathname: '/(app)', params: { stationId: item.station.id } });
+  }, []);
+
+  // Gate the summary card on verifiedCount > 0: a user with only pending or
+  // rejected rows should not see "0 zgłoszeń · 0 stacji · Aktywny od dziś".
+  // Memo the element so the FlatList header reference is stable across renders.
+  const listHeader = useMemo(
+    () => (summary.verifiedCount > 0
+      ? <SummaryHeader summary={summary} approxActiveSince={hasMore} />
+      : null),
+    [summary, hasMore],
+  );
+
   // P3: wait for auth to restore from storage before deciding what to show
   if (authLoading) {
     return (
@@ -111,7 +96,7 @@ export default function ActivityScreen() {
   if (!accessToken) {
     return (
       <View style={styles.center}>
-        <Text style={styles.emptyTitle}>{t('submissions.signInPrompt')}</Text>
+        <Text style={styles.emptyTitle}>{t('activity.signInPrompt')}</Text>
       </View>
     );
   }
@@ -129,13 +114,11 @@ export default function ActivityScreen() {
       <View style={styles.center}>
         <Text style={styles.errorText}>{error}</Text>
         <TouchableOpacity style={styles.retryButton} onPress={() => void loadPage(1, true)}>
-          <Text style={styles.retryText}>{t('submissions.retry')}</Text>
+          <Text style={styles.retryText}>{t('activity.retry')}</Text>
         </TouchableOpacity>
       </View>
     );
   }
-
-  const hasMore = page * LIMIT < total;
 
   return (
     <FlatList
@@ -143,11 +126,12 @@ export default function ActivityScreen() {
       contentContainerStyle={submissions.length === 0 ? styles.emptyContainer : undefined}
       data={submissions}
       keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <SubmissionRow item={item} t={t} />}
+      renderItem={({ item }) => <SubmissionRow item={item} onPress={handleRowPress} />}
+      ListHeaderComponent={listHeader}
       ListEmptyComponent={
         <View style={styles.center}>
-          <Text style={styles.emptyTitle}>{t('submissions.emptyTitle')}</Text>
-          <Text style={styles.emptySubtitle}>{t('submissions.emptySubtitle')}</Text>
+          <Text style={styles.emptyTitle}>{t('activity.emptyTitle')}</Text>
+          <Text style={styles.emptySubtitle}>{t('activity.emptySubtitle')}</Text>
         </View>
       }
       ListFooterComponent={
@@ -160,7 +144,7 @@ export default function ActivityScreen() {
             {isLoadingMore ? (
               <ActivityIndicator size="small" color={tokens.brand.accent} />
             ) : (
-              <Text style={styles.loadMoreText}>{t('submissions.loadMore')}</Text>
+              <Text style={styles.loadMoreText}>{t('activity.loadMore')}</Text>
             )}
           </TouchableOpacity>
         ) : null
@@ -179,24 +163,6 @@ const styles = StyleSheet.create({
     padding: 24,
     backgroundColor: tokens.surface.page,
   },
-  row: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: tokens.surface.card,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: tokens.neutral.n200,
-  },
-  rowMain: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  stationName: { flex: 1, fontSize: 15, fontWeight: '600', color: tokens.brand.ink, marginRight: 8 },
-  date: { fontSize: 12, color: tokens.neutral.n400 },
-  prices: { fontSize: 13, color: tokens.neutral.n500, marginBottom: 4 },
-  rejectedBadge: { fontSize: 11, color: tokens.brand.accent, fontWeight: '500' },
-  pendingBadge: { fontSize: 11, color: tokens.neutral.n400, fontStyle: 'italic' },
   emptyTitle: { fontSize: 16, fontWeight: '600', color: tokens.neutral.n800, marginBottom: 8, textAlign: 'center' },
   emptySubtitle: { fontSize: 14, color: tokens.neutral.n400, textAlign: 'center' },
   errorText: { fontSize: 14, color: tokens.price.expensive, marginBottom: 16, textAlign: 'center' },

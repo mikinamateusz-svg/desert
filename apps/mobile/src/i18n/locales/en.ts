@@ -89,17 +89,24 @@ export default {
     comingSoonTitle: 'Fuel Log — Coming Soon',
     comingSoonSubtitle: 'Track your consumption and fuel costs here.',
   },
-  submissions: {
+  activity: {
     title: 'Activity',
     emptyTitle: 'No submissions yet',
     emptySubtitle: 'Submit a fuel price to see your history here',
-    statusPending: 'Processing',
-    statusRejected: 'Not published',
-    stationUnknown: 'Processing...',
     loadMore: 'Load more',
     errorLoading: 'Failed to load submissions',
     retry: 'Retry',
     signInPrompt: 'Sign in to see your submission history',
+    summary: {
+      submissions_one: 'submission',
+      submissions_other: 'submissions',
+      stations_one: 'station',
+      stations_other: 'stations',
+      activeSince: 'Active since {{date}}',
+      activeSinceApprox: 'Active since {{date}}+',
+    },
+    stationUnrecognised: 'Station not recognised',
+    pendingShort: 'Processing',
   },
   map: {
     signedInAs: 'Signed in as {{name}}',

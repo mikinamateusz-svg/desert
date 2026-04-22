@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView, Linking, Alert } from 'react-native';
 import Mapbox, { MapView, Camera, MarkerView } from '@rnmapbox/maps';
 import Supercluster from 'supercluster';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { tokens } from '../../src/theme';
@@ -38,6 +38,11 @@ const WARSAW: LocationCoords = { lat: 52.2297, lng: 21.0122 };
 export default function MapScreen() {
   const { t } = useTranslation();
   const { accessToken, hasSeenOnboarding } = useAuth();
+  // Story 3.12 AC6: Activity screen pushes /(app)?stationId=<id> to open a station
+  // sheet. We handle it once per id via handledStationIdRef so the effect doesn't
+  // re-fire on every stations/prices re-render.
+  const { stationId: incomingStationId } = useLocalSearchParams<{ stationId?: string }>();
+  const handledStationIdRef = useRef<string | null>(null);
   const { location, permissionDenied, loading: loadingGPS } = useLocation();
   const insets = useSafeAreaInsets();
   const topBarHeight = insets.top + 44;
@@ -308,6 +313,28 @@ export default function MapScreen() {
       });
     }
   }, [stations]);
+
+  // Story 3.12 AC6: honour ?stationId= coming from the Activity screen.
+  // Wait for the nearby-stations fetch to include the tapped station before
+  // opening its sheet; if it never arrives (far from current GPS) the param is
+  // still cleared so we don't re-handle on the next re-render. Reset the
+  // handled-ref when the param goes empty so tapping the same row twice works.
+  useEffect(() => {
+    // useLocalSearchParams may surface the same key as string[] if the URL ever
+    // carries duplicates — collapse to the first entry defensively.
+    const id = Array.isArray(incomingStationId) ? incomingStationId[0] : incomingStationId;
+    if (!id) {
+      handledStationIdRef.current = null;
+      return;
+    }
+    if (handledStationIdRef.current === id) return;
+    if (stations.length === 0) return;
+    handledStationIdRef.current = id;
+    if (stations.some(s => s.id === id)) {
+      handlePinPress(id);
+    }
+    router.setParams({ stationId: '' });
+  }, [incomingStationId, stations, handlePinPress]);
 
   const handleFindCheapest = useCallback(async () => {
     const bounds = await mapViewRef.current?.getVisibleBounds();

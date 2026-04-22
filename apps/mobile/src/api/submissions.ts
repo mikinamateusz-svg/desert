@@ -4,7 +4,8 @@ const API_BASE = process.env['EXPO_PUBLIC_API_URL'] ?? 'http://localhost:3000';
 
 export interface PriceEntry {
   fuel_type: string;
-  price_per_litre: number;
+  /** Null when OCR extracted the fuel-type label but couldn't read a valid price. */
+  price_per_litre: number | null;
 }
 
 export interface Submission {

@@ -26,7 +26,11 @@ function SubmissionRow({ item, t }: { item: Submission; t: (k: string, opts?: Re
   const stationName =
     item.station?.name ?? t('submissions.stationUnknown');
 
+  // Filter out entries where OCR didn't read a price value — they'd otherwise
+  // crash the screen via .toFixed() on null. Backend types price_per_litre as
+  // nullable; client must respect that.
   const prices = item.price_data
+    .filter((p): p is { fuel_type: string; price_per_litre: number } => p.price_per_litre != null)
     .map((p) => `${t(`fuelTypes.${p.fuel_type}`, { defaultValue: p.fuel_type })}: ${p.price_per_litre.toFixed(2)}`)
     .join('  ');
 

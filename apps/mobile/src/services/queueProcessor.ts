@@ -7,10 +7,15 @@ import { getDueEntries, markFailed, markRetry, markSuccess, unfailAllQueueEntrie
 import { PermanentUploadError, TokenExpiredError, uploadSubmission } from '../api/submissions';
 
 /** One-shot recovery flag for the Story 3.11 401-as-permanent bug.
- *  v2 bump: first round revived entries, but then the API's submissions endpoint
- *  was returning 403 to ADMIN users, so entries got markFailed'd a second time.
- *  Revive them once more now that the API allows ADMIN to submit. */
-const UNFAIL_MIGRATION_KEY = 'desert:migration:3.11-unfail-done-v2';
+ *  v2: first round revived entries, but the API's submissions endpoint was
+ *  returning 403 to ADMIN users, so entries got markFailed'd a second time.
+ *  v3: day-2 alpha test exposed the root 3.11 bug — JwtAuthGuard never
+ *  propagated SuperTokens' `TRY_REFRESH_TOKEN` type in the 401 body, so the
+ *  client's is401RefreshSignal never matched and every expired-access-token
+ *  upload went straight to markFailed. Server fix (api commit 3dc6fa1) surfaces
+ *  the marker; this bump re-runs unfailAllQueueEntries so the 32 entries locked
+ *  in the failed state during day-2 get another shot. */
+const UNFAIL_MIGRATION_KEY = 'desert:migration:3.11-unfail-done-v3';
 
 let _running = false;
 let _unsubscribeNetInfo: (() => void) | null = null;

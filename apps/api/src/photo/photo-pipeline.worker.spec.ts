@@ -16,6 +16,7 @@ import { PriceValidationService } from '../price/price-validation.service.js';
 import { OcrSpendService } from './ocr-spend.service.js';
 import { SubmissionDedupService } from './submission-dedup.service.js';
 import { TrustScoreService } from '../user/trust-score.service.js';
+import { ResearchRetentionService } from '../research/research-retention.service.js';
 import { Worker, type Job } from 'bullmq';
 
 // ── BullMQ / Redis mocks ───────────────────────────────────────────────────
@@ -108,6 +109,12 @@ const mockSubmissionDedupService = {
 
 const mockTrustScoreService = {
   updateScore: jest.fn(),
+};
+
+const mockResearchRetention = {
+  captureIfEnabled: jest.fn(),
+  isEnabled: jest.fn().mockReturnValue(false),
+  cleanupExpired: jest.fn(),
 };
 
 // ── Test fixtures ──────────────────────────────────────────────────────────
@@ -266,6 +273,7 @@ describe('PhotoPipelineWorker', () => {
         { provide: OcrSpendService, useValue: mockOcrSpendService },
         { provide: SubmissionDedupService, useValue: mockSubmissionDedupService },
         { provide: TrustScoreService, useValue: mockTrustScoreService },
+        { provide: ResearchRetentionService, useValue: mockResearchRetention },
       ],
     }).compile();
 
@@ -342,6 +350,7 @@ describe('PhotoPipelineWorker', () => {
           { provide: OcrSpendService, useValue: mockOcrSpendService },
           { provide: SubmissionDedupService, useValue: mockSubmissionDedupService },
           { provide: TrustScoreService, useValue: mockTrustScoreService },
+          { provide: ResearchRetentionService, useValue: mockResearchRetention },
         ],
       }).compile();
 

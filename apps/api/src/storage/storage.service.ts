@@ -1,6 +1,6 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { S3Client, HeadBucketCommand, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, HeadBucketCommand, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, CopyObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 @Injectable()
@@ -47,6 +47,20 @@ export class StorageService implements OnModuleInit {
 
   async deleteObject(key: string): Promise<void> {
     await this.client.send(new DeleteObjectCommand({ Bucket: this.bucket, Key: key }));
+  }
+
+  /** Server-side copy within the same bucket. Used by research retention to
+   *  move a photo from its per-user `submissions/<user>/<id>.jpg` path to a
+   *  flat `research/<id>.jpg` path before the caller deletes the source. */
+  async copyObject(sourceKey: string, destKey: string): Promise<void> {
+    await this.client.send(
+      new CopyObjectCommand({
+        Bucket: this.bucket,
+        Key: destKey,
+        // CopySource must be bucket-prefixed and URL-encoded per S3 contract.
+        CopySource: `${this.bucket}/${encodeURIComponent(sourceKey)}`,
+      }),
+    );
   }
 
   // 10 MB default — photos should never exceed 5 MB in practice; guard against OOM (Story 3.9 D1)

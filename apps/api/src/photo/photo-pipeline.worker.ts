@@ -13,6 +13,7 @@ import { PriceValidationService } from '../price/price-validation.service.js';
 import { OcrSpendService } from './ocr-spend.service.js';
 import { SubmissionDedupService } from './submission-dedup.service.js';
 import { TrustScoreService } from '../user/trust-score.service.js';
+import { ResearchRetentionService } from '../research/research-retention.service.js';
 
 export const PHOTO_PIPELINE_QUEUE = 'photo-pipeline';
 export const PHOTO_PIPELINE_JOB = 'process-submission';
@@ -56,6 +57,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     private readonly ocrSpendService: OcrSpendService,
     private readonly submissionDedupService: SubmissionDedupService,
     private readonly trustScoreService: TrustScoreService,
+    private readonly researchRetention: ResearchRetentionService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -225,10 +227,10 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     if (!ocrResult) {
       return; // rejected inside runOcrExtraction — do not proceed
     }
-    const { trustScore } = ocrResult;
+    const { trustScore, ocrPrices } = ocrResult;
 
     // Story 3.6: logo recognition (secondary signal — never blocks pipeline)
-    const logoFlagged = await this.runLogoRecognition(submission, candidates, trustScore);
+    const logoFlagged = await this.runLogoRecognition(submission, candidates, trustScore, ocrPrices);
     if (logoFlagged) {
       return; // submission flagged for ops review — do not proceed to Story 3.7
     }
@@ -310,9 +312,9 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
    * IMPORTANT: does NOT delete the photo on success — that is Story 3.7's responsibility.
    */
   private async runOcrExtraction(
-    submission: Pick<Submission, 'id' | 'user_id' | 'photo_r2_key' | 'ocr_confidence_score'>,
+    submission: Pick<Submission, 'id' | 'user_id' | 'photo_r2_key' | 'ocr_confidence_score' | 'station_id' | 'created_at'>,
     stationId: string | null,
-  ): Promise<{ trustScore: number } | null> {
+  ): Promise<{ trustScore: number; ocrPrices: ExtractedPrice[] } | null> {
     // AC7: no photo — reject without calling Claude (saves API cost)
     if (!submission.photo_r2_key) {
       await this.rejectSubmission(submission, 'missing_photo');
@@ -389,19 +391,34 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
           where: { id: submission.id },
           data: { status: SubmissionStatus.shadow_rejected, flag_reason: 'low_trust' },
         });
+        // Research retention: shadow_rejected path keeps the photo in R2 (the
+        // admin review queue needs it), but we still copy to `research/` so the
+        // corpus includes low-trust-shadowed samples alongside verified ones.
+        if (submission.photo_r2_key) {
+          await this.researchRetention.captureIfEnabled({
+            submissionId: submission.id,
+            stationId,
+            photoR2Key: submission.photo_r2_key,
+            ocrPrices: ocrResult.prices,
+            finalPrices: null,
+            finalStatus: SubmissionStatus.shadow_rejected,
+            flagReason: 'low_trust',
+            capturedAt: submission.created_at,
+          });
+        }
         return null;
       }
     }
 
     // AC3: low confidence → reject, delete photo, no retry
     if (ocrResult.confidence_score < 0.4) {
-      await this.rejectSubmission(submission, 'low_ocr_confidence');
+      await this.rejectSubmission(submission, 'low_ocr_confidence', ocrResult.prices);
       return null;
     }
 
     // No prices extracted — reject to keep data quality high (see Q1 in story spec)
     if (ocrResult.prices.length === 0) {
-      await this.rejectSubmission(submission, 'no_prices_extracted');
+      await this.rejectSubmission(submission, 'no_prices_extracted', ocrResult.prices);
       return null;
     }
 
@@ -411,7 +428,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       this.logger.warn(
         `Submission ${submission.id}: price out of range for ${invalidFuelType} — rejecting`,
       );
-      await this.rejectSubmission(submission, 'price_out_of_range');
+      await this.rejectSubmission(submission, 'price_out_of_range', ocrResult.prices);
       return null;
     }
 
@@ -435,7 +452,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       this.logger.warn(`Failed to record hash dedup key: ${e.message}`),
     );
 
-    return { trustScore };
+    return { trustScore, ocrPrices: ocrResult.prices };
   }
 
   // ── Logo recognition step ──────────────────────────────────────────────────
@@ -451,9 +468,10 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
    * NOTE: Photo is NOT deleted here — Story 3.7 handles deletion.
    */
   private async runLogoRecognition(
-    submission: Pick<Submission, 'id' | 'user_id' | 'photo_r2_key'>,
+    submission: Pick<Submission, 'id' | 'user_id' | 'photo_r2_key' | 'station_id' | 'created_at'>,
     candidates: NearbyStationWithDistance[],
     trustScore: number,
+    ocrPrices: ExtractedPrice[],
   ): Promise<boolean> {
     // AC1 + AC2: evaluate ambiguity threshold
     if (!this.isAmbiguousMatch(candidates)) {
@@ -526,6 +544,21 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         await this.trustScoreService
           .updateScore(submission.user_id, TrustScoreService.DELTA_SHADOW_REJECTED)
           .catch((e: Error) => this.logger.warn(`Failed to update trust score: ${e.message}`));
+        // Research retention: logo_mismatch shadow leaves photo in R2 for ops
+        // review; the research copy gives us a parallel, stable path for the
+        // benchmark corpus.
+        if (submission.photo_r2_key) {
+          await this.researchRetention.captureIfEnabled({
+            submissionId: submission.id,
+            stationId: submission.station_id,
+            photoR2Key: submission.photo_r2_key,
+            ocrPrices,
+            finalPrices: null,
+            finalStatus: SubmissionStatus.shadow_rejected,
+            flagReason: 'logo_mismatch',
+            capturedAt: submission.created_at,
+          });
+        }
         return true; // flagged — caller returns early
       } catch (err) {
         // DB failure writing shadow_rejected — log and proceed rather than triggering BullMQ
@@ -578,10 +611,19 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     submissionId: string,
     stationId: string,
   ): Promise<void> {
-    // Re-fetch to get price_data written by runOcrExtraction
+    // Re-fetch to get price_data written by runOcrExtraction.
+    // station_id + created_at are needed so rejectSubmission can hand off to
+    // research retention when validation fails.
     const updated = await this.prisma.submission.findUnique({
       where: { id: submissionId },
-      select: { id: true, user_id: true, price_data: true, photo_r2_key: true },
+      select: {
+        id: true,
+        user_id: true,
+        price_data: true,
+        photo_r2_key: true,
+        station_id: true,
+        created_at: true,
+      },
     });
 
     if (!updated) {
@@ -591,7 +633,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
 
     const rawPrices = updated.price_data as unknown as ExtractedPrice[];
     if (!Array.isArray(rawPrices) || rawPrices.length === 0) {
-      await this.rejectSubmission(updated, 'price_validation_failed');
+      await this.rejectSubmission(updated, 'price_validation_failed', rawPrices ?? []);
       return;
     }
 
@@ -614,7 +656,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     }
 
     if (valid.length === 0) {
-      await this.rejectSubmission(updated, 'price_validation_failed');
+      await this.rejectSubmission(updated, 'price_validation_failed', rawPrices);
       return;
     }
 
@@ -644,6 +686,24 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         gps_lng: null,
       },
     });
+
+    // Research retention: verified submissions are the high-signal samples for
+    // the benchmark corpus — we want rawPrices (what OCR saw) AND validatedPrices
+    // (what shipped to the cache) so post-hoc we can tell which fuels got
+    // dropped by validation. Run BEFORE the R2 delete below so the photo still
+    // exists to copy.
+    if (updated.photo_r2_key) {
+      await this.researchRetention.captureIfEnabled({
+        submissionId,
+        stationId: updated.station_id,
+        photoR2Key: updated.photo_r2_key,
+        ocrPrices: rawPrices,
+        finalPrices: validatedPrices,
+        finalStatus: SubmissionStatus.verified,
+        flagReason: null,
+        capturedAt: updated.created_at,
+      });
+    }
 
     // Delete photo from R2 (best-effort — log on failure, do not throw)
     if (updated.photo_r2_key) {
@@ -695,11 +755,18 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
    * - Checks DLQ depth and alerts if threshold exceeded
    */
   private async handleFinalFailure(submissionId: string, err: Error): Promise<void> {
-    // Fetch current photo key before nulling it
+    // Fetch current photo key before nulling it. Also pull station_id +
+    // created_at + price_data so research retention can snapshot the DLQ case.
     const submission = await this.prisma.submission
       .findUnique({
         where: { id: submissionId },
-        select: { id: true, photo_r2_key: true },
+        select: {
+          id: true,
+          photo_r2_key: true,
+          station_id: true,
+          created_at: true,
+          price_data: true,
+        },
       })
       .catch((e: Error) => {
         this.logger.error(
@@ -737,6 +804,22 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
           `Failed to mark submission ${submissionId} rejected after DLQ entry: ${e.message}`,
         ),
       );
+
+    // Research retention: DLQ case is interesting for debugging pipeline
+    // crashes — keep the photo + whatever was in price_data (could be empty
+    // if OCR hadn't run yet, or partial if it crashed mid-way).
+    if (updateOk && submission.photo_r2_key) {
+      await this.researchRetention.captureIfEnabled({
+        submissionId,
+        stationId: submission.station_id,
+        photoR2Key: submission.photo_r2_key,
+        ocrPrices: submission.price_data ?? [],
+        finalPrices: null,
+        finalStatus: SubmissionStatus.rejected,
+        flagReason: 'dlq_final_failure',
+        capturedAt: submission.created_at,
+      });
+    }
 
     // P-1: only delete from R2 if DB update succeeded — avoids orphaned DB record with deleted photo
     if (updateOk && submission.photo_r2_key) {
@@ -816,8 +899,9 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
   }
 
   private async rejectSubmission(
-    submission: Pick<Submission, 'id' | 'photo_r2_key'>,
+    submission: Pick<Submission, 'id' | 'photo_r2_key' | 'station_id' | 'created_at'>,
     reason: string,
+    ocrPrices: unknown = [],
   ): Promise<void> {
     this.logger.warn(`Submission ${submission.id}: rejected — ${reason}`);
 
@@ -830,6 +914,24 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         photo_r2_key: null,
       },
     });
+
+    // Research retention: copy photo to `research/<id>.jpg` BEFORE the R2
+    // delete below, so the benchmark corpus includes failure cases (no_gps,
+    // no_station_match, low_ocr_confidence, etc.). No-op when
+    // PHOTO_RESEARCH_RETENTION_DAYS is unset. Fail-soft: exceptions are
+    // logged but never propagate — retention must not block the pipeline.
+    if (submission.photo_r2_key) {
+      await this.researchRetention.captureIfEnabled({
+        submissionId: submission.id,
+        stationId: submission.station_id ?? null,
+        photoR2Key: submission.photo_r2_key,
+        ocrPrices,
+        finalPrices: null,
+        finalStatus: SubmissionStatus.rejected,
+        flagReason: reason,
+        capturedAt: submission.created_at,
+      });
+    }
 
     if (submission.photo_r2_key) {
       await this.storageService

@@ -1,0 +1,112 @@
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service.js';
+import { StorageService } from '../storage/storage.service.js';
+
+const PHOTO_URL_TTL_SECONDS = 60 * 60; // 1 hour — enough to browse + label a batch
+
+export interface ResearchPhotoRow {
+  id: string;
+  submission_id: string;
+  station_id: string | null;
+  station_name: string | null;
+  ocr_prices: unknown;
+  final_prices: unknown;
+  actual_prices: unknown;
+  label_notes: string | null;
+  final_status: string;
+  flag_reason: string | null;
+  captured_at: Date;
+  retained_until: Date;
+  photo_url: string | null;
+}
+
+export interface ResearchListResult {
+  data: ResearchPhotoRow[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+export interface LabelInput {
+  actual_prices?: unknown;
+  label_notes?: string | null;
+}
+
+@Injectable()
+export class AdminResearchService {
+  private readonly logger = new Logger(AdminResearchService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly storage: StorageService,
+  ) {}
+
+  async list(limit: number, offset: number, onlyUnlabeled = false): Promise<ResearchListResult> {
+    const where: Prisma.ResearchPhotoWhereInput = onlyUnlabeled
+      ? { actual_prices: { equals: Prisma.JsonNull } }
+      : {};
+
+    const [rows, total] = await this.prisma.$transaction([
+      this.prisma.researchPhoto.findMany({
+        where,
+        orderBy: { captured_at: 'desc' },
+        skip: offset,
+        take: limit,
+        include: { submission: { include: { station: { select: { name: true } } } } },
+      }),
+      this.prisma.researchPhoto.count({ where }),
+    ]);
+
+    // Presigned URLs are generated on demand (1h TTL) — lazy-sign per row so
+    // an admin browsing page 5 doesn't burn sign operations on pages 1-4.
+    const data: ResearchPhotoRow[] = await Promise.all(
+      rows.map(async (r) => ({
+        id: r.id,
+        submission_id: r.submission_id,
+        station_id: r.station_id,
+        station_name: r.submission.station?.name ?? null,
+        ocr_prices: r.ocr_prices,
+        final_prices: r.final_prices,
+        actual_prices: r.actual_prices,
+        label_notes: r.label_notes,
+        final_status: r.final_status,
+        flag_reason: r.flag_reason,
+        captured_at: r.captured_at,
+        retained_until: r.retained_until,
+        photo_url: await this.storage
+          .getPresignedUrl(r.r2_key, PHOTO_URL_TTL_SECONDS)
+          .catch((err: Error) => {
+            this.logger.warn(
+              `Presign failed for research photo ${r.id} (${r.r2_key}): ${err.message}`,
+            );
+            return null;
+          }),
+      })),
+    );
+
+    return { data, total, limit, offset };
+  }
+
+  async label(id: string, input: LabelInput): Promise<void> {
+    const existing = await this.prisma.researchPhoto.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+    if (!existing) throw new NotFoundException(`Research photo ${id} not found`);
+
+    // Build a patch that only sets fields the caller actually provided.
+    // Undefined means "leave as-is"; explicit null clears.
+    const data: Prisma.ResearchPhotoUpdateInput = {};
+    if ('actual_prices' in input && input.actual_prices !== undefined) {
+      data.actual_prices = (input.actual_prices === null
+        ? Prisma.JsonNull
+        : (input.actual_prices as Prisma.InputJsonValue));
+    }
+    if ('label_notes' in input) {
+      data.label_notes = input.label_notes ?? null;
+    }
+
+    await this.prisma.researchPhoto.update({ where: { id }, data });
+  }
+}

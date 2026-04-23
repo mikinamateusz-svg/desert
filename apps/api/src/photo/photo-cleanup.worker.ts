@@ -4,6 +4,7 @@ import { Queue, Worker } from 'bullmq';
 import Redis from 'ioredis';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
+import { ResearchRetentionService } from '../research/research-retention.service.js';
 
 const QUEUE_NAME = 'photo-cleanup';
 const CLEANUP_JOB = 'cleanup-old-photos';
@@ -24,6 +25,7 @@ export class PhotoCleanupWorker implements OnModuleInit {
     private readonly prisma: PrismaService,
     private readonly storage: StorageService,
     private readonly config: ConfigService,
+    private readonly researchRetention: ResearchRetentionService,
   ) {}
 
   async onModuleInit() {
@@ -41,7 +43,10 @@ export class PhotoCleanupWorker implements OnModuleInit {
 
     const worker = new Worker(
       QUEUE_NAME,
-      async () => this.cleanupOldPhotos(),
+      async () => {
+        await this.cleanupOldPhotos();
+        await this.researchRetention.cleanupExpired();
+      },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       { connection: workerRedis as any, concurrency: 1 },
     );

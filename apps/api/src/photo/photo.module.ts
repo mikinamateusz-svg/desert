@@ -10,9 +10,10 @@ import { LogoModule } from '../logo/logo.module.js';
 import { PriceModule } from '../price/price.module.js';
 import { RedisModule } from '../redis/redis.module.js';
 import { UserModule } from '../user/user.module.js';
+import { ResearchModule } from '../research/research.module.js';
 
 @Module({
-  imports: [StationModule, StorageModule, OcrModule, LogoModule, PriceModule, RedisModule, UserModule],
+  imports: [StationModule, StorageModule, OcrModule, LogoModule, PriceModule, RedisModule, UserModule, ResearchModule],
   providers: [PhotoPipelineWorker, PhotoCleanupWorker, OcrSpendService, SubmissionDedupService],
   exports: [PhotoPipelineWorker, SubmissionDedupService, OcrSpendService],
 })

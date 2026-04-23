@@ -111,8 +111,35 @@ model Submission {
   updated_at           DateTime         @updatedAt
   user                 User             @relation(fields: [user_id], references: [id])
   station              Station?         @relation(fields: [station_id], references: [id])
+  researchPhoto        ResearchPhoto?
 
   @@index([user_id, created_at])
+}
+
+/// Opt-in research retention (env: PHOTO_RESEARCH_RETENTION_DAYS > 0).
+/// Captures the photo + OCR vs verified price_data for every submission that
+/// reaches a terminal state (verified / rejected / shadow_rejected). Used to
+/// build a labeled corpus for A/B-testing OCR models. Photo is stored at a
+/// flat `research/<id>.jpg` key (user_id stripped from path). Daily cleanup
+/// worker sweeps rows + R2 objects past `retained_until`.
+model ResearchPhoto {
+  id             String     @id @default(uuid())
+  submission_id  String     @unique
+  r2_key         String     // research/<submission_id>.jpg
+  station_id     String?    // snapshot (submission may null this later)
+  ocr_prices     Json       // what OCR extracted (pre-validation)
+  final_prices   Json?      // what pipeline verified — null for rejected/shadow_rejected
+  actual_prices  Json?      // filled in by admin when labeling ground truth
+  label_notes    String?    // optional admin comment: "blurry", "partial occlusion", etc.
+  final_status   SubmissionStatus  // status at time of retention capture
+  flag_reason    String?    // flag_reason at retention capture (e.g. 'low_trust', 'no_station_match')
+  captured_at    DateTime   // original submission created_at
+  retained_until DateTime
+  created_at     DateTime   @default(now())
+  updated_at     DateTime   @updatedAt
+  submission     Submission @relation(fields: [submission_id], references: [id], onDelete: Cascade)
+
+  @@index([retained_until])
 }
 
 model UserConsent {

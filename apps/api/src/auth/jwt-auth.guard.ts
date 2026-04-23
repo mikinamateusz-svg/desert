@@ -70,9 +70,30 @@ export class JwtAuthGuard implements CanActivate {
 
       return true;
     } catch (err) {
-      if (!(err instanceof UnauthorizedException)) {
-        this.logger.error('JwtAuthGuard unexpected error', err);
+      // Preserve UnauthorizedException thrown from inside the try block (bad
+      // header, missing user, deleted_at set) — those are terminal 401s.
+      if (err instanceof UnauthorizedException) {
+        throw err;
       }
+
+      // SuperTokens SessionError carries a `type` field: 'TRY_REFRESH_TOKEN'
+      // means the access token is expired but the session is still valid and
+      // the client should call POST /v1/auth/refresh and retry. We surface
+      // that marker in the 401 response body so the mobile client's
+      // `is401RefreshSignal` (submissions.ts) detects it and drives the
+      // refresh-and-retry path in the upload queue. Without this, every
+      // expired-access-token 401 looked like a permanent auth failure and
+      // queued uploads silently died. (Story 3.11 follow-up.)
+      const stType = (err as { type?: string } | null | undefined)?.type;
+      if (stType === 'TRY_REFRESH_TOKEN') {
+        throw new UnauthorizedException({
+          statusCode: 401,
+          message: 'Access token expired — refresh required',
+          type: 'TRY_REFRESH_TOKEN',
+        });
+      }
+
+      this.logger.error('JwtAuthGuard unexpected error', err);
       throw new UnauthorizedException();
     }
   }

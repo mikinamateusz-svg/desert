@@ -56,4 +56,17 @@ export class AdminSubmissionsController {
     await this.service.reject(id, admin.id, body.notes ?? null);
     return { status: 'rejected' };
   }
+
+  /**
+   * Reset a shadow_rejected submission to pending and re-enqueue it through
+   * the photo pipeline. Intended for recovering submissions that were
+   * shadow-rejected for a reason that no longer applies (e.g. low_trust after
+   * trust score is restored). Returns 202 Accepted to signal async processing.
+   */
+  @Post(':id/requeue')
+  @HttpCode(HttpStatus.ACCEPTED)
+  async requeue(@Param('id') id: string, @CurrentUser() admin: User) {
+    await this.service.requeue(id, admin.id);
+    return { status: 'requeued' };
+  }
 }

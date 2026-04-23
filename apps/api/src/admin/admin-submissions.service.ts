@@ -10,6 +10,7 @@ import { PrismaService } from '../prisma/prisma.service.js';
 import { PriceService, type StationPriceRow } from '../price/price.service.js';
 import { StorageService } from '../storage/storage.service.js';
 import { TrustScoreService } from '../user/trust-score.service.js';
+import { PhotoPipelineWorker } from '../photo/photo-pipeline.worker.js';
 
 export interface FlaggedSubmissionRow {
   id: string;
@@ -38,6 +39,7 @@ export interface SubmissionListResult {
 
 const AUDIT_ACTION_APPROVE = 'APPROVE';
 const AUDIT_ACTION_REJECT = 'REJECT';
+const AUDIT_ACTION_REQUEUE = 'REQUEUE';
 
 @Injectable()
 export class AdminSubmissionsService {
@@ -48,6 +50,7 @@ export class AdminSubmissionsService {
     private readonly priceService: PriceService,
     private readonly storage: StorageService,
     private readonly trustScoreService: TrustScoreService,
+    private readonly photoPipelineWorker: PhotoPipelineWorker,
   ) {}
 
   async listFlagged(page: number, limit: number): Promise<SubmissionListResult> {
@@ -286,6 +289,53 @@ export class AdminSubmissionsService {
         ),
       );
     }
+  }
+
+  /**
+   * Reset a shadow_rejected submission back to pending and push it through the
+   * pipeline again. Use case: a submission was routed to shadow_rejected for a
+   * reason that no longer applies (e.g. `low_trust` after the user's trust
+   * score has been restored). Photo must still exist in R2.
+   */
+  async requeue(submissionId: string, adminUserId: string): Promise<void> {
+    const submission = await this.prisma.submission.findUnique({
+      where: { id: submissionId },
+      select: { id: true, status: true, photo_r2_key: true },
+    });
+
+    if (!submission) throw new NotFoundException(`Submission ${submissionId} not found`);
+    if (submission.status !== SubmissionStatus.shadow_rejected) {
+      throw new ConflictException(
+        `Submission ${submissionId} cannot be requeued from status ${submission.status} — only shadow_rejected is supported`,
+      );
+    }
+    if (!submission.photo_r2_key) {
+      throw new BadRequestException(
+        `Submission ${submissionId} has no photo_r2_key — photo may have been cleaned up and cannot be reprocessed`,
+      );
+    }
+
+    // Atomic reset — guard against concurrent approve/reject changing status between
+    // the read above and the write here.
+    const updated = await this.prisma.submission.updateMany({
+      where: { id: submissionId, status: SubmissionStatus.shadow_rejected },
+      data: {
+        status: SubmissionStatus.pending,
+        ocr_confidence_score: null,
+        flag_reason: null,
+      },
+    });
+
+    if (updated.count === 0) {
+      throw new ConflictException(`Submission ${submissionId} was modified concurrently — aborting requeue`);
+    }
+
+    await this.photoPipelineWorker.requeue(submissionId);
+    await this.writeAuditLog(adminUserId, AUDIT_ACTION_REQUEUE, submissionId, null);
+
+    this.logger.log(
+      `Submission ${submissionId} requeued by admin ${adminUserId} — status reset to pending, new pipeline job enqueued`,
+    );
   }
 
   private async writeAuditLog(

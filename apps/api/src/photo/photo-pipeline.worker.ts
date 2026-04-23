@@ -136,6 +136,24 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     );
   }
 
+  /**
+   * Manual re-enqueue — used by the admin requeue endpoint when a submission
+   * was shadow_rejected (e.g. for `low_trust`) and needs to flow through the
+   * pipeline again after the underlying block has been cleared. Uses a unique
+   * jobId (timestamp suffix) so BullMQ's jobId dedup doesn't silently drop
+   * the request against the original completed job still in Redis history.
+   */
+  async requeue(submissionId: string): Promise<void> {
+    await this.queue.add(
+      PHOTO_PIPELINE_JOB,
+      { submissionId },
+      {
+        jobId: `photo-${submissionId}-requeue-${Date.now()}`,
+        ...JOB_OPTIONS,
+      },
+    );
+  }
+
   /** Exposed for tests and ops tooling */
   getQueue(): Queue {
     return this.queue;

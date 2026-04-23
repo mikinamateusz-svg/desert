@@ -6,6 +6,7 @@ import { PrismaService } from '../prisma/prisma.service.js';
 import { PriceService } from '../price/price.service.js';
 import { StorageService } from '../storage/storage.service.js';
 import { TrustScoreService } from '../user/trust-score.service.js';
+import { PhotoPipelineWorker } from '../photo/photo-pipeline.worker.js';
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
 
@@ -38,6 +39,9 @@ const mockStorage = { deleteObject: mockDeleteObject, getPresignedUrl: mockGetPr
 
 const mockUpdateScore = jest.fn();
 const mockTrustScoreService = { updateScore: mockUpdateScore };
+
+const mockWorkerRequeue = jest.fn();
+const mockPhotoPipelineWorker = { requeue: mockWorkerRequeue };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -76,6 +80,7 @@ describe('AdminSubmissionsService', () => {
     mockDeleteObject.mockResolvedValue(undefined);
     mockGetPresignedUrl.mockResolvedValue('https://r2.example.com/presigned');
     mockUpdateScore.mockResolvedValue(undefined);
+    mockWorkerRequeue.mockResolvedValue(undefined);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -84,6 +89,7 @@ describe('AdminSubmissionsService', () => {
         { provide: PriceService, useValue: mockPriceService },
         { provide: StorageService, useValue: mockStorage },
         { provide: TrustScoreService, useValue: mockTrustScoreService },
+        { provide: PhotoPipelineWorker, useValue: mockPhotoPipelineWorker },
       ],
     }).compile();
 
@@ -315,6 +321,72 @@ describe('AdminSubmissionsService', () => {
 
       await service.reject(SUB_ID, ADMIN_ID, null);
       expect(mockSetVerifiedPrice).not.toHaveBeenCalled();
+    });
+  });
+
+  // ── requeue ─────────────────────────────────────────────────────────────────
+
+  describe('requeue', () => {
+    it('happy path: resets status to pending, re-enqueues, writes audit', async () => {
+      mockSubmissionFindUnique.mockResolvedValue(makeShadowRejected({ flag_reason: 'low_trust' }));
+      mockSubmissionUpdateMany.mockResolvedValue({ count: 1 });
+
+      await service.requeue(SUB_ID, ADMIN_ID);
+
+      expect(mockSubmissionUpdateMany).toHaveBeenCalledWith({
+        where: { id: SUB_ID, status: SubmissionStatus.shadow_rejected },
+        data: {
+          status: SubmissionStatus.pending,
+          ocr_confidence_score: null,
+          flag_reason: null,
+        },
+      });
+      expect(mockWorkerRequeue).toHaveBeenCalledWith(SUB_ID);
+      expect(mockAuditLogCreate).toHaveBeenCalledWith({
+        data: {
+          admin_user_id: ADMIN_ID,
+          action: 'REQUEUE',
+          submission_id: SUB_ID,
+          notes: null,
+        },
+      });
+    });
+
+    it('throws NotFoundException when submission does not exist', async () => {
+      mockSubmissionFindUnique.mockResolvedValue(null);
+
+      await expect(service.requeue(SUB_ID, ADMIN_ID)).rejects.toThrow(NotFoundException);
+      expect(mockWorkerRequeue).not.toHaveBeenCalled();
+    });
+
+    it('throws ConflictException for non-shadow_rejected status', async () => {
+      // Prevent accidental re-processing of a verified submission (would
+      // republish stale prices) or a rejected one (photo already deleted).
+      mockSubmissionFindUnique.mockResolvedValue(
+        makeShadowRejected({ status: SubmissionStatus.verified }),
+      );
+
+      await expect(service.requeue(SUB_ID, ADMIN_ID)).rejects.toThrow(ConflictException);
+      expect(mockSubmissionUpdateMany).not.toHaveBeenCalled();
+      expect(mockWorkerRequeue).not.toHaveBeenCalled();
+    });
+
+    it('throws BadRequestException when photo_r2_key is null', async () => {
+      // Photo may have been cleaned up — can't re-run OCR without it.
+      mockSubmissionFindUnique.mockResolvedValue(
+        makeShadowRejected({ photo_r2_key: null }),
+      );
+
+      await expect(service.requeue(SUB_ID, ADMIN_ID)).rejects.toThrow(BadRequestException);
+      expect(mockWorkerRequeue).not.toHaveBeenCalled();
+    });
+
+    it('throws ConflictException when concurrent updateMany changes status first', async () => {
+      mockSubmissionFindUnique.mockResolvedValue(makeShadowRejected());
+      mockSubmissionUpdateMany.mockResolvedValue({ count: 0 });
+
+      await expect(service.requeue(SUB_ID, ADMIN_ID)).rejects.toThrow(ConflictException);
+      expect(mockWorkerRequeue).not.toHaveBeenCalled();
     });
   });
 });

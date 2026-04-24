@@ -1,0 +1,66 @@
+name: Promote main → prod
+
+# Manually-triggered workflow that fast-forwards the `prod` branch to match
+# `main`. Railway's production service auto-deploys from `prod`, so this
+# effectively promotes the latest CI-green main state to production.
+#
+# Why not auto-promote on every main push? Some main commits are WIP or want
+# staging validation first. Manual gate = intentional prod releases.
+#
+# Why force-push? prod is a downstream-only branch — no direct commits land
+# there; only promotions via this workflow. So forcing the ref is always safe.
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type PROMOTE to confirm. This force-updates prod to main HEAD and triggers Railway production deploy.'
+        required: true
+        type: string
+
+jobs:
+  promote:
+    if: github.event.inputs.confirm == 'PROMOTE'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Identify main HEAD
+        id: main_head
+        run: |
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "short=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+          echo "subject=$(git log -1 --format=%s HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch prod for divergence check
+        run: git fetch origin prod
+
+      - name: Warn on prod divergence
+        run: |
+          if ! git merge-base --is-ancestor origin/prod HEAD; then
+            echo "::warning::prod has commits that are NOT on main — they will be lost by this promotion. Review origin/prod vs main before approving."
+            echo "Diverged commits on prod that will be dropped:"
+            git log --oneline main..origin/prod
+          fi
+
+      - name: Fast-forward prod to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Force push is intentional: prod only ever tracks main via this workflow.
+          git push origin HEAD:refs/heads/prod --force
+
+      - name: Summary
+        run: |
+          echo "## Promotion complete" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**prod** is now at **${{ steps.main_head.outputs.short }}** — _${{ steps.main_head.outputs.subject }}_" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Railway production will auto-deploy shortly. Watch the service dashboard for build status." >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "⚠️ **Remember to apply pending Prisma migrations to prod DB manually** — \`railway.toml\` disables auto-migrate on deploy." >> "$GITHUB_STEP_SUMMARY"

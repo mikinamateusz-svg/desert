@@ -193,6 +193,56 @@ model StationFuelStaleness {
   @@index([station_id])
 }
 
+/// Normalized external reference data for price validation — rack feeds,
+/// retail aggregators, government caps. One row per (source, fuel_type,
+/// value_type, point-in-time). Rules in PriceValidationRule consume the most
+/// recent row per (source, fuel, value_type) within their max_age_hours
+/// window. See _bmad-output/planning-artifacts/price-validation-framework.md.
+model PriceReferencePoint {
+  id           String   @id @default(uuid())
+  source       String   // 'orlen_rack' | 'popihn_weekly_retail' | 'epetrol_daily_retail' | ...
+  fuel_type    String   // 'PB_95' | 'PB_98' | 'ON' | 'ON_PREMIUM' | 'LPG'
+  value_type   String   // 'rack_net' | 'retail_mean' | 'retail_p95' | 'gov_max'
+  value        Float
+  unit         String   @default("PLN/l")
+  as_of        DateTime // when the source claims this was valid
+  sample_size  Int?
+  metadata     Json?
+  recorded_at  DateTime @default(now())
+
+  @@index([source, fuel_type, as_of(sort: Desc)])
+  @@index([fuel_type, value_type, as_of(sort: Desc)])
+}
+
+/// Configurable price-validation rules. Each row = one rule, evaluated by
+/// PriceValidationRuleEvaluator against submission prices. Rule types,
+/// parameter schemas, and action semantics are documented in the framework
+/// doc (planning-artifacts/price-validation-framework.md).
+model PriceValidationRule {
+  id           String   @id @default(uuid())
+  rule_type    String   // 'absolute_band' | 'relative_to_reference' | 'cross_fuel_delta' (future)
+  applies_to   String   // fuel_type or '*'
+  parameters   Json     // type-specific — see framework doc §Architecture L2
+  action       String   // 'reject' | 'shadow_reject' | 'flag' | 'log_only'
+  reason_code  String   // human-readable id surfaced in admin review queue
+  enabled      Boolean  @default(true)
+  notes        String?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  @@index([enabled, rule_type])
+}
+
+/// Admin-editable runtime configuration. Primary use today: vat_multiplier
+/// (default "1.23", flipped to "1.08" during Ministry of Finance reduced-rate
+/// periods). Evaluator reads values at rule-evaluation time.
+model SystemConfig {
+  key         String   @id  // e.g. 'vat_multiplier'
+  value       String        // stringified — parse per key
+  description String?
+  updated_at  DateTime @updatedAt
+}
+
 model AdminAuditLog {
   id            String   @id @default(uuid())
   // Intentionally not a FK — log must be retained if admin account is deleted

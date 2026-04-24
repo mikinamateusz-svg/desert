@@ -35,10 +35,15 @@ const mockTransaction = jest.fn().mockImplementation(
   (ops: Promise<unknown>[]) => Promise.all(ops),
 );
 
+const mockRefCreate = jest.fn();
+
 const mockPrisma = {
   marketSignal: {
     findFirst: mockFindFirst,
     create:    mockCreate,
+  },
+  priceReferencePoint: {
+    create: mockRefCreate,
   },
   $transaction: mockTransaction,
 };
@@ -265,7 +270,7 @@ describe('OrlenIngestionService', () => {
 
   // P3: transaction wrapping
   describe('ingest — atomic transaction (P3 fix)', () => {
-    it('wraps all three creates in a single $transaction call', async () => {
+    it('wraps all creates (marketSignal + priceReferencePoint) in a single $transaction call', async () => {
       makeFetchOk();
       mockFindFirst.mockResolvedValue(null);
 
@@ -273,7 +278,8 @@ describe('OrlenIngestionService', () => {
 
       expect(mockTransaction).toHaveBeenCalledTimes(1);
       const ops = mockTransaction.mock.calls[0][0] as unknown[];
-      expect(ops).toHaveLength(3);
+      // 3 marketSignal rows (PB95, ON, LPG) + 3 priceReferencePoint rows = 6
+      expect(ops).toHaveLength(6);
     });
 
     it('reads all previous values before writing (parallel reads)', async () => {

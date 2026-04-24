@@ -169,8 +169,10 @@ export class OrlenIngestionService {
       return { type, value, pctChange, significantMovement, previous };
     });
 
-    await this.prisma.$transaction(
-      records.map(({ type, value, pctChange, significantMovement }) =>
+    await this.prisma.$transaction([
+      // Existing: MarketSignal for consumers like MarketSignalController and
+      // the price rise alert worker.
+      ...records.map(({ type, value, pctChange, significantMovement }) =>
         this.prisma.marketSignal.create({
           data: {
             signal_type:          type,
@@ -180,7 +182,23 @@ export class OrlenIngestionService {
           },
         }),
       ),
-    );
+      // New: PriceReferencePoint for the price validation rule evaluator.
+      // Dual-write keeps MarketSignal stable for existing readers while
+      // letting the evaluator consume a normalized reference-data source.
+      // See planning-artifacts/price-validation-framework.md §Architecture L1.
+      ...records.map(({ type, value }) =>
+        this.prisma.priceReferencePoint.create({
+          data: {
+            source:     'orlen_rack',
+            fuel_type:  signalTypeToFuelType(type),
+            value_type: 'rack_net',
+            value,
+            unit:       'PLN/l',
+            as_of:      new Date(),
+          },
+        }),
+      ),
+    ]);
 
     for (const { type, value, pctChange, significantMovement, previous } of records) {
       if (significantMovement) {
@@ -195,5 +213,14 @@ export class OrlenIngestionService {
       `ORLEN rack prices ingested — PB95: ${prices.pb95.toFixed(4)}, ` +
       `ON: ${prices.on.toFixed(4)}, LPG: ${prices.lpg.toFixed(4)} PLN/l`,
     );
+  }
+}
+
+/** Map our MarketSignal signal_type codes to canonical fuel_type strings. */
+function signalTypeToFuelType(signalType: 'orlen_rack_pb95' | 'orlen_rack_on' | 'orlen_rack_lpg'): string {
+  switch (signalType) {
+    case 'orlen_rack_pb95': return 'PB_95';
+    case 'orlen_rack_on':   return 'ON';
+    case 'orlen_rack_lpg':  return 'LPG';
   }
 }

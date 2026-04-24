@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PriceValidationService, ABSOLUTE_BANDS } from './price-validation.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { PriceValidationRuleEvaluator } from './price-validation-rule.evaluator.js';
 import type { ExtractedPrice } from '../ocr/ocr.service.js';
 
 // ── Prisma mock ──────────────────────────────────────────────────────────────
@@ -9,6 +10,12 @@ const mockQueryRaw = jest.fn();
 
 const mockPrisma = {
   $queryRaw: mockQueryRaw,
+};
+
+// Rule evaluator mock — default is "no rules fire, everything passes" so the
+// existing Tier 1/3 tests stay valid. Individual tests can override.
+const mockEvaluator = {
+  evaluate: jest.fn().mockResolvedValue({ perFuel: [], overall: 'passed', softFlags: [] }),
 };
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -32,11 +39,17 @@ describe('PriceValidationService', () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
+    mockEvaluator.evaluate.mockResolvedValue({
+      perFuel: [],
+      overall: 'passed',
+      softFlags: [],
+    });
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PriceValidationService,
         { provide: PrismaService, useValue: mockPrisma },
+        { provide: PriceValidationRuleEvaluator, useValue: mockEvaluator },
       ],
     }).compile();
 

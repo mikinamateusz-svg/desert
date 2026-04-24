@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
 import type { ExtractedPrice } from '../ocr/ocr.service.js';
+import { PriceValidationRuleEvaluator } from './price-validation-rule.evaluator.js';
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -16,6 +17,14 @@ export interface InvalidPrice extends ExtractedPrice {
 export interface PriceValidationOutput {
   valid: ValidatedPrice[];
   invalid: InvalidPrice[];
+  /**
+   * Framework outcomes, independent of valid/invalid bucketing above.
+   * Populated even when rule fires a flag/log_only (which doesn't move the
+   * price to invalid). Pipeline worker uses this to decide whether the whole
+   * submission gets shadow_rejected even when per-fuel validation passed.
+   */
+  rule_overall?: 'reject' | 'shadow_reject' | 'flag' | 'log_only' | 'passed';
+  rule_reason_code?: string;
 }
 
 // ── Constants ───────────────────────────────────────────────────────────────
@@ -44,13 +53,23 @@ const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 
 @Injectable()
 export class PriceValidationService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(PriceValidationService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly ruleEvaluator: PriceValidationRuleEvaluator,
+  ) {}
 
   /**
    * Validates extracted prices against a 3-tier hierarchy:
    *   Tier 1: ±20% of last known price (last 30 days) for that station × fuel_type
    *   Tier 2: regional voivodeship average — DEFERRED to Story 5.0; skipped here
    *   Tier 3: absolute fallback range (ABSOLUTE_BANDS)
+   *
+   * Then runs the configurable PriceValidationRule framework on top (see
+   * planning-artifacts/price-validation-framework.md). Rules can further
+   * demote per-fuel prices to invalid, or flag the whole submission via
+   * rule_overall for shadow-rejection even when per-fuel validation passed.
    *
    * Deduplicates fuel types before validation — first occurrence wins.
    */
@@ -101,7 +120,51 @@ export class PriceValidationService {
       }
     }
 
-    return { valid, invalid };
+    // Run the configurable rule framework on prices that survived Tier 1/3.
+    // Rules fail-open (no rules / no references → passed), so this step is
+    // a strict tightening. Fail-soft on evaluator errors: a broken evaluator
+    // must not block submissions.
+    const evaluatorInput = valid.map(p => ({ fuel_type: p.fuel_type, price_per_litre: p.price_per_litre }));
+    let ruleResult;
+    try {
+      ruleResult = await this.ruleEvaluator.evaluate(evaluatorInput);
+    } catch (err) {
+      this.logger.error(
+        `Rule evaluator threw — treating as no rules fired: ${
+          err instanceof Error ? err.message : String(err)
+        }`,
+      );
+      return { valid, invalid };
+    }
+
+    // Demote per-fuel prices the evaluator marked as failed.
+    const stillValid: ValidatedPrice[] = [];
+    for (const v of valid) {
+      const outcome = ruleResult.perFuel.find(o => o.fuel_type === v.fuel_type);
+      if (outcome && !outcome.passed) {
+        const first = outcome.rulesFired[0];
+        invalid.push({
+          fuel_type: v.fuel_type,
+          price_per_litre: v.price_per_litre,
+          reason: `rule_${first?.reason_code ?? 'unknown'}`,
+        });
+      } else {
+        stillValid.push(v);
+      }
+    }
+
+    // Find the first hard-action reason_code for the pipeline worker to
+    // surface as flag_reason on shadow_rejected/rejected submissions.
+    const firstHardFailure = ruleResult.perFuel
+      .flatMap(o => o.rulesFired)
+      .find(r => r.action === 'reject' || r.action === 'shadow_reject');
+
+    return {
+      valid: stillValid,
+      invalid,
+      rule_overall: ruleResult.overall,
+      rule_reason_code: firstHardFailure?.reason_code,
+    };
   }
 
   // ── Private ─────────────────────────────────────────────────────────────

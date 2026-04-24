@@ -637,13 +637,12 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       return;
     }
 
-    const { valid, invalid } = await this.priceValidationService.validatePrices(
-      stationId,
-      rawPrices,
-    );
+    const { valid, invalid, rule_overall, rule_reason_code } =
+      await this.priceValidationService.validatePrices(stationId, rawPrices);
 
     this.logger.log(
-      `Submission ${submissionId}: price validation — ${valid.length} valid, ${invalid.length} invalid`,
+      `Submission ${submissionId}: price validation — ${valid.length} valid, ${invalid.length} invalid` +
+        (rule_overall && rule_overall !== 'passed' ? ` (rule_overall=${rule_overall})` : ''),
     );
 
     // Log each out-of-band price for ops review (IG-1: structured log, 48h retention window)
@@ -656,6 +655,33 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     }
 
     if (valid.length === 0) {
+      // If the rule evaluator flagged shadow_reject (data-driven sanity
+      // layer) rather than raw Tier 1/3 failure, route to shadow_rejected so
+      // the admin can review the photo + OCR output rather than deleting it.
+      // See planning-artifacts/price-validation-framework.md §Decisions 3.
+      if (rule_overall === 'shadow_reject') {
+        const reason = rule_reason_code ?? 'price_validation_rule';
+        await this.prisma.submission.update({
+          where: { id: submissionId },
+          data: { status: SubmissionStatus.shadow_rejected, flag_reason: reason },
+        });
+        if (updated.photo_r2_key) {
+          await this.researchRetention.captureIfEnabled({
+            submissionId,
+            stationId: updated.station_id,
+            photoR2Key: updated.photo_r2_key,
+            ocrPrices: rawPrices,
+            finalPrices: null,
+            finalStatus: SubmissionStatus.shadow_rejected,
+            flagReason: reason,
+            capturedAt: updated.created_at,
+          });
+        }
+        this.logger.log(
+          `Submission ${submissionId}: all prices failed evaluator rules → shadow_rejected (${reason})`,
+        );
+        return;
+      }
       await this.rejectSubmission(updated, 'price_validation_failed', rawPrices);
       return;
     }

@@ -275,5 +275,32 @@ describe('AdminMetricsService', () => {
       expect(result.currentWeek.spendUsd).toBeCloseTo(0.70, 5);
       expect(result.currentWeek.imageCount).toBe(15);
     });
+
+    it('P-9: when today has no DB row, Redis fallback feeds week / month / current-month bucket too (consistency)', async () => {
+      // No rows in DB at all; Redis says today is $0.42
+      mockDailyApiCostFindMany.mockResolvedValueOnce([]);
+      mockGetDailySpend.mockResolvedValueOnce(0.42);
+
+      const result = await service.getApiCostMetrics();
+
+      expect(result.today.spendUsd).toBeCloseTo(0.42, 5);
+      // Without P-9 these would be 0 and the today card would silently disagree with the period cards.
+      expect(result.currentWeek.spendUsd).toBeCloseTo(0.42, 5);
+      expect(result.currentMonth.spendUsd).toBeCloseTo(0.42, 5);
+      expect(result.last3Months[2].spendUsd).toBeCloseTo(0.42, 5);
+      // Older buckets must NOT pick up today's fallback
+      expect(result.last3Months[0].spendUsd).toBe(0);
+      expect(result.last3Months[1].spendUsd).toBe(0);
+    });
+
+    it('P-9: when ocrSpend.getDailySpend throws (Redis down), today falls back to 0 instead of 500ing', async () => {
+      mockDailyApiCostFindMany.mockResolvedValueOnce([]);
+      mockGetDailySpend.mockRejectedValueOnce(new Error('Redis down'));
+
+      const result = await service.getApiCostMetrics();
+
+      expect(result.today.spendUsd).toBe(0);
+      expect(result.currentMonth.spendUsd).toBe(0);
+    });
   });
 });

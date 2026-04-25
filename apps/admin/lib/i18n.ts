@@ -203,7 +203,6 @@ const translations = {
         currentWeek: 'Bieżący tydzień',
         currentMonth: 'Bieżący miesiąc',
         last3Months: 'Ostatnie 3 miesiące',
-        spendLabel: 'Koszt (USD)',
         imagesLabel: 'Zdjęcia',
         noData: 'Brak danych.',
       },
@@ -425,7 +424,6 @@ const translations = {
         currentWeek: 'This week',
         currentMonth: 'This month',
         last3Months: 'Last 3 months',
-        spendLabel: 'Spend (USD)',
         imagesLabel: 'Images',
         noData: 'No data.',
       },
@@ -647,7 +645,6 @@ const translations = {
         currentWeek: 'Поточний тиждень',
         currentMonth: 'Поточний місяць',
         last3Months: 'Останні 3 місяці',
-        spendLabel: 'Витрати (USD)',
         imagesLabel: 'Зображення',
         noData: 'Немає даних.',
       },
@@ -736,7 +733,6 @@ export interface MetricsTranslations {
     currentWeek: string;
     currentMonth: string;
     last3Months: string;
-    spendLabel: string;
     imagesLabel: string;
     noData: string;
   };

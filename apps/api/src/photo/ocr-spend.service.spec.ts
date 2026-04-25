@@ -326,7 +326,7 @@ describe('OcrSpendService', () => {
       expect(fetchMock).not.toHaveBeenCalled();
     });
 
-    it('posts alert to Slack and sets the Redis dedup flag when threshold is exceeded', async () => {
+    it('claims the dedup flag with SET NX before posting to Slack', async () => {
       mockRedisGet.mockResolvedValue(null);
       mockDailyApiCostFindMany.mockResolvedValueOnce([{ spend_usd: 75 }]);
       const svc = await buildService({
@@ -339,15 +339,32 @@ describe('OcrSpendService', () => {
       expect(url).toBe('https://hooks.slack.com/services/xxx');
       expect(opts.method).toBe('POST');
       expect(opts.body).toContain('[COST-ALERT]');
+      // SET NX claim happens before fetch — guards against duplicate alerts under concurrency
       expect(mockRedisSet).toHaveBeenCalledWith(
         expect.stringMatching(/^ocr:cost_alert:\d{4}-\d{2}$/),
         '1',
         'EX',
         32 * 24 * 3600,
+        'NX',
       );
+      // Successful post: claim is kept (not deleted)
+      expect(mockRedisDel).not.toHaveBeenCalled();
     });
 
-    it('does NOT set the Redis dedup flag when Slack returns a non-2xx response', async () => {
+    it('skips the Slack post when SET NX returns null (a concurrent caller beat us)', async () => {
+      mockRedisGet.mockResolvedValue(null);
+      mockDailyApiCostFindMany.mockResolvedValueOnce([{ spend_usd: 75 }]);
+      mockRedisSet.mockResolvedValueOnce(null); // someone else claimed the flag first
+      const svc = await buildService({
+        SLACK_WEBHOOK_URL: 'https://hooks.slack.com/services/xxx',
+        COST_ALERT_THRESHOLD_USD: '50',
+      });
+      await svc.checkMonthlyAlert();
+      expect(mockRedisSet).toHaveBeenCalledTimes(1);
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
+
+    it('releases the dedup flag (DEL) when Slack returns a non-2xx response', async () => {
       mockRedisGet.mockResolvedValue(null);
       mockDailyApiCostFindMany.mockResolvedValueOnce([{ spend_usd: 75 }]);
       fetchMock.mockResolvedValueOnce({ ok: false, status: 404 });
@@ -357,7 +374,94 @@ describe('OcrSpendService', () => {
       });
       await svc.checkMonthlyAlert();
       expect(fetchMock).toHaveBeenCalledTimes(1);
-      expect(mockRedisSet).not.toHaveBeenCalled();
+      expect(mockRedisSet).toHaveBeenCalledTimes(1);
+      // Claim was released so the next OCR call can retry
+      expect(mockRedisDel).toHaveBeenCalledWith(
+        expect.stringMatching(/^ocr:cost_alert:\d{4}-\d{2}$/),
+      );
+    });
+
+    it('releases the dedup flag (DEL) when fetch throws (network error / timeout)', async () => {
+      mockRedisGet.mockResolvedValue(null);
+      mockDailyApiCostFindMany.mockResolvedValueOnce([{ spend_usd: 75 }]);
+      fetchMock.mockRejectedValueOnce(new Error('AbortError: timeout'));
+      const svc = await buildService({
+        SLACK_WEBHOOK_URL: 'https://hooks.slack.com/services/xxx',
+        COST_ALERT_THRESHOLD_USD: '50',
+      });
+      await expect(svc.checkMonthlyAlert()).resolves.toBeUndefined();
+      expect(mockRedisDel).toHaveBeenCalledWith(
+        expect.stringMatching(/^ocr:cost_alert:\d{4}-\d{2}$/),
+      );
+    });
+
+    it('omits the dashboard link from the Slack message when ADMIN_DASHBOARD_URL is unset', async () => {
+      mockRedisGet.mockResolvedValue(null);
+      mockDailyApiCostFindMany.mockResolvedValueOnce([{ spend_usd: 75 }]);
+      const svc = await buildService({
+        SLACK_WEBHOOK_URL: 'https://hooks.slack.com/services/xxx',
+        COST_ALERT_THRESHOLD_USD: '50',
+      });
+      await svc.checkMonthlyAlert();
+      const [, opts] = fetchMock.mock.calls[0];
+      // No dangling '/metrics' suffix
+      expect(opts.body).not.toContain('/metrics');
+    });
+  });
+
+  // ── getCostAlertThreshold (private, exercised via checkMonthlyAlert) ────────
+
+  describe('getCostAlertThreshold (P-3)', () => {
+    const fetchMock = jest.fn();
+    const originalFetch = global.fetch;
+
+    beforeEach(() => {
+      fetchMock.mockReset();
+      fetchMock.mockResolvedValue({ ok: true, status: 200 });
+      (global as unknown as { fetch: typeof fetch }).fetch = fetchMock as unknown as typeof fetch;
+    });
+
+    afterAll(() => {
+      (global as unknown as { fetch: typeof fetch }).fetch = originalFetch;
+    });
+
+    it('falls back to default $50 when COST_ALERT_THRESHOLD_USD is "Infinity"', async () => {
+      // With Infinity passed through, the alert would never fire; the guard must prevent that.
+      mockDailyApiCostFindMany.mockResolvedValueOnce([{ spend_usd: 75 }]);
+      const svc = await buildService({
+        SLACK_WEBHOOK_URL: 'https://hooks.slack.com/services/xxx',
+        COST_ALERT_THRESHOLD_USD: 'Infinity',
+      });
+      await svc.checkMonthlyAlert();
+      // $75 > $50 default → alert fires
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('falls back to default $50 when COST_ALERT_THRESHOLD_USD is partial-numeric ("5dollars" → 5 silently passes parseFloat)', async () => {
+      mockDailyApiCostFindMany.mockResolvedValueOnce([{ spend_usd: 30 }]);
+      const svc = await buildService({
+        SLACK_WEBHOOK_URL: 'https://hooks.slack.com/services/xxx',
+        COST_ALERT_THRESHOLD_USD: '5dollars',
+      });
+      await svc.checkMonthlyAlert();
+      // $30 < $50 default (would have been > '5dollars'→5) → alert does NOT fire
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
+  });
+
+  // ── recordSpend NaN guard (P-2) ────────────────────────────────────────────
+
+  describe('recordSpend NaN guard (P-2)', () => {
+    it('returns 0 (not NaN) when INCRBYFLOAT returns a non-numeric value', async () => {
+      mockRedisIncrbyfloat.mockResolvedValueOnce('corrupted');
+      const result = await service.recordSpend(0.001);
+      expect(result).toBe(0);
+      expect(Number.isNaN(result)).toBe(false);
+    });
+
+    it('does not throw when redis.expire fails (P-1)', async () => {
+      mockRedisExpire.mockRejectedValueOnce(new Error('redis blip'));
+      await expect(service.recordSpend(0.001)).resolves.not.toThrow();
     });
   });
 });

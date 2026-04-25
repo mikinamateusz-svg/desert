@@ -34,8 +34,18 @@ export class OcrSpendService {
   async recordSpend(costUsd: number): Promise<number> {
     const key = this.getSpendKey();
     const newTotal = await this.redis.incrbyfloat(key, costUsd);
-    await this.redis.expire(key, 48 * 3600);
+    // EXPIRE is best-effort — a transient Redis blip here must not fail an OCR call
+    // whose spend has already been recorded. Worst case the key keeps a stale TTL.
+    await this.redis.expire(key, 48 * 3600).catch(e =>
+      this.logger.warn(`redis.expire failed: ${e instanceof Error ? e.message : String(e)}`),
+    );
     const total = parseFloat(newTotal as unknown as string);
+    if (!Number.isFinite(total)) {
+      // INCRBYFLOAT corrupted the counter (e.g., stored a non-numeric string) — treat as 0
+      // rather than NaN so downstream `total >= cap` checks don't silently bypass the cap.
+      this.logger.error(`incrbyfloat returned non-finite value: ${String(newTotal)} — treating as 0`);
+      return 0;
+    }
     this.logger.debug(`OCR daily spend: $${total.toFixed(4)} (added $${costUsd.toFixed(4)})`);
 
     // Persist + alert are best-effort: never let them break a successful OCR call.
@@ -122,33 +132,60 @@ export class OcrSpendService {
     const monthlySpend = await this.getMonthlySpend(now.getUTCFullYear(), now.getUTCMonth() + 1);
     if (monthlySpend < threshold) return;
 
+    // Atomic claim BEFORE the network call: two concurrent OCR calls hitting the
+    // threshold simultaneously would otherwise both pass the GET above and double-post.
+    // SET NX returns 'OK' on success, null if the key already exists (someone beat us).
+    const claimed = await this.redis.set(flagKey, '1', 'EX', MONTHLY_ALERT_TTL_SECONDS, 'NX');
+    if (claimed !== 'OK') return;
+
     const dashboardUrl = this.config.get<string>('ADMIN_DASHBOARD_URL', '');
+    const link = dashboardUrl ? ` ${dashboardUrl}/metrics` : '';
     const body = {
-      text: `[COST-ALERT] Claude API monthly spend $${monthlySpend.toFixed(2)} exceeded threshold $${threshold.toFixed(2)}. ${dashboardUrl}/metrics`,
+      text: `[COST-ALERT] Claude API monthly spend $${monthlySpend.toFixed(2)} exceeded threshold $${threshold.toFixed(2)}.${link}`,
     };
 
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-      signal: AbortSignal.timeout(5000),
-    });
-
-    // Only dedup-flag on a successful post. A 4xx/5xx means the webhook rejected us;
-    // re-trying next time OCR fires is safer than muting future alerts for 32 days.
-    if (!res.ok) {
-      this.logger.warn(`Slack alert POST returned ${res.status} — skipping dedup flag so the next call retries.`);
+    let res: Response;
+    try {
+      res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+        signal: AbortSignal.timeout(5000),
+      });
+    } catch (e) {
+      // Network error / timeout — release the claim so the next OCR call can retry.
+      await this.redis.del(flagKey).catch(() => {});
+      this.logger.warn(`Slack alert POST failed: ${e instanceof Error ? e.message : String(e)} — releasing dedup flag.`);
       return;
     }
 
-    await this.redis.set(flagKey, '1', 'EX', MONTHLY_ALERT_TTL_SECONDS);
+    // 4xx/5xx means the webhook rejected us — release the claim and let the next call retry,
+    // rather than muting future alerts for 32 days.
+    if (!res.ok) {
+      await this.redis.del(flagKey).catch(() => {});
+      this.logger.warn(`Slack alert POST returned ${res.status} — releasing dedup flag so the next call retries.`);
+      return;
+    }
+
     this.logger.warn(`Monthly cost alert sent for ${yearMonth}: $${monthlySpend.toFixed(2)} over $${threshold.toFixed(2)}`);
   }
 
   private getCostAlertThreshold(): number {
     const raw = this.config.get<string>('COST_ALERT_THRESHOLD_USD', String(DEFAULT_COST_ALERT_THRESHOLD_USD));
-    const val = parseFloat(raw);
-    return isNaN(val) || val <= 0 ? DEFAULT_COST_ALERT_THRESHOLD_USD : val;
+    // Use Number() (strict parsing) instead of parseFloat() — parseFloat('5dollars') silently
+    // returns 5, masking misconfig. Number('5dollars') returns NaN. Number.isFinite rejects
+    // both NaN and Infinity, so a misconfigured value falls back rather than disabling alerts
+    // (Infinity threshold) or accepting partial-numeric strings.
+    const val = Number(raw);
+    if (!Number.isFinite(val) || val <= 0) {
+      if (raw !== String(DEFAULT_COST_ALERT_THRESHOLD_USD)) {
+        this.logger.warn(
+          `COST_ALERT_THRESHOLD_USD="${raw}" is not a positive finite number — falling back to $${DEFAULT_COST_ALERT_THRESHOLD_USD}`,
+        );
+      }
+      return DEFAULT_COST_ALERT_THRESHOLD_USD;
+    }
+    return val;
   }
 
   private toUtcDateOnly(d: Date): Date {

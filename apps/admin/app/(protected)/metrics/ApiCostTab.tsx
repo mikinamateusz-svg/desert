@@ -20,11 +20,15 @@ export function ApiCostTab({ t }: Props) {
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
+    let alive = true;
     startTransition(async () => {
       const result = await fetchApiCostMetrics();
-      if (result.error) setError(result.error);
+      if (!alive) return;
+      // Use 'in' instead of truthy check so an Error('') doesn't yield a phantom blank state.
+      if ('error' in result) setError(result.error ?? 'Failed to load API cost metrics.');
       else { setData(result.data ?? null); setError(null); }
     });
+    return () => { alive = false; };
   }, []);
 
   const maxMonthlySpend = data

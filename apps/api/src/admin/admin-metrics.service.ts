@@ -342,17 +342,24 @@ export class AdminMetricsService implements OnModuleInit {
     const todayIso = todayUtc.toISOString().slice(0, 10);
     const inDay = rows.find(r => r.date.toISOString().slice(0, 10) === todayIso);
 
-    // Fall back to Redis counter when today's DB row doesn't exist yet
+    // Fall back to Redis counter when today's DB row doesn't exist yet. The same
+    // fallback feeds week/month/last-3-months current bucket — otherwise the today
+    // card and the period cards would silently disagree until persistDailySpend lands.
     let todayBucket: ApiCostPeriodDto;
+    let todayRedisFallback = 0;
     if (inDay) {
       todayBucket = { spendUsd: inDay.spend_usd, imageCount: inDay.image_count };
     } else {
-      const redisTotal = await this.ocrSpend.getDailySpend();
-      todayBucket = { spendUsd: redisTotal, imageCount: 0 };
+      todayRedisFallback = await this.ocrSpend.getDailySpend().catch(() => 0);
+      todayBucket = { spendUsd: todayRedisFallback, imageCount: 0 };
     }
 
     const weekBucket = this.sumRows(rows, weekStart, todayUtc);
     const monthBucket = this.sumRows(rows, monthStart, todayUtc);
+    if (!inDay && todayRedisFallback > 0) {
+      weekBucket.spendUsd += todayRedisFallback;
+      monthBucket.spendUsd += todayRedisFallback;
+    }
 
     // last3Months: one bucket per month over the 3-month window, oldest first
     const last3Months: ApiCostMonthDto[] = [];
@@ -360,6 +367,10 @@ export class AdminMetricsService implements OnModuleInit {
       const bucketStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - offset, 1));
       const bucketEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - offset + 1, 0));
       const bucket = this.sumRows(rows, bucketStart, bucketEnd);
+      // Current month bucket (offset === 0) gets the same Redis fallback as currentMonth card.
+      if (offset === 0 && !inDay && todayRedisFallback > 0) {
+        bucket.spendUsd += todayRedisFallback;
+      }
       last3Months.push({
         month: bucketStart.toISOString().slice(0, 7),
         spendUsd: bucket.spendUsd,

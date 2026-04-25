@@ -762,8 +762,12 @@ epics:
       - id: 4.7
         title: API Cost Tracking Dashboard
         file: 4-7-api-cost-tracking-dashboard.md
-        status: ready-for-dev
+        status: review
         ready_date: 2026-04-07
+        dev_completed: 2026-04-25
+        review_date: 2026-04-25
+        review_findings: "9 patches applied (P-1 redis.expire fail-open, P-2 NaN guard on incrbyfloat, P-3 strict Number() parse on COST_ALERT_THRESHOLD_USD + warn-on-fallback, P-4 atomic SET NX claim before Slack POST + DEL release on fetch-throw/non-2xx, P-5 ADMIN_DASHBOARD_URL conditional in Slack message, P-6 useEffect alive flag, P-7 'error' in result check vs falsy string, P-8 drop unused spendLabel from i18n + interface, P-9 mirror today's Redis fallback into week/month/current-month bucket sums). 13 deferred (D-1 Float→Decimal post-MVP, D-2 image_count Int overflow, D-3 cuid id redundant, D-4 created_at index, D-5 checkMonthlyAlert hot-path, D-6 exit between Redis+DB, D-7 image_count semantics, D-8 bucketEnd time-component, D-9 UTC-midnight test flake, D-10 startTransition async UX, D-11 error retry UI, D-12 ISO vs rolling week, D-13 TTL redundancy). 13 rejected as noise."
+        patches_applied: "2026-04-25 — P-1..P-9 applied; 9 new tests added covering NaN guard, strict threshold parsing, SET NX dedup, fetch-throw/non-2xx DEL release, dashboard-link conditional, week/month Redis fallback consistency, Redis-down → 0 fallback. Touched tests 50/50 pass; full suite 847/847 pass excluding pre-existing WIP-broken research-retention.spec; tsc clean api + admin."
 
       - id: 4.8
         title: Data Freshness Dashboard

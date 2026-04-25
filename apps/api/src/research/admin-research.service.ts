@@ -10,6 +10,10 @@ export interface ResearchPhotoRow {
   submission_id: string;
   station_id: string | null;
   station_name: string | null;
+  /** Rounded to 4dp (~10m). Null if the original submission had no GPS or
+   *  was retained before the gps columns were added (2026-04-25). */
+  gps_lat: number | null;
+  gps_lng: number | null;
   ocr_prices: unknown;
   final_prices: unknown;
   actual_prices: unknown;
@@ -66,6 +70,8 @@ export class AdminResearchService {
         submission_id: r.submission_id,
         station_id: r.station_id,
         station_name: r.submission.station?.name ?? null,
+        gps_lat: r.gps_lat,
+        gps_lng: r.gps_lng,
         ocr_prices: r.ocr_prices,
         final_prices: r.final_prices,
         actual_prices: r.actual_prices,

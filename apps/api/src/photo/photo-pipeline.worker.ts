@@ -312,7 +312,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
    * IMPORTANT: does NOT delete the photo on success — that is Story 3.7's responsibility.
    */
   private async runOcrExtraction(
-    submission: Pick<Submission, 'id' | 'user_id' | 'photo_r2_key' | 'ocr_confidence_score' | 'station_id' | 'created_at'>,
+    submission: Pick<Submission, 'id' | 'user_id' | 'photo_r2_key' | 'ocr_confidence_score' | 'station_id' | 'created_at' | 'gps_lat' | 'gps_lng'>,
     stationId: string | null,
   ): Promise<{ trustScore: number; ocrPrices: ExtractedPrice[] } | null> {
     // AC7: no photo — reject without calling Claude (saves API cost)
@@ -399,6 +399,8 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
             submissionId: submission.id,
             stationId,
             photoR2Key: submission.photo_r2_key,
+            gpsLat: submission.gps_lat,
+            gpsLng: submission.gps_lng,
             ocrPrices: ocrResult.prices,
             finalPrices: null,
             finalStatus: SubmissionStatus.shadow_rejected,
@@ -468,7 +470,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
    * NOTE: Photo is NOT deleted here — Story 3.7 handles deletion.
    */
   private async runLogoRecognition(
-    submission: Pick<Submission, 'id' | 'user_id' | 'photo_r2_key' | 'station_id' | 'created_at'>,
+    submission: Pick<Submission, 'id' | 'user_id' | 'photo_r2_key' | 'station_id' | 'created_at' | 'gps_lat' | 'gps_lng'>,
     candidates: NearbyStationWithDistance[],
     trustScore: number,
     ocrPrices: ExtractedPrice[],
@@ -552,6 +554,8 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
             submissionId: submission.id,
             stationId: submission.station_id,
             photoR2Key: submission.photo_r2_key,
+            gpsLat: submission.gps_lat,
+            gpsLng: submission.gps_lng,
             ocrPrices,
             finalPrices: null,
             finalStatus: SubmissionStatus.shadow_rejected,
@@ -625,6 +629,8 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         station_id: true,
         created_at: true,
         ocr_confidence_score: true,
+        gps_lat: true,
+        gps_lng: true,
       },
     });
 
@@ -672,6 +678,8 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
             submissionId,
             stationId: updated.station_id,
             photoR2Key: updated.photo_r2_key,
+            gpsLat: updated.gps_lat,
+            gpsLng: updated.gps_lng,
             ocrPrices: rawPrices,
             finalPrices: null,
             finalStatus: SubmissionStatus.shadow_rejected,
@@ -725,6 +733,8 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         submissionId,
         stationId: updated.station_id,
         photoR2Key: updated.photo_r2_key,
+        gpsLat: updated.gps_lat,
+        gpsLng: updated.gps_lng,
         ocrPrices: rawPrices,
         finalPrices: validatedPrices,
         finalStatus: SubmissionStatus.verified,
@@ -794,6 +804,8 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
           station_id: true,
           created_at: true,
           price_data: true,
+          gps_lat: true,
+          gps_lng: true,
         },
       })
       .catch((e: Error) => {
@@ -844,6 +856,8 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         submissionId,
         stationId: submission.station_id,
         photoR2Key: submission.photo_r2_key,
+        gpsLat: submission.gps_lat,
+        gpsLng: submission.gps_lng,
         ocrPrices: submission.price_data ?? [],
         finalPrices: null,
         finalStatus: SubmissionStatus.rejected,
@@ -930,7 +944,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
   }
 
   private async rejectSubmission(
-    submission: Pick<Submission, 'id' | 'photo_r2_key' | 'station_id' | 'created_at'>,
+    submission: Pick<Submission, 'id' | 'photo_r2_key' | 'station_id' | 'created_at' | 'gps_lat' | 'gps_lng'>,
     reason: string,
     ocrPrices: unknown = [],
     /** OCR confidence — pass when the rejection happens after OCR ran so we
@@ -964,6 +978,8 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         submissionId: submission.id,
         stationId: submission.station_id ?? null,
         photoR2Key: submission.photo_r2_key,
+        gpsLat: submission.gps_lat,
+        gpsLng: submission.gps_lng,
         ocrPrices,
         finalPrices: null,
         finalStatus: SubmissionStatus.rejected,

@@ -8,11 +8,26 @@ export interface RetentionInput {
   submissionId: string;
   stationId: string | null;
   photoR2Key: string;
+  /**
+   * Original submission GPS — captured BEFORE the pipeline nulls these for
+   * GDPR. Service rounds to 4 decimal places (~10m) before writing, so the
+   * stored value is debug-useful (closest-station lookups) but not precise
+   * enough to identify a user's exact position. Null when caller doesn't
+   * have coords (pre-OCR rejections, preselect path).
+   */
+  gpsLat: number | null;
+  gpsLng: number | null;
   ocrPrices: unknown; // JSON array: what OCR extracted (pre-validation)
   finalPrices: unknown | null; // JSON array: post-validation for verified; null for rejected/shadow_rejected
   finalStatus: SubmissionStatus;
   flagReason: string | null;
   capturedAt: Date;
+}
+
+/** ~10m precision at Polish latitudes. Matches admin-submissions.service.ts. */
+function roundCoord(n: number | null | undefined): number | null {
+  if (n == null || !Number.isFinite(n)) return null;
+  return Math.round(n * 10000) / 10000;
 }
 
 /**
@@ -79,6 +94,8 @@ export class ResearchRetentionService {
           submission_id: input.submissionId,
           r2_key: destKey,
           station_id: input.stationId,
+          gps_lat: roundCoord(input.gpsLat),
+          gps_lng: roundCoord(input.gpsLng),
           ocr_prices: input.ocrPrices as Prisma.InputJsonValue,
           final_prices: (input.finalPrices ?? null) as Prisma.InputJsonValue | typeof Prisma.JsonNull,
           final_status: input.finalStatus,

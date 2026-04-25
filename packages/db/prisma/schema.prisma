@@ -127,6 +127,13 @@ model ResearchPhoto {
   submission_id  String     @unique
   r2_key         String     // research/<submission_id>.jpg
   station_id     String?    // snapshot (submission may null this later)
+  /// Rounded to 4 decimal places (~10m precision) at write time. Snapshotted
+  /// from the submission BEFORE rejectSubmission nulls them for GDPR. Lets us
+  /// diagnose no_station_match (closest station? wrong radius?) without
+  /// exposing exact user position. Null when the original submission had no
+  /// GPS or the call site didn't supply it.
+  gps_lat        Float?
+  gps_lng        Float?
   ocr_prices     Json       // what OCR extracted (pre-validation)
   final_prices   Json?      // what pipeline verified — null for rejected/shadow_rejected
   actual_prices  Json?      // filled in by admin when labeling ground truth

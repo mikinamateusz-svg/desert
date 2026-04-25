@@ -32,6 +32,8 @@ const baseInput = {
   submissionId: 'sub-1',
   stationId: 'station-1',
   photoR2Key: 'submissions/user-1/sub-1.jpg',
+  gpsLat: 51.7592 as number | null,
+  gpsLng: 19.4560 as number | null,
   ocrPrices: [{ fuel_type: 'PB_95', price_per_litre: 6.29 }],
   finalPrices: [{ fuel_type: 'PB_95', price_per_litre: 6.29 }],
   finalStatus: PrismaSubmissionStatus.verified,
@@ -138,6 +140,34 @@ describe('ResearchRetentionService', () => {
       await svc.captureIfEnabled(baseInput);
 
       expect(mockStorage.deleteObject).toHaveBeenCalledWith('research/sub-1.jpg');
+    });
+
+    it('rounds GPS coords to 4 decimal places (~10m) before writing', async () => {
+      const svc = await buildService('30');
+      mockStorage.copyObject.mockResolvedValueOnce(undefined);
+      mockResearchPhoto.create.mockResolvedValueOnce({});
+
+      await svc.captureIfEnabled({
+        ...baseInput,
+        gpsLat: 51.75923847,  // many decimals — should be truncated to ~10m
+        gpsLng: 19.45601923,
+      });
+
+      const callArg = (mockResearchPhoto.create.mock.calls[0][0] as { data: { gps_lat: number; gps_lng: number } }).data;
+      expect(callArg.gps_lat).toBe(51.7592);
+      expect(callArg.gps_lng).toBe(19.4560);
+    });
+
+    it('preserves null GPS coords when caller has none', async () => {
+      const svc = await buildService('30');
+      mockStorage.copyObject.mockResolvedValueOnce(undefined);
+      mockResearchPhoto.create.mockResolvedValueOnce({});
+
+      await svc.captureIfEnabled({ ...baseInput, gpsLat: null, gpsLng: null });
+
+      const callArg = (mockResearchPhoto.create.mock.calls[0][0] as { data: { gps_lat: number | null; gps_lng: number | null } }).data;
+      expect(callArg.gps_lat).toBeNull();
+      expect(callArg.gps_lng).toBeNull();
     });
 
     it('writes null final_prices when the submission was rejected', async () => {

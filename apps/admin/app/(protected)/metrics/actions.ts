@@ -1,5 +1,9 @@
 'use server';
 
+// Files marked 'use server' may only export async functions — re-exporting types
+// here causes Turbopack to register them as runtime server references, which
+// crashes at module evaluation with "ReferenceError: <Type> is not defined".
+// Consumers import these types directly from './types'.
 import { adminFetch } from '../../../lib/admin-api';
 import type {
   PipelineHealthDto,
@@ -8,14 +12,6 @@ import type {
   ProductMetricsDto,
   ApiCostMetricsDto,
 } from './types';
-
-export type {
-  PipelineHealthDto,
-  FunnelMetricsDto,
-  FunnelDrilldownDto,
-  ProductMetricsDto,
-  ApiCostMetricsDto,
-};
 
 export async function fetchPipelineHealth(): Promise<{ data?: PipelineHealthDto; error?: string }> {
   try {

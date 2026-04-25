@@ -472,7 +472,7 @@ describe('PhotoPipelineWorker', () => {
   // ── processJob — no match ─────────────────────────────────────────────────
 
   describe('processJob — no match', () => {
-    it('marks submission as rejected when no station within 200m', async () => {
+    it('marks submission as rejected with flag_reason when no station within 200m', async () => {
       mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
       mockStationService.findNearbyWithDistance.mockResolvedValueOnce([]);
 
@@ -480,7 +480,13 @@ describe('PhotoPipelineWorker', () => {
 
       expect(mockPrismaService.submission.update).toHaveBeenCalledWith({
         where: { id: 'sub-123' },
-        data: { status: 'rejected', gps_lat: null, gps_lng: null, photo_r2_key: null },
+        data: {
+          status: 'rejected',
+          flag_reason: 'no_station_match',
+          gps_lat: null,
+          gps_lng: null,
+          photo_r2_key: null,
+        },
       });
     });
 
@@ -532,14 +538,20 @@ describe('PhotoPipelineWorker', () => {
       gps_lng: null,
     };
 
-    it('marks submission as rejected when gps_lat is null', async () => {
+    it('marks submission as rejected with flag_reason when gps_lat is null', async () => {
       mockPrismaService.submission.findUnique.mockResolvedValueOnce(noGpsSubmission);
 
       await capturedProcessor!(makeJob('sub-123'));
 
       expect(mockPrismaService.submission.update).toHaveBeenCalledWith({
         where: { id: 'sub-123' },
-        data: { status: 'rejected', gps_lat: null, gps_lng: null, photo_r2_key: null },
+        data: {
+          status: 'rejected',
+          flag_reason: 'no_gps_coordinates',
+          gps_lat: null,
+          gps_lng: null,
+          photo_r2_key: null,
+        },
       });
     });
 
@@ -644,14 +656,20 @@ describe('PhotoPipelineWorker', () => {
         opts: { attempts },
       }) as unknown as Job<PhotoPipelineJobData>;
 
-    it('marks submission as rejected with nulled GPS and photo key on final failure', async () => {
+    it('marks submission as rejected with flag_reason=dlq_final_failure on final failure', async () => {
       const job = makeFailedJob('sub-123', 4, 4);
       capturedFailedHandler!(job, new Error('DB connection lost'));
       await flushPromises();
 
       expect(mockPrismaService.submission.update).toHaveBeenCalledWith({
         where: { id: 'sub-123' },
-        data: { status: 'rejected', gps_lat: null, gps_lng: null, photo_r2_key: null },
+        data: {
+          status: 'rejected',
+          flag_reason: 'dlq_final_failure',
+          gps_lat: null,
+          gps_lng: null,
+          photo_r2_key: null,
+        },
       });
     });
 
@@ -973,6 +991,24 @@ describe('PhotoPipelineWorker', () => {
         mockOcrService.validatePriceBands.mockReturnValueOnce('LPG');
 
         await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+      });
+
+      it('persists flag_reason and ocr_confidence_score on the rejected row (for stats)', async () => {
+        mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockOcrService.validatePriceBands.mockReturnValueOnce('PB_95');
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+          expect.objectContaining({
+            data: expect.objectContaining({
+              status: 'rejected',
+              flag_reason: 'price_out_of_range',
+              ocr_confidence_score: successfulOcrResult.confidence_score,
+            }),
+          }),
+        );
       });
     });
 

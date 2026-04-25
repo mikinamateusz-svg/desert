@@ -412,13 +412,13 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
 
     // AC3: low confidence → reject, delete photo, no retry
     if (ocrResult.confidence_score < 0.4) {
-      await this.rejectSubmission(submission, 'low_ocr_confidence', ocrResult.prices);
+      await this.rejectSubmission(submission, 'low_ocr_confidence', ocrResult.prices, ocrResult.confidence_score);
       return null;
     }
 
     // No prices extracted — reject to keep data quality high (see Q1 in story spec)
     if (ocrResult.prices.length === 0) {
-      await this.rejectSubmission(submission, 'no_prices_extracted', ocrResult.prices);
+      await this.rejectSubmission(submission, 'no_prices_extracted', ocrResult.prices, ocrResult.confidence_score);
       return null;
     }
 
@@ -428,7 +428,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       this.logger.warn(
         `Submission ${submission.id}: price out of range for ${invalidFuelType} — rejecting`,
       );
-      await this.rejectSubmission(submission, 'price_out_of_range', ocrResult.prices);
+      await this.rejectSubmission(submission, 'price_out_of_range', ocrResult.prices, ocrResult.confidence_score);
       return null;
     }
 
@@ -613,7 +613,8 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
   ): Promise<void> {
     // Re-fetch to get price_data written by runOcrExtraction.
     // station_id + created_at are needed so rejectSubmission can hand off to
-    // research retention when validation fails.
+    // research retention when validation fails. ocr_confidence_score is
+    // preserved on rejected rows for stats / debugging.
     const updated = await this.prisma.submission.findUnique({
       where: { id: submissionId },
       select: {
@@ -623,6 +624,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         photo_r2_key: true,
         station_id: true,
         created_at: true,
+        ocr_confidence_score: true,
       },
     });
 
@@ -810,13 +812,16 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       return;
     }
 
-    // Mark rejected + null GPS (GDPR) + null photo key atomically
+    // Mark rejected + null GPS (GDPR) + null photo key atomically.
+    // flag_reason='dlq_final_failure' so admin / stats can distinguish DLQ
+    // exhaustion from regular rejection causes.
     let updateOk = false;
     await this.prisma.submission
       .update({
         where: { id: submissionId },
         data: {
           status: SubmissionStatus.rejected,
+          flag_reason: 'dlq_final_failure',
           gps_lat: null,
           gps_lng: null,
           photo_r2_key: null,
@@ -928,6 +933,11 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     submission: Pick<Submission, 'id' | 'photo_r2_key' | 'station_id' | 'created_at'>,
     reason: string,
     ocrPrices: unknown = [],
+    /** OCR confidence — pass when the rejection happens after OCR ran so we
+     *  can still gather quality stats on rejected submissions. Pre-OCR
+     *  rejections (no_gps_coordinates, no_station_match, missing_photo, ...)
+     *  leave this undefined and the column stays null. */
+    ocrConfidence?: number,
   ): Promise<void> {
     this.logger.warn(`Submission ${submission.id}: rejected — ${reason}`);
 
@@ -935,9 +945,12 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       where: { id: submission.id },
       data: {
         status: SubmissionStatus.rejected,
+        flag_reason: reason,
         gps_lat: null,
         gps_lng: null,
         photo_r2_key: null,
+        // Only set if caller passed a value — otherwise leave null/existing.
+        ...(ocrConfidence !== undefined ? { ocr_confidence_score: ocrConfidence } : {}),
       },
     });
 

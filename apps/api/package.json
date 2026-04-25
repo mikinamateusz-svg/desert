@@ -12,7 +12,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "promote-admin": "ts-node -r tsconfig-paths/register scripts/promote-admin.ts"
+    "promote-admin": "ts-node -r tsconfig-paths/register scripts/promote-admin.ts",
+    "change-password": "ts-node -r tsconfig-paths/register scripts/change-password.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.82.0",

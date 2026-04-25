@@ -7,7 +7,7 @@
  * Idempotent: re-running on an already-ADMIN user is a no-op.
  * Requires DATABASE_URL to be set in the environment.
  */
-import { PrismaClient, UserRole } from '@desert/db';
+import { prisma, UserRole } from '@desert/db';
 
 async function main(): Promise<void> {
   if (!process.env.DATABASE_URL) {
@@ -27,7 +27,8 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  const prisma = new PrismaClient();
+  // Use the singleton from @desert/db — it wires up the @prisma/adapter-pg driver
+  // adapter required by Prisma 7 (schema has no datasource block).
   try {
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {

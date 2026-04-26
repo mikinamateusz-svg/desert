@@ -289,6 +289,20 @@ model PriceHistory {
 }
 
 
+model RegionalBenchmark {
+  id            String   @id @default(uuid())
+  voivodeship   String
+  fuel_type     String   // 'PB_95' | 'PB_98' | 'ON' | 'ON_PREMIUM' | 'LPG'
+  median_price  Float    // PLN/litre
+  station_count Int      // number of stations contributing to this benchmark
+  calculated_at DateTime @default(now())
+
+  // No unique on (voivodeship, fuel_type) — each daily run appends a new snapshot
+  // row so we preserve history. Index supports getLatestForStation lookup.
+  @@index([voivodeship, fuel_type, calculated_at(sort: Desc)])
+}
+
+
 model DailyApiCost {
   id          String   @id @default(cuid())
   date        DateTime @unique @db.Date

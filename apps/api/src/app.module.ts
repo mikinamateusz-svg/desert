@@ -18,6 +18,7 @@ import { PhotoModule } from './photo/photo.module.js';
 import { AlertModule } from './alert/alert.module.js';
 import { AdminModule } from './admin/admin.module.js';
 import { ResearchModule } from './research/research.module.js';
+import { RegionalBenchmarkModule } from './regional-benchmark/regional-benchmark.module.js';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { JwtAuthGuard } from './auth/jwt-auth.guard.js';
 import { RolesGuard } from './auth/guards/roles.guard.js';
@@ -45,6 +46,7 @@ import { RolesGuard } from './auth/guards/roles.guard.js';
     AlertModule,
     AdminModule,
     ResearchModule,
+    RegionalBenchmarkModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

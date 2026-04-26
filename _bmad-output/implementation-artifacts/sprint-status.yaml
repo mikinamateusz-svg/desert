@@ -815,8 +815,11 @@ epics:
       - id: 5.0
         title: "Regional Benchmark Price Calculation & Storage"
         file: 5-0-regional-benchmark-price-calculation.md
-        status: ready-for-dev
+        status: review
         ready_date: 2026-04-07
+        dev_started: 2026-04-26
+        dev_completed: 2026-04-26
+        note: "First Phase 2 story. New RegionalBenchmark table (append-only daily snapshots), RegionalBenchmarkService (calculateAndStore + getLatestForStation), daily 03:00 UTC BullMQ worker mirroring StationSyncWorker pattern. SQL uses PERCENTILE_CONT(0.5) for median + DISTINCT ON for one-vote-per-station + excludes seeded prices to avoid circular contamination + HAVING ≥5 stations threshold. Service exported for Stories 5.2 (FillUp) and 3.7 (price validation tier 2). 10 tests, 886/886 api pass (+10), tsc clean. Migration 20260426000000_add_regional_benchmarks needs to apply to staging Neon branch on next deploy."
       - id: 5.1
         title: "Vehicle Setup & Car Recognition"
         file: 5-1-vehicle-setup-car-recognition.md

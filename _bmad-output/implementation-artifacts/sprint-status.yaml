@@ -30,6 +30,13 @@ epics:
         rollout_gate: "Must complete AFTER Step 1 (solo testing) and BEFORE Step 2 (friends & family beta)"
         note: "Bundles 8 deferred fixes: ThrottlerGuard global registration, Submission+PriceHistory DB indexes, updated_at DB defaults, stale push token cleanup, market-signal rate limit, BullMQ separate Redis connections, StationFuelStaleness 7-day TTL."
 
+      - id: 0.2
+        title: "Admin Test Infrastructure"
+        file: 0-2-admin-test-infrastructure.md
+        status: ready-for-dev
+        ready_date: 2026-04-26
+        note: "Bootstrap Jest + msw for apps/admin (currently zero test coverage). Lightweight-broad scope: adminFetch + login + one server action per shape (GET / GET+params / POST trigger) + middleware + CI integration. ~5h estimated. Triggered by two prod-affecting admin bugs caught only by manual smoke this week (4.7 metrics actions.ts ReferenceError; missing API_URL on staging Vercel). Pattern: future stories add tests for new actions; existing 21 actions inherit coverage via the adminFetch tests."
+
   - id: 1
     name: User Registration & Authentication
     stories:

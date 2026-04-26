@@ -821,10 +821,26 @@ epics:
         dev_completed: 2026-04-26
         note: "First Phase 2 story. New RegionalBenchmark table (append-only daily snapshots), RegionalBenchmarkService (calculateAndStore + getLatestForStation), daily 03:00 UTC BullMQ worker mirroring StationSyncWorker pattern. SQL uses PERCENTILE_CONT(0.5) for median + DISTINCT ON for one-vote-per-station + excludes seeded prices to avoid circular contamination + HAVING ≥5 stations threshold. Service exported for Stories 5.2 (FillUp) and 3.7 (price validation tier 2). 10 tests, 886/886 api pass (+10), tsc clean. Migration 20260426000000_add_regional_benchmarks needs to apply to staging Neon branch on next deploy."
       - id: 5.1
-        title: "Vehicle Setup & Car Recognition"
-        file: 5-1-vehicle-setup-car-recognition.md
-        status: ready-for-dev
+        title: "Vehicle Setup (Dictionary-based, manual entry)"
+        file: 5-1-vehicle-setup.md
+        status: in-progress
         ready_date: 2026-04-07
+        dev_started: 2026-04-26
+        note: "Split from original 5.1 'Vehicle Setup & Car Recognition'. AI photo recognition carved out into 5.1a (model evaluation) + 5.1b (recognition implementation), deferred to end of Epic 5. This story = schema + CRUD + cascading dropdown UX. Dictionary built via Wikidata SPARQL (make/model/year, CC0/CC BY-SA) + Claude-generated engine variants (~$3 one-time cost on Sonnet, regeneratable script). Free-text fallback for long tail."
+
+      - id: 5.1a
+        title: "Vehicle Recognition Model Evaluation"
+        file: 5-1a-vehicle-recognition-model-evaluation.md
+        status: deferred-end-of-epic
+        ready_date: 2026-04-26
+        note: "Prerequisite for 5.1b. Build labeled corpus of Polish car photos, run Opus 4.7 / Sonnet 4.6 / Haiku 4.5 against it, compare accuracy + cost, pick winner. Needs photo data (collect during alpha)."
+
+      - id: 5.1b
+        title: "AI-Powered Vehicle Recognition"
+        file: 5-1b-ai-powered-vehicle-recognition.md
+        status: deferred-end-of-epic
+        ready_date: 2026-04-26
+        note: "Adds photo entry path to vehicle setup. Uses model chosen by 5.1a. Depends on 5.1 (Vehicle CRUD foundation) + 5.1a (model decision)."
       - id: 5.2
         title: "Pump Meter OCR & Fill-Up Recording"
         file: 5-2-pump-meter-ocr-fillup-recording.md

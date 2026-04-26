@@ -781,8 +781,11 @@ epics:
       - id: 4.8
         title: Data Freshness Dashboard
         file: 4-8-data-freshness-dashboard.md
-        status: ready-for-dev
+        status: review
         ready_date: 2026-04-07
+        dev_started: 2026-04-26
+        dev_completed: 2026-04-26
+        note: "getFreshnessDashboard service (LATERAL JOIN over Station + PriceHistory, three queries in Promise.all for data + total + stale count) + GET /v1/admin/metrics/freshness with whitelist sanitisation. Shared VALID_VOIVODESHIPS constant. Admin UI: FreshnessTab with voivodeship dropdown + sortBy/order toggle + paginated table with stale-row highlight + staleCount summary; wired as 5th tab in MetricsDashboard. i18n in pl/en/uk. Tests: 8 service + 5 admin action (using 0.2 test infra). api 869/869 + admin 35/35 + tsc + build all clean. No DB migration needed — existing tables + indexes sufficient."
 
       - id: 4.10
         title: Admin UI — Manual Station Sync Trigger
@@ -1050,3 +1053,33 @@ epics:
         file: 10-4-vehicle-consumption-data-api.md
         status: ready-for-dev
         ready_date: 2026-04-08
+
+  - epic: 15
+    title: "Marketing & Soft Launch (Łódź Pilot)"
+    stories:
+      - id: 15.1
+        title: "Meta Ad Creative Production — Łódź Soft Launch"
+        file: 15-1-meta-ad-creative-production.md
+        status: ready-for-dev
+        ready_date: 2026-04-18
+        note: "Static creative pack (3 concepts × 3 crops × 2 PL copy variants A/B) + search-style headline bank for Meta soft-launch campaign. No video, no founder face. See planning-artifacts/litro-soft-launch-plan.md and planning-artifacts/epic-15-marketing-soft-launch.md"
+      - id: 15.2
+        title: "Meta Campaign Setup & Launch"
+        status: planned
+        note: "Activate after 15.1; configure Łódź 15km radius, Android-only, App Install objective, 1k PLN budget cap"
+      - id: 15.3
+        title: "Decision Gate Reviews — G1, G2, G3"
+        status: planned
+        note: "G1 half-budget (~day 14), G2 end-of-test (~day 30), G3 founder seeding cap (week 6)"
+      - id: 15.4
+        title: "Founder Photo Seeding Discipline"
+        status: planned
+        note: "Backend seed=true flag, exclude from community-freshness UI, 6-week hard cap"
+      - id: 15.5
+        title: "Google Search Campaign Add-on"
+        status: planned
+        note: "Contingent on G2 scale-up decision. Łódź-radius PL search queries; reuses Story 15.1 headline bank"
+      - id: 15.6
+        title: "Waze Self-Serve Pin + Takeover"
+        status: planned
+        note: "Contingent on G2; tests driver-en-route moment. Extends Story 15.1 pack with Waze Pin (200x200) + Takeover (1080x1080)"

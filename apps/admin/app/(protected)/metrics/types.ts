@@ -69,3 +69,25 @@ export interface ApiCostMetricsDto {
   currentMonth: ApiCostPeriodDto;
   last3Months: ApiCostMonthDto[];
 }
+
+export type FreshnessSortBy = 'lastPriceAt' | 'voivodeship' | 'priceSource';
+export type FreshnessSortOrder = 'asc' | 'desc';
+export type PriceSource = 'community' | 'admin_override' | 'seeded';
+
+export interface FreshnessRowDto {
+  stationId: string;
+  stationName: string;
+  address: string | null;
+  voivodeship: string | null;
+  priceSource: PriceSource | null;
+  lastPriceAt: string | null;
+  isStale: boolean;
+}
+
+export interface FreshnessDashboardDto {
+  data: FreshnessRowDto[];
+  total: number;
+  page: number;
+  limit: number;
+  staleCount: number;
+}

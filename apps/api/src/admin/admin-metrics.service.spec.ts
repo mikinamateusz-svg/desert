@@ -16,12 +16,14 @@ const mockPhotoPipelineWorker = {
 };
 
 const mockQueryRaw = jest.fn();
+const mockQueryRawUnsafe = jest.fn();
 const mockSubmissionFindMany = jest.fn();
 const mockSubmissionCount = jest.fn();
 const mockDailyApiCostFindMany = jest.fn();
 
 const mockPrisma = {
   $queryRaw: mockQueryRaw,
+  $queryRawUnsafe: mockQueryRawUnsafe,
   submission: {
     findMany: mockSubmissionFindMany,
     count: mockSubmissionCount,
@@ -301,6 +303,162 @@ describe('AdminMetricsService', () => {
 
       expect(result.today.spendUsd).toBe(0);
       expect(result.currentMonth.spendUsd).toBe(0);
+    });
+  });
+
+  // ── getFreshnessDashboard (Story 4.8) ────────────────────────────────────
+
+  describe('getFreshnessDashboard', () => {
+    /**
+     * The service runs three queries via $queryRawUnsafe in Promise.all:
+     *   1. data rows (LATERAL join)
+     *   2. total count
+     *   3. stale count
+     * Mock them in that exact order via mockResolvedValueOnce x3.
+     */
+
+    function queueResponses(rows: unknown[], total: number, stale: number) {
+      mockQueryRawUnsafe
+        .mockResolvedValueOnce(rows)
+        .mockResolvedValueOnce([{ count: total }])
+        .mockResolvedValueOnce([{ count: stale }]);
+    }
+
+    it('returns rows with isStale=true when lastPriceAt is null (no PriceHistory ever)', async () => {
+      queueResponses(
+        [
+          {
+            stationId: 's1',
+            stationName: 'No-history station',
+            address: 'ul. Test 1',
+            voivodeship: 'mazowieckie',
+            priceSource: null,
+            lastPriceAt: null,
+          },
+        ],
+        1,
+        1,
+      );
+
+      const result = await service.getFreshnessDashboard(null, 'lastPriceAt', 'asc', 1, 50);
+
+      expect(result.data).toHaveLength(1);
+      expect(result.data[0]).toMatchObject({
+        stationId: 's1',
+        stationName: 'No-history station',
+        priceSource: null,
+        lastPriceAt: null,
+        isStale: true,
+      });
+      expect(result.total).toBe(1);
+      expect(result.staleCount).toBe(1);
+    });
+
+    it('returns isStale=true when lastPriceAt is older than 30 days', async () => {
+      const oldDate = new Date(Date.now() - 31 * 24 * 60 * 60 * 1000);
+      queueResponses(
+        [
+          {
+            stationId: 's2',
+            stationName: 'Old data',
+            address: null,
+            voivodeship: 'mazowieckie',
+            priceSource: 'community',
+            lastPriceAt: oldDate,
+          },
+        ],
+        1,
+        1,
+      );
+
+      const result = await service.getFreshnessDashboard(null, 'lastPriceAt', 'asc', 1, 50);
+      expect(result.data[0].isStale).toBe(true);
+      expect(result.data[0].lastPriceAt).toBe(oldDate.toISOString());
+    });
+
+    it('returns isStale=false when lastPriceAt is within 30 days', async () => {
+      const recent = new Date(Date.now() - 1 * 24 * 60 * 60 * 1000);
+      queueResponses(
+        [
+          {
+            stationId: 's3',
+            stationName: 'Fresh data',
+            address: 'ul. Świeża 1',
+            voivodeship: 'lodzkie',
+            priceSource: 'community',
+            lastPriceAt: recent,
+          },
+        ],
+        1,
+        0,
+      );
+
+      const result = await service.getFreshnessDashboard(null, 'lastPriceAt', 'asc', 1, 50);
+      expect(result.data[0].isStale).toBe(false);
+      expect(result.staleCount).toBe(0);
+    });
+
+    it('forwards the voivodeship filter as the first parameter to all three queries', async () => {
+      queueResponses([], 0, 0);
+
+      await service.getFreshnessDashboard('mazowieckie', 'lastPriceAt', 'asc', 1, 50);
+
+      // All 3 calls should have voivodeship as the first SQL param
+      expect(mockQueryRawUnsafe).toHaveBeenCalledTimes(3);
+      mockQueryRawUnsafe.mock.calls.forEach(callArgs => {
+        // callArgs[0] is the SQL string; callArgs[1] is the first param (voivodeship)
+        expect(callArgs[1]).toBe('mazowieckie');
+      });
+    });
+
+    it('passes null voivodeship through unchanged when no filter is requested', async () => {
+      queueResponses([], 0, 0);
+
+      await service.getFreshnessDashboard(null, 'lastPriceAt', 'asc', 1, 50);
+
+      expect(mockQueryRawUnsafe.mock.calls[0][1]).toBeNull();
+      expect(mockQueryRawUnsafe.mock.calls[1][1]).toBeNull();
+      expect(mockQueryRawUnsafe.mock.calls[2][1]).toBeNull();
+    });
+
+    it('builds the data SQL with the correct ORDER BY column for each sortBy value', async () => {
+      // sortBy: 'voivodeship' → ORDER BY s.voivodeship
+      queueResponses([], 0, 0);
+      await service.getFreshnessDashboard(null, 'voivodeship', 'asc', 1, 50);
+      expect(mockQueryRawUnsafe.mock.calls[0][0]).toContain('ORDER BY s.voivodeship ASC');
+
+      mockQueryRawUnsafe.mockReset();
+
+      // sortBy: 'priceSource' → ORDER BY lph.source
+      queueResponses([], 0, 0);
+      await service.getFreshnessDashboard(null, 'priceSource', 'desc', 1, 50);
+      expect(mockQueryRawUnsafe.mock.calls[0][0]).toContain('ORDER BY lph.source DESC');
+
+      mockQueryRawUnsafe.mockReset();
+
+      // sortBy: 'lastPriceAt' → ORDER BY lph.recorded_at NULLS FIRST (so null prices surface first)
+      queueResponses([], 0, 0);
+      await service.getFreshnessDashboard(null, 'lastPriceAt', 'asc', 1, 50);
+      expect(mockQueryRawUnsafe.mock.calls[0][0]).toContain('ORDER BY lph.recorded_at ASC NULLS FIRST');
+    });
+
+    it('translates page/limit to LIMIT/OFFSET correctly', async () => {
+      queueResponses([], 100, 5);
+
+      await service.getFreshnessDashboard(null, 'lastPriceAt', 'asc', 3, 25);
+
+      // page 3, limit 25 → LIMIT 25 OFFSET 50
+      // params order: voivodeship, limit, skip
+      expect(mockQueryRawUnsafe.mock.calls[0][2]).toBe(25);
+      expect(mockQueryRawUnsafe.mock.calls[0][3]).toBe(50);
+    });
+
+    it('returns 0 staleCount when no stations match the filter', async () => {
+      queueResponses([], 0, 0);
+      const result = await service.getFreshnessDashboard('opolskie', 'lastPriceAt', 'asc', 1, 50);
+      expect(result.staleCount).toBe(0);
+      expect(result.total).toBe(0);
+      expect(result.data).toEqual([]);
     });
   });
 });

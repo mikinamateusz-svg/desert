@@ -11,6 +11,9 @@ import type {
   FunnelDrilldownDto,
   ProductMetricsDto,
   ApiCostMetricsDto,
+  FreshnessDashboardDto,
+  FreshnessSortBy,
+  FreshnessSortOrder,
 } from './types';
 
 export async function fetchPipelineHealth(): Promise<{ data?: PipelineHealthDto; error?: string }> {
@@ -65,5 +68,29 @@ export async function fetchApiCostMetrics(): Promise<{ data?: ApiCostMetricsDto;
     return { data };
   } catch (e) {
     return { error: e instanceof Error ? e.message : 'Failed to load API cost metrics.' };
+  }
+}
+
+export async function fetchFreshnessData(opts: {
+  voivodeship?: string | null;
+  sortBy?: FreshnessSortBy;
+  order?: FreshnessSortOrder;
+  page?: number;
+  limit?: number;
+}): Promise<{ data?: FreshnessDashboardDto; error?: string }> {
+  try {
+    const params = new URLSearchParams();
+    if (opts.voivodeship) params.set('voivodeship', opts.voivodeship);
+    if (opts.sortBy) params.set('sortBy', opts.sortBy);
+    if (opts.order) params.set('order', opts.order);
+    if (opts.page) params.set('page', String(opts.page));
+    if (opts.limit) params.set('limit', String(opts.limit));
+    const qs = params.toString();
+    const data = await adminFetch<FreshnessDashboardDto>(
+      `/v1/admin/metrics/freshness${qs ? `?${qs}` : ''}`,
+    );
+    return { data };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Failed to load freshness data.' };
   }
 }

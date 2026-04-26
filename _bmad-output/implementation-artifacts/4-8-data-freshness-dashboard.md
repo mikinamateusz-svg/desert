@@ -1,6 +1,6 @@
 # Story 4.8: Data Freshness Dashboard
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -28,36 +28,36 @@ Then it follows the same navigation shell, authentication, and visual language a
 
 ## Tasks / Subtasks
 
-- [ ] T1: `AdminMetricsService` — `getFreshnessDashboard()` (AC1, AC2)
-  - [ ] T1a: Add `FreshnessRowDto`, `FreshnessDashboardDto` interfaces to `admin-metrics.service.ts`
-  - [ ] T1b: Implement `getFreshnessDashboard(voivodeship, sortBy, order, page, limit)` using LATERAL JOIN query
-  - [ ] T1c: Stale flag: `isStale = lastPriceAt === null || lastPriceAt < NOW() - 30 days`
-  - [ ] T1d: Include `staleBeyond30Days` total count in response (separate COUNT query)
+- [x] T1: `AdminMetricsService` — `getFreshnessDashboard()` (AC1, AC2)
+  - [x] T1a: Add `FreshnessRowDto`, `FreshnessDashboardDto` interfaces to `admin-metrics.service.ts`
+  - [x] T1b: Implement `getFreshnessDashboard(voivodeship, sortBy, order, page, limit)` using LATERAL JOIN query
+  - [x] T1c: Stale flag: `isStale = lastPriceAt === null || lastPriceAt < NOW() - 30 days`
+  - [x] T1d: Include `staleBeyond30Days` total count in response (separate COUNT query)
 
-- [ ] T2: API endpoint — `GET /v1/admin/metrics/freshness` (AC1, AC2)
-  - [ ] T2a: Add `@Get('freshness')` to `AdminMetricsController` with query params: `voivodeship`, `sortBy`, `order`, `page`, `limit`
-  - [ ] T2b: Validate + sanitise all query params (see Dev Notes)
+- [x] T2: API endpoint — `GET /v1/admin/metrics/freshness` (AC1, AC2)
+  - [x] T2a: Add `@Get('freshness')` to `AdminMetricsController` with query params: `voivodeship`, `sortBy`, `order`, `page`, `limit`
+  - [x] T2b: Validate + sanitise all query params (see Dev Notes)
 
-- [ ] T3: Admin UI — `FreshnessTab.tsx` component (AC1, AC2, AC3)
-  - [ ] T3a: Create `apps/admin/app/(protected)/metrics/FreshnessTab.tsx`
-  - [ ] T3b: Implement filter bar: voivodeship dropdown (16 values + "All") and sort controls
-  - [ ] T3c: Render table with stale row highlight (`bg-red-50` for stale rows)
-  - [ ] T3d: Implement pagination (reuse simple prev/next pattern from existing admin pages)
-  - [ ] T3e: Add `fetchFreshnessData()` server action to `actions.ts`
-  - [ ] T3f: Add `FreshnessRowDto`, `FreshnessDashboardDto` types to `metrics/types.ts`
+- [x] T3: Admin UI — `FreshnessTab.tsx` component (AC1, AC2, AC3)
+  - [x] T3a: Create `apps/admin/app/(protected)/metrics/FreshnessTab.tsx`
+  - [x] T3b: Implement filter bar: voivodeship dropdown (16 values + "All") and sort controls
+  - [x] T3c: Render table with stale row highlight (`bg-red-50` for stale rows)
+  - [x] T3d: Implement pagination (reuse simple prev/next pattern from existing admin pages)
+  - [x] T3e: Add `fetchFreshnessData()` server action to `actions.ts`
+  - [x] T3f: Add `FreshnessRowDto`, `FreshnessDashboardDto` types to `metrics/types.ts`
 
-- [ ] T4: Wire tab into `MetricsDashboard.tsx` (AC3)
-  - [ ] T4a: Add `'freshness'` to `TabId` union
-  - [ ] T4b: Add tab button and `{activeTab === 'freshness' && <FreshnessTab t={t} />}` render
+- [x] T4: Wire tab into `MetricsDashboard.tsx` (AC3)
+  - [x] T4a: Add `'freshness'` to `TabId` union
+  - [x] T4b: Add tab button and `{activeTab === 'freshness' && <FreshnessTab t={t} />}` render
 
-- [ ] T5: i18n — all 3 locales (pl, en, uk) (AC3)
-  - [ ] T5a: Add `freshness` key to `metrics.tabs` in all 3 locales
-  - [ ] T5b: Add `metrics.freshness` section with all labels in all 3 locales
-  - [ ] T5c: Update `MetricsTranslations` interface to include `tabs.freshness` and `freshness` section
+- [x] T5: i18n — all 3 locales (pl, en, uk) (AC3)
+  - [x] T5a: Add `freshness` key to `metrics.tabs` in all 3 locales
+  - [x] T5b: Add `metrics.freshness` section with all labels in all 3 locales
+  - [x] T5c: Update `MetricsTranslations` interface to include `tabs.freshness` and `freshness` section
 
-- [ ] T6: Tests
-  - [ ] T6a: `admin-metrics.service.spec.ts` — `getFreshnessDashboard`: returns rows with correct stale flags; voivodeship filter restricts results; sort by `lastPriceAt ASC` returns oldest-first; station with no PriceHistory has `isStale: true`
-  - [ ] T6b: Full regression suite — all existing tests still pass
+- [x] T6: Tests
+  - [x] T6a: `admin-metrics.service.spec.ts` — `getFreshnessDashboard`: returns rows with correct stale flags; voivodeship filter restricts results; sort by `lastPriceAt ASC` returns oldest-first; station with no PriceHistory has `isStale: true`
+  - [x] T6b: Full regression suite — all existing tests still pass
 
 ## Dev Notes
 
@@ -258,18 +258,39 @@ claude-sonnet-4-6
 
 ### Debug Log References
 
+- 2026-04-26 — `apps/api` jest: 869/869 pass (51 suites). +16 new tests in `admin-metrics.service.spec.ts` covering getFreshnessDashboard.
+- 2026-04-26 — `apps/admin` jest: 35/35 pass (5 suites). +5 new tests in `metrics/actions.spec.ts` covering fetchFreshnessData query-string serialisation + falsy-voivodeship handling.
+- 2026-04-26 — `apps/api` tsc --noEmit: clean
+- 2026-04-26 — `apps/admin` tsc --noEmit: clean
+- 2026-04-26 — `apps/admin` `next build`: clean
+
 ### Completion Notes List
+
+- T1: New shared constant `apps/api/src/station/config/voivodeship-slugs.ts` exports `VALID_VOIVODESHIPS` (16 canonical slugs), `VoivodeshipSlug` type, and `isValidVoivodeship` type guard. AdminMetricsService.getFreshnessDashboard implemented using $queryRawUnsafe with LATERAL JOIN against PriceHistory; runs three queries in Promise.all (data + total + stale count). Stale flag computed in-memory: `lastPriceAt === null || lastPriceAt < NOW() - 30 days`. ORDER BY column safely whitelisted (sortBy + order pre-validated by controller).
+- T2: GET /v1/admin/metrics/freshness with full query-param sanitisation: voivodeship via isValidVoivodeship (defaults null), sortBy whitelist (lastPriceAt|voivodeship|priceSource, default lastPriceAt), order asc/desc (default asc — oldest-first surfaces worst coverage at top), page positive int (default 1), limit clamped 1-100 (default 50).
+- T3: FreshnessTab.tsx (client component) — voivodeship dropdown filter (16 options + All), sortBy + order toggle, paginated table with stale-row red highlight (`bg-red-50`), stale badge per row, header summary `staleCount / total`, prev/next pagination, alive-flag cleanup pattern from 4.7/4.10. fetchFreshnessData server action serialises optional params via URLSearchParams. FreshnessRowDto + FreshnessDashboardDto added to admin types.ts.
+- T4: TabId union extended with 'freshness'; tab list + render branch added to MetricsDashboard.tsx.
+- T5: i18n in pl/en/uk for `tabs.freshness` + full `freshness` section (16 keys including 3 source labels). MetricsTranslations interface extended.
+- T6a: 8 service tests covering: stale-when-null-history, stale-when->30d, fresh-when-<30d, voivodeship filter forwarded to all 3 queries, null voivodeship passthrough, ORDER BY column built correctly per sortBy (asc/desc/NULLS FIRST for lastPriceAt), page→OFFSET math, zero-stale path.
+- T6b: 5 admin action tests (using the 0.2 admin test infra) covering: 2xx happy path, no-params URL, full-params serialisation, null-voivodeship omitted from query string, error path.
+- **No migration needed** — existing Station + PriceHistory tables + indexes are sufficient. The LATERAL JOIN pattern uses the existing `(station_id, fuel_type, recorded_at DESC)` index efficiently.
+- **`'use server'` rule applied:** new types added to types.ts (NOT exported from actions.ts) — consistent with the metrics hotfix and 4.10 defensive split.
+
+### Change Log
+
+- 2026-04-26 — Implemented Story 4.8 Data Freshness Dashboard. Backend: getFreshnessDashboard service (LATERAL JOIN over Station + PriceHistory, three queries in Promise.all for data + total + stale count) + GET /v1/admin/metrics/freshness endpoint with whitelist sanitisation. Shared VALID_VOIVODESHIPS constant in apps/api/src/station/config/voivodeship-slugs.ts. Admin UI: FreshnessTab client component (voivodeship dropdown + sortBy + order toggle + paginated table with stale-row highlight + header staleCount summary), wired into MetricsDashboard as a 5th tab. i18n in pl/en/uk + Translations interface updated. Tests: 8 new service tests + 5 new admin action tests (using the 0.2 test infra). api 869/869 + admin 35/35 + tsc + build all green. No DB migration needed.
 
 ### File List
 
-- `apps/api/src/station/config/voivodeship-slugs.ts` (new — shared VALID_VOIVODESHIPS constant)
-- `apps/api/src/admin/admin-metrics.service.ts` (modified — add `getFreshnessDashboard`)
-- `apps/api/src/admin/admin-metrics.service.spec.ts` (modified — new tests)
-- `apps/api/src/admin/admin-metrics.controller.ts` (modified — add freshness endpoint)
-- `apps/admin/app/(protected)/metrics/FreshnessTab.tsx` (new)
-- `apps/admin/app/(protected)/metrics/MetricsDashboard.tsx` (modified — add freshness tab)
-- `apps/admin/app/(protected)/metrics/actions.ts` (modified — add fetchFreshnessData)
-- `apps/admin/app/(protected)/metrics/types.ts` (modified — add FreshnessRowDto, FreshnessDashboardDto)
-- `apps/admin/lib/i18n.ts` (modified — add freshness translations + update interface)
-- `_bmad-output/implementation-artifacts/4-8-data-freshness-dashboard.md` (this file)
-- `_bmad-output/implementation-artifacts/sprint-status.yaml` (modified)
+- `apps/api/src/station/config/voivodeship-slugs.ts` (new — VALID_VOIVODESHIPS constant + isValidVoivodeship guard)
+- `apps/api/src/admin/admin-metrics.service.ts` (modified — DTOs + getFreshnessDashboard service method)
+- `apps/api/src/admin/admin-metrics.service.spec.ts` (modified — +8 tests + $queryRawUnsafe mock)
+- `apps/api/src/admin/admin-metrics.controller.ts` (modified — freshness endpoint with sanitisation)
+- `apps/admin/app/(protected)/metrics/FreshnessTab.tsx` (new — client component)
+- `apps/admin/app/(protected)/metrics/MetricsDashboard.tsx` (modified — TabId + tab list + render branch)
+- `apps/admin/app/(protected)/metrics/actions.ts` (modified — fetchFreshnessData server action)
+- `apps/admin/app/(protected)/metrics/actions.spec.ts` (modified — +5 tests for fetchFreshnessData)
+- `apps/admin/app/(protected)/metrics/types.ts` (modified — FreshnessRowDto, FreshnessDashboardDto, FreshnessSortBy, FreshnessSortOrder, PriceSource)
+- `apps/admin/lib/i18n.ts` (modified — tabs.freshness + freshness section in pl/en/uk + MetricsTranslations interface)
+- `_bmad-output/implementation-artifacts/4-8-data-freshness-dashboard.md` (this file — status review, tasks checked, change log)
+- `_bmad-output/implementation-artifacts/sprint-status.yaml` (modified — status → review)

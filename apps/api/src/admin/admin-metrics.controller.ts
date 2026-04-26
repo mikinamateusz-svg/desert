@@ -1,12 +1,29 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { UserRole } from '@prisma/client';
 import { Roles } from '../auth/decorators/roles.decorator.js';
-import { AdminMetricsService, type MetricsPeriod } from './admin-metrics.service.js';
+import {
+  AdminMetricsService,
+  type MetricsPeriod,
+  type FreshnessSortBy,
+  type FreshnessSortOrder,
+} from './admin-metrics.service.js';
+import { isValidVoivodeship } from '../station/config/voivodeship-slugs.js';
 
 const VALID_PERIODS: MetricsPeriod[] = ['today', '7d', '30d'];
+const VALID_FRESHNESS_SORTS: FreshnessSortBy[] = ['lastPriceAt', 'voivodeship', 'priceSource'];
 
 function parsePeriod(raw: string | undefined): MetricsPeriod {
   return VALID_PERIODS.includes(raw as MetricsPeriod) ? (raw as MetricsPeriod) : 'today';
+}
+
+function parseFreshnessSort(raw: string | undefined): FreshnessSortBy {
+  return VALID_FRESHNESS_SORTS.includes(raw as FreshnessSortBy)
+    ? (raw as FreshnessSortBy)
+    : 'lastPriceAt';
+}
+
+function parseOrder(raw: string | undefined): FreshnessSortOrder {
+  return raw === 'desc' ? 'desc' : 'asc';
 }
 
 @Controller('v1/admin/metrics')
@@ -53,5 +70,32 @@ export class AdminMetricsController {
   @Get('cost')
   async cost() {
     return this.service.getApiCostMetrics();
+  }
+
+  /**
+   * Per-station price freshness for the admin coverage-gap dashboard. Paginated;
+   * stale stations (no price ever, or last price > 30 days old) are flagged in
+   * the response. Voivodeship filter is sanitised against the canonical slug list.
+   */
+  @Get('freshness')
+  async freshness(
+    @Query('voivodeship') voivodeship?: string,
+    @Query('sortBy') sortBy?: string,
+    @Query('order') order?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    const safeVoivodeship = isValidVoivodeship(voivodeship) ? voivodeship : null;
+    const safeSortBy = parseFreshnessSort(sortBy);
+    const safeOrder = parseOrder(order);
+    const safePage = Math.max(1, parseInt(page ?? '1', 10) || 1);
+    const safeLimit = Math.min(100, Math.max(1, parseInt(limit ?? '50', 10) || 50));
+    return this.service.getFreshnessDashboard(
+      safeVoivodeship,
+      safeSortBy,
+      safeOrder,
+      safePage,
+      safeLimit,
+    );
   }
 }

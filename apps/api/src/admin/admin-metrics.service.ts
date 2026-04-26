@@ -77,6 +77,28 @@ export interface ApiCostMetricsDto {
   last3Months: ApiCostMonthDto[]; // oldest first
 }
 
+export type FreshnessSortBy = 'lastPriceAt' | 'voivodeship' | 'priceSource';
+export type FreshnessSortOrder = 'asc' | 'desc';
+export type PriceSource = 'community' | 'admin_override' | 'seeded';
+
+export interface FreshnessRowDto {
+  stationId: string;
+  stationName: string;
+  address: string | null;
+  voivodeship: string | null;
+  priceSource: PriceSource | null;
+  lastPriceAt: string | null; // ISO datetime or null
+  isStale: boolean;
+}
+
+export interface FreshnessDashboardDto {
+  data: FreshnessRowDto[];
+  total: number;
+  page: number;
+  limit: number;
+  staleCount: number;
+}
+
 @Injectable()
 export class AdminMetricsService implements OnModuleInit {
   private readonly logger = new Logger(AdminMetricsService.name);
@@ -394,5 +416,113 @@ export class AdminMetricsService implements OnModuleInit {
       imageCount += r.image_count;
     }
     return { spendUsd, imageCount };
+  }
+
+  // ── Data Freshness Dashboard (Story 4.8) ───────────────────────────────────
+
+  /**
+   * Lists stations with their latest PriceHistory entry and a stale flag (no
+   * price ever, or last price > 30 days old). Used by the admin Data Freshness
+   * tab to spot coverage gaps.
+   *
+   * Caller must pass already-sanitised values — controller validates against
+   * VALID_VOIVODESHIPS / sortBy whitelist / numeric ranges.
+   */
+  async getFreshnessDashboard(
+    voivodeship: string | null,
+    sortBy: FreshnessSortBy,
+    order: FreshnessSortOrder,
+    page: number,
+    limit: number,
+  ): Promise<FreshnessDashboardDto> {
+    const skip = (page - 1) * limit;
+
+    // Map sortBy + order to safe SQL fragments. Both inputs are pre-validated by
+    // the controller against fixed whitelists, so direct interpolation is safe.
+    const sortColumn =
+      sortBy === 'voivodeship'
+        ? 's.voivodeship'
+        : sortBy === 'priceSource'
+          ? 'lph.source'
+          : 'lph.recorded_at';
+    const direction = order === 'desc' ? 'DESC' : 'ASC';
+    // NULL ordering: "no data" should always surface as the worst case
+    //  - lastPriceAt: NULLS FIRST so stations with zero history appear at the top regardless of asc/desc
+    //  - other sorts: NULLS LAST so missing-classification stations don't squat the first page
+    const nullsClause = sortBy === 'lastPriceAt' ? 'NULLS FIRST' : 'NULLS LAST';
+
+    const dataSql = `
+      SELECT
+        s.id::text         AS "stationId",
+        s.name             AS "stationName",
+        s.address,
+        s.voivodeship,
+        lph.source         AS "priceSource",
+        lph.recorded_at    AS "lastPriceAt"
+      FROM "Station" s
+      LEFT JOIN LATERAL (
+        SELECT source, recorded_at
+        FROM "PriceHistory"
+        WHERE station_id = s.id
+        ORDER BY recorded_at DESC
+        LIMIT 1
+      ) lph ON true
+      WHERE ($1::text IS NULL OR s.voivodeship = $1::text)
+      ORDER BY ${sortColumn} ${direction} ${nullsClause}, s.id ASC
+      LIMIT $2::int OFFSET $3::int
+    `;
+
+    const totalSql = `
+      SELECT COUNT(*)::int AS count FROM "Station" s
+      WHERE ($1::text IS NULL OR s.voivodeship = $1::text)
+    `;
+
+    const staleSql = `
+      SELECT COUNT(*)::int AS count FROM "Station" s
+      LEFT JOIN LATERAL (
+        SELECT recorded_at FROM "PriceHistory"
+        WHERE station_id = s.id ORDER BY recorded_at DESC LIMIT 1
+      ) lph ON true
+      WHERE ($1::text IS NULL OR s.voivodeship = $1::text)
+        AND (lph.recorded_at IS NULL OR lph.recorded_at < NOW() - INTERVAL '30 days')
+    `;
+
+    const [rows, totalRows, staleRows] = await Promise.all([
+      this.prisma.$queryRawUnsafe<
+        Array<{
+          stationId: string;
+          stationName: string;
+          address: string | null;
+          voivodeship: string | null;
+          priceSource: PriceSource | null;
+          lastPriceAt: Date | null;
+        }>
+      >(dataSql, voivodeship, limit, skip),
+      this.prisma.$queryRawUnsafe<Array<{ count: number }>>(totalSql, voivodeship),
+      this.prisma.$queryRawUnsafe<Array<{ count: number }>>(staleSql, voivodeship),
+    ]);
+
+    const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+    const data: FreshnessRowDto[] = rows.map(r => {
+      const lastPriceAt = r.lastPriceAt ? new Date(r.lastPriceAt) : null;
+      const isStale = lastPriceAt === null || lastPriceAt.getTime() < thirtyDaysAgo;
+      return {
+        stationId: r.stationId,
+        stationName: r.stationName,
+        address: r.address,
+        voivodeship: r.voivodeship,
+        priceSource: r.priceSource,
+        lastPriceAt: lastPriceAt ? lastPriceAt.toISOString() : null,
+        isStale,
+      };
+    });
+
+    return {
+      data,
+      total: totalRows[0]?.count ?? 0,
+      page,
+      limit,
+      staleCount: staleRows[0]?.count ?? 0,
+    };
   }
 }

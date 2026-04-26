@@ -150,7 +150,7 @@ const translations = {
       detailAction: 'Szczegóły',
     },
     metrics: {
-      tabs: { pipeline: 'Zdrowie pipeline', funnel: 'Lejek zgłoszeń', product: 'Metryki produktu', cost: 'Koszty API' },
+      tabs: { pipeline: 'Zdrowie pipeline', funnel: 'Lejek zgłoszeń', product: 'Metryki produktu', cost: 'Koszty API', freshness: 'Świeżość danych' },
       period: { today: 'Dziś', '7d': 'Ostatnie 7 dni', '30d': 'Ostatnie 30 dni' },
       pipeline: {
         successRate: 'Skuteczność (ostatnia godz.)',
@@ -205,6 +205,25 @@ const translations = {
         last3Months: 'Ostatnie 3 miesiące',
         imagesLabel: 'Zdjęcia',
         noData: 'Brak danych.',
+      },
+      freshness: {
+        allRegions: 'Wszystkie regiony',
+        sortBy: 'Sortuj po',
+        colName: 'Stacja',
+        colAddress: 'Adres',
+        colVoivodeship: 'Województwo',
+        colSource: 'Źródło ceny',
+        colLastUpdated: 'Ostatnia aktualizacja',
+        colStatus: 'Status',
+        stale: 'Przestarzałe',
+        noData: 'Brak danych',
+        staleCount: 'Stacji bez aktualizacji (30 dni)',
+        sources: {
+          community: 'Społeczność',
+          admin_override: 'Nadpisanie admina',
+          seeded: 'Zainicjowane',
+        },
+        noResults: 'Brak stacji.',
       },
       errorGeneric: 'Błąd ładowania. Spróbuj ponownie.',
     },
@@ -371,7 +390,7 @@ const translations = {
       detailAction: 'View',
     },
     metrics: {
-      tabs: { pipeline: 'Pipeline Health', funnel: 'Contribution Funnel', product: 'Product Metrics', cost: 'API Cost' },
+      tabs: { pipeline: 'Pipeline Health', funnel: 'Contribution Funnel', product: 'Product Metrics', cost: 'API Cost', freshness: 'Data Freshness' },
       period: { today: 'Today', '7d': 'Last 7 days', '30d': 'Last 30 days' },
       pipeline: {
         successRate: 'Success rate (last 1h)',
@@ -426,6 +445,25 @@ const translations = {
         last3Months: 'Last 3 months',
         imagesLabel: 'Images',
         noData: 'No data.',
+      },
+      freshness: {
+        allRegions: 'All regions',
+        sortBy: 'Sort by',
+        colName: 'Station',
+        colAddress: 'Address',
+        colVoivodeship: 'Voivodeship',
+        colSource: 'Price source',
+        colLastUpdated: 'Last updated',
+        colStatus: 'Status',
+        stale: 'Stale',
+        noData: 'No data',
+        staleCount: 'Stations without update (30 days)',
+        sources: {
+          community: 'Community',
+          admin_override: 'Admin override',
+          seeded: 'Seeded',
+        },
+        noResults: 'No stations found.',
       },
       errorGeneric: 'Failed to load. Try again.',
     },
@@ -592,7 +630,7 @@ const translations = {
       detailAction: 'Деталі',
     },
     metrics: {
-      tabs: { pipeline: 'Здоров\'я pipeline', funnel: 'Воронка внесків', product: 'Метрики продукту', cost: 'Витрати API' },
+      tabs: { pipeline: 'Здоров\'я pipeline', funnel: 'Воронка внесків', product: 'Метрики продукту', cost: 'Витрати API', freshness: 'Актуальність даних' },
       period: { today: 'Сьогодні', '7d': 'Останні 7 днів', '30d': 'Останні 30 днів' },
       pipeline: {
         successRate: 'Ефективність (остання год.)',
@@ -648,6 +686,25 @@ const translations = {
         imagesLabel: 'Зображення',
         noData: 'Немає даних.',
       },
+      freshness: {
+        allRegions: 'Всі регіони',
+        sortBy: 'Сортувати за',
+        colName: 'Станція',
+        colAddress: 'Адреса',
+        colVoivodeship: 'Воєводство',
+        colSource: 'Джерело ціни',
+        colLastUpdated: 'Остання оновлення',
+        colStatus: 'Статус',
+        stale: 'Застарілий',
+        noData: 'Немає даних',
+        staleCount: 'Станцій без оновлення (30 днів)',
+        sources: {
+          community: 'Спільнота',
+          admin_override: 'Перевизначення адміна',
+          seeded: 'Ініціалізовано',
+        },
+        noResults: 'Станцій не знайдено.',
+      },
       errorGeneric: 'Помилка завантаження. Спробуйте ще раз.',
     },
     review: {
@@ -687,7 +744,7 @@ const translations = {
 } as const;
 
 export interface MetricsTranslations {
-  tabs: { pipeline: string; funnel: string; product: string; cost: string };
+  tabs: { pipeline: string; funnel: string; product: string; cost: string; freshness: string };
   period: { today: string; '7d': string; '30d': string };
   pipeline: {
     successRate: string;
@@ -735,6 +792,21 @@ export interface MetricsTranslations {
     last3Months: string;
     imagesLabel: string;
     noData: string;
+  };
+  freshness: {
+    allRegions: string;
+    sortBy: string;
+    colName: string;
+    colAddress: string;
+    colVoivodeship: string;
+    colSource: string;
+    colLastUpdated: string;
+    colStatus: string;
+    stale: string;
+    noData: string;
+    staleCount: string;
+    sources: { community: string; admin_override: string; seeded: string };
+    noResults: string;
   };
   errorGeneric: string;
 }

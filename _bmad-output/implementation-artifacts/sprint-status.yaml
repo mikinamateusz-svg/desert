@@ -33,9 +33,11 @@ epics:
       - id: 0.2
         title: "Admin Test Infrastructure"
         file: 0-2-admin-test-infrastructure.md
-        status: ready-for-dev
+        status: review
         ready_date: 2026-04-26
-        note: "Bootstrap Jest + msw for apps/admin (currently zero test coverage). Lightweight-broad scope: adminFetch + login + one server action per shape (GET / GET+params / POST trigger) + middleware + CI integration. ~5h estimated. Triggered by two prod-affecting admin bugs caught only by manual smoke this week (4.7 metrics actions.ts ReferenceError; missing API_URL on staging Vercel). Pattern: future stories add tests for new actions; existing 21 actions inherit coverage via the adminFetch tests."
+        dev_started: 2026-04-26
+        dev_completed: 2026-04-26
+        note: "Bootstrap Jest + ts-jest for apps/admin (was zero test coverage). 30 tests across 5 suites, ~10s locally. Covers adminFetch (transitive coverage for every action's error paths) + login (security-critical role gating) + one action per shape (GET, GET+params, POST trigger with 409) + middleware (auth gate). Pivoted from msw v2 to in-house fetch-spy helper due to msw's ESM/CJS incompatibility with Jest CommonJS — same coverage, no dependency complexity. Turbo wires admin tests into root `pnpm test` automatically — no CI workflow changes. README in apps/admin/test/ documents the pattern for future stories."
 
   - id: 1
     name: User Registration & Authentication

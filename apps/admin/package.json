@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start --port 3003",
     "lint": "eslint . --max-warnings 0",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@desert/types": "workspace:*",
@@ -17,13 +19,53 @@
   },
   "devDependencies": {
     "@desert/config": "workspace:*",
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.13.10",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "eslint": "^9.22.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.6",
     "typescript-eslint": "^8.26.1",
     "tailwindcss": "^4.0.12",
     "@tailwindcss/postcss": "^4.0.12",
     "typescript": "^5.8.3"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts",
+      "tsx"
+    ],
+    "rootDir": ".",
+    "testRegex": ".*\\.spec\\.tsx?$",
+    "transform": {
+      "^.+\\.(t|j)sx?$": [
+        "ts-jest",
+        {
+          "tsconfig": {
+            "module": "commonjs",
+            "moduleResolution": "node",
+            "verbatimModuleSyntax": false,
+            "jsx": "react-jsx",
+            "esModuleInterop": true,
+            "allowImportingTsExtensions": false
+          }
+        }
+      ]
+    },
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/.next/"
+    ],
+    "transformIgnorePatterns": [
+      "/node_modules/"
+    ]
   }
 }

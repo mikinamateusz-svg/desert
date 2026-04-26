@@ -30,6 +30,15 @@ epics:
         rollout_gate: "Must complete AFTER Step 1 (solo testing) and BEFORE Step 2 (friends & family beta)"
         note: "Bundles 8 deferred fixes: ThrottlerGuard global registration, Submission+PriceHistory DB indexes, updated_at DB defaults, stale push token cleanup, market-signal rate limit, BullMQ separate Redis connections, StationFuelStaleness 7-day TTL."
 
+      - id: 0.3
+        title: "OCR Pipeline Null-Price Guard"
+        file: 0-3-ocr-null-price-guard.md
+        status: review
+        ready_date: 2026-04-26
+        dev_started: 2026-04-26
+        dev_completed: 2026-04-26
+        note: "Triggered by today's prod admin submissions crash (TypeError on null toFixed). UI hotfix shipped 38eac36; this story closes the upstream hole — pipeline filters null/non-finite price_per_litre entries before persist, rejects via existing no_prices_extracted flag if all entries are null. Backend-only, no new flag_reason, no UI changes. +4 tests, 873/873 api pass, tsc clean. Mixed null+valid arrays drop nulls and proceed (preserves recoverable data); all-null arrays reject as no_prices_extracted (merges into existing funnel bucket)."
+
       - id: 0.2
         title: "Admin Test Infrastructure"
         file: 0-2-admin-test-infrastructure.md

@@ -958,6 +958,96 @@ describe('PhotoPipelineWorker', () => {
 
         await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
       });
+
+      // Story 0.3 — null-price guard
+      describe('null/non-finite price_per_litre handling', () => {
+        const allNullResult = {
+          ...successfulOcrResult,
+          prices: [
+            { fuel_type: 'PB_95', price_per_litre: null as unknown as number },
+            { fuel_type: 'ON', price_per_litre: NaN },
+          ],
+        };
+
+        const mixedResult = {
+          ...successfulOcrResult,
+          prices: [
+            { fuel_type: 'PB_95', price_per_litre: 6.19 },
+            { fuel_type: 'ON', price_per_litre: null as unknown as number },
+            { fuel_type: 'ON_PREMIUM', price_per_litre: 6.99 },
+          ],
+        };
+
+        it('rejects with no_prices_extracted when EVERY OCR price has null/non-finite price_per_litre', async () => {
+          mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+          mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+          mockOcrService.extractPrices.mockResolvedValueOnce(allNullResult);
+
+          await capturedProcessor!(makeJob('sub-123'));
+
+          // Same rejection path as the empty-array case — keeps the funnel bucket merged
+          expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+            expect.objectContaining({
+              data: expect.objectContaining({
+                status: 'rejected',
+                flag_reason: 'no_prices_extracted',
+              }),
+            }),
+          );
+        });
+
+        it('does NOT persist a price_data row when all prices are null (skips the persist step)', async () => {
+          mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+          mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+          mockOcrService.extractPrices.mockResolvedValueOnce(allNullResult);
+
+          await capturedProcessor!(makeJob('sub-123'));
+
+          // The persist step writes price_data + ocr_confidence_score together; on
+          // the all-null path we should never see that shape — only the rejection update.
+          const updateCalls = mockPrismaService.submission.update.mock.calls as Array<
+            [{ where: unknown; data: Record<string, unknown> }]
+          >;
+          const persistCalls = updateCalls.filter(([args]) => 'price_data' in args.data);
+          expect(persistCalls).toHaveLength(0);
+        });
+
+        it('drops only the null entries and persists the remaining valid prices when mixed', async () => {
+          mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+          mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+          mockOcrService.extractPrices.mockResolvedValueOnce(mixedResult);
+
+          await capturedProcessor!(makeJob('sub-123'));
+
+          // The persist call should contain ONLY the two valid entries — null ON entry dropped
+          expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+            expect.objectContaining({
+              where: { id: 'sub-123' },
+              data: expect.objectContaining({
+                price_data: [
+                  { fuel_type: 'PB_95', price_per_litre: 6.19 },
+                  { fuel_type: 'ON_PREMIUM', price_per_litre: 6.99 },
+                ],
+              }),
+            }),
+          );
+        });
+
+        it('does NOT reject when at least one valid price remains after filtering', async () => {
+          mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+          mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+          mockOcrService.extractPrices.mockResolvedValueOnce(mixedResult);
+
+          await capturedProcessor!(makeJob('sub-123'));
+
+          // No rejection update should be made — submission proceeds normally
+          const updateCalls = mockPrismaService.submission.update.mock.calls as Array<
+            [{ where: unknown; data: Record<string, unknown> }]
+          >;
+          const rejectCalls = updateCalls.filter(([args]) => args.data.status === 'rejected');
+          expect(rejectCalls).toHaveLength(0);
+        });
+      });
     });
 
     describe('price out of range', () => {

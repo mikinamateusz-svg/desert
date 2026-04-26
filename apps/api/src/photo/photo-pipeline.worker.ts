@@ -418,19 +418,38 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       return null;
     }
 
-    // No prices extracted — reject to keep data quality high (see Q1 in story spec)
-    if (ocrResult.prices.length === 0) {
+    // Story 0.3: drop entries where price_per_litre is null/non-finite BEFORE the
+    // empty check — historically these slipped through (validatePriceBands' band
+    // comparison silently accepts null in JS) and ended up persisted, then crashed
+    // the admin UI on render. Filter here so downstream code (band check, persist,
+    // research retention) only ever sees usable entries. Forward the original
+    // ocrResult.prices to rejectSubmission for forensic logging if everything got
+    // dropped.
+    const cleanPrices = ocrResult.prices.filter(
+      (p) => typeof p.price_per_litre === 'number' && Number.isFinite(p.price_per_litre),
+    );
+    const droppedCount = ocrResult.prices.length - cleanPrices.length;
+    if (droppedCount > 0) {
+      this.logger.warn(
+        `Submission ${submission.id}: OCR returned ${ocrResult.prices.length} prices, ` +
+          `${droppedCount} had null/non-finite price_per_litre — dropped before persist`,
+      );
+    }
+
+    // No usable prices extracted (either OCR returned an empty array, or every entry
+    // had a non-finite price_per_litre) — reject to keep data quality high (see Q1 in story spec)
+    if (cleanPrices.length === 0) {
       await this.rejectSubmission(submission, 'no_prices_extracted', ocrResult.prices, ocrResult.confidence_score);
       return null;
     }
 
     // AC4: validate price bands
-    const invalidFuelType = this.ocrService.validatePriceBands(ocrResult.prices);
+    const invalidFuelType = this.ocrService.validatePriceBands(cleanPrices);
     if (invalidFuelType) {
       this.logger.warn(
         `Submission ${submission.id}: price out of range for ${invalidFuelType} — rejecting`,
       );
-      await this.rejectSubmission(submission, 'price_out_of_range', ocrResult.prices, ocrResult.confidence_score);
+      await this.rejectSubmission(submission, 'price_out_of_range', cleanPrices, ocrResult.confidence_score);
       return null;
     }
 
@@ -439,7 +458,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     await this.prisma.submission.update({
       where: { id: submission.id },
       data: {
-        price_data: ocrResult.prices as unknown as Prisma.InputJsonValue,
+        price_data: cleanPrices as unknown as Prisma.InputJsonValue,
         ocr_confidence_score: ocrResult.confidence_score,
       },
     });
@@ -454,7 +473,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       this.logger.warn(`Failed to record hash dedup key: ${e.message}`),
     );
 
-    return { trustScore, ocrPrices: ocrResult.prices };
+    return { trustScore, ocrPrices: cleanPrices };
   }
 
   // ── Logo recognition step ──────────────────────────────────────────────────

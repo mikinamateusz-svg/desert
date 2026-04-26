@@ -2,7 +2,9 @@ export interface FlaggedSubmissionRow {
   id: string;
   station_id: string | null;
   station_name: string | null;
-  price_data: Array<{ fuel_type: string; price_per_litre: number }>;
+  // JSONB column — runtime shape can have null price_per_litre on malformed
+  // OCR rows. Type widened to match observed prod data; UI must guard.
+  price_data: Array<{ fuel_type: string; price_per_litre: number | null }>;
   ocr_confidence_score: number | null;
   created_at: string;
   user_id: string;

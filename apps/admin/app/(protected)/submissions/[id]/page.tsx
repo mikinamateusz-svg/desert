@@ -57,12 +57,19 @@ export default async function SubmissionDetailPage({ params }: Props) {
             </DetailRow>
             <DetailRow label={t.review.columns.prices}>
               <ul className="space-y-0.5">
-                {submission.price_data.map((p) => (
-                  <li key={p.fuel_type} className="text-sm">
-                    <span className="font-mono text-xs text-gray-500">{p.fuel_type}</span>{' '}
-                    <span className="font-medium">{p.price_per_litre.toFixed(3)} zł/l</span>
-                  </li>
-                ))}
+                {Array.isArray(submission.price_data) &&
+                  submission.price_data.map((p) => {
+                    const priceText =
+                      typeof p.price_per_litre === 'number' && Number.isFinite(p.price_per_litre)
+                        ? `${p.price_per_litre.toFixed(3)} zł/l`
+                        : '— zł/l';
+                    return (
+                      <li key={p.fuel_type} className="text-sm">
+                        <span className="font-mono text-xs text-gray-500">{p.fuel_type}</span>{' '}
+                        <span className="font-medium">{priceText}</span>
+                      </li>
+                    );
+                  })}
               </ul>
             </DetailRow>
             <DetailRow label={t.review.confidenceLabel}>

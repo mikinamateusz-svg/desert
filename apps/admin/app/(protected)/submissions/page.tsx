@@ -9,8 +9,19 @@ interface Props {
   searchParams: Promise<{ page?: string }>;
 }
 
-function formatPrice(priceData: Array<{ fuel_type: string; price_per_litre: number }>): string {
-  return priceData.map((p) => `${p.fuel_type} ${p.price_per_litre.toFixed(2)} zł`).join(', ');
+function formatPrice(
+  priceData: Array<{ fuel_type: string; price_per_litre: number | null }> | null | undefined,
+): string {
+  if (!Array.isArray(priceData)) return '—';
+  return priceData
+    .map((p) => {
+      const price =
+        typeof p.price_per_litre === 'number' && Number.isFinite(p.price_per_litre)
+          ? `${p.price_per_litre.toFixed(2)} zł`
+          : '—';
+      return `${p.fuel_type ?? '?'} ${price}`;
+    })
+    .join(', ');
 }
 
 export default async function SubmissionsPage({ searchParams }: Props) {

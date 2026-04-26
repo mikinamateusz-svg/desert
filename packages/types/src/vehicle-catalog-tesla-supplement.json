@@ -1,0 +1,20 @@
+{
+  "$schema_version": 1,
+  "source": "manually-curated supplement (Tesla full modern lineup, 2008-present, including notable variants)",
+  "license": "Self-curated facts",
+  "makes": {
+    "Tesla": {
+      "models": [
+        { "name": "Tesla Roadster (1st gen)", "year_from": 2008, "year_to": 2012 },
+        { "name": "Tesla Model S", "year_from": 2012, "year_to": null },
+        { "name": "Tesla Model S Plaid", "year_from": 2021, "year_to": null },
+        { "name": "Tesla Model X", "year_from": 2015, "year_to": null },
+        { "name": "Tesla Model 3", "year_from": 2017, "year_to": null },
+        { "name": "Tesla Model 3 Performance", "year_from": 2018, "year_to": null },
+        { "name": "Tesla Model Y", "year_from": 2020, "year_to": null },
+        { "name": "Tesla Cybertruck", "year_from": 2023, "year_to": null },
+        { "name": "Tesla Roadster (2nd gen)", "year_from": 2026, "year_to": null }
+      ]
+    }
+  }
+}

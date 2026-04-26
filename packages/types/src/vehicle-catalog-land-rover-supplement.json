@@ -1,0 +1,32 @@
+{
+  "$schema_version": 1,
+  "source": "manually-curated supplement (Land Rover/Range Rover lineup, major Polish-market generations 1970-present)",
+  "license": "Self-curated facts",
+  "makes": {
+    "Land Rover": {
+      "models": [
+        { "name": "Land Rover Defender (L316)", "year_from": 1990, "year_to": 2016 },
+        { "name": "Land Rover Defender (L663)", "year_from": 2020, "year_to": null },
+        { "name": "Land Rover Discovery I", "year_from": 1989, "year_to": 1998 },
+        { "name": "Land Rover Discovery II", "year_from": 1998, "year_to": 2004 },
+        { "name": "Land Rover Discovery III (L319)", "year_from": 2004, "year_to": 2009 },
+        { "name": "Land Rover Discovery IV (L319)", "year_from": 2009, "year_to": 2017 },
+        { "name": "Land Rover Discovery V (L462)", "year_from": 2017, "year_to": null },
+        { "name": "Land Rover Discovery Sport (L550)", "year_from": 2014, "year_to": null },
+        { "name": "Land Rover Freelander (L314)", "year_from": 1997, "year_to": 2006 },
+        { "name": "Land Rover Freelander 2 (L359)", "year_from": 2006, "year_to": 2014 },
+        { "name": "Land Rover Range Rover (Classic)", "year_from": 1970, "year_to": 1996 },
+        { "name": "Land Rover Range Rover (P38A)", "year_from": 1994, "year_to": 2002 },
+        { "name": "Land Rover Range Rover (L322)", "year_from": 2002, "year_to": 2012 },
+        { "name": "Land Rover Range Rover (L405)", "year_from": 2012, "year_to": 2022 },
+        { "name": "Land Rover Range Rover (L460)", "year_from": 2022, "year_to": null },
+        { "name": "Land Rover Range Rover Sport (L320)", "year_from": 2005, "year_to": 2013 },
+        { "name": "Land Rover Range Rover Sport (L494)", "year_from": 2013, "year_to": 2022 },
+        { "name": "Land Rover Range Rover Sport (L461)", "year_from": 2022, "year_to": null },
+        { "name": "Land Rover Range Rover Velar (L560)", "year_from": 2017, "year_to": null },
+        { "name": "Land Rover Range Rover Evoque (L538)", "year_from": 2011, "year_to": 2018 },
+        { "name": "Land Rover Range Rover Evoque (L551)", "year_from": 2018, "year_to": null }
+      ]
+    }
+  }
+}

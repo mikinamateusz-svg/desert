@@ -1,0 +1,27 @@
+{
+  "$schema_version": 1,
+  "source": "manually-curated supplement (BMW-era Mini, 2001-present, missing from Wikidata under 'Mini' brand)",
+  "license": "Self-curated facts",
+  "makes": {
+    "Mini": {
+      "models": [
+        { "name": "Mini Hatch (R50/R53)", "year_from": 2001, "year_to": 2006 },
+        { "name": "Mini Hatch (R56)", "year_from": 2006, "year_to": 2014 },
+        { "name": "Mini Hatch (F55/F56)", "year_from": 2014, "year_to": 2024 },
+        { "name": "Mini Hatch (F66)", "year_from": 2024, "year_to": null },
+        { "name": "Mini Convertible (R52)", "year_from": 2004, "year_to": 2008 },
+        { "name": "Mini Convertible (R57)", "year_from": 2008, "year_to": 2015 },
+        { "name": "Mini Convertible (F57)", "year_from": 2015, "year_to": 2024 },
+        { "name": "Mini Clubman (R55)", "year_from": 2007, "year_to": 2014 },
+        { "name": "Mini Clubman (F54)", "year_from": 2015, "year_to": 2024 },
+        { "name": "Mini Countryman (R60)", "year_from": 2010, "year_to": 2017 },
+        { "name": "Mini Countryman (F60)", "year_from": 2017, "year_to": 2024 },
+        { "name": "Mini Countryman (U25)", "year_from": 2024, "year_to": null },
+        { "name": "Mini Coupe (R58)", "year_from": 2011, "year_to": 2015 },
+        { "name": "Mini Roadster (R59)", "year_from": 2012, "year_to": 2015 },
+        { "name": "Mini Paceman (R61)", "year_from": 2012, "year_to": 2016 },
+        { "name": "Mini Aceman (J05)", "year_from": 2024, "year_to": null }
+      ]
+    }
+  }
+}

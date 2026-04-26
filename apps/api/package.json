@@ -13,7 +13,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "promote-admin": "ts-node -r tsconfig-paths/register scripts/promote-admin.ts",
-    "change-password": "ts-node -r tsconfig-paths/register scripts/change-password.ts"
+    "change-password": "ts-node -r tsconfig-paths/register scripts/change-password.ts",
+    "build-vehicle-dict": "ts-node -r tsconfig-paths/register scripts/build-vehicle-dictionary-makes-models.ts",
+    "filter-vehicle-dict": "ts-node -r tsconfig-paths/register scripts/filter-vehicle-dictionary.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.82.0",

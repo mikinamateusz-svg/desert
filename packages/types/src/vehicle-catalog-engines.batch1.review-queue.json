@@ -1,0 +1,1180 @@
+{
+  "$schema_version": 1,
+  "generated_at": "2026-04-26T21:26:37.605Z",
+  "batch": "feasibility-1",
+  "summary": {
+    "review_engine_count": 39,
+    "review_model_count": 111
+  },
+  "engines": [
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Golf",
+      "engine_name": "1.5 TGI 130 KM (CNG, Mk8)",
+      "confidence": "medium",
+      "year_from": 2020,
+      "year_to": 2024,
+      "fuel_type": "CNG",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Golf Sportsvan",
+      "engine_name": "1.5 TGI 130 KM (CNG)",
+      "confidence": "medium",
+      "year_from": 2018,
+      "year_to": 2020,
+      "fuel_type": "CNG",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Polo",
+      "engine_name": "1.4 TDI 75 KM (Mk5)",
+      "confidence": "medium",
+      "year_from": 2009,
+      "year_to": 2014,
+      "fuel_type": "ON",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Polo",
+      "engine_name": "1.0 TGI 90 KM (CNG, Mk6)",
+      "confidence": "medium",
+      "year_from": 2018,
+      "year_to": 2021,
+      "fuel_type": "CNG",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Polo Mk1",
+      "engine_name": "0.9 40 KM",
+      "confidence": "medium",
+      "year_from": 1975,
+      "year_to": 1981,
+      "fuel_type": "PB_95",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Polo Mk1",
+      "engine_name": "1.1 50 KM",
+      "confidence": "medium",
+      "year_from": 1975,
+      "year_to": 1981,
+      "fuel_type": "PB_95",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Polo Mk1",
+      "engine_name": "1.3 60 KM",
+      "confidence": "medium",
+      "year_from": 1977,
+      "year_to": 1981,
+      "fuel_type": "PB_95",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Polo Mk2",
+      "engine_name": "1.0 45 KM",
+      "confidence": "medium",
+      "year_from": 1981,
+      "year_to": 1994,
+      "fuel_type": "PB_95",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Polo Mk2",
+      "engine_name": "1.1 50 KM",
+      "confidence": "medium",
+      "year_from": 1981,
+      "year_to": 1990,
+      "fuel_type": "PB_95",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Polo Mk2",
+      "engine_name": "1.3 55 KM",
+      "confidence": "medium",
+      "year_from": 1981,
+      "year_to": 1994,
+      "fuel_type": "PB_95",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Polo Mk2",
+      "engine_name": "1.3 G40 113 KM",
+      "confidence": "medium",
+      "year_from": 1986,
+      "year_to": 1994,
+      "fuel_type": "PB_98",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Polo Mk2",
+      "engine_name": "1.4 D 48 KM",
+      "confidence": "medium",
+      "year_from": 1986,
+      "year_to": 1994,
+      "fuel_type": "ON",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Polo Mk5",
+      "engine_name": "1.4 TDI 75 KM",
+      "confidence": "medium",
+      "year_from": 2009,
+      "year_to": 2014,
+      "fuel_type": "ON",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Passat",
+      "engine_name": "1.4 TSI 150 KM EcoFuel (CNG, B7)",
+      "confidence": "medium",
+      "year_from": 2010,
+      "year_to": 2014,
+      "fuel_type": "CNG",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Passat",
+      "engine_name": "3.6 V6 300 KM R-Line (B7)",
+      "confidence": "medium",
+      "year_from": 2010,
+      "year_to": 2014,
+      "fuel_type": "PB_98",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Passat",
+      "engine_name": "2.0 TSI 265 KM 4Motion (B9)",
+      "confidence": "medium",
+      "year_from": 2023,
+      "year_to": null,
+      "fuel_type": "PB_98",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Tiguan",
+      "engine_name": "2.0 TDI 184 KM (Mk1)",
+      "confidence": "medium",
+      "year_from": 2014,
+      "year_to": 2016,
+      "fuel_type": "ON",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Tiguan",
+      "engine_name": "2.0 TDI 240 KM Bi-TDI (Mk2)",
+      "confidence": "medium",
+      "year_from": 2017,
+      "year_to": 2020,
+      "fuel_type": "ON",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Touareg",
+      "engine_name": "6.0 W12 450 KM (7L)",
+      "confidence": "medium",
+      "year_from": 2004,
+      "year_to": 2010,
+      "fuel_type": "PB_98",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Touareg",
+      "engine_name": "3.0 TSI Hybrid 380 KM (7P)",
+      "confidence": "medium",
+      "year_from": 2010,
+      "year_to": 2018,
+      "fuel_type": "PHEV",
+      "reason": "Hybrid combined output 380 KM (333 KM ICE + electric)"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Caddy",
+      "engine_name": "1.4 60 KM (Mk2)",
+      "confidence": "medium",
+      "year_from": 1995,
+      "year_to": 2003,
+      "fuel_type": "PB_95",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Caddy",
+      "engine_name": "1.6 75 KM (Mk2)",
+      "confidence": "medium",
+      "year_from": 1995,
+      "year_to": 2003,
+      "fuel_type": "PB_95",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Caddy",
+      "engine_name": "1.6 EcoFuel 109 KM (CNG, Mk3)",
+      "confidence": "medium",
+      "year_from": 2007,
+      "year_to": 2010,
+      "fuel_type": "CNG",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Caddy",
+      "engine_name": "1.4 TGI 110 KM (CNG, Mk4)",
+      "confidence": "medium",
+      "year_from": 2015,
+      "year_to": 2020,
+      "fuel_type": "CNG",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Beetle",
+      "engine_name": "2.3 V5 170 KM (A4)",
+      "confidence": "medium",
+      "year_from": 2000,
+      "year_to": 2005,
+      "fuel_type": "PB_95",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Beetle",
+      "engine_name": "1.8 TSI 170 KM (A5)",
+      "confidence": "medium",
+      "year_from": 2014,
+      "year_to": 2019,
+      "fuel_type": "PB_95",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Jetta VII",
+      "engine_name": "1.4 TSI 150 KM",
+      "confidence": "medium",
+      "year_from": 2018,
+      "year_to": null,
+      "fuel_type": "PB_95",
+      "reason": "NA-market focused, limited PL availability"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Jetta VII",
+      "engine_name": "2.0 TSI GLI 230 KM",
+      "confidence": "medium",
+      "year_from": 2019,
+      "year_to": null,
+      "fuel_type": "PB_98",
+      "reason": "NA-market focused"
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen LT",
+      "engine_name": "2.3 143 KM (2nd gen)",
+      "confidence": "medium",
+      "year_from": 1996,
+      "year_to": 2006,
+      "fuel_type": "PB_95",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Octavia",
+      "engine_name": "1.6 MPI 102 KM LPG (Mk2)",
+      "confidence": "medium",
+      "year_from": 2009,
+      "year_to": 2013,
+      "fuel_type": "LPG",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Octavia",
+      "engine_name": "1.6 110 KM MPI LPG (Mk3)",
+      "confidence": "medium",
+      "year_from": 2013,
+      "year_to": 2017,
+      "fuel_type": "LPG",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Octavia",
+      "engine_name": "1.5 G-TEC 130 KM (CNG, Mk4)",
+      "confidence": "medium",
+      "year_from": 2020,
+      "year_to": 2024,
+      "fuel_type": "CNG",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Octavia II",
+      "engine_name": "1.6 MPI 102 KM LPG",
+      "confidence": "medium",
+      "year_from": 2009,
+      "year_to": 2013,
+      "fuel_type": "LPG",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Octavia IV",
+      "engine_name": "1.5 G-TEC 130 KM (CNG)",
+      "confidence": "medium",
+      "year_from": 2020,
+      "year_to": 2024,
+      "fuel_type": "CNG",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Kamiq",
+      "engine_name": "1.0 G-TEC 90 KM (CNG)",
+      "confidence": "medium",
+      "year_from": 2019,
+      "year_to": 2021,
+      "fuel_type": "CNG",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Scala",
+      "engine_name": "1.0 G-TEC 90 KM (CNG)",
+      "confidence": "medium",
+      "year_from": 2019,
+      "year_to": 2021,
+      "fuel_type": "CNG",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Citigo",
+      "engine_name": "1.0 CNG 68 KM (G-TEC)",
+      "confidence": "medium",
+      "year_from": 2013,
+      "year_to": 2020,
+      "fuel_type": "CNG",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Mini",
+      "model_key": "Mini Hatch (F55/F56)",
+      "engine_name": "John Cooper Works 2.0 turbo 192 KM",
+      "confidence": "medium",
+      "year_from": 2018,
+      "year_to": 2024,
+      "fuel_type": "PB_98",
+      "reason": "spec uncertainty / partial PL availability"
+    },
+    {
+      "make": "Mini",
+      "model_key": "Mini Aceman (J05)",
+      "engine_name": "John Cooper Works Electric 258 KM (54.2 kWh)",
+      "confidence": "medium",
+      "year_from": 2024,
+      "year_to": null,
+      "fuel_type": "EV",
+      "reason": "JCW Aceman EV announced; spec confirmation pending broader market launch"
+    }
+  ],
+  "models": [
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Golf GTI",
+      "model_confidence": "medium",
+      "engine_count": 12,
+      "reason": "Sporty subset of Golf range; entries duplicate Golf umbrella for users who search GTI specifically."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Polo Mk1",
+      "model_confidence": "medium",
+      "engine_count": 3,
+      "reason": "Pre-1990 model; minimal current PL fleet relevance."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Polo Mk2",
+      "model_confidence": "medium",
+      "engine_count": 5,
+      "reason": "Pre-1995 model; uncommon in current PL fleet."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Jetta",
+      "model_confidence": "medium",
+      "engine_count": 13,
+      "reason": "PL Jetta market is much smaller than Bora/Golf; engines listed for A5/A6 generations."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Jetta VII",
+      "model_confidence": "low",
+      "engine_count": 2,
+      "reason": "Jetta VII (A7, 2018+) primarily a North American/China market model; rarely sold in Poland through official dealers."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen LT",
+      "model_confidence": "medium",
+      "engine_count": 7,
+      "reason": "Commercial van (now succeeded by Crafter); LT1 (1975-1996) omitted as marginal PL fleet relevance."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Atlas",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "NA-market only (not sold in Poland through official channels)."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Bora (China)",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "China-market only model."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen EA 48",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-production prototype, never sold."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen GX3",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Concept three-wheeler, never produced."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen ID. UNYX",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "China-market EV (joint venture)."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen ID.6 Crozz",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "China-market EV (FAW-VW)."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen ID.6 X",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "China-market EV (SAIC-VW)."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Kommandeurswagen",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "WW2 military vehicle."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Samba",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage Type 2 Microbus variant; no current PL fleet relevance."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Talagon",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "China-market only (SAIC-VW large SUV)."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Taos",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "NA/Latin America-only crossover (not sold in PL)."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Tavendor",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "China-market only (FAW-VW)."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Tayron",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Originally China-only; new Tayron 2024 entered EU but distinct model."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Teramont",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "China/Russia/ME-market large SUV (Atlas badge)."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Vento (A05)",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "India/Mexico-market sedan (not sold in PL)."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Viloran",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "China-market premium MPV."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Virtus",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "India/Brazil-market sedan (not sold in PL)."
+    },
+    {
+      "make": "Volkswagen",
+      "model_key": "Volkswagen Polo Sedan",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Russia/India/Mexico-market sedan derivative; not sold in PL."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 100",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1980 Czechoslovak small car; minimal current PL fleet relevance."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 1000 MB",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1980 small car."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 1000 MB Combi",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1980 small car estate."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 1000 MB/1100 MB",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1980 small car (umbrella)."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 1000 MBX/1100 MBX",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1980 small car coupe."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 104",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1985 small car."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 110",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1980 small car."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 110 R",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1980 coupe."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 1100 MB",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1980 small car."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 1100 MBX",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1980 small car."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 1100 OHC",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage racing prototype."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 1101/1102",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Post-WWII Czech car."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 1102",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Post-WWII Czech car."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 120",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1995 Czech small car (some PL fleet legacy but very old)."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 120 GLS",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1990 trim variant."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 120 S",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1990 trim variant."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 1200",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage Czech car."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 1201",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage Czech car."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 1202",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage Czech utility."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 1202 Kamyonet",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage Turkish-market variant."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 1203",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage van."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 125",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1995 small car."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 130",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1995 small car."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 135",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1995 small car."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 136",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1995 small car."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 154",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1990 racing prototype."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 206",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 254",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage truck."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 256",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage truck."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 304",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage truck."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 306",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage truck."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 4 R",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 420",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 422",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 430",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 440",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage Czech car."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 450",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage Czech roadster."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 504",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage truck."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 506",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage truck."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 6 R",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 633",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 637",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 645",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 650",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 720",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1980 prototype."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 740",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1995 model platform (basis for 105/120)."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 760",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1990 prototype."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 860",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 903",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 935",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII prototype."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda 973",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage prototype."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Eltra",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage utility EV (Citroen-derived); marginal PL fleet."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Epiq",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Concept/pre-production small EV; not yet on sale."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Fabia Rally2 evo",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Rally car (not road-legal); not relevant for fuel logging."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Favorit sedan",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Sedan variant of Favorit; very rare in PL fleet today."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Felicia Fun",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Special pickup variant of Felicia; engines same as Felicia."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Forman Plus",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Trim variant of Forman."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Forman Praktik",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Commercial variant of Forman."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Garde",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-1990 coupe; very rare in PL fleet today."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Joyster",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Concept car, never produced."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Kamiq (China)",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "China-market only (different model from EU Kamiq)."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Kodiaq GT",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "China-market only coupe-SUV."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Kushaq",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "India-market only crossover."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Kylaq",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "India-market only sub-compact SUV."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda MissionL",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Concept car, basis for Rapid."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda MOŽ-2",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage Soviet-era prototype."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Octavia (1959)",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Original 1959 Octavia (unrelated to modern Octavia)."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Octavia Combi (1961 - 1971)",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage estate of original Octavia."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Octavia Super",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage trim variant."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Octavia Touring Sport (1960 - 1964)",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage rally variant."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Pick-up",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Felicia-based pickup; engines same as Felicia."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Popular",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Praktik",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Felicia-based commercial; engines same as Felicia."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Rapid (China)",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "China-market only sedan."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Rapid (India)",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "India-market only sedan."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Rapid 2200",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Rapid Six",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Rapid Sport",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage prototype."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Sagitta",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Pre-WWII vintage."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Sentinel",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage steam truck."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Slavia",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "India-market only sedan."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Sport",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage racing roadster."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Super Sport",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage racing prototype."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda Tudor (2002)",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Concept car, never produced."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda VisionC",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Concept car, basis for Superb III."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Škoda VOS",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Vintage Soviet-era prototype."
+    },
+    {
+      "make": "Skoda",
+      "model_key": "Skoda Yeti Roadster",
+      "model_confidence": "low",
+      "engine_count": 0,
+      "reason": "Concept car, never produced."
+    }
+  ]
+}

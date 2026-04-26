@@ -1,14 +1,10 @@
 'use server';
 
+// Files marked 'use server' may only export async functions — see types.ts
+// for SyncStatusResult and the metrics actions.ts hotfix for the cautionary tale.
 import { revalidatePath } from 'next/cache';
 import { adminFetch, AdminApiError } from '../../../lib/admin-api';
-
-export interface SyncStatusResult {
-  status: 'idle' | 'running' | 'failed';
-  lastCompletedAt: string | null;
-  lastFailedAt: string | null;
-  stationCount: number;
-}
+import type { SyncStatusResult } from './types';
 
 export async function fetchSyncStatus(): Promise<{ data?: SyncStatusResult; error?: string }> {
   try {

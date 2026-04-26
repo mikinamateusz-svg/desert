@@ -778,8 +778,13 @@ epics:
       - id: 4.10
         title: Admin UI — Manual Station Sync Trigger
         file: 4-10-admin-ui-station-sync-trigger.md
-        status: ready-for-dev
+        status: review
         ready_date: 2026-04-07
+        dev_started: 2026-04-26
+        dev_completed: 2026-04-26
+        review_date: 2026-04-26
+        review_findings: "Implementation already in code from prior session (commits 5bbd669 + 6226f55, including its own review pass addressing 4 findings). This pass: 1 patch applied (P-1 defensive split — moved SyncStatusResult interface from actions.ts to a new types.ts; mirrors the metrics actions.ts hotfix shipped earlier today; preventive against the same 'use server' Turbopack runtime bug). 1 deferred (D-1 T4 unit tests for fetchSyncStatus + triggerSync — admin app has no test infrastructure; deferred to new Story 0.2 — Admin Test Infrastructure)."
+        patches_applied: "2026-04-26 — P-1 applied (types.ts created; actions.ts + StationSyncDashboard.tsx updated to import SyncStatusResult from ./types). tsc clean; next build clean; /station-sync route registered."
 
   - epic: 5
     stories:

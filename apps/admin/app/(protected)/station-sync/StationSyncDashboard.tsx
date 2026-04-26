@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import type { StationSyncTranslations } from '../../../lib/i18n';
-import { fetchSyncStatus, triggerSync, type SyncStatusResult } from './actions';
+import { fetchSyncStatus, triggerSync } from './actions';
+import type { SyncStatusResult } from './types';
 
 interface Props {
   t: StationSyncTranslations;

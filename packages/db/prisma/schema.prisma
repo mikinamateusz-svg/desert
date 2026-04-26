@@ -69,6 +69,7 @@ model User {
   notificationPreference   NotificationPreference?
   userConsents             UserConsent[]
   anomalyAlerts            AnomalyAlert[]
+  vehicles                 Vehicle[]
 }
 
 model Station {
@@ -286,6 +287,36 @@ model PriceHistory {
   station     Station     @relation(fields: [station_id], references: [id], onDelete: Cascade)
 
   @@index([station_id, fuel_type, recorded_at(sort: Desc)])
+}
+
+
+model Vehicle {
+  id              String   @id @default(uuid())
+  user_id         String
+  make            String
+  model           String
+  year            Int
+  // Free-text label as commonly written in Polish car listings (e.g. "1.6 TDI 115 KM").
+  // May come from the curated catalog or from the user's free-text fallback path.
+  engine_variant  String?
+  displacement_cc Int?
+  power_kw        Int?
+  // Stored as string (not enum) to avoid coupling: catalog may grow new fuel types
+  // (CNG, hydrogen, etc.) faster than schema migrations. DTO @IsIn validator
+  // restricts the accepted set at the API boundary.
+  fuel_type       String
+  nickname        String?
+  // Set true by Story 5.2 on first FillUp. While locked, PATCH rejects make/model/year
+  // changes and DELETE is blocked — preserves history consistency.
+  is_locked       Boolean  @default(false)
+  // True if any of make/model/year/engine came via free-text fallback (catalog miss).
+  // Analytics signal for promoting popular missing entries into the curated catalog later.
+  user_entered    Boolean  @default(false)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+  user            User     @relation(fields: [user_id], references: [id])
+
+  @@index([user_id])
 }
 
 

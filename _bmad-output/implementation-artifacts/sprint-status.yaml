@@ -37,7 +37,10 @@ epics:
         ready_date: 2026-04-26
         dev_started: 2026-04-26
         dev_completed: 2026-04-26
-        note: "Triggered by today's prod admin submissions crash (TypeError on null toFixed). UI hotfix shipped 38eac36; this story closes the upstream hole — pipeline filters null/non-finite price_per_litre entries before persist, rejects via existing no_prices_extracted flag if all entries are null. Backend-only, no new flag_reason, no UI changes. +4 tests, 873/873 api pass, tsc clean. Mixed null+valid arrays drop nulls and proceed (preserves recoverable data); all-null arrays reject as no_prices_extracted (merges into existing funnel bucket)."
+        review_date: 2026-04-26
+        review_findings: "6 patches applied (P-1 warn-log assertion in mixed test, P-2 all-valid no-warn regression test, P-3 price_out_of_range × filter interaction test, P-4 null-entry guard in filter, P-5 Array.isArray guard on ocrResult.prices, P-6 forensic symmetry — OOR reject uses rawPrices not cleanPrices). 15 deferred (mostly logging enrichment, type-system tightening, and pre-existing patterns). 7 rejected as noise."
+        patches_applied: "2026-04-26 — P-1..P-6 applied; +3 new tests (warn-log + no-warn regression + OOR×filter); 876/876 api pass, tsc clean."
+        note: "Triggered by today's prod admin submissions crash (TypeError on null toFixed). UI hotfix shipped 38eac36; this story closes the upstream hole — pipeline filters null/non-finite price_per_litre entries before persist, rejects via existing no_prices_extracted flag if all entries are null. Backend-only, no new flag_reason, no UI changes. Mixed null+valid arrays drop nulls and proceed (preserves recoverable data); all-null arrays reject as no_prices_extracted (merges into existing funnel bucket)."
 
       - id: 0.2
         title: "Admin Test Infrastructure"

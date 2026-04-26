@@ -198,6 +198,52 @@ claude-sonnet-4-6
 ### Change Log
 
 - 2026-04-26 — Implemented Story 0.3 OCR Pipeline Null-Price Guard. `runOcrExtraction` now filters non-finite `price_per_litre` entries from `ocrResult.prices` before the band check and persist step. All-null arrays merge into the existing `no_prices_extracted` rejection path (same flag, single bucket in funnel — no new flag_reason, no i18n updates needed). +4 tests, 873/873 api pass, tsc clean. Backend-only story — UI hotfix from commit `38eac36` continues as defense in depth.
+- 2026-04-26 — Code review pass (3 reviewers: Blind Hunter, Edge Case Hunter, Acceptance Auditor). Acceptance Auditor: spec satisfied for AC-1..AC-7 with two test-coverage gaps in AC-5. Triage: **6 patches applied, 15 deferred, 7 rejected as noise**. Test count now 876/876 api pass.
+
+## Senior Developer Review (AI)
+
+**Date:** 2026-04-26 · **Reviewers:** Blind Hunter + Edge Case Hunter + Acceptance Auditor · **Outcome:** Spec satisfied; 6 small patches applied for test coverage + defensive guards.
+
+### Patches applied (6)
+
+| # | Title | Resolution |
+|---|---|---|
+| **P-1** | Missing AC-5 test: warn-log fired on drop | Added test that spies `worker['logger'].warn` and asserts the drop message contains the submission id, original count, and dropped count. |
+| **P-2** | Missing AC-5 test: all-valid → no warn (regression) | Added test that runs the happy-path `successfulOcrResult` and asserts no warn message containing "null/non-finite price_per_litre" was emitted. |
+| **P-3** | Missing test: price_out_of_range × filter interaction | Added test that exercises the mixed-with-OOR scenario — verifies `validatePriceBands` is called with the cleaned array (null ON dropped) and the submission is rejected with `price_out_of_range` flag. |
+| **P-4** | Filter doesn't guard against null entry in array | Added `p != null && ...` to the filter callback so a sparse OCR array with `null` slots doesn't TypeError mid-filter. Defense in depth — out-of-contract for OcrResult but JSON shape isn't enforced at runtime. |
+| **P-5** | `ocrResult.prices` itself could be undefined/null | Added `const rawPrices = Array.isArray(ocrResult.prices) ? ocrResult.prices : []` so a malformed OCR response can't throw on `.filter()`. |
+| **P-6** | `price_out_of_range` reject lost forensic symmetry | Reverted the OOR reject to pass `rawPrices` (original) instead of `cleanPrices` so research retention captures what OCR actually returned, symmetrical with the `no_prices_extracted` reject path. |
+
+### Deferred (15)
+
+| # | Title | Reason |
+|---|---|---|
+| D-1 | `as unknown as Prisma.InputJsonValue` cast unchanged | Pre-existing pattern across the codebase |
+| D-2 | Race window between findUnique and update | Pre-existing; BullMQ retry handles |
+| D-3 | Filter doesn't distinguish missing-key / null / NaN in logs | Log enrichment; nice-to-have for OCR tuning |
+| D-4 | Warn log lacks structured fields (fuel types, indices) | Log enrichment; nice-to-have |
+| D-5 | No drop-ratio threshold for noisy logs | Premature at MVP scale |
+| D-6 | rejectSubmission throwing unhandled | Pre-existing pipeline pattern; BullMQ retries |
+| D-7 | prisma.update throwing after filter passed | Same as D-6 |
+| D-8 | Research retention upstream uses unfiltered prices | **By design** — corpus wants raw OCR output including malformed entries |
+| D-9 | validatePriceBands "silently accepts null" not pinned by test | Worth a future unit test on validatePriceBands itself |
+| D-10 | Numeric strings (`"6.19"`) silently dropped by isFinite filter | OCR contract returns numbers; if it ever returns strings that's an OCR-side bug |
+| D-11 | Absurdly large prices not caught by filter | That's what `validatePriceBands` upper bound is for |
+| D-12 | Missing/invalid `fuel_type` not caught here | `parseResponse` already filters unknown types — pre-existing |
+| D-13 | Duplicate `fuel_type` in cleanPrices | Story 3.5 D2 deferred — pre-existing |
+| D-14 | NaN→null in JSON serialization on rejected row | Forensic value preserved by warn-log + research retention; persisted-shape distinction is small |
+| D-15 | Type-system lie (number vs runtime null) at OCR layer | Tightening to `number \| null` touches every consumer — bigger refactor than story scope |
+
+### Rejected as noise (7)
+
+- `rejectSubmission` shape change for `no_prices_extracted` (it just persists, no breakage).
+- NaN serialization concern (covered by D-14 — value preserved elsewhere).
+- Explicit "rejected because all non-finite" log (warn already covers + count is in the line).
+- `mockResolvedValueOnce` fragility (matches every existing test, not introduced).
+- Test asserts exact array shape via `objectContaining` (correct behavior — type evolution should require test updates).
+- Race window between findUnique/update (pre-existing, unchanged).
+- Warn message wording could mislead (says "dropped before persist" — accurate; rejection log fires after if all dropped).
 
 ### File List
 

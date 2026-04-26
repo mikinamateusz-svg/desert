@@ -1047,6 +1047,78 @@ describe('PhotoPipelineWorker', () => {
           const rejectCalls = updateCalls.filter(([args]) => args.data.status === 'rejected');
           expect(rejectCalls).toHaveLength(0);
         });
+
+        // Story 0.3 review patches:
+
+        it('P-1: logs a warn with the dropped count when at least one entry is filtered', async () => {
+          const warnSpy = jest
+            .spyOn((worker as unknown as { logger: { warn: (msg: string) => void } }).logger, 'warn')
+            .mockImplementation(() => undefined);
+          try {
+            mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+            mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+            mockOcrService.extractPrices.mockResolvedValueOnce(mixedResult);
+
+            await capturedProcessor!(makeJob('sub-123'));
+
+            // The warn should mention the submission id, the original count, and the dropped count
+            const warnCalls = warnSpy.mock.calls.map(args => String(args[0]));
+            const dropWarn = warnCalls.find(msg => msg.includes('null/non-finite price_per_litre'));
+            expect(dropWarn).toBeDefined();
+            expect(dropWarn).toContain('sub-123');
+            expect(dropWarn).toContain('3 prices');
+            expect(dropWarn).toContain('1 had null');
+          } finally {
+            warnSpy.mockRestore();
+          }
+        });
+
+        it('P-2: does NOT log the drop warn when every OCR price is valid (regression — no warn on happy path)', async () => {
+          const warnSpy = jest
+            .spyOn((worker as unknown as { logger: { warn: (msg: string) => void } }).logger, 'warn')
+            .mockImplementation(() => undefined);
+          try {
+            mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+            mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+            // successfulOcrResult has a single valid entry — nothing to drop
+            mockOcrService.extractPrices.mockResolvedValueOnce(successfulOcrResult);
+
+            await capturedProcessor!(makeJob('sub-123'));
+
+            const dropWarns = warnSpy.mock.calls
+              .map(args => String(args[0]))
+              .filter(msg => msg.includes('null/non-finite price_per_litre'));
+            expect(dropWarns).toHaveLength(0);
+          } finally {
+            warnSpy.mockRestore();
+          }
+        });
+
+        it('P-3: validatePriceBands sees the FILTERED prices, not the originals (price_out_of_range path)', async () => {
+          mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
+          mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+          mockOcrService.extractPrices.mockResolvedValueOnce(mixedResult);
+          // Mixed input has [PB_95: 6.19, ON: null, ON_PREMIUM: 6.99]; after filter
+          // validatePriceBands receives [PB_95, ON_PREMIUM] (no ON).
+          mockOcrService.validatePriceBands.mockReturnValueOnce('ON_PREMIUM');
+
+          await capturedProcessor!(makeJob('sub-123'));
+
+          // The band check must have been called with the cleaned array — null ON dropped
+          expect(mockOcrService.validatePriceBands).toHaveBeenCalledWith([
+            { fuel_type: 'PB_95', price_per_litre: 6.19 },
+            { fuel_type: 'ON_PREMIUM', price_per_litre: 6.99 },
+          ]);
+          // And the submission rejected with price_out_of_range
+          expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+            expect.objectContaining({
+              data: expect.objectContaining({
+                status: 'rejected',
+                flag_reason: 'price_out_of_range',
+              }),
+            }),
+          );
+        });
       });
     });
 

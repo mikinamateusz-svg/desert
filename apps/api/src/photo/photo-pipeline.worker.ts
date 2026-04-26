@@ -422,16 +422,24 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     // empty check — historically these slipped through (validatePriceBands' band
     // comparison silently accepts null in JS) and ended up persisted, then crashed
     // the admin UI on render. Filter here so downstream code (band check, persist,
-    // research retention) only ever sees usable entries. Forward the original
-    // ocrResult.prices to rejectSubmission for forensic logging if everything got
-    // dropped.
-    const cleanPrices = ocrResult.prices.filter(
-      (p) => typeof p.price_per_litre === 'number' && Number.isFinite(p.price_per_litre),
+    // research retention) only ever sees usable entries. Forward the ORIGINAL
+    // ocrResult.prices to rejectSubmission paths for forensic logging.
+    //
+    // Defensive guards (story 0.3 review P-4/P-5): tolerate sparse/undefined arrays
+    // and null array entries — both are out-of-contract for OcrResult but nothing
+    // about JSON-shaped data is guaranteed at runtime, and we just learned that
+    // lesson the hard way today.
+    const rawPrices = Array.isArray(ocrResult.prices) ? ocrResult.prices : [];
+    const cleanPrices = rawPrices.filter(
+      (p) =>
+        p != null &&
+        typeof p.price_per_litre === 'number' &&
+        Number.isFinite(p.price_per_litre),
     );
-    const droppedCount = ocrResult.prices.length - cleanPrices.length;
+    const droppedCount = rawPrices.length - cleanPrices.length;
     if (droppedCount > 0) {
       this.logger.warn(
-        `Submission ${submission.id}: OCR returned ${ocrResult.prices.length} prices, ` +
+        `Submission ${submission.id}: OCR returned ${rawPrices.length} prices, ` +
           `${droppedCount} had null/non-finite price_per_litre — dropped before persist`,
       );
     }
@@ -439,7 +447,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     // No usable prices extracted (either OCR returned an empty array, or every entry
     // had a non-finite price_per_litre) — reject to keep data quality high (see Q1 in story spec)
     if (cleanPrices.length === 0) {
-      await this.rejectSubmission(submission, 'no_prices_extracted', ocrResult.prices, ocrResult.confidence_score);
+      await this.rejectSubmission(submission, 'no_prices_extracted', rawPrices, ocrResult.confidence_score);
       return null;
     }
 
@@ -449,7 +457,9 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       this.logger.warn(
         `Submission ${submission.id}: price out of range for ${invalidFuelType} — rejecting`,
       );
-      await this.rejectSubmission(submission, 'price_out_of_range', cleanPrices, ocrResult.confidence_score);
+      // P-6: pass the raw OCR output (not cleaned) so forensic capture sees what
+      // the model actually returned — symmetrical with the no_prices_extracted path.
+      await this.rejectSubmission(submission, 'price_out_of_range', rawPrices, ocrResult.confidence_score);
       return null;
     }
 

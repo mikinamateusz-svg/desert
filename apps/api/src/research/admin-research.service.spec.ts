@@ -70,15 +70,17 @@ describe('AdminResearchService', () => {
       });
     });
 
-    it('filters to only unlabeled rows when requested', async () => {
+    it('filters to only unlabeled rows (SQL NULL) when requested', async () => {
       mockResearchPhoto.findMany.mockResolvedValueOnce([]);
       mockResearchPhoto.count.mockResolvedValueOnce(0);
 
       await service.list(20, 0, true);
 
-      // The where clause passed to findMany must restrict actual_prices to null
+      // Must use Prisma.AnyNull, not JsonNull. Default-inserted rows have
+      // actual_prices as SQL NULL, not JSON literal null; AnyNull covers both
+      // so the filter actually catches unlabeled rows.
       const findManyArgs = mockResearchPhoto.findMany.mock.calls[0][0] as { where: unknown };
-      expect(findManyArgs.where).toEqual({ actual_prices: { equals: Prisma.JsonNull } });
+      expect(findManyArgs.where).toEqual({ actual_prices: { equals: Prisma.AnyNull } });
     });
 
     it('returns photo_url = null when presign throws (does not block the whole list)', async () => {

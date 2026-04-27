@@ -47,8 +47,13 @@ export class AdminResearchService {
   ) {}
 
   async list(limit: number, offset: number, onlyUnlabeled = false): Promise<ResearchListResult> {
+    // `unlabeled` = the row has never been touched by the labeling flow.
+    // The column is SQL NULL by default at insert time; the labeling endpoint
+    // sets it to either {} (empty-label, photo had no prices) or a non-empty
+    // object. Prisma.AnyNull matches both SQL NULL and JSON literal null —
+    // covers the SQL-NULL default reliably regardless of how it was written.
     const where: Prisma.ResearchPhotoWhereInput = onlyUnlabeled
-      ? { actual_prices: { equals: Prisma.JsonNull } }
+      ? { actual_prices: { equals: Prisma.AnyNull } }
       : {};
 
     const [rows, total] = await this.prisma.$transaction([

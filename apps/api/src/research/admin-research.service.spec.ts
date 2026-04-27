@@ -13,7 +13,7 @@ const mockResearchPhoto = {
 };
 const mockTransaction = jest.fn();
 const mockPrisma = { researchPhoto: mockResearchPhoto, $transaction: mockTransaction };
-const mockStorage = { getPresignedUrl: jest.fn() };
+const mockStorage = { getPresignedUrl: jest.fn(), getObjectBuffer: jest.fn() };
 
 const photoRow = {
   id: 'r1',
@@ -145,4 +145,24 @@ describe('AdminResearchService', () => {
       expect(updateArg.data.actual_prices).toBe(Prisma.JsonNull);
     });
   });
+
+  describe('getPhotoBuffer', () => {
+    it('streams the photo bytes via storage.getObjectBuffer', async () => {
+      mockResearchPhoto.findUnique.mockResolvedValueOnce({ r2_key: 'research/sub-1.jpg' });
+      const fakeBuf = Buffer.from('jpeg-bytes');
+      mockStorage.getObjectBuffer.mockResolvedValueOnce(fakeBuf);
+
+      const result = await service.getPhotoBuffer('r1');
+
+      expect(mockStorage.getObjectBuffer).toHaveBeenCalledWith('research/sub-1.jpg');
+      expect(result).toBe(fakeBuf);
+    });
+
+    it('throws NotFoundException when the photo does not exist', async () => {
+      mockResearchPhoto.findUnique.mockResolvedValueOnce(null);
+      await expect(service.getPhotoBuffer('missing')).rejects.toThrow(NotFoundException);
+      expect(mockStorage.getObjectBuffer).not.toHaveBeenCalled();
+    });
+  });
+
 });

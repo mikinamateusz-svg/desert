@@ -99,6 +99,22 @@ export class AdminResearchService {
     return { data, total, limit, offset };
   }
 
+  /**
+   * Streams the actual photo bytes for a research row. Used by the labeling
+   * helper to bypass R2 presigned URLs (which fight AWS SDK v3 + R2 in
+   * various ways — see commits 8dd3966, 69301e9 for prior attempts). Direct
+   * GET from R2 via the storage service works reliably; this endpoint just
+   * relays those bytes to the admin caller.
+   */
+  async getPhotoBuffer(id: string): Promise<Buffer> {
+    const photo = await this.prisma.researchPhoto.findUnique({
+      where: { id },
+      select: { r2_key: true },
+    });
+    if (!photo) throw new NotFoundException(`Research photo ${id} not found`);
+    return this.storage.getObjectBuffer(photo.r2_key);
+  }
+
   async label(id: string, input: LabelInput): Promise<void> {
     const existing = await this.prisma.researchPhoto.findUnique({
       where: { id },

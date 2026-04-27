@@ -5,6 +5,7 @@ import {
   Param,
   Query,
   Body,
+  Res,
   HttpCode,
   HttpStatus,
   ParseIntPipe,
@@ -12,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 import { UserRole } from '@prisma/client';
+import type { FastifyReply } from 'fastify';
 import { AdminResearchService } from './admin-research.service.js';
 
 class LabelDto {
@@ -49,5 +51,22 @@ export class AdminResearchController {
   async label(@Param('id') id: string, @Body() body: LabelDto) {
     await this.service.label(id, body);
     return { status: 'labeled' };
+  }
+
+  /**
+   * Streams the photo bytes — bypasses R2 presigned URLs entirely so the
+   * labeling helper can open photos via authenticated download → local
+   * file → browser. Direct R2 GET works reliably; presigned URLs fight
+   * AWS SDK v3 + R2 in opaque ways.
+   */
+  @Get(':id/photo')
+  async getPhoto(
+    @Param('id') id: string,
+    @Res() reply: FastifyReply,
+  ): Promise<void> {
+    const buffer = await this.service.getPhotoBuffer(id);
+    reply.header('Content-Type', 'image/jpeg');
+    reply.header('Cache-Control', 'private, max-age=300');
+    void reply.send(buffer);
   }
 }

@@ -93,10 +93,24 @@ export class StorageService implements OnModuleInit {
   }
 
   async getPresignedUrl(key: string, expiresInSeconds: number): Promise<string> {
-    return getSignedUrl(
-      this.client,
-      new GetObjectCommand({ Bucket: this.bucket, Key: key }),
-      { expiresIn: expiresInSeconds },
+    const command = new GetObjectCommand({ Bucket: this.bucket, Key: key });
+    // R2 rejects presigned URLs that contain `x-amz-checksum-mode=ENABLED`
+    // (auto-added by AWS SDK v3 default response-checksum middleware) with
+    // 'InvalidArgument: Authorization'. The S3Client config flags
+    // `responseChecksumValidation: 'WHEN_REQUIRED'` are supposed to suppress
+    // this, but in our SDK version (3.1014) the param still leaks into the
+    // signed URL. Belt-and-braces: remove the header at build step before
+    // SigV4 sees it, so it never appears in the URL or the signature.
+    command.middlewareStack.add(
+      (next) => async (args) => {
+        if (args.request && typeof args.request === 'object' && 'headers' in args.request) {
+          const headers = (args.request as { headers: Record<string, unknown> }).headers;
+          delete headers['x-amz-checksum-mode'];
+        }
+        return next(args);
+      },
+      { step: 'build', name: 'r2-strip-checksum-mode' },
     );
+    return getSignedUrl(this.client, command, { expiresIn: expiresInSeconds });
   }
 }

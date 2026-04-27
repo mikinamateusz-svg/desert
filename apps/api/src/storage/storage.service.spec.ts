@@ -7,7 +7,15 @@ jest.mock('@aws-sdk/client-s3', () => ({
   S3Client: jest.fn().mockImplementation(() => ({ send: mockSend })),
   HeadBucketCommand: jest.fn().mockImplementation((input) => input),
   PutObjectCommand: jest.fn().mockImplementation((input) => ({ _type: 'PutObjectCommand', ...input })),
-  GetObjectCommand: jest.fn().mockImplementation((input) => ({ _type: 'GetObjectCommand', ...input })),
+  // GetObjectCommand needs a middlewareStack stub because getPresignedUrl
+  // injects a build-step middleware to strip x-amz-checksum-mode (R2 fix).
+  GetObjectCommand: jest.fn().mockImplementation((input) => ({
+    _type: 'GetObjectCommand',
+    ...input,
+    middlewareStack: { add: jest.fn() },
+  })),
+  CopyObjectCommand: jest.fn().mockImplementation((input) => ({ _type: 'CopyObjectCommand', ...input })),
+  DeleteObjectCommand: jest.fn().mockImplementation((input) => ({ _type: 'DeleteObjectCommand', ...input })),
 }));
 
 jest.mock('@aws-sdk/s3-request-presigner', () => ({

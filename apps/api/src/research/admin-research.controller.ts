@@ -11,13 +11,26 @@ import {
   ParseIntPipe,
   DefaultValuePipe,
 } from '@nestjs/common';
+import { IsObject, IsOptional, IsString, ValidateIf } from 'class-validator';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 import { UserRole } from '@prisma/client';
 import type { FastifyReply } from 'fastify';
 import { AdminResearchService } from './admin-research.service.js';
 
 class LabelDto {
-  actual_prices?: unknown;
+  // class-validator decorators required so the global ValidationPipe
+  // (whitelist + forbidNonWhitelisted) doesn't reject these fields. Without
+  // them every property looks "not whitelisted" → 400.
+  // ValidateIf skips type-checking when the field is null so we can use null
+  // to clear actual_prices explicitly.
+  @IsOptional()
+  @ValidateIf((_, v) => v !== null)
+  @IsObject()
+  actual_prices?: Record<string, unknown> | null;
+
+  @IsOptional()
+  @ValidateIf((_, v) => v !== null)
+  @IsString()
   label_notes?: string | null;
 }
 

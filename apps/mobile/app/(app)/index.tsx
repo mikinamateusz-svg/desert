@@ -315,13 +315,15 @@ export default function MapScreen() {
   }, [stations]);
 
   // Story 3.12 AC6: honour ?stationId= coming from the Activity screen.
-  // Wait for the nearby-stations fetch to include the tapped station before
-  // opening its sheet; if it never arrives (far from current GPS) the param is
-  // still cleared so we don't re-handle on the next re-render. Reset the
-  // handled-ref when the param goes empty so tapping the same row twice works.
+  // Hold the intent until useNearbyStations actually returns the tapped id —
+  // if the user is far from that station (different city) the first fetch
+  // won't include it, but a later pan/refresh might, so we re-fire then.
+  // Mark handled + clear the param ONLY after the sheet actually opens, so
+  // the row doesn't silently no-op when the station is briefly out of scope.
+  // Splash gate: avoid pre-positioning the camera + opening the sheet
+  // beneath the LoadingScreen; user would land on a sheet they didn't see open.
   useEffect(() => {
-    // useLocalSearchParams may surface the same key as string[] if the URL ever
-    // carries duplicates — collapse to the first entry defensively.
+    if (splashVisible) return;
     const id = Array.isArray(incomingStationId) ? incomingStationId[0] : incomingStationId;
     if (!id) {
       handledStationIdRef.current = null;
@@ -329,12 +331,12 @@ export default function MapScreen() {
     }
     if (handledStationIdRef.current === id) return;
     if (stations.length === 0) return;
-    handledStationIdRef.current = id;
     if (stations.some(s => s.id === id)) {
+      handledStationIdRef.current = id;
       handlePinPress(id);
+      router.setParams({ stationId: '' });
     }
-    router.setParams({ stationId: '' });
-  }, [incomingStationId, stations, handlePinPress]);
+  }, [incomingStationId, stations, handlePinPress, splashVisible]);
 
   const handleFindCheapest = useCallback(async () => {
     const bounds = await mapViewRef.current?.getVisibleBounds();

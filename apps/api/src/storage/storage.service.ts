@@ -21,11 +21,21 @@ export class StorageService implements OnModuleInit {
         accessKeyId: this.config.getOrThrow('R2_ACCESS_KEY_ID'),
         secretAccessKey: this.config.getOrThrow('R2_SECRET_ACCESS_KEY'),
       },
+      // R2 + AWS SDK v3 + virtual-hosted style + presigning has a known
+      // mismatch: direct PUT/GET calls (where the SDK constructs and signs
+      // the URL internally) work fine, but presigned URLs come out invalid
+      // — R2 returns 'InvalidArgument: Authorization' even though the
+      // signature looks well-formed. forcePathStyle removes the ambiguity
+      // by routing everything through path-style URLs
+      // (`{accountId}.r2.cloudflarestorage.com/{bucket}/{key}` instead of
+      // `{bucket}.{accountId}.r2.cloudflarestorage.com/{key}`). Both forms
+      // are supported by R2 for direct API calls; this just makes presigning
+      // consistent.
+      forcePathStyle: true,
       // R2 compatibility: AWS SDK v3 default WHEN_SUPPORTED auto-adds
-      // x-amz-checksum-mode=ENABLED to GET requests — including presigned
-      // URLs — and R2 then rejects the signed URL with
-      // 'InvalidArgument: Authorization'. R2 doesn't require checksums,
-      // so flip both knobs to WHEN_REQUIRED (only add when explicitly asked).
+      // x-amz-checksum-mode=ENABLED to GET requests — kept here as
+      // defence-in-depth alongside the per-command middleware in
+      // getPresignedUrl.
       requestChecksumCalculation: 'WHEN_REQUIRED',
       responseChecksumValidation: 'WHEN_REQUIRED',
     });

@@ -21,6 +21,13 @@ export class StorageService implements OnModuleInit {
         accessKeyId: this.config.getOrThrow('R2_ACCESS_KEY_ID'),
         secretAccessKey: this.config.getOrThrow('R2_SECRET_ACCESS_KEY'),
       },
+      // R2 compatibility: AWS SDK v3 default WHEN_SUPPORTED auto-adds
+      // x-amz-checksum-mode=ENABLED to GET requests — including presigned
+      // URLs — and R2 then rejects the signed URL with
+      // 'InvalidArgument: Authorization'. R2 doesn't require checksums,
+      // so flip both knobs to WHEN_REQUIRED (only add when explicitly asked).
+      requestChecksumCalculation: 'WHEN_REQUIRED',
+      responseChecksumValidation: 'WHEN_REQUIRED',
     });
     await this.testConnection();
   }

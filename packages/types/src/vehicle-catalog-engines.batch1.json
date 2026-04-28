@@ -18555,6 +18555,655 @@
         "_meta": {
           "notes": "DE Wikipedia Audi_A5_B10. PHEV power = system output. RS5 e-hybrid since 04/2026."
         }
+      },
+      {
+        "key": "Audi_A3_8P_facelift",
+        "wikidata_id": "Q182602",
+        "model_year_from": 2008,
+        "model_year_to": 2013,
+        "engines": [
+          {
+            "name": "1.2 TFSI 105 KM",
+            "displacement_cc": 1197,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TFSI 125 KM",
+            "displacement_cc": 1390,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 102 KM",
+            "displacement_cc": 1595,
+            "power_kw": 75,
+            "power_hp": 102,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TFSI 160 KM",
+            "displacement_cc": 1798,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 200 KM",
+            "displacement_cc": 1984,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "S3 2.0 TFSI 265 KM",
+            "displacement_cc": 1984,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "RS3 2.5 TFSI 340 KM",
+            "displacement_cc": 2480,
+            "power_kw": 250,
+            "power_hp": 340,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 90 KM",
+            "displacement_cc": 1598,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 105 KM",
+            "displacement_cc": 1598,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TDI 105 KM",
+            "displacement_cc": 1896,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 140 KM",
+            "displacement_cc": 1968,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 170 KM",
+            "displacement_cc": 1968,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_A3_8P facelift section. 1.2 TFSI from 2010; RS3 from 2011; 1.9 TDI discontinued ~2010. DSG = S-tronic."
+        }
+      },
+      {
+        "key": "Audi_A3_8V",
+        "wikidata_id": "Q1336413",
+        "model_year_from": 2012,
+        "model_year_to": 2020,
+        "engines": [
+          {
+            "name": "1.0 TFSI 115 KM",
+            "displacement_cc": 999,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TFSI 105 KM",
+            "displacement_cc": 1197,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TFSI 110 KM",
+            "displacement_cc": 1197,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TFSI 122 KM",
+            "displacement_cc": 1395,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TFSI 125 KM",
+            "displacement_cc": 1395,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TFSI COD 140 KM",
+            "displacement_cc": 1395,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TFSI 150 KM",
+            "displacement_cc": 1395,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TFSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 g-tron 110 KM",
+            "displacement_cc": 1395,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "CNG",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 g-tron 131 KM",
+            "displacement_cc": 1498,
+            "power_kw": 96,
+            "power_hp": 131,
+            "fuel_type": "CNG",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TFSI 180 KM",
+            "displacement_cc": 1798,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 190 KM",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "S3 2.0 TFSI 300 KM",
+            "displacement_cc": 1984,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "S3 2.0 TFSI 310 KM",
+            "displacement_cc": 1984,
+            "power_kw": 228,
+            "power_hp": 310,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "RS3 2.5 TFSI 367 KM",
+            "displacement_cc": 2480,
+            "power_kw": 270,
+            "power_hp": 367,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "RS3 2.5 TFSI 400 KM",
+            "displacement_cc": 2480,
+            "power_kw": 294,
+            "power_hp": 400,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "e-tron 1.4 TFSI 204 KM",
+            "displacement_cc": 1395,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 105 KM",
+            "displacement_cc": 1598,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 110 KM",
+            "displacement_cc": 1598,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 116 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 184 KM",
+            "displacement_cc": 1968,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_A3_8V section. DSG = S-tronic. g-tron = CNG. e-tron = PHEV system output. 1.0/1.5 TFSI from 2016 facelift."
+        }
+      },
+      {
+        "key": "Audi_A3_8Y",
+        "wikidata_id": "Q87591869",
+        "model_year_from": 2020,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "30 TFSI 110 KM",
+            "displacement_cc": 999,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "30 g-tron 131 KM",
+            "displacement_cc": 1498,
+            "power_kw": 96,
+            "power_hp": 131,
+            "fuel_type": "CNG",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "35 TFSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "40 TFSI 190 KM",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "S3 TFSI 310 KM",
+            "displacement_cc": 1984,
+            "power_kw": 228,
+            "power_hp": 310,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "RS3 TFSI 400 KM",
+            "displacement_cc": 2480,
+            "power_kw": 294,
+            "power_hp": 400,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "RS3 TFSI Performance 408 KM",
+            "displacement_cc": 2480,
+            "power_kw": 299,
+            "power_hp": 408,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "40 TFSI e 204 KM",
+            "displacement_cc": 1395,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "45 TFSI e 245 KM",
+            "displacement_cc": 1395,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "30 TDI 116 KM",
+            "displacement_cc": 1968,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "35 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "40 TDI 200 KM",
+            "displacement_cc": 1968,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_A3_8Y section. All-DSG (S-tronic), no manual offered. Badge numbers: 30=110PS/1.0T, 35=150PS/1.5T, 40=190PS+/2.0T. PHEV system output. g-tron = CNG."
+        }
       }
     ],
     "Ford": [
@@ -21402,15 +22051,15 @@
     ]
   },
   "stats": {
-    "model_count": 214,
-    "engine_count": 1405,
+    "model_count": 217,
+    "engine_count": 1451,
     "engines_by_confidence": {
-      "high": 1358,
+      "high": 1404,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 192
+      "high": 195
     },
     "models_with_low_confidence": 0
   }

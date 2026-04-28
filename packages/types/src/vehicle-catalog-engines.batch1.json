@@ -21024,18 +21024,393 @@
           "notes": "DE Wikipedia Renault_Clio V section. E-Tech = full HEV, system power, DHT mapped to automatic. DSG = 7-speed EDC. 1.3 TCe 67/72 KM are detuned fleet variants."
         }
       }
+    ],
+    "Dacia": [
+      {
+        "key": "Dacia_Duster_I",
+        "wikidata_id": "Q1141583",
+        "model_year_from": 2010,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "1.6 16V 105 KM",
+            "displacement_cc": 1598,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 SCe 115 KM",
+            "displacement_cc": 1598,
+            "power_kw": 84,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TCe 125 KM",
+            "displacement_cc": 1197,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 16V LPG 105 KM",
+            "displacement_cc": 1595,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 86 KM",
+            "displacement_cc": 1461,
+            "power_kw": 63,
+            "power_hp": 86,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 90 KM",
+            "displacement_cc": 1461,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 110 KM",
+            "displacement_cc": 1461,
+            "power_kw": 80,
+            "power_hp": 109,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Dacia_Duster I section. 4x2 and 4x4 share engine specs. dCi 86 very brief (03-09/2010). dCi 110 badge = 107-110 PS across production; 80 kW from 10/2013."
+        }
+      },
+      {
+        "key": "Dacia_Duster_II",
+        "wikidata_id": "Q55630847",
+        "model_year_from": 2018,
+        "model_year_to": 2024,
+        "engines": [
+          {
+            "name": "1.0 TCe 91 KM",
+            "displacement_cc": 999,
+            "power_kw": 67,
+            "power_hp": 91,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2020,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TCe 101 KM",
+            "displacement_cc": 999,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 SCe 115 KM",
+            "displacement_cc": 1598,
+            "power_kw": 84,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TCe 125 KM",
+            "displacement_cc": 1197,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 TCe 130 KM",
+            "displacement_cc": 1332,
+            "power_kw": 96,
+            "power_hp": 131,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 TCe 150 KM",
+            "displacement_cc": 1332,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TCe ECO-G 101 KM",
+            "displacement_cc": 999,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 SCe LPG 115 KM",
+            "displacement_cc": 1598,
+            "power_kw": 84,
+            "power_hp": 115,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 90 KM",
+            "displacement_cc": 1461,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 Blue dCi 95 KM",
+            "displacement_cc": 1461,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 110 KM",
+            "displacement_cc": 1461,
+            "power_kw": 80,
+            "power_hp": 109,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 Blue dCi 115 KM",
+            "displacement_cc": 1461,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": 2024,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Dacia_Duster II section. DSG = 6-speed EDC. ECO-G = bifuel LPG/petrol. 1.2 TCe 125 and 1.6 SCe very brief (01-09/2018 transition). 1.3 TCe 130 badge = 131 PS actual."
+        }
+      },
+      {
+        "key": "Dacia_Duster_III",
+        "wikidata_id": "Q123052177",
+        "model_year_from": 2024,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "ECO-G 101 KM",
+            "displacement_cc": 999,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2024,
+            "year_to": 2025,
+            "confidence": "high"
+          },
+          {
+            "name": "ECO-G 122 KM",
+            "displacement_cc": 1199,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Mild Hybrid 131 KM",
+            "displacement_cc": 1199,
+            "power_kw": 96,
+            "power_hp": 131,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2024,
+            "year_to": 2025,
+            "confidence": "high"
+          },
+          {
+            "name": "Mild Hybrid 140 KM",
+            "displacement_cc": 1199,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Hybrid 140 KM",
+            "displacement_cc": 1598,
+            "power_kw": 104,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": 2025,
+            "confidence": "high"
+          },
+          {
+            "name": "Hybrid 155 KM",
+            "displacement_cc": 1789,
+            "power_kw": 116,
+            "power_hp": 158,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Hybrid-G 150 4x4 KM",
+            "displacement_cc": 1199,
+            "power_kw": 113,
+            "power_hp": 154,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Dacia_Duster III section. No diesel. ECO-G = LPG/petrol bifuel. Mild Hybrid = 48V starter-generator. Full Hybrid = system power. Hybrid-G = LPG + hybrid AWD."
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 211,
-    "engine_count": 1379,
+    "model_count": 214,
+    "engine_count": 1405,
     "engines_by_confidence": {
-      "high": 1332,
+      "high": 1358,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 189
+      "high": 192
     },
     "models_with_low_confidence": 0
   }

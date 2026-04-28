@@ -17506,19 +17506,121 @@
         "_meta": {
           "notes": "DE Wikipedia Audi_A5_F5. S-tronic=DSG, tiptronic=automatic. 40 TFSI power bumped 190→204 KM at MY2020. S5 TDI 341 KM (251 kW) post-2020 variant consolidated into 347 KM entry."
         }
+      },
+      {
+        "key": "Audi_A5_B10",
+        "wikidata_id": "Q130427893",
+        "model_year_from": 2024,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.0 TFSI 150 KM",
+            "displacement_cc": 1984,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 204 KM",
+            "displacement_cc": 1984,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "S5 3.0 TFSI 367 KM",
+            "displacement_cc": 2995,
+            "power_kw": 270,
+            "power_hp": 367,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI e-hybrid 299 KM",
+            "displacement_cc": 1984,
+            "power_kw": 220,
+            "power_hp": 299,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI e-hybrid performance 367 KM",
+            "displacement_cc": 1984,
+            "power_kw": 270,
+            "power_hp": 367,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "RS5 2.9 TFSI e-hybrid 639 KM",
+            "displacement_cc": 2894,
+            "power_kw": 470,
+            "power_hp": 639,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2026,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 204 KM",
+            "displacement_cc": 1968,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_A5_B10. PHEV power = system output. RS5 e-hybrid since 04/2026."
+        }
       }
     ]
   },
   "stats": {
-    "model_count": 189,
-    "engine_count": 1135,
+    "model_count": 190,
+    "engine_count": 1142,
     "engines_by_confidence": {
-      "high": 1088,
+      "high": 1095,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 167
+      "high": 168
     },
     "models_with_low_confidence": 0
   }

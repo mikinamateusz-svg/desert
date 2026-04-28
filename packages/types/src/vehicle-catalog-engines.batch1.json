@@ -7324,6 +7324,749 @@
           "model_confidence": "low",
           "notes": "Russia/India/Mexico-market sedan derivative; not sold in PL."
         }
+      },
+      {
+        "key": "Volkswagen_Passat_B6",
+        "wikidata_id": "Q697375",
+        "model_year_from": 2005,
+        "model_year_to": 2010,
+        "engines": [
+          {
+            "name": "1.6 102 KM",
+            "displacement_cc": 1595,
+            "power_kw": 75,
+            "power_hp": 102,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 FSI 115 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI 122 KM",
+            "displacement_cc": 1390,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI EcoFuel 150 KM",
+            "displacement_cc": 1390,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "CNG",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 FSI 150 KM",
+            "displacement_cc": 1984,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TSI 152 KM",
+            "displacement_cc": 1798,
+            "power_kw": 112,
+            "power_hp": 152,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TSI 160 KM",
+            "displacement_cc": 1798,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 200 KM",
+            "displacement_cc": 1984,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "3.2 V6 FSI 250 KM",
+            "displacement_cc": 3168,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6 V6 FSI 280 KM",
+            "displacement_cc": 3597,
+            "power_kw": 206,
+            "power_hp": 280,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "R36 3.6 299 KM",
+            "displacement_cc": 3597,
+            "power_kw": 220,
+            "power_hp": 299,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TDI 105 KM",
+            "displacement_cc": 1896,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2005,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 105 KM",
+            "displacement_cc": 1598,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 110 KM",
+            "displacement_cc": 1968,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 120 KM",
+            "displacement_cc": 1968,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 136 KM",
+            "displacement_cc": 1968,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 140 KM",
+            "displacement_cc": 1968,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 BlueTDI 143 KM",
+            "displacement_cc": 1968,
+            "power_kw": 105,
+            "power_hp": 143,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 170 KM",
+            "displacement_cc": 1968,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volkswagen_Passat B6 section. 1.4/1.8 TSI from 2007 facelift; 1.6 TDI replaced 1.9 TDI at 2008 facelift. EcoFuel = CNG. 2.0 TSI consolidates TFSI/TSI badge."
+        }
+      },
+      {
+        "key": "Volkswagen_Passat_B7",
+        "wikidata_id": "Q1779534",
+        "model_year_from": 2010,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "1.4 TSI 122 KM",
+            "displacement_cc": 1390,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI EcoFuel 150 KM",
+            "displacement_cc": 1390,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "CNG",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI 160 KM",
+            "displacement_cc": 1390,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TSI 160 KM",
+            "displacement_cc": 1798,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 211 KM",
+            "displacement_cc": 1984,
+            "power_kw": 155,
+            "power_hp": 211,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6 V6 FSI 299 KM",
+            "displacement_cc": 3597,
+            "power_kw": 220,
+            "power_hp": 299,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 105 KM",
+            "displacement_cc": 1598,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 140 KM",
+            "displacement_cc": 1968,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 170 KM",
+            "displacement_cc": 1968,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 177 KM",
+            "displacement_cc": 1968,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volkswagen_Passat B7 section. BlueTDI/BlueMotion Technology consolidated into standard TDI entries (same power). B7 = facelift of B6 platform."
+        }
+      },
+      {
+        "key": "Volkswagen_Passat_B8",
+        "wikidata_id": "Q15895000",
+        "model_year_from": 2014,
+        "model_year_to": 2023,
+        "engines": [
+          {
+            "name": "1.4 TSI 125 KM",
+            "displacement_cc": 1395,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI ACT 150 KM",
+            "displacement_cc": 1395,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TSI 180 KM",
+            "displacement_cc": 1798,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 190 KM",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 220 KM",
+            "displacement_cc": 1984,
+            "power_kw": 162,
+            "power_hp": 220,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 272 KM",
+            "displacement_cc": 1984,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 280 KM",
+            "displacement_cc": 1984,
+            "power_kw": 206,
+            "power_hp": 280,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI GTE 218 KM",
+            "displacement_cc": 1395,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 120 KM",
+            "displacement_cc": 1598,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 122 KM",
+            "displacement_cc": 1968,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 190 KM",
+            "displacement_cc": 1968,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 200 KM",
+            "displacement_cc": 1968,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 240 KM",
+            "displacement_cc": 1968,
+            "power_kw": 176,
+            "power_hp": 240,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volkswagen_Passat B8 section. MQB platform. 1.5 TSI replaced 1.4 TSI at 2019 facelift. GTE = PHEV system output. 2.0 TDI 122/190/200 added at facelift."
+        }
+      },
+      {
+        "key": "Volkswagen_Passat_B9",
+        "wikidata_id": "Q116974369",
+        "model_year_from": 2023,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 eTSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 204 KM",
+            "displacement_cc": 1984,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 4Motion 265 KM",
+            "displacement_cc": 1984,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 eHybrid 204 KM",
+            "displacement_cc": 1498,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 eHybrid 272 KM",
+            "displacement_cc": 1498,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 122 KM",
+            "displacement_cc": 1968,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 4Motion 193 KM",
+            "displacement_cc": 1968,
+            "power_kw": 142,
+            "power_hp": 193,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volkswagen_Passat B9 section. MQB Evo. 1.5 eTSI = 48V mild hybrid. eHybrid = PHEV system output. B9 estate-only in Europe (no saloon)."
+        }
       }
     ],
     "Skoda": [
@@ -19757,15 +20500,15 @@
     ]
   },
   "stats": {
-    "model_count": 202,
-    "engine_count": 1291,
+    "model_count": 206,
+    "engine_count": 1343,
     "engines_by_confidence": {
-      "high": 1244,
+      "high": 1296,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 180
+      "high": 184
     },
     "models_with_low_confidence": 0
   }

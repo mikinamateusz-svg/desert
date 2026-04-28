@@ -22,7 +22,7 @@
 | 4 | Opel | Astra | H (2004-2014), J (2009-2015), K (2015-2021), L (2021-) | #1 used-import 2024 (24,293 units); top-5 new sales 2010-2018 | H ✅ · J ✅ · K ✅ · L ✅ |
 | 5 | Skoda | Fabia | II (2007-2014), III (2014-2021), IV (2021-) | #2 in PL 2010-2017, #1 in 2013, top-15 since | II ✅ · III ✅ · IV ✅ |
 | 6 | Audi | A4 | B8 (2007-2015), B9 (2015-) | #3 used-import 2024 (21,292 units); flagship used-import for years | B8 ✅ · B9 ✅ |
-| 7 | Toyota | Yaris | XP130 (2011-2020), XP210 (2020-) | Top-5 new sales 2015-2024; 14,185 units in 2024 | XP130 ⬜ · XP210 ⬜ |
+| 7 | Toyota | Yaris | XP130 (2011-2020), XP210 (2020-) | Top-5 new sales 2015-2024; 14,185 units in 2024 | XP130 ✅ · XP210 ✅ |
 | 8 | Ford | Focus | Mk2 facelift (2008-2011), Mk3 (2011-2018), Mk4 (2018-) | #5 used-import 2024 (16,501 units); strong new sales 2010-2019 | Mk2fl ⬜ · Mk3 ⬜ · Mk4 ⬜ |
 | 9 | BMW | 3 Series | E90/E91/E92 (2005-2013), F30/F31 (2012-2019), G20/G21 (2019-) | #4 used-import 2024 (17,956 units); flagship German used import | E90 ⬜ · F30 ⬜ · G20 ⬜ |
 | 10 | Toyota | Yaris Cross | XP210 (2020-) | #3 new sales 2024 (15,608 units); rapid Polish bestseller | XP210 ⬜ |

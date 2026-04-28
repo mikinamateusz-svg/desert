@@ -19395,18 +19395,377 @@
           "notes": "DE Wikipedia Hyundai_Tucson sections 10/11/12. 48V mild-hybrid petrol variants share power badges. HEV/PHEV = system output. iMT mapped to manual."
         }
       }
+    ],
+    "Kia": [
+      {
+        "key": "Kia_Sportage_SL",
+        "wikidata_id": "Q1760679",
+        "model_year_from": 2010,
+        "model_year_to": 2015,
+        "engines": [
+          {
+            "name": "1.6 GDI 135 KM",
+            "displacement_cc": 1591,
+            "power_kw": 99,
+            "power_hp": 135,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 CVVT 163 KM",
+            "displacement_cc": 1998,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 GDI 166 KM",
+            "displacement_cc": 1998,
+            "power_kw": 122,
+            "power_hp": 166,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 CRDi 115 KM",
+            "displacement_cc": 1685,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 CRDi 136 KM",
+            "displacement_cc": 1995,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 CRDi 184 KM",
+            "displacement_cc": 1995,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Kia_Sportage SL section. 2.0 CVVT 150 KM (Mexico/Russia) skipped. AWD standard on 2.0 CRDi 184."
+        }
+      },
+      {
+        "key": "Kia_Sportage_QL",
+        "wikidata_id": "Q21008951",
+        "model_year_from": 2015,
+        "model_year_to": 2021,
+        "engines": [
+          {
+            "name": "1.6 GDI 132 KM",
+            "displacement_cc": 1591,
+            "power_kw": 97,
+            "power_hp": 132,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 T-GDI 177 KM",
+            "displacement_cc": 1591,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 115 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 136 KM",
+            "displacement_cc": 1598,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 CRDi 115 KM",
+            "displacement_cc": 1685,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 CRDi 141 KM",
+            "displacement_cc": 1685,
+            "power_kw": 104,
+            "power_hp": 141,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 CRDi 136 KM",
+            "displacement_cc": 1995,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 CRDi 185 KM",
+            "displacement_cc": 1995,
+            "power_kw": 136,
+            "power_hp": 185,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2021,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Kia_Sportage QL section. 1.6 CRDi from 2018 facelift replacing 1.7 CRDi. DSG = 7-speed DCT."
+        }
+      },
+      {
+        "key": "Kia_Sportage_NQ5",
+        "wikidata_id": "Q110648278",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.6 T-GDI 150 KM",
+            "displacement_cc": 1598,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 T-GDI 160 KM",
+            "displacement_cc": 1598,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 T-GDI 180 KM",
+            "displacement_cc": 1598,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 T-GDI HEV 215 KM",
+            "displacement_cc": 1598,
+            "power_kw": 158,
+            "power_hp": 215,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 T-GDI HEV 239 KM",
+            "displacement_cc": 1598,
+            "power_kw": 176,
+            "power_hp": 239,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 T-GDI PHEV 252 KM",
+            "displacement_cc": 1598,
+            "power_kw": 185,
+            "power_hp": 252,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 T-GDI PHEV 265 KM",
+            "displacement_cc": 1598,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 T-GDI PHEV 288 KM",
+            "displacement_cc": 1598,
+            "power_kw": 212,
+            "power_hp": 288,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2026,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 115 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 136 KM",
+            "displacement_cc": 1598,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Kia_Sportage NQ5 section. 48V mild-hybrid shares power badges with regular T-GDI. PHEV system power; 3 variants across model years. HEV = 6-AT."
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 199,
-    "engine_count": 1267,
+    "model_count": 202,
+    "engine_count": 1291,
     "engines_by_confidence": {
-      "high": 1220,
+      "high": 1244,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 177
+      "high": 180
     },
     "models_with_low_confidence": 0
   }

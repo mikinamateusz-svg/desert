@@ -250,6 +250,7 @@ export default {
       cta: 'Go to Settings',
     },
     cameraPermissionDenied: 'Camera access denied. Please enable it in Settings.',
+    cameraStuck: "Camera didn't start. Tap to retry.",
     goToSettings: 'Go to Settings',
     gpsLocating: 'Matching station…',
     frameHint: 'Point camera at price board',

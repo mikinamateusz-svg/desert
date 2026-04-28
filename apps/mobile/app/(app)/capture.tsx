@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,11 +7,13 @@ import {
   StatusBar,
   Modal,
   Alert,
+  AppState,
+  ActivityIndicator,
 } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { File as FSFile, Paths } from 'expo-file-system';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { tokens } from '../../src/theme';
@@ -30,6 +32,22 @@ import type { StationDto } from '../../src/api/stations';
 const NEARBY_RADIUS_M = 200;
 const MIN_FREE_BYTES = 5 * 1024 * 1024; // 5 MB
 const BLUR_SIZE_THRESHOLD = 800; // bytes — below this → blurry proxy (JPEG file-size heuristic)
+
+// expo-camera's `zoom` is a normalized 0..1 value whose hardware mapping
+// differs by device. These three steps give discoverable, predictable jumps
+// without claiming an exact optical multiplier — labels are "feel" labels,
+// not precise focal-length math.
+const ZOOM_LEVELS = [
+  { label: '1×', value: 0 },
+  { label: '2×', value: 0.3 },
+  { label: '5×', value: 0.6 },
+] as const;
+
+// If onCameraReady doesn't fire within this window, surface a tap-to-retry
+// overlay. expo-camera occasionally mounts to a black preview on Android
+// (lost session after backgrounding, mid-flight permission grant, etc.) and
+// silently never recovers — this gives the user agency to remount.
+const CAMERA_READY_TIMEOUT_MS = 3000;
 
 type ScreenState =
   | 'camera'
@@ -57,7 +75,7 @@ export default function CaptureScreen() {
   const { accessToken } = useAuth();
   const { location, permissionDenied } = useLocation();
   const { fuelType: storedFuelType } = useFuelTypePreference();
-  const [permission] = useCameraPermissions();
+  const [permission, requestPermission] = useCameraPermissions();
 
   const params = useLocalSearchParams<{ locationDenied?: string }>();
   const locationDeniedParam = params.locationDenied === '1';
@@ -69,6 +87,23 @@ export default function CaptureScreen() {
   );
   const [cameraError, setCameraError] = useState(false);
   const [isCapturing, setIsCapturing] = useState(false);
+
+  // Camera lifecycle plumbing for the black-preview fix:
+  //   cameraKey forces a fresh mount of <CameraView/> when bumped.
+  //   cameraReady flips on onCameraReady; armed false on every remount so the
+  //     watchdog re-triggers if the new mount also stalls.
+  //   showRetry surfaces the tap-to-retry overlay after CAMERA_READY_TIMEOUT_MS.
+  const [cameraKey, setCameraKey] = useState(0);
+  const [cameraReady, setCameraReady] = useState(false);
+  const [showRetry, setShowRetry] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState<number>(0);
+
+  const remountCamera = useCallback(() => {
+    setCameraReady(false);
+    setShowRetry(false);
+    setCameraError(false);
+    setCameraKey(k => k + 1);
+  }, []);
 
   const [capturedPhoto, setCapturedPhoto] = useState<CapturedPhoto | null>(null);
   const [qualityFlag, setQualityFlag] = useState<QualityFlag | null>(null);
@@ -111,6 +146,44 @@ export default function CaptureScreen() {
   const handleBack = useCallback(() => {
     router.back();
   }, []);
+
+  // First-launch camera permission: when status is 'undetermined' the OS hasn't
+  // shown the prompt yet. expo-camera doesn't auto-prompt reliably on Android,
+  // so we kick the request manually. canAskAgain guards a re-prompt loop after
+  // the user denies — that path falls through to the existing 'denied' UI.
+  useEffect(() => {
+    if (permission?.status === 'undetermined' && permission.canAskAgain) {
+      void requestPermission();
+    }
+  }, [permission?.status, permission?.canAskAgain, requestPermission]);
+
+  // Force a fresh camera mount when the screen regains focus or the app
+  // returns from background. expo-camera's native session is fragile across
+  // these transitions and can leave the preview black. Bumping cameraKey is
+  // cheap (sub-100ms remount) and reliably restores the live preview.
+  useFocusEffect(
+    useCallback(() => {
+      remountCamera();
+    }, [remountCamera]),
+  );
+
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') remountCamera();
+    });
+    return () => sub.remove();
+  }, [remountCamera]);
+
+  // Watchdog: if onCameraReady doesn't fire within CAMERA_READY_TIMEOUT_MS,
+  // surface the retry overlay. Cleared once the preview is live or the user
+  // leaves the camera state.
+  useEffect(() => {
+    if (screenState !== 'camera') return;
+    if (!permission?.granted) return;
+    if (cameraReady) return;
+    const id = setTimeout(() => setShowRetry(true), CAMERA_READY_TIMEOUT_MS);
+    return () => clearTimeout(id);
+  }, [screenState, permission?.granted, cameraReady, cameraKey]);
 
   const runQualityCheck = useCallback(async (uri: string): Promise<QualityFlag> => {
     try {
@@ -296,14 +369,23 @@ export default function CaptureScreen() {
       {/* ── Camera viewfinder ─────────────────────────────────────────── */}
       {screenState === 'camera' && (
         <>
-          <CameraView
-            ref={cameraRef}
-            style={StyleSheet.absoluteFill}
-            facing="back"
-            onCameraReady={() => setCameraError(false)}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            onMountError={() => { setCameraError(true); setScreenState('error'); }}
-          />
+          {permission?.granted ? (
+            <CameraView
+              key={cameraKey}
+              ref={cameraRef}
+              style={StyleSheet.absoluteFill}
+              facing="back"
+              zoom={zoomLevel}
+              onCameraReady={() => { setCameraError(false); setCameraReady(true); }}
+              onMountError={() => { setCameraError(true); setScreenState('error'); }}
+            />
+          ) : (
+            // Permission still loading or being requested — placeholder spinner
+            // so the user doesn't see a black void while the OS prompt resolves.
+            <View style={[StyleSheet.absoluteFill, styles.cameraLoading]}>
+              <ActivityIndicator size="large" color={tokens.neutral.n0} />
+            </View>
+          )}
 
           {/* GPS station indicator — top center */}
           {gpsIndicator && (
@@ -330,18 +412,51 @@ export default function CaptureScreen() {
           </View>
 
           {/* Frame hint */}
-          <Text style={[styles.frameHint, { bottom: insets.bottom + 110 }]}>
+          <Text style={[styles.frameHint, { bottom: insets.bottom + 168 }]}>
             {t('contribution.frameHint')}
           </Text>
+
+          {/* Zoom selector — sits between the frame hint and the capture button */}
+          <View style={[styles.zoomRow, { bottom: insets.bottom + 110 }]}>
+            {ZOOM_LEVELS.map(({ label, value }) => {
+              const active = value === zoomLevel;
+              return (
+                <TouchableOpacity
+                  key={label}
+                  style={[styles.zoomButton, active && styles.zoomButtonActive]}
+                  onPress={() => setZoomLevel(value)}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: active }}
+                  accessibilityLabel={`Zoom ${label}`}
+                >
+                  <Text style={[styles.zoomLabel, active && styles.zoomLabelActive]}>{label}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
 
           {/* Capture button — bottom center */}
           <TouchableOpacity
             style={[styles.captureButton, { bottom: insets.bottom + 32 }]}
             onPress={() => void handleCapture()}
-            disabled={isCapturing}
+            disabled={isCapturing || !cameraReady}
             accessibilityLabel={t('contribution.takePhoto')}
             accessibilityRole="button"
           />
+
+          {/* Watchdog overlay — shown if onCameraReady never fires. Whole
+              surface is the tap target so retry doesn't depend on hitting a
+              small button at distance from the user's thumb. */}
+          {permission?.granted && !cameraReady && showRetry && (
+            <TouchableOpacity
+              style={styles.retryOverlay}
+              onPress={remountCamera}
+              activeOpacity={0.7}
+              accessibilityRole="button"
+            >
+              <Text style={styles.retryText}>{t('contribution.cameraStuck')}</Text>
+            </TouchableOpacity>
+          )}
         </>
       )}
 
@@ -525,6 +640,57 @@ const styles = StyleSheet.create({
     backgroundColor: tokens.neutral.n0,
     borderWidth: 4,
     borderColor: 'rgba(255,255,255,0.5)',
+  },
+
+  // Zoom selector
+  zoomRow: {
+    position: 'absolute',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  zoomButton: {
+    minWidth: 40,
+    height: 32,
+    borderRadius: 16,
+    paddingHorizontal: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.45)',
+  },
+  zoomButtonActive: {
+    backgroundColor: tokens.neutral.n0,
+  },
+  zoomLabel: {
+    color: tokens.neutral.n0,
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  zoomLabelActive: {
+    color: tokens.brand.ink,
+  },
+
+  // Camera-loading placeholder (permission still resolving)
+  cameraLoading: {
+    backgroundColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  // Watchdog retry overlay (preview never went live)
+  retryOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.75)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32,
+  },
+  retryText: {
+    color: tokens.neutral.n0,
+    fontSize: 16,
+    fontWeight: '500',
+    textAlign: 'center',
+    lineHeight: 22,
   },
 
   // Quality check modal

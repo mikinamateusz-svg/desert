@@ -253,6 +253,7 @@ export default {
       cta: 'Przejdź do ustawień',
     },
     cameraPermissionDenied: 'Brak dostępu do aparatu. Włącz go w Ustawieniach.',
+    cameraStuck: 'Aparat się nie uruchomił. Dotknij, aby spróbować ponownie.',
     goToSettings: 'Przejdź do ustawień',
     gpsLocating: 'Dopasowywanie stacji…',
     frameHint: 'Skieruj aparat na tablicę z cenami',

@@ -9435,10 +9435,10 @@
             "confidence": "high"
           },
           {
-            "name": "1.2 HTP 70 KM",
+            "name": "1.2 HTP 69 KM",
             "displacement_cc": 1198,
             "power_kw": 51,
-            "power_hp": 70,
+            "power_hp": 69,
             "fuel_type": "PB_95",
             "transmission_options": [
               "manual"
@@ -9592,6 +9592,19 @@
             "year_from": 2007,
             "year_to": 2010,
             "confidence": "high"
+          },
+          {
+            "name": "1.2 TDI 75 KM",
+            "displacement_cc": 1199,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
           }
         ],
         "_meta": {
@@ -9610,19 +9623,6 @@
             "displacement_cc": 999,
             "power_kw": 44,
             "power_hp": 60,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2014,
-            "year_to": 2021,
-            "confidence": "high"
-          },
-          {
-            "name": "1.0 MPI 75 KM",
-            "displacement_cc": 999,
-            "power_kw": 55,
-            "power_hp": 75,
             "fuel_type": "PB_95",
             "transmission_options": [
               "manual"
@@ -9687,19 +9687,6 @@
             "confidence": "high"
           },
           {
-            "name": "1.4 TDI 75 KM",
-            "displacement_cc": 1422,
-            "power_kw": 55,
-            "power_hp": 75,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2014,
-            "year_to": 2018,
-            "confidence": "high"
-          },
-          {
             "name": "1.4 TDI 90 KM",
             "displacement_cc": 1422,
             "power_kw": 66,
@@ -9730,6 +9717,123 @@
         "_meta": {
           "model_confidence": "high",
           "notes": "Fabia IV (2021-present) is a separate model not yet in catalog under this entry."
+        }
+      },
+      {
+        "key": "Skoda_Fabia_IV",
+        "wikidata_id": "Q105988278",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 MPI EVO 65 KM",
+            "displacement_cc": 999,
+            "power_kw": 48,
+            "power_hp": 65,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2021,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 MPI EVO 80 KM",
+            "displacement_cc": 999,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI EVO 95 KM",
+            "displacement_cc": 999,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI EVO 110 KM",
+            "displacement_cc": 999,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI EVO 116 KM",
+            "displacement_cc": 999,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI EVO 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI 177 KM",
+            "displacement_cc": 1498,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI Rally2 190 KM",
+            "displacement_cc": 1498,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Skoda_Fabia_IV. Rally2 since 10/2024, limited production. 1.5 TSI 177 KM since 10/2025."
         }
       },
       {
@@ -16150,15 +16254,15 @@
     ]
   },
   "stats": {
-    "model_count": 182,
-    "engine_count": 1039,
+    "model_count": 183,
+    "engine_count": 1046,
     "engines_by_confidence": {
-      "high": 992,
+      "high": 999,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 160
+      "high": 161
     },
     "models_with_low_confidence": 0
   }

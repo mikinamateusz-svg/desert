@@ -20,7 +20,7 @@
 | 2 | Toyota | Corolla | E150 (2007-2013), E170 (2013-2019), E210 (2019-) | #1 new-car best-seller 2021-2024 (4 consecutive years); 29,488 units in 2024 | E150 🟡 · E170 ✅ · E210 ✅ |
 | 3 | Volkswagen | Golf | VI (2008-2012), VII (2012-2020), VIII (2020-) | #2 used-import 2024 (23,553 units); top-5 new sales 2015-2018; backbone of German used inflow | VI ✅ · VII ✅ · VIII ✅ |
 | 4 | Opel | Astra | H (2004-2014), J (2009-2015), K (2015-2021), L (2021-) | #1 used-import 2024 (24,293 units); top-5 new sales 2010-2018 | H ✅ · J ✅ · K ✅ · L ✅ |
-| 5 | Skoda | Fabia | II (2007-2014), III (2014-2021), IV (2021-) | #2 in PL 2010-2017, #1 in 2013, top-15 since | II ⬜ · III ⬜ · IV ⬜ |
+| 5 | Skoda | Fabia | II (2007-2014), III (2014-2021), IV (2021-) | #2 in PL 2010-2017, #1 in 2013, top-15 since | II ✅ · III ✅ · IV ✅ |
 | 6 | Audi | A4 | B8 (2007-2015), B9 (2015-) | #3 used-import 2024 (21,292 units); flagship used-import for years | B8 ⬜ · B9 ⬜ |
 | 7 | Toyota | Yaris | XP130 (2011-2020), XP210 (2020-) | Top-5 new sales 2015-2024; 14,185 units in 2024 | XP130 ⬜ · XP210 ⬜ |
 | 8 | Ford | Focus | Mk2 facelift (2008-2011), Mk3 (2011-2018), Mk4 (2018-) | #5 used-import 2024 (16,501 units); strong new sales 2010-2019 | Mk2fl ⬜ · Mk3 ⬜ · Mk4 ⬜ |

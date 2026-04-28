@@ -16460,6 +16460,133 @@
         "_meta": {
           "notes": "DE Wikipedia Toyota_Yaris_Cross Technische Daten. System power used for hybrids. E-Four = rear e-motor AWD. Petrol dropped at 04/2024 facelift. EU availability from 09/2021."
         }
+      },
+      {
+        "key": "Toyota_CHR_Mk1",
+        "wikidata_id": "Q19801888",
+        "model_year_from": 2016,
+        "model_year_to": 2023,
+        "engines": [
+          {
+            "name": "1.2 Turbo 116 KM",
+            "displacement_cc": 1197,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 Turbo 4x4 116 KM",
+            "displacement_cc": 1197,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2016,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 Hybrid 122 KM",
+            "displacement_cc": 1798,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2016,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Hybrid 184 KM",
+            "displacement_cc": 1987,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Toyota_C-HR Mk1 section. Non-EU 2.0 petrol and China EV skipped. 1.2T dropped at 09/2020 EU refresh; 4x4 variant to 11/2019 only. System power for hybrids."
+        }
+      },
+      {
+        "key": "Toyota_CHR_Mk2",
+        "wikidata_id": "Q123338747",
+        "model_year_from": 2024,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.8 Hybrid 140 KM",
+            "displacement_cc": 1798,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Hybrid 197 KM",
+            "displacement_cc": 1987,
+            "power_kw": 145,
+            "power_hp": 197,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Hybrid AWD 197 KM",
+            "displacement_cc": 1987,
+            "power_kw": 145,
+            "power_hp": 197,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 PHEV 223 KM",
+            "displacement_cc": 1987,
+            "power_kw": 164,
+            "power_hp": 223,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Toyota_C-HR Mk2 section. EU launch 01/2024. AWD via rear e-motor (30 kW); system power same badge as FWD. PHEV system output."
+        }
       }
     ],
     "Opel": [
@@ -20500,15 +20627,15 @@
     ]
   },
   "stats": {
-    "model_count": 206,
-    "engine_count": 1343,
+    "model_count": 208,
+    "engine_count": 1351,
     "engines_by_confidence": {
-      "high": 1296,
+      "high": 1304,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 184
+      "high": 186
     },
     "models_with_low_confidence": 0
   }

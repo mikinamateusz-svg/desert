@@ -16251,18 +16251,549 @@
           "notes": "DE Wikipedia Opel_Astra_L. Electric = Astra-e variant."
         }
       }
+    ],
+    "Audi": [
+      {
+        "key": "Audi_A4_B8",
+        "wikidata_id": "Q697380",
+        "model_year_from": 2007,
+        "model_year_to": 2015,
+        "engines": [
+          {
+            "name": "1.8 TFSI 120 KM",
+            "displacement_cc": 1798,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TFSI 160 KM",
+            "displacement_cc": 1798,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TFSI 170 KM",
+            "displacement_cc": 1798,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 180 KM",
+            "displacement_cc": 1984,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 211 KM",
+            "displacement_cc": 1984,
+            "power_kw": 155,
+            "power_hp": 211,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 225 KM",
+            "displacement_cc": 1984,
+            "power_kw": 165,
+            "power_hp": 225,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TFSI 272 KM",
+            "displacement_cc": 2995,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TFSI S4 333 KM",
+            "displacement_cc": 2995,
+            "power_kw": 245,
+            "power_hp": 333,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "3.2 FSI 265 KM",
+            "displacement_cc": 3197,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "4.2 FSI RS4 450 KM",
+            "displacement_cc": 4163,
+            "power_kw": 331,
+            "power_hp": 450,
+            "fuel_type": "PB_98",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 120 KM",
+            "displacement_cc": 1968,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 136 KM",
+            "displacement_cc": 1968,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 143 KM",
+            "displacement_cc": 1968,
+            "power_kw": 105,
+            "power_hp": 143,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 163 KM",
+            "displacement_cc": 1968,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 170 KM",
+            "displacement_cc": 1968,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 177 KM",
+            "displacement_cc": 1968,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 190 KM",
+            "displacement_cc": 1968,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.7 TDI 190 KM",
+            "displacement_cc": 2698,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "2.7 TDI 204 KM",
+            "displacement_cc": 2698,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TDI 240 KM",
+            "displacement_cc": 2967,
+            "power_kw": 176,
+            "power_hp": 240,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2007,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TDI 245 KM",
+            "displacement_cc": 2967,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_A4_B8. Multitronic mapped to 'automatic'. E85 flex variant skipped. S-tronic mapped to 'DSG'."
+        }
+      },
+      {
+        "key": "Audi_A4_B9",
+        "wikidata_id": "Q19812869",
+        "model_year_from": 2015,
+        "model_year_to": 2024,
+        "engines": [
+          {
+            "name": "1.4 TFSI 150 KM",
+            "displacement_cc": 1395,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 190 KM",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI g-tron 170 KM",
+            "displacement_cc": 1984,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "CNG",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 252 KM",
+            "displacement_cc": 1984,
+            "power_kw": 185,
+            "power_hp": 252,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 245 KM",
+            "displacement_cc": 1984,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 265 KM",
+            "displacement_cc": 1984,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TFSI S4 354 KM",
+            "displacement_cc": 2995,
+            "power_kw": 260,
+            "power_hp": 354,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.9 TFSI RS4 450 KM",
+            "displacement_cc": 2894,
+            "power_kw": 331,
+            "power_hp": 450,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 122 KM",
+            "displacement_cc": 1968,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 163 KM",
+            "displacement_cc": 1968,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 190 KM",
+            "displacement_cc": 1968,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TDI 218 KM",
+            "displacement_cc": 2967,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TDI 272 KM",
+            "displacement_cc": 2967,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TDI 286 KM",
+            "displacement_cc": 2967,
+            "power_kw": 210,
+            "power_hp": 286,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "S4 TDI 347 KM",
+            "displacement_cc": 2967,
+            "power_kw": 255,
+            "power_hp": 347,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_A4_B9. S-tronic=DSG, tiptronic=automatic. 45 TFSI power bump 245→265 KM at MY2020 split into two entries. g-tron=CNG primary fuel."
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 183,
-    "engine_count": 1046,
+    "model_count": 185,
+    "engine_count": 1084,
     "engines_by_confidence": {
-      "high": 999,
+      "high": 1037,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 161
+      "high": 163
     },
     "models_with_low_confidence": 0
   }

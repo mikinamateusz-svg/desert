@@ -15012,11 +15012,223 @@
           "notes": "All-electric only model; no ICE variants offered."
         }
       }
+    ],
+    "Toyota": [
+    {
+      "key": "Toyota Corolla E150",
+      "wikidata_id": "Q3536054",
+      "model_year_from": 2007,
+      "model_year_to": 2013,
+      "model_year_confidence": "high",
+      "engines": [
+        {
+          "name": "1.33 Dual-VVT-i 99 KM",
+          "displacement_cc": 1329,
+          "power_kw": 73,
+          "power_hp": 99,
+          "fuel_type": "PB_95",
+          "transmission_options": [
+            "manual"
+          ],
+          "year_from": 2010,
+          "year_to": 2013,
+          "confidence": "medium"
+        },
+        {
+          "name": "1.4 VVT-i 97 KM",
+          "displacement_cc": 1398,
+          "power_kw": 71,
+          "power_hp": 97,
+          "fuel_type": "PB_95",
+          "transmission_options": [
+            "manual"
+          ],
+          "year_from": 2007,
+          "year_to": 2010,
+          "confidence": "medium"
+        },
+        {
+          "name": "1.6 VVT-i 124 KM",
+          "displacement_cc": 1598,
+          "power_kw": 91,
+          "power_hp": 124,
+          "fuel_type": "PB_95",
+          "transmission_options": [
+            "manual",
+            "automatic"
+          ],
+          "year_from": 2007,
+          "year_to": 2013,
+          "confidence": "medium"
+        },
+        {
+          "name": "1.4 D-4D 90 KM",
+          "displacement_cc": 1364,
+          "power_kw": 66,
+          "power_hp": 90,
+          "fuel_type": "ON",
+          "transmission_options": [
+            "manual"
+          ],
+          "year_from": 2007,
+          "year_to": 2013,
+          "confidence": "medium"
+        },
+        {
+          "name": "2.0 D-4D 126 KM",
+          "displacement_cc": 1995,
+          "power_kw": 93,
+          "power_hp": 126,
+          "fuel_type": "ON",
+          "transmission_options": [
+            "manual"
+          ],
+          "year_from": 2007,
+          "year_to": 2010,
+          "confidence": "medium"
+        },
+        {
+          "name": "2.2 D-4D 177 KM",
+          "displacement_cc": 2231,
+          "power_kw": 130,
+          "power_hp": 177,
+          "fuel_type": "ON",
+          "transmission_options": [
+            "manual"
+          ],
+          "year_from": 2007,
+          "year_to": 2010,
+          "confidence": "medium"
+        }
+      ],
+      "_meta": {
+        "model_confidence": "medium",
+        "notes": "European market engines compiled from training knowledge 2026-04-28 — DE Wikipedia (Toyota Corolla section 33) does not contain a structured engine table for this generation. All entries marked medium confidence pending a second source. Facelift from 2010: 1.4 VVT-i replaced by 1.33 Dual-VVT-i; larger diesels (2.0/2.2 D-4D) dropped at facelift."
+      }
+    },
+    {
+      "key": "Toyota Corolla E170",
+      "wikidata_id": "Q16879264",
+      "model_year_from": 2013,
+      "model_year_to": 2019,
+      "model_year_confidence": "high",
+      "engines": [
+        {
+          "name": "1.33 Dual-VVT-i 99 KM",
+          "displacement_cc": 1329,
+          "power_kw": 73,
+          "power_hp": 99,
+          "fuel_type": "PB_95",
+          "transmission_options": [
+            "manual"
+          ],
+          "year_from": 2013,
+          "year_to": 2016,
+          "confidence": "high"
+        },
+        {
+          "name": "1.6 Valvematic 132 KM",
+          "displacement_cc": 1598,
+          "power_kw": 97,
+          "power_hp": 132,
+          "fuel_type": "PB_95",
+          "transmission_options": [
+            "manual",
+            "CVT"
+          ],
+          "year_from": 2013,
+          "year_to": 2019,
+          "confidence": "high"
+        },
+        {
+          "name": "1.4 D-4D 90 KM",
+          "displacement_cc": 1364,
+          "power_kw": 66,
+          "power_hp": 90,
+          "fuel_type": "ON",
+          "transmission_options": [
+            "manual"
+          ],
+          "year_from": 2013,
+          "year_to": 2016,
+          "confidence": "high"
+        }
+      ],
+      "_meta": {
+        "model_confidence": "high",
+        "notes": "Verified against German Wikipedia (Toyota Corolla section 34, E160/E170/E180 article), 2026-04-28. European market only: 3 engines. 1.33 and 1.4 D-4D discontinued at 2016 mid-cycle refresh; 1.6 Valvematic continued to end of production 03/2019."
+      }
+    },
+    {
+      "key": "Toyota Corolla E210",
+      "wikidata_id": "Q55533476",
+      "model_year_from": 2019,
+      "model_year_to": null,
+      "model_year_confidence": "high",
+      "engines": [
+        {
+          "name": "1.2T 116 KM",
+          "displacement_cc": 1197,
+          "power_kw": 85,
+          "power_hp": 116,
+          "fuel_type": "PB_95",
+          "transmission_options": [
+            "manual"
+          ],
+          "year_from": 2019,
+          "year_to": 2020,
+          "confidence": "high"
+        },
+        {
+          "name": "1.8 HEV 122 KM",
+          "displacement_cc": 1798,
+          "power_kw": 90,
+          "power_hp": 122,
+          "fuel_type": "PB_95",
+          "transmission_options": [
+            "e-CVT"
+          ],
+          "year_from": 2019,
+          "year_to": 2022,
+          "confidence": "high"
+        },
+        {
+          "name": "1.8 HEV 140 KM",
+          "displacement_cc": 1798,
+          "power_kw": 103,
+          "power_hp": 140,
+          "fuel_type": "PB_95",
+          "transmission_options": [
+            "e-CVT"
+          ],
+          "year_from": 2022,
+          "year_to": null,
+          "confidence": "high"
+        },
+        {
+          "name": "2.0 HEV 196 KM",
+          "displacement_cc": 1987,
+          "power_kw": 144,
+          "power_hp": 196,
+          "fuel_type": "PB_95",
+          "transmission_options": [
+            "e-CVT"
+          ],
+          "year_from": 2022,
+          "year_to": null,
+          "confidence": "medium"
+        }
+      ],
+      "_meta": {
+        "model_confidence": "high",
+        "notes": "Verified against German Wikipedia (Toyota Corolla section 39, E210 Technische Daten), 2026-04-28. 1.2T petrol discontinued 08/2020. 1.8 HEV system power upgraded from 90 kW (122 KM) to 103 kW (140 KM) at 2022 facelift. 2.0 HEV (144 kW/196 KM) added; year_from 2022 is approximate — Wikipedia listed 'since 02/2025' which may reflect German market launch; marking medium confidence on year_from."
+      }
+    }
     ]
   },
   "stats": {
-    "model_count": 175,
-    "engine_count": 948,
+    "model_count": 178,
+    "engine_count": 973,
     "engines_by_confidence": {
       "high": 909,
       "medium": 39,

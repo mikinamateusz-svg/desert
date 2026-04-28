@@ -15640,6 +15640,83 @@
         "_meta": {
           "notes": "DE Wikipedia Toyota_Yaris_(XP21). Hybrid system output. GR Yaris is separate performance model on XP210 platform."
         }
+      },
+      {
+        "key": "Toyota_Yaris_Cross_XP210",
+        "wikidata_id": "Q97773497",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 VVT-i 125 KM",
+            "displacement_cc": 1490,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2021,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 Hybrid 116 KM",
+            "displacement_cc": 1490,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 Hybrid 116 KM E-Four",
+            "displacement_cc": 1490,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 Hybrid 130 KM",
+            "displacement_cc": 1490,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 Hybrid 130 KM E-Four",
+            "displacement_cc": 1490,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Toyota_Yaris_Cross Technische Daten. System power used for hybrids. E-Four = rear e-motor AWD. Petrol dropped at 04/2024 facelift. EU availability from 09/2021."
+        }
       }
     ],
     "Opel": [
@@ -19065,15 +19142,15 @@
     ]
   },
   "stats": {
-    "model_count": 196,
-    "engine_count": 1245,
+    "model_count": 197,
+    "engine_count": 1250,
     "engines_by_confidence": {
-      "high": 1198,
+      "high": 1203,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 174
+      "high": 175
     },
     "models_with_low_confidence": 0
   }

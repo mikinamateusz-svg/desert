@@ -45,7 +45,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // isGuest: seen onboarding (skipped) but not authenticated
   const isGuest = hasSeenOnboarding && accessToken === null;
 
-  // Restore session and onboarding state on mount
+  // De-dup concurrent refreshes — if queue processor + Activity screen + boot
+  // restore all hit a 401 at once we only want ONE /v1/auth/refresh roundtrip.
+  const refreshInFlight = React.useRef<Promise<string | null> | null>(null);
+
+  const refreshSession = useCallback(async (): Promise<string | null> => {
+    if (refreshInFlight.current) return refreshInFlight.current;
+
+    const run = (async () => {
+      const stored = await getRefreshToken();
+      if (!stored) return null;
+      try {
+        const res = await apiRefreshSession(stored);
+        await saveToken(res.accessToken);
+        await saveRefreshToken(res.refreshToken);
+        setAccessToken(res.accessToken);
+        return res.accessToken;
+      } catch (err) {
+        // Only wipe tokens when the server definitively says the refresh token
+        // itself is invalid (401). For 5xx / network errors the refresh token
+        // is still potentially valid — keep it so a later retry can succeed
+        // rather than forcing the user to re-login after a transient outage.
+        if (err instanceof ApiError && err.statusCode === 401) {
+          await deleteToken();
+          await deleteRefreshToken();
+          setAccessToken(null);
+          setUser(null);
+        }
+        return null;
+      } finally {
+        refreshInFlight.current = null;
+      }
+    })();
+    refreshInFlight.current = run;
+    return run;
+  }, []);
+
+  // Restore session and onboarding state on mount.
+  // Access tokens live ~1h (SuperTokens default); refresh tokens live ~100d.
+  // On cold-start we MUST attempt the refresh-token exchange before giving up,
+  // otherwise any gap >1h between app opens silently logs the user out — even
+  // though their refresh token is still valid for months.
   useEffect(() => {
     async function restoreSession() {
       // Restore onboarding flag
@@ -62,14 +102,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const me = await apiGetMe(token);
         setAccessToken(token);
         setUser(me);
-      } catch {
-        // Token expired or invalid — clear silently
+        return;
+      } catch (err) {
+        // Network failure (offline boot, DNS hiccup) — keep the stored access
+        // token and let in-app calls drive refresh-or-fail naturally once
+        // connectivity returns. Don't punish the user for a missed packet.
+        if (err instanceof ApiError && err.statusCode === 0) {
+          setAccessToken(token);
+          return;
+        }
+        // Anything else (typically 401 from an expired access token) → fall
+        // through to the refresh path below.
+      }
+
+      // Access token rejected by the server — try the refresh-token exchange
+      // before clearing local state. refreshSession() handles its own cleanup
+      // when the refresh token is itself 401'd (returns null in that case).
+      const fresh = await refreshSession();
+      if (fresh === null) {
+        // No refresh token, or refresh failed for a non-401 reason. Drop the
+        // stale access token but keep the refresh token (refreshSession only
+        // wipes it on a confirmed 401), so a later retry can still recover.
         await deleteToken();
+        return;
+      }
+
+      try {
+        const me = await apiGetMe(fresh);
+        setUser(me);
+      } catch {
+        // The brand-new access token failed too — give up cleanly.
+        await deleteToken();
+        await deleteRefreshToken();
+        setAccessToken(null);
+        setUser(null);
       }
     }
 
     restoreSession().finally(() => setIsLoading(false));
-  }, []);
+  }, [refreshSession]);
 
   // Mark onboarding as seen on any successful sign-in so the SoftSignUpSheet
   // is never shown again, even if the user later logs out.
@@ -143,42 +214,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setAccessToken(null);
     setUser(null);
   }, [accessToken]);
-
-  // De-dup concurrent refreshes — if queue processor + Activity screen both hit a
-  // 401 at once we only want ONE /v1/auth/refresh roundtrip.
-  const refreshInFlight = React.useRef<Promise<string | null> | null>(null);
-
-  const refreshSession = useCallback(async (): Promise<string | null> => {
-    if (refreshInFlight.current) return refreshInFlight.current;
-
-    const run = (async () => {
-      const stored = await getRefreshToken();
-      if (!stored) return null;
-      try {
-        const res = await apiRefreshSession(stored);
-        await saveToken(res.accessToken);
-        await saveRefreshToken(res.refreshToken);
-        setAccessToken(res.accessToken);
-        return res.accessToken;
-      } catch (err) {
-        // Only wipe tokens when the server definitively says the refresh token
-        // itself is invalid (401). For 5xx / network errors the refresh token
-        // is still potentially valid — keep it so a later retry can succeed
-        // rather than forcing the user to re-login after a transient outage.
-        if (err instanceof ApiError && err.statusCode === 401) {
-          await deleteToken();
-          await deleteRefreshToken();
-          setAccessToken(null);
-          setUser(null);
-        }
-        return null;
-      } finally {
-        refreshInFlight.current = null;
-      }
-    })();
-    refreshInFlight.current = run;
-    return run;
-  }, []);
 
   // Register this store's refreshSession as the module-level singleton so non-React
   // callers (e.g. queueProcessor) can drive a refresh through the same in-flight

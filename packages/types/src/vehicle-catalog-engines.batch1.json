@@ -21813,6 +21813,554 @@
         "_meta": {
           "notes": "DE Wikipedia Renault_Clio V section. E-Tech = full HEV, system power, DHT mapped to automatic. DSG = 7-speed EDC. 1.3 TCe 67/72 KM are detuned fleet variants."
         }
+      },
+      {
+        "key": "Renault_Megane_III",
+        "wikidata_id": "Q1359408",
+        "model_year_from": 2008,
+        "model_year_to": 2016,
+        "engines": [
+          {
+            "name": "1.6 16V 101 KM",
+            "displacement_cc": 1598,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 16V 110 KM",
+            "displacement_cc": 1598,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TCe 115 KM",
+            "displacement_cc": 1197,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TCe 130 KM",
+            "displacement_cc": 1397,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TCe 132 KM",
+            "displacement_cc": 1197,
+            "power_kw": 97,
+            "power_hp": 132,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2013,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 16V 140 KM",
+            "displacement_cc": 1997,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2009,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TCe 180 KM",
+            "displacement_cc": 1998,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TCe RS 220 KM",
+            "displacement_cc": 1998,
+            "power_kw": 162,
+            "power_hp": 220,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TCe RS 250 KM",
+            "displacement_cc": 1998,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TCe RS Trophy 265 KM",
+            "displacement_cc": 1998,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TCe RS Trophy 275 KM",
+            "displacement_cc": 1998,
+            "power_kw": 201,
+            "power_hp": 275,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 90 KM",
+            "displacement_cc": 1461,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 106 KM",
+            "displacement_cc": 1461,
+            "power_kw": 78,
+            "power_hp": 106,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 110 KM",
+            "displacement_cc": 1461,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 dCi 130 KM",
+            "displacement_cc": 1598,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 dCi 130 KM",
+            "displacement_cc": 1870,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 dCi 160 KM",
+            "displacement_cc": 1995,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 dCi 163 KM",
+            "displacement_cc": 1995,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Renault_Megane III section. 2.0 TCe 190 KM (brief 2012-13) merged into 180/220 range. DSG = 6-speed EDC. 2.0 16V uses CVT."
+        }
+      },
+      {
+        "key": "Renault_Megane_IV",
+        "wikidata_id": "Q16962673",
+        "model_year_from": 2016,
+        "model_year_to": 2022,
+        "engines": [
+          {
+            "name": "1.2 TCe 100 KM",
+            "displacement_cc": 1197,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2016,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 SCe 115 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2016,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 TCe 115 KM",
+            "displacement_cc": 1332,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 TCe 130 KM",
+            "displacement_cc": 1332,
+            "power_kw": 97,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 SCe 140 KM",
+            "displacement_cc": 1997,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2016,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 TCe 140 KM",
+            "displacement_cc": 1332,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 TCe 160 KM",
+            "displacement_cc": 1332,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TCe 165 KM",
+            "displacement_cc": 1618,
+            "power_kw": 121,
+            "power_hp": 165,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TCe 205 KM",
+            "displacement_cc": 1618,
+            "power_kw": 151,
+            "power_hp": 205,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2016,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TCe RS 280 KM",
+            "displacement_cc": 1798,
+            "power_kw": 206,
+            "power_hp": 280,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TCe RS Trophy 300 KM",
+            "displacement_cc": 1798,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 E-Tech PHEV 160 KM",
+            "displacement_cc": 1598,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 90 KM",
+            "displacement_cc": 1461,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2016,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 110 KM",
+            "displacement_cc": 1461,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 115 KM",
+            "displacement_cc": 1461,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 dCi 130 KM",
+            "displacement_cc": 1598,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2016,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 dCi 165 KM",
+            "displacement_cc": 1598,
+            "power_kw": 120,
+            "power_hp": 165,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 Blue dCi 150 KM",
+            "displacement_cc": 1749,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2022,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Renault_Megane IV section. DSG = 7-speed EDC. E-Tech PHEV system output. 1.6 dCi 165 badge = 163 PS actual."
+        }
+      },
+      {
+        "key": "Renault_Megane_ETech",
+        "wikidata_id": "Q108993499",
+        "model_year_from": 2022,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "EV40 131 KM",
+            "displacement_cc": 0,
+            "power_kw": 96,
+            "power_hp": 131,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "EV60 131 KM",
+            "displacement_cc": 0,
+            "power_kw": 96,
+            "power_hp": 131,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "EV60 218 KM",
+            "displacement_cc": 0,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Renault_Megane E-Tech section. EV40 = 40 kWh/300 km WLTP; EV60 = 60 kWh/450-470 km WLTP. All FWD. displacement_cc=0 (no ICE)."
+        }
       }
     ],
     "Dacia": [
@@ -22192,15 +22740,15 @@
     ]
   },
   "stats": {
-    "model_count": 219,
-    "engine_count": 1460,
+    "model_count": 222,
+    "engine_count": 1499,
     "engines_by_confidence": {
-      "high": 1413,
+      "high": 1452,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 197
+      "high": 200
     },
     "models_with_low_confidence": 0
   }

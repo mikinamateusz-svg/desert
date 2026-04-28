@@ -34,7 +34,7 @@
 | 16 | Dacia | Duster | I (2010-2018), II (2018-2024), III (2024-) | #4 new sales 2019-2022; #1 in private buyers 2019; top SUV in PL | I ✅ · II ✅ · III ✅ |
 | 17 | Audi | A3 | 8P facelift (2008-2013), 8V (2012-2020), 8Y (2020-) | #6 used-import 2024 (14,588); huge Polish premium-used stock | 8Pfl ✅ · 8V ✅ · 8Y ✅ |
 | 18 | Toyota | RAV4 | XA40 (2012-2018), XA50 (2018-) | #9 new sales 2024 (11,262); +23% YoY 2024 | XA40 ✅ · XA50 ✅ |
-| 19 | Renault | Megane | III (2008-2016), IV (2016-2022), E-Tech (2022-) | #18 used-import 2024; top-15 new sales 2010-2017 | III ⬜ · IV ⬜ · ET ⬜ |
+| 19 | Renault | Megane | III (2008-2016), IV (2016-2022), E-Tech (2022-) | #18 used-import 2024; top-15 new sales 2010-2017 | III ✅ · IV ✅ · ET ✅ |
 | 20 | Ford | Fiesta | Mk6 (2008-2017), Mk7 (2017-2023) | #9 used-import 2024 (12,767); high stock pre-discontinuation | Mk6 ⬜ · Mk7 ⬜ |
 | 21 | Hyundai | i30 | FD facelift (2010-2012), GD (2012-2017), PD (2017-2024), CN7 (2024-) | #3 new 2022 (9,142); top-15 sustained | FDfl ⬜ · GD ⬜ · PD ⬜ · CN7 ⬜ |
 | 22 | Mercedes-Benz | C-Class | W204 (2007-2014), W205 (2014-2021), W206 (2021-) | Mercedes is top used-import brand (42,607); C-Class is volume model | W204 ⬜ · W205 ⬜ · W206 ⬜ |

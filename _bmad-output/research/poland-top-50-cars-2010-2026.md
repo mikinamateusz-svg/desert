@@ -18,7 +18,7 @@
 |---|------|-------|------------------------------|--------------|--------|
 | 1 | Skoda | Octavia | II facelift (2008-2013), **III (2013-2020), IV (2020-)** | #1 new-car best-seller in Poland 2009-2018 (10 consecutive years); still #2 in 2024 | II ✅ · III ✅ · IV ✅ |
 | 2 | Toyota | Corolla | E150 (2007-2013), E170 (2013-2019), E210 (2019-) | #1 new-car best-seller 2021-2024 (4 consecutive years); 29,488 units in 2024 | E150 🟡 · E170 ✅ · E210 ✅ |
-| 3 | Volkswagen | Golf | VI (2008-2012), VII (2012-2020), VIII (2020-) | #2 used-import 2024 (23,553 units); top-5 new sales 2015-2018; backbone of German used inflow | VI ⬜ · VII ⬜ · VIII ⬜ |
+| 3 | Volkswagen | Golf | VI (2008-2012), VII (2012-2020), VIII (2020-) | #2 used-import 2024 (23,553 units); top-5 new sales 2015-2018; backbone of German used inflow | VI ✅ · VII ✅ · VIII ✅ |
 | 4 | Opel | Astra | H (2004-2014), J (2009-2015), K (2015-2021), L (2021-) | #1 used-import 2024 (24,293 units); top-5 new sales 2010-2018 | H ⬜ · J ⬜ · K ⬜ · L ⬜ |
 | 5 | Skoda | Fabia | II (2007-2014), III (2014-2021), IV (2021-) | #2 in PL 2010-2017, #1 in 2013, top-15 since | II ⬜ · III ⬜ · IV ⬜ |
 | 6 | Audi | A4 | B8 (2007-2015), B9 (2015-) | #3 used-import 2024 (21,292 units); flagship used-import for years | B8 ⬜ · B9 ⬜ |
@@ -102,6 +102,7 @@ For each row in the table:
 ## Reference: completed verifications
 
 - ✅ **Škoda Octavia IV** — verified 2026-04-28 against [de.wikipedia.org/wiki/Škoda_Octavia_IV](https://de.wikipedia.org/wiki/%C5%A0koda_Octavia_IV). Commit `fbcb2b6`. 11 → 13 engines, 5 power/year corrections, 2 missing engines added (2.0 TSI 190 KM 4x4, 2.0 TSI RS 265 KM post-facelift).
+- ✅ **VW Golf Mk6/Mk7/Mk8** — verified 2026-04-28 against DE Wikipedia (Golf 6/7/8 articles). 112 → 122 engines. Mk6: added 1.6 TDI BlueMotion 110 KM + LPG variant; flagged 2.0 TDI 110 KM (Mk6) medium (81 kW not confirmed at 2.0 TDI for Mk6). Mk7: added 1.2 TSI 110 KM FL, 1.4 TGI CNG, 1.5 TGI 110 CNG pre-FL; flagged 1.4 TSI 125 KM medium. Mk8: added 1.0 TSI 90 KM, 1.2 TSI 115 KM, 1.4 TSI 150 KM, 2.0 TSI 190 KM, GTI 265 KM FL (2024+); GTI 245 KM year_to set to 2024.
 - ✅ **Toyota Corolla E170** — verified 2026-04-28 against DE + EN Wikipedia. 5 engines: 1.33 VVT-i (2013–16), 1.6 Valvematic (2013–19), 1.6 Dual VVT-i 124 KM (2013–19, medium), 1.8 Dual VVT-i 140 KM (2013–19, medium), 1.4 D-4D (2013–16). 1.6/1.8 non-Valvematic added from EN Wikipedia.
 - ✅ **Toyota Corolla E210** — verified 2026-04-28 against DE + EN Wikipedia. 4 engines. Facelift corrected to 2023 (not 2022). 2.0 HEV year_from set to 2023 (post-facelift confirmed). 1.2T to 2020.
 - 🟡 **Toyota Corolla E150** — cross-checked DE + EN + JA Wikipedia, 2026-04-28. DE has no table; EN/JA confirm engine codes but no power figures. Removed 1.8 VVT-i and 2.2 D-4D (Avensis/US engines, not EU Corolla). 5 engines remain, all medium confidence. Needs Toyota EU brochure to promote to ✅.

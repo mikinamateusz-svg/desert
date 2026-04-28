@@ -978,7 +978,7 @@
             ],
             "year_from": 2008,
             "year_to": 2012,
-            "confidence": "high"
+            "confidence": "medium"
           },
           {
             "name": "2.0 TDI 140 KM (Mk6)",
@@ -1088,7 +1088,7 @@
             ],
             "year_from": 2014,
             "year_to": 2017,
-            "confidence": "high"
+            "confidence": "medium"
           },
           {
             "name": "1.4 TSI 140 KM ACT (Mk7)",
@@ -1445,7 +1445,7 @@
               "DSG"
             ],
             "year_from": 2020,
-            "year_to": null,
+            "year_to": 2024,
             "confidence": "high"
           },
           {
@@ -1527,11 +1527,143 @@
             "year_from": 2020,
             "year_to": null,
             "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI BlueMotion 110 KM (Mk6)",
+            "displacement_cc": 1598,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 BiFuel 98 KM LPG (Mk6)",
+            "displacement_cc": 1595,
+            "power_kw": 72,
+            "power_hp": 98,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TSI 110 KM (Mk7)",
+            "displacement_cc": 1197,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TGI 110 KM (CNG, Mk7)",
+            "displacement_cc": 1395,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "CNG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TGI 110 KM (CNG, Mk7)",
+            "displacement_cc": 1495,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "CNG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI 90 KM (Mk8)",
+            "displacement_cc": 999,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2020,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TSI 115 KM (Mk8)",
+            "displacement_cc": 1197,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI 150 KM (Mk8)",
+            "displacement_cc": 1395,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 190 KM (Mk8)",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI GTI 265 KM (Mk8 FL)",
+            "displacement_cc": 1984,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_98",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
           }
         ],
         "_meta": {
           "model_confidence": "high",
-          "notes": "Umbrella model spanning Mk1-Mk8 (1974-present); engine list intentionally broad to cover all generations sold in PL."
+          "notes": "Verified against DE Wikipedia (VW Golf 6/7/8 articles), 2026-04-28. Mk6: added 1.6 TDI BlueMotion 110 KM and 1.6 BiFuel LPG; flagged 2.0 TDI 110 KM as medium — DE Wikipedia shows no 2.0 TDI at 81 kW for Mk6 (81 kW = 1.6 TDI territory). Mk7: added 1.2 TSI 110 KM FL (2016-18), 1.4 TGI 110 CNG (2015-16), 1.5 TGI 110 CNG pre-FL (2014-17); flagged 1.4 TSI 125 KM as medium — not in DE Wikipedia table. Mk8: added 1.0 TSI 90 KM, 1.2 TSI 115 KM, 1.4 TSI 150 KM, 2.0 TSI 190 KM, GTI 265 KM FL (2024+); GTI 245 KM year_to set to 2024 (replaced by 265 KM at facelift)."
         }
       },
       {

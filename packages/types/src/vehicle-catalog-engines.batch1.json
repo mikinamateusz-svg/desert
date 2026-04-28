@@ -16587,6 +16587,147 @@
         "_meta": {
           "notes": "DE Wikipedia Toyota_C-HR Mk2 section. EU launch 01/2024. AWD via rear e-motor (30 kW); system power same badge as FWD. PHEV system output."
         }
+      },
+      {
+        "key": "Toyota_RAV4_XA40",
+        "wikidata_id": "Q1135022",
+        "model_year_from": 2013,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "2.0 152 KM",
+            "displacement_cc": 1987,
+            "power_kw": 112,
+            "power_hp": 152,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5 Hybrid 197 KM",
+            "displacement_cc": 2494,
+            "power_kw": 145,
+            "power_hp": 197,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2016,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 D-4D 124 KM",
+            "displacement_cc": 1998,
+            "power_kw": 91,
+            "power_hp": 124,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2013,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 D-4D 143 KM",
+            "displacement_cc": 1995,
+            "power_kw": 105,
+            "power_hp": 143,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2016,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 D-4D 150 KM",
+            "displacement_cc": 2231,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2016,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Toyota_RAV4 XA40 section. EU launch 04/2013. 2.5 NA petrol (Russia/USA only) skipped. 2.5 Hybrid from 2016 facelift only. System power for hybrid."
+        }
+      },
+      {
+        "key": "Toyota_RAV4_XA50",
+        "wikidata_id": "Q56418218",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.0 175 KM",
+            "displacement_cc": 1987,
+            "power_kw": 129,
+            "power_hp": 175,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5 Hybrid 218 KM",
+            "displacement_cc": 2487,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5 Hybrid AWD 222 KM",
+            "displacement_cc": 2487,
+            "power_kw": 163,
+            "power_hp": 222,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5 PHEV 306 KM",
+            "displacement_cc": 2487,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Toyota_RAV4 XA50 section. EU launch 01/2019. 2.0 petrol dropped from EU after 05/2020. 2.5 NA and 2.5 AWD petrol (Russia/NA only) skipped. System power for HEV/PHEV."
+        }
       }
     ],
     "Opel": [
@@ -22051,15 +22192,15 @@
     ]
   },
   "stats": {
-    "model_count": 217,
-    "engine_count": 1451,
+    "model_count": 219,
+    "engine_count": 1460,
     "engines_by_confidence": {
-      "high": 1404,
+      "high": 1413,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 195
+      "high": 197
     },
     "models_with_low_confidence": 0
   }

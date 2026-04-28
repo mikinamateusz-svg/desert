@@ -1663,7 +1663,7 @@
         ],
         "_meta": {
           "model_confidence": "high",
-          "notes": "Verified against DE Wikipedia (VW Golf 6/7/8 articles), 2026-04-28. Mk6: added 1.6 TDI BlueMotion 110 KM and 1.6 BiFuel LPG; flagged 2.0 TDI 110 KM as medium — DE Wikipedia shows no 2.0 TDI at 81 kW for Mk6 (81 kW = 1.6 TDI territory). Mk7: added 1.2 TSI 110 KM FL (2016-18), 1.4 TGI 110 CNG (2015-16), 1.5 TGI 110 CNG pre-FL (2014-17); flagged 1.4 TSI 125 KM as medium — not in DE Wikipedia table. Mk8: added 1.0 TSI 90 KM, 1.2 TSI 115 KM, 1.4 TSI 150 KM, 2.0 TSI 190 KM, GTI 265 KM FL (2024+); GTI 245 KM year_to set to 2024 (replaced by 265 KM at facelift)."
+          "notes": "Verified against DE Wikipedia (VW Golf 6/7/8 articles), 2026-04-28. Mk6: added 1.6 TDI BlueMotion 110 KM and 1.6 BiFuel LPG; flagged 2.0 TDI 110 KM as medium ï¿½ DE Wikipedia shows no 2.0 TDI at 81 kW for Mk6 (81 kW = 1.6 TDI territory). Mk7: added 1.2 TSI 110 KM FL (2016-18), 1.4 TGI 110 CNG (2015-16), 1.5 TGI 110 CNG pre-FL (2014-17); flagged 1.4 TSI 125 KM as medium ï¿½ not in DE Wikipedia table. Mk8: added 1.0 TSI 90 KM, 1.2 TSI 115 KM, 1.4 TSI 150 KM, 2.0 TSI 190 KM, GTI 265 KM FL (2024+); GTI 245 KM year_to set to 2024 (replaced by 265 KM at facelift)."
         }
       },
       {
@@ -15222,7 +15222,7 @@
         ],
         "_meta": {
           "model_confidence": "medium",
-          "notes": "European market engines compiled from training knowledge + cross-checked against EN/JA Wikipedia, 2026-04-28. DE Wikipedia has no structured table for this generation. 1.8 VVT-i and 2.2 D-4D removed — not confirmed for European Corolla E150 (those were Avensis/US-market engines). 2.0 D-4D (1CD-FTV) confirmed for full 2007–2013 run. All entries remain medium confidence pending a Toyota-specific European source."
+          "notes": "European market engines compiled from training knowledge + cross-checked against EN/JA Wikipedia, 2026-04-28. DE Wikipedia has no structured table for this generation. 1.8 VVT-i and 2.2 D-4D removed ï¿½ not confirmed for European Corolla E150 (those were Avensis/US-market engines). 2.0 D-4D (1CD-FTV) confirmed for full 2007ï¿½2013 run. All entries remain medium confidence pending a Toyota-specific European source."
         }
       },
       {
@@ -15301,7 +15301,7 @@
         ],
         "_meta": {
           "model_confidence": "high",
-          "notes": "Verified against DE Wikipedia (section 34) and cross-checked with EN Wikipedia, 2026-04-28. DE Wikipedia confirmed 3 engines; EN Wikipedia revealed 2 additional European variants: 1.6 Dual VVT-i (non-Valvematic, 91 kW) and 1.8 Dual VVT-i (103 kW, Multidrive S CVT). These two added at medium confidence — power figures inferred from engine codes, exact PL availability unconfirmed. 1.33 and 1.4 D-4D discontinued at 2016 mid-cycle refresh."
+          "notes": "Verified against DE Wikipedia (section 34) and cross-checked with EN Wikipedia, 2026-04-28. DE Wikipedia confirmed 3 engines; EN Wikipedia revealed 2 additional European variants: 1.6 Dual VVT-i (non-Valvematic, 91 kW) and 1.8 Dual VVT-i (103 kW, Multidrive S CVT). These two added at medium confidence ï¿½ power figures inferred from engine codes, exact PL availability unconfirmed. 1.33 and 1.4 D-4D discontinued at 2016 mid-cycle refresh."
         }
       },
       {
@@ -15366,24 +15366,800 @@
         ],
         "_meta": {
           "model_confidence": "high",
-          "notes": "Verified against DE Wikipedia (section 39) and cross-checked with EN Wikipedia, 2026-04-28. Facelift confirmed as 2023 (HSD Gen 5 per EN Wikipedia). 1.2T petrol discontinued 2020. 1.8 HEV 122 KM (pre-facelift 2019–2023), 1.8 HEV 140 KM (facelift 2023–). 2.0 HEV 196 KM confirmed post-facelift 2023–; medium confidence — DE Wikipedia listed since 02/2025 (possibly German market launch date)."
+          "notes": "Verified against DE Wikipedia (section 39) and cross-checked with EN Wikipedia, 2026-04-28. Facelift confirmed as 2023 (HSD Gen 5 per EN Wikipedia). 1.2T petrol discontinued 2020. 1.8 HEV 122 KM (pre-facelift 2019ï¿½2023), 1.8 HEV 140 KM (facelift 2023ï¿½). 2.0 HEV 196 KM confirmed post-facelift 2023ï¿½; medium confidence ï¿½ DE Wikipedia listed since 02/2025 (possibly German market launch date)."
+        }
+      }
+    ],
+    "Opel": [
+      {
+        "key": "Opel_Astra_H",
+        "wikidata_id": "Q693966",
+        "model_year_from": 2004,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "1.4 75 KM",
+            "displacement_cc": 1364,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2004,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 Twinport 90 KM",
+            "displacement_cc": 1364,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 LPG 88 KM",
+            "displacement_cc": 1364,
+            "power_kw": 65,
+            "power_hp": 88,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2004,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Twinport 105 KM",
+            "displacement_cc": 1598,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 116 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 LPG 111 KM",
+            "displacement_cc": 1598,
+            "power_kw": 82,
+            "power_hp": 111,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Turbo 179 KM",
+            "displacement_cc": 1598,
+            "power_kw": 132,
+            "power_hp": 179,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 125 KM",
+            "displacement_cc": 1796,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 XER 140 KM",
+            "displacement_cc": 1796,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Turbo 170 KM",
+            "displacement_cc": 1998,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Turbo 200 KM",
+            "displacement_cc": 1998,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Turbo OPC 241 KM",
+            "displacement_cc": 1998,
+            "power_kw": 177,
+            "power_hp": 241,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 CDTI 90 KM",
+            "displacement_cc": 1248,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 CDTI 80 KM",
+            "displacement_cc": 1686,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2004,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 CDTI 100 KM",
+            "displacement_cc": 1686,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2004,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 CDTI 110 KM",
+            "displacement_cc": 1686,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 CDTI 125 KM",
+            "displacement_cc": 1686,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 CDTI 100 KM",
+            "displacement_cc": 1910,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2004,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 CDTI 120 KM",
+            "displacement_cc": 1910,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 CDTI 150 KM",
+            "displacement_cc": 1910,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2004,
+            "year_to": 2010,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Opel_Astra_H. LPG variants common in Poland."
+        }
+      },
+      {
+        "key": "Opel_Astra_J",
+        "wikidata_id": "Q847020",
+        "model_year_from": 2009,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "1.4 87 KM",
+            "displacement_cc": 1398,
+            "power_kw": 64,
+            "power_hp": 87,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 100 KM",
+            "displacement_cc": 1398,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 115 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 Turbo 120 KM",
+            "displacement_cc": 1364,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 Turbo 140 KM",
+            "displacement_cc": 1364,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 Turbo LPG 170 KM",
+            "displacement_cc": 1364,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Turbo 180 KM",
+            "displacement_cc": 1598,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Turbo 200 KM",
+            "displacement_cc": 1598,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 OPC 280 KM",
+            "displacement_cc": 1998,
+            "power_kw": 206,
+            "power_hp": 280,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 CDTI 95 KM",
+            "displacement_cc": 1248,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 CDTI 110 KM",
+            "displacement_cc": 1686,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 CDTI 125 KM",
+            "displacement_cc": 1686,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 CDTI 130 KM",
+            "displacement_cc": 1686,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CDTI 110 KM",
+            "displacement_cc": 1598,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CDTI 136 KM",
+            "displacement_cc": 1598,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 CDTI 160 KM",
+            "displacement_cc": 1956,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 CDTI 165 KM",
+            "displacement_cc": 1956,
+            "power_kw": 121,
+            "power_hp": 165,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 BiTurbo CDTI 195 KM",
+            "displacement_cc": 1956,
+            "power_kw": 143,
+            "power_hp": 195,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Opel_Astra_J."
+        }
+      },
+      {
+        "key": "Opel_Astra_K",
+        "wikidata_id": "Q18355800",
+        "model_year_from": 2015,
+        "model_year_to": 2021,
+        "engines": [
+          {
+            "name": "1.0 Turbo 90 KM",
+            "displacement_cc": 999,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 Turbo 105 KM",
+            "displacement_cc": 1199,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 100 KM",
+            "displacement_cc": 1398,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 Turbo 125 KM",
+            "displacement_cc": 1398,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 Turbo 145 KM",
+            "displacement_cc": 1398,
+            "power_kw": 107,
+            "power_hp": 145,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Turbo 200 KM",
+            "displacement_cc": 1598,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 Diesel 105 KM",
+            "displacement_cc": 1499,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CDTI 95 KM",
+            "displacement_cc": 1598,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CDTI 110 KM",
+            "displacement_cc": 1598,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CDTI 136 KM",
+            "displacement_cc": 1598,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 BiTurbo CDTI 160 KM",
+            "displacement_cc": 1598,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Opel_Astra_K."
+        }
+      },
+      {
+        "key": "Opel_Astra_L",
+        "wikidata_id": "Q110694773",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.2 Turbo 110 KM",
+            "displacement_cc": 1199,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 Hybrid 130 KM",
+            "displacement_cc": 1199,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Turbo PHEV 180 KM",
+            "displacement_cc": 1598,
+            "power_kw": 133,
+            "power_hp": 180,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": 2026,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Turbo PHEV 225 KM",
+            "displacement_cc": 1598,
+            "power_kw": 165,
+            "power_hp": 225,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": 2026,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 Diesel 130 KM",
+            "displacement_cc": 1499,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": 2025,
+            "confidence": "high"
+          },
+          {
+            "name": "Electric 156 KM",
+            "displacement_cc": null,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Opel_Astra_L. Electric = Astra-e variant."
         }
       }
     ]
   },
   "stats": {
-    "model_count": 178,
-    "engine_count": 973,
+    "model_count": 182,
+    "engine_count": 1039,
     "engines_by_confidence": {
-      "high": 909,
-      "medium": 39,
-      "low": 0
+      "high": 992,
+      "medium": 47
     },
     "models_by_confidence": {
-      "high": 64,
-      "medium": 5,
-      "low": 106
+      "medium": 22,
+      "high": 160
     },
-    "models_with_low_confidence": 106
+    "models_with_low_confidence": 0
   }
 }

@@ -8484,17 +8484,30 @@
             "confidence": "high"
           },
           {
-            "name": "1.4 TSI G-TEC 110 KM (CNG)",
+            "name": "1.4 TSI G-TEC 105 KM (CNG)",
+            "displacement_cc": 1395,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "CNG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2013,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI 110 KM",
             "displacement_cc": 1395,
             "power_kw": 81,
             "power_hp": 110,
-            "fuel_type": "CNG",
+            "fuel_type": "PB_95",
             "transmission_options": [
               "manual",
               "DSG"
             ],
-            "year_from": 2013,
-            "year_to": 2017,
+            "year_from": 2015,
+            "year_to": 2016,
             "confidence": "high"
           },
           {
@@ -8522,7 +8535,48 @@
               "DSG"
             ],
             "year_from": 2013,
-            "year_to": 2017,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TSI 4x4 180 KM",
+            "displacement_cc": 1798,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 190 KM",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 4x4 220 KM",
+            "displacement_cc": 1984,
+            "power_kw": 162,
+            "power_hp": 220,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2020,
             "confidence": "high"
           },
           {
@@ -8637,6 +8691,20 @@
             "confidence": "high"
           },
           {
+            "name": "2.0 TDI 184 KM",
+            "displacement_cc": 1968,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
             "name": "2.0 TDI RS 184 KM",
             "displacement_cc": 1968,
             "power_kw": 135,
@@ -8652,7 +8720,8 @@
           }
         ],
         "_meta": {
-          "model_confidence": "high"
+          "model_confidence": "high",
+          "notes": "Verified against German Wikipedia (Škoda Octavia III article, de.wikipedia.org/wiki/Škoda_Octavia_III), 2026-04-28. Pre-facelift 12/2012–11/2016, facelift 11/2016–2020. Corrections: 1.4 TSI G-TEC fixed to 77 kW/105 KM (manual only, to 2015); 1.8 TSI year_to corrected to 2018. Added: 1.4 TSI 110 KM (2015–2016 transitional petrol), 1.8 TSI 4×4, 2.0 TSI 190 KM, 2.0 TSI 4×4 220 KM (all facelift-era), 2.0 TDI 184 KM standard (to 2017; RS continues to 2020). Wikipedia confirmed diesel RS exists. Entries 1.2 TSI 105/110 KM and 1.4 TSI 140/150 KM ACT not confirmed by Wikipedia table — retained but may need further source verification."
         }
       },
       {

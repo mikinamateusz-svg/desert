@@ -19996,6 +19996,447 @@
         "_meta": {
           "notes": "DE Wikipedia Ford_Focus section 39/40. 1.0 EcoBoost Hybrid = mild hybrid (48V). Focus discontinued 11/2025."
         }
+      },
+      {
+        "key": "Ford_Fiesta_Mk6",
+        "wikidata_id": "Q1418827",
+        "model_year_from": 2008,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "1.25 60 KM",
+            "displacement_cc": 1242,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.25 82 KM",
+            "displacement_cc": 1242,
+            "power_kw": 60,
+            "power_hp": 82,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 96 KM",
+            "displacement_cc": 1388,
+            "power_kw": 71,
+            "power_hp": 96,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Ti-VCT 120 KM",
+            "displacement_cc": 1596,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Ti-VCT 134 KM",
+            "displacement_cc": 1596,
+            "power_kw": 99,
+            "power_hp": 134,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 LPG 92 KM",
+            "displacement_cc": 1388,
+            "power_kw": 68,
+            "power_hp": 92,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TDCi 70 KM",
+            "displacement_cc": 1399,
+            "power_kw": 51,
+            "power_hp": 70,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDCi 75 KM",
+            "displacement_cc": 1560,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDCi 90 KM",
+            "displacement_cc": 1560,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDCi 95 KM",
+            "displacement_cc": 1560,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 65 KM",
+            "displacement_cc": 998,
+            "power_kw": 48,
+            "power_hp": 65,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 80 KM",
+            "displacement_cc": 998,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 EcoBoost 100 KM",
+            "displacement_cc": 998,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 EcoBoost 125 KM",
+            "displacement_cc": 998,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 EcoBoost 140 KM",
+            "displacement_cc": 998,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2013,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Ti-VCT 105 KM",
+            "displacement_cc": 1596,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 EcoBoost ST 182 KM",
+            "displacement_cc": 1596,
+            "power_kw": 134,
+            "power_hp": 182,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 EcoBoost ST200 200 KM",
+            "displacement_cc": 1596,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2016,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TDCi 75 KM",
+            "displacement_cc": 1499,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TDCi 95 KM",
+            "displacement_cc": 1499,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDCi 95 KM",
+            "displacement_cc": 1560,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_Fiesta_'09 section. Pre-facelift 2008-2012, facelift 2012-2017. DSG = 6-speed PowerShift. ST rated at 182 PS (147 kW overboost to 200 PS); ST200 rated at 200 PS (215 overboost). 1.0 NA 65/80 PS = naturally aspirated Ti-VCT."
+        }
+      },
+      {
+        "key": "Ford_Fiesta_Mk7",
+        "wikidata_id": "Q55635066",
+        "model_year_from": 2017,
+        "model_year_to": 2023,
+        "engines": [
+          {
+            "name": "1.1 70 KM",
+            "displacement_cc": 1084,
+            "power_kw": 52,
+            "power_hp": 70,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.1 75 KM",
+            "displacement_cc": 1084,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.1 85 KM",
+            "displacement_cc": 1084,
+            "power_kw": 63,
+            "power_hp": 85,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 EcoBoost 85 KM",
+            "displacement_cc": 998,
+            "power_kw": 63,
+            "power_hp": 85,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 EcoBoost 95 KM",
+            "displacement_cc": 998,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 EcoBoost 100 KM",
+            "displacement_cc": 998,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 EcoBoost 125 KM",
+            "displacement_cc": 998,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 EcoBoost 140 KM",
+            "displacement_cc": 998,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 EcoBoost ST 200 KM",
+            "displacement_cc": 1496,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TDCi 85 KM",
+            "displacement_cc": 1499,
+            "power_kw": 63,
+            "power_hp": 85,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TDCi 120 KM",
+            "displacement_cc": 1499,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_Fiesta_'18 section. EU launch 2017. 1.1 NA 3-cylinder replaces 1.25. 1.0 EcoBoost 85 PS dropped after 2019 facelift. 1.5 EcoBoost ST replaces 1.6 unit. automatic = 7-speed DCT on 100 PS variant."
+        }
       }
     ],
     "BMW": [
@@ -22740,15 +23181,15 @@
     ]
   },
   "stats": {
-    "model_count": 222,
-    "engine_count": 1499,
+    "model_count": 224,
+    "engine_count": 1531,
     "engines_by_confidence": {
-      "high": 1452,
+      "high": 1484,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 200
+      "high": 202
     },
     "models_with_low_confidence": 0
   }

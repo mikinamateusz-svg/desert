@@ -24,7 +24,7 @@
 | 6 | Audi | A4 | B8 (2007-2015), B9 (2015-) | #3 used-import 2024 (21,292 units); flagship used-import for years | B8 ✅ · B9 ✅ |
 | 7 | Toyota | Yaris | XP130 (2011-2020), XP210 (2020-) | Top-5 new sales 2015-2024; 14,185 units in 2024 | XP130 ✅ · XP210 ✅ |
 | 8 | Ford | Focus | Mk2 facelift (2008-2011), Mk3 (2011-2018), Mk4 (2018-) | #5 used-import 2024 (16,501 units); strong new sales 2010-2019 | Mk2fl ✅ · Mk3 ✅ · Mk4 ✅ |
-| 9 | BMW | 3 Series | E90/E91/E92 (2005-2013), F30/F31 (2012-2019), G20/G21 (2019-) | #4 used-import 2024 (17,956 units); flagship German used import | E90 ⬜ · F30 ⬜ · G20 ⬜ |
+| 9 | BMW | 3 Series | E90/E91/E92 (2005-2013), F30/F31 (2012-2019), G20/G21 (2019-) | #4 used-import 2024 (17,956 units); flagship German used import | E90 ✅ · F30 ✅ · G20 ✅ |
 | 10 | Toyota | Yaris Cross | XP210 (2020-) | #3 new sales 2024 (15,608 units); rapid Polish bestseller | XP210 ⬜ |
 | 11 | Hyundai | Tucson | TL (2015-2020), NX4 (2020-) | #7 new sales 2024 (13,179); top-10 since 2018 | TL ⬜ · NX4 ⬜ |
 | 12 | Kia | Sportage | III SL (2010-2015), IV QL (2015-2021), V NQ5 (2021-) | #6 new 2024 (14,133); top-10 sustained 2017-2024 | SL ⬜ · QL ⬜ · NQ5 ⬜ |

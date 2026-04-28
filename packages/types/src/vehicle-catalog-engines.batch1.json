@@ -18260,18 +18260,820 @@
           "notes": "DE Wikipedia Ford_Focus section 39/40. 1.0 EcoBoost Hybrid = mild hybrid (48V). Focus discontinued 11/2025."
         }
       }
+    ],
+    "BMW": [
+      {
+        "key": "BMW_E90",
+        "wikidata_id": "Q577073",
+        "model_year_from": 2005,
+        "model_year_to": 2013,
+        "engines": [
+          {
+            "name": "316i 122 KM",
+            "displacement_cc": 1599,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "318i 129 KM",
+            "displacement_cc": 1995,
+            "power_kw": 95,
+            "power_hp": 129,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "318i 143 KM",
+            "displacement_cc": 1995,
+            "power_kw": 105,
+            "power_hp": 143,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "320i 150 KM",
+            "displacement_cc": 1995,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "320i 170 KM",
+            "displacement_cc": 1995,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "323i 177 KM",
+            "displacement_cc": 2497,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "323i 204 KM",
+            "displacement_cc": 2497,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "325i 218 KM",
+            "displacement_cc": 2497,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "325i 218 KM (3.0)",
+            "displacement_cc": 2996,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "328i 233 KM",
+            "displacement_cc": 2497,
+            "power_kw": 172,
+            "power_hp": 233,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "330i 258 KM",
+            "displacement_cc": 2996,
+            "power_kw": 190,
+            "power_hp": 258,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "330i 272 KM",
+            "displacement_cc": 2996,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "335i 306 KM",
+            "displacement_cc": 2979,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "M3 420 KM",
+            "displacement_cc": 3999,
+            "power_kw": 309,
+            "power_hp": 420,
+            "fuel_type": "PB_98",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "316d 116 KM",
+            "displacement_cc": 1995,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "318d 122 KM",
+            "displacement_cc": 1995,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "318d 143 KM",
+            "displacement_cc": 1995,
+            "power_kw": 105,
+            "power_hp": 143,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "320d 163 KM",
+            "displacement_cc": 1995,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "320d 177 KM",
+            "displacement_cc": 1995,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "320d 184 KM",
+            "displacement_cc": 1995,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "325d 197 KM",
+            "displacement_cc": 2993,
+            "power_kw": 145,
+            "power_hp": 197,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "325d 204 KM",
+            "displacement_cc": 2993,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "330d 231 KM",
+            "displacement_cc": 2993,
+            "power_kw": 170,
+            "power_hp": 231,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "330d 245 KM",
+            "displacement_cc": 2993,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "335d 286 KM",
+            "displacement_cc": 2993,
+            "power_kw": 210,
+            "power_hp": 286,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2012,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia BMW_E90. Covers E90/E91/E92/E93 family. 323i had two power outputs (N52B25). M3 = V8 4.0L."
+        }
+      },
+      {
+        "key": "BMW_F30",
+        "wikidata_id": "Q2055440",
+        "model_year_from": 2011,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "316i 136 KM",
+            "displacement_cc": 1598,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "318i 136 KM",
+            "displacement_cc": 1499,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "320i 184 KM",
+            "displacement_cc": 1997,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "328i 245 KM",
+            "displacement_cc": 1997,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "330i 252 KM",
+            "displacement_cc": 1998,
+            "power_kw": 185,
+            "power_hp": 252,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "335i 306 KM",
+            "displacement_cc": 2979,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "340i 326 KM",
+            "displacement_cc": 2998,
+            "power_kw": 240,
+            "power_hp": 326,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "330e 252 KM",
+            "displacement_cc": 1998,
+            "power_kw": 185,
+            "power_hp": 252,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "M3 431 KM",
+            "displacement_cc": 2979,
+            "power_kw": 317,
+            "power_hp": 431,
+            "fuel_type": "PB_98",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "M3 Competition 450 KM",
+            "displacement_cc": 2979,
+            "power_kw": 331,
+            "power_hp": 450,
+            "fuel_type": "PB_98",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "316d 116 KM",
+            "displacement_cc": 1995,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "318d 143 KM",
+            "displacement_cc": 1995,
+            "power_kw": 105,
+            "power_hp": 143,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "320d 163 KM",
+            "displacement_cc": 1995,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "320d 184 KM",
+            "displacement_cc": 1995,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "325d 218 KM",
+            "displacement_cc": 1995,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "330d 258 KM",
+            "displacement_cc": 2993,
+            "power_kw": 190,
+            "power_hp": 258,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "335d 313 KM",
+            "displacement_cc": 2993,
+            "power_kw": 230,
+            "power_hp": 313,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia BMW_F30 sections 33/38. M DCT mapped to DSG. 330e = PHEV system output."
+        }
+      },
+      {
+        "key": "BMW_G20",
+        "wikidata_id": "Q55638498",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "318i 156 KM",
+            "displacement_cc": 1998,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "320i 184 KM",
+            "displacement_cc": 1998,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "330i 245 KM",
+            "displacement_cc": 1998,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "330i 258 KM",
+            "displacement_cc": 1998,
+            "power_kw": 190,
+            "power_hp": 258,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "M340i xDrive 374 KM",
+            "displacement_cc": 2998,
+            "power_kw": 275,
+            "power_hp": 374,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "M3 480 KM",
+            "displacement_cc": 2993,
+            "power_kw": 353,
+            "power_hp": 480,
+            "fuel_type": "PB_98",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "M3 Competition 510 KM",
+            "displacement_cc": 2993,
+            "power_kw": 375,
+            "power_hp": 510,
+            "fuel_type": "PB_98",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "M3 Competition xDrive 530 KM",
+            "displacement_cc": 2993,
+            "power_kw": 390,
+            "power_hp": 530,
+            "fuel_type": "PB_98",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "320e 204 KM",
+            "displacement_cc": 1998,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "330e 252 KM",
+            "displacement_cc": 1998,
+            "power_kw": 185,
+            "power_hp": 252,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "318d 150 KM",
+            "displacement_cc": 1995,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "320d 190 KM",
+            "displacement_cc": 1995,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "330d 265 KM",
+            "displacement_cc": 2993,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "330d xDrive 286 KM",
+            "displacement_cc": 2993,
+            "power_kw": 210,
+            "power_hp": 286,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "M340d xDrive 340 KM",
+            "displacement_cc": 2993,
+            "power_kw": 250,
+            "power_hp": 340,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia BMW_G20. 318d/320d got 48V mild hybrid from 02/2020. PHEV system output. M DCT mapped to DSG."
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 193,
-    "engine_count": 1188,
+    "model_count": 196,
+    "engine_count": 1245,
     "engines_by_confidence": {
-      "high": 1141,
+      "high": 1198,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 171
+      "high": 174
     },
     "models_with_low_confidence": 0
   }

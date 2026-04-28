@@ -21495,6 +21495,470 @@
         "_meta": {
           "notes": "DE Wikipedia Hyundai_Tucson sections 10/11/12. 48V mild-hybrid petrol variants share power badges. HEV/PHEV = system output. iMT mapped to manual."
         }
+      },
+      {
+        "key": "Hyundai_i30_FD",
+        "wikidata_id": "Q1349217",
+        "model_year_from": 2007,
+        "model_year_to": 2012,
+        "engines": [
+          {
+            "name": "1.4 CVVT 109 KM",
+            "displacement_cc": 1396,
+            "power_kw": 80,
+            "power_hp": 109,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CVVT 122 KM",
+            "displacement_cc": 1591,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CVVT 126 KM",
+            "displacement_cc": 1591,
+            "power_kw": 93,
+            "power_hp": 126,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 CVVT 143 KM",
+            "displacement_cc": 1975,
+            "power_kw": 105,
+            "power_hp": 143,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 90 KM",
+            "displacement_cc": 1582,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 116 KM",
+            "displacement_cc": 1582,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 CRDi 140 KM",
+            "displacement_cc": 1991,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Hyundai_i30_(FD). 2.0 CVVT and 2.0 CRDi dropped 2010 (pre-Euro 5). 1.6 CRDi 128 PS not available in DE — skipped. automatic = 4-speed."
+        }
+      },
+      {
+        "key": "Hyundai_i30_GD",
+        "wikidata_id": "Q7104875",
+        "model_year_from": 2011,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "1.4 CVVT 99 KM",
+            "displacement_cc": 1396,
+            "power_kw": 73,
+            "power_hp": 99,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 blue 100 KM",
+            "displacement_cc": 1368,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 MPI 120 KM",
+            "displacement_cc": 1591,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 GDI 135 KM",
+            "displacement_cc": 1591,
+            "power_kw": 99,
+            "power_hp": 135,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic",
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 GDI Turbo 186 KM",
+            "displacement_cc": 1591,
+            "power_kw": 137,
+            "power_hp": 186,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 CRDi 90 KM",
+            "displacement_cc": 1396,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 110 KM",
+            "displacement_cc": 1582,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic",
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 128 KM",
+            "displacement_cc": 1582,
+            "power_kw": 94,
+            "power_hp": 128,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi blue 136 KM",
+            "displacement_cc": 1582,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2017,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Hyundai_i30_(GD). automatic = 6-step; DSG = 7-speed DCT (from 04/2015 for GDI/CRDi 110). 1.4 blue = updated 1368 cc Gamma. 1.6 GDI Turbo = i30 Turbo Sport trim."
+        }
+      },
+      {
+        "key": "Hyundai_i30_PD",
+        "wikidata_id": "Q28692748",
+        "model_year_from": 2017,
+        "model_year_to": 2024,
+        "engines": [
+          {
+            "name": "1.0 T-GDI 120 KM",
+            "displacement_cc": 998,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 MPI 99 KM",
+            "displacement_cc": 1368,
+            "power_kw": 73,
+            "power_hp": 99,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 T-GDI 140 KM",
+            "displacement_cc": 1353,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 DPI 110 KM",
+            "displacement_cc": 1498,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2020,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 T-GDI 140 KM",
+            "displacement_cc": 1482,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 T-GDI 160 KM",
+            "displacement_cc": 1482,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 N 250 KM",
+            "displacement_cc": 1998,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 N Performance 275 KM",
+            "displacement_cc": 1998,
+            "power_kw": 202,
+            "power_hp": 275,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 N Performance 280 KM",
+            "displacement_cc": 1998,
+            "power_kw": 206,
+            "power_hp": 280,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 95 KM",
+            "displacement_cc": 1582,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 110 KM",
+            "displacement_cc": 1582,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 115 KM",
+            "displacement_cc": 1582,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 136 KM",
+            "displacement_cc": 1582,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2022,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Hyundai_i30_(PD). DSG = 7-speed DCT (8-speed DCT for N Performance 280 optional). 1.5 DPI = naturally aspirated 1.5. Diesel range ended 01/2022. N variants production gap 04/2019–05/2021."
+        }
+      },
+      {
+        "key": "Hyundai_i30_CN7",
+        "wikidata_id": "Q113564091",
+        "model_year_from": 2024,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 T-GDI 100 KM",
+            "displacement_cc": 998,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 T-GDI 140 KM",
+            "displacement_cc": 1482,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Hyundai_i30_(PD) section 06/2024+ (CN7 not yet a separate DE Wikipedia article). No diesel. 1.0 T-GDI replaces 1.0 120 PS; 1.5 T-GDI 140 PS replaces 160 PS as main powertrain."
+        }
       }
     ],
     "Kia": [
@@ -23181,15 +23645,15 @@
     ]
   },
   "stats": {
-    "model_count": 224,
-    "engine_count": 1531,
+    "model_count": 228,
+    "engine_count": 1562,
     "engines_by_confidence": {
-      "high": 1484,
+      "high": 1515,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 202
+      "high": 206
     },
     "models_with_low_confidence": 0
   }

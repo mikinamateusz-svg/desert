@@ -30,7 +30,7 @@
 | 12 | Kia | Sportage | III SL (2010-2015), IV QL (2015-2021), V NQ5 (2021-) | #6 new 2024 (14,133); top-10 sustained 2017-2024 | SL ✅ · QL ✅ · NQ5 ✅ |
 | 13 | Volkswagen | Passat | B6 (2005-2010), B7 (2010-2014), B8 (2014-2023), B9 (2023-) | #7 used-import 2024 (13,840); massive used stock from Germany | B6 ✅ · B7 ✅ · B8 ✅ · B9 ✅ |
 | 14 | Toyota | C-HR | Mk1 (2016-2023), Mk2 (2023-) | #4 new sales 2024 (14,516, +34% YoY) | Mk1 ✅ · Mk2 ✅ |
-| 15 | Renault | Clio | III facelift (2009-2012), IV (2012-2019), V (2019-) | #10 new 2024 (10,885); sustained presence | IIIfl ⬜ · IV ⬜ · V ⬜ |
+| 15 | Renault | Clio | III facelift (2009-2012), IV (2012-2019), V (2019-) | #10 new 2024 (10,885); sustained presence | IIIfl ✅ · IV ✅ · V ✅ |
 | 16 | Dacia | Duster | I (2010-2018), II (2018-2024), III (2024-) | #4 new sales 2019-2022; #1 in private buyers 2019; top SUV in PL | I ⬜ · II ⬜ · III ⬜ |
 | 17 | Audi | A3 | 8P facelift (2008-2013), 8V (2012-2020), 8Y (2020-) | #6 used-import 2024 (14,588); huge Polish premium-used stock | 8Pfl ⬜ · 8V ⬜ · 8Y ⬜ |
 | 18 | Toyota | RAV4 | XA40 (2012-2018), XA50 (2018-) | #9 new sales 2024 (11,262); +23% YoY 2024 | XA40 ⬜ · XA50 ⬜ |

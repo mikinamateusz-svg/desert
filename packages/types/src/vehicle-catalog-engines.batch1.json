@@ -20624,18 +20624,418 @@
           "notes": "DE Wikipedia Kia_Sportage NQ5 section. 48V mild-hybrid shares power badges with regular T-GDI. PHEV system power; 3 variants across model years. HEV = 6-AT."
         }
       }
+    ],
+    "Renault": [
+      {
+        "key": "Renault_Clio_III_facelift",
+        "wikidata_id": "Q1066934",
+        "model_year_from": 2009,
+        "model_year_to": 2012,
+        "engines": [
+          {
+            "name": "1.2 TCe 103 KM",
+            "displacement_cc": 1149,
+            "power_kw": 76,
+            "power_hp": 103,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 16V 128 KM",
+            "displacement_cc": 1598,
+            "power_kw": 94,
+            "power_hp": 128,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 RS 201 KM",
+            "displacement_cc": 1998,
+            "power_kw": 148,
+            "power_hp": 201,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 75 KM",
+            "displacement_cc": 1461,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 88 KM",
+            "displacement_cc": 1461,
+            "power_kw": 65,
+            "power_hp": 88,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 106 KM",
+            "displacement_cc": 1461,
+            "power_kw": 78,
+            "power_hp": 106,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2012,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Renault_Clio III facelift section. Only facelift-era verified engines included; base 1.2 16V/1.4 16V carry-overs not in DE section."
+        }
+      },
+      {
+        "key": "Renault_Clio_IV",
+        "wikidata_id": "Q3352498",
+        "model_year_from": 2012,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "1.2 16V 65 KM",
+            "displacement_cc": 1149,
+            "power_kw": 48,
+            "power_hp": 65,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 16V 73 KM",
+            "displacement_cc": 1149,
+            "power_kw": 54,
+            "power_hp": 73,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "0.9 TCe 76 KM",
+            "displacement_cc": 898,
+            "power_kw": 56,
+            "power_hp": 76,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "0.9 TCe 90 KM",
+            "displacement_cc": 898,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TCe 118 KM",
+            "displacement_cc": 1197,
+            "power_kw": 87,
+            "power_hp": 118,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TCe 120 KM",
+            "displacement_cc": 1197,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 RS 200 KM",
+            "displacement_cc": 1618,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 RS Trophy 220 KM",
+            "displacement_cc": 1618,
+            "power_kw": 162,
+            "power_hp": 220,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 75 KM",
+            "displacement_cc": 1461,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 90 KM",
+            "displacement_cc": 1461,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 110 KM",
+            "displacement_cc": 1461,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Renault_Clio IV section. DSG = 6-speed EDC dual-clutch. 0.9 TCe = 3-cylinder turbo."
+        }
+      },
+      {
+        "key": "Renault_Clio_V",
+        "wikidata_id": "Q58643793",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 SCe 65 KM",
+            "displacement_cc": 999,
+            "power_kw": 48,
+            "power_hp": 65,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 TCe 67 KM",
+            "displacement_cc": 1332,
+            "power_kw": 49,
+            "power_hp": 67,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 TCe 72 KM",
+            "displacement_cc": 1332,
+            "power_kw": 53,
+            "power_hp": 72,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 TCe 101 KM",
+            "displacement_cc": 1332,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 TCe 130 KM",
+            "displacement_cc": 1332,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 TCe 140 KM",
+            "displacement_cc": 1332,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 E-Tech 140 KM",
+            "displacement_cc": 1598,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 E-Tech 145 KM",
+            "displacement_cc": 1598,
+            "power_kw": 105,
+            "power_hp": 145,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 Blue dCi 85 KM",
+            "displacement_cc": 1461,
+            "power_kw": 63,
+            "power_hp": 85,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 Blue dCi 100 KM",
+            "displacement_cc": 1461,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 Blue dCi 115 KM",
+            "displacement_cc": 1461,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Renault_Clio V section. E-Tech = full HEV, system power, DHT mapped to automatic. DSG = 7-speed EDC. 1.3 TCe 67/72 KM are detuned fleet variants."
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 208,
-    "engine_count": 1351,
+    "model_count": 211,
+    "engine_count": 1379,
     "engines_by_confidence": {
-      "high": 1304,
+      "high": 1332,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 186
+      "high": 189
     },
     "models_with_low_confidence": 0
   }

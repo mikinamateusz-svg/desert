@@ -8673,20 +8673,21 @@
               "DSG"
             ],
             "year_from": 2020,
-            "year_to": null,
+            "year_to": 2023,
             "confidence": "high"
           },
           {
-            "name": "1.0 e-TEC 110 KM mHEV",
+            "name": "1.0 TSI e-TEC 115 KM mHEV",
             "displacement_cc": 999,
-            "power_kw": 81,
-            "power_hp": 110,
+            "power_kw": 85,
+            "power_hp": 115,
             "fuel_type": "PB_95",
             "transmission_options": [
+              "manual",
               "DSG"
             ],
             "year_from": 2020,
-            "year_to": null,
+            "year_to": 2023,
             "confidence": "high"
           },
           {
@@ -8704,12 +8705,13 @@
             "confidence": "high"
           },
           {
-            "name": "1.5 e-TEC 150 KM mHEV",
+            "name": "1.5 TSI e-TEC 150 KM mHEV",
             "displacement_cc": 1498,
             "power_kw": 110,
             "power_hp": 150,
             "fuel_type": "PB_95",
             "transmission_options": [
+              "manual",
               "DSG"
             ],
             "year_from": 2020,
@@ -8717,20 +8719,20 @@
             "confidence": "high"
           },
           {
-            "name": "1.5 G-TEC 130 KM (CNG)",
+            "name": "1.5 TSI G-TEC 130 KM (CNG)",
             "displacement_cc": 1498,
             "power_kw": 96,
             "power_hp": 130,
             "fuel_type": "CNG",
             "transmission_options": [
-              "DSG"
+              "manual"
             ],
             "year_from": 2020,
-            "year_to": 2024,
-            "confidence": "medium"
+            "year_to": 2020,
+            "confidence": "high"
           },
           {
-            "name": "1.4 iV 204 KM PHEV",
+            "name": "1.4 TSI iV 204 KM PHEV",
             "displacement_cc": 1395,
             "power_kw": 150,
             "power_hp": 204,
@@ -8743,7 +8745,7 @@
             "confidence": "high"
           },
           {
-            "name": "1.4 RS iV 245 KM PHEV",
+            "name": "1.4 TSI RS iV 245 KM PHEV",
             "displacement_cc": 1395,
             "power_kw": 180,
             "power_hp": 245,
@@ -8756,24 +8758,49 @@
             "confidence": "high"
           },
           {
+            "name": "2.0 TSI 190 KM 4x4",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
             "name": "2.0 TSI RS 245 KM",
             "displacement_cc": 1984,
             "power_kw": 180,
             "power_hp": 245,
             "fuel_type": "PB_98",
             "transmission_options": [
-              "manual",
               "DSG"
             ],
             "year_from": 2020,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI RS 265 KM",
+            "displacement_cc": 1984,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_98",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
             "year_to": null,
             "confidence": "high"
           },
           {
-            "name": "2.0 TDI 116 KM",
+            "name": "2.0 TDI 115 KM",
             "displacement_cc": 1968,
             "power_kw": 85,
-            "power_hp": 116,
+            "power_hp": 115,
             "fuel_type": "ON",
             "transmission_options": [
               "manual",
@@ -8804,15 +8831,17 @@
             "power_hp": 200,
             "fuel_type": "ON",
             "transmission_options": [
+              "manual",
               "DSG"
             ],
             "year_from": 2020,
-            "year_to": 2023,
+            "year_to": 2024,
             "confidence": "high"
           }
         ],
         "_meta": {
-          "model_confidence": "high"
+          "model_confidence": "high",
+          "notes": "Verified against German Wikipedia (Škoda Octavia IV article). Pre-facelift 11/2019-02/2024, facelift 14 Feb 2024. 1.0 TSI/TSI e-TEC dropped at facelift (replaced by 1.5 TSI). RS petrol uprated 245→265 KM at facelift; RS diesel and RS PHEV discontinued at facelift. CNG G-TEC was a very short 2020-only production run (March-December)."
         }
       },
       {

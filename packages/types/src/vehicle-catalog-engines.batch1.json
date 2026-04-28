@@ -8233,7 +8233,20 @@
               "manual"
             ],
             "year_from": 2004,
-            "year_to": 2010,
+            "year_to": 2006,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 80 KM",
+            "displacement_cc": 1390,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2013,
             "confidence": "high"
           },
           {
@@ -8279,17 +8292,17 @@
             "confidence": "high"
           },
           {
-            "name": "1.6 MPI 102 KM LPG",
+            "name": "1.6 MPI 98 KM LPG",
             "displacement_cc": 1595,
-            "power_kw": 75,
-            "power_hp": 102,
+            "power_kw": 72,
+            "power_hp": 98,
             "fuel_type": "LPG",
             "transmission_options": [
               "manual"
             ],
             "year_from": 2009,
             "year_to": 2013,
-            "confidence": "medium"
+            "confidence": "high"
           },
           {
             "name": "1.8 TSI 160 KM",
@@ -8302,6 +8315,20 @@
               "DSG"
             ],
             "year_from": 2007,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TSI 152 KM",
+            "displacement_cc": 1798,
+            "power_kw": 112,
+            "power_hp": 152,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
             "year_to": 2013,
             "confidence": "high"
           },
@@ -8361,6 +8388,33 @@
             "confidence": "high"
           },
           {
+            "name": "2.0 TDI 136 KM",
+            "displacement_cc": 1968,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2004,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 110 KM",
+            "displacement_cc": 1968,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
             "name": "2.0 TDI 140 KM",
             "displacement_cc": 1968,
             "power_kw": 103,
@@ -8371,6 +8425,19 @@
               "DSG"
             ],
             "year_from": 2004,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CNG 102 KM",
+            "displacement_cc": 1595,
+            "power_kw": 75,
+            "power_hp": 102,
+            "fuel_type": "CNG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
             "year_to": 2013,
             "confidence": "high"
           },
@@ -8390,7 +8457,8 @@
           }
         ],
         "_meta": {
-          "model_confidence": "high"
+          "model_confidence": "high",
+          "notes": "Verified against German Wikipedia (Škoda Octavia II article, de.wikipedia.org/wiki/Škoda_Octavia_II), 2026-04-28. Covers full gen 05/2004–01/2013 incl. facelift from 11/2008. Corrections: 1.4 75 KM year_to 2010→2006; LPG power corrected to 72 kW/98 KM (LPG-mode). Added: 1.4 80 KM (2006–13), 1.8 TSI 152 KM (2009–13 detuned variant), 2.0 TDI 136 KM PD (2004–10), 2.0 TDI 110 KM CR (2010–13), 1.6 CNG 102 KM (2007–13). DPF-only and PD/CR sub-variants of same power consolidated."
         }
       },
       {

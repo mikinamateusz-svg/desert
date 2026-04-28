@@ -16,7 +16,7 @@
 
 | # | Make | Model | Generations within 2010-2026 | Why included | Status |
 |---|------|-------|------------------------------|--------------|--------|
-| 1 | Skoda | Octavia | II facelift (2008-2013), **III (2013-2020), IV (2020-)** | #1 new-car best-seller in Poland 2009-2018 (10 consecutive years); still #2 in 2024 | II ⬜ · III ✅ · IV ✅ |
+| 1 | Skoda | Octavia | II facelift (2008-2013), **III (2013-2020), IV (2020-)** | #1 new-car best-seller in Poland 2009-2018 (10 consecutive years); still #2 in 2024 | II ✅ · III ✅ · IV ✅ |
 | 2 | Toyota | Corolla | E150 (2007-2013), E170 (2013-2019), E210 (2019-) | #1 new-car best-seller 2021-2024 (4 consecutive years); 29,488 units in 2024 | E150 ⬜ · E170 ⬜ · E210 ⬜ |
 | 3 | Volkswagen | Golf | VI (2008-2012), VII (2012-2020), VIII (2020-) | #2 used-import 2024 (23,553 units); top-5 new sales 2015-2018; backbone of German used inflow | VI ⬜ · VII ⬜ · VIII ⬜ |
 | 4 | Opel | Astra | H (2004-2014), J (2009-2015), K (2015-2021), L (2021-) | #1 used-import 2024 (24,293 units); top-5 new sales 2010-2018 | H ⬜ · J ⬜ · K ⬜ · L ⬜ |
@@ -102,4 +102,5 @@ For each row in the table:
 ## Reference: completed verifications
 
 - ✅ **Škoda Octavia IV** — verified 2026-04-28 against [de.wikipedia.org/wiki/Škoda_Octavia_IV](https://de.wikipedia.org/wiki/%C5%A0koda_Octavia_IV). Commit `fbcb2b6`. 11 → 13 engines, 5 power/year corrections, 2 missing engines added (2.0 TSI 190 KM 4x4, 2.0 TSI RS 265 KM post-facelift).
+- ✅ **Škoda Octavia II** — verified 2026-04-28 against [de.wikipedia.org/wiki/Škoda_Octavia_II](https://de.wikipedia.org/wiki/%C5%A0koda_Octavia_II). Full gen 2004–2013 incl. FL from 2008. 13 → 18 engines. Corrections: 1.4 75 KM year_to fixed; LPG power 102→98 KM. Added: 1.4 80 KM, 1.8 TSI 152 KM, 2.0 TDI 136 KM, 2.0 TDI 110 KM CR, 1.6 CNG.
 - ✅ **Škoda Octavia III** — verified 2026-04-28 against [de.wikipedia.org/wiki/Škoda_Octavia_III](https://de.wikipedia.org/wiki/%C5%A0koda_Octavia_III). Pre-facelift 2012–2016, FL 2016–2020. 18 → 22 engines. Corrections: 1.4 TSI G-TEC 110→105 KM (manual only, year_to 2015); 1.8 TSI year_to 2017→2018. Added: 1.4 TSI 110 KM (2015–16), 1.8 TSI 4×4, 2.0 TSI 190 KM, 2.0 TSI 4×4 220 KM, 2.0 TDI 184 KM std. Note: 1.2 TSI 105/110 KM and 1.4 TSI 140/150 ACT unconfirmed by Wikipedia — retained pending second source.

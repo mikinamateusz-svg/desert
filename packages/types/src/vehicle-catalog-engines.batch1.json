@@ -23642,18 +23642,562 @@
           "notes": "DE Wikipedia Dacia_Duster III section. No diesel. ECO-G = LPG/petrol bifuel. Mild Hybrid = 48V starter-generator. Full Hybrid = system power. Hybrid-G = LPG + hybrid AWD."
         }
       }
+    ],
+    "Mercedes-Benz": [
+      {
+        "key": "Mercedes_C_W204",
+        "wikidata_id": "Q2073813",
+        "model_year_from": 2007,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "C 180 156 KM",
+            "displacement_cc": 1595,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "C 200 184 KM",
+            "displacement_cc": 1796,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "C 250 204 KM",
+            "displacement_cc": 1796,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "C 300 231 KM",
+            "displacement_cc": 2996,
+            "power_kw": 170,
+            "power_hp": 231,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "C 350 272 KM",
+            "displacement_cc": 3498,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "C 350 306 KM",
+            "displacement_cc": 3498,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "C 63 AMG 457 KM",
+            "displacement_cc": 6208,
+            "power_kw": 336,
+            "power_hp": 457,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "C 180 CDI 120 KM",
+            "displacement_cc": 2143,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "C 200 CDI 136 KM",
+            "displacement_cc": 2143,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "C 220 CDI 170 KM",
+            "displacement_cc": 2143,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "C 250 CDI 204 KM",
+            "displacement_cc": 2143,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "C 350 CDI 231 KM",
+            "displacement_cc": 2987,
+            "power_kw": 170,
+            "power_hp": 231,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "C 350 CDI 265 KM",
+            "displacement_cc": 2987,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mercedes-Benz_Baureihe_204. C 180 uses M271/M274 (1597-1595 cc); 1595 cc used as final spec. C 200/C 250 use M271 1796 cc. automatic = 5G/7G-Tronic. C 300 covers C 280 (2007-09) and C 300 (2009-11). C 350 CDI 231 covers C 320 CDI (2007-09) and C 300/350 CDI (2009-14). 4MATIC available on C 220/250/350 CDI."
+        }
+      },
+      {
+        "key": "Mercedes_C_W205",
+        "wikidata_id": "Q17025882",
+        "model_year_from": 2014,
+        "model_year_to": 2021,
+        "engines": [
+          {
+            "name": "C 180 156 KM",
+            "displacement_cc": 1595,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "C 200 184 KM",
+            "displacement_cc": 1991,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "C 250 211 KM",
+            "displacement_cc": 1991,
+            "power_kw": 155,
+            "power_hp": 211,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "C 300 245 KM",
+            "displacement_cc": 1991,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "AMG C 43 367 KM",
+            "displacement_cc": 2996,
+            "power_kw": 270,
+            "power_hp": 367,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "AMG C 63 476 KM",
+            "displacement_cc": 3982,
+            "power_kw": 350,
+            "power_hp": 476,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "AMG C 63 S 510 KM",
+            "displacement_cc": 3982,
+            "power_kw": 375,
+            "power_hp": 510,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "C 350 e 279 KM",
+            "displacement_cc": 1991,
+            "power_kw": 205,
+            "power_hp": 279,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "C 300 e 320 KM",
+            "displacement_cc": 1991,
+            "power_kw": 235,
+            "power_hp": 320,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "C 180 d 116 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "C 200 d 136 KM",
+            "displacement_cc": 1598,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "C 200 d 160 KM",
+            "displacement_cc": 1597,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "C 220 d 170 KM",
+            "displacement_cc": 2143,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "C 220 d 194 KM",
+            "displacement_cc": 1950,
+            "power_kw": 143,
+            "power_hp": 194,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "C 250 d 204 KM",
+            "displacement_cc": 2143,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "C 300 d 245 KM",
+            "displacement_cc": 1950,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2021,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mercedes-Benz_Baureihe_205. C 180/200 post-07/2018 use M264 1497 cc with EQ Boost (mHEV); badge power unchanged. C 200 d and C 220 d engines swapped to OM654 (1597/1950 cc) from 07/2018 facelift. PHEV = system power. automatic = 7G/9G-Tronic. 4MATIC available on C 200/300/220d/250d/300d."
+        }
+      },
+      {
+        "key": "Mercedes_C_W206",
+        "wikidata_id": "Q110007700",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "C 180 170 KM",
+            "displacement_cc": 1496,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "C 200 204 KM",
+            "displacement_cc": 1496,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "C 300 258 KM",
+            "displacement_cc": 1999,
+            "power_kw": 190,
+            "power_hp": 258,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "AMG C 43 408 KM",
+            "displacement_cc": 1991,
+            "power_kw": 300,
+            "power_hp": 408,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "C 300 e 313 KM",
+            "displacement_cc": 1999,
+            "power_kw": 230,
+            "power_hp": 313,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "C 400 e 4MATIC 381 KM",
+            "displacement_cc": 1999,
+            "power_kw": 280,
+            "power_hp": 381,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "C 200 d 163 KM",
+            "displacement_cc": 1993,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "C 220 d 200 KM",
+            "displacement_cc": 1993,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "C 300 d 265 KM",
+            "displacement_cc": 1993,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mercedes-Benz_Baureihe_206. All petrol and diesel are 48V EQ Boost mHEV (ICE + 17 kW e-motor); power listed = ICE only (badge). All 9G-Tronic. C 200 4MATIC shares spec with C 200 RWD. AMG C 63 S E Performance (680 PS PHEV, 2023-) omitted as extreme outlier."
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 228,
-    "engine_count": 1562,
+    "model_count": 231,
+    "engine_count": 1600,
     "engines_by_confidence": {
-      "high": 1515,
+      "high": 1553,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 206
+      "high": 209
     },
     "models_with_low_confidence": 0
   }

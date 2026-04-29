@@ -46,7 +46,7 @@
 | 28 | Opel | Corsa | D (2006-2014), E (2014-2019), F (2019-) | #10 used-import 2024 (12,594); strong new in 2010-2014 | D ✅ · E ✅ · F ✅ |
 | 29 | Ford | Kuga | Mk2 (2012-2019), Mk3 (2019-) | #11 used-import 2024 (11,852) | Mk1 ✅ · Mk2 ✅ · Mk3 ✅ |
 | 30 | BMW | 5 Series | F10/F11 (2010-2017), G30/G31 (2017-2023), G60 (2023-) | #13 used-import 2024 (11,342) | F10 ✅ · G30 ✅ · G60 ✅ |
-| 31 | Skoda | Superb | II facelift (2013-2015), III (2015-) | #16 new 2022 (5,403); volume D-segment | IIfl ⬜ · III ⬜ |
+| 31 | Skoda | Superb | II facelift (2013-2015), III (2015-) | #16 new 2022 (5,403); volume D-segment | I ✅ · II ✅ · III ✅ · IV ✅ |
 | 32 | Skoda | Kamiq | Mk1 (2019-) | #15 new 2022 (5,675); fast-growing B-SUV | Mk1 ⬜ |
 | 33 | Skoda | Kodiaq | Mk1 (2016-2024), Mk2 (2024-) | #20 new 2022 (4,365); volume large-SUV | Mk1 ⬜ · Mk2 ⬜ |
 | 34 | Volvo | XC60 | Mk1 facelift (2008-2017), Mk2 (2017-) | #17 new 2022; #1 premium model 2024 | Mk1fl ⬜ · Mk2 ⬜ |

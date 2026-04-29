@@ -14686,6 +14686,476 @@
           "model_confidence": "low",
           "notes": "Concept car, never produced."
         }
+      },
+      {
+        "key": "Skoda_Superb_I",
+        "wikidata_id": "Q706218",
+        "model_year_from": 2001,
+        "model_year_to": 2008,
+        "engines": [
+          {
+            "name": "1.8T 150 KM",
+            "displacement_cc": 1798,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 115 KM",
+            "displacement_cc": 1984,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "2.8 V6 193 KM",
+            "displacement_cc": 2771,
+            "power_kw": 142,
+            "power_hp": 193,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TDI 101 KM",
+            "displacement_cc": 1896,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TDI 130 KM",
+            "displacement_cc": 1896,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TDI 156 KM",
+            "displacement_cc": 1896,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2003,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5 TDI V6 163 KM",
+            "displacement_cc": 2461,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2008,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Skoda_Superb (Gen I, 3U, 2001-2008). Based on VW Passat B5 platform. 1.8T = EA113 turbo. 2.0 = naturally aspirated. 2.8 V6 = 2771cc VR6. 1.9 TDI = PD pump-injector (EA188). 1.9 TDI 156 PS from ~2003; DSG = 6-speed. Wikidata ID covers full Superb model line."
+        }
+      },
+      {
+        "key": "Skoda_Superb_II",
+        "wikidata_id": "Q706218",
+        "model_year_from": 2008,
+        "model_year_to": 2015,
+        "engines": [
+          {
+            "name": "1.4 TSI 125 KM",
+            "displacement_cc": 1390,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TSI 160 KM",
+            "displacement_cc": 1798,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 200 KM",
+            "displacement_cc": 1984,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6 FSI V6 260 KM 4x4",
+            "displacement_cc": 3597,
+            "power_kw": 191,
+            "power_hp": 260,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 105 KM",
+            "displacement_cc": 1598,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 140 KM",
+            "displacement_cc": 1968,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 170 KM",
+            "displacement_cc": 1968,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Skoda_Superb (Gen II, 3T, 2008-2015, incl. facelift 2013). PQ35 platform. 1.4 TSI = EA111. 1.8 TSI = EA888. 3.6 FSI = VR6 with DSG + 4x4 Haldex. 1.6 TDI from 2010 (EU5). 2.0 TDI = EA189 (Dieselgate engine). DSG = 6-speed."
+        }
+      },
+      {
+        "key": "Skoda_Superb_III",
+        "wikidata_id": "Q706218",
+        "model_year_from": 2015,
+        "model_year_to": 2024,
+        "engines": [
+          {
+            "name": "1.4 TSI ACT 125 KM",
+            "displacement_cc": 1395,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI ACT 150 KM",
+            "displacement_cc": 1395,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI ACT 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 190 KM",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 220 KM 4x4",
+            "displacement_cc": 1984,
+            "power_kw": 162,
+            "power_hp": 220,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 272 KM 4x4",
+            "displacement_cc": 1984,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI iV 218 KM",
+            "displacement_cc": 1395,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 120 KM",
+            "displacement_cc": 1598,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 190 KM",
+            "displacement_cc": 1968,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 200 KM 4x4",
+            "displacement_cc": 1968,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2024,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Skoda_Superb (Gen III, 3V, 2015-2024). MQB platform. 1.5 TSI replaces 1.4 TSI from 2019 facelift. 2.0 TSI 190 PS replaces 1.8 TSI. 1.4 TSI iV PHEV: ICE 115 kW + EM 85 kW = 160 kW system, 13 kWh, ~55 km EV. 1.6 TDI discontinued 2018. DSG = 7-speed."
+        }
+      },
+      {
+        "key": "Skoda_Superb_IV",
+        "wikidata_id": "Q706218",
+        "model_year_from": 2024,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 TSI mHEV 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 204 KM",
+            "displacement_cc": 1984,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 265 KM 4x4",
+            "displacement_cc": 1984,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI iV 204 KM",
+            "displacement_cc": 1498,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI iV 272 KM",
+            "displacement_cc": 1498,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 193 KM 4x4",
+            "displacement_cc": 1968,
+            "power_kw": 142,
+            "power_hp": 193,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Skoda_Superb (Gen IV, 3Y, 2024-). MQB evo platform. All engines 7-speed DSG. 1.5 TSI mHEV = 48V mild hybrid. 1.5 TSI iV PHEV: 25.7 kWh battery, ~100 km WLTP EV range, 6-speed DSG, system 200 kW/272 PS. No manual gearbox in Gen IV."
+        }
       }
     ],
     "Mini": [
@@ -26962,15 +27432,15 @@
     ]
   },
   "stats": {
-    "model_count": 254,
-    "engine_count": 1789,
+    "model_count": 258,
+    "engine_count": 1821,
     "engines_by_confidence": {
-      "high": 1742,
+      "high": 1774,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 232
+      "high": 236
     },
     "models_with_low_confidence": 0
   }

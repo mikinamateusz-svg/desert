@@ -8067,6 +8067,504 @@
         "_meta": {
           "notes": "DE Wikipedia Volkswagen_Passat B9 section. MQB Evo. 1.5 eTSI = 48V mild hybrid. eHybrid = PHEV system output. B9 estate-only in Europe (no saloon)."
         }
+      },
+      {
+        "key": "VW_Tiguan_I",
+        "wikidata_id": "Q1420732",
+        "model_year_from": 2007,
+        "model_year_to": 2016,
+        "engines": [
+          {
+            "name": "1.4 TSI 122 KM",
+            "displacement_cc": 1390,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI 150 KM",
+            "displacement_cc": 1390,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2007,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI 160 KM",
+            "displacement_cc": 1390,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 170 KM 4Motion",
+            "displacement_cc": 1984,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 180 KM 4Motion",
+            "displacement_cc": 1984,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 200 KM 4Motion",
+            "displacement_cc": 1984,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 211 KM 4Motion",
+            "displacement_cc": 1984,
+            "power_kw": 155,
+            "power_hp": 211,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 110 KM",
+            "displacement_cc": 1968,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 140 KM",
+            "displacement_cc": 1968,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2007,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI SCR 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 170 KM 4Motion",
+            "displacement_cc": 1968,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 177 KM 4Motion",
+            "displacement_cc": 1968,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI SCR 184 KM 4Motion",
+            "displacement_cc": 1968,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2016,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia VW_Tiguan_I. 1.4 TSI 150 uses EA111 (2007-2015) and EA211 1395cc (2015-2016). 4Motion available on 1.4 TSI 150/160 optionally. EA189 diesel affected by Dieselgate (2015). DSG = 6- or 7-speed."
+        }
+      },
+      {
+        "key": "VW_Tiguan_II",
+        "wikidata_id": "Q21754218",
+        "model_year_from": 2016,
+        "model_year_to": 2023,
+        "engines": [
+          {
+            "name": "1.4 TSI 125 KM",
+            "displacement_cc": 1395,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2016,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI 150 KM",
+            "displacement_cc": 1395,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI ACT 130 KM",
+            "displacement_cc": 1498,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI ACT 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 180 KM 4Motion",
+            "displacement_cc": 1984,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 190 KM 4Motion",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 220 KM 4Motion",
+            "displacement_cc": 1984,
+            "power_kw": 162,
+            "power_hp": 220,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 245 KM 4Motion",
+            "displacement_cc": 1984,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "Tiguan R 320 KM 4Motion",
+            "displacement_cc": 1984,
+            "power_kw": 235,
+            "power_hp": 320,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI eHybrid 245 KM",
+            "displacement_cc": 1395,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 122 KM",
+            "displacement_cc": 1968,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2020,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 190 KM 4Motion",
+            "displacement_cc": 1968,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 200 KM 4Motion",
+            "displacement_cc": 1968,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia VW_Tiguan_II. Allspace (2017-2024) shares engine specs. 1.4 TSI eHybrid: ICE 110 kW + EM 85 kW = 180 kW system. WLTP-measured 2.0 TDI 150 (2018+) same engine as 2016-2018. DSG = 6-speed (eHybrid) or 7-speed (all others)."
+        }
+      },
+      {
+        "key": "VW_Tiguan_III",
+        "wikidata_id": "Q122524046",
+        "model_year_from": 2024,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 eTSI 130 KM",
+            "displacement_cc": 1498,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 eTSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 204 KM 4Motion",
+            "displacement_cc": 1984,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 265 KM 4Motion",
+            "displacement_cc": 1984,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 eHybrid 204 KM",
+            "displacement_cc": 1498,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 eHybrid 272 KM",
+            "displacement_cc": 1498,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 193 KM 4Motion",
+            "displacement_cc": 1968,
+            "power_kw": 142,
+            "power_hp": 193,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia VW_Tiguan_III. EU launch 11/2023. 1.5 eTSI = EA211 evo2 with 48V mild hybrid. PHEV system power: ICE 110/130 kW + EM 85 kW; 19.7 kWh battery; ~118-125 km WLTP electric range. All diesel EA288 evo. No manual gearbox in Gen III."
+        }
       }
     ],
     "Skoda": [
@@ -24189,15 +24687,15 @@
     ]
   },
   "stats": {
-    "model_count": 231,
-    "engine_count": 1600,
+    "model_count": 234,
+    "engine_count": 1635,
     "engines_by_confidence": {
-      "high": 1553,
+      "high": 1588,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 209
+      "high": 212
     },
     "models_with_low_confidence": 0
   }

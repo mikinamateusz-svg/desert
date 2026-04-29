@@ -2,11 +2,12 @@ import Link from 'next/link';
 import { detectLocale, getTranslations } from '../../../lib/i18n';
 import { adminFetch } from '../../../lib/admin-api';
 import type { SubmissionListResult } from '../../../lib/types';
+import SubmissionsFilter from './SubmissionsFilter';
 
 const PAGE_SIZE = 20;
 
 interface Props {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; flagReason?: string }>;
 }
 
 function formatPrice(
@@ -29,24 +30,40 @@ export default async function SubmissionsPage({ searchParams }: Props) {
   const t = getTranslations(locale);
   const params = await searchParams;
   const page = Math.max(1, parseInt(params.page ?? '1', 10) || 1);
+  const flagReason = params.flagReason ?? '';
 
   let result: SubmissionListResult | null = null;
   let fetchError: string | null = null;
 
+  const qs = new URLSearchParams({ page: String(page), limit: String(PAGE_SIZE) });
+  if (flagReason) qs.set('flagReason', flagReason);
+
   try {
-    result = await adminFetch<SubmissionListResult>(
-      `/v1/admin/submissions?page=${page}&limit=${PAGE_SIZE}`,
-    );
+    result = await adminFetch<SubmissionListResult>(`/v1/admin/submissions?${qs.toString()}`);
   } catch {
     fetchError = t.review.errorGeneric;
   }
 
   const totalPages = result ? Math.ceil(result.total / PAGE_SIZE) : 1;
 
+  const filterOptions = Object.entries(t.review.flagReason).map(([value, label]) => ({
+    value,
+    label,
+  }));
+
   return (
     <div>
       <h1 className="text-2xl font-semibold text-gray-900">{t.sections.submissions.title}</h1>
       <p className="mt-1 text-sm text-gray-500">{t.sections.submissions.description}</p>
+
+      <div className="mt-4">
+        <SubmissionsFilter
+          currentFilter={flagReason}
+          filterLabel={t.review.filterLabel}
+          filterAll={t.review.filterAll}
+          options={filterOptions}
+        />
+      </div>
 
       {fetchError && (
         <p className="mt-6 rounded-md bg-red-50 px-4 py-3 text-sm text-red-700">{fetchError}</p>
@@ -126,7 +143,7 @@ export default async function SubmissionsPage({ searchParams }: Props) {
               <div className="flex gap-2">
                 {page > 1 && (
                   <Link
-                    href={`/submissions?page=${page - 1}`}
+                    href={`/submissions?page=${page - 1}${flagReason ? `&flagReason=${encodeURIComponent(flagReason)}` : ''}`}
                     className="rounded border border-gray-200 px-3 py-1 hover:bg-gray-50"
                   >
                     ←
@@ -134,7 +151,7 @@ export default async function SubmissionsPage({ searchParams }: Props) {
                 )}
                 {page < totalPages && (
                   <Link
-                    href={`/submissions?page=${page + 1}`}
+                    href={`/submissions?page=${page + 1}${flagReason ? `&flagReason=${encodeURIComponent(flagReason)}` : ''}`}
                     className="rounded border border-gray-200 px-3 py-1 hover:bg-gray-50"
                   >
                     →

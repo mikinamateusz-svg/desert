@@ -5,7 +5,7 @@ import {
   ConflictException,
   BadRequestException,
 } from '@nestjs/common';
-import { SubmissionStatus } from '@prisma/client';
+import { Prisma, SubmissionStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { PriceService, type StationPriceRow } from '../price/price.service.js';
 import { StorageService } from '../storage/storage.service.js';
@@ -53,12 +53,16 @@ export class AdminSubmissionsService {
     private readonly photoPipelineWorker: PhotoPipelineWorker,
   ) {}
 
-  async listFlagged(page: number, limit: number): Promise<SubmissionListResult> {
+  async listFlagged(page: number, limit: number, flagReason?: string): Promise<SubmissionListResult> {
     const skip = (page - 1) * limit;
+    const where: Prisma.SubmissionWhereInput = {
+      status: SubmissionStatus.shadow_rejected,
+      ...(flagReason ? { flag_reason: flagReason } : {}),
+    };
 
     const [submissions, total] = await this.prisma.$transaction([
       this.prisma.submission.findMany({
-        where: { status: SubmissionStatus.shadow_rejected },
+        where,
         orderBy: { created_at: 'asc' },
         skip,
         take: limit,
@@ -73,9 +77,7 @@ export class AdminSubmissionsService {
           station: { select: { name: true } },
         },
       }),
-      this.prisma.submission.count({
-        where: { status: SubmissionStatus.shadow_rejected },
-      }),
+      this.prisma.submission.count({ where }),
     ]);
 
     return {
@@ -151,7 +153,12 @@ export class AdminSubmissionsService {
     };
   }
 
-  async approve(submissionId: string, adminUserId: string): Promise<void> {
+  async approve(
+    submissionId: string,
+    adminUserId: string,
+    overridePrices?: Array<{ fuel_type: string; price_per_litre: number }>,
+    overrideStationId?: string,
+  ): Promise<void> {
     // 1. Atomically claim the submission — prevents concurrent double-approvals
     const submission = await this.prisma.submission.findUnique({
       where: { id: submissionId },
@@ -162,37 +169,51 @@ export class AdminSubmissionsService {
     if (submission.status !== SubmissionStatus.shadow_rejected) {
       throw new ConflictException(`Submission ${submissionId} is no longer awaiting review`);
     }
-    if (!submission.station_id) {
+
+    const effectiveStationId = overrideStationId ?? submission.station_id;
+    if (!effectiveStationId) {
       throw new BadRequestException(
-        `Submission ${submissionId} has no matched station — cannot approve`,
+        `Submission ${submissionId} has no matched station — provide stationId in request body`,
       );
     }
 
-    const rawPriceData = submission.price_data;
-    if (
-      !Array.isArray(rawPriceData) ||
-      !rawPriceData.every(
-        (p) =>
-          p !== null &&
-          typeof p === 'object' &&
-          typeof (p as Record<string, unknown>).fuel_type === 'string' &&
-          typeof (p as Record<string, unknown>).price_per_litre === 'number',
-      )
-    ) {
-      throw new BadRequestException(
-        `Submission ${submissionId} has malformed price_data — cannot approve`,
-      );
+    // Use override prices if provided, otherwise fall back to stored OCR prices
+    let priceData: Array<{ fuel_type: string; price_per_litre: number }>;
+    if (overridePrices && overridePrices.length > 0) {
+      priceData = overridePrices;
+    } else {
+      const rawPriceData = submission.price_data;
+      if (
+        !Array.isArray(rawPriceData) ||
+        !rawPriceData.every(
+          (p) =>
+            p !== null &&
+            typeof p === 'object' &&
+            typeof (p as Record<string, unknown>).fuel_type === 'string' &&
+            typeof (p as Record<string, unknown>).price_per_litre === 'number',
+        )
+      ) {
+        throw new BadRequestException(
+          `Submission ${submissionId} has malformed price_data — cannot approve`,
+        );
+      }
+      priceData = rawPriceData as Array<{ fuel_type: string; price_per_litre: number }>;
     }
-    const priceData = rawPriceData as Array<{ fuel_type: string; price_per_litre: number }>;
 
     if (!priceData.length) {
       throw new BadRequestException(`Submission ${submissionId} has no price data`);
     }
 
-    // 2. Mark verified + clear photo key (atomic status check)
+    // 2. Mark verified + clear photo key (atomic status check); update station if reassigned
     const updated = await this.prisma.submission.updateMany({
       where: { id: submissionId, status: SubmissionStatus.shadow_rejected },
-      data: { status: SubmissionStatus.verified, photo_r2_key: null, gps_lat: null, gps_lng: null },
+      data: {
+        status: SubmissionStatus.verified,
+        photo_r2_key: null,
+        gps_lat: null,
+        gps_lng: null,
+        ...(overrideStationId ? { station_id: overrideStationId } : {}),
+      },
     });
 
     if (updated.count === 0) {
@@ -202,14 +223,14 @@ export class AdminSubmissionsService {
 
     // 3. Publish price to cache + history
     const priceRow: StationPriceRow = {
-      stationId: submission.station_id,
+      stationId: effectiveStationId,
       prices: Object.fromEntries(priceData.map((p) => [p.fuel_type, p.price_per_litre])),
       sources: Object.fromEntries(priceData.map((p) => [p.fuel_type, 'community' as const])),
       updatedAt: new Date(),
     };
 
     try {
-      await this.priceService.setVerifiedPrice(submission.station_id, priceRow);
+      await this.priceService.setVerifiedPrice(effectiveStationId, priceRow);
     } catch (e: unknown) {
       this.logger.warn(
         `Approve ${submissionId}: price cache/history update failed — ` +
@@ -221,7 +242,7 @@ export class AdminSubmissionsService {
     // 4. Clear staleness flags for this station's fuel types (best-effort)
     const fuelTypes = priceData.map((p) => p.fuel_type);
     await this.prisma.stationFuelStaleness
-      .deleteMany({ where: { station_id: submission.station_id, fuel_type: { in: fuelTypes } } })
+      .deleteMany({ where: { station_id: effectiveStationId, fuel_type: { in: fuelTypes } } })
       .catch((e: unknown) =>
         this.logger.warn(
           `Approve ${submissionId}: staleness clear failed: ${e instanceof Error ? e.message : String(e)}`,

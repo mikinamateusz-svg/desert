@@ -228,7 +228,12 @@ const translations = {
       errorGeneric: 'Błąd ładowania. Spróbuj ponownie.',
     },
     review: {
-      flagReason: { logo_mismatch: 'Niezgodność logo', low_trust: 'Niskie zaufanie' },
+      flagReason: {
+        logo_mismatch: 'Niezgodność logo',
+        low_trust: 'Niskie zaufanie',
+        pb98_below_pb95: 'PB98 < PB95',
+        on_premium_below_on: 'ON Premium < ON',
+      },
       columns: {
         station: 'Stacja',
         prices: 'Ceny',
@@ -237,6 +242,8 @@ const translations = {
         contributor: 'Zgłaszający',
         flag: 'Powód flagi',
       },
+      filterLabel: 'Filtruj:',
+      filterAll: 'Wszystkie',
       noItems: 'Brak zgłoszeń do przeglądu.',
       approve: 'Zatwierdź',
       reject: 'Odrzuć',
@@ -248,6 +255,7 @@ const translations = {
       rejectedSuccess: 'Zgłoszenie odrzucone.',
       errorGeneric: 'Błąd. Spróbuj ponownie.',
       errorConflict: 'To zgłoszenie zostało już rozpatrzone.',
+      errorNoStation: 'Brak dopasowanej stacji — wyszukaj i przypisz stację przed zatwierdzeniem.',
       stationLabel: 'Stacja',
       brandLabel: 'Marka stacji',
       flagLabel: 'Powód flagi',
@@ -259,6 +267,12 @@ const translations = {
       photoLabel: 'Zdjęcie',
       photoExpires: 'Link wygasa za 1 godz.',
       gpsLabel: 'Lokalizacja GPS',
+      priceOverrideLabel: 'Korekta cen (opcjonalna)',
+      stationReassignLabel: 'Zmień stację',
+      stationSearchPlaceholder: 'Szukaj po nazwie...',
+      stationSearchError: 'Błąd wyszukiwania. Spróbuj ponownie.',
+      stationSelected: 'Wybrano:',
+      stationClear: 'Wyczyść',
     },
   },
   en: {
@@ -468,7 +482,12 @@ const translations = {
       errorGeneric: 'Failed to load. Try again.',
     },
     review: {
-      flagReason: { logo_mismatch: 'Logo mismatch', low_trust: 'Low trust score' },
+      flagReason: {
+        logo_mismatch: 'Logo mismatch',
+        low_trust: 'Low trust score',
+        pb98_below_pb95: 'PB98 < PB95',
+        on_premium_below_on: 'ON Premium < ON',
+      },
       columns: {
         station: 'Station',
         prices: 'Prices',
@@ -477,6 +496,8 @@ const translations = {
         contributor: 'Contributor',
         flag: 'Flag reason',
       },
+      filterLabel: 'Filter:',
+      filterAll: 'All',
       noItems: 'No submissions awaiting review.',
       approve: 'Approve',
       reject: 'Reject',
@@ -488,6 +509,7 @@ const translations = {
       rejectedSuccess: 'Submission rejected.',
       errorGeneric: 'Something went wrong. Try again.',
       errorConflict: 'This submission has already been reviewed.',
+      errorNoStation: 'No station matched — search and assign a station before approving.',
       stationLabel: 'Station',
       brandLabel: 'Station brand',
       flagLabel: 'Flag reason',
@@ -499,6 +521,12 @@ const translations = {
       photoLabel: 'Photo',
       photoExpires: 'Link expires in 1 hour',
       gpsLabel: 'GPS location',
+      priceOverrideLabel: 'Price correction (optional)',
+      stationReassignLabel: 'Reassign station',
+      stationSearchPlaceholder: 'Search by name...',
+      stationSearchError: 'Search failed. Try again.',
+      stationSelected: 'Selected:',
+      stationClear: 'Clear',
     },
   },
   uk: {
@@ -708,7 +736,12 @@ const translations = {
       errorGeneric: 'Помилка завантаження. Спробуйте ще раз.',
     },
     review: {
-      flagReason: { logo_mismatch: 'Невідповідність логотипу', low_trust: 'Низький рейтинг довіри' },
+      flagReason: {
+        logo_mismatch: 'Невідповідність логотипу',
+        low_trust: 'Низький рейтинг довіри',
+        pb98_below_pb95: 'PB98 < PB95',
+        on_premium_below_on: 'ON Premium < ON',
+      },
       columns: {
         station: 'Станція',
         prices: 'Ціни',
@@ -717,6 +750,8 @@ const translations = {
         contributor: 'Автор',
         flag: 'Причина позначки',
       },
+      filterLabel: 'Фільтр:',
+      filterAll: 'Усі',
       noItems: 'Немає заявок для перегляду.',
       approve: 'Затвердити',
       reject: 'Відхилити',
@@ -728,6 +763,7 @@ const translations = {
       rejectedSuccess: 'Заявку відхилено.',
       errorGeneric: 'Помилка. Спробуйте ще раз.',
       errorConflict: 'Цю заявку вже розглянуто.',
+      errorNoStation: 'Станцію не знайдено — знайдіть і призначте станцію перед затвердженням.',
       stationLabel: 'Станція',
       brandLabel: 'Бренд станції',
       flagLabel: 'Причина позначки',
@@ -739,6 +775,12 @@ const translations = {
       photoLabel: 'Фото',
       photoExpires: 'Посилання діє 1 год',
       gpsLabel: 'GPS-локація',
+      priceOverrideLabel: 'Корекція цін (необов\'язково)',
+      stationReassignLabel: 'Змінити станцію',
+      stationSearchPlaceholder: 'Пошук за назвою...',
+      stationSearchError: 'Помилка пошуку. Спробуйте ще раз.',
+      stationSelected: 'Вибрано:',
+      stationClear: 'Очистити',
     },
   },
 } as const;
@@ -926,6 +968,8 @@ export interface Translations {
       contributor: string;
       flag: string;
     };
+    filterLabel: string;
+    filterAll: string;
     noItems: string;
     approve: string;
     reject: string;
@@ -937,6 +981,7 @@ export interface Translations {
     rejectedSuccess: string;
     errorGeneric: string;
     errorConflict: string;
+    errorNoStation: string;
     stationLabel: string;
     brandLabel: string;
     flagLabel: string;
@@ -948,6 +993,12 @@ export interface Translations {
     photoLabel: string;
     photoExpires: string;
     gpsLabel: string;
+    priceOverrideLabel: string;
+    stationReassignLabel: string;
+    stationSearchPlaceholder: string;
+    stationSearchError: string;
+    stationSelected: string;
+    stationClear: string;
   };
   sections: {
     submissions: { title: string; description: string };

@@ -104,7 +104,13 @@ export default async function SubmissionDetailPage({ params }: Props) {
             )}
           </dl>
 
-          <ReviewActions submissionId={submission.id} t={t.review} />
+          <ReviewActions
+            submissionId={submission.id}
+            initialPrices={submission.price_data}
+            initialStationId={submission.station_id}
+            initialStationName={submission.station_name}
+            t={t.review}
+          />
         </>
       )}
     </div>

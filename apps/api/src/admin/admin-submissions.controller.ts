@@ -19,6 +19,11 @@ class RejectDto {
   notes?: string;
 }
 
+class ApproveDto {
+  prices?: Array<{ fuel_type: string; price_per_litre: number }>;
+  stationId?: string;
+}
+
 @Controller('v1/admin/submissions')
 @Roles(UserRole.ADMIN)
 export class AdminSubmissionsController {
@@ -28,10 +33,11 @@ export class AdminSubmissionsController {
   async list(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @Query('flagReason') flagReason?: string,
   ) {
     const safePage = Math.max(1, page);
     const safeLimit = Math.max(1, Math.min(limit, 100));
-    return this.service.listFlagged(safePage, safeLimit);
+    return this.service.listFlagged(safePage, safeLimit, flagReason || undefined);
   }
 
   @Get(':id')
@@ -41,8 +47,8 @@ export class AdminSubmissionsController {
 
   @Post(':id/approve')
   @HttpCode(HttpStatus.OK)
-  async approve(@Param('id') id: string, @CurrentUser() admin: User) {
-    await this.service.approve(id, admin.id);
+  async approve(@Param('id') id: string, @Body() body: ApproveDto, @CurrentUser() admin: User) {
+    await this.service.approve(id, admin.id, body.prices, body.stationId);
     return { status: 'approved' };
   }
 

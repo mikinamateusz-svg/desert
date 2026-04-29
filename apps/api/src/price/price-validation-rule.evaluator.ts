@@ -37,6 +37,11 @@ interface AbsoluteBandParams {
   max: number;
 }
 
+interface CrossFuelOrderingParams {
+  reference_fuel: string; // the fuel that must be cheaper (e.g. PB_95, ON)
+  min_delta: number;      // this fuel must be >= reference + min_delta (use 0.0 for strict ≥)
+}
+
 interface RelativeToReferenceParams {
   source: string;
   value_type: string;
@@ -126,7 +131,7 @@ export class PriceValidationRuleEvaluator {
       const fired: FiredRule[] = [];
       for (const rule of rules) {
         if (rule.applies_to !== '*' && rule.applies_to !== p.fuel_type) continue;
-        const outcome = this.applyRule(rule, p, references, vatMultiplier);
+        const outcome = this.applyRule(rule, p, references, vatMultiplier, prices);
         if (outcome) fired.push(outcome);
       }
       const passed = !fired.some(f => HARD_FAIL_ACTIONS.includes(f.action));
@@ -149,6 +154,7 @@ export class PriceValidationRuleEvaluator {
     price: ExtractedPrice,
     references: Map<string, ReferenceRow>,
     vatMultiplier: number,
+    allPrices: ExtractedPrice[],
   ): FiredRule | null {
     try {
       switch (rule.rule_type) {
@@ -156,6 +162,8 @@ export class PriceValidationRuleEvaluator {
           return this.applyAbsoluteBand(rule, price);
         case 'relative_to_reference':
           return this.applyRelativeToReference(rule, price, references, vatMultiplier);
+        case 'cross_fuel_ordering':
+          return this.applyCrossFuelOrdering(rule, price, allPrices);
         default:
           // Unknown rule_type — log once and skip. Could be a future type
           // loaded from a newer schema than this code version.
@@ -235,6 +243,30 @@ export class PriceValidationRuleEvaluator {
       detail:
         `${value.toFixed(2)} outside [${min.toFixed(2)}, ${max.toFixed(2)}] ` +
         `(ref ${params.source}.${params.value_type}=${ref.value.toFixed(2)} × VAT ${vat})`,
+    };
+  }
+
+  private applyCrossFuelOrdering(
+    rule: RuleRow,
+    price: ExtractedPrice,
+    allPrices: ExtractedPrice[],
+  ): FiredRule | null {
+    const params = rule.parameters as CrossFuelOrderingParams | null;
+    if (!params || typeof params.reference_fuel !== 'string' || typeof params.min_delta !== 'number') {
+      this.logger.warn(`Rule ${rule.id}: malformed cross_fuel_ordering parameters — skipping`);
+      return null;
+    }
+    const ref = allPrices.find(p => p.fuel_type === params.reference_fuel);
+    if (!ref) return null; // reference fuel not in this submission — skip silently
+    const threshold = ref.price_per_litre + params.min_delta;
+    if (price.price_per_litre >= threshold) return null;
+    return {
+      rule_id: rule.id,
+      reason_code: rule.reason_code,
+      action: rule.action,
+      detail:
+        `${price.fuel_type}=${price.price_per_litre.toFixed(2)} < ` +
+        `${params.reference_fuel}=${ref.price_per_litre.toFixed(2)} + delta=${params.min_delta}`,
     };
   }
 

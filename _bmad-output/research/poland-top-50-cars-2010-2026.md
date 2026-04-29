@@ -54,7 +54,7 @@
 | 36 | Toyota | Auris | E150 facelift (2010-2012), E180 (2012-2018) | Top-10 new 2015-2018; pre-Corolla volume | E150fl ✅ · E180 ✅ |
 | 37 | Volkswagen | Polo | V facelift (2014-2017), VI (2017-) | Top-20 new sales 2010-2018; high used-import stock | IV ✅ · V ✅ · Vfl ✅ · VI ✅ |
 | 38 | Renault | Captur | I (2013-2019), II (2019-) | #8 new sales 2024 (12,520); strong B-SUV | I ✅ · II ✅ |
-| 39 | Peugeot | 308 | T7 (2007-2013), T9 (2013-2021), P51 (2021-) | Peugeot is #7 used-import brand (40,569); 308 is volume | T7 ⬜ · T9 ⬜ · P51 ⬜ |
+| 39 | Peugeot | 308 | T7 (2007-2013), T9 (2013-2021), P51 (2021-) | Peugeot is #7 used-import brand (40,569); 308 is volume | T7 ✅ · T9 ✅ · P51 ✅ |
 | 40 | Opel | Insignia | A (2008-2017), B (2017-2022) | #19 used-import 2024; top D-segment used | A ⬜ · B ⬜ |
 | 41 | Ford | Mondeo | Mk4 facelift (2010-2014), Mk5 (2014-2022) | Sustained D-segment used-import volume | Mk4fl ⬜ · Mk5 ⬜ |
 | 42 | Seat | Ibiza | IV (2008-2017), V (2017-) | #20 used-import 2024 (3,349) | IV ⬜ · V ⬜ |

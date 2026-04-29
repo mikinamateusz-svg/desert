@@ -29114,18 +29114,363 @@
           "notes": "DE Wikipedia VW_Polo (AW, 2017-). MQB-A0 platform. 1.0 TSI = EA211 evo. 1.5 TSI ACT = EA211 evo with cylinder deactivation (from 2020 facelift). GTI: 147kW/200PS (2017-2021), 152kW/207PS (2022+ FL). 1.0 TGI = CNG+petrol bifuel. 1.6 TDI discontinued ~2020 (EU6d). DSG = 7-speed dry."
         }
       }
+    ],
+    "Peugeot": [
+      {
+        "key": "Peugeot_308_T7",
+        "wikidata_id": "Q390093",
+        "model_year_from": 2007,
+        "model_year_to": 2013,
+        "engines": [
+          {
+            "name": "1.4 VTi 95 KM",
+            "displacement_cc": 1397,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 VTi 120 KM",
+            "displacement_cc": 1598,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 THP 150 KM",
+            "displacement_cc": 1598,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 THP 200 GTi",
+            "displacement_cc": 1598,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 HDi FAP 90 KM",
+            "displacement_cc": 1560,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 HDi FAP 110 KM",
+            "displacement_cc": 1560,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 HDi FAP 136 KM",
+            "displacement_cc": 1997,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 HDi FAP 150 KM",
+            "displacement_cc": 1997,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2013,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Peugeot_308 (T7, 2007-2013). PF2 platform. 1.4/1.6 VTi = EP3/EP6 DOHC NA. 1.6 THP = EP6DT turbo. GTI = EP6 DTS high-tune from 2010. 1.6 HDi = DV6 TDCI. 2.0 HDi = DW10 TDCI. automatic = AL4/EAT6."
+        }
+      },
+      {
+        "key": "Peugeot_308_T9",
+        "wikidata_id": "Q390093",
+        "model_year_from": 2013,
+        "model_year_to": 2021,
+        "engines": [
+          {
+            "name": "1.2 PureTech 110 KM",
+            "displacement_cc": 1199,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 PureTech 130 KM",
+            "displacement_cc": 1199,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 THP 205 GT",
+            "displacement_cc": 1598,
+            "power_kw": 151,
+            "power_hp": 205,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 BlueHDi 120 KM",
+            "displacement_cc": 1560,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 BlueHDi 100 KM",
+            "displacement_cc": 1499,
+            "power_kw": 75,
+            "power_hp": 100,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 BlueHDi 130 KM",
+            "displacement_cc": 1499,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 BlueHDi 150 KM",
+            "displacement_cc": 1997,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 BlueHDi 180 GT",
+            "displacement_cc": 1997,
+            "power_kw": 133,
+            "power_hp": 181,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2021,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Peugeot_308 (T9, 2013-2021). EMP2 platform. Facelift 2017. 1.2 PureTech = EB2 3-cyl turbo. 1.6 THP 205 GT = EP6 high-tune. 2017 FL replaced 1.6 HDi/BlueHDi with 1.5 BlueHDi (DV5). 2.0 BlueHDi = DW10. DSG = EAT6/EAT8. automatic = EAT6."
+        }
+      },
+      {
+        "key": "Peugeot_308_P51",
+        "wikidata_id": "Q390093",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.2 PureTech 110 KM",
+            "displacement_cc": 1199,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 PureTech 130 KM",
+            "displacement_cc": 1199,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Hybrid 136 KM",
+            "displacement_cc": 1598,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 PHEV 180 KM",
+            "displacement_cc": 1598,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 PHEV 225 KM",
+            "displacement_cc": 1598,
+            "power_kw": 165,
+            "power_hp": 225,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "e-308 156 KM",
+            "displacement_cc": 0,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 BlueHDi 130 KM",
+            "displacement_cc": 1499,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Peugeot_308 (P51, 2021-). EMP2 evolved platform. 1.2 PureTech = EB2 ADTED. 1.6 Hybrid 136 = 48V mild hybrid e-DSC6 dual-clutch. PHEV: 1.6 petrol + electric, 12.4kWh, ~60km EV (180PS) / 15.6kWh PHEV 225. e-308 = 54kWh, ~400km WLTP. automatic = EAT8. DSG covers EDC/e-DSC6/e-EAT8."
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 273,
-    "engine_count": 1935,
+    "model_count": 276,
+    "engine_count": 1958,
     "engines_by_confidence": {
-      "high": 1888,
+      "high": 1911,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 251
+      "high": 254
     },
     "models_with_low_confidence": 0
   }

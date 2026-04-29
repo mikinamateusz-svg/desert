@@ -32443,18 +32443,172 @@
           "notes": "DE Wikipedia Fiat_500 (312, 2007-2024). Produced in Tychy, Poland. Facelifts 2015, 2020. 1.0 mHEV = FireFly 48V BSG (2020 FL). TwinAir = 2-cyl 875cc SGE turbo. TwinAir CNG = gas+petrol bifuel. Dualogic AMT = mapped to automatic. 1.3 Multijet = 55kW pre-2010, 70kW with DPF from 2009. Abarth automatic = Competizione sequential AMT. 500e BEV (332 platform) listed separately."
         }
       }
+    ],
+    "Tesla": [
+      {
+        "key": "Tesla_Model3_Mk1",
+        "wikidata_id": "Q27951520",
+        "model_year_from": 2017,
+        "model_year_to": 2023,
+        "engines": [
+          {
+            "name": "Long Range RWD 325 KM",
+            "displacement_cc": 0,
+            "power_kw": 239,
+            "power_hp": 325,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "Mid Range RWD 306 KM",
+            "displacement_cc": 0,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "Standard Range RWD 306 KM",
+            "displacement_cc": 0,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "Standard Range Plus RWD 325 KM",
+            "displacement_cc": 0,
+            "power_kw": 239,
+            "power_hp": 325,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "Long Range AWD 351 KM",
+            "displacement_cc": 0,
+            "power_kw": 258,
+            "power_hp": 351,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2023,
+            "confidence": "medium"
+          },
+          {
+            "name": "Performance AWD 450 KM",
+            "displacement_cc": 0,
+            "power_kw": 331,
+            "power_hp": 450,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2023,
+            "confidence": "medium"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Tesla_Model_3. Mk1 (2017-2023). RWD variants: Long Range 75kWh 2017-2019; Mid Range ~62kWh 2018-2019; Standard Range 52kWh 2019; SR+ 58kWh 2019-2021. AWD/Performance pre-Highland specs (258kW/331kW) from EN Wikipedia / Tesla spec sheets — DE Wikipedia treats these as continuous lines without pre-Highland split, hence medium confidence."
+        }
+      },
+      {
+        "key": "Tesla_Model3_Highland",
+        "wikidata_id": "Q27951520",
+        "model_year_from": 2023,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "Standard RWD LFP 283 KM",
+            "displacement_cc": 0,
+            "power_kw": 208,
+            "power_hp": 283,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Long Range RWD 320 KM",
+            "displacement_cc": 0,
+            "power_kw": 235,
+            "power_hp": 320,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Long Range AWD 441 KM",
+            "displacement_cc": 0,
+            "power_kw": 324,
+            "power_hp": 441,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Performance AWD 460 KM",
+            "displacement_cc": 0,
+            "power_kw": 338,
+            "power_hp": 460,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Tesla_Model_3. Highland facelift (09/2023-). Standard RWD: LFP 60kWh 208kW/283PS, launched Nov 2021 pre-Highland, continues unchanged. LR RWD: NMC 79kWh 235kW/320PS, WLTP 702km. LR AWD: system 324kW/441PS (365kW/496PS with Acceleration Boost OTA). Performance AWD: 338kW/460PS, reintroduced Apr 2024 after brief Highland-launch hiatus."
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 299,
-    "engine_count": 2163,
+    "model_count": 301,
+    "engine_count": 2173,
     "engines_by_confidence": {
-      "high": 2116,
-      "medium": 47
+      "high": 2124,
+      "medium": 49
     },
     "models_by_confidence": {
-      "medium": 22,
-      "high": 277
+      "medium": 23,
+      "high": 278
     },
     "models_with_low_confidence": 0
   }

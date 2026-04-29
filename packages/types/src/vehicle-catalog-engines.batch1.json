@@ -26971,6 +26971,185 @@
         "_meta": {
           "notes": "DE Wikipedia Dacia_Duster III section. No diesel. ECO-G = LPG/petrol bifuel. Mild Hybrid = 48V starter-generator. Full Hybrid = system power. Hybrid-G = LPG + hybrid AWD."
         }
+      },
+      {
+        "key": "Dacia_Sandero_II",
+        "wikidata_id": "Q679750",
+        "model_year_from": 2012,
+        "model_year_to": 2020,
+        "engines": [
+          {
+            "name": "1.2 16V 75 KM",
+            "displacement_cc": 1149,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "0.9 TCe 90 KM",
+            "displacement_cc": 898,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 SCe 73 KM",
+            "displacement_cc": 999,
+            "power_kw": 54,
+            "power_hp": 73,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TCe 101 KM",
+            "displacement_cc": 999,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "0.9 TCe Bifuel 90 KM",
+            "displacement_cc": 898,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 75 KM",
+            "displacement_cc": 1461,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 90 KM",
+            "displacement_cc": 1461,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 95 KM",
+            "displacement_cc": 1461,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Dacia_Sandero (Gen II B52, 2012-2020). Facelift 2016. 0.9 TCe = H4Bt 3-cyl turbo. 1.2 16V = D4F pre-facelift only. 1.0 SCe = H4D naturally aspirated (facelift). 0.9 TCe Bifuel = LPG+petrol dual-fuel system. 1.5 dCi = K9K; 95 PS from 2018 (EU6c). No automatic on diesel. Easy-R automated-manual offered but negligible volume."
+        }
+      },
+      {
+        "key": "Dacia_Sandero_III",
+        "wikidata_id": "Q679750",
+        "model_year_from": 2020,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 SCe 65 KM",
+            "displacement_cc": 999,
+            "power_kw": 49,
+            "power_hp": 65,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TCe 90 KM",
+            "displacement_cc": 999,
+            "power_kw": 67,
+            "power_hp": 91,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TCe 100 KM",
+            "displacement_cc": 999,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TCe ECO-G 100 KM",
+            "displacement_cc": 999,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Dacia_Sandero (Gen III BJI, 2020-). CMF-B platform. No diesel. 1.0 SCe = naturally aspirated. 1.0 TCe = turbocharged (H4D-H series). ECO-G = bifuel LPG+petrol. CVT = X-Tronic on 1.0 TCe 90. 1.0 TCe 100 PS petrol (non-ECO-G) from 2022 facelift. Facelift 2022 added mild cosmetic updates."
+        }
       }
     ],
     "Mercedes-Benz": [
@@ -27952,15 +28131,15 @@
     ]
   },
   "stats": {
-    "model_count": 263,
-    "engine_count": 1856,
+    "model_count": 265,
+    "engine_count": 1868,
     "engines_by_confidence": {
-      "high": 1809,
+      "high": 1821,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 241
+      "high": 243
     },
     "models_with_low_confidence": 0
   }

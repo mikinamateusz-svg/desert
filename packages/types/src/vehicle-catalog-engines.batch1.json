@@ -19961,6 +19961,509 @@
         "_meta": {
           "notes": "DE Wikipedia Audi_A3_8Y section. All-DSG (S-tronic), no manual offered. Badge numbers: 30=110PS/1.0T, 35=150PS/1.5T, 40=190PS+/2.0T. PHEV system output. g-tron = CNG."
         }
+      },
+      {
+        "key": "Audi_A6_C6fl",
+        "wikidata_id": "Q218038",
+        "model_year_from": 2007,
+        "model_year_to": 2011,
+        "engines": [
+          {
+            "name": "2.0 TFSI 170 KM",
+            "displacement_cc": 1984,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2008,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "2.8 FSI 220 KM",
+            "displacement_cc": 2773,
+            "power_kw": 162,
+            "power_hp": 220,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TFSI 290 KM",
+            "displacement_cc": 2995,
+            "power_kw": 213,
+            "power_hp": 290,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 136 KM",
+            "displacement_cc": 1968,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 170 KM",
+            "displacement_cc": 1968,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "2.7 TDI 190 KM",
+            "displacement_cc": 2698,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "CVT",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TDI 240 KM",
+            "displacement_cc": 2967,
+            "power_kw": 176,
+            "power_hp": 240,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2011,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_A6_C6 (facelift 2007-2011). 2.8 FSI up from 190 PS pre-facelift. 3.0 TFSI supercharged. CVT = multitronic; automatic = tiptronic. Wikidata ID covers full A6 model line; generation-specific ID not extracted."
+        }
+      },
+      {
+        "key": "Audi_A6_C7",
+        "wikidata_id": "Q218038",
+        "model_year_from": 2011,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "1.8 TFSI 190 KM",
+            "displacement_cc": 1798,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 180 KM",
+            "displacement_cc": 1984,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 252 KM",
+            "displacement_cc": 1984,
+            "power_kw": 185,
+            "power_hp": 252,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.8 FSI 204 KM",
+            "displacement_cc": 2773,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TFSI 300 KM",
+            "displacement_cc": 2995,
+            "power_kw": 220,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI Hybrid 245 KM",
+            "displacement_cc": 1984,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 136 KM",
+            "displacement_cc": 1968,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 190 KM",
+            "displacement_cc": 1968,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TDI 218 KM",
+            "displacement_cc": 2967,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TDI 272 KM",
+            "displacement_cc": 2967,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TDI 326 KM",
+            "displacement_cc": 2967,
+            "power_kw": 240,
+            "power_hp": 326,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_A6_C7 (2011-2018). 1.8 TFSI added 09/2014 facelift; 3.0 TFSI supercharged dropped 2012. Hybrid = 2.0 TFSI + 40 kW EM, system 180 kW. DSG = 7-speed S-tronic. automatic = 8-speed tiptronic. 3.0 TDI 326 = biturbo. S6/RS6 excluded."
+        }
+      },
+      {
+        "key": "Audi_A6_C8",
+        "wikidata_id": "Q218038",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "45 TFSI 245 KM",
+            "displacement_cc": 1984,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "55 TFSI 340 KM",
+            "displacement_cc": 2995,
+            "power_kw": 250,
+            "power_hp": 340,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "55 TFSI e 367 KM",
+            "displacement_cc": 2894,
+            "power_kw": 270,
+            "power_hp": 367,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "35 TDI 163 KM",
+            "displacement_cc": 1968,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "40 TDI 204 KM",
+            "displacement_cc": 1968,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "45 TDI 231 KM",
+            "displacement_cc": 2967,
+            "power_kw": 170,
+            "power_hp": 231,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "50 TDI 286 KM",
+            "displacement_cc": 2967,
+            "power_kw": 210,
+            "power_hp": 286,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_A6_C8 (2018-). All engines 48V mHEV. New numerical badge system: 35/40/45/50/55. DSG = 7-speed S-tronic; automatic = 8-speed tiptronic (PHEV). 55 TFSI e PHEV: ICE 195 kW + EM 105 kW ≈ 270 kW / 367 PS system. Diesel range ended ~2023. S6 TDI/RS6 excluded."
+        }
+      },
+      {
+        "key": "Audi_A6_C6",
+        "wikidata_id": "Q218038",
+        "model_year_from": 2004,
+        "model_year_to": 2008,
+        "engines": [
+          {
+            "name": "2.0 TFSI 170 KM",
+            "displacement_cc": 1984,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2005,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "2.4 177 KM",
+            "displacement_cc": 2393,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2004,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "2.8 FSI 209 KM",
+            "displacement_cc": 2773,
+            "power_kw": 154,
+            "power_hp": 209,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2006,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "3.2 FSI 256 KM",
+            "displacement_cc": 3123,
+            "power_kw": 188,
+            "power_hp": 256,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2004,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "4.2 FSI 350 KM quattro",
+            "displacement_cc": 4163,
+            "power_kw": 257,
+            "power_hp": 350,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 140 KM",
+            "displacement_cc": 1968,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2004,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "2.7 TDI 180 KM",
+            "displacement_cc": 2698,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TDI 224 KM",
+            "displacement_cc": 2967,
+            "power_kw": 165,
+            "power_hp": 224,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2006,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TDI 233 KM",
+            "displacement_cc": 2967,
+            "power_kw": 171,
+            "power_hp": 233,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2008,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_A6_C6 (pre-facelift 02/2004-08/2008). 2.0 TFSI from 04/2005. 2.8 FSI 209 PS from 10/2006 (replaced 190 PS 2.4 V6). 4.2 FSI quattro continues into facelift (year_to 2010). 3.0 TDI power bump 04/2006 (224→233 PS). CVT = multitronic; automatic = tiptronic. S6 (V10)/RS6 excluded."
+        }
       }
     ],
     "Ford": [
@@ -25344,15 +25847,15 @@
     ]
   },
   "stats": {
-    "model_count": 241,
-    "engine_count": 1678,
+    "model_count": 245,
+    "engine_count": 1712,
     "engines_by_confidence": {
-      "high": 1631,
+      "high": 1665,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 219
+      "high": 223
     },
     "models_with_low_confidence": 0
   }

@@ -15156,6 +15156,85 @@
         "_meta": {
           "notes": "DE Wikipedia Skoda_Superb (Gen IV, 3Y, 2024-). MQB evo platform. All engines 7-speed DSG. 1.5 TSI mHEV = 48V mild hybrid. 1.5 TSI iV PHEV: 25.7 kWh battery, ~100 km WLTP EV range, 6-speed DSG, system 200 kW/272 PS. No manual gearbox in Gen IV."
         }
+      },
+      {
+        "key": "Skoda_Kamiq_Mk1",
+        "wikidata_id": "Q56232440",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 TSI 90 KM",
+            "displacement_cc": 999,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI 95 KM",
+            "displacement_cc": 999,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 G-TEC 90 KM",
+            "displacement_cc": 999,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "CNG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2020,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 115 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Skoda_Kamiq (Mk1 06/2019-). MQB-A0 platform. FWD only, no AWD. 1.0 TSI 90 PS = base (66 kW, pre-2024 only); 95 PS = main variant (70 kW). 1.5 TSI 150 PS = ACT cylinder deactivation. G-TEC (CNG) very brief production 01/2020-10/2020. 1.6 TDI discontinued 11/2020. Facelift 08/2023. DSG = 7-speed."
+        }
       }
     ],
     "Mini": [
@@ -27432,15 +27511,15 @@
     ]
   },
   "stats": {
-    "model_count": 258,
-    "engine_count": 1821,
+    "model_count": 259,
+    "engine_count": 1826,
     "engines_by_confidence": {
-      "high": 1774,
+      "high": 1779,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 236
+      "high": 237
     },
     "models_with_low_confidence": 0
   }

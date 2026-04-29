@@ -22600,6 +22600,334 @@
         "_meta": {
           "notes": "DE Wikipedia Audi_Q5 (GU, 09/2024-). PPC platform. All S-tronic 7-speed (DSG). 2.0 TFSI 204 from 09/2024; 272 from 11/2025. SQ5 3.0 TFSI from 09/2024. e-hybrid PHEV: two power tunes (220kW/299PS and 270kW/367PS), from 06/2025. 2.0 TDI 204 from 09/2024; 3.0 TDI 299 from 11/2025."
         }
+      },
+      {
+        "key": "Audi_Q3_8U",
+        "wikidata_id": "Q684052",
+        "model_year_from": 2011,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "2.0 TFSI 170 KM",
+            "displacement_cc": 1984,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 211 KM",
+            "displacement_cc": 1984,
+            "power_kw": 155,
+            "power_hp": 211,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TFSI 150 KM",
+            "displacement_cc": 1395,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "RS Q3 2.5 TFSI 310 KM",
+            "displacement_cc": 2480,
+            "power_kw": 228,
+            "power_hp": 310,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "RS Q3 2.5 TFSI 340 KM",
+            "displacement_cc": 2480,
+            "power_kw": 250,
+            "power_hp": 340,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "RS Q3 2.5 TFSI Performance 367 KM",
+            "displacement_cc": 2480,
+            "power_kw": 270,
+            "power_hp": 367,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 140 KM",
+            "displacement_cc": 1968,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 184 KM",
+            "displacement_cc": 1968,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_Q3 (8U, 2011-2018). PQ35 platform. LCI facelift 2014. 1.4 TFSI = EA111/EA211 from FL. RS Q3 = CEPA 2.5T 5-cyl: 228kW (2013), 250kW (2015), 270kW Performance (2016). 2.0 TDI = EA189/EA288. S-tronic DSG = 6-speed wet."
+        }
+      },
+      {
+        "key": "Audi_Q3_F3",
+        "wikidata_id": "Q684052",
+        "model_year_from": 2018,
+        "model_year_to": 2025,
+        "engines": [
+          {
+            "name": "35 TFSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "40 TFSI quattro 190 KM",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "45 TFSI quattro 230 KM",
+            "displacement_cc": 1984,
+            "power_kw": 169,
+            "power_hp": 230,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "45 TFSI quattro 245 KM",
+            "displacement_cc": 1984,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "RS Q3 2.5 TFSI 400 KM",
+            "displacement_cc": 2480,
+            "power_kw": 294,
+            "power_hp": 400,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "45 TFSIe PHEV 245 KM",
+            "displacement_cc": 1395,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "35 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "40 TDI quattro 190 KM",
+            "displacement_cc": 1968,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_Q3 (F3, 2018-2025). MQB evo platform. 35 TFSI = EA211 1.5T ACT. 40/45 TFSI = EA888 2.0T. RS Q3 = DAZA 2.5T 5-cyl 294kW (2019-). 45 TFSIe PHEV: 1.4T + electric, system 180kW/245PS, 13kWh ~48km EV. 35/40 TDI = EA288 2.0. S-tronic DSG = 6/7-speed."
+        }
+      },
+      {
+        "key": "Audi_Q3_FJ",
+        "wikidata_id": "Q684052",
+        "model_year_from": 2025,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 TFSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 204 KM",
+            "displacement_cc": 1984,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 265 KM",
+            "displacement_cc": 1984,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TFSI e-hybrid 272 KM",
+            "displacement_cc": 1498,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 193 KM",
+            "displacement_cc": 1968,
+            "power_kw": 142,
+            "power_hp": 193,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_Q3 (FJ, 06/2025-). MQB evo2 platform. All S-tronic 7-speed DSG (e-hybrid 6-speed). 1.5 TFSI EA211 evo; 2.0 TFSI EA888 gen4. 1.5 TFSI e-hybrid: system 200kW/272PS, PHEV. 2.0 TDI EA288 evo. Euro 6e-bis."
+        }
       }
     ],
     "Ford": [
@@ -31944,15 +32272,15 @@
     ]
   },
   "stats": {
-    "model_count": 295,
-    "engine_count": 2129,
+    "model_count": 298,
+    "engine_count": 2151,
     "engines_by_confidence": {
-      "high": 2082,
+      "high": 2104,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 273
+      "high": 276
     },
     "models_with_low_confidence": 0
   }

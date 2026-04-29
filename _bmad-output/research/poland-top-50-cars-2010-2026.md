@@ -62,7 +62,7 @@
 | 44 | Mercedes-Benz | E-Class | W212 (2009-2016), W213 (2016-2023), W214 (2023-) | Mercedes top-6 used-import brand; E-Class is core executive used | W212 ✅ · W213 ✅ · W214 ✅ |
 | 45 | BMW | X3 | F25 (2010-2017), G01 (2017-2024), G45 (2024-) | Premium SUV staple; high used + new | F25 ✅ · G01 ✅ · G45 ✅ |
 | 46 | Audi | Q5 | 8R (2008-2017), FY (2017-) | #4 premium new 2024 (3,821); top used premium SUV | 8R ✅ · FY ✅ · GU ✅ |
-| 47 | Audi | Q3 | 8U (2011-2018), F3 (2018-) | #5 premium new 2024 (3,704) | 8U ⬜ · F3 ⬜ |
+| 47 | Audi | Q3 | 8U (2011-2018), F3 (2018-) | #5 premium new 2024 (3,704) | 8U ✅ · F3 ✅ · FJ ✅ |
 | 48 | Fiat | 500 | (2007-2024 incl. facelifts) | Sustained Polish small-car presence; produced in PL (Tychy) | (2007-24) ⬜ |
 | 49 | Tesla | Model 3 | Mk1 (2017-) | Best-selling EV in PL 2021-2024; meaningful market share | Mk1 ⬜ |
 | 50 | Cupra | Formentor | Mk1 (2020-) | Notable 2023 ranking riser per BSCB; volume Cupra model | Mk1 ⬜ |

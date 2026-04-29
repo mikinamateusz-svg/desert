@@ -15235,6 +15235,239 @@
         "_meta": {
           "notes": "DE Wikipedia Skoda_Kamiq (Mk1 06/2019-). MQB-A0 platform. FWD only, no AWD. 1.0 TSI 90 PS = base (66 kW, pre-2024 only); 95 PS = main variant (70 kW). 1.5 TSI 150 PS = ACT cylinder deactivation. G-TEC (CNG) very brief production 01/2020-10/2020. 1.6 TDI discontinued 11/2020. Facelift 08/2023. DSG = 7-speed."
         }
+      },
+      {
+        "key": "Skoda_Kodiaq_Mk1",
+        "wikidata_id": "Q28523213",
+        "model_year_from": 2016,
+        "model_year_to": 2024,
+        "engines": [
+          {
+            "name": "1.4 TSI 125 KM",
+            "displacement_cc": 1395,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2016,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI 150 KM",
+            "displacement_cc": 1395,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 180 KM 4x4",
+            "displacement_cc": 1984,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 190 KM 4x4",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI vRS 245 KM 4x4",
+            "displacement_cc": 1984,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 190 KM 4x4",
+            "displacement_cc": 1968,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 200 KM 4x4",
+            "displacement_cc": 1968,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI vRS 240 KM 4x4",
+            "displacement_cc": 1968,
+            "power_kw": 177,
+            "power_hp": 240,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Skoda_Kodiaq (Mk1 2016-2024). MQB platform, up to 7 seats. 1.4 TSI replaced by 1.5 TSI from 2018. 2.0 TSI 180 PS replaced by ACT 190 PS at 2019 facelift. vRS: 245 PS petrol from 2021, 240 PS diesel from 2019. DSG = 7-speed. Greentech = same engine, low-emission variant; merged with standard 150 TDI."
+        }
+      },
+      {
+        "key": "Skoda_Kodiaq_Mk2",
+        "wikidata_id": "Q28523213",
+        "model_year_from": 2024,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 TSI mHEV 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 204 KM 4x4",
+            "displacement_cc": 1984,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI RS 265 KM 4x4",
+            "displacement_cc": 1984,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI iV 204 KM",
+            "displacement_cc": 1498,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 193 KM 4x4",
+            "displacement_cc": 1968,
+            "power_kw": 142,
+            "power_hp": 193,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Skoda_Kodiaq (Mk2 12/2023-). MQB evo platform. All DSG, no manual. 1.5 TSI mHEV = 48V mild hybrid. iV PHEV = 25.7 kWh battery, ~100 km WLTP EV, 6-speed DSG, FWD. RS = 265 PS replaces 245 PS vRS. Diesel 193 PS 4x4 replaces 190 PS unit."
+        }
       }
     ],
     "Mini": [
@@ -27511,15 +27744,15 @@
     ]
   },
   "stats": {
-    "model_count": 259,
-    "engine_count": 1826,
+    "model_count": 261,
+    "engine_count": 1842,
     "engines_by_confidence": {
-      "high": 1779,
+      "high": 1795,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 237
+      "high": 239
     },
     "models_with_low_confidence": 0
   }

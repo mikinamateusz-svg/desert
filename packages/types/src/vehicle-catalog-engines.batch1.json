@@ -26802,6 +26802,177 @@
         "_meta": {
           "notes": "DE Wikipedia Renault_Megane E-Tech section. EV40 = 40 kWh/300 km WLTP; EV60 = 60 kWh/450-470 km WLTP. All FWD. displacement_cc=0 (no ICE)."
         }
+      },
+      {
+        "key": "Renault_Captur_I",
+        "wikidata_id": "Q1778048",
+        "model_year_from": 2013,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "Energy TCe 90 KM",
+            "displacement_cc": 898,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "Energy TCe 120 KM",
+            "displacement_cc": 1197,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "TCe 130 KM",
+            "displacement_cc": 1330,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "Energy dCi 90 KM",
+            "displacement_cc": 1461,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "Energy dCi 110 KM",
+            "displacement_cc": 1461,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "EN/FR Wikipedia Renault_Captur (Gen I J87, 2013-2019). B0 platform. TCe 90 = H4Bt 3-cyl. TCe 120 = H4Jt 4-cyl. TCe 130 = H5Ht 1.3T from 2017 facelift. dCi = K9K 1.5 diesel. EDC = 6-speed dual-clutch, labeled DSG."
+        }
+      },
+      {
+        "key": "Renault_Captur_II",
+        "wikidata_id": "Q1778048",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "TCe 90 KM",
+            "displacement_cc": 999,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "TCe 140 KM",
+            "displacement_cc": 1330,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E-Tech Hybrid 145 KM",
+            "displacement_cc": 1598,
+            "power_kw": 105,
+            "power_hp": 145,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E-Tech PHEV 160 KM",
+            "displacement_cc": 1598,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Blue dCi 95 KM",
+            "displacement_cc": 1461,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "Blue dCi 115 KM",
+            "displacement_cc": 1461,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "EN/FR Wikipedia Renault_Captur (Gen II XJB, 2019-). CMF-B platform. TCe 90 = H4Dt 1.0T 3-cyl. TCe 140 = H5Ht 1.3T 4-cyl. E-Tech Hybrid: 1.6 Atkinson + 2 electric motors, system 105kW/145PS, no plug. E-Tech PHEV: system 118kW/160PS, 9.8kWh, ~45km EV. Blue dCi = K9K EU6d, phased out ~2023. EDC = DSG."
+        }
       }
     ],
     "Dacia": [
@@ -28946,15 +29117,15 @@
     ]
   },
   "stats": {
-    "model_count": 271,
-    "engine_count": 1924,
+    "model_count": 273,
+    "engine_count": 1935,
     "engines_by_confidence": {
-      "high": 1877,
+      "high": 1888,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 249
+      "high": 251
     },
     "models_with_low_confidence": 0
   }

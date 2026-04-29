@@ -30219,18 +30219,322 @@
           "notes": "DE Wikipedia Peugeot_308 (P51, 2021-). EMP2 evolved platform. 1.2 PureTech = EB2 ADTED. 1.6 Hybrid 136 = 48V mild hybrid e-DSC6 dual-clutch. PHEV: 1.6 petrol + electric, 12.4kWh, ~60km EV (180PS) / 15.6kWh PHEV 225. e-308 = 54kWh, ~400km WLTP. automatic = EAT8. DSG covers EDC/e-DSC6/e-EAT8."
         }
       }
+    ],
+    "Seat": [
+      {
+        "key": "Seat_Ibiza_IV",
+        "wikidata_id": "Q869740",
+        "model_year_from": 2008,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "1.2 60 KM",
+            "displacement_cc": 1198,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 75 KM",
+            "displacement_cc": 999,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TSI 90 KM",
+            "displacement_cc": 1197,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 16V 105 KM",
+            "displacement_cc": 1390,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 86 KM",
+            "displacement_cc": 1598,
+            "power_kw": 63,
+            "power_hp": 86,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI FR 150 KM",
+            "displacement_cc": 1390,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI Cupra 180 KM",
+            "displacement_cc": 1390,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TSI Cupra 192 KM",
+            "displacement_cc": 1798,
+            "power_kw": 141,
+            "power_hp": 192,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 LPG 86 KM",
+            "displacement_cc": 1598,
+            "power_kw": 63,
+            "power_hp": 86,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TDI 75 KM",
+            "displacement_cc": 1199,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TDI 80 KM",
+            "displacement_cc": 1422,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 90 KM",
+            "displacement_cc": 1598,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 105 KM",
+            "displacement_cc": 1598,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI FR 143 KM",
+            "displacement_cc": 1968,
+            "power_kw": 105,
+            "power_hp": 143,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Seat_Ibiza (6J, 2008-2017). PQ25 platform. Facelift 2012. 1.2 TSI = EA111 CBZ. 1.4 TSI FR/Cupra = EA111 CAVE twin-charged; Cupra 180 DSG only. 1.8 TSI Cupra = EA888 from 2015. 1.2 TDI = CFWA 3-cyl BlueMotion. 1.6 LPG = bifuel. 2.0 TDI FR = EA189. DSG = 7-speed dry."
+        }
+      },
+      {
+        "key": "Seat_Ibiza_V",
+        "wikidata_id": "Q869740",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 MPI 65 KM",
+            "displacement_cc": 999,
+            "power_kw": 48,
+            "power_hp": 65,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI 80 KM",
+            "displacement_cc": 999,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI 95 KM",
+            "displacement_cc": 999,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TGI 90 KM",
+            "displacement_cc": 999,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "CNG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 95 KM",
+            "displacement_cc": 1598,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 115 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Seat_Ibiza (KJ1, 2017-). MQB-A0 platform. 1.0 TSI = EA211 evo 3-cyl. 1.5 TSI = EA211 evo ACT cylinder deactivation. 1.0 TGI = CNG+petrol bifuel. 1.6 TDI discontinued 2019 (EU6d). No Cupra in Ibiza V generation (became standalone brand). DSG = 7-speed dry."
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 281,
-    "engine_count": 2010,
+    "model_count": 283,
+    "engine_count": 2031,
     "engines_by_confidence": {
-      "high": 1963,
+      "high": 1984,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 259
+      "high": 261
     },
     "models_with_low_confidence": 0
   }

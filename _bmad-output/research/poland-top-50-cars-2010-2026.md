@@ -57,7 +57,7 @@
 | 39 | Peugeot | 308 | T7 (2007-2013), T9 (2013-2021), P51 (2021-) | Peugeot is #7 used-import brand (40,569); 308 is volume | T7 ✅ · T9 ✅ · P51 ✅ |
 | 40 | Opel | Insignia | A (2008-2017), B (2017-2022) | #19 used-import 2024; top D-segment used | A ✅ · B ✅ |
 | 41 | Ford | Mondeo | Mk4 facelift (2010-2014), Mk5 (2014-2022) | Sustained D-segment used-import volume | Mk4 ✅ · Mk4fl ✅ · Mk5 ✅ |
-| 42 | Seat | Ibiza | IV (2008-2017), V (2017-) | #20 used-import 2024 (3,349) | IV ⬜ · V ⬜ |
+| 42 | Seat | Ibiza | IV (2008-2017), V (2017-) | #20 used-import 2024 (3,349) | IV ✅ · V ✅ |
 | 43 | Renault | Scenic | III (2009-2016), IV (2016-2022), E-Tech (2024-) | #17 used-import 2024; historical MPV staple | III ⬜ · IV ⬜ · ET ⬜ |
 | 44 | Mercedes-Benz | E-Class | W212 (2009-2016), W213 (2016-2023), W214 (2023-) | Mercedes top-6 used-import brand; E-Class is core executive used | W212 ⬜ · W213 ⬜ · W214 ⬜ |
 | 45 | BMW | X3 | F25 (2010-2017), G01 (2017-2024), G45 (2024-) | Premium SUV staple; high used + new | F25 ⬜ · G01 ⬜ · G45 ⬜ |

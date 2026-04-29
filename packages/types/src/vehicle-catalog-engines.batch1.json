@@ -22934,6 +22934,270 @@
         "_meta": {
           "notes": "DE Wikipedia Kia_Sportage NQ5 section. 48V mild-hybrid shares power badges with regular T-GDI. PHEV system power; 3 variants across model years. HEV = 6-AT."
         }
+      },
+      {
+        "key": "Kia_Ceed_JD",
+        "wikidata_id": "Q179177",
+        "model_year_from": 2012,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "1.0 T-GDI 100 KM",
+            "displacement_cc": 998,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 CVVT 99 KM",
+            "displacement_cc": 1396,
+            "power_kw": 73,
+            "power_hp": 99,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 GDI 135 KM",
+            "displacement_cc": 1591,
+            "power_kw": 99,
+            "power_hp": 135,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 T-GDI GT 204 KM",
+            "displacement_cc": 1591,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 CRDi 90 KM",
+            "displacement_cc": 1396,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 110 KM",
+            "displacement_cc": 1582,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 128 KM",
+            "displacement_cc": 1582,
+            "power_kw": 94,
+            "power_hp": 128,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 136 KM",
+            "displacement_cc": 1582,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Kia_cee'd (JD, 04/2012-08/2018). 1.0 T-GDI and 1.6 CRDi 136 added at 06/2015 facelift. DSG = 6-speed DCT (petrol GT, CRDi 136). automatic = 6-speed torque converter (CRDi 110). Wikidata ID covers full cee'd/Ceed model line; generation-specific ID not found in DE article."
+        }
+      },
+      {
+        "key": "Kia_Ceed_CD",
+        "wikidata_id": "Q179177",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 T-GDI 100 KM",
+            "displacement_cc": 998,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 CVVT 99 KM",
+            "displacement_cc": 1368,
+            "power_kw": 73,
+            "power_hp": 99,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 T-GDI 140 KM",
+            "displacement_cc": 1353,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 T-GDI 140 KM",
+            "displacement_cc": 1482,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 T-GDI 160 KM",
+            "displacement_cc": 1482,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2021,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 T-GDI GT 204 KM",
+            "displacement_cc": 1591,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 GDI HEV 141 KM",
+            "displacement_cc": 1580,
+            "power_kw": 104,
+            "power_hp": 141,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 GDI PHEV 141 KM",
+            "displacement_cc": 1580,
+            "power_kw": 104,
+            "power_hp": 141,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 115 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 136 KM",
+            "displacement_cc": 1598,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2024,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Kia_Ceed (CD, 06/2018-). 1.4 CVVT brief launch only (→ 1.4 T-GDI). 1.5 T-GDI replaces 1.4 T-GDI from 2021 facelift. HEV = 77 kW ICE + 44 kW EM, system 104 kW, hatchback only. PHEV = same system + 9.3–11.2 kWh battery, SW wagon only. New CRDi 1598 cc (U2 diesel) vs JD's 1582 cc. DSG = 6- or 7-speed DCT."
+        }
       }
     ],
     "Renault": [
@@ -25030,15 +25294,15 @@
     ]
   },
   "stats": {
-    "model_count": 238,
-    "engine_count": 1657,
+    "model_count": 240,
+    "engine_count": 1675,
     "engines_by_confidence": {
-      "high": 1610,
+      "high": 1628,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 216
+      "high": 218
     },
     "models_with_low_confidence": 0
   }

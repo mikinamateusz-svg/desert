@@ -32597,18 +32597,278 @@
           "notes": "DE Wikipedia Tesla_Model_3. Highland facelift (09/2023-). Standard RWD: LFP 60kWh 208kW/283PS, launched Nov 2021 pre-Highland, continues unchanged. LR RWD: NMC 79kWh 235kW/320PS, WLTP 702km. LR AWD: system 324kW/441PS (365kW/496PS with Acceleration Boost OTA). Performance AWD: 338kW/460PS, reintroduced Apr 2024 after brief Highland-launch hiatus."
         }
       }
+    ],
+    "Cupra": [
+      {
+        "key": "Cupra_Formentor_Mk1",
+        "wikidata_id": "Q84891671",
+        "model_year_from": 2020,
+        "model_year_to": 2024,
+        "engines": [
+          {
+            "name": "1.5 TSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 4Drive 190 KM",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "VZ 2.0 TSI 245 KM",
+            "displacement_cc": 1984,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "VZ 2.0 TSI 4Drive 310 KM",
+            "displacement_cc": 1984,
+            "power_kw": 228,
+            "power_hp": 310,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "VZ5 2.5 TSI 4Drive 390 KM",
+            "displacement_cc": 2480,
+            "power_kw": 287,
+            "power_hp": 390,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 e-Hybrid PHEV 204 KM",
+            "displacement_cc": 1395,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "VZ 1.4 e-Hybrid PHEV 245 KM",
+            "displacement_cc": 1395,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2021,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 4Drive 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2024,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Cupra_Formentor (2020-2024). MQB evo platform. 1.5 TSI = EA211 evo. 2.0 TSI = EA888. VZ5 2.5 TSI 5-cyl = EA855 evo, shared with Audi RS3, limited 7000 units. e-Hybrid PHEV: EA211 1.4T + 85kW e-motor, system power 150kW/204PS or 180kW/245PS, 6-speed DSG. 2.0 TDI = EA288 evo."
+        }
+      },
+      {
+        "key": "Cupra_Formentor_Mk1fl",
+        "wikidata_id": "Q84891671",
+        "model_year_from": 2024,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 TSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 eTSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 4Drive 204 KM",
+            "displacement_cc": 1984,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "VZ 2.0 TSI 265 KM",
+            "displacement_cc": 1984,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "VZ 2.0 TSI 4Drive 333 KM",
+            "displacement_cc": 1984,
+            "power_kw": 245,
+            "power_hp": 333,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "VZ5 2.5 TSI 4Drive 390 KM",
+            "displacement_cc": 2480,
+            "power_kw": 287,
+            "power_hp": 390,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 e-Hybrid PHEV 204 KM",
+            "displacement_cc": 1498,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "VZ 1.5 e-Hybrid PHEV 272 KM",
+            "displacement_cc": 1498,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Cupra_Formentor facelift (2024-). EA211 evo 2 replaces EA211 evo. 1.5 eTSI = 48V mild hybrid. VZ5 2.5 TSI 5-cyl = EA855 evo, limited 4000 units, reintroduced 2025. e-Hybrid PHEV upgraded to 1.5T EA211 evo 2; VZ variant ICE 130kW/177PS + 85kW e-motor = system 200kW/272PS. TDI switches to 7DSG, AWD diesel discontinued."
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 301,
-    "engine_count": 2173,
+    "model_count": 303,
+    "engine_count": 2191,
     "engines_by_confidence": {
-      "high": 2124,
+      "high": 2142,
       "medium": 49
     },
     "models_by_confidence": {
       "medium": 23,
-      "high": 278
+      "high": 280
     },
     "models_with_low_confidence": 0
   }

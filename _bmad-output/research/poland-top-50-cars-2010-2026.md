@@ -65,7 +65,7 @@
 | 47 | Audi | Q3 | 8U (2011-2018), F3 (2018-) | #5 premium new 2024 (3,704) | 8U ✅ · F3 ✅ · FJ ✅ |
 | 48 | Fiat | 500 | (2007-2024 incl. facelifts) | Sustained Polish small-car presence; produced in PL (Tychy) | (2007-24) ✅ |
 | 49 | Tesla | Model 3 | Mk1 (2017-2023), Highland (2023-) | Best-selling EV in PL 2021-2024; meaningful market share | Mk1 ✅ · Highland ✅ |
-| 50 | Cupra | Formentor | Mk1 (2020-) | Notable 2023 ranking riser per BSCB; volume Cupra model | Mk1 ⬜ |
+| 50 | Cupra | Formentor | Mk1 (2020-2024), Mk1fl (2024-) | Notable 2023 ranking riser per BSCB; volume Cupra model | Mk1 ✅ · Mk1fl ✅ |
 
 ## Sources
 

@@ -23046,6 +23046,433 @@
         "_meta": {
           "notes": "DE Wikipedia BMW_G20. 318d/320d got 48V mild hybrid from 02/2020. PHEV system output. M DCT mapped to DSG."
         }
+      },
+      {
+        "key": "BMW_5_F10",
+        "wikidata_id": "Q149521",
+        "model_year_from": 2010,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "520i 184 KM",
+            "displacement_cc": 1997,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "528i 245 KM",
+            "displacement_cc": 1997,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "535i 306 KM",
+            "displacement_cc": 2979,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "550i xDrive 408 KM",
+            "displacement_cc": 4395,
+            "power_kw": 300,
+            "power_hp": 408,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "550i xDrive 450 KM",
+            "displacement_cc": 4395,
+            "power_kw": 330,
+            "power_hp": 450,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "ActiveHybrid 5 340 KM",
+            "displacement_cc": 2979,
+            "power_kw": 250,
+            "power_hp": 340,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "520d 184 KM",
+            "displacement_cc": 1995,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "520d 190 KM",
+            "displacement_cc": 1995,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "525d 218 KM",
+            "displacement_cc": 1995,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "530d 258 KM",
+            "displacement_cc": 2993,
+            "power_kw": 190,
+            "power_hp": 258,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "535d 313 KM",
+            "displacement_cc": 2993,
+            "power_kw": 230,
+            "power_hp": 313,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia BMW_5er_F10 (01/2010-01/2017). 520i/528i use N20 4-cyl (from 2011); earlier 528i was N53 6-cyl 258PS. 520d: N47 engine to 2014 (184PS), then B47 (190PS). 525d = N47 biturbo 4-cyl. 535i = N55 6-cyl. ActiveHybrid 5 = N55 + 40kW EM. automatic = 8-speed ZF. Wikidata ID covers full 5 Series model line; F10-specific ID not extracted."
+        }
+      },
+      {
+        "key": "BMW_5_G30",
+        "wikidata_id": "Q149521",
+        "model_year_from": 2017,
+        "model_year_to": 2023,
+        "engines": [
+          {
+            "name": "520i 184 KM",
+            "displacement_cc": 1998,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "530i 252 KM",
+            "displacement_cc": 1998,
+            "power_kw": 185,
+            "power_hp": 252,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "540i xDrive 340 KM",
+            "displacement_cc": 2998,
+            "power_kw": 250,
+            "power_hp": 340,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "530e 252 KM",
+            "displacement_cc": 1998,
+            "power_kw": 185,
+            "power_hp": 252,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "530e xDrive 292 KM",
+            "displacement_cc": 1998,
+            "power_kw": 215,
+            "power_hp": 292,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "545e xDrive 394 KM",
+            "displacement_cc": 2998,
+            "power_kw": 290,
+            "power_hp": 394,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "520d 190 KM",
+            "displacement_cc": 1995,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "525d 231 KM",
+            "displacement_cc": 1995,
+            "power_kw": 170,
+            "power_hp": 231,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "530d 265 KM",
+            "displacement_cc": 2993,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "530d 286 KM",
+            "displacement_cc": 2993,
+            "power_kw": 210,
+            "power_hp": 286,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "540d xDrive 320 KM",
+            "displacement_cc": 2993,
+            "power_kw": 235,
+            "power_hp": 320,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia BMW_5er_G30 (02/2017-08/2023). All B-series modular engines. 530i = B48 4-cyl; 540i/545e = B58 6-cyl. 530e PHEV: ICE 135 kW + EM 83 kW = 185 kW system. 545e: ICE 210 kW + EM 80 kW = 290 kW system. 520d manual to summer 2018 only. 525d discontinued 2019. LCI facelift 07/2020."
+        }
+      },
+      {
+        "key": "BMW_5_G60",
+        "wikidata_id": "Q149521",
+        "model_year_from": 2023,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "520i 190 KM",
+            "displacement_cc": 1998,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "530e 299 KM",
+            "displacement_cc": 1998,
+            "power_kw": 220,
+            "power_hp": 299,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "550e xDrive 489 KM",
+            "displacement_cc": 2998,
+            "power_kw": 360,
+            "power_hp": 489,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "520d 197 KM",
+            "displacement_cc": 1995,
+            "power_kw": 145,
+            "power_hp": 197,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "540d xDrive 286 KM",
+            "displacement_cc": 2993,
+            "power_kw": 210,
+            "power_hp": 286,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "i5 eDrive40 340 KM",
+            "displacement_cc": 0,
+            "power_kw": 250,
+            "power_hp": 340,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "i5 xDrive40 394 KM",
+            "displacement_cc": 0,
+            "power_kw": 290,
+            "power_hp": 394,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "i5 M60 xDrive 601 KM",
+            "displacement_cc": 0,
+            "power_kw": 442,
+            "power_hp": 601,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia BMW_5er_G60 (launch 10/2023). All ICE = 48V mild hybrid. 530e PHEV: ICE 140 kW + EM 135 kW = 220 kW system. 550e: ICE 230 kW + EM 145 kW = 360 kW system. i5 shares G60 platform. 530i/540i petrol not available in EU (US/Asia only). automatic = 8-speed ZF. M5 PHEV (727PS) excluded."
+        }
       }
     ],
     "Hyundai": [
@@ -26535,15 +26962,15 @@
     ]
   },
   "stats": {
-    "model_count": 251,
-    "engine_count": 1759,
+    "model_count": 254,
+    "engine_count": 1789,
     "engines_by_confidence": {
-      "high": 1712,
+      "high": 1742,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 229
+      "high": 232
     },
     "models_with_low_confidence": 0
   }

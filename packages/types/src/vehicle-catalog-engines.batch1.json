@@ -8565,6 +8565,124 @@
         "_meta": {
           "notes": "DE Wikipedia VW_Tiguan_III. EU launch 11/2023. 1.5 eTSI = EA211 evo2 with 48V mild hybrid. PHEV system power: ICE 110/130 kW + EM 85 kW; 19.7 kWh battery; ~118-125 km WLTP electric range. All diesel EA288 evo. No manual gearbox in Gen III."
         }
+      },
+      {
+        "key": "VW_T-Roc_I",
+        "wikidata_id": "Q135984189",
+        "model_year_from": 2017,
+        "model_year_to": 2025,
+        "engines": [
+          {
+            "name": "1.0 TSI 115 KM",
+            "displacement_cc": 999,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI 190 KM",
+            "displacement_cc": 1498,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": 2025,
+            "confidence": "high"
+          },
+          {
+            "name": "T-Roc R 2.0 TSI 300 KM 4Motion",
+            "displacement_cc": 1984,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2025,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 115 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 150 KM",
+            "displacement_cc": 1598,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 190 KM 4Motion",
+            "displacement_cc": 1968,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2022,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia VW_T-Roc_I. 1.0 TSI dropped at 2020 facelift. 1.5 TSI ACT cylinder deactivation from 11/2020; same 110 kW from launch. 1.5 TSI 190 KM = ACTplus evo2 EA211 from 02/2024. T-Roc R (300 PS) from 08/2019. 1.6 TDI available from 06/2018; 2.0 TDI 190 4Motion ended ~2022. No manual on 2.0 units. DSG = 7-speed."
+        }
       }
     ],
     "Skoda": [
@@ -24687,15 +24805,15 @@
     ]
   },
   "stats": {
-    "model_count": 234,
-    "engine_count": 1635,
+    "model_count": 235,
+    "engine_count": 1643,
     "engines_by_confidence": {
-      "high": 1588,
+      "high": 1596,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 212
+      "high": 213
     },
     "models_with_low_confidence": 0
   }

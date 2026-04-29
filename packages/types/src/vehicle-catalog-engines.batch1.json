@@ -23566,6 +23566,432 @@
         "_meta": {
           "notes": "DE Wikipedia Ford_Kuga (Mk3 2019-, production from 04/2020). FHEV = 2.5 Atkinson + 95 kW EM, system ~150 kW/190 PS, discontinued 2024. PHEV = 14.4 kWh, 56 km WLTP EV range, system 165 kW/225 PS. All diesel discontinued 02/2022. automatic = 8-speed. CVT = Ford e-CVT (Atkinson hybrid)."
         }
+      },
+      {
+        "key": "Ford_Mondeo_Mk4",
+        "wikidata_id": "Q847258",
+        "model_year_from": 2007,
+        "model_year_to": 2010,
+        "engines": [
+          {
+            "name": "1.6 Ti-VCT 110 KM",
+            "displacement_cc": 1596,
+            "power_kw": 82,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Ti-VCT 125 KM",
+            "displacement_cc": 1596,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Duratec 145 KM",
+            "displacement_cc": 1999,
+            "power_kw": 107,
+            "power_hp": 145,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.3 Duratec 160 KM",
+            "displacement_cc": 2261,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5T 220 KM",
+            "displacement_cc": 2498,
+            "power_kw": 162,
+            "power_hp": 220,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDCi 115 KM",
+            "displacement_cc": 1560,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TDCi 100 KM",
+            "displacement_cc": 1798,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TDCi 125 KM",
+            "displacement_cc": 1798,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 130 KM",
+            "displacement_cc": 1997,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 163 KM",
+            "displacement_cc": 1997,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 TDCi 175 KM",
+            "displacement_cc": 2198,
+            "power_kw": 129,
+            "power_hp": 175,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "EN Wikipedia Ford_Mondeo (Mk4 BA7 pre-facelift, 2007-2010). EUCD platform. 2.3 Duratec = Mazda sourced. 2.5T = Volvo B5254T3 inline-5. 1.8 TDCi = DLD-418 PSA. 2.0 TDCi = PSA DW10. 2.2 TDCi = PSA DW12 twin-turbo 129kW. No PowerShift pre-facelift; automatic = 6-speed Aisin/SelectShift."
+        }
+      },
+      {
+        "key": "Ford_Mondeo_Mk4fl",
+        "wikidata_id": "Q847258",
+        "model_year_from": 2010,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "1.6 Ti-VCT 125 KM",
+            "displacement_cc": 1596,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 EcoBoost 160 KM",
+            "displacement_cc": 1596,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Duratec 145 KM",
+            "displacement_cc": 1999,
+            "power_kw": 107,
+            "power_hp": 145,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 EcoBoost 203 KM",
+            "displacement_cc": 1999,
+            "power_kw": 149,
+            "power_hp": 203,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 EcoBoost ST 240 KM",
+            "displacement_cc": 1999,
+            "power_kw": 177,
+            "power_hp": 240,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDCi 115 KM",
+            "displacement_cc": 1560,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 115 KM",
+            "displacement_cc": 1997,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 163 KM",
+            "displacement_cc": 1997,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 TDCi 200 KM",
+            "displacement_cc": 2198,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "EN Wikipedia Ford_Mondeo (Mk4 BA7 facelift, 2010-2014). 1.6 EcoBoost = Dragon/Fox 1.6T turbocharged (new at FL). 2.0 EcoBoost from Ford EcoBoost family. 1.8 TDCi dropped; 2.3/2.5 dropped at FL. 2.2 TDCi uprated to 147kW/200PS. PowerShift = 6-speed DCT = DSG."
+        }
+      },
+      {
+        "key": "Ford_Mondeo_Mk5",
+        "wikidata_id": "Q847258",
+        "model_year_from": 2014,
+        "model_year_to": 2022,
+        "engines": [
+          {
+            "name": "1.0 EcoBoost 125 KM",
+            "displacement_cc": 999,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 EcoBoost 160 KM",
+            "displacement_cc": 1499,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 EcoBoost 203 KM",
+            "displacement_cc": 1999,
+            "power_kw": 149,
+            "power_hp": 203,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 EcoBoost ST 240 KM",
+            "displacement_cc": 1999,
+            "power_kw": 177,
+            "power_hp": 240,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 HEV 187 KM",
+            "displacement_cc": 1999,
+            "power_kw": 138,
+            "power_hp": 187,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2014,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 EcoBlue 120 KM",
+            "displacement_cc": 1499,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 150 KM",
+            "displacement_cc": 1997,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 180 KM",
+            "displacement_cc": 1997,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Bi-TDCi ST 210 KM",
+            "displacement_cc": 1997,
+            "power_kw": 154,
+            "power_hp": 210,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2022,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "EN Wikipedia Ford_Mondeo (Mk5 CD391, 2014-2022). C2 platform. 2.0 HEV = 2.0 Atkinson + EM, system 138kW/187PS, eCVT. 1.5 EcoBlue from 2016 (EU6). 2.0 TDCi = Duratorq; Bi-TDCi biturbo for ST. HEV sedan from launch, estate from 2019. PowerShift DCT = DSG. automatic = 8-speed Aisin on Mk5."
+        }
       }
     ],
     "BMW": [
@@ -29796,15 +30222,15 @@
     ]
   },
   "stats": {
-    "model_count": 278,
-    "engine_count": 1981,
+    "model_count": 281,
+    "engine_count": 2010,
     "engines_by_confidence": {
-      "high": 1934,
+      "high": 1963,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 256
+      "high": 259
     },
     "models_with_low_confidence": 0
   }

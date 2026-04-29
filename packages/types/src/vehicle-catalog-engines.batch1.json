@@ -28334,18 +28334,627 @@
           "notes": "DE Wikipedia Volvo_XC60 (Mk2 SPA, 2017-). All Drive-E 2.0T (1969cc). T→B rebadging 2020 with 48V mHEV integration (same power). T8 PHEV: ICE 228 kW + EM 107 kW rear axle, system 287 kW/390 PS; 14.9 kWh battery; ~50 km WLTP EV; Recharge branding from 09/2021. Diesel phased out ~2023. automatic = 8-speed Geartronic."
         }
       }
+    ],
+    "VW": [
+      {
+        "key": "VW_Polo_IV",
+        "wikidata_id": "Q231869",
+        "model_year_from": 2001,
+        "model_year_to": 2009,
+        "engines": [
+          {
+            "name": "1.2 55 KM",
+            "displacement_cc": 1198,
+            "power_kw": 40,
+            "power_hp": 55,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 64 KM",
+            "displacement_cc": 1198,
+            "power_kw": 47,
+            "power_hp": 64,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 16V 80 KM",
+            "displacement_cc": 1390,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 16V 101 KM",
+            "displacement_cc": 1390,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2006,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 16V 105 KM",
+            "displacement_cc": 1598,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8T GTI 150 KM",
+            "displacement_cc": 1781,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8T GTI Cup 180 KM",
+            "displacement_cc": 1781,
+            "power_kw": 130,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 SDI 64 KM",
+            "displacement_cc": 1896,
+            "power_kw": 47,
+            "power_hp": 64,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2005,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TDI 70 KM",
+            "displacement_cc": 1422,
+            "power_kw": 51,
+            "power_hp": 70,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TDI 80 KM",
+            "displacement_cc": 1422,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TDI 101 KM",
+            "displacement_cc": 1896,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2003,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TDI 130 KM",
+            "displacement_cc": 1896,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2003,
+            "year_to": 2009,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia VW_Polo (9N 2001-2005, 9N3 facelift 2005-2009). 1.2 = AZQ/BME 3-cyl. 1.4 16V = BBY/BKY. GTI = 9N3 only, 1.8T AWP/BUD. 1.9 SDI = 9N only. 1.4 TDI = AMF/BNM PD; 9N3 switched to CR. 1.9 TDI = ATD/BLT PD. automatic = 4-speed Tiptronic on petrol."
+        }
+      },
+      {
+        "key": "VW_Polo_V",
+        "wikidata_id": "Q231869",
+        "model_year_from": 2009,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "1.2 MPI 60 KM",
+            "displacement_cc": 1198,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 MPI 70 KM",
+            "displacement_cc": 1198,
+            "power_kw": 51,
+            "power_hp": 70,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 MPI 85 KM",
+            "displacement_cc": 1390,
+            "power_kw": 63,
+            "power_hp": 85,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 MPI 105 KM",
+            "displacement_cc": 1598,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TSI 90 KM",
+            "displacement_cc": 1197,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TSI 105 KM",
+            "displacement_cc": 1197,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI GTI 180 KM",
+            "displacement_cc": 1390,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TDI 75 KM",
+            "displacement_cc": 1199,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TDI 75 KM",
+            "displacement_cc": 1422,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 90 KM",
+            "displacement_cc": 1598,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 105 KM",
+            "displacement_cc": 1598,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia VW_Polo (6R pre-facelift, 2009-2014). PQ25 platform. 1.2 MPI = CGP 3-cyl. 1.2 TSI = CBZ twin-charged (supercharged+turbo). 1.4 TSI GTI = CAVE twin-charged 180 PS, DSG only (discontinued 2013). 1.2 TDI = CFWA 3-cyl BlueMotion. 1.4/1.6 TDI = CR. DSG = 7-speed dry."
+        }
+      },
+      {
+        "key": "VW_Polo_V_fl",
+        "wikidata_id": "Q231869",
+        "model_year_from": 2014,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "1.0 MPI 60 KM",
+            "displacement_cc": 999,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 MPI 75 KM",
+            "displacement_cc": 999,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI 90 KM",
+            "displacement_cc": 999,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI 110 KM",
+            "displacement_cc": 999,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI BlueGT 140 KM",
+            "displacement_cc": 1395,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TSI GTI 192 KM",
+            "displacement_cc": 1798,
+            "power_kw": 141,
+            "power_hp": 192,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TDI 75 KM",
+            "displacement_cc": 1422,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TDI 90 KM",
+            "displacement_cc": 1422,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TDI 105 KM",
+            "displacement_cc": 1422,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia VW_Polo (6C facelift, 2014-2017). 1.0 MPI/TSI = EA111 3-cyl replacing 1.2 units. 1.4 TSI BlueGT = EA211 with cylinder deactivation. 1.8 TSI GTI = EA888 replacing twin-charged 1.4 TSI. 1.4 TDI = EA288 3-cyl. DSG = 7-speed dry."
+        }
+      },
+      {
+        "key": "VW_Polo_VI",
+        "wikidata_id": "Q231869",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 MPI 65 KM",
+            "displacement_cc": 999,
+            "power_kw": 48,
+            "power_hp": 65,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 MPI 80 KM",
+            "displacement_cc": 999,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI 95 KM",
+            "displacement_cc": 999,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI 115 KM",
+            "displacement_cc": 999,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI GTI 200 KM",
+            "displacement_cc": 1984,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI GTI 207 KM",
+            "displacement_cc": 1984,
+            "power_kw": 152,
+            "power_hp": 207,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TGI 90 KM",
+            "displacement_cc": 999,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "CNG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 80 KM",
+            "displacement_cc": 1598,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 95 KM",
+            "displacement_cc": 1598,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia VW_Polo (AW, 2017-). MQB-A0 platform. 1.0 TSI = EA211 evo. 1.5 TSI ACT = EA211 evo with cylinder deactivation (from 2020 facelift). GTI: 147kW/200PS (2017-2021), 152kW/207PS (2022+ FL). 1.0 TGI = CNG+petrol bifuel. 1.6 TDI discontinued ~2020 (EU6d). DSG = 7-speed dry."
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 267,
-    "engine_count": 1882,
+    "model_count": 271,
+    "engine_count": 1924,
     "engines_by_confidence": {
-      "high": 1835,
+      "high": 1877,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 245
+      "high": 249
     },
     "models_with_low_confidence": 0
   }

@@ -22186,6 +22186,420 @@
         "_meta": {
           "notes": "DE Wikipedia Audi_A6_C6 (pre-facelift 02/2004-08/2008). 2.0 TFSI from 04/2005. 2.8 FSI 209 PS from 10/2006 (replaced 190 PS 2.4 V6). 4.2 FSI quattro continues into facelift (year_to 2010). 3.0 TDI power bump 04/2006 (224→233 PS). CVT = multitronic; automatic = tiptronic. S6 (V10)/RS6 excluded."
         }
+      },
+      {
+        "key": "Audi_Q5_Mk1",
+        "wikidata_id": "Q584118",
+        "model_year_from": 2008,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "3.2 FSI quattro 270 KM",
+            "displacement_cc": 3197,
+            "power_kw": 199,
+            "power_hp": 270,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 180 KM",
+            "displacement_cc": 1984,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 230 KM",
+            "displacement_cc": 1984,
+            "power_kw": 169,
+            "power_hp": 230,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TFSI quattro 272 KM",
+            "displacement_cc": 2995,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "SQ5 3.0 TFSI 354 KM",
+            "displacement_cc": 2995,
+            "power_kw": 260,
+            "power_hp": 354,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI Hybrid 245 KM",
+            "displacement_cc": 1984,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 143 KM",
+            "displacement_cc": 1968,
+            "power_kw": 105,
+            "power_hp": 143,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 177 KM",
+            "displacement_cc": 1968,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 190 KM",
+            "displacement_cc": 1968,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TDI quattro 240 KM",
+            "displacement_cc": 2967,
+            "power_kw": 176,
+            "power_hp": 240,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TDI quattro 258 KM",
+            "displacement_cc": 2967,
+            "power_kw": 190,
+            "power_hp": 258,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "SQ5 3.0 TDI 313 KM",
+            "displacement_cc": 2967,
+            "power_kw": 230,
+            "power_hp": 313,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_Q5 (8R, 2008-2017). MLB platform. Facelift 2012. 3.2 FSI = CALA V6 NA (pre-FL only). 2.0 TFSI = EA888. 3.0 TFSI SC = CGWB. Q5 Hybrid: 2.0T + electric, non-plug, system 180kW. SQ5: diesel 230kW (2013-15) then petrol 3.0 TFSI SC 260kW (2015-17). S-tronic DSG = 7-speed dry / 8-speed wet. automatic = tiptronic."
+        }
+      },
+      {
+        "key": "Audi_Q5_Mk2",
+        "wikidata_id": "Q584118",
+        "model_year_from": 2017,
+        "model_year_to": 2024,
+        "engines": [
+          {
+            "name": "2.0 TFSI 190 KM",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 204 KM",
+            "displacement_cc": 1984,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 252 KM",
+            "displacement_cc": 1984,
+            "power_kw": 185,
+            "power_hp": 252,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "SQ5 3.0 TFSI 354 KM",
+            "displacement_cc": 2995,
+            "power_kw": 260,
+            "power_hp": 354,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "50 TFSIe PHEV 299 KM",
+            "displacement_cc": 1984,
+            "power_kw": 220,
+            "power_hp": 299,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "55 TFSIe PHEV 367 KM",
+            "displacement_cc": 1984,
+            "power_kw": 270,
+            "power_hp": 367,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 163 KM",
+            "displacement_cc": 1968,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 204 KM",
+            "displacement_cc": 1968,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TDI quattro 286 KM",
+            "displacement_cc": 2967,
+            "power_kw": 210,
+            "power_hp": 286,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TDI quattro 341 KM",
+            "displacement_cc": 2967,
+            "power_kw": 251,
+            "power_hp": 341,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_Q5 (FY, 2017-2024). MLB evo platform. Facelift 2020. All 48V mHEV from 2020 facelift. 2.0 TFSI = EA888 gen4. SQ5 3.0 TFSI = EA839 mild hybrid. PHEV: 50 TFSIe 14.1kWh ~47km EV; 55 TFSIe 17.9kWh ~56km EV. 3.0 TDI = EA897. S-tronic 7-speed DSG. SQ5/3.0 TDI tiptronic automatic."
+        }
+      },
+      {
+        "key": "Audi_Q5_GU",
+        "wikidata_id": "Q584118",
+        "model_year_from": 2024,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.0 TFSI 204 KM",
+            "displacement_cc": 1984,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 272 KM",
+            "displacement_cc": 1984,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "SQ5 3.0 TFSI 367 KM",
+            "displacement_cc": 2995,
+            "power_kw": 270,
+            "power_hp": 367,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "e-hybrid PHEV 299 KM",
+            "displacement_cc": 1984,
+            "power_kw": 220,
+            "power_hp": 299,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "e-hybrid PHEV 367 KM",
+            "displacement_cc": 1984,
+            "power_kw": 270,
+            "power_hp": 367,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 204 KM",
+            "displacement_cc": 1968,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TDI 299 KM",
+            "displacement_cc": 2967,
+            "power_kw": 220,
+            "power_hp": 299,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_Q5 (GU, 09/2024-). PPC platform. All S-tronic 7-speed (DSG). 2.0 TFSI 204 from 09/2024; 272 from 11/2025. SQ5 3.0 TFSI from 09/2024. e-hybrid PHEV: two power tunes (220kW/299PS and 270kW/367PS), from 06/2025. 2.0 TDI 204 from 09/2024; 3.0 TDI 299 from 11/2025."
+        }
       }
     ],
     "Ford": [
@@ -31530,15 +31944,15 @@
     ]
   },
   "stats": {
-    "model_count": 292,
-    "engine_count": 2100,
+    "model_count": 295,
+    "engine_count": 2129,
     "engines_by_confidence": {
-      "high": 2053,
+      "high": 2082,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 270
+      "high": 273
     },
     "models_with_low_confidence": 0
   }

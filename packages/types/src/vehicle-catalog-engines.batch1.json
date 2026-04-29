@@ -19510,6 +19510,340 @@
         "_meta": {
           "notes": "DE Wikipedia Opel_Corsa_F (07/2019-). PSA/Stellantis platform (CMP). All petrol = 3-cyl PureTech. mHEV = 48V 6-speed DSG from 02/2024 facelift. 1.5 CDTI discontinued 06/2023. EV = Vitesco EMR3; 50 kWh (2019-2023) then 51 kWh (2023+). automatic (EV) = single-speed reduction gear."
         }
+      },
+      {
+        "key": "Opel_Insignia_A",
+        "wikidata_id": "Q695516",
+        "model_year_from": 2008,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "1.6 ECOTEC 115 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Turbo 180 KM",
+            "displacement_cc": 1598,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 140 KM",
+            "displacement_cc": 1796,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 Turbo 140 KM",
+            "displacement_cc": 1364,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2013,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 DI Turbo 170 KM",
+            "displacement_cc": 1598,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Turbo 220 KM",
+            "displacement_cc": 1998,
+            "power_kw": 162,
+            "power_hp": 220,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Turbo 250 KM 4x4",
+            "displacement_cc": 1998,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "2.8 V6 Turbo OPC 300 KM",
+            "displacement_cc": 2792,
+            "power_kw": 220,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.8 V6 Turbo OPC 325 KM",
+            "displacement_cc": 2792,
+            "power_kw": 239,
+            "power_hp": 325,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 CDTI 110 KM",
+            "displacement_cc": 1686,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CDTI 110 KM",
+            "displacement_cc": 1598,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2013,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CDTI 136 KM",
+            "displacement_cc": 1598,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 CDTI 160 KM",
+            "displacement_cc": 1956,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 CDTI BiTurbo 190 KM",
+            "displacement_cc": 1956,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 CDTI BiTurbo 195 KM",
+            "displacement_cc": 1956,
+            "power_kw": 143,
+            "power_hp": 195,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2017,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Opel_Insignia (A, 2008-2017). Epsilon II platform. Facelift 2013. 1.7 CDTI = Z17DTH pre-fl only; replaced by 1.6 CDTI at FL. 2.0 CDTI = A20DTH/DTJ. OPC: 2.8 V6 (Z28NET) pre-fl 220kW, facelift 239kW. automatic = 6-speed Aisin."
+        }
+      },
+      {
+        "key": "Opel_Insignia_B",
+        "wikidata_id": "Q695516",
+        "model_year_from": 2017,
+        "model_year_to": 2022,
+        "engines": [
+          {
+            "name": "1.5 DI Turbo 140 KM",
+            "displacement_cc": 1490,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 DI Turbo 200 KM",
+            "displacement_cc": 1598,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Turbo GSi 230 KM",
+            "displacement_cc": 1998,
+            "power_kw": 169,
+            "power_hp": 230,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Turbo GSi 260 KM 4x4",
+            "displacement_cc": 1998,
+            "power_kw": 191,
+            "power_hp": 260,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Turbo D 136 KM",
+            "displacement_cc": 1598,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Turbo D 170 KM",
+            "displacement_cc": 1995,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Turbo D 174 KM",
+            "displacement_cc": 1956,
+            "power_kw": 128,
+            "power_hp": 174,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Turbo D BiTurbo 210 KM",
+            "displacement_cc": 1956,
+            "power_kw": 154,
+            "power_hp": 210,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Opel_Insignia (B, 2017-2022). E2 platform (GM). GSi replaces OPC. 1.5/1.6 DI petrol phased out 2020 (EU6d). 2.0 Turbo D: 1995cc pre-2020 (D20DTH), 1956cc post-2020 (D20DTJ). automatic = 9-speed Aisin (petrol) or 8-speed (diesel). Production ended 2022 without successor."
+        }
       }
     ],
     "Audi": [
@@ -29462,15 +29796,15 @@
     ]
   },
   "stats": {
-    "model_count": 276,
-    "engine_count": 1958,
+    "model_count": 278,
+    "engine_count": 1981,
     "engines_by_confidence": {
-      "high": 1911,
+      "high": 1934,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 254
+      "high": 256
     },
     "models_with_low_confidence": 0
   }

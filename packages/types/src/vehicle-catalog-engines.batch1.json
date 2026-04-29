@@ -18126,6 +18126,212 @@
         "_meta": {
           "notes": "DE Wikipedia Toyota_RAV4 XA50 section. EU launch 01/2019. 2.0 petrol dropped from EU after 05/2020. 2.5 NA and 2.5 AWD petrol (Russia/NA only) skipped. System power for HEV/PHEV."
         }
+      },
+      {
+        "key": "Toyota_Auris_E150fl",
+        "wikidata_id": "Q697507",
+        "model_year_from": 2010,
+        "model_year_to": 2012,
+        "engines": [
+          {
+            "name": "1.33 Dual VVT-i 99 KM",
+            "displacement_cc": 1329,
+            "power_kw": 73,
+            "power_hp": 99,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Valvematic 132 KM",
+            "displacement_cc": 1598,
+            "power_kw": 97,
+            "power_hp": 132,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 Valvematic 147 KM",
+            "displacement_cc": 1794,
+            "power_kw": 108,
+            "power_hp": 147,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 HSD 136 KM",
+            "displacement_cc": 1798,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2010,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 D-4D 90 KM",
+            "displacement_cc": 1364,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 D-4D 126 KM",
+            "displacement_cc": 1995,
+            "power_kw": 93,
+            "power_hp": 126,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 D-CAT 177 KM",
+            "displacement_cc": 2231,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2012,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Toyota_Auris (E150 facelift, 2010-2012). MC = 2010. 1.33 = 1NR-FE. 1.6/1.8 Valvematic = 1ZR-FAE/2ZR-FAE. HSD = 2ZR-FXE + electric motor, system 100 kW. 1.4 D-4D = 1ND-TV. 2.0 D-4D = 1AD-FTV. 2.2 D-CAT = 2AD-FHV. automatic on 1.6 = Multidrive S (single-clutch AMT)."
+        }
+      },
+      {
+        "key": "Toyota_Auris_E180",
+        "wikidata_id": "Q697507",
+        "model_year_from": 2012,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "1.33 Dual VVT-i 99 KM",
+            "displacement_cc": 1329,
+            "power_kw": 73,
+            "power_hp": 99,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 Turbo 116 KM",
+            "displacement_cc": 1197,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Valvematic 132 KM",
+            "displacement_cc": 1598,
+            "power_kw": 97,
+            "power_hp": 132,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 HSD 136 KM",
+            "displacement_cc": 1798,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 D-4D 90 KM",
+            "displacement_cc": 1364,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 D-4D 112 KM",
+            "displacement_cc": 1598,
+            "power_kw": 82,
+            "power_hp": 112,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 D-4D 124 KM",
+            "displacement_cc": 1998,
+            "power_kw": 91,
+            "power_hp": 124,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Toyota_Auris (E180, 2012-2018). Facelift 2015. 1.2 Turbo = 8NR-FTS (added at FL). 1.33 = 1NR-FE. 1.6 Valvematic = 1ZR-FAE (pre-FL only). HSD = 2ZR-FXE hybrid, system 100 kW. 1.4 D-4D = 1ND-TV; 1.6 D-4D = 1WW-WTV (added at FL). 2.0 D-4D = 1AD-FTV (pre-FL). automatic on 1.6 petrol = Multidrive S."
+        }
       }
     ],
     "Opel": [
@@ -28131,15 +28337,15 @@
     ]
   },
   "stats": {
-    "model_count": 265,
-    "engine_count": 1868,
+    "model_count": 267,
+    "engine_count": 1882,
     "engines_by_confidence": {
-      "high": 1821,
+      "high": 1835,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 243
+      "high": 245
     },
     "models_with_low_confidence": 0
   }

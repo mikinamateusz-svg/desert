@@ -21956,6 +21956,294 @@
         "_meta": {
           "notes": "DE Wikipedia Ford_Fiesta_'18 section. EU launch 2017. 1.1 NA 3-cylinder replaces 1.25. 1.0 EcoBoost 85 PS dropped after 2019 facelift. 1.5 EcoBoost ST replaces 1.6 unit. automatic = 7-speed DCT on 100 PS variant."
         }
+      },
+      {
+        "key": "Ford_Kuga_Mk1",
+        "wikidata_id": "Q1441699",
+        "model_year_from": 2008,
+        "model_year_to": 2012,
+        "engines": [
+          {
+            "name": "2.5 Duratec 200 KM",
+            "displacement_cc": 2521,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 136 KM",
+            "displacement_cc": 1997,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 140 KM",
+            "displacement_cc": 1997,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 163 KM",
+            "displacement_cc": 1997,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2012,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_Kuga (Mk1 02/2008-10/2012). EU-only model (US = Escape). 2.5 T5 petrol = Volvo-derived. TDCi 136 PS replaced by 140/163 PS from 02/2010 facelift. DSG = 6-speed PowerShift. 4WD optional. Produced in Saarlouis. Wikidata ID covers full Kuga model line."
+        }
+      },
+      {
+        "key": "Ford_Kuga_Mk2",
+        "wikidata_id": "Q1441699",
+        "model_year_from": 2012,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "1.5 EcoBoost 120 KM",
+            "displacement_cc": 1498,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2016,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 EcoBoost 150 KM",
+            "displacement_cc": 1596,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 EcoBoost 182 KM",
+            "displacement_cc": 1596,
+            "power_kw": 134,
+            "power_hp": 182,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 EcoBoost 242 KM 4x4",
+            "displacement_cc": 1999,
+            "power_kw": 178,
+            "power_hp": 242,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 120 KM",
+            "displacement_cc": 1997,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 150 KM",
+            "displacement_cc": 1997,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 180 KM 4x4",
+            "displacement_cc": 1997,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_Kuga (Mk2 11/2012-06/2019). 1.6 EcoBoost replaced by 1.5 EcoBoost from 2016 facelift (150 PS dropped). 2.0 EcoBoost 242 PS added 11/2017. DSG = 6-speed PowerShift. 4x4 standard on top petrol/diesel variants."
+        }
+      },
+      {
+        "key": "Ford_Kuga_Mk3",
+        "wikidata_id": "Q1441699",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 EcoBoost 120 KM",
+            "displacement_cc": 1498,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 EcoBoost 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 EcoBoost 186 KM",
+            "displacement_cc": 1498,
+            "power_kw": 137,
+            "power_hp": 186,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5 Duratec FHEV 190 KM",
+            "displacement_cc": 2488,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5 Duratec PHEV 225 KM",
+            "displacement_cc": 2488,
+            "power_kw": 165,
+            "power_hp": 225,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 EcoBlue 120 KM",
+            "displacement_cc": 1499,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2020,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 EcoBlue 150 KM",
+            "displacement_cc": 1996,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 EcoBlue 190 KM 4x4",
+            "displacement_cc": 1996,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": 2022,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_Kuga (Mk3 2019-, production from 04/2020). FHEV = 2.5 Atkinson + 95 kW EM, system ~150 kW/190 PS, discontinued 2024. PHEV = 14.4 kWh, 56 km WLTP EV range, system 165 kW/225 PS. All diesel discontinued 02/2022. automatic = 8-speed. CVT = Ford e-CVT (Atkinson hybrid)."
+        }
       }
     ],
     "BMW": [
@@ -26247,15 +26535,15 @@
     ]
   },
   "stats": {
-    "model_count": 248,
-    "engine_count": 1740,
+    "model_count": 251,
+    "engine_count": 1759,
     "engines_by_confidence": {
-      "high": 1693,
+      "high": 1712,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 226
+      "high": 229
     },
     "models_with_low_confidence": 0
   }

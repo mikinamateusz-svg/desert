@@ -43,7 +43,7 @@
 | 25 | Nissan | Qashqai | J10 facelift (2010-2013), J11 (2013-2021), J12 (2021-) | #8 used-import 2024 (13,314); top-15 new since 2010 | J10fl ✅ · J11 ✅ · J12 ✅ |
 | 26 | Kia | Ceed | JD (2012-2018), CD (2018-) | #13 new 2022 (7,177); sustained top-20 | JD ✅ · CD ✅ |
 | 27 | Audi | A6 | C7 (2011-2018), C8 (2018-) | #12 used-import 2024 (11,493); flagship D-segment used | C7 ✅ · C8 ✅ |
-| 28 | Opel | Corsa | D (2006-2014), E (2014-2019), F (2019-) | #10 used-import 2024 (12,594); strong new in 2010-2014 | D ⬜ · E ⬜ · F ⬜ |
+| 28 | Opel | Corsa | D (2006-2014), E (2014-2019), F (2019-) | #10 used-import 2024 (12,594); strong new in 2010-2014 | D ✅ · E ✅ · F ✅ |
 | 29 | Ford | Kuga | Mk2 (2012-2019), Mk3 (2019-) | #11 used-import 2024 (11,852) | Mk2 ⬜ · Mk3 ⬜ |
 | 30 | BMW | 5 Series | F10/F11 (2010-2017), G30/G31 (2017-2023), G60 (2023-) | #13 used-import 2024 (11,342) | F10 ⬜ · G30 ⬜ · G60 ⬜ |
 | 31 | Skoda | Superb | II facelift (2013-2015), III (2015-) | #16 new 2022 (5,403); volume D-segment | IIfl ⬜ · III ⬜ |

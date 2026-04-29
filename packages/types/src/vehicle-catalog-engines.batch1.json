@@ -18122,6 +18122,406 @@
         "_meta": {
           "notes": "DE Wikipedia Opel_Astra_L. Electric = Astra-e variant."
         }
+      },
+      {
+        "key": "Opel_Corsa_D",
+        "wikidata_id": "Q178068",
+        "model_year_from": 2006,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "1.0 60 KM",
+            "displacement_cc": 998,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 70 KM",
+            "displacement_cc": 1229,
+            "power_kw": 51,
+            "power_hp": 70,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 90 KM",
+            "displacement_cc": 1398,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 101 KM",
+            "displacement_cc": 1398,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Turbo GSi 150 KM",
+            "displacement_cc": 1598,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Turbo OPC 192 KM",
+            "displacement_cc": 1598,
+            "power_kw": 141,
+            "power_hp": 192,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 LPG 80 KM",
+            "displacement_cc": 1229,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 CDTI 75 KM",
+            "displacement_cc": 1248,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 CDTI 90 KM",
+            "displacement_cc": 1248,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 CDTI 95 KM",
+            "displacement_cc": 1248,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 CDTI 125 KM",
+            "displacement_cc": 1686,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 CDTI 130 KM",
+            "displacement_cc": 1686,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2013,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Opel_Corsa_D (07/2006-10/2014). 1.0 dropped 2009; 1.2 replaced it. 1.4 power bump 2010 (90→101 PS). LPG power listed in petrol mode. 1.3 CDTI = Fiat-derived MultiJet. automatic = 4-speed. Easytronic (AMT) on 1.2/1.3 CDTI skipped (very rare). Wikidata ID covers full Corsa model line."
+        }
+      },
+      {
+        "key": "Opel_Corsa_E",
+        "wikidata_id": "Q178068",
+        "model_year_from": 2014,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "1.0 SIDI Turbo 90 KM",
+            "displacement_cc": 999,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 70 KM",
+            "displacement_cc": 1398,
+            "power_kw": 51,
+            "power_hp": 70,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 90 KM",
+            "displacement_cc": 1364,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 Turbo 150 KM",
+            "displacement_cc": 1398,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Turbo OPC 207 KM",
+            "displacement_cc": 1598,
+            "power_kw": 152,
+            "power_hp": 207,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 LPG 100 KM",
+            "displacement_cc": 1364,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 CDTI 75 KM",
+            "displacement_cc": 1248,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 CDTI 95 KM",
+            "displacement_cc": 1248,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Opel_Corsa_E (11/2014-06/2019). 1.0 SIDI Turbo = 3-cyl. Two 1.4 variants: 1398cc NA 70PS and 1364cc ecoFlex 90PS (different block). OPC up from 192 PS. 1.3 CDTI 75 PS to 2018, 95 PS to 2017. automatic = 6-speed."
+        }
+      },
+      {
+        "key": "Opel_Corsa_F",
+        "wikidata_id": "Q178068",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.2 75 KM",
+            "displacement_cc": 1199,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 Turbo 101 KM",
+            "displacement_cc": 1199,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 Turbo 130 KM",
+            "displacement_cc": 1199,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 Turbo mHEV 136 KM",
+            "displacement_cc": 1199,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 Turbo mHEV 145 KM",
+            "displacement_cc": 1199,
+            "power_kw": 107,
+            "power_hp": 145,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 CDTI 102 KM",
+            "displacement_cc": 1499,
+            "power_kw": 75,
+            "power_hp": 102,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "Corsa-e 136 KM",
+            "displacement_cc": 0,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "Corsa Electric 156 KM",
+            "displacement_cc": 0,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Opel_Corsa_F (07/2019-). PSA/Stellantis platform (CMP). All petrol = 3-cyl PureTech. mHEV = 48V 6-speed DSG from 02/2024 facelift. 1.5 CDTI discontinued 06/2023. EV = Vitesco EMR3; 50 kWh (2019-2023) then 51 kWh (2023+). automatic (EV) = single-speed reduction gear."
+        }
       }
     ],
     "Audi": [
@@ -25847,15 +26247,15 @@
     ]
   },
   "stats": {
-    "model_count": 245,
-    "engine_count": 1712,
+    "model_count": 248,
+    "engine_count": 1740,
     "engines_by_confidence": {
-      "high": 1665,
+      "high": 1693,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 223
+      "high": 226
     },
     "models_with_low_confidence": 0
   }

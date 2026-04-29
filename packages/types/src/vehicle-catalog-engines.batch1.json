@@ -27733,6 +27733,275 @@
         "_meta": {
           "notes": "EN/FR Wikipedia Renault_Captur (Gen II XJB, 2019-). CMF-B platform. TCe 90 = H4Dt 1.0T 3-cyl. TCe 140 = H5Ht 1.3T 4-cyl. E-Tech Hybrid: 1.6 Atkinson + 2 electric motors, system 105kW/145PS, no plug. E-Tech PHEV: system 118kW/160PS, 9.8kWh, ~45km EV. Blue dCi = K9K EU6d, phased out ~2023. EDC = DSG."
         }
+      },
+      {
+        "key": "Renault_Scenic_III",
+        "wikidata_id": "Q1361753",
+        "model_year_from": 2009,
+        "model_year_to": 2016,
+        "engines": [
+          {
+            "name": "1.6 16V 110 KM",
+            "displacement_cc": 1598,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TCe 130 KM",
+            "displacement_cc": 1397,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 16V 140 KM",
+            "displacement_cc": 1997,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TCe Energy 115 KM",
+            "displacement_cc": 1198,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 85 KM",
+            "displacement_cc": 1461,
+            "power_kw": 63,
+            "power_hp": 85,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 106 KM",
+            "displacement_cc": 1461,
+            "power_kw": 78,
+            "power_hp": 106,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 dCi 130 KM",
+            "displacement_cc": 1870,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 dCi 150 KM",
+            "displacement_cc": 1870,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 dCi 130 KM",
+            "displacement_cc": 1598,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2013,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 dCi 160 KM",
+            "displacement_cc": 1995,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Renault_Scénic (JZ, 2009-2016). C platform. Facelift 2012. 1.4 TCe = H4Jt. 1.2 TCe Energy = H5Ft 3-cyl turbo (FL). 1.5 dCi = K9K. 1.9 dCi = F9Q. 1.6 dCi = R9M (FL). 2.0 dCi = M9R. automatic = 6-speed Aisin on 2.0 dCi."
+        }
+      },
+      {
+        "key": "Renault_Scenic_IV",
+        "wikidata_id": "Q1361753",
+        "model_year_from": 2016,
+        "model_year_to": 2022,
+        "engines": [
+          {
+            "name": "TCe 115 KM",
+            "displacement_cc": 1197,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2016,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "TCe 140 KM",
+            "displacement_cc": 1330,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "dCi 110 KM",
+            "displacement_cc": 1461,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "dCi 130 KM",
+            "displacement_cc": 1598,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2016,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "Blue dCi 120 KM",
+            "displacement_cc": 1749,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "Blue dCi 150 KM",
+            "displacement_cc": 1995,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2022,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Renault_Scénic (JFA, 2016-2022). CMF-C platform. TCe 115 = H5Ht 1.2T 3-cyl. TCe 140 = H5H 1.3T 4-cyl with EDC (DSG). 2018 refresh: old dCi replaced by Blue dCi. Blue dCi 120 = R9M 1.7L; Blue dCi 150 = M9R 2.0L; both with 6-speed EDC automatic."
+        }
+      },
+      {
+        "key": "Renault_Scenic_EV",
+        "wikidata_id": "Q1361753",
+        "model_year_from": 2024,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "E-Tech 170 KM",
+            "displacement_cc": 0,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E-Tech 218 KM",
+            "displacement_cc": 0,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Renault_Scénic E-Tech (2024-). CMF-EV platform (Renault-Nissan Alliance BEV). E-Tech 170: 60kWh, ~430km WLTP. E-Tech 218: 87kWh, ~625km WLTP. DC charging up to 150kW, AC 22kW. Pure EV — no ICE or PHEV variant."
+        }
       }
     ],
     "Dacia": [
@@ -30526,15 +30795,15 @@
     ]
   },
   "stats": {
-    "model_count": 283,
-    "engine_count": 2031,
+    "model_count": 286,
+    "engine_count": 2049,
     "engines_by_confidence": {
-      "high": 1984,
+      "high": 2002,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 261
+      "high": 264
     },
     "models_with_low_confidence": 0
   }

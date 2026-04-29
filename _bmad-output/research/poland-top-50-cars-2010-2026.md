@@ -58,7 +58,7 @@
 | 40 | Opel | Insignia | A (2008-2017), B (2017-2022) | #19 used-import 2024; top D-segment used | A ✅ · B ✅ |
 | 41 | Ford | Mondeo | Mk4 facelift (2010-2014), Mk5 (2014-2022) | Sustained D-segment used-import volume | Mk4 ✅ · Mk4fl ✅ · Mk5 ✅ |
 | 42 | Seat | Ibiza | IV (2008-2017), V (2017-) | #20 used-import 2024 (3,349) | IV ✅ · V ✅ |
-| 43 | Renault | Scenic | III (2009-2016), IV (2016-2022), E-Tech (2024-) | #17 used-import 2024; historical MPV staple | III ⬜ · IV ⬜ · ET ⬜ |
+| 43 | Renault | Scenic | III (2009-2016), IV (2016-2022), E-Tech (2024-) | #17 used-import 2024; historical MPV staple | III ✅ · IV ✅ · ET ✅ |
 | 44 | Mercedes-Benz | E-Class | W212 (2009-2016), W213 (2016-2023), W214 (2023-) | Mercedes top-6 used-import brand; E-Class is core executive used | W212 ⬜ · W213 ⬜ · W214 ⬜ |
 | 45 | BMW | X3 | F25 (2010-2017), G01 (2017-2024), G45 (2024-) | Premium SUV staple; high used + new | F25 ⬜ · G01 ⬜ · G45 ⬜ |
 | 46 | Audi | Q5 | 8R (2008-2017), FY (2017-) | #4 premium new 2024 (3,821); top used premium SUV | 8R ⬜ · FY ⬜ |

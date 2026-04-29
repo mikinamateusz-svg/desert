@@ -25221,6 +25221,288 @@
         "_meta": {
           "notes": "DE Wikipedia BMW_5er_G60 (launch 10/2023). All ICE = 48V mild hybrid. 530e PHEV: ICE 140 kW + EM 135 kW = 220 kW system. 550e: ICE 230 kW + EM 145 kW = 360 kW system. i5 shares G60 platform. 530i/540i petrol not available in EU (US/Asia only). automatic = 8-speed ZF. M5 PHEV (727PS) excluded."
         }
+      },
+      {
+        "key": "BMW_X3_F25",
+        "wikidata_id": "Q1423363",
+        "model_year_from": 2010,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "xDrive20i 184 KM",
+            "displacement_cc": 1997,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive28i 245 KM",
+            "displacement_cc": 1997,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive35i 306 KM",
+            "displacement_cc": 2979,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive20d 184 KM",
+            "displacement_cc": 1995,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive20d 190 KM",
+            "displacement_cc": 1995,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive30d 258 KM",
+            "displacement_cc": 2993,
+            "power_kw": 190,
+            "power_hp": 258,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2017,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia BMW_X3 (F25, 2010-2017). LCI facelift 2014. 20i/28i = N20 2.0T 4-cyl; 35i = N55 3.0T 6-cyl. 20d = N47 2.0 pre-LCI (135kW), B47 2.0 LCI (140kW). 30d = N57 3.0 6-cyl biturbo. Manual 6-speed on 20i/20d pre-LCI; all post-LCI automatic only. automatic = ZF 8HP."
+        }
+      },
+      {
+        "key": "BMW_X3_G01",
+        "wikidata_id": "Q1423363",
+        "model_year_from": 2017,
+        "model_year_to": 2024,
+        "engines": [
+          {
+            "name": "xDrive20i 184 KM",
+            "displacement_cc": 1998,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive30i 252 KM",
+            "displacement_cc": 1998,
+            "power_kw": 185,
+            "power_hp": 252,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "M40i 360 KM",
+            "displacement_cc": 2998,
+            "power_kw": 265,
+            "power_hp": 360,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive30e PHEV 292 KM",
+            "displacement_cc": 1998,
+            "power_kw": 215,
+            "power_hp": 292,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive20d 190 KM",
+            "displacement_cc": 1995,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive30d 265 KM",
+            "displacement_cc": 2993,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive30d 286 KM",
+            "displacement_cc": 2993,
+            "power_kw": 210,
+            "power_hp": 286,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": 2024,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia BMW_X3 (G01, 2017-2024). CLAR platform. LCI 2021. 20i/30i = B48 2.0T 4-cyl. M40i = B58 3.0T 6-cyl 48V mHEV. 20d = B47 2.0 4-cyl. 30d pre-LCI = B57 3.0 N57 biturbo 195kW; LCI = B57 210kW 48V mHEV. xDrive30e PHEV from LCI: 12kWh, ~50km EV. All automatic ZF 8HP."
+        }
+      },
+      {
+        "key": "BMW_X3_G45",
+        "wikidata_id": "Q1423363",
+        "model_year_from": 2024,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "xDrive20 208 KM",
+            "displacement_cc": 1998,
+            "power_kw": 155,
+            "power_hp": 208,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive30 258 KM",
+            "displacement_cc": 1998,
+            "power_kw": 190,
+            "power_hp": 258,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "M50 xDrive 393 KM",
+            "displacement_cc": 2998,
+            "power_kw": 290,
+            "power_hp": 393,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive30e PHEV 299 KM",
+            "displacement_cc": 1998,
+            "power_kw": 220,
+            "power_hp": 299,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive20d 197 KM",
+            "displacement_cc": 1995,
+            "power_kw": 145,
+            "power_hp": 197,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive30d 299 KM",
+            "displacement_cc": 2993,
+            "power_kw": 220,
+            "power_hp": 299,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia BMW_X3 (G45, 2024-). CLAR evo platform. All engines 48V ISG mild hybrid. 20/30 = B48 2.0T 4-cyl. M50 = B58 3.0T 6-cyl. 20d = B47 2.0 4-cyl. 30d (B57 3.0 6-cyl) from 2025. xDrive30e PHEV: 19.5kWh, ~90km EV. All automatic ZF 8HP."
+        }
       }
     ],
     "Hyundai": [
@@ -31248,15 +31530,15 @@
     ]
   },
   "stats": {
-    "model_count": 289,
-    "engine_count": 2081,
+    "model_count": 292,
+    "engine_count": 2100,
     "engines_by_confidence": {
-      "high": 2034,
+      "high": 2053,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 267
+      "high": 270
     },
     "models_with_low_confidence": 0
   }

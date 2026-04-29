@@ -32269,18 +32269,192 @@
           "notes": "DE Wikipedia Mercedes-Benz_W214 (2023-). MRA2 platform. All engines 48V ISG mild hybrid standard. E 200/300 = M254 2.0T I4. E 450 = M256 3.0 I6. E 53 AMG PHEV = M256 3.0T + EQ booster, 25.4kWh, ~100km EV. Diesel = OM654 2.0T / OM656 3.0 I6. PHEV 25.4kWh ~100km EV. automatic = 9G-Tronic."
         }
       }
+    ],
+    "Fiat": [
+      {
+        "key": "Fiat_500_312",
+        "wikidata_id": "Q491578",
+        "model_year_from": 2007,
+        "model_year_to": 2024,
+        "engines": [
+          {
+            "name": "1.2 8V 69 KM",
+            "displacement_cc": 1242,
+            "power_kw": 51,
+            "power_hp": 69,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 16V 101 KM",
+            "displacement_cc": 1368,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "0.9 TwinAir 85 KM",
+            "displacement_cc": 875,
+            "power_kw": 63,
+            "power_hp": 85,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "0.9 TwinAir 105 KM",
+            "displacement_cc": 875,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 Mild-Hybrid 70 KM",
+            "displacement_cc": 999,
+            "power_kw": 51,
+            "power_hp": 70,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "0.9 TwinAir CNG 85 KM",
+            "displacement_cc": 875,
+            "power_kw": 63,
+            "power_hp": 85,
+            "fuel_type": "CNG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 LPG 69 KM",
+            "displacement_cc": 1242,
+            "power_kw": 51,
+            "power_hp": 69,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 Multijet 75 KM",
+            "displacement_cc": 1248,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 Multijet 95 KM",
+            "displacement_cc": 1248,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "Abarth 500 1.4 T-JET 140 KM",
+            "displacement_cc": 1368,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "Abarth 595 1.4 T-JET 160 KM",
+            "displacement_cc": 1368,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "Abarth 695 1.4 T-JET 180 KM",
+            "displacement_cc": 1368,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2024,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Fiat_500 (312, 2007-2024). Produced in Tychy, Poland. Facelifts 2015, 2020. 1.0 mHEV = FireFly 48V BSG (2020 FL). TwinAir = 2-cyl 875cc SGE turbo. TwinAir CNG = gas+petrol bifuel. Dualogic AMT = mapped to automatic. 1.3 Multijet = 55kW pre-2010, 70kW with DPF from 2009. Abarth automatic = Competizione sequential AMT. 500e BEV (332 platform) listed separately."
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 298,
-    "engine_count": 2151,
+    "model_count": 299,
+    "engine_count": 2163,
     "engines_by_confidence": {
-      "high": 2104,
+      "high": 2116,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 276
+      "high": 277
     },
     "models_with_low_confidence": 0
   }

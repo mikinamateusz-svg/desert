@@ -27741,18 +27741,226 @@
           "notes": "DE Wikipedia Nissan_Qashqai (J12 06/2021-). No diesel. All petrol = 12V mHEV. e-Power = serial hybrid: 1.5 VC-T (variable compression) ICE acts as generator only; 140 kW electric motor drives wheels; listed power = motor output. CVT = X-TRONIC e-CVT (e-Power) or X-TRONIC (mHEV). 4WD option on 1.3 160 and e-Power."
         }
       }
+    ],
+    "Volvo": [
+      {
+        "key": "Volvo_XC60_Mk1",
+        "wikidata_id": "Q310270",
+        "model_year_from": 2008,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "T5 245 KM",
+            "displacement_cc": 1969,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "T6 AWD 285 KM",
+            "displacement_cc": 2953,
+            "power_kw": 210,
+            "power_hp": 285,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "T6 AWD 306 KM",
+            "displacement_cc": 1969,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "3.2 AWD 238 KM",
+            "displacement_cc": 3192,
+            "power_kw": 175,
+            "power_hp": 238,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "D3 150 KM",
+            "displacement_cc": 1969,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "D4 181 KM",
+            "displacement_cc": 1969,
+            "power_kw": 133,
+            "power_hp": 181,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "D4 190 KM",
+            "displacement_cc": 1969,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "D5 AWD 220 KM",
+            "displacement_cc": 2400,
+            "power_kw": 162,
+            "power_hp": 220,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2017,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volvo_XC60 (Mk1 Y20, 2008-2017). T5/T6 Drive-E (1969cc 4-cyl) from 2014 facelift; original T6 = B6324S 2953cc inline-6 supercharged. 3.2 = B6324S2 NA 6-cyl. D3/D4 = D5204 4-cyl; D5 = D5244 5-cyl biturbo (2400cc). automatic = Geartronic 6-speed (pre-fl) or 8-speed (post-fl)."
+        }
+      },
+      {
+        "key": "Volvo_XC60_Mk2",
+        "wikidata_id": "Q310270",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "B4/T4 197 KM",
+            "displacement_cc": 1969,
+            "power_kw": 145,
+            "power_hp": 197,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "B5/T5 250 KM",
+            "displacement_cc": 1969,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "B6/T6 AWD 300 KM",
+            "displacement_cc": 1969,
+            "power_kw": 220,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "T8 Recharge AWD 390 KM",
+            "displacement_cc": 1969,
+            "power_kw": 287,
+            "power_hp": 390,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "B4d/D4 197 KM",
+            "displacement_cc": 1969,
+            "power_kw": 145,
+            "power_hp": 197,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "B5d/D5 AWD 235 KM",
+            "displacement_cc": 1969,
+            "power_kw": 173,
+            "power_hp": 235,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volvo_XC60 (Mk2 SPA, 2017-). All Drive-E 2.0T (1969cc). T→B rebadging 2020 with 48V mHEV integration (same power). T8 PHEV: ICE 228 kW + EM 107 kW rear axle, system 287 kW/390 PS; 14.9 kWh battery; ~50 km WLTP EV; Recharge branding from 09/2021. Diesel phased out ~2023. automatic = 8-speed Geartronic."
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 261,
-    "engine_count": 1842,
+    "model_count": 263,
+    "engine_count": 1856,
     "engines_by_confidence": {
-      "high": 1795,
+      "high": 1809,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 239
+      "high": 241
     },
     "models_with_low_confidence": 0
   }

@@ -49,7 +49,7 @@
 | 31 | Skoda | Superb | II facelift (2013-2015), III (2015-) | #16 new 2022 (5,403); volume D-segment | I ✅ · II ✅ · III ✅ · IV ✅ |
 | 32 | Skoda | Kamiq | Mk1 (2019-) | #15 new 2022 (5,675); fast-growing B-SUV | Mk1 ✅ |
 | 33 | Skoda | Kodiaq | Mk1 (2016-2024), Mk2 (2024-) | #20 new 2022 (4,365); volume large-SUV | Mk1 ✅ · Mk2 ✅ |
-| 34 | Volvo | XC60 | Mk1 facelift (2008-2017), Mk2 (2017-) | #17 new 2022; #1 premium model 2024 | Mk1fl ⬜ · Mk2 ⬜ |
+| 34 | Volvo | XC60 | Mk1 facelift (2008-2017), Mk2 (2017-) | #17 new 2022; #1 premium model 2024 | Mk1 ✅ · Mk2 ✅ |
 | 35 | Dacia | Sandero | II (2012-2020), III (2020-) | #14 new 2022 (6,049); private-buyer favourite | II ⬜ · III ⬜ |
 | 36 | Toyota | Auris | E150 facelift (2010-2012), E180 (2012-2018) | Top-10 new 2015-2018; pre-Corolla volume | E150fl ⬜ · E180 ⬜ |
 | 37 | Volkswagen | Polo | V facelift (2014-2017), VI (2017-) | Top-20 new sales 2010-2018; high used-import stock | Vfl ⬜ · VI ⬜ |

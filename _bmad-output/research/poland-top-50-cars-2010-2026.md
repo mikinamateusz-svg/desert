@@ -40,7 +40,7 @@
 | 22 | Mercedes-Benz | C-Class | W204 (2007-2014), W205 (2014-2021), W206 (2021-) | Mercedes is top used-import brand (42,607); C-Class is volume model | W204 ✅ · W205 ✅ · W206 ✅ |
 | 23 | Volkswagen | Tiguan | I (2007-2016), II (2016-2024), III (2024-) | #18 new sales 2022; consistent top-25 new + used | I ✅ · II ✅ · III ✅ |
 | 24 | Volkswagen | T-Roc | Mk1 (2017-) | #10 new sales 2024 (7,048); #11 in 2022 | Mk1 ✅ |
-| 25 | Nissan | Qashqai | J10 facelift (2010-2013), J11 (2013-2021), J12 (2021-) | #8 used-import 2024 (13,314); top-15 new since 2010 | J10fl ⬜ · J11 ⬜ · J12 ⬜ |
+| 25 | Nissan | Qashqai | J10 facelift (2010-2013), J11 (2013-2021), J12 (2021-) | #8 used-import 2024 (13,314); top-15 new since 2010 | J10fl ✅ · J11 ✅ · J12 ✅ |
 | 26 | Kia | Ceed | JD (2012-2018), CD (2018-) | #13 new 2022 (7,177); sustained top-20 | JD ⬜ · CD ⬜ |
 | 27 | Audi | A6 | C7 (2011-2018), C8 (2018-) | #12 used-import 2024 (11,493); flagship D-segment used | C7 ⬜ · C8 ⬜ |
 | 28 | Opel | Corsa | D (2006-2014), E (2014-2019), F (2019-) | #10 used-import 2024 (12,594); strong new in 2010-2014 | D ⬜ · E ⬜ · F ⬜ |

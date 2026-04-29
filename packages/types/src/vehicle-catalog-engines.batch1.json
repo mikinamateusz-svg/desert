@@ -24802,18 +24802,243 @@
           "notes": "DE Wikipedia Mercedes-Benz_Baureihe_206. All petrol and diesel are 48V EQ Boost mHEV (ICE + 17 kW e-motor); power listed = ICE only (badge). All 9G-Tronic. C 200 4MATIC shares spec with C 200 RWD. AMG C 63 S E Performance (680 PS PHEV, 2023-) omitted as extreme outlier."
         }
       }
+    ],
+    "Nissan": [
+      {
+        "key": "Nissan_Qashqai_J10fl",
+        "wikidata_id": "Q13463871",
+        "model_year_from": 2010,
+        "model_year_to": 2013,
+        "engines": [
+          {
+            "name": "1.6 117 KM",
+            "displacement_cc": 1598,
+            "power_kw": 86,
+            "power_hp": 117,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 141 KM",
+            "displacement_cc": 1997,
+            "power_kw": 104,
+            "power_hp": 141,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2010,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 110 KM",
+            "displacement_cc": 1461,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 dCi 130 KM",
+            "displacement_cc": 1598,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 dCi 150 KM",
+            "displacement_cc": 1994,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2013,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Nissan_Qashqai (J10 facelift 03/2010-11/2013). 1.6 petrol up from 114 PS. 1.6 dCi added 2011. 2.0 engines available with 4WD option. CVT = X-TRONIC; DSG = auto on diesel. Wikidata covers full J10 generation."
+        }
+      },
+      {
+        "key": "Nissan_Qashqai_J11",
+        "wikidata_id": "Q13463871",
+        "model_year_from": 2013,
+        "model_year_to": 2021,
+        "engines": [
+          {
+            "name": "1.2 DIG-T 115 KM",
+            "displacement_cc": 1197,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 DIG-T 140 KM",
+            "displacement_cc": 1332,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2018,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 DIG-T 160 KM",
+            "displacement_cc": 1332,
+            "power_kw": 116,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 110 KM",
+            "displacement_cc": 1461,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 dCi 130 KM",
+            "displacement_cc": 1598,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 dCi 150 KM",
+            "displacement_cc": 1749,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2021,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Nissan_Qashqai (J11 2013-2021). 1.2 DIG-T dropped 08/2018; replaced by 1.3 DIG-T (co-developed with Renault). 1.6 dCi replaced by 1.7 dCi (R9N) from 2019. 1.3 DIG-T 160 PS = late J11 pre-J12 bridge variant. DSG = 7-speed DCT (petrol) or auto (diesel). 4WD available on 1.3 140/1.6 dCi/1.7 dCi."
+        }
+      },
+      {
+        "key": "Nissan_Qashqai_J12",
+        "wikidata_id": "Q13463871",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.3 DIG-T mHEV 140 KM",
+            "displacement_cc": 1332,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2021,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 DIG-T mHEV 160 KM",
+            "displacement_cc": 1332,
+            "power_kw": 116,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "e-Power 190 KM",
+            "displacement_cc": 1497,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Nissan_Qashqai (J12 06/2021-). No diesel. All petrol = 12V mHEV. e-Power = serial hybrid: 1.5 VC-T (variable compression) ICE acts as generator only; 140 kW electric motor drives wheels; listed power = motor output. CVT = X-TRONIC e-CVT (e-Power) or X-TRONIC (mHEV). 4WD option on 1.3 160 and e-Power."
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 235,
-    "engine_count": 1643,
+    "model_count": 238,
+    "engine_count": 1657,
     "engines_by_confidence": {
-      "high": 1596,
+      "high": 1610,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 213
+      "high": 216
     },
     "models_with_low_confidence": 0
   }

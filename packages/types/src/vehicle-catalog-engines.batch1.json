@@ -23198,6 +23198,56 @@
         "_meta": {
           "notes": "DE Wikipedia Kia_Ceed (CD, 06/2018-). 1.4 CVVT brief launch only (→ 1.4 T-GDI). 1.5 T-GDI replaces 1.4 T-GDI from 2021 facelift. HEV = 77 kW ICE + 44 kW EM, system 104 kW, hatchback only. PHEV = same system + 9.3–11.2 kWh battery, SW wagon only. New CRDi 1598 cc (U2 diesel) vs JD's 1582 cc. DSG = 6- or 7-speed DCT."
         }
+      },
+      {
+        "key": "Kia_K4",
+        "wikidata_id": "Q125196878",
+        "model_year_from": 2025,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 T-GDI 115 KM",
+            "displacement_cc": 998,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 T-GDI 150 KM",
+            "displacement_cc": 1598,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 T-GDI 180 KM",
+            "displacement_cc": 1598,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Kia_K4. EU launch 11/2025 (hatchback); SW Sportswagon 01/2026. Replaces Kia Ceed (CD). 1.0 T-GDI also available as 48V mHEV at same 85 kW — merged into one entry. 1.6 T-GDI offered in 150 PS and 180 PS tunes. No diesel or PHEV in EU lineup. NA variants excluded. DSG = 7-speed DCT."
+        }
       }
     ],
     "Renault": [
@@ -25294,15 +25344,15 @@
     ]
   },
   "stats": {
-    "model_count": 240,
-    "engine_count": 1675,
+    "model_count": 241,
+    "engine_count": 1678,
     "engines_by_confidence": {
-      "high": 1628,
+      "high": 1631,
       "medium": 47
     },
     "models_by_confidence": {
       "medium": 22,
-      "high": 218
+      "high": 219
     },
     "models_with_low_confidence": 0
   }

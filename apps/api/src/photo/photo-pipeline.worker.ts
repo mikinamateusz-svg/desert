@@ -853,7 +853,8 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       return;
     }
 
-    // Mark rejected + null GPS (GDPR) + null photo key atomically.
+    // Mark rejected + null GPS (GDPR). photo_r2_key kept for cleanup worker
+    // (REJECTED_PHOTO_RETENTION_DAYS grace period — useful for DLQ debugging).
     // flag_reason='dlq_final_failure' so admin / stats can distinguish DLQ
     // exhaustion from regular rejection causes.
     let updateOk = false;
@@ -865,7 +866,6 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
           flag_reason: 'dlq_final_failure',
           gps_lat: null,
           gps_lng: null,
-          photo_r2_key: null,
         },
       })
       .then(() => {
@@ -893,17 +893,6 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         flagReason: 'dlq_final_failure',
         capturedAt: submission.created_at,
       });
-    }
-
-    // P-1: only delete from R2 if DB update succeeded — avoids orphaned DB record with deleted photo
-    if (updateOk && submission.photo_r2_key) {
-      await this.storageService
-        .deleteObject(submission.photo_r2_key)
-        .catch((e: Error) =>
-          this.logger.error(
-            `Failed to delete R2 photo ${submission.photo_r2_key} for DLQ submission ${submissionId}: ${e.message}`,
-          ),
-        );
     }
 
     // Ops alert — structured log for monitoring / log-sink pickup
@@ -991,17 +980,17 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         flag_reason: reason,
         gps_lat: null,
         gps_lng: null,
-        photo_r2_key: null,
+        // photo_r2_key intentionally kept — cleanup worker deletes it after
+        // REJECTED_PHOTO_RETENTION_DAYS (default 2) so ops can recover photos
+        // from short-lived failures (no_station_match, OCR miss, etc.).
         // Only set if caller passed a value — otherwise leave null/existing.
         ...(ocrConfidence !== undefined ? { ocr_confidence_score: ocrConfidence } : {}),
       },
     });
 
-    // Research retention: copy photo to `research/<id>.jpg` BEFORE the R2
-    // delete below, so the benchmark corpus includes failure cases (no_gps,
-    // no_station_match, low_ocr_confidence, etc.). No-op when
-    // PHOTO_RESEARCH_RETENTION_DAYS is unset. Fail-soft: exceptions are
-    // logged but never propagate — retention must not block the pipeline.
+    // Research retention: copy photo to `research/<id>.jpg` before cleanup
+    // worker removes it, so the benchmark corpus includes failure cases.
+    // No-op when PHOTO_RESEARCH_RETENTION_DAYS is unset. Fail-soft.
     if (submission.photo_r2_key) {
       await this.researchRetention.captureIfEnabled({
         submissionId: submission.id,
@@ -1015,16 +1004,6 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         flagReason: reason,
         capturedAt: submission.created_at,
       });
-    }
-
-    if (submission.photo_r2_key) {
-      await this.storageService
-        .deleteObject(submission.photo_r2_key)
-        .catch((err: Error) =>
-          this.logger.error(
-            `Failed to delete R2 object ${submission.photo_r2_key} for submission ${submission.id}: ${err.message}`,
-          ),
-        );
     }
   }
 }

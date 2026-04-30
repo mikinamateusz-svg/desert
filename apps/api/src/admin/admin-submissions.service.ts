@@ -303,13 +303,8 @@ export class AdminSubmissionsService {
         ),
       );
 
-    if (submission.photo_r2_key) {
-      await this.storage.deleteObject(submission.photo_r2_key).catch((e: unknown) =>
-        this.logger.warn(
-          `Reject ${submissionId}: R2 photo delete failed: ${e instanceof Error ? e.message : String(e)}`,
-        ),
-      );
-    }
+    // photo_r2_key intentionally kept — cleanup worker removes it after
+    // REJECTED_PHOTO_RETENTION_DAYS so ops can recover photos if needed.
   }
 
   /**

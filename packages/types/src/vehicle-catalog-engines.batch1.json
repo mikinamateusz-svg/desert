@@ -46635,19 +46635,2188 @@
         "_meta": {
           "notes": "DE Wikipedia Honda_Civic_VIII (FD/FN, 2005-2011). EU 5-door hatch = FN. R18A2 petrol, K20Z4 Type R, N22A diesel. Dual-zone dashboard controversial styling. Facelift 2008."
         }
+      },
+      {
+        "key": "Honda_Jazz_GD",
+        "wikidata_id": "Q944868",
+        "model_year_from": 2001,
+        "model_year_to": 2008,
+        "engines": [
+          {
+            "name": "1.2 i-DSi 78 KM",
+            "displacement_cc": 1246,
+            "power_kw": 57,
+            "power_hp": 78,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 i-DSi 83 KM",
+            "displacement_cc": 1339,
+            "power_kw": 61,
+            "power_hp": 83,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2008,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_Jazz_GD (2001-2008). B-segment. L12A/L13A i-DSi (dual sequential ignition). 5-door only in EU. Excellent packaging with folding seats. Popular in PL as reliable city car."
+        }
+      },
+      {
+        "key": "Honda_Jazz_GE",
+        "wikidata_id": "Q1478760",
+        "model_year_from": 2008,
+        "model_year_to": 2015,
+        "engines": [
+          {
+            "name": "1.2 i-VTEC 90 KM",
+            "displacement_cc": 1198,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 i-VTEC 100 KM",
+            "displacement_cc": 1339,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_Jazz_GE (2008-2015). 2nd gen EU. L12B/L13Z i-VTEC. Facelift 2011. Honda Magic Seats retained. Popular in PL as spacious B-segment."
+        }
+      },
+      {
+        "key": "Honda_Jazz_GK",
+        "wikidata_id": "Q20827029",
+        "model_year_from": 2015,
+        "model_year_to": 2020,
+        "engines": [
+          {
+            "name": "1.3 i-VTEC 102 KM",
+            "displacement_cc": 1318,
+            "power_kw": 75,
+            "power_hp": 102,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2015,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 i-VTEC 130 KM Sport",
+            "displacement_cc": 1498,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_Jazz_GK (2015-2020). 3rd gen EU. L13Z/L15B. CVT = Earth Dreams. Facelift 2018. Succeeded by GR e:HEV-only."
+        }
+      },
+      {
+        "key": "Honda_Jazz_GR",
+        "wikidata_id": "Q99521640",
+        "model_year_from": 2020,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "e:HEV 1.5 109 KM",
+            "displacement_cc": 1498,
+            "power_kw": 80,
+            "power_hp": 109,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_Jazz_GR (2020-). EU-only e:HEV full-hybrid. LEB (1.5 Atkinson) + 2 e-motors, e-CVT. Sold as Fit in other markets. Crosstar subvariant (raised ride height)."
+        }
+      },
+      {
+        "key": "Honda_CRV_Mk2_RD",
+        "wikidata_id": "Q2713044",
+        "model_year_from": 2001,
+        "model_year_to": 2006,
+        "engines": [
+          {
+            "name": "2.0 i-VTEC 150 KM",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2006,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 i-CDTi 140 KM",
+            "displacement_cc": 2204,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2004,
+            "year_to": 2006,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_CR-V_II (RD4/RD5/RD7, 2001-2006). Compact SUV. K20A4 petrol. N22A diesel (from 2004). AWD real-time system. Popular in PL 2004-2008 as used."
+        }
+      },
+      {
+        "key": "Honda_CRV_Mk3_RE",
+        "wikidata_id": "Q1637531",
+        "model_year_from": 2006,
+        "model_year_to": 2012,
+        "engines": [
+          {
+            "name": "2.0 i-VTEC 150 KM",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 i-CDTi 140 KM",
+            "displacement_cc": 2204,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 i-DTEC 150 KM",
+            "displacement_cc": 2199,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2012,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_CR-V_III (RE4/RE5, 2006-2012). Larger platform. K20Z4 petrol. N22A → N22B diesel. Facelift 2010. Real-time AWD. Popular in PL 2009-2014 as used compact SUV."
+        }
+      },
+      {
+        "key": "Honda_CRV_Mk4_RM",
+        "wikidata_id": "Q12111960",
+        "model_year_from": 2012,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "1.6 i-DTEC 120 KM",
+            "displacement_cc": 1597,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 i-DTEC 160 KM",
+            "displacement_cc": 1597,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 i-VTEC 155 KM",
+            "displacement_cc": 1997,
+            "power_kw": 114,
+            "power_hp": 155,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_CR-V_IV (RM1/RM4, 2012-2018). EU: 1.6 i-DTEC diesel dominant. N16A diesel. R20A petrol + CVT. Facelift 2015 adds 160 KM diesel. 9AT later in US."
+        }
+      },
+      {
+        "key": "Honda_CRV_Mk5_RW",
+        "wikidata_id": "Q28737124",
+        "model_year_from": 2018,
+        "model_year_to": 2022,
+        "engines": [
+          {
+            "name": "1.5 VTEC Turbo 193 KM",
+            "displacement_cc": 1498,
+            "power_kw": 142,
+            "power_hp": 193,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2018,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 i-MMD Hybrid 184 KM",
+            "displacement_cc": 1993,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2022,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_CR-V_V (RW1/RW2, 2018-2022). EU: 1.5T L15BE or 2.0 i-MMD (Atkinson + 2 e-motors, e-CVT). AWD = real-time e-AWD on hybrid. No diesel in Mk5."
+        }
+      },
+      {
+        "key": "Honda_CRV_Mk6_RS",
+        "wikidata_id": "Q119746839",
+        "model_year_from": 2022,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.0 e:HEV 184 KM",
+            "displacement_cc": 1993,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 e:PHEV 306 KM",
+            "displacement_cc": 1993,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_CR-V_VI (2022-). EU: e:HEV full hybrid only (no ICE-only). PHEV = Sport Touring e:PHEV. 2.0 LEB Atkinson + dual e-motor system. e-CVT."
+        }
+      },
+      {
+        "key": "Honda_HRV_Mk2_RU",
+        "wikidata_id": "Q17128827",
+        "model_year_from": 2015,
+        "model_year_to": 2021,
+        "engines": [
+          {
+            "name": "1.5 i-VTEC 130 KM",
+            "displacement_cc": 1498,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2015,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 i-DTEC 120 KM",
+            "displacement_cc": 1597,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2021,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_HR-V_II (RU1/RU6, 2015-2021). EU B/C-SUV. L15B2 petrol / N16A diesel. Facelift 2018. Real-time AWD optional. Popular in PL 2016-2022 as used compact SUV."
+        }
+      },
+      {
+        "key": "Honda_HRV_Mk3_RV",
+        "wikidata_id": "Q111600699",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "e:HEV 1.5 131 KM",
+            "displacement_cc": 1498,
+            "power_kw": 96,
+            "power_hp": 131,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_HR-V_III (RV3/RV5, 2021-). EU: e:HEV only (no diesel, no ICE-only). LEB Atkinson + 2 e-motors, e-CVT. FWD standard, eAWD optional."
+        }
+      },
+      {
+        "key": "Honda_Accord_Mk7_CM",
+        "wikidata_id": "Q1286534",
+        "model_year_from": 2003,
+        "model_year_to": 2008,
+        "engines": [
+          {
+            "name": "2.0 i-VTEC 155 KM",
+            "displacement_cc": 1998,
+            "power_kw": 114,
+            "power_hp": 155,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "2.4 i-VTEC 190 KM",
+            "displacement_cc": 2354,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 V6 i-VTEC 209 KM",
+            "displacement_cc": 2997,
+            "power_kw": 154,
+            "power_hp": 209,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 i-CDTi 140 KM",
+            "displacement_cc": 2204,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2008,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_Accord_VII (CM2/CM3, 2003-2008). EU D/E-segment. K20A6/K24A3 petrol, J30A4 V6, N22A diesel. Sedan + Tourer estate. Facelift 2006."
+        }
+      },
+      {
+        "key": "Honda_Accord_Mk8_CU",
+        "wikidata_id": "Q2460827",
+        "model_year_from": 2008,
+        "model_year_to": 2015,
+        "engines": [
+          {
+            "name": "2.0 i-VTEC 156 KM",
+            "displacement_cc": 1997,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.4 i-VTEC 201 KM",
+            "displacement_cc": 2354,
+            "power_kw": 148,
+            "power_hp": 201,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 i-DTEC 180 KM",
+            "displacement_cc": 2199,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_Accord_VIII (CU1/CU2, 2008-2015). EU D/E-segment. R20A3 / K24Z3 petrol, N22B diesel. Facelift 2011. Tourer estate. Last Accord sold in EU until 2023 relaunch."
+        }
+      },
+      {
+        "key": "Honda_Civic_Mk9_FK",
+        "wikidata_id": "Q3108453",
+        "model_year_from": 2011,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "1.4 i-VTEC 100 KM",
+            "displacement_cc": 1339,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 i-VTEC 142 KM",
+            "displacement_cc": 1798,
+            "power_kw": 104,
+            "power_hp": 142,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "Type R 2.0 VTEC Turbo 310 KM",
+            "displacement_cc": 1996,
+            "power_kw": 228,
+            "power_hp": 310,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 i-DTEC 120 KM",
+            "displacement_cc": 1597,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2017,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_Civic_IX (FK2/FK3, 2011-2017). EU hatch. R18Z4 / N16A. Type R FK2 = K20C2 turbo, 310 PS, FWD only. Facelift 2014."
+        }
+      },
+      {
+        "key": "Honda_Civic_Mk10_FC",
+        "wikidata_id": "Q21080863",
+        "model_year_from": 2017,
+        "model_year_to": 2021,
+        "engines": [
+          {
+            "name": "1.0 VTEC Turbo 126 KM",
+            "displacement_cc": 988,
+            "power_kw": 93,
+            "power_hp": 126,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2017,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 VTEC Turbo 182 KM",
+            "displacement_cc": 1498,
+            "power_kw": 134,
+            "power_hp": 182,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2017,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "Type R 2.0 VTEC Turbo 320 KM",
+            "displacement_cc": 1996,
+            "power_kw": 235,
+            "power_hp": 320,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 i-DTEC 120 KM",
+            "displacement_cc": 1597,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_Civic_X (FC1/FK7/FK8, 2017-2021). EU hatch 5-door. P10A3 1.0T / L15B7 1.5T. Type R FK8 = K20C1 turbo 320PS FWD. Facelift 2019. Last diesel in 2020."
+        }
+      },
+      {
+        "key": "Honda_Civic_Mk11_FL",
+        "wikidata_id": "Q110673898",
+        "model_year_from": 2022,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "e:HEV 2.0 184 KM",
+            "displacement_cc": 1993,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "e:PHEV 2.0 184 KM",
+            "displacement_cc": 1993,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Type R 2.0 VTEC Turbo 329 KM",
+            "displacement_cc": 1996,
+            "power_kw": 242,
+            "power_hp": 329,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_Civic_XI (FL1/FL5, 2022-). EU: e:HEV full hybrid (LEB + 2 e-motors) as standard. PHEV also available. Type R FL5 = K20C1 329PS. No diesel offered."
+        }
+      }
+    ],
+    "Suzuki": [
+      {
+        "key": "Suzuki_Jimny_Mk3_FJ",
+        "wikidata_id": "Q1337095",
+        "model_year_from": 1998,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "1.3 16v 86 KM",
+            "displacement_cc": 1298,
+            "power_kw": 63,
+            "power_hp": 86,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1998,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Suzuki_Jimny_III (FJ, 1998-2018). Compact off-roader, 4WD ladder frame. G13BB/M13A engine. One of the longest single-gen runs. Very popular in PL for off-road use."
+        }
+      },
+      {
+        "key": "Suzuki_Jimny_Mk4_GJ",
+        "wikidata_id": "Q56423574",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 AllGrip 102 KM",
+            "displacement_cc": 1462,
+            "power_kw": 75,
+            "power_hp": 102,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Suzuki_Jimny_IV (GJ, 2018-). Body-on-frame 4WD retained. K15B engine. Sold as 2-seater commercial in EU from 2019 due to CO2 regs. Cult following."
+        }
+      },
+      {
+        "key": "Suzuki_Grand_Vitara_Mk2_JT",
+        "wikidata_id": "Q1067543",
+        "model_year_from": 2005,
+        "model_year_to": 2015,
+        "engines": [
+          {
+            "name": "1.6 VVT 106 KM",
+            "displacement_cc": 1586,
+            "power_kw": 78,
+            "power_hp": 106,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 140 KM",
+            "displacement_cc": 1995,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.4 169 KM",
+            "displacement_cc": 2393,
+            "power_kw": 124,
+            "power_hp": 169,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 DDiS 129 KM",
+            "displacement_cc": 1870,
+            "power_kw": 95,
+            "power_hp": 129,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Suzuki_Grand_Vitara_II (JT, 2005-2015). 3/5-door compact SUV. J20A petrol; 1.9 DDiS = Fiat 188A9.000 diesel. Shift-on-the-fly 4WD. Popular in PL as affordable 4WD SUV."
+        }
+      },
+      {
+        "key": "Suzuki_Vitara_Mk3_LY",
+        "wikidata_id": "Q17520960",
+        "model_year_from": 2015,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.6 VVT 120 KM",
+            "displacement_cc": 1586,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 BoosterJet 140 KM",
+            "displacement_cc": 1373,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 mHEV 102 KM",
+            "displacement_cc": 1462,
+            "power_kw": 75,
+            "power_hp": 102,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 BoosterJet MHEV 129 KM",
+            "displacement_cc": 1373,
+            "power_kw": 95,
+            "power_hp": 129,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Suzuki_Vitara_III (LY, 2015-). Crossover. K16B (1.6), K14C BoosterJet turbo, K15C mHEV 48V. AllGrip AWD. Facelift 2018 + MHEV 2019. Sold well in PL."
+        }
+      },
+      {
+        "key": "Suzuki_Swift_Mk2_RS",
+        "wikidata_id": "Q1303777",
+        "model_year_from": 2004,
+        "model_year_to": 2010,
+        "engines": [
+          {
+            "name": "1.3 DOHC 92 KM",
+            "displacement_cc": 1328,
+            "power_kw": 68,
+            "power_hp": 92,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 VVT 102 KM",
+            "displacement_cc": 1490,
+            "power_kw": 75,
+            "power_hp": 102,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "Sport 1.6 VVT 125 KM",
+            "displacement_cc": 1586,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 DDiS 69 KM",
+            "displacement_cc": 1248,
+            "power_kw": 51,
+            "power_hp": 69,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2004,
+            "year_to": 2010,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Suzuki_Swift_II (RS, 2004-2010). B-segment. M13A/M15A petrol; 1.3 DDiS = Fiat 199A2 diesel. Sport 1.6 = M16A. Popular fun city car in PL."
+        }
+      },
+      {
+        "key": "Suzuki_Swift_Mk3_FZ",
+        "wikidata_id": "Q1752064",
+        "model_year_from": 2010,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "1.2 VVT 94 KM",
+            "displacement_cc": 1197,
+            "power_kw": 69,
+            "power_hp": 94,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "Sport 1.6 VVT 136 KM",
+            "displacement_cc": 1586,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 DDiS 75 KM",
+            "displacement_cc": 1248,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2017,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Suzuki_Swift_III (FZ/NZ, 2010-2017). B-segment. K12B petrol; M16A Sport. 1.3 DDiS diesel. Facelift 2013. AWD optional. Popular in PL 2011-2017."
+        }
+      },
+      {
+        "key": "Suzuki_Swift_Mk4_AZ",
+        "wikidata_id": "Q28041024",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 BoosterJet 111 KM",
+            "displacement_cc": 996,
+            "power_kw": 82,
+            "power_hp": 111,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 DualJet MHEV 83 KM",
+            "displacement_cc": 1197,
+            "power_kw": 61,
+            "power_hp": 83,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Sport 1.4 BoosterJet 140 KM",
+            "displacement_cc": 1373,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Suzuki_Swift_IV (AZ, 2017-). B-segment, lighter platform. K10C BoosterJet; K12D DualJet MHEV 48V; K14D Sport. Facelift 2020 drops 1.0T → DualJet MHEV standard."
+        }
+      },
+      {
+        "key": "Suzuki_SX4_Mk1_EY",
+        "wikidata_id": "Q835536",
+        "model_year_from": 2006,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "1.5 VVT 102 KM",
+            "displacement_cc": 1490,
+            "power_kw": 75,
+            "power_hp": 102,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 VVT 120 KM",
+            "displacement_cc": 1586,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 DDiS 90 KM",
+            "displacement_cc": 1560,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 DDiS 120 KM",
+            "displacement_cc": 1870,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Suzuki_SX4_I (EY, 2006-2014). Compact crossover/hatch. M15A/M16A petrol; 1.6 DDiS / 1.9 DDiS = Fiat diesel. AllGrip 4WD. Developed with Fiat (→ Fiat Sedici)."
+        }
+      },
+      {
+        "key": "Suzuki_SCross_Mk2_JY",
+        "wikidata_id": "Q15726036",
+        "model_year_from": 2013,
+        "model_year_to": 2021,
+        "engines": [
+          {
+            "name": "1.6 VVT 120 KM",
+            "displacement_cc": 1586,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 BoosterJet 140 KM",
+            "displacement_cc": 1373,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 DDiS 120 KM",
+            "displacement_cc": 1598,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2013,
+            "year_to": 2021,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Suzuki_S-Cross_I (JY, 2013-2021). Compact crossover. M16A / K14C turbo / Fiat DDiS diesel. Facelift 2016 adds BoosterJet. AllGrip AWD. Sold in PL as mid-size alternative to Vitara."
+        }
+      },
+      {
+        "key": "Suzuki_SCross_Mk3_AKK",
+        "wikidata_id": "Q111960773",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.4 BoosterJet MHEV 129 KM",
+            "displacement_cc": 1373,
+            "power_kw": 95,
+            "power_hp": 129,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 PHEV 188 KM",
+            "displacement_cc": 1462,
+            "power_kw": 138,
+            "power_hp": 188,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Suzuki_S-Cross_II (AKK, 2021-). K14D MHEV 48V or 1.5T PHEV (Toyota sourced TNGA-based, 17.4 kWh). AllGrip AWD. No diesel. Facelift approach vs. all-new."
+        }
+      },
+      {
+        "key": "Suzuki_Baleno_Mk2_FW",
+        "wikidata_id": "Q21014175",
+        "model_year_from": 2015,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 BoosterJet 111 KM",
+            "displacement_cc": 996,
+            "power_kw": 82,
+            "power_hp": 111,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 DualJet SHVS 90 KM",
+            "displacement_cc": 1197,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Suzuki_Baleno_II (FW, 2015-). B-segment hatch. K10C BoosterJet; K12C DualJet + SHVS mild hybrid. Facelift 2019 + 2022. FWD only. Affordable B-hatch in PL."
+        }
+      },
+      {
+        "key": "Suzuki_Ignis_Mk3_FF",
+        "wikidata_id": "Q27978568",
+        "model_year_from": 2016,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.2 DualJet MHEV 83 KM",
+            "displacement_cc": 1197,
+            "power_kw": 61,
+            "power_hp": 83,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Suzuki_Ignis_III (FF21S, 2016-). Mini crossover. K12D DualJet + SHVS/MHEV 48V. AllGrip AWD optional. Retro design. City car with high driving position. Niche but visible in PL."
+        }
+      }
+    ],
+    "Subaru": [
+      {
+        "key": "Subaru_Impreza_Mk2_GD",
+        "wikidata_id": "Q1334756",
+        "model_year_from": 2000,
+        "model_year_to": 2007,
+        "engines": [
+          {
+            "name": "2.0i 125 KM",
+            "displacement_cc": 1994,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2000,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "WRX 2.0T 220 KM",
+            "displacement_cc": 1994,
+            "power_kw": 162,
+            "power_hp": 220,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "WRX STI 2.0T 265 KM",
+            "displacement_cc": 1994,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2007,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_Impreza_II (GD/GG, 2000-2007). EJ20 flat-4. WRX = EJ20T turbo 220PS; STI = EJ207 265PS with DCCD diff. EU spec. Sedan/wagon. Popular rally-image import in PL."
+        }
+      },
+      {
+        "key": "Subaru_Impreza_Mk3_GH",
+        "wikidata_id": "Q1460022",
+        "model_year_from": 2007,
+        "model_year_to": 2011,
+        "engines": [
+          {
+            "name": "2.0i 150 KM",
+            "displacement_cc": 1994,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "WRX 2.5T 230 KM",
+            "displacement_cc": 2457,
+            "power_kw": 169,
+            "power_hp": 230,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "WRX STI 2.5T 300 KM",
+            "displacement_cc": 2457,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0D 150 KM",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2011,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_Impreza_III (GH/GE, 2007-2011). EJ20 (2.0i) / EJ255 (WRX 2.5T) / EJ257 (STI 2.5T). EE20 boxer diesel added 2009. Switched to hatchback only in EU."
+        }
+      },
+      {
+        "key": "Subaru_Impreza_Mk4_GJ",
+        "wikidata_id": "Q12120434",
+        "model_year_from": 2011,
+        "model_year_to": 2016,
+        "engines": [
+          {
+            "name": "1.6i 114 KM",
+            "displacement_cc": 1598,
+            "power_kw": 84,
+            "power_hp": 114,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2011,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0i 150 KM",
+            "displacement_cc": 1994,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2011,
+            "year_to": 2016,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_Impreza_IV (GJ/GP, 2011-2016). FB16/FB20 new boxer platform. No WRX in EU (became separate model). CVT = Lineartronic. Hatch/sedan."
+        }
+      },
+      {
+        "key": "Subaru_Impreza_Mk5_GT",
+        "wikidata_id": "Q28822499",
+        "model_year_from": 2016,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.6i 114 KM",
+            "displacement_cc": 1598,
+            "power_kw": 84,
+            "power_hp": 114,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0i 156 KM",
+            "displacement_cc": 1995,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 e-Boxer 150 KM",
+            "displacement_cc": 1995,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_Impreza_V (GT/GK, 2016-). SGP platform (new). FB16E/FB20E. e-Boxer = 12.3V mild hybrid assist motor. AWD Symmetrical standard. Hatch/sedan."
+        }
+      },
+      {
+        "key": "Subaru_Legacy_Mk4_BL",
+        "wikidata_id": "Q1768620",
+        "model_year_from": 2003,
+        "model_year_to": 2009,
+        "engines": [
+          {
+            "name": "2.0i 150 KM",
+            "displacement_cc": 1994,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5i 167 KM",
+            "displacement_cc": 2457,
+            "power_kw": 123,
+            "power_hp": 167,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0GT Turbo 260 KM",
+            "displacement_cc": 1994,
+            "power_kw": 191,
+            "power_hp": 260,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0R 245 KM",
+            "displacement_cc": 2999,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0D 150 KM",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2009,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_Legacy_IV (BL/BP, 2003-2009). D-segment. EJ20/EJ25 boxer petrol; EZ30 flat-6 (3.0R); EE20 boxer diesel late. BP = Outback variant shared. AWD Symmetrical."
+        }
+      },
+      {
+        "key": "Subaru_Legacy_Mk5_BM",
+        "wikidata_id": "Q2068834",
+        "model_year_from": 2009,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "2.0i 150 KM",
+            "displacement_cc": 1994,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5i 167 KM",
+            "displacement_cc": 2457,
+            "power_kw": 123,
+            "power_hp": 167,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0GT Turbo 265 KM",
+            "displacement_cc": 1994,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0D 150 KM",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_Legacy_V (BM/BR, 2009-2014). EJ20/EJ25/EE20. BR = Outback. Lineartronic CVT introduced. Popular in PL as spacious AWD estate (BR/Outback more than BM sedan)."
+        }
+      },
+      {
+        "key": "Subaru_Outback_Mk3_BP",
+        "wikidata_id": "Q2452534",
+        "model_year_from": 2003,
+        "model_year_to": 2009,
+        "engines": [
+          {
+            "name": "2.5i 167 KM",
+            "displacement_cc": 2457,
+            "power_kw": 123,
+            "power_hp": 167,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0R 245 KM",
+            "displacement_cc": 2999,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0D 150 KM",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2009,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_Outback_III (BP, 2003-2009). Legacy BP estate with raised suspension + plastic cladding. EJ253/EJ30/EE20. AWD Symmetrical. Popular in PL as practical lifted estate."
+        }
+      },
+      {
+        "key": "Subaru_Outback_Mk4_BR",
+        "wikidata_id": "Q2452550",
+        "model_year_from": 2009,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "2.0i 150 KM",
+            "displacement_cc": 1994,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5i 167 KM",
+            "displacement_cc": 2457,
+            "power_kw": 123,
+            "power_hp": 167,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0D 150 KM",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_Outback_IV (BR, 2009-2014). Legacy V platform. EJ20/EJ25/EE20. Lineartronic CVT. AWD Symmetrical. Good seller in PL as used AWD estate alternative."
+        }
+      },
+      {
+        "key": "Subaru_Outback_Mk5_BS",
+        "wikidata_id": "Q17090200",
+        "model_year_from": 2014,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "2.5i 175 KM",
+            "displacement_cc": 2498,
+            "power_kw": 129,
+            "power_hp": 175,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6R 260 KM",
+            "displacement_cc": 3630,
+            "power_kw": 191,
+            "power_hp": 260,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "medium"
+          },
+          {
+            "name": "2.0D 150 KM",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_Outback_V (BS, 2014-2019). FB25 petrol, EE20 diesel, EZ36 V6 (US/AU mainly). 3.6R limited EU availability — medium confidence. Lineartronic CVT."
+        }
+      },
+      {
+        "key": "Subaru_Outback_Mk6_BT",
+        "wikidata_id": "Q89022244",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.5i 169 KM",
+            "displacement_cc": 2498,
+            "power_kw": 124,
+            "power_hp": 169,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5i e-Boxer 175 KM",
+            "displacement_cc": 2498,
+            "power_kw": 129,
+            "power_hp": 175,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_Outback_VI (BT, 2019-). SGP platform. FB25 standard or + e-Boxer mild hybrid motor. No diesel in Mk6. AWD Symmetrical. Eyesight standard."
+        }
+      },
+      {
+        "key": "Subaru_Forester_Mk2_SG",
+        "wikidata_id": "Q1488289",
+        "model_year_from": 2002,
+        "model_year_to": 2008,
+        "engines": [
+          {
+            "name": "2.0X 122 KM",
+            "displacement_cc": 1994,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0XT Turbo 177 KM",
+            "displacement_cc": 1994,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2008,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_Forester_II (SG, 2002-2008). EJ20/EJ20T boxer. Compact SUV, high ground clearance. AWD Symmetrical. No diesel in Mk2. Facelift 2005. Popular in PL as practical AWD."
+        }
+      },
+      {
+        "key": "Subaru_Forester_Mk3_SH",
+        "wikidata_id": "Q1488301",
+        "model_year_from": 2008,
+        "model_year_to": 2013,
+        "engines": [
+          {
+            "name": "2.0X 150 KM",
+            "displacement_cc": 1994,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0XT Turbo 230 KM",
+            "displacement_cc": 1994,
+            "power_kw": 169,
+            "power_hp": 230,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0D 147 KM",
+            "displacement_cc": 1998,
+            "power_kw": 108,
+            "power_hp": 147,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2013,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_Forester_III (SH, 2008-2013). EJ20/EJ205 petrol, EE20 boxer diesel. EyeSight ADAS introduced. Facelift 2011. Popular in PL especially diesel AWD variant."
+        }
+      },
+      {
+        "key": "Subaru_Forester_Mk4_SJ",
+        "wikidata_id": "Q12555836",
+        "model_year_from": 2013,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "2.0i 150 KM",
+            "displacement_cc": 1994,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0XT Turbo 250 KM",
+            "displacement_cc": 1998,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0D 147 KM",
+            "displacement_cc": 1998,
+            "power_kw": 108,
+            "power_hp": 147,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_Forester_IV (SJ, 2013-2018). FB20/FA20DIT turbo, EE20 diesel. Lineartronic CVT. Facelift 2016. AWD Symmetrical. Popular in PL 2014-2020 as used."
+        }
+      },
+      {
+        "key": "Subaru_Forester_Mk5_SK",
+        "wikidata_id": "Q55632847",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.0i e-Boxer 150 KM",
+            "displacement_cc": 1994,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5i 184 KM",
+            "displacement_cc": 2498,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_Forester_V (SK, 2018-). SGP platform. FB20E e-Boxer MHEV (EU main seller) or FB25 (US/AU). No diesel, no turbo in EU. EyeSight standard. AWD Symmetrical."
+        }
+      },
+      {
+        "key": "Subaru_XV_Mk1_GP",
+        "wikidata_id": "Q12419397",
+        "model_year_from": 2012,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "1.6i 114 KM",
+            "displacement_cc": 1598,
+            "power_kw": 84,
+            "power_hp": 114,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2012,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0i 150 KM",
+            "displacement_cc": 1994,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2012,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0D 147 KM",
+            "displacement_cc": 1998,
+            "power_kw": 108,
+            "power_hp": 147,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2017,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_XV_I (GP, 2012-2017). Impreza GP raised crossover. FB16/FB20/EE20. AWD Symmetrical. Popular in PL as affordable compact AWD crossover vs. Forester."
+        }
+      },
+      {
+        "key": "Subaru_XV_Mk2_GT",
+        "wikidata_id": "Q39044851",
+        "model_year_from": 2017,
+        "model_year_to": 2023,
+        "engines": [
+          {
+            "name": "1.6i 114 KM",
+            "displacement_cc": 1598,
+            "power_kw": 84,
+            "power_hp": 114,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0i 156 KM",
+            "displacement_cc": 1995,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 e-Boxer 150 KM",
+            "displacement_cc": 1994,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "e:PHEV 1.6 136 KM",
+            "displacement_cc": 1598,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_XV_II (GT, 2017-2023). SGP platform. FB16/FB20E + e-Boxer. PHEV = Plug-in Hybrid XV. No diesel. AWD Symmetrical. Sold as Crosstrek in non-EU markets."
+        }
+      },
+      {
+        "key": "Subaru_BRZ_Mk1_ZC6",
+        "wikidata_id": "Q12119791",
+        "model_year_from": 2012,
+        "model_year_to": 2021,
+        "engines": [
+          {
+            "name": "2.0 FA20 200 KM",
+            "displacement_cc": 1998,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2021,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_BRZ_I (ZC6, 2012-2021). FR sports coupe, co-developed with Toyota (GT86/GR86). FA20D boxer 4-cyl, D4-S injection. RWD. Torsen LSD available. Cult following in PL."
+        }
+      },
+      {
+        "key": "Subaru_BRZ_Mk2_ZD8",
+        "wikidata_id": "Q107101786",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.4 FA24 234 KM",
+            "displacement_cc": 2387,
+            "power_kw": 172,
+            "power_hp": 234,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Subaru_BRZ_II (ZD8, 2021-). Co-developed with Toyota (GR86 II). FA24D naturally aspirated boxer, larger displacement for better torque. RWD only. Traction control / LSD."
+        }
       }
     ]
   },
   "stats": {
-    "model_count": 473,
-    "engine_count": 3083,
+    "model_count": 519,
+    "engine_count": 3206,
     "engines_by_confidence": {
-      "high": 3031,
-      "medium": 52
+      "high": 3153,
+      "medium": 53
     },
     "models_by_confidence": {
-      "medium": 25,
-      "high": 448
+      "medium": 26,
+      "high": 493
     },
     "models_with_low_confidence": 0
   }

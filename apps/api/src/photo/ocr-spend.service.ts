@@ -4,9 +4,9 @@ import type Redis from 'ioredis';
 import { REDIS_CLIENT } from '../redis/redis.module.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
-// Claude Haiku 4.5 pricing (USD per million tokens) — update if Anthropic changes rates.
-const COST_PER_INPUT_MTOKEN_USD = 0.80;
-const COST_PER_OUTPUT_MTOKEN_USD = 4.00;
+// Gemini 2.5 Flash pricing (USD per million tokens) — update if Google changes rates.
+const COST_PER_INPUT_MTOKEN_USD = 0.30;
+const COST_PER_OUTPUT_MTOKEN_USD = 2.50;
 
 const DEFAULT_COST_ALERT_THRESHOLD_USD = 50;
 const MONTHLY_ALERT_TTL_SECONDS = 32 * 24 * 3600;

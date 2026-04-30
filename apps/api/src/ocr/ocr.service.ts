@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import Anthropic from '@anthropic-ai/sdk';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -13,8 +12,18 @@ export interface OcrResult {
   prices: ExtractedPrice[];
   confidence_score: number; // 0.0 – 1.0
   raw_response: string; // for debugging; not stored in DB
-  input_tokens: number; // Claude API usage — for spend tracking (Story 3.9)
+  input_tokens: number; // Gemini API usage — for spend tracking (Story 3.9)
   output_tokens: number;
+}
+
+interface GeminiResponse {
+  candidates?: Array<{
+    content?: { parts?: Array<{ text?: string }> };
+  }>;
+  usageMetadata?: {
+    promptTokenCount?: number;
+    candidatesTokenCount?: number;
+  };
 }
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -30,6 +39,9 @@ export const PRICE_BANDS: Record<string, { min: number; max: number }> = {
 };
 
 const VALID_FUEL_TYPES = new Set(Object.keys(PRICE_BANDS));
+
+const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
+const GEMINI_MODEL = 'gemini-2.5-flash';
 
 const OCR_PROMPT = `You are analyzing a photo of a fuel station price board in Poland.
 Extract all visible fuel prices. For each price you find, return:
@@ -68,18 +80,16 @@ If no prices are visible, return: { "prices": [], "confidence_score": 0.0 }`;
 @Injectable()
 export class OcrService {
   private readonly logger = new Logger(OcrService.name);
-  private readonly client: Anthropic;
+  private readonly apiKey: string;
 
   constructor(private readonly config: ConfigService) {
-    this.client = new Anthropic({
-      apiKey: this.config.getOrThrow<string>('ANTHROPIC_API_KEY'),
-    });
+    this.apiKey = this.config.getOrThrow<string>('GEMINI_API_KEY');
   }
 
   /**
-   * Sends a photo buffer to Claude Haiku 4.5 and extracts fuel prices.
-   * Throws on transient API failure (Claude 429, 5xx, network error) — BullMQ retries.
-   * Returns OcrResult with confidence 0.0 on Anthropic 4xx (non-retriable bad request).
+   * Sends a photo buffer to Gemini Flash and extracts fuel prices.
+   * Throws on transient API failure (429, 5xx, network error) — BullMQ retries.
+   * Returns OcrResult with confidence 0.0 on non-retriable 4xx errors.
    * Returns OcrResult with empty prices array if no prices found (not a throw).
    */
   async extractPrices(
@@ -87,65 +97,62 @@ export class OcrService {
     mediaType: 'image/jpeg' | 'image/png' = 'image/jpeg',
   ): Promise<OcrResult> {
     const base64Image = photoBuffer.toString('base64');
+    const url = `${GEMINI_API_BASE}/${GEMINI_MODEL}:generateContent?key=${this.apiKey}`;
 
-    let response: Awaited<ReturnType<typeof this.client.messages.create>>;
+    let res: Response;
     try {
-      response = await this.client.messages.create({
-        model: 'claude-haiku-4-5',
-        max_tokens: 512,
-        messages: [
-          {
+      res = await fetch(url, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
             role: 'user',
-            content: [
-              {
-                type: 'image',
-                source: {
-                  type: 'base64',
-                  media_type: mediaType,
-                  data: base64Image,
-                },
-              },
-              {
-                type: 'text',
-                text: OCR_PROMPT,
-              },
+            parts: [
+              { inline_data: { mime_type: mediaType, data: base64Image } },
+              { text: OCR_PROMPT },
             ],
+          }],
+          generationConfig: {
+            responseMimeType: 'application/json',
+            temperature: 0.0,
           },
-        ],
+        }),
       });
     } catch (err: unknown) {
-      // 4xx errors are non-retriable (bad request, invalid image, etc.)
-      // Return confidence 0.0 so the low_ocr_confidence path rejects gracefully.
-      // 5xx / network errors still throw → BullMQ retries.
-      const httpStatus = (err as { status?: number }).status;
-      // 429 Too Many Requests is retriable — BullMQ will back off and retry.
-      if (typeof httpStatus === 'number' && httpStatus >= 400 && httpStatus < 500 && httpStatus !== 429) {
-        const message = (err as Error).message ?? String(err);
-        this.logger.warn(
-          `OCR: Anthropic ${httpStatus} error — non-retriable, rejecting submission: ${message}`,
-        );
-        return { prices: [], confidence_score: 0.0, raw_response: message, input_tokens: 0, output_tokens: 0 };
-      }
+      // Network / DNS error — throw for BullMQ retry
       throw err;
     }
 
-    const rawText = response.content[0]?.type === 'text' ? response.content[0].text : '';
+    if (!res.ok) {
+      const httpStatus = res.status;
+      const body = await res.text();
+      // 429 Too Many Requests is retriable — BullMQ will back off and retry.
+      // 5xx server errors are also retriable.
+      if (httpStatus >= 400 && httpStatus < 500 && httpStatus !== 429) {
+        this.logger.warn(`OCR: Gemini ${httpStatus} — non-retriable, rejecting submission: ${body}`);
+        return { prices: [], confidence_score: 0.0, raw_response: body, input_tokens: 0, output_tokens: 0 };
+      }
+      throw new Error(`Gemini ${httpStatus}: ${body}`);
+    }
+
+    const responseBody = (await res.json()) as GeminiResponse;
+    const rawText = responseBody.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
     const result = this.parseResponse(rawText);
     return {
       ...result,
-      input_tokens: response.usage.input_tokens,
-      output_tokens: response.usage.output_tokens,
+      input_tokens: responseBody.usageMetadata?.promptTokenCount ?? 0,
+      output_tokens: responseBody.usageMetadata?.candidatesTokenCount ?? 0,
     };
   }
 
   /**
-   * Parses Claude's JSON response. Returns a safe default on parse failure
+   * Parses Gemini's JSON response. Returns a safe default on parse failure
    * (confidence 0.0, empty prices) — do not throw here, let the caller handle
    * low confidence as a rejection.
    */
   parseResponse(rawText: string): OcrResult {
     try {
-      // Strip markdown code fences if Claude wraps the JSON
+      // Strip markdown code fences if the model wraps the JSON
       const cleaned = rawText
         .replace(/^```json\s*/i, '')
         .replace(/```\s*$/i, '')
@@ -182,7 +189,7 @@ export class OcrService {
 
       return { prices, confidence_score, raw_response: rawText, input_tokens: 0, output_tokens: 0 };
     } catch {
-      this.logger.warn(`OCR: failed to parse Claude response: ${rawText}`);
+      this.logger.warn(`OCR: failed to parse Gemini response: ${rawText}`);
       return { prices: [], confidence_score: 0.0, raw_response: rawText, input_tokens: 0, output_tokens: 0 };
     }
   }

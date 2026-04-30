@@ -294,7 +294,7 @@ describe('AdminSubmissionsService', () => {
       await expect(service.reject(SUB_ID, ADMIN_ID, null)).rejects.toThrow(ConflictException);
     });
 
-    it('happy path: updates status, writes audit with notes, deletes photo', async () => {
+    it('happy path: updates status, writes audit with notes, keeps photo for cleanup worker', async () => {
       mockSubmissionFindUnique.mockResolvedValue(makeShadowRejected());
       mockSubmissionUpdateMany.mockResolvedValue({ count: 1 });
 
@@ -312,7 +312,8 @@ describe('AdminSubmissionsService', () => {
           notes: 'Wrong station',
         },
       });
-      expect(mockDeleteObject).toHaveBeenCalled();
+      // Photo kept for REJECTED_PHOTO_RETENTION_DAYS — cleanup worker handles deletion
+      expect(mockDeleteObject).not.toHaveBeenCalled();
     });
 
     it('does not call setVerifiedPrice on reject', async () => {

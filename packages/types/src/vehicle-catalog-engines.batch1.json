@@ -8683,6 +8683,70 @@
         "_meta": {
           "notes": "DE Wikipedia VW_T-Roc_I. 1.0 TSI dropped at 2020 facelift. 1.5 TSI ACT cylinder deactivation from 11/2020; same 110 kW from launch. 1.5 TSI 190 KM = ACTplus evo2 EA211 from 02/2024. T-Roc R (300 PS) from 08/2019. 1.6 TDI available from 06/2018; 2.0 TDI 190 4Motion ended ~2022. No manual on 2.0 units. DSG = 7-speed."
         }
+      },
+      {
+        "key": "VW_TCross_C11",
+        "wikidata_id": "Q56906818",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 TSI 95 KM",
+            "displacement_cc": 999,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI 115 KM",
+            "displacement_cc": 999,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI R-Line 116 KM",
+            "displacement_cc": 999,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volkswagen_T-Cross (C11, 2018-). MQB A0 platform. 1.0 TSI 95/115PS launch variants; 1.5 TSI 150PS top trim. Facelift 2023/2024: revised lineup. No diesel. DSG = 7-speed."
+        }
       }
     ],
     "Skoda": [
@@ -19844,6 +19908,315 @@
         "_meta": {
           "notes": "DE Wikipedia Opel_Insignia (B, 2017-2022). E2 platform (GM). GSi replaces OPC. 1.5/1.6 DI petrol phased out 2020 (EU6d). 2.0 Turbo D: 1995cc pre-2020 (D20DTH), 1956cc post-2020 (D20DTJ). automatic = 9-speed Aisin (petrol) or 8-speed (diesel). Production ended 2022 without successor."
         }
+      },
+      {
+        "key": "Opel_Mokka_A",
+        "wikidata_id": "Q1430847",
+        "model_year_from": 2012,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "1.4 Turbo 140 KM",
+            "displacement_cc": 1364,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 SIDI 170 KM",
+            "displacement_cc": 1598,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CDTI 110 KM",
+            "displacement_cc": 1598,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CDTI 136 KM",
+            "displacement_cc": 1598,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Opel_Mokka (A, 2012-2019). Gamma II platform. 1.4T with optional 6AT. 1.6 SIDI 6AT. 1.6 CDTI (Fiat-sourced). Facelift 2016: 1.6 SIDI dropped."
+        }
+      },
+      {
+        "key": "Opel_Mokka_B",
+        "wikidata_id": "Q1430847",
+        "model_year_from": 2020,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.2 Turbo 100 KM",
+            "displacement_cc": 1199,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 Turbo 130 KM",
+            "displacement_cc": 1199,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 Diesel 110 KM",
+            "displacement_cc": 1499,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Mokka-e Electric 136 KM",
+            "displacement_cc": 0,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "Mokka Electric 156 KM",
+            "displacement_cc": 0,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Opel_Mokka (B, 2020-). CMP platform (PSA). 1.2T = EB2ADTS PureTech. EV: 50kWh/100kW Mokka-e; updated 54kWh/115kW from 2024. DSG on 1.2T 130PS = 8AT."
+        }
+      },
+      {
+        "key": "Opel_Grandland_A",
+        "wikidata_id": "Q28798107",
+        "model_year_from": 2017,
+        "model_year_to": 2024,
+        "engines": [
+          {
+            "name": "1.2 Turbo 130 KM",
+            "displacement_cc": 1199,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Turbo 180 KM",
+            "displacement_cc": 1598,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 Diesel 130 KM",
+            "displacement_cc": 1499,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Diesel 177 KM",
+            "displacement_cc": 1997,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 PHEV 224 KM",
+            "displacement_cc": 1598,
+            "power_kw": 165,
+            "power_hp": 224,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 PHEV 4WD 300 KM",
+            "displacement_cc": 1598,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Opel_Grandland X/Grandland (EMP2 platform, 2017-2024). 1.2T PureTech, 8AT. PHEV: 1.6T + e-motor (FWD 224PS or 4WD 300PS with rear e-motor). Facelift 2021 → rebadged Grandland (dropped X)."
+        }
+      },
+      {
+        "key": "Opel_Grandland_B",
+        "wikidata_id": "Q28798107",
+        "model_year_from": 2024,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.2 Turbo 136 KM",
+            "displacement_cc": 1199,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 PHEV 195 KM",
+            "displacement_cc": 1598,
+            "power_kw": 143,
+            "power_hp": 195,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 PHEV 4WD 300 KM",
+            "displacement_cc": 1598,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Grandland Electric 213 KM",
+            "displacement_cc": 0,
+            "power_kw": 157,
+            "power_hp": 213,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Grandland Electric 4WD 320 KM",
+            "displacement_cc": 0,
+            "power_kw": 235,
+            "power_hp": 320,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Opel_Grandland (B, 2024-). STLA Medium platform. New gen launched 2024. EV: 73kWh/157kW or dual-motor 235kW AWD. PHEV: 21kWh PHEV with 8AT."
+        }
       }
     ],
     "Audi": [
@@ -22928,6 +23301,280 @@
         "_meta": {
           "notes": "DE Wikipedia Audi_Q3 (FJ, 06/2025-). MQB evo2 platform. All S-tronic 7-speed DSG (e-hybrid 6-speed). 1.5 TFSI EA211 evo; 2.0 TFSI EA888 gen4. 1.5 TFSI e-hybrid: system 200kW/272PS, PHEV. 2.0 TDI EA288 evo. Euro 6e-bis."
         }
+      },
+      {
+        "key": "Audi_Q2_GA",
+        "wikidata_id": "Q20972218",
+        "model_year_from": 2016,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 TFSI 116 KM",
+            "displacement_cc": 999,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TFSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI 190 KM",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TFSI quattro 300 KM",
+            "displacement_cc": 1984,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 116 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 116 KM",
+            "displacement_cc": 1968,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_Q2 (GA, 2016-). MQB A1 platform. Facelift 2020: 1.0 TFSI → 1.5 TFSI; 1.6 TDI → 2.0 TDI 116PS. SQ2: 2.0 TFSI quattro 300PS. DSG = 7-speed S tronic."
+        }
+      },
+      {
+        "key": "Audi_A1_8X",
+        "wikidata_id": "Q607748",
+        "model_year_from": 2010,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "1.2 TFSI 86 KM",
+            "displacement_cc": 1197,
+            "power_kw": 63,
+            "power_hp": 86,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TFSI 122 KM",
+            "displacement_cc": 1395,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TFSI 140 KM",
+            "displacement_cc": 1395,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TFSI 185 KM",
+            "displacement_cc": 1395,
+            "power_kw": 136,
+            "power_hp": 185,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "S1 2.0 TFSI quattro 231 KM",
+            "displacement_cc": 1984,
+            "power_kw": 170,
+            "power_hp": 231,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 90 KM",
+            "displacement_cc": 1598,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 136 KM",
+            "displacement_cc": 1968,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_A1 (8X, 2010-2018). PQ25 platform. 1.4 TFSI cylinder-on-demand (CoD) versions: 140PS (2010) and 185PS (2014 S1-Linie). S1: EA888 quattro AWD."
+        }
+      },
+      {
+        "key": "Audi_A1_GB",
+        "wikidata_id": "Q607748",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "25 TFSI 95 KM",
+            "displacement_cc": 999,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "30 TFSI 116 KM",
+            "displacement_cc": 999,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "35 TFSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "40 TFSI 207 KM",
+            "displacement_cc": 1984,
+            "power_kw": 152,
+            "power_hp": 207,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_A1 (GB, 2018-). MQB A0 platform. 25 TFSI = 1.0T 3-cyl 70kW; 30 TFSI = 1.0T 85kW; 35 TFSI = 1.5T 110kW. S1 discontinued for GB gen. DSG = 7-speed S tronic."
+        }
       }
     ],
     "Ford": [
@@ -24733,6 +25380,85 @@
         ],
         "_meta": {
           "notes": "EN Wikipedia Ford_Mondeo (Mk5 CD391, 2014-2022). C2 platform. 2.0 HEV = 2.0 Atkinson + EM, system 138kW/187PS, eCVT. 1.5 EcoBlue from 2016 (EU6). 2.0 TDCi = Duratorq; Bi-TDCi biturbo for ST. HEV sedan from launch, estate from 2019. PowerShift DCT = DSG. automatic = 8-speed Aisin on Mk5."
+        }
+      },
+      {
+        "key": "Ford_Puma_JX",
+        "wikidata_id": "Q80891897",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 EcoBoost 95 KM",
+            "displacement_cc": 999,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 EcoBoost 125 KM",
+            "displacement_cc": 999,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 EcoBoost mHEV 125 KM",
+            "displacement_cc": 999,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 EcoBoost mHEV 155 KM",
+            "displacement_cc": 999,
+            "power_kw": 114,
+            "power_hp": 155,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "ST 1.5 EcoBoost 200 KM",
+            "displacement_cc": 1499,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_Puma (JX, 2019-). C2 platform. mHEV = 48V mild hybrid → PB_95. 7DCT for auto variants. ST: 1.5T 3-cyl 200PS 6MT."
         }
       }
     ],
@@ -26965,6 +27691,548 @@
         "_meta": {
           "notes": "DE Wikipedia Hyundai_i30_(PD) section 06/2024+ (CN7 not yet a separate DE Wikipedia article). No diesel. 1.0 T-GDI replaces 1.0 120 PS; 1.5 T-GDI 140 PS replaces 160 PS as main powertrain."
         }
+      },
+      {
+        "key": "Hyundai_Kona_OS",
+        "wikidata_id": "Q24013879",
+        "model_year_from": 2017,
+        "model_year_to": 2023,
+        "engines": [
+          {
+            "name": "1.0 T-GDi 120 KM",
+            "displacement_cc": 998,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 T-GDi 177 KM",
+            "displacement_cc": 1598,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "Kona N 2.0 T-GDi 280 KM",
+            "displacement_cc": 1998,
+            "power_kw": 206,
+            "power_hp": 280,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 115 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 136 KM",
+            "displacement_cc": 1598,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 GDi HEV 141 KM",
+            "displacement_cc": 1591,
+            "power_kw": 104,
+            "power_hp": 141,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "Kona Electric 136 KM",
+            "displacement_cc": 0,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "Kona Electric 204 KM",
+            "displacement_cc": 0,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Hyundai_Kona (OS, 2017-2023). 1.0 T-GDi (88kW) launch, replaced by 1.6 T-GDi. HEV: Theta II 1.6 GDi (104kW) + 32kW e-motor, 6DCT. Electric: 39.2kWh/100kW or 64kWh/150kW. Kona N: 2.0T 8DCT 206kW (2021-). Diesel 1.6 CRDi discontinued 2021."
+        }
+      },
+      {
+        "key": "Hyundai_Kona_SX2",
+        "wikidata_id": "Q24013879",
+        "model_year_from": 2023,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 T-GDi 100 KM",
+            "displacement_cc": 998,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 T-GDi 120 KM",
+            "displacement_cc": 998,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 T-GDi 198 KM",
+            "displacement_cc": 1598,
+            "power_kw": 146,
+            "power_hp": 198,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 GDi HEV 129 KM",
+            "displacement_cc": 1591,
+            "power_kw": 95,
+            "power_hp": 129,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 GDi HEV 141 KM",
+            "displacement_cc": 1591,
+            "power_kw": 104,
+            "power_hp": 141,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Kona Electric 135 KM",
+            "displacement_cc": 0,
+            "power_kw": 99,
+            "power_hp": 135,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Kona Electric 218 KM",
+            "displacement_cc": 0,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Hyundai_Kona (SX2, 2023-). HEV: 1.6 GDi + 6MT (129PS) or 7DCT (141PS). EV: 48.4kWh/99kW or 65.4kWh/160kW. 1.6 T-GDi 7DCT = Kona performance variant."
+        }
+      },
+      {
+        "key": "Hyundai_Bayon_BC3",
+        "wikidata_id": "Q108278484",
+        "model_year_from": 2021,
+        "model_year_to": 2025,
+        "engines": [
+          {
+            "name": "1.0 T-GDi 84 KM",
+            "displacement_cc": 998,
+            "power_kw": 62,
+            "power_hp": 84,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2021,
+            "year_to": 2025,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 T-GDi 100 KM",
+            "displacement_cc": 998,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2025,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 T-GDi 120 KM",
+            "displacement_cc": 998,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2025,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 T-GDi 48V 100 KM",
+            "displacement_cc": 998,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2025,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Hyundai_Bayon (BC3, 2021-2025). B-SUV on i20 platform. 1.0 T-GDi in 3 power levels; 48V mHEV variant → PB_95. Production ended Nov 2025 per DE Wikipedia."
+        }
+      },
+      {
+        "key": "Hyundai_i20_GB",
+        "wikidata_id": "Q1584742",
+        "model_year_from": 2014,
+        "model_year_to": 2020,
+        "engines": [
+          {
+            "name": "1.2 MPI 84 KM",
+            "displacement_cc": 1197,
+            "power_kw": 62,
+            "power_hp": 84,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 MPI 100 KM",
+            "displacement_cc": 1368,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 T-GDi 100 KM",
+            "displacement_cc": 998,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 T-GDi 120 KM",
+            "displacement_cc": 998,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.1 CRDi 75 KM",
+            "displacement_cc": 1120,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 CRDi 90 KM",
+            "displacement_cc": 1396,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Hyundai_i20 (GB, 2014-2020). 1.0 T-GDi turbo from 2015 with 7DCT. 1.4 MPI with optional 4AT. Diesel: 1.1 CRDi 3-cyl and 1.4 CRDi 4-cyl."
+        }
+      },
+      {
+        "key": "Hyundai_i20_BC3",
+        "wikidata_id": "Q1584742",
+        "model_year_from": 2020,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 T-GDi 84 KM",
+            "displacement_cc": 998,
+            "power_kw": 62,
+            "power_hp": 84,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 T-GDi 100 KM",
+            "displacement_cc": 998,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 T-GDi 120 KM",
+            "displacement_cc": 998,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 T-GDi 48V 100 KM",
+            "displacement_cc": 998,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 T-GDi N 204 KM",
+            "displacement_cc": 1598,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Hyundai_i20 (BC3, 2020-). 1.0 T-GDi in 3 power tunes; from 12/2025 replaced by 48V mHEV variant → PB_95. i20 N: 1.6T 150kW 6MT performance variant."
+        }
+      },
+      {
+        "key": "Hyundai_i10_IA",
+        "wikidata_id": "Q1584744",
+        "model_year_from": 2013,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "1.0 MPI 67 KM",
+            "displacement_cc": 998,
+            "power_kw": 49,
+            "power_hp": 67,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 MPI 87 KM",
+            "displacement_cc": 1248,
+            "power_kw": 64,
+            "power_hp": 87,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Hyundai_i10 (IA, 2013-2019). 1.0 MPI 3-cyl and 1.2 MPI 4-cyl; both with optional 4AT. LPG variant existed but niche."
+        }
+      },
+      {
+        "key": "Hyundai_i10_AC3",
+        "wikidata_id": "Q1584744",
+        "model_year_from": 2019,
+        "model_year_to": 2025,
+        "engines": [
+          {
+            "name": "1.0 MPI 67 KM",
+            "displacement_cc": 998,
+            "power_kw": 49,
+            "power_hp": 67,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2025,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 MPI 84 KM",
+            "displacement_cc": 1197,
+            "power_kw": 62,
+            "power_hp": 84,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": 2025,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 T-GDi 100 KM",
+            "displacement_cc": 998,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Hyundai_i10 (AC3, 2019-2025). Production ended Nov 2025. 1.0 T-GDi 100PS added 06/2020, dropped 05/2024. No automatic available on AC3 in EU from launch."
+        }
       }
     ],
     "Kia": [
@@ -27637,6 +28905,198 @@
         ],
         "_meta": {
           "notes": "DE Wikipedia Kia_K4. EU launch 11/2025 (hatchback); SW Sportswagon 01/2026. Replaces Kia Ceed (CD). 1.0 T-GDI also available as 48V mHEV at same 85 kW — merged into one entry. 1.6 T-GDI offered in 150 PS and 180 PS tunes. No diesel or PHEV in EU lineup. NA variants excluded. DSG = 7-speed DCT."
+        }
+      },
+      {
+        "key": "Kia_Niro_I",
+        "wikidata_id": "Q21061019",
+        "model_year_from": 2016,
+        "model_year_to": 2022,
+        "engines": [
+          {
+            "name": "1.6 GDi HEV 141 KM",
+            "displacement_cc": 1591,
+            "power_kw": 104,
+            "power_hp": 141,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 GDi PHEV 141 KM",
+            "displacement_cc": 1591,
+            "power_kw": 104,
+            "power_hp": 141,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "e-Niro EV 136 KM",
+            "displacement_cc": 0,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "e-Niro EV 204 KM",
+            "displacement_cc": 0,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2022,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Kia_Niro (DE, 2016-2022). HEV: Theta II 1.6 GDi 77kW + 32kW e-motor, 6DCT, system 104kW/141PS, non-plug → PB_95. PHEV: 45kW e-motor, 6DCT. EV: 39.2kWh/100kW or 64kWh/150kW."
+        }
+      },
+      {
+        "key": "Kia_Niro_II",
+        "wikidata_id": "Q21061019",
+        "model_year_from": 2022,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.6 GDi HEV 141 KM",
+            "displacement_cc": 1591,
+            "power_kw": 104,
+            "power_hp": 141,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 GDi PHEV 183 KM",
+            "displacement_cc": 1591,
+            "power_kw": 135,
+            "power_hp": 183,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Niro EV 204 KM",
+            "displacement_cc": 0,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Kia_Niro (SG2, 2022-). HEV: system 104kW/141PS, 6DCT non-plug → PB_95. PHEV: upgraded 62kW e-motor, system 135kW/183PS, 6DCT, 65km EV range. EV: 64.8kWh/150kW."
+        }
+      },
+      {
+        "key": "Kia_Stonic_YB",
+        "wikidata_id": "Q42165337",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 T-GDi 100 KM",
+            "displacement_cc": 998,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 T-GDi 115 KM",
+            "displacement_cc": 998,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 T-GDi 120 KM",
+            "displacement_cc": 998,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 110 KM",
+            "displacement_cc": 1582,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 115 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Kia_Stonic (YB, 2017-). Facelift Aug 2020 (engine update), second update May 2024 (diesel dropped, 120PS petrol added). Optional 7DCT on 1.0 T-GDi."
         }
       }
     ],
@@ -29026,6 +30486,120 @@
         "_meta": {
           "notes": "DE Wikipedia Renault_Scénic E-Tech (2024-). CMF-EV platform (Renault-Nissan Alliance BEV). E-Tech 170: 60kWh, ~430km WLTP. E-Tech 218: 87kWh, ~625km WLTP. DC charging up to 150kW, AC 22kW. Pure EV — no ICE or PHEV variant."
         }
+      },
+      {
+        "key": "Renault_Arkana_I",
+        "wikidata_id": "Q57375506",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "TCe 140 140 KM",
+            "displacement_cc": 1332,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "E-Tech Hybrid 145 145 KM",
+            "displacement_cc": 1598,
+            "power_kw": 105,
+            "power_hp": 145,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E-Tech Full Hybrid 160 160 KM",
+            "displacement_cc": 1598,
+            "power_kw": 116,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Renault_Arkana (I, EU launch 2021). CMF-B platform. TCe 140: 1.3T EDC7 wet DCT → DSG. E-Tech: 1.6L + 2 e-motors, dog-clutch multi-mode → automatic. Facelift 2024: TCe 140 dropped, E-Tech upgraded to 160PS."
+        }
+      },
+      {
+        "key": "Renault_Austral_I",
+        "wikidata_id": "Q113534948",
+        "model_year_from": 2022,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "TCe 130 130 KM",
+            "displacement_cc": 1332,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "TCe 160 160 KM",
+            "displacement_cc": 1332,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E-Tech Full Hybrid 200 200 KM",
+            "displacement_cc": 1598,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E-Tech PHEV 300 300 KM",
+            "displacement_cc": 1598,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Renault_Austral (I, 2022-). CMF-CD platform. TCe 130 with optional 6MT. TCe 160 7DCT → DSG. E-Tech Full Hybrid 200: 1.6L + 2 e-motors, dog-clutch DHT, non-plug → PB_95. PHEV 300: 22.5kWh plug-in."
+        }
       }
     ],
     "Dacia": [
@@ -29580,6 +31154,82 @@
         "_meta": {
           "notes": "DE Wikipedia Dacia_Sandero (Gen III BJI, 2020-). CMF-B platform. No diesel. 1.0 SCe = naturally aspirated. 1.0 TCe = turbocharged (H4D-H series). ECO-G = bifuel LPG+petrol. CVT = X-Tronic on 1.0 TCe 90. 1.0 TCe 100 PS petrol (non-ECO-G) from 2022 facelift. Facelift 2022 added mild cosmetic updates."
         }
+      },
+      {
+        "key": "Dacia_Jogger",
+        "wikidata_id": "Q110424693",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "TCe 110 110 KM",
+            "displacement_cc": 999,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2022,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "ECO-G 100 LPG 100 KM",
+            "displacement_cc": 999,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2022,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "ECO-G 120 LPG 122 KM",
+            "displacement_cc": 1199,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "LPG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2024,
+            "year_to": 2025,
+            "confidence": "high"
+          },
+          {
+            "name": "E-Tech Hybrid 140 141 KM",
+            "displacement_cc": 1598,
+            "power_kw": 104,
+            "power_hp": 141,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "Hybrid 155 158 KM",
+            "displacement_cc": 1789,
+            "power_kw": 116,
+            "power_hp": 158,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2025,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Dacia_Jogger (2021-). Sales from 03/2022. No diesel. ECO-G = factory petrol/LPG bifuel; LPG-mode peak power listed. E-Tech 140: 1.6L + 51kW e-motor, 8-speed DHT multi-mode, non-plug HEV → PB_95. Hybrid 155: 1.8L from 12/2025."
+        }
       }
     ],
     "Mercedes-Benz": [
@@ -30124,6 +31774,857 @@
         "_meta": {
           "notes": "DE Wikipedia Mercedes-Benz_Baureihe_206. All petrol and diesel are 48V EQ Boost mHEV (ICE + 17 kW e-motor); power listed = ICE only (badge). All 9G-Tronic. C 200 4MATIC shares spec with C 200 RWD. AMG C 63 S E Performance (680 PS PHEV, 2023-) omitted as extreme outlier."
         }
+      },
+      {
+        "key": "MB_AClass_W176",
+        "wikidata_id": "Q271516",
+        "model_year_from": 2012,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "A 160 102 KM",
+            "displacement_cc": 1595,
+            "power_kw": 75,
+            "power_hp": 102,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "A 180 122 KM",
+            "displacement_cc": 1595,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "A 200 156 KM",
+            "displacement_cc": 1991,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "A 250 Sport 211 KM",
+            "displacement_cc": 1991,
+            "power_kw": 155,
+            "power_hp": 211,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "A 45 AMG 360 KM",
+            "displacement_cc": 1991,
+            "power_kw": 265,
+            "power_hp": 360,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "A 180 d 109 KM",
+            "displacement_cc": 1461,
+            "power_kw": 80,
+            "power_hp": 109,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "A 200 d 136 KM",
+            "displacement_cc": 2143,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mercedes-Benz_A-Klasse (W176, 2012-2018). MFA platform. 7G-DCT = 7-speed dual clutch → DSG. 1.6T (160/180), 2.0T (200/250). A 45 AMG = M133 high-output 2.0T."
+        }
+      },
+      {
+        "key": "MB_AClass_W177",
+        "wikidata_id": "Q271516",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "A 160 109 KM",
+            "displacement_cc": 1332,
+            "power_kw": 80,
+            "power_hp": 109,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "A 180 136 KM",
+            "displacement_cc": 1332,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "A 200 163 KM",
+            "displacement_cc": 1332,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "A 250 224 KM",
+            "displacement_cc": 1991,
+            "power_kw": 165,
+            "power_hp": 224,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "A 35 AMG 4Matic 306 KM",
+            "displacement_cc": 1991,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "A 45 S AMG 4Matic+ 421 KM",
+            "displacement_cc": 1991,
+            "power_kw": 310,
+            "power_hp": 421,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "A 180 d 116 KM",
+            "displacement_cc": 1461,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "A 200 d 150 KM",
+            "displacement_cc": 1950,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "A 250 e PHEV 218 KM",
+            "displacement_cc": 1332,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mercedes-Benz_A-Klasse (W177, 2018-). MFA2 platform. 1.3T = M282 (Renault-sourced); 2.0T = M260. 8G-DCT → DSG. A 250 e: 1.3T + 75kW e-motor, 15.6kWh PHEV."
+        }
+      },
+      {
+        "key": "MB_GLC_X253",
+        "wikidata_id": "Q20009740",
+        "model_year_from": 2015,
+        "model_year_to": 2023,
+        "engines": [
+          {
+            "name": "GLC 200 184 KM",
+            "displacement_cc": 1991,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "GLC 300 258 KM",
+            "displacement_cc": 1991,
+            "power_kw": 190,
+            "power_hp": 258,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "GLC 300 4Matic 258 KM",
+            "displacement_cc": 1991,
+            "power_kw": 190,
+            "power_hp": 258,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "AMG GLC 43 4Matic 390 KM",
+            "displacement_cc": 2996,
+            "power_kw": 287,
+            "power_hp": 390,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "GLC 220 d 170 KM",
+            "displacement_cc": 1950,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "GLC 300 d 4Matic 245 KM",
+            "displacement_cc": 1950,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "GLC 300 e 4Matic PHEV 320 KM",
+            "displacement_cc": 1991,
+            "power_kw": 235,
+            "power_hp": 320,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mercedes-Benz_GLC (X253, 2015-2023). C-class platform. 9G-Tronic torque converter → DSG convention. PHEV: 2.0T + e-motor, 13.5kWh."
+        }
+      },
+      {
+        "key": "MB_GLC_X254",
+        "wikidata_id": "Q20009740",
+        "model_year_from": 2022,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "GLC 200 204 KM",
+            "displacement_cc": 1499,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GLC 300 258 KM",
+            "displacement_cc": 1999,
+            "power_kw": 190,
+            "power_hp": 258,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GLC 300 4Matic 258 KM",
+            "displacement_cc": 1999,
+            "power_kw": 190,
+            "power_hp": 258,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "AMG GLC 43 4Matic 421 KM",
+            "displacement_cc": 1999,
+            "power_kw": 310,
+            "power_hp": 421,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GLC 220 d 4Matic 197 KM",
+            "displacement_cc": 1993,
+            "power_kw": 145,
+            "power_hp": 197,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GLC 300 de 4Matic PHEV 333 KM",
+            "displacement_cc": 1993,
+            "power_kw": 245,
+            "power_hp": 333,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GLC 300 e 4Matic PHEV 313 KM",
+            "displacement_cc": 1999,
+            "power_kw": 230,
+            "power_hp": 313,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mercedes-Benz_GLC (X254, 2022-). New platform, 48V mild hybrid standard. GLC 200 = 1.5T M254 + 48V ISG. PHEVs: 31.2kWh large battery, ~120km EV range. DSG = 9G-Tronic."
+        }
+      },
+      {
+        "key": "MB_GLB_X247",
+        "wikidata_id": "Q60998044",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "GLB 180 136 KM",
+            "displacement_cc": 1332,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GLB 200 163 KM",
+            "displacement_cc": 1332,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GLB 250 4Matic 224 KM",
+            "displacement_cc": 1991,
+            "power_kw": 165,
+            "power_hp": 224,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "AMG GLB 35 4Matic 306 KM",
+            "displacement_cc": 1991,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GLB 180 d 116 KM",
+            "displacement_cc": 1461,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GLB 200 d 150 KM",
+            "displacement_cc": 1950,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GLB 250 e 4Matic PHEV 218 KM",
+            "displacement_cc": 1332,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mercedes-Benz_GLB (X247, 2019-). MFA2 platform. 7-seat compact SUV. 1.3T M282 (Renault) or 2.0T M260. 8G-DCT/9G-Tronic → DSG. PHEV: 15.6kWh."
+        }
+      },
+      {
+        "key": "MB_CLA_C117",
+        "wikidata_id": "Q13427948",
+        "model_year_from": 2013,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "CLA 180 122 KM",
+            "displacement_cc": 1595,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "CLA 200 156 KM",
+            "displacement_cc": 1595,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "CLA 250 211 KM",
+            "displacement_cc": 1991,
+            "power_kw": 155,
+            "power_hp": 211,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "AMG CLA 45 4Matic 360 KM",
+            "displacement_cc": 1991,
+            "power_kw": 265,
+            "power_hp": 360,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "CLA 180 d 109 KM",
+            "displacement_cc": 1461,
+            "power_kw": 80,
+            "power_hp": 109,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "CLA 220 d 177 KM",
+            "displacement_cc": 2143,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mercedes-Benz_CLA (C117, 2013-2019). MFA platform. 7G-DCT → DSG. Sedan-coupé, 4-door."
+        }
+      },
+      {
+        "key": "MB_CLA_C118",
+        "wikidata_id": "Q13427948",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "CLA 180 136 KM",
+            "displacement_cc": 1332,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "CLA 200 163 KM",
+            "displacement_cc": 1332,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "CLA 250 224 KM",
+            "displacement_cc": 1991,
+            "power_kw": 165,
+            "power_hp": 224,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "AMG CLA 35 4Matic 306 KM",
+            "displacement_cc": 1991,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "AMG CLA 45 S 4Matic+ 421 KM",
+            "displacement_cc": 1991,
+            "power_kw": 310,
+            "power_hp": 421,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "CLA 180 d 116 KM",
+            "displacement_cc": 1461,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "CLA 200 d 150 KM",
+            "displacement_cc": 1950,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "CLA 250 e PHEV 218 KM",
+            "displacement_cc": 1332,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mercedes-Benz_CLA (C118, 2019-). MFA2 platform. 1.3T M282 or 2.0T M260. 8G-DCT/7G-DCT → DSG. PHEV: 15.6kWh."
+        }
+      },
+      {
+        "key": "MB_GLE_V167",
+        "wikidata_id": "Q16990267",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "GLE 300 d 4Matic 245 KM",
+            "displacement_cc": 1950,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GLE 350 d 4Matic 272 KM",
+            "displacement_cc": 2925,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GLE 400 d 4Matic 330 KM",
+            "displacement_cc": 2925,
+            "power_kw": 243,
+            "power_hp": 330,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GLE 450 4Matic mHEV 367 KM",
+            "displacement_cc": 2999,
+            "power_kw": 270,
+            "power_hp": 367,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GLE 580 4Matic mHEV 489 KM",
+            "displacement_cc": 3982,
+            "power_kw": 360,
+            "power_hp": 489,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "AMG GLE 53 4Matic+ mHEV 435 KM",
+            "displacement_cc": 2999,
+            "power_kw": 320,
+            "power_hp": 435,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GLE 350 de 4Matic PHEV 320 KM",
+            "displacement_cc": 1950,
+            "power_kw": 235,
+            "power_hp": 320,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mercedes-Benz_GLE (V167, 2018-). GLE 450/580/53 AMG = 48V EQ Boost mHEV (ISG) → PB_95. GLE 350 de: 2.0d + e-motor plug-in, 31.2kWh. 9G-Tronic → DSG."
+        }
       }
     ],
     "Nissan": [
@@ -30349,6 +32850,109 @@
         "_meta": {
           "notes": "DE Wikipedia Nissan_Qashqai (J12 06/2021-). No diesel. All petrol = 12V mHEV. e-Power = serial hybrid: 1.5 VC-T (variable compression) ICE acts as generator only; 140 kW electric motor drives wheels; listed power = motor output. CVT = X-TRONIC e-CVT (e-Power) or X-TRONIC (mHEV). 4WD option on 1.3 160 and e-Power."
         }
+      },
+      {
+        "key": "Nissan_Juke_F15",
+        "wikidata_id": "Q584773",
+        "model_year_from": 2010,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "1.6 116 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2010,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 DIG-T 115 KM",
+            "displacement_cc": 1197,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 DIG-T 190 KM",
+            "displacement_cc": 1598,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 110 KM",
+            "displacement_cc": 1461,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Nissan_Juke (F15, 2010-2019). Facelift 2014: 1.2 DIG-T replaces 1.6 NA. 1.6 DIG-T 190PS Nismo/4WD. CVT on 1.6 NA."
+        }
+      },
+      {
+        "key": "Nissan_Juke_F16",
+        "wikidata_id": "Q584773",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 DIG-T 114 KM",
+            "displacement_cc": 999,
+            "power_kw": 84,
+            "power_hp": 114,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 HEV 143 KM",
+            "displacement_cc": 1598,
+            "power_kw": 105,
+            "power_hp": 143,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Nissan_Juke (F16, 2019-). CMF-B platform. 1.0 DIG-T 3-cyl turbo; DCT7 → DSG. HEV: 1.6 + e-motor, series/parallel, 4AT-like → automatic. No diesel in F16."
+        }
       }
     ],
     "Volvo": [
@@ -30556,6 +33160,393 @@
         ],
         "_meta": {
           "notes": "DE Wikipedia Volvo_XC60 (Mk2 SPA, 2017-). All Drive-E 2.0T (1969cc). T→B rebadging 2020 with 48V mHEV integration (same power). T8 PHEV: ICE 228 kW + EM 107 kW rear axle, system 287 kW/390 PS; 14.9 kWh battery; ~50 km WLTP EV; Recharge branding from 09/2021. Diesel phased out ~2023. automatic = 8-speed Geartronic."
+        }
+      },
+      {
+        "key": "Volvo_XC40_536",
+        "wikidata_id": "Q28865882",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "T2 129 KM",
+            "displacement_cc": 1969,
+            "power_kw": 95,
+            "power_hp": 129,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2020,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "T3 163 KM",
+            "displacement_cc": 1477,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "T4 190 KM",
+            "displacement_cc": 1969,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "T5 AWD 247 KM",
+            "displacement_cc": 1969,
+            "power_kw": 181,
+            "power_hp": 247,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "B3 163 KM mHEV",
+            "displacement_cc": 1477,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "B4 197 KM mHEV",
+            "displacement_cc": 1969,
+            "power_kw": 145,
+            "power_hp": 197,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "B5 AWD 250 KM mHEV",
+            "displacement_cc": 1969,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "T4 Recharge PHEV 211 KM",
+            "displacement_cc": 1477,
+            "power_kw": 155,
+            "power_hp": 211,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "D3 150 KM",
+            "displacement_cc": 1969,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "D4 190 KM",
+            "displacement_cc": 1969,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "XC40 Recharge EV 231 KM",
+            "displacement_cc": 0,
+            "power_kw": 170,
+            "power_hp": 231,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "XC40 Recharge EV AWD 408 KM",
+            "displacement_cc": 0,
+            "power_kw": 300,
+            "power_hp": 408,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volvo_XC40 (536, 2017-). CMA platform. B-series = 48V mHEV from 2020 → PB_95. T4 Recharge PHEV: 1.5T + e-motor, 7DCT. EV: 78kWh single/dual motor. Diesel D3/D4 dropped 2020. DSG = 8AT (Aisin) or 7DCT."
+        }
+      },
+      {
+        "key": "Volvo_XC90_II",
+        "wikidata_id": "Q1296879",
+        "model_year_from": 2015,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "T5 FWD 254 KM",
+            "displacement_cc": 1969,
+            "power_kw": 187,
+            "power_hp": 254,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "T6 AWD 320 KM",
+            "displacement_cc": 1969,
+            "power_kw": 235,
+            "power_hp": 320,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "T8 Recharge PHEV AWD 390 KM",
+            "displacement_cc": 1969,
+            "power_kw": 287,
+            "power_hp": 390,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "T8 Recharge PHEV AWD 455 KM",
+            "displacement_cc": 1969,
+            "power_kw": 335,
+            "power_hp": 455,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "D5 AWD 235 KM",
+            "displacement_cc": 1969,
+            "power_kw": 173,
+            "power_hp": 235,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "B5 AWD 250 KM mHEV",
+            "displacement_cc": 1969,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volvo_XC90 (II, 2015-). SPA platform. T5 supercharged; T6 turbo+supercharged. T8 PHEV: 2.0T + twin e-axle rear motor; upgraded from 390PS to 455PS 2022. B5 diesel 48V mHEV. DSG = 8AT Aisin."
+        }
+      },
+      {
+        "key": "Volvo_V60_II",
+        "wikidata_id": "Q2140947",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "T4 190 KM",
+            "displacement_cc": 1969,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "T5 FWD 250 KM",
+            "displacement_cc": 1969,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "T6 AWD 300 KM",
+            "displacement_cc": 1969,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "B4 197 KM mHEV",
+            "displacement_cc": 1969,
+            "power_kw": 145,
+            "power_hp": 197,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "B5 AWD 250 KM mHEV",
+            "displacement_cc": 1969,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "T6 Recharge PHEV AWD 340 KM",
+            "displacement_cc": 1969,
+            "power_kw": 250,
+            "power_hp": 340,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "D3 150 KM",
+            "displacement_cc": 1969,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "D4 190 KM",
+            "displacement_cc": 1969,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "B4 197 KM mHEV diesel",
+            "displacement_cc": 1969,
+            "power_kw": 145,
+            "power_hp": 197,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volvo_V60 (II, 2018-). SPA platform. B-series = 48V mHEV from 2020 (both petrol and diesel). T6 Recharge PHEV: 2.0T + rear e-motor, 8AT. DSG = 8AT Aisin."
         }
       }
     ],
@@ -31511,6 +34502,720 @@
         "_meta": {
           "notes": "DE Wikipedia Peugeot_308 (P51, 2021-). EMP2 evolved platform. 1.2 PureTech = EB2 ADTED. 1.6 Hybrid 136 = 48V mild hybrid e-DSC6 dual-clutch. PHEV: 1.6 petrol + electric, 12.4kWh, ~60km EV (180PS) / 15.6kWh PHEV 225. e-308 = 54kWh, ~400km WLTP. automatic = EAT8. DSG covers EDC/e-DSC6/e-EAT8."
         }
+      },
+      {
+        "key": "Peugeot_208_A9",
+        "wikidata_id": "Q1491671",
+        "model_year_from": 2012,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "1.2 VTi 82 KM",
+            "displacement_cc": 1199,
+            "power_kw": 60,
+            "power_hp": 82,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 PureTech 82 KM",
+            "displacement_cc": 1199,
+            "power_kw": 60,
+            "power_hp": 82,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 PureTech 110 KM",
+            "displacement_cc": 1199,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 THP 200 KM GTi",
+            "displacement_cc": 1598,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 BlueHDi 100 KM",
+            "displacement_cc": 1560,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 BlueHDi 120 KM",
+            "displacement_cc": 1560,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Peugeot_208 (A9, 2012-2019). PF1 platform. PureTech 3-cyl from facelift 2015. DSG = EAT6 6AT. GTi 200PS = 1.6 THP."
+        }
+      },
+      {
+        "key": "Peugeot_208_UB",
+        "wikidata_id": "Q1491671",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.2 PureTech 75 KM",
+            "displacement_cc": 1199,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 PureTech 100 KM",
+            "displacement_cc": 1199,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 PureTech 130 KM",
+            "displacement_cc": 1199,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 BlueHDi 100 KM",
+            "displacement_cc": 1499,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "e-208 EV 136 KM",
+            "displacement_cc": 0,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "e-208 EV 156 KM",
+            "displacement_cc": 0,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Peugeot_208 (UB/CMP, 2019-). CMP platform. DSG = EAT8 8AT. e-208: 50kWh/100kW, updated 54kWh/115kW from 2024."
+        }
+      },
+      {
+        "key": "Peugeot_2008_A94",
+        "wikidata_id": "Q15003011",
+        "model_year_from": 2013,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "1.2 PureTech 82 KM",
+            "displacement_cc": 1199,
+            "power_kw": 60,
+            "power_hp": 82,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 PureTech 110 KM",
+            "displacement_cc": 1199,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 THP 165 KM",
+            "displacement_cc": 1598,
+            "power_kw": 121,
+            "power_hp": 165,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 BlueHDi 100 KM",
+            "displacement_cc": 1560,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 BlueHDi 120 KM",
+            "displacement_cc": 1560,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Peugeot_2008 (A94, 2013-2019). 1.2 PureTech from 2013 (3-cyl). DSG = EAT6."
+        }
+      },
+      {
+        "key": "Peugeot_2008_UB",
+        "wikidata_id": "Q15003011",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.2 PureTech 100 KM",
+            "displacement_cc": 1199,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 PureTech 130 KM",
+            "displacement_cc": 1199,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 BlueHDi 110 KM",
+            "displacement_cc": 1499,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "e-2008 EV 136 KM",
+            "displacement_cc": 0,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "e-2008 EV 156 KM",
+            "displacement_cc": 0,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Peugeot_2008 (UB/CMP, 2019-). CMP platform. DSG = EAT8 8AT. e-2008: 50kWh/100kW, updated 54kWh/115kW from 2024."
+        }
+      },
+      {
+        "key": "Peugeot_3008_I",
+        "wikidata_id": "Q858462",
+        "model_year_from": 2016,
+        "model_year_to": 2024,
+        "engines": [
+          {
+            "name": "1.2 PureTech 130 KM",
+            "displacement_cc": 1199,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 THP 165 KM",
+            "displacement_cc": 1598,
+            "power_kw": 121,
+            "power_hp": 165,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 PureTech 180 KM",
+            "displacement_cc": 1598,
+            "power_kw": 133,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 BlueHDi 130 KM",
+            "displacement_cc": 1499,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 BlueHDi 150 KM",
+            "displacement_cc": 1997,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 BlueHDi 180 KM",
+            "displacement_cc": 1997,
+            "power_kw": 133,
+            "power_hp": 180,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "PHEV 225 KM",
+            "displacement_cc": 1598,
+            "power_kw": 165,
+            "power_hp": 225,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "PHEV4 300 KM",
+            "displacement_cc": 1598,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Peugeot_3008 (I/facelift, EMP2, 2016-2024). PHEV: 1.6T + e-motor FWD 225PS or AWD 300PS (front 165kW ICE + rear e-axle). DSG = EAT8 8AT."
+        }
+      },
+      {
+        "key": "Peugeot_3008_II",
+        "wikidata_id": "Q858462",
+        "model_year_from": 2024,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.2 PureTech 136 KM mHEV",
+            "displacement_cc": 1199,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "PHEV 195 KM",
+            "displacement_cc": 1598,
+            "power_kw": 143,
+            "power_hp": 195,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "PHEV 4WD 300 KM",
+            "displacement_cc": 1598,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E-3008 EV 210 KM",
+            "displacement_cc": 0,
+            "power_kw": 157,
+            "power_hp": 210,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E-3008 EV 4WD 320 KM",
+            "displacement_cc": 0,
+            "power_kw": 235,
+            "power_hp": 320,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Peugeot_3008 (II, STLA Medium, 2024-). New platform. E-3008: 73kWh/157kW or AWD 235kW. 1.2 PureTech with 48V mHEV. PHEV: 21kWh plug-in."
+        }
+      },
+      {
+        "key": "Peugeot_5008_I",
+        "wikidata_id": "Q2009978",
+        "model_year_from": 2017,
+        "model_year_to": 2024,
+        "engines": [
+          {
+            "name": "1.2 PureTech 130 KM",
+            "displacement_cc": 1199,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 PureTech 180 KM",
+            "displacement_cc": 1598,
+            "power_kw": 133,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 BlueHDi 130 KM",
+            "displacement_cc": 1499,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 BlueHDi 150 KM",
+            "displacement_cc": 1997,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 BlueHDi 180 KM",
+            "displacement_cc": 1997,
+            "power_kw": 133,
+            "power_hp": 180,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2024,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Peugeot_5008 (I, EMP2, 2017-2024). 7-seat SUV. Same powertrain family as 3008 I but no PHEV. DSG = EAT6/EAT8."
+        }
+      },
+      {
+        "key": "Peugeot_508_II",
+        "wikidata_id": "Q1471680",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.2 PureTech 130 KM",
+            "displacement_cc": 1199,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 PureTech 180 KM",
+            "displacement_cc": 1598,
+            "power_kw": 133,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 PureTech 225 KM",
+            "displacement_cc": 1598,
+            "power_kw": 165,
+            "power_hp": 225,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 BlueHDi 130 KM",
+            "displacement_cc": 1499,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 BlueHDi 160 KM",
+            "displacement_cc": 1997,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "PHEV 225 KM",
+            "displacement_cc": 1598,
+            "power_kw": 165,
+            "power_hp": 225,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "PHEV 360 KM",
+            "displacement_cc": 1598,
+            "power_kw": 265,
+            "power_hp": 360,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Peugeot_508 (II, EMP2, 2018-). D-segment. PHEV: 1.6T + rear e-motor. 225PS FWD; 360PS AWD (Peugeot Sport Engineered). DSG = EAT8."
+        }
       }
     ],
     "Seat": [
@@ -31814,6 +35519,457 @@
         ],
         "_meta": {
           "notes": "DE Wikipedia Seat_Ibiza (KJ1, 2017-). MQB-A0 platform. 1.0 TSI = EA211 evo 3-cyl. 1.5 TSI = EA211 evo ACT cylinder deactivation. 1.0 TGI = CNG+petrol bifuel. 1.6 TDI discontinued 2019 (EU6d). No Cupra in Ibiza V generation (became standalone brand). DSG = 7-speed dry."
+        }
+      },
+      {
+        "key": "Seat_Leon_5F",
+        "wikidata_id": "Q783696",
+        "model_year_from": 2012,
+        "model_year_to": 2020,
+        "engines": [
+          {
+            "name": "1.2 TSI 115 KM",
+            "displacement_cc": 1197,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI 125 KM",
+            "displacement_cc": 1395,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TSI 180 KM",
+            "displacement_cc": 1798,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "Cupra 2.0 TSI 265 KM",
+            "displacement_cc": 1984,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "Cupra 2.0 TSI 290 KM",
+            "displacement_cc": 1984,
+            "power_kw": 213,
+            "power_hp": 290,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "Cupra 2.0 TSI 300 KM",
+            "displacement_cc": 1984,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 90 KM",
+            "displacement_cc": 1598,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 115 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 184 KM",
+            "displacement_cc": 1968,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Seat_Leon III (5F, 2012-2020). MQB platform. 1.2 TSI → 1.5 TSI at facelift 2018. Cupra sub-brand: 265→290→300 PS upgrades 2014-2018, all Cupra treated as Seat pre-2018. TDI: EA288."
+        }
+      },
+      {
+        "key": "Seat_Leon_KL",
+        "wikidata_id": "Q783696",
+        "model_year_from": 2020,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 eTSI 110 KM",
+            "displacement_cc": 999,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI 130 KM",
+            "displacement_cc": 1498,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 eTSI 130 KM",
+            "displacement_cc": 1498,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 190 KM",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 e-Hybrid PHEV 204 KM",
+            "displacement_cc": 1498,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 115 KM",
+            "displacement_cc": 1968,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Seat_Leon IV (KL, 2020-). MQB evo platform. 1.0 eTSI and 1.5 eTSI = 48V mild hybrid → PB_95. PHEV 204PS: system 150kW, 6-speed DQ400E wet DSG, ICE 110kW. From 07/2024 facelift: eTSI replaces TSI, 1.5 eTSI 130PS. Cupra-specific variants listed under Cupra Leon."
+        }
+      },
+      {
+        "key": "Seat_Arona_KJ",
+        "wikidata_id": "Q27506025",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 TSI 95 KM",
+            "displacement_cc": 999,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI 115 KM",
+            "displacement_cc": 999,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 e-TSI 110 KM",
+            "displacement_cc": 999,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Seat_Arona (KJ, 2017-). MQB A0 platform. Sibling of VW T-Cross. 1.0 e-TSI = 48V mHEV from facelift 2021 → PB_95. DSG = 7-speed."
+        }
+      },
+      {
+        "key": "Seat_Ateca_KH",
+        "wikidata_id": "Q21069765",
+        "model_year_from": 2016,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 TSI 115 KM",
+            "displacement_cc": 999,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 190 KM",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 4Drive 220 KM",
+            "displacement_cc": 1984,
+            "power_kw": 162,
+            "power_hp": 220,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 115 KM",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2016,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 115 KM",
+            "displacement_cc": 1968,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150 KM",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Seat_Ateca (KH, 2016-). MQB A1 platform. Sibling of Skoda Karoq. Cupra Ateca listed separately under Cupra make. 1.6 TDI dropped at facelift 2020-2021. DSG = 7-speed."
         }
       }
     ],
@@ -32442,6 +36598,326 @@
         "_meta": {
           "notes": "DE Wikipedia Fiat_500 (312, 2007-2024). Produced in Tychy, Poland. Facelifts 2015, 2020. 1.0 mHEV = FireFly 48V BSG (2020 FL). TwinAir = 2-cyl 875cc SGE turbo. TwinAir CNG = gas+petrol bifuel. Dualogic AMT = mapped to automatic. 1.3 Multijet = 55kW pre-2010, 70kW with DPF from 2009. Abarth automatic = Competizione sequential AMT. 500e BEV (332 platform) listed separately."
         }
+      },
+      {
+        "key": "Fiat_Tipo_356",
+        "wikidata_id": "Q3741548",
+        "model_year_from": 2015,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.4 95 KM",
+            "displacement_cc": 1368,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 T-Jet 120 KM",
+            "displacement_cc": 1368,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 Firefly 100 KM",
+            "displacement_cc": 999,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 Hybrid 130 KM",
+            "displacement_cc": 1499,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 MultiJet 120 KM",
+            "displacement_cc": 1598,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 MultiJet 150 KM",
+            "displacement_cc": 1956,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2022,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Fiat_Tipo (356, 2015-). Available as saloon, hatchback, estate. Facelift 2022: 1.4/1.6 MultiJet dropped; new 1.0 Firefly and 1.5 PureTech Hybrid (PSA sourced, 48V mHEV). DSG = 6AT on 1.4T; EAT8 on 1.5 Hybrid."
+        }
+      },
+      {
+        "key": "Fiat_Panda_169",
+        "wikidata_id": "Q190524",
+        "model_year_from": 2003,
+        "model_year_to": 2012,
+        "engines": [
+          {
+            "name": "1.1 Fire 54 KM",
+            "displacement_cc": 1108,
+            "power_kw": 40,
+            "power_hp": 54,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2003,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 Fire 60 KM",
+            "displacement_cc": 1242,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2003,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 Natural Power CNG 77 KM",
+            "displacement_cc": 1368,
+            "power_kw": 57,
+            "power_hp": 77,
+            "fuel_type": "CNG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 MultiJet 75 KM",
+            "displacement_cc": 1248,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2003,
+            "year_to": 2012,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Fiat_Panda (169, 2003-2012). 4x4 variant with same petrol engines. CNG = factory bifuel (petrol/CNG)."
+        }
+      },
+      {
+        "key": "Fiat_Panda_319",
+        "wikidata_id": "Q190524",
+        "model_year_from": 2011,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.2 Fire 69 KM",
+            "displacement_cc": 1242,
+            "power_kw": 51,
+            "power_hp": 69,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "0.9 TwinAir 85 KM",
+            "displacement_cc": 875,
+            "power_kw": 63,
+            "power_hp": 85,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 Hybrid 70 KM",
+            "displacement_cc": 999,
+            "power_kw": 51,
+            "power_hp": 70,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 Hybrid CNG 70 KM",
+            "displacement_cc": 999,
+            "power_kw": 51,
+            "power_hp": 70,
+            "fuel_type": "CNG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 MultiJet 95 KM",
+            "displacement_cc": 1248,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2022,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Fiat_Panda (319, 2011-). 1.0 Hybrid = 12V mHEV (BSG), non-plug → PB_95. 1.0 CNG = factory bifuel. Long lifecycle, still produced. 1.2 Fire discontinued 2022."
+        }
+      },
+      {
+        "key": "Fiat_Punto_199",
+        "wikidata_id": "Q485982",
+        "model_year_from": 2005,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "1.2 Fire 69 KM",
+            "displacement_cc": 1242,
+            "power_kw": 51,
+            "power_hp": 69,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 Fire 77 KM",
+            "displacement_cc": 1368,
+            "power_kw": 57,
+            "power_hp": 77,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "Abarth 1.4 T-Jet 135 KM",
+            "displacement_cc": 1368,
+            "power_kw": 99,
+            "power_hp": 135,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 MultiJet 75 KM",
+            "displacement_cc": 1248,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 MultiJet 85 KM",
+            "displacement_cc": 1248,
+            "power_kw": 63,
+            "power_hp": 85,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 MultiJet 95 KM",
+            "displacement_cc": 1248,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Fiat_Punto (199, 2005-2018). Long lived model; production ended 2018, sold until stock cleared. Abarth Grande Punto: 1.4 T-Jet tuned."
+        }
       }
     ],
     "Tesla": [
@@ -32856,19 +37332,811 @@
         "_meta": {
           "notes": "DE Wikipedia Cupra_Formentor facelift (2024-). EA211 evo 2 replaces EA211 evo. 1.5 eTSI = 48V mild hybrid. VZ5 2.5 TSI 5-cyl = EA855 evo, limited 4000 units, reintroduced 2025. e-Hybrid PHEV upgraded to 1.5T EA211 evo 2; VZ variant ICE 130kW/177PS + 85kW e-motor = system 200kW/272PS. TDI switches to 7DSG, AWD diesel discontinued."
         }
+      },
+      {
+        "key": "Cupra_Ateca",
+        "wikidata_id": "Q48793918",
+        "model_year_from": 2018,
+        "model_year_to": 2024,
+        "engines": [
+          {
+            "name": "2.0 TSI 300 KM",
+            "displacement_cc": 1984,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 190 KM",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": 2024,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Seat_Ateca/Cupra Ateca (KH, 2018-2024). MQB A1 platform. Launched as Seat Ateca Cupra 300PS (2018); became Cupra Ateca 2020. Entry variants 1.5T/2.0T 190PS added 06/2023. Production ended 04/2024. No diesel, no PHEV. All 7-speed DSG."
+        }
+      },
+      {
+        "key": "Cupra_Leon_KL",
+        "wikidata_id": "Q113839528",
+        "model_year_from": 2020,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 eTSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 245 KM",
+            "displacement_cc": 1984,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 4Drive 310 KM",
+            "displacement_cc": 1984,
+            "power_kw": 228,
+            "power_hp": 310,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 e-Hybrid PHEV 204 KM",
+            "displacement_cc": 1395,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "VZ 1.4 e-Hybrid PHEV 245 KM",
+            "displacement_cc": 1395,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 e-Hybrid PHEV 204 KM",
+            "displacement_cc": 1498,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "VZ 1.5 e-Hybrid PHEV 272 KM",
+            "displacement_cc": 1498,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Cupra_Leon (KL, 2020-). MQB evo platform. 1.5 eTSI 48V mHEV → PB_95. 2.0 TSI 245PS FWD; 310PS AWD 4Drive Sportstourer. PHEV pre-facelift: 1.4T (110kW ICE + 85kW e-motor), 6-speed DQ400E wet DSG. Post-facelift (07/2024): upgraded to 1.5T engine, VZ 272PS system 200kW."
+        }
+      }
+    ],
+    "Mazda": [
+      {
+        "key": "Mazda_CX5_KE",
+        "wikidata_id": "Q2707048",
+        "model_year_from": 2011,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "SKYACTIV-G 2.0 165 KM",
+            "displacement_cc": 1998,
+            "power_kw": 121,
+            "power_hp": 165,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "SKYACTIV-G 2.5 192 KM",
+            "displacement_cc": 2488,
+            "power_kw": 141,
+            "power_hp": 192,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "SKYACTIV-D 2.2 150 KM",
+            "displacement_cc": 2191,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "SKYACTIV-D 2.2 175 KM",
+            "displacement_cc": 2191,
+            "power_kw": 129,
+            "power_hp": 175,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2017,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mazda_CX-5 (KE, 2011-2017). SKYACTIV platform. 6AT = SKYACTIV-Drive torque converter. 2.2D with optional AWD."
+        }
+      },
+      {
+        "key": "Mazda_CX5_KF",
+        "wikidata_id": "Q2707048",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "SKYACTIV-G 2.0 165 KM",
+            "displacement_cc": 1998,
+            "power_kw": 121,
+            "power_hp": 165,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "SKYACTIV-G 2.5 194 KM",
+            "displacement_cc": 2488,
+            "power_kw": 143,
+            "power_hp": 194,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "SKYACTIV-G 2.5T 231 KM",
+            "displacement_cc": 2488,
+            "power_kw": 170,
+            "power_hp": 231,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "e-SKYACTIV G 2.0 mHEV 165 KM",
+            "displacement_cc": 1998,
+            "power_kw": 121,
+            "power_hp": 165,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "SKYACTIV-D 2.2 150 KM",
+            "displacement_cc": 2191,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "SKYACTIV-D 2.2 184 KM",
+            "displacement_cc": 2191,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mazda_CX-5 (KF, 2017-). SKYACTIV-Drive 6AT torque converter. e-SKYACTIV G = 24V mHEV from 2022 → PB_95. 2.5T turbocharged petrol from 2019. Optional AWD on most variants."
+        }
+      },
+      {
+        "key": "Mazda_3_BP",
+        "wikidata_id": "Q2106266",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "SKYACTIV-G 2.0 122 KM",
+            "displacement_cc": 1998,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "e-SKYACTIV G 2.0 mHEV 122 KM",
+            "displacement_cc": 1998,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "e-SKYACTIV G 2.0 mHEV 150 KM",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "SKYACTIV-X 2.0 186 KM",
+            "displacement_cc": 1998,
+            "power_kw": 137,
+            "power_hp": 186,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "SKYACTIV-D 1.8 116 KM",
+            "displacement_cc": 1756,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mazda_3 (BP, 2019-). SKYACTIV-X = SPCCI (spark-controlled compression ignition), 24V mHEV integrated. e-SKYACTIV G = 24V mHEV. SKYACTIV-Drive 6AT."
+        }
+      },
+      {
+        "key": "Mazda_CX30_DM",
+        "wikidata_id": "Q63396882",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "SKYACTIV-G 2.0 122 KM",
+            "displacement_cc": 1998,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "e-SKYACTIV G 2.0 mHEV 150 KM",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "SKYACTIV-X 2.0 186 KM",
+            "displacement_cc": 1998,
+            "power_kw": 137,
+            "power_hp": 186,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "e-SKYACTIV G 2.0 e-Drive HEV 204 KM",
+            "displacement_cc": 1998,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "SKYACTIV-D 1.8 116 KM",
+            "displacement_cc": 1756,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mazda_CX-30 (DM, 2019-). e-SKYACTIV G 2.0 e-Drive = full HEV (series-parallel), system 150kW, non-plug → PB_95. SKYACTIV-Drive 6AT."
+        }
+      },
+      {
+        "key": "Mazda_CX60_KH",
+        "wikidata_id": "Q111840940",
+        "model_year_from": 2022,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "e-SKYACTIV G 2.5 mHEV 231 KM",
+            "displacement_cc": 2488,
+            "power_kw": 170,
+            "power_hp": 231,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "e-SKYACTIV PHEV 2.5 327 KM",
+            "displacement_cc": 2488,
+            "power_kw": 241,
+            "power_hp": 327,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "e-SKYACTIV D 3.3 200 KM",
+            "displacement_cc": 3283,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "e-SKYACTIV D 3.3 249 KM",
+            "displacement_cc": 3283,
+            "power_kw": 183,
+            "power_hp": 249,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mazda_CX-60 (KH, 2022-). New large platform, inline-6 diesel. PHEV: 2.5L Atkinson + e-motor, system 241kW plug-in. 8AT torque converter."
+        }
+      }
+    ],
+    "Mitsubishi": [
+      {
+        "key": "Mitsubishi_Outlander_III",
+        "wikidata_id": "Q1421099",
+        "model_year_from": 2012,
+        "model_year_to": 2022,
+        "engines": [
+          {
+            "name": "2.0 MIVEC 150 KM",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2012,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.4 PHEV 224 KM",
+            "displacement_cc": 2360,
+            "power_kw": 165,
+            "power_hp": 224,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 Di-D 150 KM",
+            "displacement_cc": 2268,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2021,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mitsubishi_Outlander (III, GF, 2012-2022). PHEV: 2.4 Atkinson + front + rear e-motors, series-parallel; system 165kW, 13.8kWh plug-in. CVT = INVECS-III CVT. Diesel discontinued 2021."
+        }
+      },
+      {
+        "key": "Mitsubishi_Outlander_IV",
+        "wikidata_id": "Q1421099",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.5 PHEV 302 KM",
+            "displacement_cc": 2488,
+            "power_kw": 222,
+            "power_hp": 302,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mitsubishi_Outlander (IV, GN, 2021-). PHEV only in EU. 2.5 Atkinson + dual e-motor AWD, 20kWh plug-in, system 222kW/302PS. No ICE-only or diesel."
+        }
+      },
+      {
+        "key": "Mitsubishi_ASX_I",
+        "wikidata_id": "Q1323891",
+        "model_year_from": 2010,
+        "model_year_to": 2022,
+        "engines": [
+          {
+            "name": "1.6 MIVEC 117 KM",
+            "displacement_cc": 1590,
+            "power_kw": 86,
+            "power_hp": 117,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2010,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 MIVEC 150 KM",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "CVT"
+            ],
+            "year_from": 2010,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Di-D 114 KM",
+            "displacement_cc": 1590,
+            "power_kw": 84,
+            "power_hp": 114,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 Di-D 150 KM",
+            "displacement_cc": 2268,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2017,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mitsubishi_ASX (I, GA, 2010-2022). Long lifecycle. Facelift 2016, 2019. CVT = INVECS-III. 2.2 Di-D discontinued 2017."
+        }
+      },
+      {
+        "key": "Mitsubishi_ASX_II",
+        "wikidata_id": "Q1323891",
+        "model_year_from": 2023,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 PureTech 100 KM",
+            "displacement_cc": 999,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 PureTech 140 KM mHEV",
+            "displacement_cc": 1332,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 Hybrid 143 KM HEV",
+            "displacement_cc": 1598,
+            "power_kw": 105,
+            "power_hp": 143,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "PHEV 190 KM",
+            "displacement_cc": 1598,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mitsubishi_ASX (II, 2023-). Rebadged Renault Captur II. CMP platform PSA. 1.6 Hybrid = E-Tech non-plug dog-clutch DHT → automatic. PHEV = E-Tech plug-in."
+        }
+      },
+      {
+        "key": "Mitsubishi_EclipseCross_GK",
+        "wikidata_id": "Q29562738",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5T 163 KM",
+            "displacement_cc": 1499,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2017,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.4 PHEV 188 KM",
+            "displacement_cc": 2360,
+            "power_kw": 138,
+            "power_hp": 188,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.4 PHEV 188 KM (facelift)",
+            "displacement_cc": 2360,
+            "power_kw": 138,
+            "power_hp": 188,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mitsubishi_Eclipse_Cross (GK, 2017-). Facelift 2021: PHEV added, 1.5T petrol retained in some markets, SUV-coupé rear restyled to SUV. PHEV: 2.4 Atkinson + dual e-motor AWD. CVT = INVECS-III."
+        }
       }
     ]
   },
   "stats": {
-    "model_count": 303,
-    "engine_count": 2191,
+    "model_count": 366,
+    "engine_count": 2535,
     "engines_by_confidence": {
-      "high": 2142,
+      "high": 2486,
       "medium": 49
     },
     "models_by_confidence": {
       "medium": 23,
-      "high": 280
+      "high": 343
     },
     "models_with_low_confidence": 0
   }

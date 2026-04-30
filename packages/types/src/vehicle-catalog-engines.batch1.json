@@ -33969,6 +33969,119 @@
         "_meta": {
           "notes": "DE Wikipedia Hyundai_Elantra_XD (2000-2006). C/D-segment. G4ED (1.6) / G4GC (2.0) Theta engines. D4EA diesel. Sold in PL as affordable Korean alternative to VW/Ford."
         }
+      },
+      {
+        "key": "Hyundai_Ioniq5_NE1",
+        "wikidata_id": "Q105765698",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "58kWh RWD 170",
+            "displacement_cc": 0,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "72.6kWh RWD 217",
+            "displacement_cc": 0,
+            "power_kw": 160,
+            "power_hp": 217,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "72.6kWh AWD 305",
+            "displacement_cc": 0,
+            "power_kw": 225,
+            "power_hp": 305,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "84kWh RWD 225",
+            "displacement_cc": 0,
+            "power_kw": 165,
+            "power_hp": 225,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "E-GMP 800V; electric mid-size crossover"
+        }
+      },
+      {
+        "key": "Hyundai_Ioniq6_CE1",
+        "wikidata_id": "Q113568091",
+        "model_year_from": 2022,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "53kWh RWD 151",
+            "displacement_cc": 0,
+            "power_kw": 111,
+            "power_hp": 151,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "77.4kWh RWD 229",
+            "displacement_cc": 0,
+            "power_kw": 168,
+            "power_hp": 229,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "77.4kWh AWD 325",
+            "displacement_cc": 0,
+            "power_kw": 239,
+            "power_hp": 325,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "E-GMP 800V; electric fastback sedan"
+        }
       }
     ],
     "Kia": [
@@ -34911,6 +35024,69 @@
         ],
         "_meta": {
           "notes": "DE Wikipedia Kia_Ceed (ED, 2006-2012). C-segment. First Kia designed in Europe (Frankfurt). SW estate variant too. 1.6 CRDi = U2 engine. Facelift 2009 = pro_cee'd added."
+        }
+      },
+      {
+        "key": "Kia_EV6_CV1",
+        "wikidata_id": "Q107082246",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "58kWh RWD 170",
+            "displacement_cc": 0,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "77.4kWh RWD 229",
+            "displacement_cc": 0,
+            "power_kw": 168,
+            "power_hp": 229,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "77.4kWh AWD 325",
+            "displacement_cc": 0,
+            "power_kw": 239,
+            "power_hp": 325,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GT 77.4kWh AWD 585",
+            "displacement_cc": 0,
+            "power_kw": 430,
+            "power_hp": 585,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "E-GMP platform; 800V architecture, Hyundai Ioniq 5 sibling"
         }
       }
     ],
@@ -40625,6 +40801,43 @@
         "_meta": {
           "notes": "DE Wikipedia Nissan_Almera_N16 (2000-2006). C/D border segment. QG15DE/QG18DE petrol. K9K (1.5 dCi) / YD22DDTi diesel. Popular in PL as affordable reliable sedan."
         }
+      },
+      {
+        "key": "Nissan_Leaf_Mk2_ZE1",
+        "wikidata_id": "Q1140516",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "40kWh 150",
+            "displacement_cc": 0,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "62kWh e+ 217",
+            "displacement_cc": 0,
+            "power_kw": 160,
+            "power_hp": 217,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "ZE1 platform; one of the first mass-market EVs in PL"
+        }
       }
     ],
     "Volvo": [
@@ -41716,6 +41929,43 @@
         ],
         "_meta": {
           "notes": "DE Wikipedia Volvo_S90 (II/234, 2016-). SPA platform, D-segment luxury. T6 = turbo+supercharged 2.0T. B6 = 48V ISG mHEV 221kW. T8: 2.0T + rear e-axle. Diesel dropped 2020. DSG = 8AT Geartronic."
+        }
+      },
+      {
+        "key": "Volvo_C40_E542",
+        "wikidata_id": "Q107082249",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "Recharge Single 231",
+            "displacement_cc": 0,
+            "power_kw": 170,
+            "power_hp": 231,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Recharge Twin AWD 408",
+            "displacement_cc": 0,
+            "power_kw": 300,
+            "power_hp": 408,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "BEV-only coupe SUV; shares XC40 underpinnings"
         }
       }
     ],
@@ -43325,6 +43575,56 @@
         "_meta": {
           "notes": "DE Wikipedia Peugeot_406 (8B/C, 1995-2004). D-segment. XU/EW petrol, DW diesel. Coupe by Pininfarina. HDi = common rail from 1999. Sedan/estate/coupe. Popular in PL 1998-2006 especially diesel."
         }
+      },
+      {
+        "key": "Peugeot_5008_II",
+        "wikidata_id": "Q131487063",
+        "model_year_from": 2024,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.2 PureTech 136",
+            "displacement_cc": 1199,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "e-5008 EV 210",
+            "displacement_cc": 0,
+            "power_kw": 157,
+            "power_hp": 210,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "e-5008 EV AWD 320",
+            "displacement_cc": 0,
+            "power_kw": 240,
+            "power_hp": 320,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "STLA Medium platform; first Peugeot 5008 as BEV option"
+        }
       }
     ],
     "Seat": [
@@ -44362,6 +44662,97 @@
         ],
         "_meta": {
           "notes": "DE Wikipedia Seat_Ibiza_6K (1993-2002). PQ24 platform. AEH/AKQ/ABF/APE petrol, AGP/AGR diesel. GTI 2.0 = ABF. 3/5-door + Cordoba sedan. Facelift 1999. Popular in PL 1995-2004."
+        }
+      },
+      {
+        "key": "Seat_Tarraco_KN2",
+        "wikidata_id": "Q56007964",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 TSI 150",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 190",
+            "displacement_cc": 1984,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI 245",
+            "displacement_cc": 1984,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI e-Hybrid 245",
+            "displacement_cc": 1395,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 150",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDI 190",
+            "displacement_cc": 1968,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "MQB platform; 7-seat SUV flagship of SEAT range"
         }
       }
     ],
@@ -55230,18 +55621,897 @@
           "notes": "Flagship DS SUV; EMP2 platform"
         }
       }
+    ],
+    "Lancia": [
+      {
+        "key": "Lancia_Y_840A",
+        "wikidata_id": "Q697981",
+        "model_year_from": 1995,
+        "model_year_to": 2003,
+        "engines": [
+          {
+            "name": "1.1i 54",
+            "displacement_cc": 1108,
+            "power_kw": 40,
+            "power_hp": 54,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 2003,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2i 60",
+            "displacement_cc": 1242,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 2003,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4i 75",
+            "displacement_cc": 1372,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 2003,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6i 103",
+            "displacement_cc": 1581,
+            "power_kw": 76,
+            "power_hp": 103,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 2003,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 JTD 100",
+            "displacement_cc": 1910,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1999,
+            "year_to": 2003,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "840A platform; popular compact in PL 1990s-2000s"
+        }
+      },
+      {
+        "key": "Lancia_Ypsilon_Mk2_843",
+        "wikidata_id": "Q1570697",
+        "model_year_from": 2003,
+        "model_year_to": 2011,
+        "engines": [
+          {
+            "name": "1.2 8V 65",
+            "displacement_cc": 1242,
+            "power_kw": 48,
+            "power_hp": 65,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2003,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 T-Jet 95",
+            "displacement_cc": 1368,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 Multijet 70",
+            "displacement_cc": 1248,
+            "power_kw": 51,
+            "power_hp": 70,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2003,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 Multijet 95",
+            "displacement_cc": 1248,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2011,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "843 platform; shared underpinnings with Fiat Grande Punto"
+        }
+      },
+      {
+        "key": "Lancia_Ypsilon_Mk3_846",
+        "wikidata_id": "Q2094577",
+        "model_year_from": 2011,
+        "model_year_to": 2023,
+        "engines": [
+          {
+            "name": "1.2 8V 69",
+            "displacement_cc": 1242,
+            "power_kw": 51,
+            "power_hp": 69,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "0.9 TwinAir 85",
+            "displacement_cc": 875,
+            "power_kw": 63,
+            "power_hp": 85,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 Multijet 75",
+            "displacement_cc": 1248,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 Multijet 95",
+            "displacement_cc": 1248,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "846 platform; shared with Fiat 500 / Punto"
+        }
+      },
+      {
+        "key": "Lancia_Ypsilon_Mk4_2024",
+        "wikidata_id": "Q130434668",
+        "model_year_from": 2024,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "Hybrid 100",
+            "displacement_cc": 1199,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "EV 115kW",
+            "displacement_cc": 0,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "STLA Small platform; brand revival model"
+        }
+      }
+    ],
+    "Jaguar": [
+      {
+        "key": "Jaguar_XE_X760",
+        "wikidata_id": "Q17091070",
+        "model_year_from": 2015,
+        "model_year_to": 2023,
+        "engines": [
+          {
+            "name": "2.0 P200 200",
+            "displacement_cc": 1997,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 P250 250",
+            "displacement_cc": 1997,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 P300 300",
+            "displacement_cc": 1997,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 D150 150",
+            "displacement_cc": 1997,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 D180 180",
+            "displacement_cc": 1997,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 D204 204",
+            "displacement_cc": 1997,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Compact exec sedan/saloon; Ingenium engines"
+        }
+      },
+      {
+        "key": "Jaguar_XF_Mk2_X260",
+        "wikidata_id": "Q18391649",
+        "model_year_from": 2015,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.0 P250 250",
+            "displacement_cc": 1997,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 P300 300",
+            "displacement_cc": 1997,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 D180 180",
+            "displacement_cc": 1997,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 D200 200",
+            "displacement_cc": 1997,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "X260 platform; exec sedan/estate"
+        }
+      },
+      {
+        "key": "Jaguar_FPace_X761",
+        "wikidata_id": "Q21009559",
+        "model_year_from": 2016,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.0 P250 250",
+            "displacement_cc": 1997,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 P300 300",
+            "displacement_cc": 1997,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 P400e PHEV 400",
+            "displacement_cc": 1997,
+            "power_kw": 294,
+            "power_hp": 400,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 D180 180",
+            "displacement_cc": 1997,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 D204 204",
+            "displacement_cc": 1997,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "X761 platform; mid-size performance SUV"
+        }
+      }
+    ],
+    "Smart": [
+      {
+        "key": "Smart_ForTwo_Mk2_W450",
+        "wikidata_id": "Q697985",
+        "model_year_from": 1998,
+        "model_year_to": 2007,
+        "engines": [
+          {
+            "name": "0.6T 45",
+            "displacement_cc": 599,
+            "power_kw": 33,
+            "power_hp": 45,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1998,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "0.6T 61",
+            "displacement_cc": 599,
+            "power_kw": 45,
+            "power_hp": 61,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "0.8 CDI 41",
+            "displacement_cc": 799,
+            "power_kw": 30,
+            "power_hp": 41,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1999,
+            "year_to": 2007,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "W450 platform; city microcar, common in PL cities"
+        }
+      },
+      {
+        "key": "Smart_ForTwo_Mk3_W451",
+        "wikidata_id": "Q1066130",
+        "model_year_from": 2007,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "1.0 MHD 61",
+            "displacement_cc": 999,
+            "power_kw": 45,
+            "power_hp": 61,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 MHD 71",
+            "displacement_cc": 999,
+            "power_kw": 52,
+            "power_hp": 71,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0T Brabus 84",
+            "displacement_cc": 999,
+            "power_kw": 62,
+            "power_hp": 84,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "0.8 CDI 41",
+            "displacement_cc": 799,
+            "power_kw": 30,
+            "power_hp": 41,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "W451 platform; redesigned ForTwo"
+        }
+      },
+      {
+        "key": "Smart_ForTwo_Mk4_C453",
+        "wikidata_id": "Q18204133",
+        "model_year_from": 2014,
+        "model_year_to": 2020,
+        "engines": [
+          {
+            "name": "1.0 71",
+            "displacement_cc": 999,
+            "power_kw": 52,
+            "power_hp": 71,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "0.9T 90",
+            "displacement_cc": 898,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "EQ 60kW",
+            "displacement_cc": 0,
+            "power_kw": 60,
+            "power_hp": 82,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "C453 platform; last ICE ForTwo generation"
+        }
+      }
+    ],
+    "MG": [
+      {
+        "key": "MG_ZS_ICE",
+        "wikidata_id": "Q47473124",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0T VTi 111",
+            "displacement_cc": 998,
+            "power_kw": 82,
+            "power_hp": 111,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 VTi 106",
+            "displacement_cc": 1490,
+            "power_kw": 78,
+            "power_hp": 106,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2021,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Compact ICE crossover; budget segment"
+        }
+      },
+      {
+        "key": "MG_ZS_EV",
+        "wikidata_id": "Q87503065",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "ZS EV 44.5kWh 143",
+            "displacement_cc": 0,
+            "power_kw": 105,
+            "power_hp": 143,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "ZS EV Long Range 77kWh 177",
+            "displacement_cc": 0,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "EV variant of ZS; growing presence in PL"
+        }
+      },
+      {
+        "key": "MG_MG4_EV_GSA",
+        "wikidata_id": "Q113569046",
+        "model_year_from": 2022,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "51kWh Standard 170",
+            "displacement_cc": 0,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "64kWh Long Range 204",
+            "displacement_cc": 0,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "77kWh Extended 245",
+            "displacement_cc": 0,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "MSP platform; competitive EV hatchback in PL"
+        }
+      }
+    ],
+    "BYD": [
+      {
+        "key": "BYD_Atto3",
+        "wikidata_id": "Q110622960",
+        "model_year_from": 2022,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "60.5kWh 204",
+            "displacement_cc": 0,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "87kWh Extended 204",
+            "displacement_cc": 0,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "BYD e-Platform 3.0; most popular BYD in PL"
+        }
+      },
+      {
+        "key": "BYD_Seal",
+        "wikidata_id": "Q116700938",
+        "model_year_from": 2023,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "82.5kWh RWD 313",
+            "displacement_cc": 0,
+            "power_kw": 230,
+            "power_hp": 313,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "82.5kWh AWD 530",
+            "displacement_cc": 0,
+            "power_kw": 390,
+            "power_hp": 530,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "BYD e-Platform 3.0; Tesla Model 3 rival"
+        }
+      },
+      {
+        "key": "BYD_Dolphin",
+        "wikidata_id": "Q110441895",
+        "model_year_from": 2023,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "44.9kWh 95",
+            "displacement_cc": 0,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "60.4kWh 177",
+            "displacement_cc": 0,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "BYD e-Platform 3.0; budget EV hatchback"
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 611,
-    "engine_count": 3614,
+    "model_count": 634,
+    "engine_count": 3691,
     "engines_by_confidence": {
-      "high": 3555,
+      "high": 3632,
       "medium": 59,
       "low": 0
     },
     "models_by_confidence": {
-      "all_high": 580,
+      "all_high": 603,
       "has_medium": 31,
       "has_low": 0
     },

@@ -485,7 +485,6 @@ describe('PhotoPipelineWorker', () => {
           flag_reason: 'no_station_match',
           gps_lat: null,
           gps_lng: null,
-          photo_r2_key: null,
         },
       });
     });
@@ -501,15 +500,13 @@ describe('PhotoPipelineWorker', () => {
       );
     });
 
-    it('deletes photo from R2 on rejection', async () => {
+    it('keeps photo in R2 on rejection (cleanup worker handles deletion)', async () => {
       mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
       mockStationService.findNearbyWithDistance.mockResolvedValueOnce([]);
 
       await capturedProcessor!(makeJob('sub-123'));
 
-      expect(mockStorageService.deleteObject).toHaveBeenCalledWith(
-        'submissions/user-abc/sub-123.jpg',
-      );
+      expect(mockStorageService.deleteObject).not.toHaveBeenCalled();
     });
 
     it('completes job without throwing — no BullMQ retry on GPS failure', async () => {
@@ -550,19 +547,16 @@ describe('PhotoPipelineWorker', () => {
           flag_reason: 'no_gps_coordinates',
           gps_lat: null,
           gps_lng: null,
-          photo_r2_key: null,
         },
       });
     });
 
-    it('deletes photo from R2 on no-GPS rejection', async () => {
+    it('keeps photo in R2 on no-GPS rejection (cleanup worker handles deletion)', async () => {
       mockPrismaService.submission.findUnique.mockResolvedValueOnce(noGpsSubmission);
 
       await capturedProcessor!(makeJob('sub-123'));
 
-      expect(mockStorageService.deleteObject).toHaveBeenCalledWith(
-        'submissions/user-abc/sub-123.jpg',
-      );
+      expect(mockStorageService.deleteObject).not.toHaveBeenCalled();
     });
 
     it('does not call findNearbyWithDistance when GPS is missing', async () => {
@@ -668,19 +662,16 @@ describe('PhotoPipelineWorker', () => {
           flag_reason: 'dlq_final_failure',
           gps_lat: null,
           gps_lng: null,
-          photo_r2_key: null,
         },
       });
     });
 
-    it('deletes photo from R2 on final failure', async () => {
+    it('keeps photo in R2 on final failure (cleanup worker handles deletion)', async () => {
       const job = makeFailedJob('sub-123', 4, 4);
       capturedFailedHandler!(job, new Error('Claude API timeout'));
       await flushPromises();
 
-      expect(mockStorageService.deleteObject).toHaveBeenCalledWith(
-        'submissions/user-abc/sub-123.jpg',
-      );
+      expect(mockStorageService.deleteObject).not.toHaveBeenCalled();
     });
 
     it('logs [OPS-ALERT] with submission ID on final failure', async () => {

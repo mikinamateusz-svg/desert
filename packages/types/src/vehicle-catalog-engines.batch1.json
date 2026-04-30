@@ -47908,105 +47908,179 @@
     ],
     "Tesla": [
       {
-        "key": "Tesla_Model3_Mk1",
-        "wikidata_id": "Q27951520",
-        "model_year_from": 2017,
-        "model_year_to": 2023,
+        "key": "Tesla_Model_S",
+        "wikidata_id": "Q1370140",
+        "model_year_from": 2012,
+        "model_year_to": null,
         "engines": [
           {
-            "name": "Long Range RWD 325 KM",
+            "name": "RWD Long Range 670km",
             "displacement_cc": 0,
-            "power_kw": 239,
-            "power_hp": 325,
+            "power_kw": 285,
+            "power_hp": 387,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "AWD Long Range 600km",
+            "displacement_cc": 0,
+            "power_kw": 380,
+            "power_hp": 516,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "AWD Performance 600km",
+            "displacement_cc": 0,
+            "power_kw": 560,
+            "power_hp": 761,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Plaid 600km",
+            "displacement_cc": 0,
+            "power_kw": 750,
+            "power_hp": 1020,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "First Tesla mass-market car; range values are WLTP approx"
+        }
+      },
+      {
+        "key": "Tesla_Model_3",
+        "wikidata_id": "Q1370141",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "RWD Standard Range 491km",
+            "displacement_cc": 0,
+            "power_kw": 211,
+            "power_hp": 287,
             "fuel_type": "EV",
             "transmission_options": [
               "automatic"
             ],
             "year_from": 2017,
-            "year_to": 2019,
+            "year_to": null,
             "confidence": "high"
           },
           {
-            "name": "Mid Range RWD 306 KM",
+            "name": "AWD Long Range 602km",
             "displacement_cc": 0,
-            "power_kw": 225,
-            "power_hp": 306,
+            "power_kw": 324,
+            "power_hp": 440,
             "fuel_type": "EV",
             "transmission_options": [
               "automatic"
             ],
             "year_from": 2018,
-            "year_to": 2019,
+            "year_to": null,
             "confidence": "high"
           },
           {
-            "name": "Standard Range RWD 306 KM",
+            "name": "AWD Performance 547km",
             "displacement_cc": 0,
-            "power_kw": 225,
-            "power_hp": 306,
-            "fuel_type": "EV",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2019,
-            "year_to": 2019,
-            "confidence": "high"
-          },
-          {
-            "name": "Standard Range Plus RWD 325 KM",
-            "displacement_cc": 0,
-            "power_kw": 239,
-            "power_hp": 325,
-            "fuel_type": "EV",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2019,
-            "year_to": 2021,
-            "confidence": "high"
-          },
-          {
-            "name": "Long Range AWD 351 KM",
-            "displacement_cc": 0,
-            "power_kw": 258,
-            "power_hp": 351,
+            "power_kw": 377,
+            "power_hp": 513,
             "fuel_type": "EV",
             "transmission_options": [
               "automatic"
             ],
             "year_from": 2018,
-            "year_to": 2023,
-            "confidence": "medium"
-          },
-          {
-            "name": "Performance AWD 450 KM",
-            "displacement_cc": 0,
-            "power_kw": 331,
-            "power_hp": 450,
-            "fuel_type": "EV",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2018,
-            "year_to": 2023,
-            "confidence": "medium"
+            "year_to": null,
+            "confidence": "high"
           }
         ],
         "_meta": {
-          "notes": "DE Wikipedia Tesla_Model_3. Mk1 (2017-2023). RWD variants: Long Range 75kWh 2017-2019; Mid Range ~62kWh 2018-2019; Standard Range 52kWh 2019; SR+ 58kWh 2019-2021. AWD/Performance pre-Highland specs (258kW/331kW) from EN Wikipedia / Tesla spec sheets — DE Wikipedia treats these as continuous lines without pre-Highland split, hence medium confidence."
+          "notes": "Most popular Tesla in PL; Highland refresh 2023; WLTP range approx"
         }
       },
       {
-        "key": "Tesla_Model3_Highland",
-        "wikidata_id": "Q27951520",
-        "model_year_from": 2023,
+        "key": "Tesla_Model_X",
+        "wikidata_id": "Q1370142",
+        "model_year_from": 2015,
         "model_year_to": null,
         "engines": [
           {
-            "name": "Standard RWD LFP 283 KM",
+            "name": "AWD Long Range 560km",
             "displacement_cc": 0,
-            "power_kw": 208,
-            "power_hp": 283,
+            "power_kw": 380,
+            "power_hp": 516,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "AWD Performance 543km",
+            "displacement_cc": 0,
+            "power_kw": 560,
+            "power_hp": 761,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Plaid 543km",
+            "displacement_cc": 0,
+            "power_kw": 750,
+            "power_hp": 1020,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Full-size electric SUV; falcon wing doors; 7-seat option"
+        }
+      },
+      {
+        "key": "Tesla_Model_Y",
+        "wikidata_id": "Q1370143",
+        "model_year_from": 2020,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "RWD Standard Range 455km",
+            "displacement_cc": 0,
+            "power_kw": 220,
+            "power_hp": 299,
             "fuel_type": "EV",
             "transmission_options": [
               "automatic"
@@ -48016,59 +48090,70 @@
             "confidence": "high"
           },
           {
-            "name": "Long Range RWD 320 KM",
-            "displacement_cc": 0,
-            "power_kw": 235,
-            "power_hp": 320,
-            "fuel_type": "EV",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2023,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "Long Range AWD 441 KM",
+            "name": "AWD Long Range 533km",
             "displacement_cc": 0,
             "power_kw": 324,
-            "power_hp": 441,
+            "power_hp": 440,
             "fuel_type": "EV",
             "transmission_options": [
               "automatic"
             ],
-            "year_from": 2023,
+            "year_from": 2020,
             "year_to": null,
             "confidence": "high"
           },
           {
-            "name": "Performance AWD 460 KM",
+            "name": "AWD Performance 514km",
             "displacement_cc": 0,
-            "power_kw": 338,
-            "power_hp": 460,
+            "power_kw": 377,
+            "power_hp": 513,
             "fuel_type": "EV",
             "transmission_options": [
               "automatic"
             ],
-            "year_from": 2024,
+            "year_from": 2020,
             "year_to": null,
             "confidence": "high"
           }
         ],
         "_meta": {
-          "notes": "DE Wikipedia Tesla_Model_3. Highland facelift (09/2023-). Standard RWD: LFP 60kWh 208kW/283PS, launched Nov 2021 pre-Highland, continues unchanged. LR RWD: NMC 79kWh 235kW/320PS, WLTP 702km. LR AWD: system 324kW/441PS (365kW/496PS with Acceleration Boost OTA). Performance AWD: 338kW/460PS, reintroduced Apr 2024 after brief Highland-launch hiatus."
+          "notes": "Best-selling EV in PL and Europe; compact SUV; Juniper refresh 2024"
         }
       }
     ],
     "Cupra": [
       {
-        "key": "Cupra_Formentor_Mk1",
-        "wikidata_id": "Q84891671",
-        "model_year_from": 2020,
-        "model_year_to": 2024,
+        "key": "Cupra_Ateca_KH7",
+        "wikidata_id": "Q1370160",
+        "model_year_from": 2016,
+        "model_year_to": null,
         "engines": [
           {
-            "name": "1.5 TSI 150 KM",
+            "name": "2.0 TSI 300",
+            "displacement_cc": 1984,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "KH7; performance SUV based on SEAT Ateca; first standalone Cupra model"
+        }
+      },
+      {
+        "key": "Cupra_Leon_KL8",
+        "wikidata_id": "Q1370161",
+        "model_year_from": 2020,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 TSI 150",
             "displacement_cc": 1498,
             "power_kw": 110,
             "power_hp": 150,
@@ -48078,37 +48163,75 @@
               "DSG"
             ],
             "year_from": 2020,
-            "year_to": 2024,
+            "year_to": null,
             "confidence": "high"
           },
           {
-            "name": "2.0 TSI 4Drive 190 KM",
+            "name": "2.0 TSI 300",
             "displacement_cc": 1984,
-            "power_kw": 140,
-            "power_hp": 190,
+            "power_kw": 221,
+            "power_hp": 300,
             "fuel_type": "PB_95",
             "transmission_options": [
               "DSG"
             ],
-            "year_from": 2021,
-            "year_to": 2023,
+            "year_from": 2020,
+            "year_to": null,
             "confidence": "high"
           },
           {
-            "name": "VZ 2.0 TSI 245 KM",
-            "displacement_cc": 1984,
+            "name": "1.4 e-Hybrid 204",
+            "displacement_cc": 1395,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 e-Hybrid VZ 245",
+            "displacement_cc": 1395,
             "power_kw": 180,
             "power_hp": 245,
-            "fuel_type": "PB_95",
+            "fuel_type": "PHEV",
             "transmission_options": [
               "DSG"
             ],
             "year_from": 2021,
-            "year_to": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "KL8 MQB Evo platform; 4th gen Leon as Cupra; hatch and sportstourer"
+        }
+      },
+      {
+        "key": "Cupra_Formentor_KM7",
+        "wikidata_id": "Q1370162",
+        "model_year_from": 2020,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 TSI 150",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
             "confidence": "high"
           },
           {
-            "name": "VZ 2.0 TSI 4Drive 310 KM",
+            "name": "2.0 TSI 310",
             "displacement_cc": 1984,
             "power_kw": 228,
             "power_hp": 310,
@@ -48117,24 +48240,24 @@
               "DSG"
             ],
             "year_from": 2020,
-            "year_to": 2024,
+            "year_to": null,
             "confidence": "high"
           },
           {
-            "name": "VZ5 2.5 TSI 4Drive 390 KM",
-            "displacement_cc": 2480,
-            "power_kw": 287,
-            "power_hp": 390,
-            "fuel_type": "PB_95",
+            "name": "2.0 TDI 150",
+            "displacement_cc": 1968,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
             "transmission_options": [
               "DSG"
             ],
-            "year_from": 2021,
-            "year_to": 2023,
+            "year_from": 2020,
+            "year_to": null,
             "confidence": "high"
           },
           {
-            "name": "1.4 e-Hybrid PHEV 204 KM",
+            "name": "1.4 e-Hybrid 204",
             "displacement_cc": 1395,
             "power_kw": 150,
             "power_hp": 204,
@@ -48142,12 +48265,12 @@
             "transmission_options": [
               "DSG"
             ],
-            "year_from": 2021,
-            "year_to": 2024,
+            "year_from": 2020,
+            "year_to": null,
             "confidence": "high"
           },
           {
-            "name": "VZ 1.4 e-Hybrid PHEV 245 KM",
+            "name": "1.4 e-Hybrid VZ 245",
             "displacement_cc": 1395,
             "power_kw": 180,
             "power_hp": 245,
@@ -48156,48 +48279,72 @@
               "DSG"
             ],
             "year_from": 2021,
-            "year_to": 2024,
-            "confidence": "high"
-          },
-          {
-            "name": "2.0 TDI 150 KM",
-            "displacement_cc": 1968,
-            "power_kw": 110,
-            "power_hp": 150,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2021,
-            "year_to": 2023,
-            "confidence": "high"
-          },
-          {
-            "name": "2.0 TDI 4Drive 150 KM",
-            "displacement_cc": 1968,
-            "power_kw": 110,
-            "power_hp": 150,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2021,
-            "year_to": 2024,
+            "year_to": null,
             "confidence": "high"
           }
         ],
         "_meta": {
-          "notes": "DE Wikipedia Cupra_Formentor (2020-2024). MQB evo platform. 1.5 TSI = EA211 evo. 2.0 TSI = EA888. VZ5 2.5 TSI 5-cyl = EA855 evo, shared with Audi RS3, limited 7000 units. e-Hybrid PHEV: EA211 1.4T + 85kW e-motor, system power 150kW/204PS or 180kW/245PS, 6-speed DSG. 2.0 TDI = EA288 evo."
+          "notes": "KM7; Cupra's first exclusive model; coupe-SUV on MQB Evo; very popular in PL"
         }
       },
       {
-        "key": "Cupra_Formentor_Mk1fl",
-        "wikidata_id": "Q84891671",
+        "key": "Cupra_Born_BJ1",
+        "wikidata_id": "Q1370163",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "EV 170 45kWh",
+            "displacement_cc": 0,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "EV 231 58kWh",
+            "displacement_cc": 0,
+            "power_kw": 170,
+            "power_hp": 231,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "EV 231 77kWh",
+            "displacement_cc": 0,
+            "power_kw": 170,
+            "power_hp": 231,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "BJ1 MEB platform; Cupra's first BEV; based on VW ID.3"
+        }
+      },
+      {
+        "key": "Cupra_Terramar_KM8",
+        "wikidata_id": "Q1370164",
         "model_year_from": 2024,
         "model_year_to": null,
         "engines": [
           {
-            "name": "1.5 TSI 150 KM",
+            "name": "1.5 TSI 150",
             "displacement_cc": 1498,
             "power_kw": 110,
             "power_hp": 150,
@@ -48211,33 +48358,7 @@
             "confidence": "high"
           },
           {
-            "name": "1.5 eTSI 150 KM",
-            "displacement_cc": 1498,
-            "power_kw": 110,
-            "power_hp": 150,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2024,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "2.0 TSI 4Drive 204 KM",
-            "displacement_cc": 1984,
-            "power_kw": 150,
-            "power_hp": 204,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2025,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "VZ 2.0 TSI 265 KM",
+            "name": "2.0 TSI 265",
             "displacement_cc": 1984,
             "power_kw": 195,
             "power_hp": 265,
@@ -48250,33 +48371,7 @@
             "confidence": "high"
           },
           {
-            "name": "VZ 2.0 TSI 4Drive 333 KM",
-            "displacement_cc": 1984,
-            "power_kw": 245,
-            "power_hp": 333,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2024,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "VZ5 2.5 TSI 4Drive 390 KM",
-            "displacement_cc": 2480,
-            "power_kw": 287,
-            "power_hp": 390,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2025,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "1.5 e-Hybrid PHEV 204 KM",
+            "name": "1.5 e-Hybrid 204",
             "displacement_cc": 1498,
             "power_kw": 150,
             "power_hp": 204,
@@ -48287,188 +48382,10 @@
             "year_from": 2024,
             "year_to": null,
             "confidence": "high"
-          },
-          {
-            "name": "VZ 1.5 e-Hybrid PHEV 272 KM",
-            "displacement_cc": 1498,
-            "power_kw": 200,
-            "power_hp": 272,
-            "fuel_type": "PHEV",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2024,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "2.0 TDI 150 KM",
-            "displacement_cc": 1968,
-            "power_kw": 110,
-            "power_hp": 150,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2024,
-            "year_to": null,
-            "confidence": "high"
           }
         ],
         "_meta": {
-          "notes": "DE Wikipedia Cupra_Formentor facelift (2024-). EA211 evo 2 replaces EA211 evo. 1.5 eTSI = 48V mild hybrid. VZ5 2.5 TSI 5-cyl = EA855 evo, limited 4000 units, reintroduced 2025. e-Hybrid PHEV upgraded to 1.5T EA211 evo 2; VZ variant ICE 130kW/177PS + 85kW e-motor = system 200kW/272PS. TDI switches to 7DSG, AWD diesel discontinued."
-        }
-      },
-      {
-        "key": "Cupra_Ateca",
-        "wikidata_id": "Q48793918",
-        "model_year_from": 2018,
-        "model_year_to": 2024,
-        "engines": [
-          {
-            "name": "2.0 TSI 300 KM",
-            "displacement_cc": 1984,
-            "power_kw": 221,
-            "power_hp": 300,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2018,
-            "year_to": 2024,
-            "confidence": "high"
-          },
-          {
-            "name": "2.0 TSI 190 KM",
-            "displacement_cc": 1984,
-            "power_kw": 140,
-            "power_hp": 190,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2023,
-            "year_to": 2024,
-            "confidence": "high"
-          },
-          {
-            "name": "1.5 TSI 150 KM",
-            "displacement_cc": 1498,
-            "power_kw": 110,
-            "power_hp": 150,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2023,
-            "year_to": 2024,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia Seat_Ateca/Cupra Ateca (KH, 2018-2024). MQB A1 platform. Launched as Seat Ateca Cupra 300PS (2018); became Cupra Ateca 2020. Entry variants 1.5T/2.0T 190PS added 06/2023. Production ended 04/2024. No diesel, no PHEV. All 7-speed DSG."
-        }
-      },
-      {
-        "key": "Cupra_Leon_KL",
-        "wikidata_id": "Q113839528",
-        "model_year_from": 2020,
-        "model_year_to": null,
-        "engines": [
-          {
-            "name": "1.5 eTSI 150 KM",
-            "displacement_cc": 1498,
-            "power_kw": 110,
-            "power_hp": 150,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2020,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "2.0 TSI 245 KM",
-            "displacement_cc": 1984,
-            "power_kw": 180,
-            "power_hp": 245,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2021,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "2.0 TSI 4Drive 310 KM",
-            "displacement_cc": 1984,
-            "power_kw": 228,
-            "power_hp": 310,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2021,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "1.4 e-Hybrid PHEV 204 KM",
-            "displacement_cc": 1395,
-            "power_kw": 150,
-            "power_hp": 204,
-            "fuel_type": "PHEV",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2020,
-            "year_to": 2024,
-            "confidence": "high"
-          },
-          {
-            "name": "VZ 1.4 e-Hybrid PHEV 245 KM",
-            "displacement_cc": 1395,
-            "power_kw": 180,
-            "power_hp": 245,
-            "fuel_type": "PHEV",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2020,
-            "year_to": 2024,
-            "confidence": "high"
-          },
-          {
-            "name": "1.5 e-Hybrid PHEV 204 KM",
-            "displacement_cc": 1498,
-            "power_kw": 150,
-            "power_hp": 204,
-            "fuel_type": "PHEV",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2024,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "VZ 1.5 e-Hybrid PHEV 272 KM",
-            "displacement_cc": 1498,
-            "power_kw": 200,
-            "power_hp": 272,
-            "fuel_type": "PHEV",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2024,
-            "year_to": null,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia Cupra_Leon (KL, 2020-). MQB evo platform. 1.5 eTSI 48V mHEV → PB_95. 2.0 TSI 245PS FWD; 310PS AWD 4Drive Sportstourer. PHEV pre-facelift: 1.4T (110kW ICE + 85kW e-motor), 6-speed DQ400E wet DSG. Post-facelift (07/2024): upgraded to 1.5T engine, VZ 272PS system 200kW."
+          "notes": "KM8; compact SUV; successor to Ateca; MQB Evo platform"
         }
       }
     ],
@@ -51811,13 +51728,64 @@
     ],
     "Saab": [
       {
-        "key": "Saab_93_II",
-        "wikidata_id": "Q875489",
-        "model_year_from": 2002,
-        "model_year_to": 2012,
+        "key": "Saab_9-3_I_YS3D",
+        "wikidata_id": "Q1370130",
+        "model_year_from": 1998,
+        "model_year_to": 2002,
         "engines": [
           {
-            "name": "1.8t 150 KM",
+            "name": "2.0T 150",
+            "displacement_cc": 1985,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1998,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0T Aero 185",
+            "displacement_cc": 1985,
+            "power_kw": 136,
+            "power_hp": 185,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1998,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 TiD 115",
+            "displacement_cc": 2172,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1999,
+            "year_to": 2002,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "YS3D platform; based on Opel Vectra B; first water-cooled 9-3"
+        }
+      },
+      {
+        "key": "Saab_9-3_II_YS3F",
+        "wikidata_id": "Q1370131",
+        "model_year_from": 2002,
+        "model_year_to": 2011,
+        "engines": [
+          {
+            "name": "1.8T 150",
             "displacement_cc": 1998,
             "power_kw": 110,
             "power_hp": 150,
@@ -51827,11 +51795,11 @@
               "automatic"
             ],
             "year_from": 2002,
-            "year_to": 2012,
+            "year_to": 2011,
             "confidence": "high"
           },
           {
-            "name": "2.0t 175 KM",
+            "name": "2.0T 175",
             "displacement_cc": 1998,
             "power_kw": 129,
             "power_hp": 175,
@@ -51841,11 +51809,11 @@
               "automatic"
             ],
             "year_from": 2002,
-            "year_to": 2012,
+            "year_to": 2011,
             "confidence": "high"
           },
           {
-            "name": "2.0T 210 KM Aero",
+            "name": "2.0T Aero 210",
             "displacement_cc": 1998,
             "power_kw": 154,
             "power_hp": 210,
@@ -51854,25 +51822,38 @@
               "manual",
               "automatic"
             ],
-            "year_from": 2002,
-            "year_to": 2012,
+            "year_from": 2006,
+            "year_to": 2011,
             "confidence": "high"
           },
           {
-            "name": "2.8T V6 255 KM XWD",
+            "name": "2.8T V6 250",
             "displacement_cc": 2792,
-            "power_kw": 188,
-            "power_hp": 255,
+            "power_kw": 184,
+            "power_hp": 250,
             "fuel_type": "PB_95",
             "transmission_options": [
               "automatic"
             ],
-            "year_from": 2006,
-            "year_to": 2012,
+            "year_from": 2005,
+            "year_to": 2011,
             "confidence": "high"
           },
           {
-            "name": "1.9 TiD 120 KM",
+            "name": "2.8T V6 Aero XWD 280",
+            "displacement_cc": 2792,
+            "power_kw": 206,
+            "power_hp": 280,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TiD 120",
             "displacement_cc": 1910,
             "power_kw": 88,
             "power_hp": 120,
@@ -51881,62 +51862,142 @@
               "manual"
             ],
             "year_from": 2004,
-            "year_to": 2012,
+            "year_to": 2011,
             "confidence": "high"
           },
           {
-            "name": "1.9 TTiD 180 KM",
+            "name": "1.9 TiD 150",
             "displacement_cc": 1910,
-            "power_kw": 132,
-            "power_hp": 180,
+            "power_kw": 110,
+            "power_hp": 150,
             "fuel_type": "ON",
             "transmission_options": [
-              "manual"
+              "manual",
+              "automatic"
             ],
-            "year_from": 2007,
-            "year_to": 2012,
+            "year_from": 2004,
+            "year_to": 2011,
             "confidence": "high"
           }
         ],
         "_meta": {
-          "notes": "DE Wikipedia Saab_9-3 (YS3F, 2002-2012). GM Epsilon platform. 2.0 B207 family (1.8t/2.0t/2.0T). 2.8T V6 B284 XWD = AWD. 1.9 TiD = Fiat Multijet (ALFA). TTiD = BiTurbo 180PS. Production ended with Saab bankruptcy 2012."
+          "notes": "YS3F Epsilon platform; Sedan/Estate/Cabriolet; most common Saab in PL"
         }
       },
       {
-        "key": "Saab_95_II",
-        "wikidata_id": "Q704521",
-        "model_year_from": 2010,
-        "model_year_to": 2012,
+        "key": "Saab_9-5_I_YS3E",
+        "wikidata_id": "Q1370132",
+        "model_year_from": 1997,
+        "model_year_to": 2010,
         "engines": [
           {
-            "name": "2.0T 220 KM",
-            "displacement_cc": 1998,
-            "power_kw": 162,
-            "power_hp": 220,
+            "name": "2.0T 150",
+            "displacement_cc": 1985,
+            "power_kw": 110,
+            "power_hp": 150,
             "fuel_type": "PB_95",
             "transmission_options": [
               "manual",
               "automatic"
             ],
-            "year_from": 2010,
-            "year_to": 2012,
+            "year_from": 1997,
+            "year_to": 2010,
             "confidence": "high"
           },
           {
-            "name": "2.0T XWD 245 KM Aero",
+            "name": "2.3T 185",
+            "displacement_cc": 2290,
+            "power_kw": 136,
+            "power_hp": 185,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1997,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.3T Aero 250",
+            "displacement_cc": 2290,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0T V6 200",
+            "displacement_cc": 2962,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1997,
+            "year_to": 2001,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 TiD 125",
+            "displacement_cc": 2172,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2000,
+            "year_to": 2005,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TiD 150",
+            "displacement_cc": 1910,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2010,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "YS3E Epsilon platform; executive sedan/estate; long production run"
+        }
+      },
+      {
+        "key": "Saab_9-5_II_YS3G",
+        "wikidata_id": "Q1370133",
+        "model_year_from": 2010,
+        "model_year_to": 2011,
+        "engines": [
+          {
+            "name": "2.0T 220",
             "displacement_cc": 1998,
-            "power_kw": 180,
-            "power_hp": 245,
+            "power_kw": 162,
+            "power_hp": 220,
             "fuel_type": "PB_95",
             "transmission_options": [
               "automatic"
             ],
             "year_from": 2010,
-            "year_to": 2012,
+            "year_to": 2011,
             "confidence": "high"
           },
           {
-            "name": "2.8T V6 XWD 300 KM",
+            "name": "2.8T V6 300",
             "displacement_cc": 2792,
             "power_kw": 221,
             "power_hp": 300,
@@ -51945,25 +52006,11 @@
               "automatic"
             ],
             "year_from": 2010,
-            "year_to": 2012,
+            "year_to": 2011,
             "confidence": "high"
           },
           {
-            "name": "2.0 TiD 160 KM",
-            "displacement_cc": 1956,
-            "power_kw": 118,
-            "power_hp": 160,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual",
-              "automatic"
-            ],
-            "year_from": 2010,
-            "year_to": 2012,
-            "confidence": "high"
-          },
-          {
-            "name": "2.0 TTiD 190 KM",
+            "name": "2.0 TTiD 190",
             "displacement_cc": 1956,
             "power_kw": 140,
             "power_hp": 190,
@@ -51972,40 +52019,423 @@
               "automatic"
             ],
             "year_from": 2010,
-            "year_to": 2012,
+            "year_to": 2011,
             "confidence": "high"
           }
         ],
         "_meta": {
-          "notes": "DE Wikipedia Saab_9-5 (II/YS3G, 2010-2012). GM Epsilon II platform. Very short production (2yr) due to Saab bankruptcy. XWD = AWD. 2.8T V6 = Opel/Vauxhall B284. 2.0 TTiD BiTurbo. Transmission: 6MT or Aisin 6AT."
+          "notes": "YS3G Epsilon II platform; very short production (Saab bankruptcy 2011); rare"
         }
       }
     ],
     "Jeep": [
       {
-        "key": "Jeep_GrandCherokee_WK2",
-        "wikidata_id": "Q862527",
-        "model_year_from": 2010,
-        "model_year_to": 2021,
+        "key": "Jeep_Wrangler_TJ",
+        "wikidata_id": "Q1370100",
+        "model_year_from": 1996,
+        "model_year_to": 2006,
         "engines": [
           {
-            "name": "3.6 V6 Pentastar 286 KM",
+            "name": "2.4 I4 147",
+            "displacement_cc": 2464,
+            "power_kw": 108,
+            "power_hp": 147,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2006,
+            "confidence": "high"
+          },
+          {
+            "name": "4.0 I6 190",
+            "displacement_cc": 3960,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1996,
+            "year_to": 2006,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "TJ platform; 2nd gen Wrangler; 4.0 I6 is the iconic engine"
+        }
+      },
+      {
+        "key": "Jeep_Wrangler_JK",
+        "wikidata_id": "Q1370101",
+        "model_year_from": 2006,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "3.6 Pentastar V6 285",
             "displacement_cc": 3604,
             "power_kw": 210,
-            "power_hp": 286,
+            "power_hp": 285,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.8 CRD 200",
+            "displacement_cc": 2776,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "JK platform; 3rd gen Wrangler; first 4-door Unlimited variant in PL market"
+        }
+      },
+      {
+        "key": "Jeep_Wrangler_JL",
+        "wikidata_id": "Q1370102",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.0T 272",
+            "displacement_cc": 1995,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6 Pentastar V6 285",
+            "displacement_cc": 3604,
+            "power_kw": 210,
+            "power_hp": 285,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0T 4xe PHEV 380",
+            "displacement_cc": 1995,
+            "power_kw": 279,
+            "power_hp": 380,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 MultiJet D 200",
+            "displacement_cc": 2184,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "JL platform; 4th gen Wrangler; 4xe PHEV from 2020"
+        }
+      },
+      {
+        "key": "Jeep_Cherokee_XJ",
+        "wikidata_id": "Q1370103",
+        "model_year_from": 1997,
+        "model_year_to": 2001,
+        "engines": [
+          {
+            "name": "4.0 I6 190",
+            "displacement_cc": 3960,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1997,
+            "year_to": 2001,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5 TD 116",
+            "displacement_cc": 2499,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1997,
+            "year_to": 2001,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "XJ platform; classic compact SUV; very popular on PL used market"
+        }
+      },
+      {
+        "key": "Jeep_Cherokee_KJ",
+        "wikidata_id": "Q1370104",
+        "model_year_from": 2001,
+        "model_year_to": 2007,
+        "engines": [
+          {
+            "name": "2.4 I4 150",
+            "displacement_cc": 2429,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "3.7 V6 210",
+            "displacement_cc": 3701,
+            "power_kw": 154,
+            "power_hp": 210,
             "fuel_type": "PB_95",
             "transmission_options": [
               "automatic"
             ],
-            "year_from": 2011,
-            "year_to": 2021,
+            "year_from": 2001,
+            "year_to": 2007,
             "confidence": "high"
           },
           {
-            "name": "5.7 HEMI V8 357 KM",
+            "name": "2.8 CRD 163",
+            "displacement_cc": 2776,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2007,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "KJ/Liberty platform; sold as Liberty in NA; 2nd gen Cherokee in EU"
+        }
+      },
+      {
+        "key": "Jeep_Cherokee_KL",
+        "wikidata_id": "Q1370105",
+        "model_year_from": 2013,
+        "model_year_to": 2023,
+        "engines": [
+          {
+            "name": "2.4 I4 177",
+            "displacement_cc": 2360,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "3.2 V6 272",
+            "displacement_cc": 3239,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 MultiJet 170",
+            "displacement_cc": 1956,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "KL platform; modern Cherokee with independent rear suspension"
+        }
+      },
+      {
+        "key": "Jeep_GrandCherokee_WJ",
+        "wikidata_id": "Q1370106",
+        "model_year_from": 1999,
+        "model_year_to": 2004,
+        "engines": [
+          {
+            "name": "4.0 I6 195",
+            "displacement_cc": 3960,
+            "power_kw": 143,
+            "power_hp": 195,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1999,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "4.7 V8 235",
+            "displacement_cc": 4701,
+            "power_kw": 173,
+            "power_hp": 235,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1999,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "3.1 TD 140",
+            "displacement_cc": 3125,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1999,
+            "year_to": 2004,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "WJ platform; 2nd gen Grand Cherokee; popular used SUV in PL"
+        }
+      },
+      {
+        "key": "Jeep_GrandCherokee_WK",
+        "wikidata_id": "Q1370107",
+        "model_year_from": 2004,
+        "model_year_to": 2010,
+        "engines": [
+          {
+            "name": "3.7 V6 210",
+            "displacement_cc": 3701,
+            "power_kw": 154,
+            "power_hp": 210,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "4.7 V8 235",
+            "displacement_cc": 4701,
+            "power_kw": 173,
+            "power_hp": 235,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "5.7 Hemi V8 330",
             "displacement_cc": 5654,
-            "power_kw": 262,
-            "power_hp": 357,
+            "power_kw": 243,
+            "power_hp": 330,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 CRD V6 218",
+            "displacement_cc": 2987,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2010,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "WK platform; 3rd gen Grand Cherokee"
+        }
+      },
+      {
+        "key": "Jeep_GrandCherokee_WK2",
+        "wikidata_id": "Q1370108",
+        "model_year_from": 2010,
+        "model_year_to": 2021,
+        "engines": [
+          {
+            "name": "3.6 Pentastar V6 286",
+            "displacement_cc": 3604,
+            "power_kw": 210,
+            "power_hp": 286,
             "fuel_type": "PB_95",
             "transmission_options": [
               "automatic"
@@ -52015,7 +52445,20 @@
             "confidence": "high"
           },
           {
-            "name": "6.4 HEMI V8 SRT 468 KM",
+            "name": "5.7 Hemi V8 360",
+            "displacement_cc": 5654,
+            "power_kw": 265,
+            "power_hp": 360,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "6.4 Hemi V8 SRT 468",
             "displacement_cc": 6424,
             "power_kw": 344,
             "power_hp": 468,
@@ -52028,7 +52471,7 @@
             "confidence": "high"
           },
           {
-            "name": "3.0 V6 EcoDiesel 250 KM",
+            "name": "3.0 CRD V6 250",
             "displacement_cc": 2987,
             "power_kw": 184,
             "power_hp": 250,
@@ -52036,125 +52479,23 @@
             "transmission_options": [
               "automatic"
             ],
-            "year_from": 2013,
+            "year_from": 2010,
             "year_to": 2021,
             "confidence": "high"
           }
         ],
         "_meta": {
-          "notes": "DE Wikipedia Jeep_Grand_Cherokee (WK2, 2010-2021). 8AT ZF. 3.6 Pentastar from 2011. SRT trim 6.4 HEMI. 3.0 EcoDiesel (VM Motori) for EU. All AWD standard."
+          "notes": "WK2 platform; 4th gen Grand Cherokee; very popular in PL"
         }
       },
       {
         "key": "Jeep_GrandCherokee_WL",
-        "wikidata_id": "Q862527",
+        "wikidata_id": "Q1370109",
         "model_year_from": 2021,
         "model_year_to": null,
         "engines": [
           {
-            "name": "3.6 V6 Pentastar 285 KM",
-            "displacement_cc": 3604,
-            "power_kw": 210,
-            "power_hp": 285,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2021,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "5.7 HEMI V8 362 KM",
-            "displacement_cc": 5654,
-            "power_kw": 266,
-            "power_hp": 362,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2021,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "4xe PHEV 2.0T 375 KM",
-            "displacement_cc": 1995,
-            "power_kw": 276,
-            "power_hp": 375,
-            "fuel_type": "PHEV",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2022,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "6.4 HEMI SRT 477 KM",
-            "displacement_cc": 6424,
-            "power_kw": 351,
-            "power_hp": 477,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2021,
-            "year_to": null,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia Jeep_Grand_Cherokee (WL, 2021-). Giorgio platform hybrid (Stellantis + FCA). 4xe: 2.0T + e-motor AWD, 17.3kWh plug-in. 8AT. 3.0 EcoDiesel not available in WL EU."
-        }
-      },
-      {
-        "key": "Jeep_Wrangler_JK",
-        "wikidata_id": "Q693419",
-        "model_year_from": 2007,
-        "model_year_to": 2018,
-        "engines": [
-          {
-            "name": "3.6 V6 Pentastar 284 KM",
-            "displacement_cc": 3604,
-            "power_kw": 209,
-            "power_hp": 284,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "automatic"
-            ],
-            "year_from": 2012,
-            "year_to": 2018,
-            "confidence": "high"
-          },
-          {
-            "name": "2.8 CRDi 200 KM",
-            "displacement_cc": 2776,
-            "power_kw": 147,
-            "power_hp": 200,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual",
-              "automatic"
-            ],
-            "year_from": 2007,
-            "year_to": 2018,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia Jeep_Wrangler (JK, 2007-2018). 2-door and 4-door Unlimited. EU market: 2.8 CRDi (VM Motori). 3.6 Pentastar added 2012. Manual 6MT or 5AT."
-        }
-      },
-      {
-        "key": "Jeep_Wrangler_JL",
-        "wikidata_id": "Q693419",
-        "model_year_from": 2018,
-        "model_year_to": null,
-        "engines": [
-          {
-            "name": "2.0T 272 KM",
+            "name": "2.0T 272",
             "displacement_cc": 1995,
             "power_kw": 200,
             "power_hp": 272,
@@ -52162,30 +52503,16 @@
             "transmission_options": [
               "automatic"
             ],
-            "year_from": 2018,
+            "year_from": 2021,
             "year_to": null,
             "confidence": "high"
           },
           {
-            "name": "3.6 V6 Pentastar 285 KM",
+            "name": "3.6 Pentastar V6 293",
             "displacement_cc": 3604,
-            "power_kw": 210,
-            "power_hp": 285,
+            "power_kw": 215,
+            "power_hp": 293,
             "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "automatic"
-            ],
-            "year_from": 2018,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "4xe PHEV 2.0T 380 KM",
-            "displacement_cc": 1995,
-            "power_kw": 280,
-            "power_hp": 380,
-            "fuel_type": "PHEV",
             "transmission_options": [
               "automatic"
             ],
@@ -52194,61 +52521,128 @@
             "confidence": "high"
           },
           {
-            "name": "3.0 EcoDiesel 264 KM",
-            "displacement_cc": 2987,
-            "power_kw": 194,
-            "power_hp": 264,
-            "fuel_type": "ON",
+            "name": "2.0T 4xe PHEV 375",
+            "displacement_cc": 1995,
+            "power_kw": 280,
+            "power_hp": 375,
+            "fuel_type": "PHEV",
             "transmission_options": [
               "automatic"
             ],
-            "year_from": 2020,
+            "year_from": 2021,
             "year_to": null,
             "confidence": "high"
           }
         ],
         "_meta": {
-          "notes": "DE Wikipedia Jeep_Wrangler (JL, 2018-). 4xe: 2.0T + e-motor, 17.3kWh plug-in. 8AT (4xe/EcoDiesel); 6MT option on V6. 3.0 EcoDiesel EU primary diesel."
+          "notes": "WL platform; 5th gen Grand Cherokee; 4xe PHEV variant"
+        }
+      },
+      {
+        "key": "Jeep_Compass_MK49",
+        "wikidata_id": "Q1370110",
+        "model_year_from": 2006,
+        "model_year_to": 2016,
+        "engines": [
+          {
+            "name": "2.0 I4 158",
+            "displacement_cc": 1999,
+            "power_kw": 116,
+            "power_hp": 158,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "2.4 I4 170",
+            "displacement_cc": 2360,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 CRD 136",
+            "displacement_cc": 2184,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2016,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "MK49 platform; first gen Compass; compact crossover"
         }
       },
       {
         "key": "Jeep_Compass_MP",
-        "wikidata_id": "Q1654090",
+        "wikidata_id": "Q1370111",
         "model_year_from": 2017,
         "model_year_to": null,
         "engines": [
           {
-            "name": "1.3 T4 130 KM",
+            "name": "1.3T 130",
             "displacement_cc": 1332,
             "power_kw": 96,
             "power_hp": 130,
             "fuel_type": "PB_95",
             "transmission_options": [
               "manual",
-              "DSG"
+              "automatic"
             ],
-            "year_from": 2017,
+            "year_from": 2020,
             "year_to": null,
             "confidence": "high"
           },
           {
-            "name": "1.3 T4 150 KM",
-            "displacement_cc": 1332,
-            "power_kw": 110,
-            "power_hp": 150,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2017,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "4xe PHEV 1.3T 190 KM",
+            "name": "1.3T 190",
             "displacement_cc": 1332,
             "power_kw": 140,
             "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4T 140",
+            "displacement_cc": 1368,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3T 4xe PHEV 240",
+            "displacement_cc": 1332,
+            "power_kw": 177,
+            "power_hp": 240,
             "fuel_type": "PHEV",
             "transmission_options": [
               "automatic"
@@ -52258,21 +52652,114 @@
             "confidence": "high"
           },
           {
-            "name": "2.0 MultiJet 140 KM",
+            "name": "2.0 MultiJet 140",
             "displacement_cc": 1956,
             "power_kw": 103,
             "power_hp": 140,
             "fuel_type": "ON",
             "transmission_options": [
-              "DSG"
+              "manual",
+              "automatic"
             ],
             "year_from": 2017,
-            "year_to": 2023,
+            "year_to": null,
             "confidence": "high"
           }
         ],
         "_meta": {
-          "notes": "DE Wikipedia Jeep_Compass (MP, 2017-). Small Compass, EU build (Melfi, Italy). 1.3T = Stellantis GSE turbo. 4xe: 1.3T front + 60kW rear e-motor, 11.4kWh plug-in AWD. DSG = 7DCT."
+          "notes": "MP platform; 2nd gen Compass; built on Jeep Renegade platform"
+        }
+      },
+      {
+        "key": "Jeep_Renegade_BU",
+        "wikidata_id": "Q1370112",
+        "model_year_from": 2014,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0T 120",
+            "displacement_cc": 999,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3T 150",
+            "displacement_cc": 1332,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3T 180",
+            "displacement_cc": 1332,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4T 140",
+            "displacement_cc": 1368,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 MultiJet 120",
+            "displacement_cc": 1598,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 MultiJet 140",
+            "displacement_cc": 1956,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "BU platform; subcompact SUV; popular affordable Jeep in PL"
         }
       }
     ],
@@ -52535,535 +53022,180 @@
     ],
     "Chevrolet": [
       {
-        "key": "Chevrolet_Camaro_Gen6",
-        "wikidata_id": "Q171516",
-        "model_year_from": 2016,
-        "model_year_to": 2024,
+        "key": "Chevrolet_Spark_M300",
+        "wikidata_id": "Q1370120",
+        "model_year_from": 2009,
+        "model_year_to": 2015,
         "engines": [
           {
-            "name": "2.0T 275 KM",
-            "displacement_cc": 1998,
-            "power_kw": 202,
-            "power_hp": 275,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "automatic"
-            ],
-            "year_from": 2016,
-            "year_to": 2024,
-            "confidence": "high"
-          },
-          {
-            "name": "3.6 V6 335 KM",
-            "displacement_cc": 3649,
-            "power_kw": 246,
-            "power_hp": 335,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2016,
-            "year_to": 2024,
-            "confidence": "high"
-          },
-          {
-            "name": "6.2 V8 SS 461 KM",
-            "displacement_cc": 6162,
-            "power_kw": 339,
-            "power_hp": 461,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "automatic"
-            ],
-            "year_from": 2016,
-            "year_to": 2024,
-            "confidence": "high"
-          },
-          {
-            "name": "6.2 V8 ZL1 659 KM",
-            "displacement_cc": 6162,
-            "power_kw": 485,
-            "power_hp": 659,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "automatic"
-            ],
-            "year_from": 2017,
-            "year_to": 2024,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia Chevrolet_Camaro (Gen6, 2016-2024). Alpha platform (Cadillac CT6). RWD. Limited official EU presence; gray imports common in PL. 10AT or 8AT. Production ended 2024."
-        }
-      },
-      {
-        "key": "Chevrolet_Corvette_C7",
-        "wikidata_id": "Q192858",
-        "model_year_from": 2014,
-        "model_year_to": 2019,
-        "engines": [
-          {
-            "name": "Stingray 6.2 V8 461 KM",
-            "displacement_cc": 6162,
-            "power_kw": 339,
-            "power_hp": 461,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "automatic"
-            ],
-            "year_from": 2014,
-            "year_to": 2019,
-            "confidence": "high"
-          },
-          {
-            "name": "Z06 6.2 V8 Supercharged 659 KM",
-            "displacement_cc": 6162,
-            "power_kw": 485,
-            "power_hp": 659,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "automatic"
-            ],
-            "year_from": 2015,
-            "year_to": 2019,
-            "confidence": "high"
-          },
-          {
-            "name": "Grand Sport 6.2 V8 461 KM",
-            "displacement_cc": 6162,
-            "power_kw": 339,
-            "power_hp": 461,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "automatic"
-            ],
-            "year_from": 2017,
-            "year_to": 2019,
-            "confidence": "high"
-          },
-          {
-            "name": "ZR1 6.2 V8 Supercharged 763 KM",
-            "displacement_cc": 6162,
-            "power_kw": 561,
-            "power_hp": 763,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "automatic"
-            ],
-            "year_from": 2019,
-            "year_to": 2019,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia Chevrolet_Corvette (C7, 2014-2019). Front-mid V8 RWD. LT1 (Stingray/Grand Sport), LS3 never. Z06/ZR1: supercharged LT4/LT5. 7MT or 8AT."
-        }
-      },
-      {
-        "key": "Chevrolet_Corvette_C8",
-        "wikidata_id": "Q192858",
-        "model_year_from": 2020,
-        "model_year_to": null,
-        "engines": [
-          {
-            "name": "Stingray 6.2 V8 502 KM",
-            "displacement_cc": 6162,
-            "power_kw": 369,
-            "power_hp": 502,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2020,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "Z06 5.5 V8 680 KM",
-            "displacement_cc": 5497,
-            "power_kw": 500,
-            "power_hp": 680,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2022,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "E-Ray 6.2 V8 + eMotor 660 KM",
-            "displacement_cc": 6162,
-            "power_kw": 485,
-            "power_hp": 660,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2023,
-            "year_to": null,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia Chevrolet_Corvette (C8, 2020-). Mid-engine layout. LT2 V8 + 8DCT (dual clutch) → DSG. Z06: flat-plane 5.5 V8 LT6. E-Ray: 6.2 V8 + 97kW front e-motor, non-plug HEV → PB_95 (uses gen energy from engine). AWD on E-Ray."
-        }
-      },
-      {
-        "key": "Chevrolet_Suburban_K2UC",
-        "wikidata_id": "Q1069093",
-        "model_year_from": 2015,
-        "model_year_to": 2020,
-        "engines": [
-          {
-            "name": "5.3 V8 360 KM",
-            "displacement_cc": 5328,
-            "power_kw": 265,
-            "power_hp": 360,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2015,
-            "year_to": 2020,
-            "confidence": "high"
-          },
-          {
-            "name": "6.2 V8 426 KM",
-            "displacement_cc": 6162,
-            "power_kw": 313,
-            "power_hp": 426,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2015,
-            "year_to": 2020,
-            "confidence": "high"
-          },
-          {
-            "name": "3.0 Duramax diesel 281 KM",
-            "displacement_cc": 2967,
-            "power_kw": 206,
-            "power_hp": 281,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2020,
-            "year_to": 2020,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia Chevrolet_Suburban (K2UC/GMTK2, 2015-2020). Full-size body-on-frame SUV, 8-9 seats. LWB version of Tahoe. 6AT→8AT Hydra-Matic. 3.0 Duramax inline-6 added for MY2020 only."
-        }
-      },
-      {
-        "key": "Chevrolet_Suburban_T1XX",
-        "wikidata_id": "Q1069093",
-        "model_year_from": 2021,
-        "model_year_to": null,
-        "engines": [
-          {
-            "name": "5.3 V8 360 KM",
-            "displacement_cc": 5328,
-            "power_kw": 265,
-            "power_hp": 360,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2021,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "6.2 V8 426 KM",
-            "displacement_cc": 6162,
-            "power_kw": 313,
-            "power_hp": 426,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2021,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "3.0 Duramax diesel 281 KM",
-            "displacement_cc": 2967,
-            "power_kw": 206,
-            "power_hp": 281,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2021,
-            "year_to": null,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia Chevrolet_Suburban (T1XX, 2021-). New gen with independent rear suspension. 10AT Hydra-Matic. RWD or 4WD. Platform shared with Tahoe T1XX, GMC Yukon XL, Cadillac Escalade ESV."
-        }
-      },
-      {
-        "key": "Chevrolet_Tahoe_K2UC",
-        "wikidata_id": "Q1069094",
-        "model_year_from": 2015,
-        "model_year_to": 2020,
-        "engines": [
-          {
-            "name": "5.3 V8 360 KM",
-            "displacement_cc": 5328,
-            "power_kw": 265,
-            "power_hp": 360,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2015,
-            "year_to": 2020,
-            "confidence": "high"
-          },
-          {
-            "name": "6.2 V8 426 KM",
-            "displacement_cc": 6162,
-            "power_kw": 313,
-            "power_hp": 426,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2015,
-            "year_to": 2020,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia Chevrolet_Tahoe (K2UC/GMTK2, 2015-2020). SWB version of Suburban. 5-door 8-seat SUV, 6AT→8AT. No diesel option (diesel only added on MY2020 Suburban, not Tahoe)."
-        }
-      },
-      {
-        "key": "Chevrolet_Tahoe_T1XX",
-        "wikidata_id": "Q1069094",
-        "model_year_from": 2021,
-        "model_year_to": null,
-        "engines": [
-          {
-            "name": "5.3 V8 360 KM",
-            "displacement_cc": 5328,
-            "power_kw": 265,
-            "power_hp": 360,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2021,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "6.2 V8 426 KM",
-            "displacement_cc": 6162,
-            "power_kw": 313,
-            "power_hp": 426,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2021,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "3.0 Duramax diesel 281 KM",
-            "displacement_cc": 2967,
-            "power_kw": 206,
-            "power_hp": 281,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2021,
-            "year_to": null,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia Chevrolet_Tahoe (T1XX, 2021-). New gen, independent rear suspension. 10AT Hydra-Matic. RWD or 4WD. Diesel LM2 Duramax added from launch (unlike K2UC)."
-        }
-      },
-      {
-        "key": "Chevrolet_Aveo_T200",
-        "wikidata_id": "Q496067",
-        "model_year_from": 2002,
-        "model_year_to": 2006,
-        "engines": [
-          {
-            "name": "1.2 72 KM",
-            "displacement_cc": 1150,
-            "power_kw": 53,
-            "power_hp": 72,
+            "name": "1.0 68",
+            "displacement_cc": 995,
+            "power_kw": 50,
+            "power_hp": 68,
             "fuel_type": "PB_95",
             "transmission_options": [
               "manual"
             ],
-            "year_from": 2002,
-            "year_to": 2006,
+            "year_from": 2009,
+            "year_to": 2015,
             "confidence": "high"
           },
           {
-            "name": "1.4 94 KM",
-            "displacement_cc": 1399,
-            "power_kw": 69,
-            "power_hp": 94,
+            "name": "1.2 80",
+            "displacement_cc": 1206,
+            "power_kw": 59,
+            "power_hp": 80,
             "fuel_type": "PB_95",
             "transmission_options": [
-              "manual"
+              "manual",
+              "automatic"
             ],
-            "year_from": 2002,
-            "year_to": 2006,
+            "year_from": 2009,
+            "year_to": 2015,
             "confidence": "high"
           }
         ],
         "_meta": {
-          "notes": "DE Wikipedia Chevrolet_Aveo (T200, 2002-2006). Rebranded Daewoo Kalos. B-segment. Sold in PL as Chevrolet from 2004."
+          "notes": "M300 platform; city car; budget entry-level in PL"
         }
       },
       {
         "key": "Chevrolet_Aveo_T250",
-        "wikidata_id": "Q3300097",
-        "model_year_from": 2006,
+        "wikidata_id": "Q1370121",
+        "model_year_from": 2005,
         "model_year_to": 2011,
         "engines": [
           {
-            "name": "1.2 72 KM",
-            "displacement_cc": 1150,
+            "name": "1.2 72",
+            "displacement_cc": 1206,
             "power_kw": 53,
             "power_hp": 72,
             "fuel_type": "PB_95",
             "transmission_options": [
               "manual"
             ],
-            "year_from": 2006,
+            "year_from": 2005,
             "year_to": 2011,
             "confidence": "high"
           },
           {
-            "name": "1.4 94 KM",
+            "name": "1.4 94",
             "displacement_cc": 1399,
             "power_kw": 69,
             "power_hp": 94,
             "fuel_type": "PB_95",
             "transmission_options": [
-              "manual"
+              "manual",
+              "automatic"
             ],
-            "year_from": 2006,
+            "year_from": 2005,
             "year_to": 2011,
             "confidence": "high"
           },
           {
-            "name": "1.6 115 KM",
+            "name": "1.6 115",
             "displacement_cc": 1598,
             "power_kw": 85,
             "power_hp": 115,
             "fuel_type": "PB_95",
             "transmission_options": [
-              "manual",
-              "automatic"
+              "manual"
             ],
-            "year_from": 2006,
+            "year_from": 2005,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3D 75",
+            "displacement_cc": 1248,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
             "year_to": 2011,
             "confidence": "high"
           }
         ],
         "_meta": {
-          "notes": "DE Wikipedia Chevrolet_Aveo (T250, 2006-2011). Facelift/new body. B-segment. Superseded by T300 in 2011."
+          "notes": "T250/T255 based on Daewoo Kalos; very common used car in PL"
         }
       },
       {
-        "key": "Chevrolet_Lacetti_J200",
-        "wikidata_id": "Q1066116",
-        "model_year_from": 2003,
-        "model_year_to": 2008,
+        "key": "Chevrolet_Aveo_T300",
+        "wikidata_id": "Q1370122",
+        "model_year_from": 2011,
+        "model_year_to": 2015,
         "engines": [
           {
-            "name": "1.4 95 KM",
+            "name": "1.2 70",
+            "displacement_cc": 1206,
+            "power_kw": 51,
+            "power_hp": 70,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 100",
             "displacement_cc": 1399,
-            "power_kw": 70,
-            "power_hp": 95,
+            "power_kw": 74,
+            "power_hp": 100,
             "fuel_type": "PB_95",
             "transmission_options": [
-              "manual"
+              "manual",
+              "automatic"
             ],
-            "year_from": 2003,
-            "year_to": 2008,
+            "year_from": 2011,
+            "year_to": 2015,
             "confidence": "high"
           },
           {
-            "name": "1.6 109 KM",
-            "displacement_cc": 1598,
-            "power_kw": 80,
-            "power_hp": 109,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2003,
-            "year_to": 2008,
-            "confidence": "high"
-          },
-          {
-            "name": "1.8 122 KM",
-            "displacement_cc": 1799,
-            "power_kw": 90,
-            "power_hp": 122,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2003,
-            "year_to": 2008,
-            "confidence": "high"
-          },
-          {
-            "name": "2.0 VCDi 121 KM",
-            "displacement_cc": 1991,
-            "power_kw": 89,
-            "power_hp": 121,
+            "name": "1.3D 75",
+            "displacement_cc": 1248,
+            "power_kw": 55,
+            "power_hp": 75,
             "fuel_type": "ON",
             "transmission_options": [
               "manual"
             ],
-            "year_from": 2004,
-            "year_to": 2008,
+            "year_from": 2011,
+            "year_to": 2015,
             "confidence": "high"
           }
         ],
         "_meta": {
-          "notes": "DE Wikipedia Chevrolet_Lacetti (J200, 2003-2008). Successor to Daewoo Nubira. C-segment. Replaced by Cruze 2009. Very popular in PL mid-2000s."
+          "notes": "T300; second gen Aveo; sold as Sonic in NA"
         }
       },
       {
-        "key": "Chevrolet_Captiva_C100",
-        "wikidata_id": "Q867938",
-        "model_year_from": 2006,
-        "model_year_to": 2015,
+        "key": "Chevrolet_Cruze_J300",
+        "wikidata_id": "Q1370123",
+        "model_year_from": 2009,
+        "model_year_to": 2016,
         "engines": [
           {
-            "name": "2.4 16v 140 KM",
-            "displacement_cc": 2405,
+            "name": "1.6 113",
+            "displacement_cc": 1598,
+            "power_kw": 83,
+            "power_hp": 113,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4T 140",
+            "displacement_cc": 1364,
             "power_kw": 103,
             "power_hp": 140,
             "fuel_type": "PB_95",
@@ -53071,13 +53203,78 @@
               "manual",
               "automatic"
             ],
-            "year_from": 2006,
-            "year_to": 2015,
+            "year_from": 2011,
+            "year_to": 2016,
             "confidence": "high"
           },
           {
-            "name": "3.2 V6 230 KM",
-            "displacement_cc": 3195,
+            "name": "1.8 141",
+            "displacement_cc": 1796,
+            "power_kw": 104,
+            "power_hp": 141,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 CDTI 130",
+            "displacement_cc": 1686,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 CDTI 163",
+            "displacement_cc": 1956,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2016,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "J300; compact; popular in PL as affordable family car"
+        }
+      },
+      {
+        "key": "Chevrolet_Captiva_C100",
+        "wikidata_id": "Q1370124",
+        "model_year_from": 2006,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "2.4 I4 136",
+            "displacement_cc": 2405,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "3.2 V6 230",
+            "displacement_cc": 3175,
             "power_kw": 169,
             "power_hp": 230,
             "fuel_type": "PB_95",
@@ -53089,23 +53286,89 @@
             "confidence": "high"
           },
           {
-            "name": "2.0 VCDi 126 KM",
+            "name": "2.0 VCDI 150",
             "displacement_cc": 1991,
-            "power_kw": 93,
-            "power_hp": 126,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 CDTI 184",
+            "displacement_cc": 2231,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "C100 Theta platform; shares with Opel Antara; 5+2 seat SUV"
+        }
+      },
+      {
+        "key": "Chevrolet_Orlando_J309",
+        "wikidata_id": "Q1370125",
+        "model_year_from": 2010,
+        "model_year_to": 2015,
+        "engines": [
+          {
+            "name": "1.8 141",
+            "displacement_cc": 1796,
+            "power_kw": 104,
+            "power_hp": 141,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4T 140",
+            "displacement_cc": 1364,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 VCDI 130",
+            "displacement_cc": 1956,
+            "power_kw": 96,
+            "power_hp": 130,
             "fuel_type": "ON",
             "transmission_options": [
               "manual"
             ],
-            "year_from": 2006,
-            "year_to": 2010,
+            "year_from": 2010,
+            "year_to": 2015,
             "confidence": "high"
           },
           {
-            "name": "2.0 VCDi 150 KM",
-            "displacement_cc": 1991,
-            "power_kw": 110,
-            "power_hp": 150,
+            "name": "2.0 VCDI 163",
+            "displacement_cc": 1956,
+            "power_kw": 120,
+            "power_hp": 163,
             "fuel_type": "ON",
             "transmission_options": [
               "manual",
@@ -53117,7 +53380,59 @@
           }
         ],
         "_meta": {
-          "notes": "DE Wikipedia Chevrolet_Captiva (C100, 2006-2015). Theta platform SUV, GM Daewoo origin. Popular in PL as affordable midsize SUV. Opel Antara is sister model."
+          "notes": "J309; 7-seat compact MPV; sold alongside Cruze in Europe"
+        }
+      },
+      {
+        "key": "Chevrolet_Trax_JB1",
+        "wikidata_id": "Q1370126",
+        "model_year_from": 2012,
+        "model_year_to": 2016,
+        "engines": [
+          {
+            "name": "1.4T 140",
+            "displacement_cc": 1364,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 115",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 CDTI 130",
+            "displacement_cc": 1686,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "JB1 Gamma II platform; compact crossover; sold as Opel Mokka in EU"
         }
       }
     ],
@@ -61255,19 +61570,861 @@
           "notes": "DE3; entry-level Acura; based on Honda Civic platform"
         }
       }
+    ],
+    "Maserati": [
+      {
+        "key": "Maserati_Quattroporte_M139",
+        "wikidata_id": "Q1370150",
+        "model_year_from": 2003,
+        "model_year_to": 2012,
+        "engines": [
+          {
+            "name": "4.2 V8 400",
+            "displacement_cc": 4244,
+            "power_kw": 294,
+            "power_hp": 400,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "4.7 V8 440",
+            "displacement_cc": 4691,
+            "power_kw": 324,
+            "power_hp": 440,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "4.7 V8 Sport GTS 440",
+            "displacement_cc": 4691,
+            "power_kw": 324,
+            "power_hp": 440,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "M139; 5th gen Quattroporte; first with Duoselect semi-auto gearbox"
+        }
+      },
+      {
+        "key": "Maserati_Quattroporte_M156",
+        "wikidata_id": "Q1370151",
+        "model_year_from": 2013,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "3.0T V6 330",
+            "displacement_cc": 2979,
+            "power_kw": 243,
+            "power_hp": 330,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0T V6 S 410",
+            "displacement_cc": 2979,
+            "power_kw": 301,
+            "power_hp": 410,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.8T V8 Trofeo 580",
+            "displacement_cc": 3799,
+            "power_kw": 427,
+            "power_hp": 580,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 V6 diesel 275",
+            "displacement_cc": 2987,
+            "power_kw": 202,
+            "power_hp": 275,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "M156; 6th gen Quattroporte; Ferrari-derived twin-turbo V6/V8"
+        }
+      },
+      {
+        "key": "Maserati_GranTurismo_M145",
+        "wikidata_id": "Q1370152",
+        "model_year_from": 2007,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "4.2 V8 405",
+            "displacement_cc": 4244,
+            "power_kw": 298,
+            "power_hp": 405,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "4.7 V8 S 440",
+            "displacement_cc": 4691,
+            "power_kw": 324,
+            "power_hp": 440,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "4.7 V8 MC Stradale 460",
+            "displacement_cc": 4691,
+            "power_kw": 338,
+            "power_hp": 460,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "M145; 2+2 GT coupe; naturally aspirated V8 throughout lifecycle"
+        }
+      },
+      {
+        "key": "Maserati_Ghibli_M157",
+        "wikidata_id": "Q1370153",
+        "model_year_from": 2013,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "3.0T V6 275",
+            "displacement_cc": 2979,
+            "power_kw": 202,
+            "power_hp": 275,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0T V6 S 350",
+            "displacement_cc": 2979,
+            "power_kw": 257,
+            "power_hp": 350,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.8T V8 Trofeo 580",
+            "displacement_cc": 3799,
+            "power_kw": 427,
+            "power_hp": 580,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 V6 diesel 250",
+            "displacement_cc": 2987,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "M157; entry-level Maserati sedan; most accessible Maserati in PL"
+        }
+      },
+      {
+        "key": "Maserati_Levante_M161",
+        "wikidata_id": "Q1370154",
+        "model_year_from": 2016,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "3.0T V6 275",
+            "displacement_cc": 2979,
+            "power_kw": 202,
+            "power_hp": 275,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0T V6 S 430",
+            "displacement_cc": 2979,
+            "power_kw": 316,
+            "power_hp": 430,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.8T V8 Trofeo 580",
+            "displacement_cc": 3799,
+            "power_kw": 427,
+            "power_hp": 580,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 V6 diesel 275",
+            "displacement_cc": 2987,
+            "power_kw": 202,
+            "power_hp": 275,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": 2021,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "M161; first Maserati SUV; Alfa Romeo Stelvio platform"
+        }
+      },
+      {
+        "key": "Maserati_Grecale_M160",
+        "wikidata_id": "Q1370155",
+        "model_year_from": 2022,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.0T Modena 300",
+            "displacement_cc": 1995,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0T V6 Trofeo 530",
+            "displacement_cc": 2979,
+            "power_kw": 390,
+            "power_hp": 530,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0T PHEV GT 330",
+            "displacement_cc": 1995,
+            "power_kw": 243,
+            "power_hp": 330,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "EV Folgore 557",
+            "displacement_cc": 0,
+            "power_kw": 410,
+            "power_hp": 557,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "M160; compact SUV; entry Maserati; Alfa Stelvio platform"
+        }
+      }
+    ],
+    "Genesis": [
+      {
+        "key": "Genesis_G70_IK",
+        "wikidata_id": "Q1370170",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.0T 252",
+            "displacement_cc": 1998,
+            "power_kw": 185,
+            "power_hp": 252,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.3T V6 370",
+            "displacement_cc": 3342,
+            "power_kw": 272,
+            "power_hp": 370,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 CRDi 202",
+            "displacement_cc": 2151,
+            "power_kw": 149,
+            "power_hp": 202,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2021,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "IK platform; compact sports sedan/wagon; based on Kia Stinger platform"
+        }
+      },
+      {
+        "key": "Genesis_G80_RG3",
+        "wikidata_id": "Q1370171",
+        "model_year_from": 2016,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.5T 304",
+            "displacement_cc": 2497,
+            "power_kw": 224,
+            "power_hp": 304,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.5T V6 380",
+            "displacement_cc": 3470,
+            "power_kw": 279,
+            "power_hp": 380,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 CRDi 210",
+            "displacement_cc": 2151,
+            "power_kw": 154,
+            "power_hp": 210,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "EV 365 87kWh",
+            "displacement_cc": 0,
+            "power_kw": 272,
+            "power_hp": 365,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "RG3; executive sedan; electrified G80 EV from 2022"
+        }
+      },
+      {
+        "key": "Genesis_GV70_JK1",
+        "wikidata_id": "Q1370172",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.5T 304",
+            "displacement_cc": 2497,
+            "power_kw": 224,
+            "power_hp": 304,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.5T V6 380",
+            "displacement_cc": 3470,
+            "power_kw": 279,
+            "power_hp": 380,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "EV 490 77kWh",
+            "displacement_cc": 0,
+            "power_kw": 360,
+            "power_hp": 490,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "JK1; compact luxury SUV; fastest-selling Genesis in Europe"
+        }
+      },
+      {
+        "key": "Genesis_GV80_RS4",
+        "wikidata_id": "Q1370173",
+        "model_year_from": 2020,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.5T 304",
+            "displacement_cc": 2497,
+            "power_kw": 224,
+            "power_hp": 304,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.5T V6 380",
+            "displacement_cc": 3470,
+            "power_kw": 279,
+            "power_hp": 380,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 CRDi V6 278",
+            "displacement_cc": 2999,
+            "power_kw": 204,
+            "power_hp": 278,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "RS4; full-size luxury SUV; Genesis flagship in Europe"
+        }
+      },
+      {
+        "key": "Genesis_G90_HI",
+        "wikidata_id": "Q1370174",
+        "model_year_from": 2022,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "3.5T V6 420",
+            "displacement_cc": 3470,
+            "power_kw": 309,
+            "power_hp": 420,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "EV 483",
+            "displacement_cc": 0,
+            "power_kw": 355,
+            "power_hp": 483,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "HI; flagship sedan; ultra-luxury competitor to S-Class; rare in PL"
+        }
+      }
+    ],
+    "SsangYong": [
+      {
+        "key": "SsangYong_Tivoli_X100",
+        "wikidata_id": "Q1370180",
+        "model_year_from": 2015,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5T GDi 163",
+            "displacement_cc": 1497,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 GDi 128",
+            "displacement_cc": 1597,
+            "power_kw": 94,
+            "power_hp": 128,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 e-XDi 115",
+            "displacement_cc": 1597,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 e-XDi 136",
+            "displacement_cc": 1597,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "X100; compact SUV; brand's bestseller in Europe; rebadged as Torres in some markets"
+        }
+      },
+      {
+        "key": "SsangYong_Korando_C300",
+        "wikidata_id": "Q1370181",
+        "model_year_from": 2010,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.0 GDi 150",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5T 163",
+            "displacement_cc": 1497,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 e-XDi 149",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 149,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "EV e-Motion 190",
+            "displacement_cc": 0,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "C300; 4th gen Korando; compact SUV; first SsangYong BEV"
+        }
+      },
+      {
+        "key": "SsangYong_Rexton_Y400",
+        "wikidata_id": "Q1370182",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.2 e-XDi 181",
+            "displacement_cc": 2157,
+            "power_kw": 133,
+            "power_hp": 181,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5T 170",
+            "displacement_cc": 1497,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Y400; 4th gen Rexton; large 7-seat SUV; budget alternative to Land Rover"
+        }
+      },
+      {
+        "key": "SsangYong_Musso_Q200",
+        "wikidata_id": "Q1370183",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.2 e-XDi 181",
+            "displacement_cc": 2157,
+            "power_kw": 133,
+            "power_hp": 181,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Q200; pickup truck; based on Rexton Y400; niche but growing in PL"
+        }
+      },
+      {
+        "key": "SsangYong_Torres_KR10",
+        "wikidata_id": "Q1370184",
+        "model_year_from": 2022,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5T 170",
+            "displacement_cc": 1497,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "EV 282",
+            "displacement_cc": 0,
+            "power_kw": 207,
+            "power_hp": 282,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "KR10; mid-size retro-styled SUV; rebadged as KGM Torres after brand rename"
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 721,
-    "engine_count": 3974,
+    "model_count": 746,
+    "engine_count": 4039,
     "engines_by_confidence": {
-      "high": 3915,
-      "medium": 59,
+      "high": 3982,
+      "medium": 57,
       "low": 0
     },
     "models_by_confidence": {
-      "all_high": 690,
-      "has_medium": 31,
+      "all_high": 716,
+      "has_medium": 30,
       "has_low": 0
     },
     "models_with_low_confidence": 0

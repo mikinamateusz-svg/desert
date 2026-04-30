@@ -880,16 +880,14 @@ describe('PhotoPipelineWorker', () => {
         );
       });
 
-      it('deletes photo from R2 on low-confidence rejection', async () => {
+      it('keeps photo in R2 on low-confidence rejection (cleanup worker handles deletion)', async () => {
         mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
         mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
         mockOcrService.extractPrices.mockResolvedValueOnce(lowConfidenceResult);
 
         await capturedProcessor!(makeJob('sub-123'));
 
-        expect(mockStorageService.deleteObject).toHaveBeenCalledWith(
-          'submissions/user-abc/sub-123.jpg',
-        );
+        expect(mockStorageService.deleteObject).not.toHaveBeenCalled();
       });
 
       it('completes job without throwing on low confidence', async () => {
@@ -930,16 +928,14 @@ describe('PhotoPipelineWorker', () => {
         );
       });
 
-      it('deletes photo from R2 on no-prices rejection', async () => {
+      it('keeps photo in R2 on no-prices rejection (cleanup worker handles deletion)', async () => {
         mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
         mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
         mockOcrService.extractPrices.mockResolvedValueOnce(noPricesResult);
 
         await capturedProcessor!(makeJob('sub-123'));
 
-        expect(mockStorageService.deleteObject).toHaveBeenCalledWith(
-          'submissions/user-abc/sub-123.jpg',
-        );
+        expect(mockStorageService.deleteObject).not.toHaveBeenCalled();
       });
 
       it('completes job without throwing when no prices found', async () => {
@@ -1126,16 +1122,14 @@ describe('PhotoPipelineWorker', () => {
         );
       });
 
-      it('deletes photo from R2 on price-out-of-range rejection', async () => {
+      it('keeps photo in R2 on price-out-of-range rejection (cleanup worker handles deletion)', async () => {
         mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
         mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
         mockOcrService.validatePriceBands.mockReturnValueOnce('PB_95');
 
         await capturedProcessor!(makeJob('sub-123'));
 
-        expect(mockStorageService.deleteObject).toHaveBeenCalledWith(
-          'submissions/user-abc/sub-123.jpg',
-        );
+        expect(mockStorageService.deleteObject).not.toHaveBeenCalled();
       });
 
       it('completes job without throwing on price range rejection', async () => {

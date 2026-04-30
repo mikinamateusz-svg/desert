@@ -25460,6 +25460,625 @@
         "_meta": {
           "notes": "DE Wikipedia Ford_Puma (JX, 2019-). C2 platform. mHEV = 48V mild hybrid → PB_95. 7DCT for auto variants. ST: 1.5T 3-cyl 200PS 6MT."
         }
+      },
+      {
+        "key": "Ford_Galaxy_Mk2",
+        "wikidata_id": "Q1409095",
+        "model_year_from": 2006,
+        "model_year_to": 2015,
+        "engines": [
+          {
+            "name": "1.6 EcoBoost 160 KM",
+            "displacement_cc": 1596,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 EcoBoost 203 KM",
+            "displacement_cc": 1999,
+            "power_kw": 149,
+            "power_hp": 203,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 115 KM",
+            "displacement_cc": 1997,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 140 KM",
+            "displacement_cc": 1997,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2006,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 163 KM",
+            "displacement_cc": 1997,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2006,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 TDCi 200 KM",
+            "displacement_cc": 2179,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2006,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_Galaxy (WA6, 2006-2015). CD3 platform, sibling of S-Max Mk1. PowerShift 6DCT → DSG. 2.0 TDCi DSG = 6AT PowerShift. 1.6/2.0 EcoBoost from facelift 2011."
+        }
+      },
+      {
+        "key": "Ford_Galaxy_Mk3",
+        "wikidata_id": "Q1409095",
+        "model_year_from": 2015,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 EcoBoost 160 KM",
+            "displacement_cc": 1498,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 EcoBoost 240 KM",
+            "displacement_cc": 1999,
+            "power_kw": 177,
+            "power_hp": 240,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5 Duratec FHEV 190 KM",
+            "displacement_cc": 2488,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 120 KM",
+            "displacement_cc": 1997,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 150 KM",
+            "displacement_cc": 1997,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 180 KM",
+            "displacement_cc": 1997,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 210 KM",
+            "displacement_cc": 1997,
+            "power_kw": 154,
+            "power_hp": 210,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_Galaxy (Mk3/CK, 2015-). CD4 platform, sibling of S-Max Mk2. 2.5 FHEV = full hybrid non-plug e-CVT → automatic. DSG = 8AT SelectShift."
+        }
+      },
+      {
+        "key": "Ford_SMax_Mk1",
+        "wikidata_id": "Q1413693",
+        "model_year_from": 2006,
+        "model_year_to": 2015,
+        "engines": [
+          {
+            "name": "1.6 EcoBoost 160 KM",
+            "displacement_cc": 1596,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 EcoBoost 203 KM",
+            "displacement_cc": 1999,
+            "power_kw": 149,
+            "power_hp": 203,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 EcoBoost 240 KM",
+            "displacement_cc": 1999,
+            "power_kw": 177,
+            "power_hp": 240,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 115 KM",
+            "displacement_cc": 1997,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 140 KM",
+            "displacement_cc": 1997,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2006,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 163 KM",
+            "displacement_cc": 1997,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2006,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 TDCi 200 KM",
+            "displacement_cc": 2179,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2006,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_S-MAX (Mk1/WA6, 2006-2015). CD3 platform, sibling of Galaxy Mk2. 2.0 EcoBoost 240PS = ST-Line trim. PowerShift 6DCT → DSG."
+        }
+      },
+      {
+        "key": "Ford_SMax_Mk2",
+        "wikidata_id": "Q1413693",
+        "model_year_from": 2015,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 EcoBoost 160 KM",
+            "displacement_cc": 1498,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 EcoBoost 240 KM",
+            "displacement_cc": 1999,
+            "power_kw": 177,
+            "power_hp": 240,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 150 KM",
+            "displacement_cc": 1997,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 180 KM",
+            "displacement_cc": 1997,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 210 KM",
+            "displacement_cc": 1997,
+            "power_kw": 154,
+            "power_hp": 210,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_S-MAX (Mk2/CJ, 2015-). CD4 platform, sibling of Galaxy Mk3. No PHEV on S-Max (Galaxy Mk3 exclusive). DSG = 8AT SelectShift."
+        }
+      },
+      {
+        "key": "Ford_CMax_Mk2",
+        "wikidata_id": "Q1278988",
+        "model_year_from": 2010,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "1.0 EcoBoost 100 KM",
+            "displacement_cc": 999,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 EcoBoost 125 KM",
+            "displacement_cc": 999,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 EcoBoost 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 EcoBoost 182 KM",
+            "displacement_cc": 1498,
+            "power_kw": 134,
+            "power_hp": 182,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TDCi 95 KM",
+            "displacement_cc": 1499,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TDCi 120 KM",
+            "displacement_cc": 1499,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 150 KM",
+            "displacement_cc": 1997,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_C-MAX (Mk2/C344, 2010-2019). C1/CD3 platform. Includes Grand C-Max (longer wheelbase). 1.0 EcoBoost 3-cyl from 2012. DSG = PowerShift 6DCT."
+        }
+      },
+      {
+        "key": "Ford_Mustang_Mk6",
+        "wikidata_id": "Q697361",
+        "model_year_from": 2015,
+        "model_year_to": 2023,
+        "engines": [
+          {
+            "name": "2.3 EcoBoost 317 KM",
+            "displacement_cc": 2300,
+            "power_kw": 233,
+            "power_hp": 317,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "2.3 EcoBoost 290 KM",
+            "displacement_cc": 2300,
+            "power_kw": 213,
+            "power_hp": 290,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "5.0 V8 421 KM",
+            "displacement_cc": 4951,
+            "power_kw": 310,
+            "power_hp": 421,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "5.0 V8 450 KM",
+            "displacement_cc": 4951,
+            "power_kw": 331,
+            "power_hp": 450,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "Shelby GT500 5.2 V8 760 KM",
+            "displacement_cc": 5163,
+            "power_kw": 559,
+            "power_hp": 760,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_Mustang (S550, 2015-2023). First Mustang officially sold in EU/PL. 2018 facelift: 2.3 EB EU-spec 290PS, 5.0 V8 450PS, 10AT → automatic. GT500: Predator 5.2L flat-plane V8 + 7G-DCT Tremec → DSG."
+        }
+      },
+      {
+        "key": "Ford_Mustang_Mk7",
+        "wikidata_id": "Q697361",
+        "model_year_from": 2023,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.3 EcoBoost 290 KM",
+            "displacement_cc": 2300,
+            "power_kw": 213,
+            "power_hp": 290,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "5.0 V8 450 KM",
+            "displacement_cc": 4951,
+            "power_kw": 331,
+            "power_hp": 450,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Dark Horse 5.0 V8 500 KM",
+            "displacement_cc": 4951,
+            "power_kw": 368,
+            "power_hp": 500,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "medium"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_Mustang (S650, 2023-). EU-spec 5.0 V8 ~450PS. Dark Horse: flat-plane 5.0 V8 ~500PS with 6MT or optional Tremec 7DCT → DSG. Exact EU PS figures may vary slightly."
+        }
       }
     ],
     "BMW": [
@@ -33548,6 +34167,503 @@
         "_meta": {
           "notes": "DE Wikipedia Volvo_V60 (II, 2018-). SPA platform. B-series = 48V mHEV from 2020 (both petrol and diesel). T6 Recharge PHEV: 2.0T + rear e-motor, 8AT. DSG = 8AT Aisin."
         }
+      },
+      {
+        "key": "Volvo_V40_Mk2",
+        "wikidata_id": "Q1778408",
+        "model_year_from": 2012,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "T2 122 KM",
+            "displacement_cc": 1498,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "T3 152 KM",
+            "displacement_cc": 1498,
+            "power_kw": 112,
+            "power_hp": 152,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "T4 190 KM",
+            "displacement_cc": 1969,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "T5 245 KM",
+            "displacement_cc": 1969,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "D2 120 KM",
+            "displacement_cc": 1969,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "D3 150 KM",
+            "displacement_cc": 1969,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "D4 190 KM",
+            "displacement_cc": 1969,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volvo_V40 (525/526, 2012-2019). FWD only except V40 Cross Country AWD. Drive-E engines from 2014/2015 (1.5T T2/T3, 2.0 D-series). DSG = 8AT Geartronic (Aisin) or 6DCT."
+        }
+      },
+      {
+        "key": "Volvo_V50_Mk1",
+        "wikidata_id": "Q684617",
+        "model_year_from": 2004,
+        "model_year_to": 2012,
+        "engines": [
+          {
+            "name": "T4 180 KM",
+            "displacement_cc": 1999,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2007,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "T5 220 KM",
+            "displacement_cc": 2521,
+            "power_kw": 162,
+            "power_hp": 220,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2004,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0D 136 KM",
+            "displacement_cc": 1997,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2004,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "D3 150 KM",
+            "displacement_cc": 2179,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "D5 180 KM",
+            "displacement_cc": 2400,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2004,
+            "year_to": 2012,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volvo_V50 (545, 2004-2012). Ford C1 platform. T5 = 2.5T 5-cyl. D5 = 2.4D 5-cyl; AWD optional. DSG = Geartronic 5AT or 6AT. Facelift 2007 added T4 2.0T."
+        }
+      },
+      {
+        "key": "Volvo_S60_II",
+        "wikidata_id": "Q1570186",
+        "model_year_from": 2010,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "T4 190 KM",
+            "displacement_cc": 1969,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "T5 FWD 245 KM",
+            "displacement_cc": 1969,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "T6 AWD 306 KM",
+            "displacement_cc": 1969,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "T8 Twin Engine PHEV 340 KM",
+            "displacement_cc": 1969,
+            "power_kw": 250,
+            "power_hp": 340,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "D3 150 KM",
+            "displacement_cc": 1969,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "D4 190 KM",
+            "displacement_cc": 1969,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "D5 AWD 215 KM",
+            "displacement_cc": 1969,
+            "power_kw": 158,
+            "power_hp": 215,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volvo_S60 (II/134, 2010-2018). SPA predecessor platform. Drive-E 2.0 engines from 2014. T6 = 2.0T turbo+supercharged. T8 PHEV: 2.0T + rear e-axle 11.2kWh. DSG = 8AT Geartronic."
+        }
+      },
+      {
+        "key": "Volvo_S60_III",
+        "wikidata_id": "Q1570186",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "T4 FWD 190 KM",
+            "displacement_cc": 1969,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "B4 FWD 197 KM mHEV",
+            "displacement_cc": 1969,
+            "power_kw": 145,
+            "power_hp": 197,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "T5 AWD 254 KM",
+            "displacement_cc": 1969,
+            "power_kw": 187,
+            "power_hp": 254,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "B5 AWD 250 KM mHEV",
+            "displacement_cc": 1969,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "T8 Recharge PHEV AWD 390 KM",
+            "displacement_cc": 1969,
+            "power_kw": 287,
+            "power_hp": 390,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "T8 Recharge PHEV AWD 455 KM",
+            "displacement_cc": 1969,
+            "power_kw": 335,
+            "power_hp": 455,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volvo_S60 (III/224, 2018-). SPA platform. B-series = 48V mHEV from 2020 → PB_95. T8 Recharge: 2.0T + rear e-axle, upgraded from 390PS to 455PS in 2022. No diesel in S60 III."
+        }
+      },
+      {
+        "key": "Volvo_S90_II",
+        "wikidata_id": "Q1570190",
+        "model_year_from": 2016,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "T5 FWD 254 KM",
+            "displacement_cc": 1969,
+            "power_kw": 187,
+            "power_hp": 254,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "T6 AWD 320 KM",
+            "displacement_cc": 1969,
+            "power_kw": 235,
+            "power_hp": 320,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "B5 AWD 250 KM mHEV",
+            "displacement_cc": 1969,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "B6 AWD 300 KM mHEV",
+            "displacement_cc": 1969,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "T8 Recharge PHEV AWD 390 KM",
+            "displacement_cc": 1969,
+            "power_kw": 287,
+            "power_hp": 390,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "T8 Recharge PHEV AWD 455 KM",
+            "displacement_cc": 1969,
+            "power_kw": 335,
+            "power_hp": 455,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "D4 FWD 190 KM",
+            "displacement_cc": 1969,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "D5 AWD 235 KM",
+            "displacement_cc": 1969,
+            "power_kw": 173,
+            "power_hp": 235,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volvo_S90 (II/234, 2016-). SPA platform, D-segment luxury. T6 = turbo+supercharged 2.0T. B6 = 48V ISG mHEV 221kW. T8: 2.0T + rear e-axle. Diesel dropped 2020. DSG = 8AT Geartronic."
+        }
       }
     ],
     "VW": [
@@ -38125,18 +39241,2179 @@
           "notes": "DE Wikipedia Mitsubishi_Eclipse_Cross (GK, 2017-). Facelift 2021: PHEV added, 1.5T petrol retained in some markets, SUV-coupé rear restyled to SUV. PHEV: 2.4 Atkinson + dual e-motor AWD. CVT = INVECS-III."
         }
       }
+    ],
+    "Alfa Romeo": [
+      {
+        "key": "Alfa_159_939",
+        "wikidata_id": "Q223757",
+        "model_year_from": 2005,
+        "model_year_to": 2011,
+        "engines": [
+          {
+            "name": "1.8 TBi 200 KM",
+            "displacement_cc": 1742,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 JTS 185 KM",
+            "displacement_cc": 2198,
+            "power_kw": 136,
+            "power_hp": 185,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "3.2 JTS V6 260 KM",
+            "displacement_cc": 3195,
+            "power_kw": 191,
+            "power_hp": 260,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 JTDM 120 KM",
+            "displacement_cc": 1910,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 JTDM 150 KM",
+            "displacement_cc": 1910,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 JTDM 170 KM",
+            "displacement_cc": 1956,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "2.4 JTDM 200 KM",
+            "displacement_cc": 2387,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2011,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Alfa_Romeo_159 (939, 2005-2011). GM Epsilon platform. Facelift 2008: 1.8 TBi replaces 2.2 JTS at base; 2.0 JTDM replaces 1.9. 3.2 V6 Q4 AWD. 2.4 JTDM 5-cyl. Selespeed on some petrol."
+        }
+      },
+      {
+        "key": "Alfa_Giulia_952",
+        "wikidata_id": "Q18397284",
+        "model_year_from": 2016,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.0 Turbo 200 KM",
+            "displacement_cc": 1995,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Turbo 280 KM",
+            "displacement_cc": 1995,
+            "power_kw": 206,
+            "power_hp": 280,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Quadrifoglio 2.9 V6 Biturbo 510 KM",
+            "displacement_cc": 2891,
+            "power_kw": 375,
+            "power_hp": 510,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 JTD 150 KM",
+            "displacement_cc": 2143,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 JTD 190 KM",
+            "displacement_cc": 2143,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Alfa_Romeo_Giulia (952, 2016-). Giorgio platform. 2.0T GME engine (FWD or Q4 AWD). 280PS = Q4. 2.9 V6 Biturbo (Ferrari-derived) Quadrifoglio AWD. DSG = 8AT ZF."
+        }
+      },
+      {
+        "key": "Alfa_Stelvio_949",
+        "wikidata_id": "Q24042416",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.0 Turbo 200 KM",
+            "displacement_cc": 1995,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Turbo Q4 280 KM",
+            "displacement_cc": 1995,
+            "power_kw": 206,
+            "power_hp": 280,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Quadrifoglio 2.9 V6 Biturbo 510 KM",
+            "displacement_cc": 2891,
+            "power_kw": 375,
+            "power_hp": 510,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 JTD 160 KM",
+            "displacement_cc": 2143,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 JTD Q4 190 KM",
+            "displacement_cc": 2143,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Alfa_Romeo_Stelvio (949, 2017-). Giorgio platform, SUV sibling of Giulia. All variants AWD. 2.0T base = RWD or Q4 depending on market; EU often Q4 only. 2.9 V6 = Quadrifoglio. DSG = 8AT ZF."
+        }
+      },
+      {
+        "key": "Alfa_Tonale_965",
+        "wikidata_id": "Q106477534",
+        "model_year_from": 2022,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 VGT Hybrid 130 KM",
+            "displacement_cc": 1469,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 VGT Hybrid 160 KM",
+            "displacement_cc": 1469,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 PHEV FWD 190 KM",
+            "displacement_cc": 1268,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 PHEV Q4 280 KM",
+            "displacement_cc": 1268,
+            "power_kw": 206,
+            "power_hp": 280,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Alfa_Romeo_Tonale (965, 2022-). STLA Small platform. 1.5 VGT = 48V mHEV with variable-geometry turbo, 7DCT → DSG → PB_95. PHEV: 1.3T + 90kW rear e-motor (Q4 AWD); 13.2kWh battery."
+        }
+      },
+      {
+        "key": "Alfa_Junior_1_4",
+        "wikidata_id": "Q127457213",
+        "model_year_from": 2024,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "Ibrida 1.2 mHEV 136 KM",
+            "displacement_cc": 1199,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Elettrica EV 156 KM",
+            "displacement_cc": 0,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Veloce PHEV 280 KM",
+            "displacement_cc": 1199,
+            "power_kw": 206,
+            "power_hp": 280,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Alfa_Romeo_Junior (1.4/Milano, 2024-). CMP platform (Stellantis). Rebadged Peugeot e-208 platform. 1.2T PureTech + 48V BSG → PB_95. EV: 54kWh/115kW. Veloce PHEV: 1.2T + rear e-motor AWD, system 206kW."
+        }
+      }
+    ],
+    "Porsche": [
+      {
+        "key": "Porsche_911_991",
+        "wikidata_id": "Q209218",
+        "model_year_from": 2011,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "Carrera 3.4 350 KM",
+            "displacement_cc": 3436,
+            "power_kw": 257,
+            "power_hp": 350,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "Carrera S 3.8 400 KM",
+            "displacement_cc": 3800,
+            "power_kw": 294,
+            "power_hp": 400,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2011,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "Carrera 3.0 370 KM",
+            "displacement_cc": 2981,
+            "power_kw": 272,
+            "power_hp": 370,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "Carrera S 3.0 420 KM",
+            "displacement_cc": 2981,
+            "power_kw": 309,
+            "power_hp": 420,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "Carrera GTS 3.0 450 KM",
+            "displacement_cc": 2981,
+            "power_kw": 331,
+            "power_hp": 450,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "Turbo 3.8 520 KM",
+            "displacement_cc": 3800,
+            "power_kw": 382,
+            "power_hp": 520,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "Turbo S 3.8 560 KM",
+            "displacement_cc": 3800,
+            "power_kw": 412,
+            "power_hp": 560,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2013,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "Turbo 3.8 540 KM",
+            "displacement_cc": 3800,
+            "power_kw": 397,
+            "power_hp": 540,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "Turbo S 3.8 580 KM",
+            "displacement_cc": 3800,
+            "power_kw": 427,
+            "power_hp": 580,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "GT3 4.0 500 KM",
+            "displacement_cc": 3996,
+            "power_kw": 368,
+            "power_hp": 500,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Porsche_911 (991, 2011-2019). 991.1 (2011-2015): NA 3.4/3.8. 991.2 (2015-2019): turbocharged 3.0. DSG = 7-speed PDK. GT3 991.1: 3.8 475PS NA; 991.2: 4.0 500PS NA. Carrera AWD variants (Carrera 4) have same power."
+        }
+      },
+      {
+        "key": "Porsche_911_992",
+        "wikidata_id": "Q209218",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "Carrera 3.0 385 KM",
+            "displacement_cc": 2981,
+            "power_kw": 283,
+            "power_hp": 385,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Carrera S 3.0 450 KM",
+            "displacement_cc": 2981,
+            "power_kw": 331,
+            "power_hp": 450,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Carrera GTS 3.0 480 KM",
+            "displacement_cc": 2981,
+            "power_kw": 353,
+            "power_hp": 480,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Turbo 3.7 580 KM",
+            "displacement_cc": 3745,
+            "power_kw": 427,
+            "power_hp": 580,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Turbo S 3.7 650 KM",
+            "displacement_cc": 3745,
+            "power_kw": 478,
+            "power_hp": 650,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GT3 4.0 510 KM",
+            "displacement_cc": 3996,
+            "power_kw": 375,
+            "power_hp": 510,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GT3 RS 4.0 525 KM",
+            "displacement_cc": 3996,
+            "power_kw": 386,
+            "power_hp": 525,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Porsche_911 (992, 2019-). Turbo: 3.7L biturbo. Carrera 4/4S/Targa = same power as RWD. DSG = 8-speed PDK. GT3 available 6MT or PDK."
+        }
+      },
+      {
+        "key": "Porsche_Cayenne_958",
+        "wikidata_id": "Q318546",
+        "model_year_from": 2010,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "3.6 V6 300 KM",
+            "displacement_cc": 3598,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "S 3.6 V6 Turbo 420 KM",
+            "displacement_cc": 3598,
+            "power_kw": 309,
+            "power_hp": 420,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "GTS 3.6 V6 440 KM",
+            "displacement_cc": 3598,
+            "power_kw": 324,
+            "power_hp": 440,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "Turbo 4.8 V8 520 KM",
+            "displacement_cc": 4806,
+            "power_kw": 382,
+            "power_hp": 520,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "Turbo S 4.8 V8 570 KM",
+            "displacement_cc": 4806,
+            "power_kw": 419,
+            "power_hp": 570,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "S E-Hybrid PHEV 416 KM",
+            "displacement_cc": 3000,
+            "power_kw": 306,
+            "power_hp": 416,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "Diesel 3.0 V6 245 KM",
+            "displacement_cc": 2967,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "Diesel S 4.2 V8 385 KM",
+            "displacement_cc": 4134,
+            "power_kw": 283,
+            "power_hp": 385,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Porsche_Cayenne (958, 2010-2018). 958.1 (2010-2014): 4.8 V8 S/Turbo. 958.2 facelift (2014-2018): new 3.6T V6 S/GTS, PHEV. S E-Hybrid: 3.0 V6 + 95kW e-motor, 10.8kWh. DSG = 8AT Tiptronic."
+        }
+      },
+      {
+        "key": "Porsche_Cayenne_9YA",
+        "wikidata_id": "Q318546",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "3.0 V6 Turbo 340 KM",
+            "displacement_cc": 2995,
+            "power_kw": 250,
+            "power_hp": 340,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "S 2.9 V6 Biturbo 440 KM",
+            "displacement_cc": 2894,
+            "power_kw": 324,
+            "power_hp": 440,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "GTS 4.0 V8 460 KM",
+            "displacement_cc": 3996,
+            "power_kw": 338,
+            "power_hp": 460,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Turbo 4.0 V8 550 KM",
+            "displacement_cc": 3996,
+            "power_kw": 404,
+            "power_hp": 550,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Turbo GT 4.0 V8 640 KM",
+            "displacement_cc": 3996,
+            "power_kw": 471,
+            "power_hp": 640,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E-Hybrid 3.0 PHEV 462 KM",
+            "displacement_cc": 2995,
+            "power_kw": 340,
+            "power_hp": 462,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "Turbo S E-Hybrid PHEV 680 KM",
+            "displacement_cc": 3996,
+            "power_kw": 500,
+            "power_hp": 680,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "Turbo E-Hybrid PHEV 739 KM",
+            "displacement_cc": 3996,
+            "power_kw": 543,
+            "power_hp": 739,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Porsche_Cayenne (9YA, 2018-). MLB Evo platform. E-Hybrid PHEVs: 14.1kWh (2018-), 25.9kWh (2023 facelift). Turbo E-Hybrid: 4.0 V8 + 190kW e-motor, 739PS system. DSG = 8AT Tiptronic."
+        }
+      },
+      {
+        "key": "Porsche_Macan_95B",
+        "wikidata_id": "Q15717714",
+        "model_year_from": 2014,
+        "model_year_to": 2024,
+        "engines": [
+          {
+            "name": "2.0T 245 KM",
+            "displacement_cc": 1984,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "S 3.0 V6 Biturbo 354 KM",
+            "displacement_cc": 2995,
+            "power_kw": 260,
+            "power_hp": 354,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "GTS 2.9 V6 Biturbo 380 KM",
+            "displacement_cc": 2894,
+            "power_kw": 280,
+            "power_hp": 380,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2019,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "Turbo 2.9 V6 Biturbo 440 KM",
+            "displacement_cc": 2894,
+            "power_kw": 324,
+            "power_hp": 440,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2018,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "S Diesel 3.0 V6 258 KM",
+            "displacement_cc": 2967,
+            "power_kw": 190,
+            "power_hp": 258,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Porsche_Macan (95B, 2014-2024). MLB Evo platform (Audi Q5 based). 2.0T base = Audi EA888. Facelift 2018: new 2.9/3.0 V6 range. S Diesel 3.0 discontinued 2019. DSG = 7-speed PDK."
+        }
+      },
+      {
+        "key": "Porsche_Macan_J1A",
+        "wikidata_id": "Q15717714",
+        "model_year_from": 2024,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "Macan 4 EV 300 KM",
+            "displacement_cc": 0,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Macan 4S EV 408 KM",
+            "displacement_cc": 0,
+            "power_kw": 300,
+            "power_hp": 408,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Macan Turbo EV 639 KM",
+            "displacement_cc": 0,
+            "power_kw": 470,
+            "power_hp": 639,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Porsche_Macan (J1A/EV, 2024-). PPE platform (shared with Audi Q6 e-tron). BEV only. Macan 4: 100kWh/single motor. 4S: 100kWh/dual motor AWD. Turbo: 100kWh/dual motor high-output."
+        }
+      },
+      {
+        "key": "Porsche_Boxster_981",
+        "wikidata_id": "Q631668",
+        "model_year_from": 2012,
+        "model_year_to": 2016,
+        "engines": [
+          {
+            "name": "Boxster 2.7 265 KM",
+            "displacement_cc": 2706,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "Boxster S 3.4 315 KM",
+            "displacement_cc": 3436,
+            "power_kw": 232,
+            "power_hp": 315,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "Boxster GTS 3.4 330 KM",
+            "displacement_cc": 3436,
+            "power_kw": 243,
+            "power_hp": 330,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2016,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Porsche_Boxster (981, 2012-2016). Pre-718 generation. NA flat-6. DSG = 7-speed PDK."
+        }
+      },
+      {
+        "key": "Porsche_718Boxster_982",
+        "wikidata_id": "Q631668",
+        "model_year_from": 2016,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "718 Boxster 2.0T 300 KM",
+            "displacement_cc": 1988,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "718 Boxster S 2.5T 350 KM",
+            "displacement_cc": 2497,
+            "power_kw": 257,
+            "power_hp": 350,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "718 Boxster GTS 4.0 400 KM",
+            "displacement_cc": 3995,
+            "power_kw": 294,
+            "power_hp": 400,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "718 Spyder 4.0 420 KM",
+            "displacement_cc": 3995,
+            "power_kw": 309,
+            "power_hp": 420,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Porsche_718_Boxster (982, 2016-). 2.0T flat-4 turbo (base/S) from launch. GTS and Spyder: NA 4.0 flat-6. DSG = 7-speed PDK."
+        }
+      },
+      {
+        "key": "Porsche_Cayman_981",
+        "wikidata_id": "Q662348",
+        "model_year_from": 2012,
+        "model_year_to": 2016,
+        "engines": [
+          {
+            "name": "Cayman 2.7 275 KM",
+            "displacement_cc": 2706,
+            "power_kw": 202,
+            "power_hp": 275,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "Cayman S 3.4 325 KM",
+            "displacement_cc": 3436,
+            "power_kw": 239,
+            "power_hp": 325,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2012,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "Cayman GTS 3.4 340 KM",
+            "displacement_cc": 3436,
+            "power_kw": 250,
+            "power_hp": 340,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2016,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Porsche_Cayman (981c, 2012-2016). Coupe sibling of Boxster 981. NA flat-6. DSG = 7-speed PDK."
+        }
+      },
+      {
+        "key": "Porsche_718Cayman_982c",
+        "wikidata_id": "Q662348",
+        "model_year_from": 2016,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "718 Cayman 2.0T 300 KM",
+            "displacement_cc": 1988,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "718 Cayman S 2.5T 350 KM",
+            "displacement_cc": 2497,
+            "power_kw": 257,
+            "power_hp": 350,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "718 Cayman GTS 4.0 400 KM",
+            "displacement_cc": 3995,
+            "power_kw": 294,
+            "power_hp": 400,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "718 GT4 4.0 420 KM",
+            "displacement_cc": 3995,
+            "power_kw": 309,
+            "power_hp": 420,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "718 GT4 RS 4.0 500 KM",
+            "displacement_cc": 3995,
+            "power_kw": 368,
+            "power_hp": 500,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Porsche_718_Cayman (982c, 2016-). Coupe sibling of 718 Boxster. GTS/GT4/GT4 RS all use NA 4.0 flat-6. GT4 RS: 911 GT3 engine, PDK only. DSG = 7-speed PDK."
+        }
+      }
+    ],
+    "Saab": [
+      {
+        "key": "Saab_93_II",
+        "wikidata_id": "Q875489",
+        "model_year_from": 2002,
+        "model_year_to": 2012,
+        "engines": [
+          {
+            "name": "1.8t 150 KM",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0t 175 KM",
+            "displacement_cc": 1998,
+            "power_kw": 129,
+            "power_hp": 175,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0T 210 KM Aero",
+            "displacement_cc": 1998,
+            "power_kw": 154,
+            "power_hp": 210,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.8T V6 255 KM XWD",
+            "displacement_cc": 2792,
+            "power_kw": 188,
+            "power_hp": 255,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TiD 120 KM",
+            "displacement_cc": 1910,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2004,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TTiD 180 KM",
+            "displacement_cc": 1910,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2012,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Saab_9-3 (YS3F, 2002-2012). GM Epsilon platform. 2.0 B207 family (1.8t/2.0t/2.0T). 2.8T V6 B284 XWD = AWD. 1.9 TiD = Fiat Multijet (ALFA). TTiD = BiTurbo 180PS. Production ended with Saab bankruptcy 2012."
+        }
+      },
+      {
+        "key": "Saab_95_II",
+        "wikidata_id": "Q704521",
+        "model_year_from": 2010,
+        "model_year_to": 2012,
+        "engines": [
+          {
+            "name": "2.0T 220 KM",
+            "displacement_cc": 1998,
+            "power_kw": 162,
+            "power_hp": 220,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0T XWD 245 KM Aero",
+            "displacement_cc": 1998,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.8T V6 XWD 300 KM",
+            "displacement_cc": 2792,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TiD 160 KM",
+            "displacement_cc": 1956,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TTiD 190 KM",
+            "displacement_cc": 1956,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2012,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Saab_9-5 (II/YS3G, 2010-2012). GM Epsilon II platform. Very short production (2yr) due to Saab bankruptcy. XWD = AWD. 2.8T V6 = Opel/Vauxhall B284. 2.0 TTiD BiTurbo. Transmission: 6MT or Aisin 6AT."
+        }
+      }
+    ],
+    "Jeep": [
+      {
+        "key": "Jeep_GrandCherokee_WK2",
+        "wikidata_id": "Q862527",
+        "model_year_from": 2010,
+        "model_year_to": 2021,
+        "engines": [
+          {
+            "name": "3.6 V6 Pentastar 286 KM",
+            "displacement_cc": 3604,
+            "power_kw": 210,
+            "power_hp": 286,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "5.7 HEMI V8 357 KM",
+            "displacement_cc": 5654,
+            "power_kw": 262,
+            "power_hp": 357,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "6.4 HEMI V8 SRT 468 KM",
+            "displacement_cc": 6424,
+            "power_kw": 344,
+            "power_hp": 468,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 V6 EcoDiesel 250 KM",
+            "displacement_cc": 2987,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2021,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Jeep_Grand_Cherokee (WK2, 2010-2021). 8AT ZF. 3.6 Pentastar from 2011. SRT trim 6.4 HEMI. 3.0 EcoDiesel (VM Motori) for EU. All AWD standard."
+        }
+      },
+      {
+        "key": "Jeep_GrandCherokee_WL",
+        "wikidata_id": "Q862527",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "3.6 V6 Pentastar 285 KM",
+            "displacement_cc": 3604,
+            "power_kw": 210,
+            "power_hp": 285,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "5.7 HEMI V8 362 KM",
+            "displacement_cc": 5654,
+            "power_kw": 266,
+            "power_hp": 362,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "4xe PHEV 2.0T 375 KM",
+            "displacement_cc": 1995,
+            "power_kw": 276,
+            "power_hp": 375,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "6.4 HEMI SRT 477 KM",
+            "displacement_cc": 6424,
+            "power_kw": 351,
+            "power_hp": 477,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Jeep_Grand_Cherokee (WL, 2021-). Giorgio platform hybrid (Stellantis + FCA). 4xe: 2.0T + e-motor AWD, 17.3kWh plug-in. 8AT. 3.0 EcoDiesel not available in WL EU."
+        }
+      },
+      {
+        "key": "Jeep_Wrangler_JK",
+        "wikidata_id": "Q693419",
+        "model_year_from": 2007,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "3.6 V6 Pentastar 284 KM",
+            "displacement_cc": 3604,
+            "power_kw": 209,
+            "power_hp": 284,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.8 CRDi 200 KM",
+            "displacement_cc": 2776,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Jeep_Wrangler (JK, 2007-2018). 2-door and 4-door Unlimited. EU market: 2.8 CRDi (VM Motori). 3.6 Pentastar added 2012. Manual 6MT or 5AT."
+        }
+      },
+      {
+        "key": "Jeep_Wrangler_JL",
+        "wikidata_id": "Q693419",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.0T 272 KM",
+            "displacement_cc": 1995,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6 V6 Pentastar 285 KM",
+            "displacement_cc": 3604,
+            "power_kw": 210,
+            "power_hp": 285,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "4xe PHEV 2.0T 380 KM",
+            "displacement_cc": 1995,
+            "power_kw": 280,
+            "power_hp": 380,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 EcoDiesel 264 KM",
+            "displacement_cc": 2987,
+            "power_kw": 194,
+            "power_hp": 264,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Jeep_Wrangler (JL, 2018-). 4xe: 2.0T + e-motor, 17.3kWh plug-in. 8AT (4xe/EcoDiesel); 6MT option on V6. 3.0 EcoDiesel EU primary diesel."
+        }
+      },
+      {
+        "key": "Jeep_Compass_MP",
+        "wikidata_id": "Q1654090",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.3 T4 130 KM",
+            "displacement_cc": 1332,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 T4 150 KM",
+            "displacement_cc": 1332,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "4xe PHEV 1.3T 190 KM",
+            "displacement_cc": 1332,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 MultiJet 140 KM",
+            "displacement_cc": 1956,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Jeep_Compass (MP, 2017-). Small Compass, EU build (Melfi, Italy). 1.3T = Stellantis GSE turbo. 4xe: 1.3T front + 60kW rear e-motor, 11.4kWh plug-in AWD. DSG = 7DCT."
+        }
+      }
+    ],
+    "Dodge": [
+      {
+        "key": "Dodge_Charger_LD",
+        "wikidata_id": "Q188267",
+        "model_year_from": 2011,
+        "model_year_to": 2023,
+        "engines": [
+          {
+            "name": "3.6 V6 Pentastar 296 KM",
+            "displacement_cc": 3604,
+            "power_kw": 218,
+            "power_hp": 296,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "5.7 HEMI V8 375 KM",
+            "displacement_cc": 5654,
+            "power_kw": 276,
+            "power_hp": 375,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "6.4 HEMI SRT V8 492 KM",
+            "displacement_cc": 6424,
+            "power_kw": 362,
+            "power_hp": 492,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "6.2 HEMI SRT Hellcat V8 717 KM",
+            "displacement_cc": 6166,
+            "power_kw": 527,
+            "power_hp": 717,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "6.2 HEMI SRT Redeye V8 808 KM",
+            "displacement_cc": 6166,
+            "power_kw": 594,
+            "power_hp": 808,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Dodge_Charger (LD, 2011-2023). RWD or AWD. 8AT (ZF or TorqueFlite). V8 variants widely gray-imported to Poland. Hellcat: supercharged 6.2. Redeye: higher-output Hellcat."
+        }
+      },
+      {
+        "key": "Dodge_Challenger_LC",
+        "wikidata_id": "Q627961",
+        "model_year_from": 2008,
+        "model_year_to": 2023,
+        "engines": [
+          {
+            "name": "3.6 V6 Pentastar 305 KM",
+            "displacement_cc": 3604,
+            "power_kw": 224,
+            "power_hp": 305,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "5.7 HEMI V8 375 KM",
+            "displacement_cc": 5654,
+            "power_kw": 276,
+            "power_hp": 375,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "6.4 HEMI SRT V8 492 KM",
+            "displacement_cc": 6424,
+            "power_kw": 362,
+            "power_hp": 492,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "6.2 HEMI SRT Hellcat V8 717 KM",
+            "displacement_cc": 6166,
+            "power_kw": 527,
+            "power_hp": 717,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "6.2 HEMI SRT Redeye V8 808 KM",
+            "displacement_cc": 6166,
+            "power_kw": 594,
+            "power_hp": 808,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Dodge_Challenger (LC, 2008-2023). RWD coupe. Manual available on V6/5.7/6.4. Hellcat/Redeye: automatic only (TorqueFlite 8AT)."
+        }
+      }
+    ],
+    "Chevrolet": [
+      {
+        "key": "Chevrolet_Camaro_Gen6",
+        "wikidata_id": "Q171516",
+        "model_year_from": 2016,
+        "model_year_to": 2024,
+        "engines": [
+          {
+            "name": "2.0T 275 KM",
+            "displacement_cc": 1998,
+            "power_kw": 202,
+            "power_hp": 275,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6 V6 335 KM",
+            "displacement_cc": 3649,
+            "power_kw": 246,
+            "power_hp": 335,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "6.2 V8 SS 461 KM",
+            "displacement_cc": 6162,
+            "power_kw": 339,
+            "power_hp": 461,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": 2024,
+            "confidence": "high"
+          },
+          {
+            "name": "6.2 V8 ZL1 659 KM",
+            "displacement_cc": 6162,
+            "power_kw": 485,
+            "power_hp": 659,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2024,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Chevrolet_Camaro (Gen6, 2016-2024). Alpha platform (Cadillac CT6). RWD. Limited official EU presence; gray imports common in PL. 10AT or 8AT. Production ended 2024."
+        }
+      },
+      {
+        "key": "Chevrolet_Corvette_C7",
+        "wikidata_id": "Q192858",
+        "model_year_from": 2014,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "Stingray 6.2 V8 461 KM",
+            "displacement_cc": 6162,
+            "power_kw": 339,
+            "power_hp": 461,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "Z06 6.2 V8 Supercharged 659 KM",
+            "displacement_cc": 6162,
+            "power_kw": 485,
+            "power_hp": 659,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "Grand Sport 6.2 V8 461 KM",
+            "displacement_cc": 6162,
+            "power_kw": 339,
+            "power_hp": 461,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "ZR1 6.2 V8 Supercharged 763 KM",
+            "displacement_cc": 6162,
+            "power_kw": 561,
+            "power_hp": 763,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Chevrolet_Corvette (C7, 2014-2019). Front-mid V8 RWD. LT1 (Stingray/Grand Sport), LS3 never. Z06/ZR1: supercharged LT4/LT5. 7MT or 8AT."
+        }
+      },
+      {
+        "key": "Chevrolet_Corvette_C8",
+        "wikidata_id": "Q192858",
+        "model_year_from": 2020,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "Stingray 6.2 V8 502 KM",
+            "displacement_cc": 6162,
+            "power_kw": 369,
+            "power_hp": 502,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Z06 5.5 V8 680 KM",
+            "displacement_cc": 5497,
+            "power_kw": 500,
+            "power_hp": 680,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E-Ray 6.2 V8 + eMotor 660 KM",
+            "displacement_cc": 6162,
+            "power_kw": 485,
+            "power_hp": 660,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Chevrolet_Corvette (C8, 2020-). Mid-engine layout. LT2 V8 + 8DCT (dual clutch) → DSG. Z06: flat-plane 5.5 V8 LT6. E-Ray: 6.2 V8 + 97kW front e-motor, non-plug HEV → PB_95 (uses gen energy from engine). AWD on E-Ray."
+        }
+      }
+    ],
+    "RAM": [
+      {
+        "key": "RAM_1500_DS",
+        "wikidata_id": "Q1755534",
+        "model_year_from": 2009,
+        "model_year_to": 2021,
+        "engines": [
+          {
+            "name": "3.6 V6 Pentastar 309 KM",
+            "displacement_cc": 3604,
+            "power_kw": 227,
+            "power_hp": 309,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "5.7 HEMI V8 401 KM",
+            "displacement_cc": 5654,
+            "power_kw": 295,
+            "power_hp": 401,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 EcoDiesel V6 240 KM",
+            "displacement_cc": 2987,
+            "power_kw": 176,
+            "power_hp": 240,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2021,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia RAM_1500 (DS Classic, 2009-2021, sold alongside DT). 8AT or 6AT depending on year. Gray imports popular in PL. 5.7 HEMI MDS cylinder deactivation. EcoDiesel: VM Motori sourced."
+        }
+      },
+      {
+        "key": "RAM_1500_DT",
+        "wikidata_id": "Q1755534",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "3.6 V6 eTorque 309 KM mHEV",
+            "displacement_cc": 3604,
+            "power_kw": 227,
+            "power_hp": 309,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "5.7 HEMI V8 eTorque 401 KM mHEV",
+            "displacement_cc": 5654,
+            "power_kw": 295,
+            "power_hp": 401,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 EcoDiesel V6 264 KM",
+            "displacement_cc": 2987,
+            "power_kw": 194,
+            "power_hp": 264,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "TRX 6.2 HEMI Hellcat V8 712 KM",
+            "displacement_cc": 6166,
+            "power_kw": 523,
+            "power_hp": 712,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia RAM_1500 (DT, 2018-). 5th gen. eTorque = 48V belt-starter-generator mHEV → PB_95. 8AT. TRX: supercharged Hellcat 6.2. Popular grey import to PL."
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 366,
-    "engine_count": 2535,
+    "model_count": 407,
+    "engine_count": 2745,
     "engines_by_confidence": {
-      "high": 2486,
-      "medium": 49
+      "high": 2695,
+      "medium": 50
     },
     "models_by_confidence": {
-      "medium": 23,
-      "high": 343
+      "medium": 24,
+      "high": 383
     },
     "models_with_low_confidence": 0
   }

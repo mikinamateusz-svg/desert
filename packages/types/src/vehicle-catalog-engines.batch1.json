@@ -60382,18 +60382,891 @@
           "notes": "Aventador successor; V12 + 3 electric motors; 1015hp combined"
         }
       }
+    ],
+    "Infiniti": [
+      {
+        "key": "Infiniti_G35_V35",
+        "wikidata_id": "Q1066200",
+        "model_year_from": 2002,
+        "model_year_to": 2007,
+        "engines": [
+          {
+            "name": "3.5 V6 280",
+            "displacement_cc": 3498,
+            "power_kw": 206,
+            "power_hp": 280,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2007,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "V35 platform; Sedan and Coupe; based on Nissan FM platform sharing with 350Z"
+        }
+      },
+      {
+        "key": "Infiniti_G37_V36",
+        "wikidata_id": "Q1066201",
+        "model_year_from": 2007,
+        "model_year_to": 2015,
+        "engines": [
+          {
+            "name": "3.7 V6 320",
+            "displacement_cc": 3696,
+            "power_kw": 235,
+            "power_hp": 320,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "V36 platform; Sedan/Coupe/Convertible; sold as Q40/Q60 from 2014 in some markets"
+        }
+      },
+      {
+        "key": "Infiniti_Q50_V37",
+        "wikidata_id": "Q1066202",
+        "model_year_from": 2013,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.0T 211",
+            "displacement_cc": 1991,
+            "power_kw": 155,
+            "power_hp": 211,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0T 300",
+            "displacement_cc": 2997,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0T Red Sport 400",
+            "displacement_cc": 2997,
+            "power_kw": 294,
+            "power_hp": 400,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2d 170",
+            "displacement_cc": 2143,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "G37 successor; sports sedan; steer-by-wire DAS option"
+        }
+      },
+      {
+        "key": "Infiniti_Q60_V37",
+        "wikidata_id": "Q1066203",
+        "model_year_from": 2016,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.0T 211",
+            "displacement_cc": 1991,
+            "power_kw": 155,
+            "power_hp": 211,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0T 300",
+            "displacement_cc": 2997,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0T Red Sport 400",
+            "displacement_cc": 2997,
+            "power_kw": 294,
+            "power_hp": 400,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Sports coupe; shares V37 platform with Q50"
+        }
+      },
+      {
+        "key": "Infiniti_M35_M45_Y50",
+        "wikidata_id": "Q1066204",
+        "model_year_from": 2006,
+        "model_year_to": 2010,
+        "engines": [
+          {
+            "name": "3.5 V6 280",
+            "displacement_cc": 3498,
+            "power_kw": 206,
+            "power_hp": 280,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "4.5 V8 325",
+            "displacement_cc": 4494,
+            "power_kw": 239,
+            "power_hp": 325,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2010,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Y50 platform; executive sedan; M35 (V6) and M45 (V8)"
+        }
+      },
+      {
+        "key": "Infiniti_M37_M56_Y51",
+        "wikidata_id": "Q1066205",
+        "model_year_from": 2010,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "3.7 V6 328",
+            "displacement_cc": 3696,
+            "power_kw": 241,
+            "power_hp": 328,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "5.6 V8 420",
+            "displacement_cc": 5552,
+            "power_kw": 309,
+            "power_hp": 420,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Y51 platform; sold as Q70 from 2014; successor to M35/M45"
+        }
+      },
+      {
+        "key": "Infiniti_FX35_FX45_S50",
+        "wikidata_id": "Q1066206",
+        "model_year_from": 2002,
+        "model_year_to": 2008,
+        "engines": [
+          {
+            "name": "3.5 V6 FX35 280",
+            "displacement_cc": 3498,
+            "power_kw": 206,
+            "power_hp": 280,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "4.5 V8 FX45 315",
+            "displacement_cc": 4494,
+            "power_kw": 232,
+            "power_hp": 315,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2008,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "S50 platform; sport SUV coupe; first gen FX"
+        }
+      },
+      {
+        "key": "Infiniti_FX37_FX50_S51",
+        "wikidata_id": "Q1066207",
+        "model_year_from": 2008,
+        "model_year_to": 2013,
+        "engines": [
+          {
+            "name": "3.7 V6 FX37 320",
+            "displacement_cc": 3696,
+            "power_kw": 235,
+            "power_hp": 320,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "5.0 V8 FX50 390",
+            "displacement_cc": 4999,
+            "power_kw": 287,
+            "power_hp": 390,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "S51 platform; second gen FX; sold as QX70 from 2013"
+        }
+      },
+      {
+        "key": "Infiniti_QX60_L50",
+        "wikidata_id": "Q1066208",
+        "model_year_from": 2012,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "3.5 V6 265",
+            "displacement_cc": 3498,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "CVT"
+            ],
+            "year_from": 2012,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "L50 platform (formerly JX35); 3-row 7-seat luxury SUV; based on Nissan Pathfinder"
+        }
+      },
+      {
+        "key": "Infiniti_QX80_Z62",
+        "wikidata_id": "Q1066209",
+        "model_year_from": 2010,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "5.6 V8 400",
+            "displacement_cc": 5552,
+            "power_kw": 294,
+            "power_hp": 400,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Z62 platform; full-size luxury SUV; based on Nissan Patrol/Armada"
+        }
+      },
+      {
+        "key": "Infiniti_EX35_QX50",
+        "wikidata_id": "Q1066210",
+        "model_year_from": 2007,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "3.5 V6 EX35 222",
+            "displacement_cc": 3498,
+            "power_kw": 163,
+            "power_hp": 222,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "3.7 V6 QX50 328",
+            "displacement_cc": 3696,
+            "power_kw": 241,
+            "power_hp": 328,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2017,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Compact luxury crossover; EX35 (2007-2012) renamed QX50 (2013-2017)"
+        }
+      }
+    ],
+    "Acura": [
+      {
+        "key": "Acura_NSX_NA1",
+        "wikidata_id": "Q697540",
+        "model_year_from": 1990,
+        "model_year_to": 2005,
+        "engines": [
+          {
+            "name": "3.0 V6 270",
+            "displacement_cc": 2977,
+            "power_kw": 199,
+            "power_hp": 270,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1990,
+            "year_to": 1997,
+            "confidence": "high"
+          },
+          {
+            "name": "3.2 V6 290",
+            "displacement_cc": 3179,
+            "power_kw": 213,
+            "power_hp": 290,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1997,
+            "year_to": 2005,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "NA1/NA2; mid-engine all-aluminium sports car; iconic naturally aspirated Honda V6"
+        }
+      },
+      {
+        "key": "Acura_NSX_NC1",
+        "wikidata_id": "Q697541",
+        "model_year_from": 2016,
+        "model_year_to": 2022,
+        "engines": [
+          {
+            "name": "3.5T V6 PHEV 573",
+            "displacement_cc": 3492,
+            "power_kw": 421,
+            "power_hp": 573,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": 2022,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "NC1; twin-turbo V6 + 3 electric motors; 573hp combined sport hybrid"
+        }
+      },
+      {
+        "key": "Acura_RSX_DC5",
+        "wikidata_id": "Q697542",
+        "model_year_from": 2001,
+        "model_year_to": 2006,
+        "engines": [
+          {
+            "name": "2.0 i-VTEC 160",
+            "displacement_cc": 1998,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2006,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 i-VTEC Type-S 210",
+            "displacement_cc": 1998,
+            "power_kw": 154,
+            "power_hp": 210,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2002,
+            "year_to": 2006,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DC5; successor to Integra; compact sports coupe"
+        }
+      },
+      {
+        "key": "Acura_TL_UA6",
+        "wikidata_id": "Q697543",
+        "model_year_from": 2003,
+        "model_year_to": 2008,
+        "engines": [
+          {
+            "name": "3.2 V6 258",
+            "displacement_cc": 3210,
+            "power_kw": 190,
+            "power_hp": 258,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2008,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "UA6 platform; 3rd gen TL; popular JDM-spec used car"
+        }
+      },
+      {
+        "key": "Acura_TL_UA8",
+        "wikidata_id": "Q697544",
+        "model_year_from": 2008,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "3.5 V6 280",
+            "displacement_cc": 3471,
+            "power_kw": 206,
+            "power_hp": 280,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "3.7 V6 SH-AWD 305",
+            "displacement_cc": 3664,
+            "power_kw": 224,
+            "power_hp": 305,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "UA8/UA9; 4th gen TL; SH-AWD variant with torque vectoring"
+        }
+      },
+      {
+        "key": "Acura_TSX_CL9",
+        "wikidata_id": "Q697545",
+        "model_year_from": 2003,
+        "model_year_to": 2008,
+        "engines": [
+          {
+            "name": "2.4 i-VTEC 200",
+            "displacement_cc": 2354,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2008,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "CL9; based on Honda Accord Euro R; sporty compact executive"
+        }
+      },
+      {
+        "key": "Acura_TSX_CU2",
+        "wikidata_id": "Q697546",
+        "model_year_from": 2008,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "2.4 i-VTEC 201",
+            "displacement_cc": 2354,
+            "power_kw": 148,
+            "power_hp": 201,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "3.5 V6 280",
+            "displacement_cc": 3471,
+            "power_kw": 206,
+            "power_hp": 280,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "CU2; second gen TSX; based on Honda Accord 8th gen"
+        }
+      },
+      {
+        "key": "Acura_TLX_UB1",
+        "wikidata_id": "Q697547",
+        "model_year_from": 2014,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.4 i-VTEC 206",
+            "displacement_cc": 2356,
+            "power_kw": 152,
+            "power_hp": 206,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "3.5 V6 SH-AWD 290",
+            "displacement_cc": 3471,
+            "power_kw": 213,
+            "power_hp": 290,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0T 272",
+            "displacement_cc": 1995,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0T Type-S SH-AWD 355",
+            "displacement_cc": 2997,
+            "power_kw": 261,
+            "power_hp": 355,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "TL/TSX successor; 2nd gen (2020+) fully redesigned; Type S returned 2021"
+        }
+      },
+      {
+        "key": "Acura_MDX_YD1",
+        "wikidata_id": "Q697548",
+        "model_year_from": 2001,
+        "model_year_to": 2006,
+        "engines": [
+          {
+            "name": "3.5 V6 265",
+            "displacement_cc": 3471,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2006,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "YD1; first gen MDX; 3-row SUV based on Honda Odyssey platform"
+        }
+      },
+      {
+        "key": "Acura_MDX_YD2",
+        "wikidata_id": "Q697549",
+        "model_year_from": 2006,
+        "model_year_to": 2013,
+        "engines": [
+          {
+            "name": "3.7 V6 300",
+            "displacement_cc": 3664,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2013,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "YD2; second gen MDX; SH-AWD with torque vectoring; popular in NA"
+        }
+      },
+      {
+        "key": "Acura_MDX_YD3",
+        "wikidata_id": "Q697550",
+        "model_year_from": 2013,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "3.5 V6 290",
+            "displacement_cc": 3471,
+            "power_kw": 213,
+            "power_hp": 290,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0T PHEV 325",
+            "displacement_cc": 2997,
+            "power_kw": 239,
+            "power_hp": 325,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "YD3/YE1; 3rd/4th gen MDX; PHEV Sport Hybrid from 2021 gen"
+        }
+      },
+      {
+        "key": "Acura_RDX_TB3",
+        "wikidata_id": "Q697551",
+        "model_year_from": 2006,
+        "model_year_to": 2012,
+        "engines": [
+          {
+            "name": "2.3T 240",
+            "displacement_cc": 2354,
+            "power_kw": 176,
+            "power_hp": 240,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2012,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "TB3/TB4; first gen RDX; turbocharged inline-4, compact luxury SUV"
+        }
+      },
+      {
+        "key": "Acura_RDX_UC1",
+        "wikidata_id": "Q697552",
+        "model_year_from": 2012,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "3.5 V6 273",
+            "displacement_cc": 3471,
+            "power_kw": 201,
+            "power_hp": 273,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0T 272",
+            "displacement_cc": 1995,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "UC1; 2nd gen (2012-2018) naturally aspirated V6; 3rd gen (2018+) 2.0T"
+        }
+      },
+      {
+        "key": "Acura_ILX_DE3",
+        "wikidata_id": "Q697553",
+        "model_year_from": 2012,
+        "model_year_to": 2022,
+        "engines": [
+          {
+            "name": "2.0 i-VTEC 150",
+            "displacement_cc": 1997,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "2.4 i-VTEC 201",
+            "displacement_cc": 2354,
+            "power_kw": 148,
+            "power_hp": 201,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE3; entry-level Acura; based on Honda Civic platform"
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 696,
-    "engine_count": 3929,
+    "model_count": 721,
+    "engine_count": 3974,
     "engines_by_confidence": {
-      "high": 3870,
+      "high": 3915,
       "medium": 59,
       "low": 0
     },
     "models_by_confidence": {
-      "all_high": 665,
+      "all_high": 690,
       "has_medium": 31,
       "has_low": 0
     },

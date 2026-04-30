@@ -9655,6 +9655,613 @@
         "_meta": {
           "notes": "DE Wikipedia Volkswagen_Passat_B4 (3A, 1993-1996). Facelift of B3 platform before full PL46 replacement. ABD/ADZ/AAA petrol, 1Z/AHU diesel. Short run. Popular D-segment in PL 1994-2000."
         }
+      },
+      {
+        "key": "VW_Polo_IV",
+        "wikidata_id": "Q231869",
+        "model_year_from": 2001,
+        "model_year_to": 2009,
+        "engines": [
+          {
+            "name": "1.2 55 KM",
+            "displacement_cc": 1198,
+            "power_kw": 40,
+            "power_hp": 55,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 64 KM",
+            "displacement_cc": 1198,
+            "power_kw": 47,
+            "power_hp": 64,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 16V 80 KM",
+            "displacement_cc": 1390,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 16V 101 KM",
+            "displacement_cc": 1390,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2006,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 16V 105 KM",
+            "displacement_cc": 1598,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8T GTI 150 KM",
+            "displacement_cc": 1781,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8T GTI Cup 180 KM",
+            "displacement_cc": 1781,
+            "power_kw": 130,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 SDI 64 KM",
+            "displacement_cc": 1896,
+            "power_kw": 47,
+            "power_hp": 64,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2005,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TDI 70 KM",
+            "displacement_cc": 1422,
+            "power_kw": 51,
+            "power_hp": 70,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TDI 80 KM",
+            "displacement_cc": 1422,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TDI 101 KM",
+            "displacement_cc": 1896,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2003,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TDI 130 KM",
+            "displacement_cc": 1896,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2003,
+            "year_to": 2009,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia VW_Polo (9N 2001-2005, 9N3 facelift 2005-2009). 1.2 = AZQ/BME 3-cyl. 1.4 16V = BBY/BKY. GTI = 9N3 only, 1.8T AWP/BUD. 1.9 SDI = 9N only. 1.4 TDI = AMF/BNM PD; 9N3 switched to CR. 1.9 TDI = ATD/BLT PD. automatic = 4-speed Tiptronic on petrol."
+        }
+      },
+      {
+        "key": "VW_Polo_V",
+        "wikidata_id": "Q231869",
+        "model_year_from": 2009,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "1.2 MPI 60 KM",
+            "displacement_cc": 1198,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 MPI 70 KM",
+            "displacement_cc": 1198,
+            "power_kw": 51,
+            "power_hp": 70,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 MPI 85 KM",
+            "displacement_cc": 1390,
+            "power_kw": 63,
+            "power_hp": 85,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 MPI 105 KM",
+            "displacement_cc": 1598,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TSI 90 KM",
+            "displacement_cc": 1197,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TSI 105 KM",
+            "displacement_cc": 1197,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI GTI 180 KM",
+            "displacement_cc": 1390,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2010,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 TDI 75 KM",
+            "displacement_cc": 1199,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TDI 75 KM",
+            "displacement_cc": 1422,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 90 KM",
+            "displacement_cc": 1598,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 105 KM",
+            "displacement_cc": 1598,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia VW_Polo (6R pre-facelift, 2009-2014). PQ25 platform. 1.2 MPI = CGP 3-cyl. 1.2 TSI = CBZ twin-charged (supercharged+turbo). 1.4 TSI GTI = CAVE twin-charged 180 PS, DSG only (discontinued 2013). 1.2 TDI = CFWA 3-cyl BlueMotion. 1.4/1.6 TDI = CR. DSG = 7-speed dry."
+        }
+      },
+      {
+        "key": "VW_Polo_V_fl",
+        "wikidata_id": "Q231869",
+        "model_year_from": 2014,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "1.0 MPI 60 KM",
+            "displacement_cc": 999,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 MPI 75 KM",
+            "displacement_cc": 999,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI 90 KM",
+            "displacement_cc": 999,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI 110 KM",
+            "displacement_cc": 999,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TSI BlueGT 140 KM",
+            "displacement_cc": 1395,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TSI GTI 192 KM",
+            "displacement_cc": 1798,
+            "power_kw": 141,
+            "power_hp": 192,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TDI 75 KM",
+            "displacement_cc": 1422,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TDI 90 KM",
+            "displacement_cc": 1422,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TDI 105 KM",
+            "displacement_cc": 1422,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia VW_Polo (6C facelift, 2014-2017). 1.0 MPI/TSI = EA111 3-cyl replacing 1.2 units. 1.4 TSI BlueGT = EA211 with cylinder deactivation. 1.8 TSI GTI = EA888 replacing twin-charged 1.4 TSI. 1.4 TDI = EA288 3-cyl. DSG = 7-speed dry."
+        }
+      },
+      {
+        "key": "VW_Polo_VI",
+        "wikidata_id": "Q231869",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 MPI 65 KM",
+            "displacement_cc": 999,
+            "power_kw": 48,
+            "power_hp": 65,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 MPI 80 KM",
+            "displacement_cc": 999,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI 95 KM",
+            "displacement_cc": 999,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TSI 115 KM",
+            "displacement_cc": 999,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TSI 150 KM",
+            "displacement_cc": 1498,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI GTI 200 KM",
+            "displacement_cc": 1984,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TSI GTI 207 KM",
+            "displacement_cc": 1984,
+            "power_kw": 152,
+            "power_hp": 207,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 TGI 90 KM",
+            "displacement_cc": 999,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "CNG",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 80 KM",
+            "displacement_cc": 1598,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDI 95 KM",
+            "displacement_cc": 1598,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia VW_Polo (AW, 2017-). MQB-A0 platform. 1.0 TSI = EA211 evo. 1.5 TSI ACT = EA211 evo with cylinder deactivation (from 2020 facelift). GTI: 147kW/200PS (2017-2021), 152kW/207PS (2022+ FL). 1.0 TGI = CNG+petrol bifuel. 1.6 TDI discontinued ~2020 (EU6d). DSG = 7-speed dry."
+        }
       }
     ],
     "Skoda": [
@@ -37099,6 +37706,82 @@
         "_meta": {
           "notes": "DE Wikipedia Dacia_Jogger (2021-). Sales from 03/2022. No diesel. ECO-G = factory petrol/LPG bifuel; LPG-mode peak power listed. E-Tech 140: 1.6L + 51kW e-motor, 8-speed DHT multi-mode, non-plug HEV → PB_95. Hybrid 155: 1.8L from 12/2025."
         }
+      },
+      {
+        "key": "Dacia_Logan_Mk2_LS",
+        "wikidata_id": "Q1364406",
+        "model_year_from": 2012,
+        "model_year_to": 2020,
+        "engines": [
+          {
+            "name": "1.0 SCe 73",
+            "displacement_cc": 999,
+            "power_kw": 54,
+            "power_hp": 73,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 MPI 85",
+            "displacement_cc": 1598,
+            "power_kw": 63,
+            "power_hp": 85,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "0.9 TCe 90",
+            "displacement_cc": 898,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 75",
+            "displacement_cc": 1461,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 90",
+            "displacement_cc": 1461,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2012,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "LS/L52 platform; budget sedan popular in PL"
+        }
       }
     ],
     "Mercedes-Benz": [
@@ -39022,6 +39705,457 @@
         "_meta": {
           "notes": "DE Wikipedia Mercedes-Benz_E-Klasse_W210 (1995-2002). E-segment. M111/M104/M112/M113 petrol. OM604/OM605/OM611/OM612/OM613 diesel. CDI common rail from 1999. Facelift 1999. Popular used E-segment in PL 2000-2008."
         }
+      },
+      {
+        "key": "Mercedes_EClass_W212",
+        "wikidata_id": "Q706922",
+        "model_year_from": 2009,
+        "model_year_to": 2016,
+        "engines": [
+          {
+            "name": "E 200 184 KM",
+            "displacement_cc": 1800,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "E 250 204 KM",
+            "displacement_cc": 1800,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "E 300 245 KM",
+            "displacement_cc": 2996,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "E 350 306 KM",
+            "displacement_cc": 3498,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "E 400 333 KM",
+            "displacement_cc": 3498,
+            "power_kw": 245,
+            "power_hp": 333,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "E 63 AMG 557 KM",
+            "displacement_cc": 5461,
+            "power_kw": 410,
+            "power_hp": 557,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "E 200 CDI 136 KM",
+            "displacement_cc": 2143,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "E 220 CDI 170 KM",
+            "displacement_cc": 2143,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "E 250 CDI 204 KM",
+            "displacement_cc": 2143,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "E 300 CDI 211 KM",
+            "displacement_cc": 2987,
+            "power_kw": 155,
+            "power_hp": 211,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "E 350 CDI 265 KM",
+            "displacement_cc": 2987,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2016,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mercedes-Benz_W212 (2009-2016). Facelift 2013: E 200/E 250 switched M271 1.8T→M274 2.0T (same power badges). E 300/E 350/E 400 = M276 3.0/3.5 V6. E 63 AMG = M157 5.5 V8 biturbo (from 2011; pre-fl M156 NA). Diesel = OM651 2.1T I4 / OM642 3.0 V6. automatic = 7G-Tronic."
+        }
+      },
+      {
+        "key": "Mercedes_EClass_W213",
+        "wikidata_id": "Q706922",
+        "model_year_from": 2016,
+        "model_year_to": 2023,
+        "engines": [
+          {
+            "name": "E 180 156 KM",
+            "displacement_cc": 1595,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "E 200 184 KM",
+            "displacement_cc": 1991,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "E 300 245 KM",
+            "displacement_cc": 1991,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "E 450 367 KM",
+            "displacement_cc": 2996,
+            "power_kw": 270,
+            "power_hp": 367,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "E 63 AMG 571 KM",
+            "displacement_cc": 3982,
+            "power_kw": 420,
+            "power_hp": 571,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "E 63 S AMG 612 KM",
+            "displacement_cc": 3982,
+            "power_kw": 450,
+            "power_hp": 612,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "E 300e PHEV 320 KM",
+            "displacement_cc": 1991,
+            "power_kw": 235,
+            "power_hp": 320,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "E 200d 150 KM",
+            "displacement_cc": 1950,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "E 220d 194 KM",
+            "displacement_cc": 1950,
+            "power_kw": 143,
+            "power_hp": 194,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "E 300d 245 KM",
+            "displacement_cc": 1950,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "E 350d 258 KM",
+            "displacement_cc": 2987,
+            "power_kw": 190,
+            "power_hp": 258,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "E 300de PHEV 306 KM",
+            "displacement_cc": 1950,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mercedes-Benz_W213 (2016-2023). Facelift 2020. E 180 = M264 1.6T (2017-2020). E 200/300 = M274 2.0T. E 450 = M276 3.0 V6 biturbo 48V mHEV. E 63 AMG = M177 4.0 V8 biturbo. Diesel = OM654 2.0T I4 (EU6). PHEV from FL 2020: E 300e system 235kW; E 300de system 225kW; both 13.5kWh ~50km EV. automatic = 9G-Tronic."
+        }
+      },
+      {
+        "key": "Mercedes_EClass_W214",
+        "wikidata_id": "Q706922",
+        "model_year_from": 2023,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "E 200 204 KM",
+            "displacement_cc": 1999,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E 300 258 KM",
+            "displacement_cc": 1999,
+            "power_kw": 190,
+            "power_hp": 258,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E 450 381 KM",
+            "displacement_cc": 2999,
+            "power_kw": 280,
+            "power_hp": 381,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E 300e PHEV 313 KM",
+            "displacement_cc": 1999,
+            "power_kw": 230,
+            "power_hp": 313,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E 400e PHEV 381 KM",
+            "displacement_cc": 1999,
+            "power_kw": 280,
+            "power_hp": 381,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E 53 HYBRID AMG 449 KM",
+            "displacement_cc": 2999,
+            "power_kw": 330,
+            "power_hp": 449,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E 220d 197 KM",
+            "displacement_cc": 1993,
+            "power_kw": 145,
+            "power_hp": 197,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E 450d 367 KM",
+            "displacement_cc": 2989,
+            "power_kw": 270,
+            "power_hp": 367,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E 300de PHEV 313 KM",
+            "displacement_cc": 1993,
+            "power_kw": 230,
+            "power_hp": 313,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mercedes-Benz_W214 (2023-). MRA2 platform. All engines 48V ISG mild hybrid standard. E 200/300 = M254 2.0T I4. E 450 = M256 3.0 I6. E 53 AMG PHEV = M256 3.0T + EQ booster, 25.4kWh, ~100km EV. Diesel = OM654 2.0T / OM656 3.0 I6. PHEV 25.4kWh ~100km EV. automatic = 9G-Tronic."
+        }
       }
     ],
     "Nissan": [
@@ -40582,615 +41716,6 @@
         ],
         "_meta": {
           "notes": "DE Wikipedia Volvo_S90 (II/234, 2016-). SPA platform, D-segment luxury. T6 = turbo+supercharged 2.0T. B6 = 48V ISG mHEV 221kW. T8: 2.0T + rear e-axle. Diesel dropped 2020. DSG = 8AT Geartronic."
-        }
-      }
-    ],
-    "VW": [
-      {
-        "key": "VW_Polo_IV",
-        "wikidata_id": "Q231869",
-        "model_year_from": 2001,
-        "model_year_to": 2009,
-        "engines": [
-          {
-            "name": "1.2 55 KM",
-            "displacement_cc": 1198,
-            "power_kw": 40,
-            "power_hp": 55,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2001,
-            "year_to": 2009,
-            "confidence": "high"
-          },
-          {
-            "name": "1.2 64 KM",
-            "displacement_cc": 1198,
-            "power_kw": 47,
-            "power_hp": 64,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2001,
-            "year_to": 2009,
-            "confidence": "high"
-          },
-          {
-            "name": "1.4 16V 80 KM",
-            "displacement_cc": 1390,
-            "power_kw": 59,
-            "power_hp": 80,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "automatic"
-            ],
-            "year_from": 2001,
-            "year_to": 2009,
-            "confidence": "high"
-          },
-          {
-            "name": "1.4 16V 101 KM",
-            "displacement_cc": 1390,
-            "power_kw": 74,
-            "power_hp": 101,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "automatic"
-            ],
-            "year_from": 2002,
-            "year_to": 2006,
-            "confidence": "high"
-          },
-          {
-            "name": "1.6 16V 105 KM",
-            "displacement_cc": 1598,
-            "power_kw": 77,
-            "power_hp": 105,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2006,
-            "year_to": 2009,
-            "confidence": "high"
-          },
-          {
-            "name": "1.8T GTI 150 KM",
-            "displacement_cc": 1781,
-            "power_kw": 110,
-            "power_hp": 150,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2006,
-            "year_to": 2009,
-            "confidence": "high"
-          },
-          {
-            "name": "1.8T GTI Cup 180 KM",
-            "displacement_cc": 1781,
-            "power_kw": 130,
-            "power_hp": 180,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2007,
-            "year_to": 2009,
-            "confidence": "high"
-          },
-          {
-            "name": "1.9 SDI 64 KM",
-            "displacement_cc": 1896,
-            "power_kw": 47,
-            "power_hp": 64,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2001,
-            "year_to": 2005,
-            "confidence": "high"
-          },
-          {
-            "name": "1.4 TDI 70 KM",
-            "displacement_cc": 1422,
-            "power_kw": 51,
-            "power_hp": 70,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2001,
-            "year_to": 2009,
-            "confidence": "high"
-          },
-          {
-            "name": "1.4 TDI 80 KM",
-            "displacement_cc": 1422,
-            "power_kw": 59,
-            "power_hp": 80,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2005,
-            "year_to": 2009,
-            "confidence": "high"
-          },
-          {
-            "name": "1.9 TDI 101 KM",
-            "displacement_cc": 1896,
-            "power_kw": 74,
-            "power_hp": 101,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2003,
-            "year_to": 2009,
-            "confidence": "high"
-          },
-          {
-            "name": "1.9 TDI 130 KM",
-            "displacement_cc": 1896,
-            "power_kw": 96,
-            "power_hp": 130,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2003,
-            "year_to": 2009,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia VW_Polo (9N 2001-2005, 9N3 facelift 2005-2009). 1.2 = AZQ/BME 3-cyl. 1.4 16V = BBY/BKY. GTI = 9N3 only, 1.8T AWP/BUD. 1.9 SDI = 9N only. 1.4 TDI = AMF/BNM PD; 9N3 switched to CR. 1.9 TDI = ATD/BLT PD. automatic = 4-speed Tiptronic on petrol."
-        }
-      },
-      {
-        "key": "VW_Polo_V",
-        "wikidata_id": "Q231869",
-        "model_year_from": 2009,
-        "model_year_to": 2014,
-        "engines": [
-          {
-            "name": "1.2 MPI 60 KM",
-            "displacement_cc": 1198,
-            "power_kw": 44,
-            "power_hp": 60,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2009,
-            "year_to": 2014,
-            "confidence": "high"
-          },
-          {
-            "name": "1.2 MPI 70 KM",
-            "displacement_cc": 1198,
-            "power_kw": 51,
-            "power_hp": 70,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2009,
-            "year_to": 2014,
-            "confidence": "high"
-          },
-          {
-            "name": "1.4 MPI 85 KM",
-            "displacement_cc": 1390,
-            "power_kw": 63,
-            "power_hp": 85,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "DSG"
-            ],
-            "year_from": 2009,
-            "year_to": 2014,
-            "confidence": "high"
-          },
-          {
-            "name": "1.6 MPI 105 KM",
-            "displacement_cc": 1598,
-            "power_kw": 77,
-            "power_hp": 105,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2009,
-            "year_to": 2014,
-            "confidence": "high"
-          },
-          {
-            "name": "1.2 TSI 90 KM",
-            "displacement_cc": 1197,
-            "power_kw": 66,
-            "power_hp": 90,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "DSG"
-            ],
-            "year_from": 2009,
-            "year_to": 2014,
-            "confidence": "high"
-          },
-          {
-            "name": "1.2 TSI 105 KM",
-            "displacement_cc": 1197,
-            "power_kw": 77,
-            "power_hp": 105,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "DSG"
-            ],
-            "year_from": 2009,
-            "year_to": 2014,
-            "confidence": "high"
-          },
-          {
-            "name": "1.4 TSI GTI 180 KM",
-            "displacement_cc": 1390,
-            "power_kw": 132,
-            "power_hp": 180,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2010,
-            "year_to": 2013,
-            "confidence": "high"
-          },
-          {
-            "name": "1.2 TDI 75 KM",
-            "displacement_cc": 1199,
-            "power_kw": 55,
-            "power_hp": 75,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2009,
-            "year_to": 2014,
-            "confidence": "high"
-          },
-          {
-            "name": "1.4 TDI 75 KM",
-            "displacement_cc": 1422,
-            "power_kw": 55,
-            "power_hp": 75,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual",
-              "DSG"
-            ],
-            "year_from": 2009,
-            "year_to": 2014,
-            "confidence": "high"
-          },
-          {
-            "name": "1.6 TDI 90 KM",
-            "displacement_cc": 1598,
-            "power_kw": 66,
-            "power_hp": 90,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual",
-              "DSG"
-            ],
-            "year_from": 2009,
-            "year_to": 2014,
-            "confidence": "high"
-          },
-          {
-            "name": "1.6 TDI 105 KM",
-            "displacement_cc": 1598,
-            "power_kw": 77,
-            "power_hp": 105,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual",
-              "DSG"
-            ],
-            "year_from": 2009,
-            "year_to": 2014,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia VW_Polo (6R pre-facelift, 2009-2014). PQ25 platform. 1.2 MPI = CGP 3-cyl. 1.2 TSI = CBZ twin-charged (supercharged+turbo). 1.4 TSI GTI = CAVE twin-charged 180 PS, DSG only (discontinued 2013). 1.2 TDI = CFWA 3-cyl BlueMotion. 1.4/1.6 TDI = CR. DSG = 7-speed dry."
-        }
-      },
-      {
-        "key": "VW_Polo_V_fl",
-        "wikidata_id": "Q231869",
-        "model_year_from": 2014,
-        "model_year_to": 2017,
-        "engines": [
-          {
-            "name": "1.0 MPI 60 KM",
-            "displacement_cc": 999,
-            "power_kw": 44,
-            "power_hp": 60,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2014,
-            "year_to": 2017,
-            "confidence": "high"
-          },
-          {
-            "name": "1.0 MPI 75 KM",
-            "displacement_cc": 999,
-            "power_kw": 55,
-            "power_hp": 75,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2014,
-            "year_to": 2017,
-            "confidence": "high"
-          },
-          {
-            "name": "1.0 TSI 90 KM",
-            "displacement_cc": 999,
-            "power_kw": 66,
-            "power_hp": 90,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2014,
-            "year_to": 2017,
-            "confidence": "high"
-          },
-          {
-            "name": "1.0 TSI 110 KM",
-            "displacement_cc": 999,
-            "power_kw": 81,
-            "power_hp": 110,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "DSG"
-            ],
-            "year_from": 2014,
-            "year_to": 2017,
-            "confidence": "high"
-          },
-          {
-            "name": "1.4 TSI BlueGT 140 KM",
-            "displacement_cc": 1395,
-            "power_kw": 103,
-            "power_hp": 140,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2014,
-            "year_to": 2017,
-            "confidence": "high"
-          },
-          {
-            "name": "1.8 TSI GTI 192 KM",
-            "displacement_cc": 1798,
-            "power_kw": 141,
-            "power_hp": 192,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "DSG"
-            ],
-            "year_from": 2014,
-            "year_to": 2017,
-            "confidence": "high"
-          },
-          {
-            "name": "1.4 TDI 75 KM",
-            "displacement_cc": 1422,
-            "power_kw": 55,
-            "power_hp": 75,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual",
-              "DSG"
-            ],
-            "year_from": 2014,
-            "year_to": 2017,
-            "confidence": "high"
-          },
-          {
-            "name": "1.4 TDI 90 KM",
-            "displacement_cc": 1422,
-            "power_kw": 66,
-            "power_hp": 90,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual",
-              "DSG"
-            ],
-            "year_from": 2014,
-            "year_to": 2017,
-            "confidence": "high"
-          },
-          {
-            "name": "1.4 TDI 105 KM",
-            "displacement_cc": 1422,
-            "power_kw": 77,
-            "power_hp": 105,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual",
-              "DSG"
-            ],
-            "year_from": 2014,
-            "year_to": 2017,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia VW_Polo (6C facelift, 2014-2017). 1.0 MPI/TSI = EA111 3-cyl replacing 1.2 units. 1.4 TSI BlueGT = EA211 with cylinder deactivation. 1.8 TSI GTI = EA888 replacing twin-charged 1.4 TSI. 1.4 TDI = EA288 3-cyl. DSG = 7-speed dry."
-        }
-      },
-      {
-        "key": "VW_Polo_VI",
-        "wikidata_id": "Q231869",
-        "model_year_from": 2017,
-        "model_year_to": null,
-        "engines": [
-          {
-            "name": "1.0 MPI 65 KM",
-            "displacement_cc": 999,
-            "power_kw": 48,
-            "power_hp": 65,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2017,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "1.0 MPI 80 KM",
-            "displacement_cc": 999,
-            "power_kw": 59,
-            "power_hp": 80,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2017,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "1.0 TSI 95 KM",
-            "displacement_cc": 999,
-            "power_kw": 70,
-            "power_hp": 95,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2017,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "1.0 TSI 115 KM",
-            "displacement_cc": 999,
-            "power_kw": 85,
-            "power_hp": 115,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "DSG"
-            ],
-            "year_from": 2017,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "1.5 TSI 150 KM",
-            "displacement_cc": 1498,
-            "power_kw": 110,
-            "power_hp": 150,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "DSG"
-            ],
-            "year_from": 2020,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "2.0 TSI GTI 200 KM",
-            "displacement_cc": 1984,
-            "power_kw": 147,
-            "power_hp": 200,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2017,
-            "year_to": 2021,
-            "confidence": "high"
-          },
-          {
-            "name": "2.0 TSI GTI 207 KM",
-            "displacement_cc": 1984,
-            "power_kw": 152,
-            "power_hp": 207,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "DSG"
-            ],
-            "year_from": 2022,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "1.0 TGI 90 KM",
-            "displacement_cc": 999,
-            "power_kw": 66,
-            "power_hp": 90,
-            "fuel_type": "CNG",
-            "transmission_options": [
-              "manual"
-            ],
-            "year_from": 2017,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "1.6 TDI 80 KM",
-            "displacement_cc": 1598,
-            "power_kw": 59,
-            "power_hp": 80,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual",
-              "DSG"
-            ],
-            "year_from": 2017,
-            "year_to": 2020,
-            "confidence": "high"
-          },
-          {
-            "name": "1.6 TDI 95 KM",
-            "displacement_cc": 1598,
-            "power_kw": 70,
-            "power_hp": 95,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual",
-              "DSG"
-            ],
-            "year_from": 2017,
-            "year_to": 2020,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia VW_Polo (AW, 2017-). MQB-A0 platform. 1.0 TSI = EA211 evo. 1.5 TSI ACT = EA211 evo with cylinder deactivation (from 2020 facelift). GTI: 147kW/200PS (2017-2021), 152kW/207PS (2022+ FL). 1.0 TGI = CNG+petrol bifuel. 1.6 TDI discontinued ~2020 (EU6d). DSG = 7-speed dry."
         }
       }
     ],
@@ -43840,459 +44365,6 @@
         }
       }
     ],
-    "Mercedes": [
-      {
-        "key": "Mercedes_EClass_W212",
-        "wikidata_id": "Q706922",
-        "model_year_from": 2009,
-        "model_year_to": 2016,
-        "engines": [
-          {
-            "name": "E 200 184 KM",
-            "displacement_cc": 1800,
-            "power_kw": 135,
-            "power_hp": 184,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "manual",
-              "automatic"
-            ],
-            "year_from": 2009,
-            "year_to": 2016,
-            "confidence": "high"
-          },
-          {
-            "name": "E 250 204 KM",
-            "displacement_cc": 1800,
-            "power_kw": 150,
-            "power_hp": 204,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2009,
-            "year_to": 2016,
-            "confidence": "high"
-          },
-          {
-            "name": "E 300 245 KM",
-            "displacement_cc": 2996,
-            "power_kw": 180,
-            "power_hp": 245,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2009,
-            "year_to": 2015,
-            "confidence": "high"
-          },
-          {
-            "name": "E 350 306 KM",
-            "displacement_cc": 3498,
-            "power_kw": 225,
-            "power_hp": 306,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2009,
-            "year_to": 2014,
-            "confidence": "high"
-          },
-          {
-            "name": "E 400 333 KM",
-            "displacement_cc": 3498,
-            "power_kw": 245,
-            "power_hp": 333,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2013,
-            "year_to": 2016,
-            "confidence": "high"
-          },
-          {
-            "name": "E 63 AMG 557 KM",
-            "displacement_cc": 5461,
-            "power_kw": 410,
-            "power_hp": 557,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2011,
-            "year_to": 2016,
-            "confidence": "high"
-          },
-          {
-            "name": "E 200 CDI 136 KM",
-            "displacement_cc": 2143,
-            "power_kw": 100,
-            "power_hp": 136,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "manual",
-              "automatic"
-            ],
-            "year_from": 2009,
-            "year_to": 2016,
-            "confidence": "high"
-          },
-          {
-            "name": "E 220 CDI 170 KM",
-            "displacement_cc": 2143,
-            "power_kw": 125,
-            "power_hp": 170,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2009,
-            "year_to": 2016,
-            "confidence": "high"
-          },
-          {
-            "name": "E 250 CDI 204 KM",
-            "displacement_cc": 2143,
-            "power_kw": 150,
-            "power_hp": 204,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2009,
-            "year_to": 2016,
-            "confidence": "high"
-          },
-          {
-            "name": "E 300 CDI 211 KM",
-            "displacement_cc": 2987,
-            "power_kw": 155,
-            "power_hp": 211,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2009,
-            "year_to": 2016,
-            "confidence": "high"
-          },
-          {
-            "name": "E 350 CDI 265 KM",
-            "displacement_cc": 2987,
-            "power_kw": 195,
-            "power_hp": 265,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2009,
-            "year_to": 2016,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia Mercedes-Benz_W212 (2009-2016). Facelift 2013: E 200/E 250 switched M271 1.8T→M274 2.0T (same power badges). E 300/E 350/E 400 = M276 3.0/3.5 V6. E 63 AMG = M157 5.5 V8 biturbo (from 2011; pre-fl M156 NA). Diesel = OM651 2.1T I4 / OM642 3.0 V6. automatic = 7G-Tronic."
-        }
-      },
-      {
-        "key": "Mercedes_EClass_W213",
-        "wikidata_id": "Q706922",
-        "model_year_from": 2016,
-        "model_year_to": 2023,
-        "engines": [
-          {
-            "name": "E 180 156 KM",
-            "displacement_cc": 1595,
-            "power_kw": 115,
-            "power_hp": 156,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2017,
-            "year_to": 2020,
-            "confidence": "high"
-          },
-          {
-            "name": "E 200 184 KM",
-            "displacement_cc": 1991,
-            "power_kw": 135,
-            "power_hp": 184,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2016,
-            "year_to": 2020,
-            "confidence": "high"
-          },
-          {
-            "name": "E 300 245 KM",
-            "displacement_cc": 1991,
-            "power_kw": 180,
-            "power_hp": 245,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2016,
-            "year_to": 2020,
-            "confidence": "high"
-          },
-          {
-            "name": "E 450 367 KM",
-            "displacement_cc": 2996,
-            "power_kw": 270,
-            "power_hp": 367,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2018,
-            "year_to": 2023,
-            "confidence": "high"
-          },
-          {
-            "name": "E 63 AMG 571 KM",
-            "displacement_cc": 3982,
-            "power_kw": 420,
-            "power_hp": 571,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2016,
-            "year_to": 2023,
-            "confidence": "high"
-          },
-          {
-            "name": "E 63 S AMG 612 KM",
-            "displacement_cc": 3982,
-            "power_kw": 450,
-            "power_hp": 612,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2016,
-            "year_to": 2023,
-            "confidence": "high"
-          },
-          {
-            "name": "E 300e PHEV 320 KM",
-            "displacement_cc": 1991,
-            "power_kw": 235,
-            "power_hp": 320,
-            "fuel_type": "PHEV",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2020,
-            "year_to": 2023,
-            "confidence": "high"
-          },
-          {
-            "name": "E 200d 150 KM",
-            "displacement_cc": 1950,
-            "power_kw": 110,
-            "power_hp": 150,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2016,
-            "year_to": 2020,
-            "confidence": "high"
-          },
-          {
-            "name": "E 220d 194 KM",
-            "displacement_cc": 1950,
-            "power_kw": 143,
-            "power_hp": 194,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2016,
-            "year_to": 2023,
-            "confidence": "high"
-          },
-          {
-            "name": "E 300d 245 KM",
-            "displacement_cc": 1950,
-            "power_kw": 180,
-            "power_hp": 245,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2018,
-            "year_to": 2023,
-            "confidence": "high"
-          },
-          {
-            "name": "E 350d 258 KM",
-            "displacement_cc": 2987,
-            "power_kw": 190,
-            "power_hp": 258,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2016,
-            "year_to": 2018,
-            "confidence": "high"
-          },
-          {
-            "name": "E 300de PHEV 306 KM",
-            "displacement_cc": 1950,
-            "power_kw": 225,
-            "power_hp": 306,
-            "fuel_type": "PHEV",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2020,
-            "year_to": 2023,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia Mercedes-Benz_W213 (2016-2023). Facelift 2020. E 180 = M264 1.6T (2017-2020). E 200/300 = M274 2.0T. E 450 = M276 3.0 V6 biturbo 48V mHEV. E 63 AMG = M177 4.0 V8 biturbo. Diesel = OM654 2.0T I4 (EU6). PHEV from FL 2020: E 300e system 235kW; E 300de system 225kW; both 13.5kWh ~50km EV. automatic = 9G-Tronic."
-        }
-      },
-      {
-        "key": "Mercedes_EClass_W214",
-        "wikidata_id": "Q706922",
-        "model_year_from": 2023,
-        "model_year_to": null,
-        "engines": [
-          {
-            "name": "E 200 204 KM",
-            "displacement_cc": 1999,
-            "power_kw": 150,
-            "power_hp": 204,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2023,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "E 300 258 KM",
-            "displacement_cc": 1999,
-            "power_kw": 190,
-            "power_hp": 258,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2023,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "E 450 381 KM",
-            "displacement_cc": 2999,
-            "power_kw": 280,
-            "power_hp": 381,
-            "fuel_type": "PB_95",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2023,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "E 300e PHEV 313 KM",
-            "displacement_cc": 1999,
-            "power_kw": 230,
-            "power_hp": 313,
-            "fuel_type": "PHEV",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2023,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "E 400e PHEV 381 KM",
-            "displacement_cc": 1999,
-            "power_kw": 280,
-            "power_hp": 381,
-            "fuel_type": "PHEV",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2024,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "E 53 HYBRID AMG 449 KM",
-            "displacement_cc": 2999,
-            "power_kw": 330,
-            "power_hp": 449,
-            "fuel_type": "PHEV",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2023,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "E 220d 197 KM",
-            "displacement_cc": 1993,
-            "power_kw": 145,
-            "power_hp": 197,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2023,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "E 450d 367 KM",
-            "displacement_cc": 2989,
-            "power_kw": 270,
-            "power_hp": 367,
-            "fuel_type": "ON",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2023,
-            "year_to": null,
-            "confidence": "high"
-          },
-          {
-            "name": "E 300de PHEV 313 KM",
-            "displacement_cc": 1993,
-            "power_kw": 230,
-            "power_hp": 313,
-            "fuel_type": "PHEV",
-            "transmission_options": [
-              "automatic"
-            ],
-            "year_from": 2023,
-            "year_to": null,
-            "confidence": "high"
-          }
-        ],
-        "_meta": {
-          "notes": "DE Wikipedia Mercedes-Benz_W214 (2023-). MRA2 platform. All engines 48V ISG mild hybrid standard. E 200/300 = M254 2.0T I4. E 450 = M256 3.0 I6. E 53 AMG PHEV = M256 3.0T + EQ booster, 25.4kWh, ~100km EV. Diesel = OM654 2.0T / OM656 3.0 I6. PHEV 25.4kWh ~100km EV. automatic = 9G-Tronic."
-        }
-      }
-    ],
     "Fiat": [
       {
         "key": "Fiat_500_312",
@@ -46211,6 +46283,437 @@
         ],
         "_meta": {
           "notes": "DE Wikipedia Mazda_323_BA (1994-1998). C-segment. B3/Z5/BP engines. Sedan/hatch/estate. Last 323 before rebrand to Mazda 3. Used in PL 1997-2003."
+        }
+      },
+      {
+        "key": "Mazda_2_Mk2_DE",
+        "wikidata_id": "Q1915799",
+        "model_year_from": 2007,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "1.3i MZR 75",
+            "displacement_cc": 1349,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5i MZR 103",
+            "displacement_cc": 1498,
+            "power_kw": 76,
+            "power_hp": 103,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 MZR-CD 68",
+            "displacement_cc": 1399,
+            "power_kw": 50,
+            "power_hp": 68,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 MZR-CD 90",
+            "displacement_cc": 1560,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE platform, second gen Mazda 2"
+        }
+      },
+      {
+        "key": "Mazda_2_Mk3_DJ",
+        "wikidata_id": "Q15735434",
+        "model_year_from": 2014,
+        "model_year_to": 2022,
+        "engines": [
+          {
+            "name": "1.5 SkyActiv-G 75",
+            "displacement_cc": 1496,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 SkyActiv-G 90",
+            "displacement_cc": 1496,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 SkyActiv-D 105",
+            "displacement_cc": 1499,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DJ platform, third gen Mazda 2"
+        }
+      },
+      {
+        "key": "Mazda_3_Mk3_BM",
+        "wikidata_id": "Q15735439",
+        "model_year_from": 2013,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "1.5 SkyActiv-G 100",
+            "displacement_cc": 1496,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 SkyActiv-G 120",
+            "displacement_cc": 1997,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 SkyActiv-G 165",
+            "displacement_cc": 1997,
+            "power_kw": 121,
+            "power_hp": 165,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 SkyActiv-D 105",
+            "displacement_cc": 1499,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 SkyActiv-D 150",
+            "displacement_cc": 2191,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 SkyActiv-D 175",
+            "displacement_cc": 2191,
+            "power_kw": 129,
+            "power_hp": 175,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "BM/BN platform, third gen Mazda 3"
+        }
+      },
+      {
+        "key": "Mazda_6_Mk2_GH",
+        "wikidata_id": "Q1469006",
+        "model_year_from": 2007,
+        "model_year_to": 2012,
+        "engines": [
+          {
+            "name": "1.8i MZR 120",
+            "displacement_cc": 1798,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0i MZR 147",
+            "displacement_cc": 1999,
+            "power_kw": 108,
+            "power_hp": 147,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5i MZR 170",
+            "displacement_cc": 2488,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 MZR-CD 140",
+            "displacement_cc": 1997,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 MZR-CD 163",
+            "displacement_cc": 2184,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2012,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "GH platform, second gen Mazda 6 (sedan/estate/hatch)"
+        }
+      },
+      {
+        "key": "Mazda_6_Mk3_GJ",
+        "wikidata_id": "Q15735441",
+        "model_year_from": 2012,
+        "model_year_to": 2023,
+        "engines": [
+          {
+            "name": "2.0 SkyActiv-G 145",
+            "displacement_cc": 1997,
+            "power_kw": 107,
+            "power_hp": 145,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5 SkyActiv-G 192",
+            "displacement_cc": 2488,
+            "power_kw": 141,
+            "power_hp": 192,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 SkyActiv-D 150",
+            "displacement_cc": 2191,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2023,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 SkyActiv-D 184",
+            "displacement_cc": 2191,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2023,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "GJ/GL platform, third gen Mazda 6"
+        }
+      },
+      {
+        "key": "Mazda_MX5_Mk3_NC",
+        "wikidata_id": "Q1914396",
+        "model_year_from": 2005,
+        "model_year_to": 2015,
+        "engines": [
+          {
+            "name": "1.8i MZR 126",
+            "displacement_cc": 1798,
+            "power_kw": 93,
+            "power_hp": 126,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0i MZR 160",
+            "displacement_cc": 1999,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "NC platform roadster; also sold as NC PRHT (folding hardtop)"
+        }
+      },
+      {
+        "key": "Mazda_MX5_Mk4_ND",
+        "wikidata_id": "Q19837007",
+        "model_year_from": 2015,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 SkyActiv-G 132",
+            "displacement_cc": 1496,
+            "power_kw": 97,
+            "power_hp": 132,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 SkyActiv-G 184",
+            "displacement_cc": 1997,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "ND platform; also RF (retractable fastback) variant"
         }
       }
     ],
@@ -53636,19 +54139,1110 @@
           "notes": "Flagship fastback, low volume in Poland"
         }
       }
+    ],
+    "Lexus": [
+      {
+        "key": "Lexus_CT_200h_ZWA10",
+        "wikidata_id": "Q1075366",
+        "model_year_from": 2011,
+        "model_year_to": 2020,
+        "engines": [
+          {
+            "name": "1.8 Hybrid 136",
+            "displacement_cc": 1798,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2011,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Entry hybrid, very popular in Poland; system power 100 kW / 136 hp"
+        }
+      },
+      {
+        "key": "Lexus_IS_Mk2_XE20",
+        "wikidata_id": "Q1207294",
+        "model_year_from": 2005,
+        "model_year_to": 2013,
+        "engines": [
+          {
+            "name": "IS 250 2.5 V6 208",
+            "displacement_cc": 2499,
+            "power_kw": 153,
+            "power_hp": 208,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "IS 220d 2.2 177",
+            "displacement_cc": 2231,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2013,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "XE20 gen IS; IS 220d was popular diesel option in PL"
+        }
+      },
+      {
+        "key": "Lexus_IS_Mk3_XE30",
+        "wikidata_id": "Q15895124",
+        "model_year_from": 2013,
+        "model_year_to": 2020,
+        "engines": [
+          {
+            "name": "IS 300h 2.5 Hybrid 223",
+            "displacement_cc": 2499,
+            "power_kw": 164,
+            "power_hp": 223,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2013,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "IS 200t/300 2.0T 245",
+            "displacement_cc": 1998,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "XE30 gen; IS 300h hybrid dominant in EU/PL"
+        }
+      },
+      {
+        "key": "Lexus_ES_Mk6_XV60",
+        "wikidata_id": "Q1208547",
+        "model_year_from": 2012,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "ES 300h 2.5 Hybrid 205",
+            "displacement_cc": 2494,
+            "power_kw": 151,
+            "power_hp": 205,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2012,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Hybrid-only in EU; exec sedan with Toyota 2AR-FXE"
+        }
+      },
+      {
+        "key": "Lexus_ES_Mk7_XV70",
+        "wikidata_id": "Q56252786",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "ES 300h 2.5 Hybrid 218",
+            "displacement_cc": 2487,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "TNGA-K platform; hybrid-only in EU"
+        }
+      },
+      {
+        "key": "Lexus_NX_Mk1_AZ10",
+        "wikidata_id": "Q17077787",
+        "model_year_from": 2014,
+        "model_year_to": 2021,
+        "engines": [
+          {
+            "name": "NX 300 2.0T 238",
+            "displacement_cc": 1998,
+            "power_kw": 175,
+            "power_hp": 238,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "NX 300h 2.5 Hybrid 197",
+            "displacement_cc": 2494,
+            "power_kw": 145,
+            "power_hp": 197,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2014,
+            "year_to": 2021,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "First gen NX; 300h most popular in PL"
+        }
+      },
+      {
+        "key": "Lexus_NX_Mk2_AZ20",
+        "wikidata_id": "Q107082266",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "NX 250 2.5 205",
+            "displacement_cc": 2487,
+            "power_kw": 151,
+            "power_hp": 205,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "NX 350h 2.5 Hybrid 243",
+            "displacement_cc": 2487,
+            "power_kw": 179,
+            "power_hp": 243,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "NX 450h+ 2.5 PHEV 309",
+            "displacement_cc": 2487,
+            "power_kw": 227,
+            "power_hp": 309,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Second gen NX, TNGA-K; first Lexus PHEV in EU"
+        }
+      },
+      {
+        "key": "Lexus_RX_Mk3_AL10",
+        "wikidata_id": "Q2121934",
+        "model_year_from": 2008,
+        "model_year_to": 2015,
+        "engines": [
+          {
+            "name": "RX 450h 3.5 Hybrid 249",
+            "displacement_cc": 3456,
+            "power_kw": 183,
+            "power_hp": 249,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "RX 350 3.5 V6 277",
+            "displacement_cc": 3456,
+            "power_kw": 203,
+            "power_hp": 277,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2015,
+            "confidence": "medium"
+          }
+        ],
+        "_meta": {
+          "notes": "AL10 RX; 450h dominant in EU/PL"
+        }
+      },
+      {
+        "key": "Lexus_RX_Mk4_AL20",
+        "wikidata_id": "Q21508200",
+        "model_year_from": 2015,
+        "model_year_to": 2022,
+        "engines": [
+          {
+            "name": "RX 300 2.0T 238",
+            "displacement_cc": 1998,
+            "power_kw": 175,
+            "power_hp": 238,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "RX 450h 3.5 Hybrid 313",
+            "displacement_cc": 3456,
+            "power_kw": 230,
+            "power_hp": 313,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2015,
+            "year_to": 2022,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "AL20 RX; 450h and 300 both sold in PL"
+        }
+      },
+      {
+        "key": "Lexus_RX_Mk5_AL30",
+        "wikidata_id": "Q113568088",
+        "model_year_from": 2022,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "RX 350 2.4T 298",
+            "displacement_cc": 2393,
+            "power_kw": 219,
+            "power_hp": 298,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "RX 350h 2.5 Hybrid 246",
+            "displacement_cc": 2487,
+            "power_kw": 178,
+            "power_hp": 246,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "RX 450h+ 2.5 PHEV 309",
+            "displacement_cc": 2487,
+            "power_kw": 227,
+            "power_hp": 309,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "TNGA-K platform, 5th gen RX"
+        }
+      },
+      {
+        "key": "Lexus_UX_MZAA10",
+        "wikidata_id": "Q55676083",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "UX 250h 2.0 Hybrid 184",
+            "displacement_cc": 1987,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "e-CVT"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "UX 300e 150kW",
+            "displacement_cc": 0,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Compact SUV on TNGA-C; 250h dominant in PL"
+        }
+      }
+    ],
+    "Land Rover": [
+      {
+        "key": "LandRover_Freelander2_L359",
+        "wikidata_id": "Q1387522",
+        "model_year_from": 2006,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "2.0 Si4 240",
+            "displacement_cc": 1999,
+            "power_kw": 177,
+            "power_hp": 240,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 TD4 150",
+            "displacement_cc": 2179,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 SD4 190",
+            "displacement_cc": 2179,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "L359 platform; TD4 most popular engine in PL"
+        }
+      },
+      {
+        "key": "LandRover_RangeRoverEvoque_Mk1_L538",
+        "wikidata_id": "Q1347839",
+        "model_year_from": 2011,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "2.0 Si4 240 4WD",
+            "displacement_cc": 1999,
+            "power_kw": 177,
+            "power_hp": 240,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 eD4 150 FWD",
+            "displacement_cc": 1999,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TD4 150 4WD",
+            "displacement_cc": 1999,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 SD4 190 4WD",
+            "displacement_cc": 1999,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "First gen Evoque, L538; very popular compact SUV in PL"
+        }
+      },
+      {
+        "key": "LandRover_RangeRoverEvoque_Mk2_L551",
+        "wikidata_id": "Q64086025",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.5 P160 mHEV 163",
+            "displacement_cc": 1497,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 P200 200",
+            "displacement_cc": 1997,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 P300e PHEV 309",
+            "displacement_cc": 1997,
+            "power_kw": 227,
+            "power_hp": 309,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 D150 150",
+            "displacement_cc": 1997,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 D180 180",
+            "displacement_cc": 1997,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Second gen Evoque, L551/PTA platform"
+        }
+      },
+      {
+        "key": "LandRover_DiscoverySport_L550",
+        "wikidata_id": "Q18391651",
+        "model_year_from": 2014,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "2.0 Si4 240",
+            "displacement_cc": 1999,
+            "power_kw": 177,
+            "power_hp": 240,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 P200 200",
+            "displacement_cc": 1997,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 P300e PHEV 309",
+            "displacement_cc": 1997,
+            "power_kw": 227,
+            "power_hp": 309,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TD4 150",
+            "displacement_cc": 1999,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 D180 180",
+            "displacement_cc": 1997,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 D200 204",
+            "displacement_cc": 1997,
+            "power_kw": 147,
+            "power_hp": 204,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "L550, replacement for Freelander 2; popular in PL"
+        }
+      }
+    ],
+    "DS": [
+      {
+        "key": "DS_DS3_Mk1_A55",
+        "wikidata_id": "Q1066111",
+        "model_year_from": 2009,
+        "model_year_to": 2016,
+        "engines": [
+          {
+            "name": "1.2 PureTech 110",
+            "displacement_cc": 1199,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 VTi 95",
+            "displacement_cc": 1360,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 THP 155",
+            "displacement_cc": 1598,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 HDi 90",
+            "displacement_cc": 1560,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 BlueHDi 100",
+            "displacement_cc": 1560,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2014,
+            "year_to": 2016,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Sold as Citroën DS3 until 2014, then DS brand; A55 platform"
+        }
+      },
+      {
+        "key": "DS_DS3_Crossback_E3",
+        "wikidata_id": "Q56007897",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.2 PureTech 100",
+            "displacement_cc": 1199,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 PureTech 130",
+            "displacement_cc": 1199,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E-Tense 100kW",
+            "displacement_cc": 0,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "New DS3 on CMP platform; unrelated to Mk1"
+        }
+      },
+      {
+        "key": "DS_DS4_Mk1",
+        "wikidata_id": "Q1362663",
+        "model_year_from": 2010,
+        "model_year_to": 2015,
+        "engines": [
+          {
+            "name": "1.6 THP 155",
+            "displacement_cc": 1598,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 THP 200",
+            "displacement_cc": 1598,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 e-HDi 110",
+            "displacement_cc": 1560,
+            "power_kw": 80,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 HDi 160",
+            "displacement_cc": 1997,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Sold as Citroën DS4; compact hatch/crossover"
+        }
+      },
+      {
+        "key": "DS_DS4_Mk2_V13",
+        "wikidata_id": "Q108003048",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.2 PureTech 130",
+            "displacement_cc": 1199,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 PureTech 180",
+            "displacement_cc": 1598,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E-Tense PHEV 225",
+            "displacement_cc": 1598,
+            "power_kw": 165,
+            "power_hp": 225,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 BlueHDi 130",
+            "displacement_cc": 1499,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "New gen DS4, EMP2/CMP platform"
+        }
+      },
+      {
+        "key": "DS_DS5_KF",
+        "wikidata_id": "Q1362662",
+        "model_year_from": 2011,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "1.6 THP 155",
+            "displacement_cc": 1598,
+            "power_kw": 115,
+            "power_hp": 156,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 THP 200",
+            "displacement_cc": 1997,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "HYbrid4 2.0 HDi+e 200",
+            "displacement_cc": 1997,
+            "power_kw": 147,
+            "power_hp": 200,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 HDi 160",
+            "displacement_cc": 1997,
+            "power_kw": 118,
+            "power_hp": 160,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Flagship DS hatchback; sold as Citroën DS5 initially"
+        }
+      },
+      {
+        "key": "DS_DS7_Crossback_X74",
+        "wikidata_id": "Q28051614",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.6 PureTech 180",
+            "displacement_cc": 1598,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 PureTech 225",
+            "displacement_cc": 1598,
+            "power_kw": 165,
+            "power_hp": 225,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E-Tense 4x4 PHEV 300",
+            "displacement_cc": 1598,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "E-Tense PHEV 225",
+            "displacement_cc": 1598,
+            "power_kw": 165,
+            "power_hp": 225,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 BlueHDi 130",
+            "displacement_cc": 1499,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 BlueHDi 180",
+            "displacement_cc": 1997,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Flagship DS SUV; EMP2 platform"
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 582,
-    "engine_count": 3518,
+    "model_count": 611,
+    "engine_count": 3614,
     "engines_by_confidence": {
-      "high": 3460,
-      "medium": 58,
+      "high": 3555,
+      "medium": 59,
       "low": 0
     },
     "models_by_confidence": {
-      "all_high": 552,
-      "has_medium": 30,
+      "all_high": 580,
+      "has_medium": 31,
       "has_low": 0
     },
     "models_with_low_confidence": 0

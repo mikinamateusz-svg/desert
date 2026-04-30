@@ -10,17 +10,37 @@ import {
   ParseIntPipe,
   DefaultValuePipe,
 } from '@nestjs/common';
+import { IsOptional, IsString, IsArray, ValidateNested, IsNumber, IsPositive } from 'class-validator';
+import { Type } from 'class-transformer';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 import { CurrentUser } from '../auth/current-user.decorator.js';
 import { UserRole, User } from '@prisma/client';
 import { AdminSubmissionsService } from './admin-submissions.service.js';
 
+class PriceEntryDto {
+  @IsString()
+  fuel_type: string;
+
+  @IsNumber()
+  @IsPositive()
+  price_per_litre: number;
+}
+
 class RejectDto {
+  @IsOptional()
+  @IsString()
   notes?: string;
 }
 
 class ApproveDto {
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => PriceEntryDto)
   prices?: Array<{ fuel_type: string; price_per_litre: number }>;
+
+  @IsOptional()
+  @IsString()
   stationId?: string;
 }
 

@@ -20,12 +20,14 @@ function makeJwt(payload: Record<string, unknown>): string {
   return `${b64({ alg: 'HS256', typ: 'JWT' })}.${b64(payload)}.signature`;
 }
 
-function makeRequest(pathname: string, opts: { token?: string } = {}): NextRequest {
+function makeRequest(
+  pathname: string,
+  opts: { token?: string; refreshToken?: string } = {},
+): NextRequest {
   const url = `https://admin.example.com${pathname}`;
   const req = new NextRequest(url);
-  if (opts.token) {
-    req.cookies.set('admin_token', opts.token);
-  }
+  if (opts.token) req.cookies.set('admin_token', opts.token);
+  if (opts.refreshToken) req.cookies.set('admin_refresh_token', opts.refreshToken);
   return req;
 }
 
@@ -35,45 +37,72 @@ describe('admin middleware', () => {
     exp: Math.floor(Date.now() / 1000) + 3600, // 1 hour from now
   });
 
-  it('passes through requests to /login (public path)', () => {
-    const res = middleware(makeRequest('/login'));
-    // NextResponse.next() returns a response with no Location header
+  it('passes through requests to /login (public path)', async () => {
+    const res = await middleware(makeRequest('/login'));
     expect(res.headers.get('Location')).toBeNull();
   });
 
-  it('redirects to /login when no admin_token cookie is present on a protected path', () => {
-    const res = middleware(makeRequest('/submissions'));
+  it('redirects to /login when no admin_token cookie is present on a protected path', async () => {
+    const res = await middleware(makeRequest('/submissions'));
     expect(res.status).toBe(307);
     expect(res.headers.get('Location')).toContain('/login');
   });
 
-  it('passes through requests with a valid ADMIN admin_token cookie', () => {
-    const res = middleware(makeRequest('/submissions', { token: validAdminToken }));
+  it('passes through requests with a valid ADMIN admin_token cookie', async () => {
+    const res = await middleware(makeRequest('/submissions', { token: validAdminToken }));
     expect(res.headers.get('Location')).toBeNull();
   });
 
-  it('redirects to /login when admin_token is malformed (not a JWT)', () => {
-    const res = middleware(makeRequest('/submissions', { token: 'not-a-jwt' }));
+  it('redirects to /login when admin_token is malformed (not a JWT)', async () => {
+    const res = await middleware(makeRequest('/submissions', { token: 'not-a-jwt' }));
     expect(res.status).toBe(307);
     expect(res.headers.get('Location')).toContain('/login');
   });
 
-  it('redirects to /login when admin_token has expired', () => {
+  it('redirects to /login when admin_token has expired and no refresh token is present', async () => {
     const expired = makeJwt({
       role: 'ADMIN',
-      exp: Math.floor(Date.now() / 1000) - 60, // 1 min ago
+      exp: Math.floor(Date.now() / 1000) - 60,
     });
-    const res = middleware(makeRequest('/submissions', { token: expired }));
+    const res = await middleware(makeRequest('/submissions', { token: expired }));
     expect(res.status).toBe(307);
     expect(res.headers.get('Location')).toContain('/login');
   });
 
-  it('redirects to /login when admin_token has a non-ADMIN role (e.g., DRIVER)', () => {
+  it('silently refreshes and passes through when access token is expired but refresh token is valid', async () => {
+    const expired = makeJwt({ role: 'ADMIN', exp: Math.floor(Date.now() / 1000) - 60 });
+    const newAccess = makeJwt({ role: 'ADMIN', exp: Math.floor(Date.now() / 1000) + 3600 });
+
+    global.fetch = jest.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ accessToken: newAccess, refreshToken: 'new-refresh' }),
+    } as Response);
+
+    const res = await middleware(
+      makeRequest('/submissions', { token: expired, refreshToken: 'old-refresh' }),
+    );
+    expect(res.headers.get('Location')).toBeNull();
+    expect(res.cookies.get('admin_token')?.value).toBe(newAccess);
+  });
+
+  it('redirects to /login when refresh API call fails', async () => {
+    const expired = makeJwt({ role: 'ADMIN', exp: Math.floor(Date.now() / 1000) - 60 });
+
+    global.fetch = jest.fn().mockResolvedValueOnce({ ok: false } as Response);
+
+    const res = await middleware(
+      makeRequest('/submissions', { token: expired, refreshToken: 'old-refresh' }),
+    );
+    expect(res.status).toBe(307);
+    expect(res.headers.get('Location')).toContain('/login');
+  });
+
+  it('redirects to /login when admin_token has a non-ADMIN role (e.g., DRIVER)', async () => {
     const driverToken = makeJwt({
       role: 'DRIVER',
       exp: Math.floor(Date.now() / 1000) + 3600,
     });
-    const res = middleware(makeRequest('/submissions', { token: driverToken }));
+    const res = await middleware(makeRequest('/submissions', { token: driverToken }));
     expect(res.status).toBe(307);
     expect(res.headers.get('Location')).toContain('/login');
   });

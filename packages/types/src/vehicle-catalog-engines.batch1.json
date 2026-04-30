@@ -51279,6 +51279,534 @@
         "_meta": {
           "notes": "DE Wikipedia Porsche_718_Cayman (982c, 2016-). Coupe sibling of 718 Boxster. GTS/GT4/GT4 RS all use NA 4.0 flat-6. GT4 RS: 911 GT3 engine, PDK only. DSG = 7-speed PDK."
         }
+      },
+      {
+        "key": "Porsche_911_993",
+        "wikidata_id": "Q697991",
+        "model_year_from": 1993,
+        "model_year_to": 1998,
+        "engines": [
+          {
+            "name": "3.6 Carrera 272",
+            "displacement_cc": 3600,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1993,
+            "year_to": 1995,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6 Carrera 285",
+            "displacement_cc": 3600,
+            "power_kw": 210,
+            "power_hp": 285,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1995,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6 Turbo 408",
+            "displacement_cc": 3600,
+            "power_kw": 300,
+            "power_hp": 408,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 1998,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Last air-cooled 911; 993 platform"
+        }
+      },
+      {
+        "key": "Porsche_911_996",
+        "wikidata_id": "Q1066113",
+        "model_year_from": 1997,
+        "model_year_to": 2006,
+        "engines": [
+          {
+            "name": "3.4 Carrera 300",
+            "displacement_cc": 3387,
+            "power_kw": 221,
+            "power_hp": 300,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1997,
+            "year_to": 2001,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6 Carrera 320",
+            "displacement_cc": 3596,
+            "power_kw": 235,
+            "power_hp": 320,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2006,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6 Carrera S 345",
+            "displacement_cc": 3596,
+            "power_kw": 254,
+            "power_hp": 345,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2006,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6 Turbo 420",
+            "displacement_cc": 3600,
+            "power_kw": 309,
+            "power_hp": 420,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2006,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6 GT3 381",
+            "displacement_cc": 3600,
+            "power_kw": 280,
+            "power_hp": 381,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1999,
+            "year_to": 2006,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "First water-cooled 911; 996 platform; common used car in PL"
+        }
+      },
+      {
+        "key": "Porsche_911_997",
+        "wikidata_id": "Q1066114",
+        "model_year_from": 2004,
+        "model_year_to": 2012,
+        "engines": [
+          {
+            "name": "3.6 Carrera 325",
+            "displacement_cc": 3596,
+            "power_kw": 239,
+            "power_hp": 325,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "3.8 Carrera S 355",
+            "displacement_cc": 3824,
+            "power_kw": 261,
+            "power_hp": 355,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6 Carrera 345",
+            "displacement_cc": 3614,
+            "power_kw": 254,
+            "power_hp": 345,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "3.8 Carrera S 400",
+            "displacement_cc": 3800,
+            "power_kw": 294,
+            "power_hp": 400,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6 Turbo 480",
+            "displacement_cc": 3600,
+            "power_kw": 353,
+            "power_hp": 480,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2006,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "3.8 GT3 435",
+            "displacement_cc": 3797,
+            "power_kw": 320,
+            "power_hp": 435,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2012,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "997 platform; 997.1 (2004-2008) and 997.2 (2008-2012)"
+        }
+      },
+      {
+        "key": "Porsche_Boxster_986",
+        "wikidata_id": "Q697992",
+        "model_year_from": 1996,
+        "model_year_to": 2004,
+        "engines": [
+          {
+            "name": "2.5 204",
+            "displacement_cc": 2480,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1996,
+            "year_to": 1999,
+            "confidence": "high"
+          },
+          {
+            "name": "2.7 220",
+            "displacement_cc": 2687,
+            "power_kw": 162,
+            "power_hp": 220,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1999,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "3.2 S 252",
+            "displacement_cc": 3179,
+            "power_kw": 185,
+            "power_hp": 252,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2000,
+            "year_to": 2004,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "986 platform; first Boxster generation"
+        }
+      },
+      {
+        "key": "Porsche_Boxster_987",
+        "wikidata_id": "Q1066115",
+        "model_year_from": 2004,
+        "model_year_to": 2012,
+        "engines": [
+          {
+            "name": "2.7 240",
+            "displacement_cc": 2687,
+            "power_kw": 176,
+            "power_hp": 240,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "3.2 S 280",
+            "displacement_cc": 3179,
+            "power_kw": 206,
+            "power_hp": 280,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "2.9 260",
+            "displacement_cc": 2893,
+            "power_kw": 191,
+            "power_hp": 260,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "3.4 S 310",
+            "displacement_cc": 3436,
+            "power_kw": 228,
+            "power_hp": 310,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "987 platform; second Boxster; 987.1 and 987.2"
+        }
+      },
+      {
+        "key": "Porsche_Cayman_987c",
+        "wikidata_id": "Q1066116",
+        "model_year_from": 2005,
+        "model_year_to": 2012,
+        "engines": [
+          {
+            "name": "2.7 245",
+            "displacement_cc": 2687,
+            "power_kw": 180,
+            "power_hp": 245,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "3.4 S 295",
+            "displacement_cc": 3387,
+            "power_kw": 217,
+            "power_hp": 295,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "2.9 265",
+            "displacement_cc": 2893,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "3.4 S 320",
+            "displacement_cc": 3436,
+            "power_kw": 235,
+            "power_hp": 320,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "3.4 R 330",
+            "displacement_cc": 3436,
+            "power_kw": 243,
+            "power_hp": 330,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2012,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "987c platform; first Cayman; based on 987 Boxster"
+        }
+      },
+      {
+        "key": "Porsche_Cayenne_955_957",
+        "wikidata_id": "Q697995",
+        "model_year_from": 2002,
+        "model_year_to": 2010,
+        "engines": [
+          {
+            "name": "3.2 V6 250",
+            "displacement_cc": 3179,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "4.5 V8 S 340",
+            "displacement_cc": 4511,
+            "power_kw": 250,
+            "power_hp": 340,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "4.5 V8 Turbo 450",
+            "displacement_cc": 4511,
+            "power_kw": 331,
+            "power_hp": 450,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6 V6 290",
+            "displacement_cc": 3598,
+            "power_kw": 213,
+            "power_hp": 290,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "4.8 V8 S 385",
+            "displacement_cc": 4806,
+            "power_kw": 283,
+            "power_hp": 385,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "4.8 V8 Turbo 500",
+            "displacement_cc": 4806,
+            "power_kw": 368,
+            "power_hp": 500,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 TDI V6 240",
+            "displacement_cc": 2967,
+            "power_kw": 176,
+            "power_hp": 240,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2010,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "955 (2002-2007) and 957 facelift (2007-2010); first Cayenne generation"
+        }
       }
     ],
     "Saab": [
@@ -59117,15 +59645,15 @@
     ]
   },
   "stats": {
-    "model_count": 669,
-    "engine_count": 3857,
+    "model_count": 676,
+    "engine_count": 3890,
     "engines_by_confidence": {
-      "high": 3798,
+      "high": 3831,
       "medium": 59,
       "low": 0
     },
     "models_by_confidence": {
-      "all_high": 638,
+      "all_high": 645,
       "has_medium": 31,
       "has_low": 0
     },

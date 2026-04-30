@@ -19,11 +19,11 @@ import { AdminSubmissionsService } from './admin-submissions.service.js';
 
 class PriceEntryDto {
   @IsString()
-  fuel_type: string;
+  fuel_type!: string;
 
   @IsNumber()
   @IsPositive()
-  price_per_litre: number;
+  price_per_litre!: number;
 }
 
 class RejectDto {

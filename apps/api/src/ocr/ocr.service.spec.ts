@@ -2,25 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { OcrService, PRICE_BANDS, type ExtractedPrice } from './ocr.service.js';
 
-// ── Anthropic SDK mock ──────────────────────────────────────────────────────
+// ── Global fetch mock ────────────────────────────────────────────────────────
 
-const mockMessagesCreate = jest.fn();
+const mockFetch = jest.fn();
+global.fetch = mockFetch;
 
-jest.mock('@anthropic-ai/sdk', () => ({
-  __esModule: true,
-  default: jest.fn().mockImplementation(() => ({
-    messages: {
-      create: mockMessagesCreate,
-    },
-  })),
-}));
-
-// ── Helpers ─────────────────────────────────────────────────────────────────
-
-const makeApiResponse = (text: string, inputTokens = 1000, outputTokens = 200) => ({
-  content: [{ type: 'text', text }],
-  usage: { input_tokens: inputTokens, output_tokens: outputTokens },
-});
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
 const validJsonResponse = JSON.stringify({
   prices: [
@@ -30,7 +17,34 @@ const validJsonResponse = JSON.stringify({
   confidence_score: 0.92,
 });
 
-// ── Test suite ──────────────────────────────────────────────────────────────
+function makeGeminiResponse(
+  text: string,
+  promptTokens = 1000,
+  candidateTokens = 200,
+): Response {
+  return {
+    ok: true,
+    status: 200,
+    text: async () => '',
+    json: async () => ({
+      candidates: [{ content: { parts: [{ text }] } }],
+      usageMetadata: {
+        promptTokenCount: promptTokens,
+        candidatesTokenCount: candidateTokens,
+      },
+    }),
+  } as unknown as Response;
+}
+
+function makeErrorResponse(status: number, body = 'error'): Response {
+  return {
+    ok: false,
+    status,
+    text: async () => body,
+  } as unknown as Response;
+}
+
+// ── Test suite ───────────────────────────────────────────────────────────────
 
 describe('OcrService', () => {
   let service: OcrService;
@@ -41,40 +55,42 @@ describe('OcrService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         OcrService,
-        { provide: ConfigService, useValue: { getOrThrow: () => 'sk-ant-test-key' } },
+        { provide: ConfigService, useValue: { getOrThrow: () => 'test-gemini-key' } },
       ],
     }).compile();
 
     service = module.get<OcrService>(OcrService);
   });
 
-  // ── extractPrices ──────────────────────────────────────────────────────────
+  // ── extractPrices ────────────────────────────────────────────────────────
 
   describe('extractPrices', () => {
-    it('calls claude-haiku-4-5 with base64 image and structured prompt', async () => {
-      mockMessagesCreate.mockResolvedValueOnce(makeApiResponse(validJsonResponse));
+    it('calls Gemini 2.5 Flash API with base64 image and structured prompt', async () => {
+      mockFetch.mockResolvedValueOnce(makeGeminiResponse(validJsonResponse));
       const buffer = Buffer.from('fake-image-data');
 
       await service.extractPrices(buffer);
 
-      expect(mockMessagesCreate).toHaveBeenCalledWith(
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining('gemini-2.5-flash'),
         expect.objectContaining({
-          model: 'claude-haiku-4-5',
-          messages: expect.arrayContaining([
-            expect.objectContaining({
-              role: 'user',
-              content: expect.arrayContaining([
-                expect.objectContaining({ type: 'image' }),
-                expect.objectContaining({ type: 'text' }),
-              ]),
-            }),
-          ]),
+          method: 'POST',
+          body: expect.stringContaining('inline_data'),
         }),
       );
     });
 
+    it('includes API key as query param in the request URL', async () => {
+      mockFetch.mockResolvedValueOnce(makeGeminiResponse(validJsonResponse));
+
+      await service.extractPrices(Buffer.from('img'));
+
+      const [url] = mockFetch.mock.calls[0] as [string, unknown];
+      expect(url).toContain('key=test-gemini-key');
+    });
+
     it('returns parsed prices and confidence score on success', async () => {
-      mockMessagesCreate.mockResolvedValueOnce(makeApiResponse(validJsonResponse));
+      mockFetch.mockResolvedValueOnce(makeGeminiResponse(validJsonResponse));
 
       const result = await service.extractPrices(Buffer.from('img'));
 
@@ -83,56 +99,8 @@ describe('OcrService', () => {
       expect(result.confidence_score).toBe(0.92);
     });
 
-    it('throws when Anthropic API returns an error (allows BullMQ retry)', async () => {
-      mockMessagesCreate.mockRejectedValueOnce(new Error('API 503 Service Unavailable'));
-
-      await expect(service.extractPrices(Buffer.from('img'))).rejects.toThrow(
-        'API 503 Service Unavailable',
-      );
-    });
-
-    it('encodes photoBuffer as base64 in the API request', async () => {
-      mockMessagesCreate.mockResolvedValueOnce(makeApiResponse(validJsonResponse));
-      const buffer = Buffer.from('test-image-bytes');
-
-      await service.extractPrices(buffer);
-
-      const call = mockMessagesCreate.mock.calls[0][0];
-      const imageContent = call.messages[0].content.find(
-        (c: { type: string }) => c.type === 'image',
-      );
-      expect(imageContent.source.data).toBe(buffer.toString('base64'));
-      expect(imageContent.source.type).toBe('base64');
-    });
-
-    it('uses image/jpeg media type by default', async () => {
-      mockMessagesCreate.mockResolvedValueOnce(makeApiResponse(validJsonResponse));
-
-      await service.extractPrices(Buffer.from('img'));
-
-      const call = mockMessagesCreate.mock.calls[0][0];
-      const imageContent = call.messages[0].content.find(
-        (c: { type: string }) => c.type === 'image',
-      );
-      expect(imageContent.source.media_type).toBe('image/jpeg');
-    });
-
-    it('accepts image/png media type override', async () => {
-      mockMessagesCreate.mockResolvedValueOnce(makeApiResponse(validJsonResponse));
-
-      await service.extractPrices(Buffer.from('img'), 'image/png');
-
-      const call = mockMessagesCreate.mock.calls[0][0];
-      const imageContent = call.messages[0].content.find(
-        (c: { type: string }) => c.type === 'image',
-      );
-      expect(imageContent.source.media_type).toBe('image/png');
-    });
-
-    // ── Story 3.9: token usage and 4xx handling ─────────────────────────────
-
-    it('returns input_tokens and output_tokens from API response usage', async () => {
-      mockMessagesCreate.mockResolvedValueOnce(makeApiResponse(validJsonResponse, 1500, 300));
+    it('returns input_tokens and output_tokens from usageMetadata', async () => {
+      mockFetch.mockResolvedValueOnce(makeGeminiResponse(validJsonResponse, 1500, 300));
 
       const result = await service.extractPrices(Buffer.from('img'));
 
@@ -140,9 +108,46 @@ describe('OcrService', () => {
       expect(result.output_tokens).toBe(300);
     });
 
-    it('returns zero tokens on Anthropic 4xx error (non-retriable path)', async () => {
-      const httpErr = Object.assign(new Error('Bad request'), { status: 400 });
-      mockMessagesCreate.mockRejectedValueOnce(httpErr);
+    it('encodes photoBuffer as base64 in the request body', async () => {
+      mockFetch.mockResolvedValueOnce(makeGeminiResponse(validJsonResponse));
+      const buffer = Buffer.from('test-image-bytes');
+
+      await service.extractPrices(buffer);
+
+      const [, init] = mockFetch.mock.calls[0] as [string, RequestInit];
+      const body = JSON.parse(init.body as string) as {
+        contents: Array<{ parts: Array<{ inline_data?: { data?: string; mime_type?: string } }> }>;
+      };
+      const inlineData = body.contents[0].parts[0].inline_data;
+      expect(inlineData?.data).toBe(buffer.toString('base64'));
+    });
+
+    it('uses image/jpeg mime type by default', async () => {
+      mockFetch.mockResolvedValueOnce(makeGeminiResponse(validJsonResponse));
+
+      await service.extractPrices(Buffer.from('img'));
+
+      const [, init] = mockFetch.mock.calls[0] as [string, RequestInit];
+      const body = JSON.parse(init.body as string) as {
+        contents: Array<{ parts: Array<{ inline_data?: { mime_type?: string } }> }>;
+      };
+      expect(body.contents[0].parts[0].inline_data?.mime_type).toBe('image/jpeg');
+    });
+
+    it('accepts image/png mime type override', async () => {
+      mockFetch.mockResolvedValueOnce(makeGeminiResponse(validJsonResponse));
+
+      await service.extractPrices(Buffer.from('img'), 'image/png');
+
+      const [, init] = mockFetch.mock.calls[0] as [string, RequestInit];
+      const body = JSON.parse(init.body as string) as {
+        contents: Array<{ parts: Array<{ inline_data?: { mime_type?: string } }> }>;
+      };
+      expect(body.contents[0].parts[0].inline_data?.mime_type).toBe('image/png');
+    });
+
+    it('returns zero tokens and empty prices on Gemini 4xx (non-retriable path)', async () => {
+      mockFetch.mockResolvedValueOnce(makeErrorResponse(400, 'Bad request'));
 
       const result = await service.extractPrices(Buffer.from('img'));
 
@@ -152,9 +157,8 @@ describe('OcrService', () => {
       expect(result.prices).toEqual([]);
     });
 
-    it('returns empty prices and confidence 0.0 on Anthropic 4xx (graceful rejection path)', async () => {
-      const httpErr = Object.assign(new Error('Request too large'), { status: 413 });
-      mockMessagesCreate.mockRejectedValueOnce(httpErr);
+    it('returns empty prices and confidence 0.0 on Gemini 413 (graceful rejection)', async () => {
+      mockFetch.mockResolvedValueOnce(makeErrorResponse(413, 'Request too large'));
 
       const result = await service.extractPrices(Buffer.from('img'));
 
@@ -162,28 +166,26 @@ describe('OcrService', () => {
       expect(result.confidence_score).toBe(0.0);
     });
 
-    it('re-throws Anthropic 5xx errors so BullMQ can retry', async () => {
-      const httpErr = Object.assign(new Error('Internal Server Error'), { status: 500 });
-      mockMessagesCreate.mockRejectedValueOnce(httpErr);
+    it('throws on Gemini 5xx so BullMQ can retry', async () => {
+      mockFetch.mockResolvedValueOnce(makeErrorResponse(500, 'Internal Server Error'));
 
-      await expect(service.extractPrices(Buffer.from('img'))).rejects.toThrow('Internal Server Error');
+      await expect(service.extractPrices(Buffer.from('img'))).rejects.toThrow('Gemini 500');
     });
 
-    it('re-throws errors without a status field (network errors, etc.)', async () => {
-      mockMessagesCreate.mockRejectedValueOnce(new Error('ECONNRESET'));
+    it('throws on Gemini 429 so BullMQ can retry with backoff', async () => {
+      mockFetch.mockResolvedValueOnce(makeErrorResponse(429, 'Too Many Requests'));
+
+      await expect(service.extractPrices(Buffer.from('img'))).rejects.toThrow('Gemini 429');
+    });
+
+    it('throws on network error so BullMQ can retry', async () => {
+      mockFetch.mockRejectedValueOnce(new Error('ECONNRESET'));
 
       await expect(service.extractPrices(Buffer.from('img'))).rejects.toThrow('ECONNRESET');
     });
-
-    it('re-throws Anthropic 429 so BullMQ can retry with backoff (P-3)', async () => {
-      const httpErr = Object.assign(new Error('Too Many Requests'), { status: 429 });
-      mockMessagesCreate.mockRejectedValueOnce(httpErr);
-
-      await expect(service.extractPrices(Buffer.from('img'))).rejects.toThrow('Too Many Requests');
-    });
   });
 
-  // ── parseResponse ──────────────────────────────────────────────────────────
+  // ── parseResponse ─────────────────────────────────────────────────────────
 
   describe('parseResponse', () => {
     it('parses valid JSON response with multiple fuel types', () => {
@@ -257,7 +259,6 @@ describe('OcrService', () => {
         confidence_score: 0.8,
       });
 
-      // JSON.stringify converts Infinity to null
       const result = service.parseResponse(json);
 
       expect(result.prices).toEqual([]);
@@ -322,7 +323,6 @@ describe('OcrService', () => {
     });
 
     it('ignores unknown fuel types not in PRICE_BANDS', () => {
-      // validatePriceBands should only check known fuel types
       const prices: ExtractedPrice[] = [{ fuel_type: 'UNKNOWN', price_per_litre: 999.0 }];
       expect(service.validatePriceBands(prices)).toBeNull();
     });

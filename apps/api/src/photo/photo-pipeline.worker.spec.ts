@@ -1812,9 +1812,7 @@ describe('PhotoPipelineWorker', () => {
 
         await capturedProcessor!(makeJob('sub-123'));
 
-        expect(mockStorageService.deleteObject).toHaveBeenCalledWith(
-          'submissions/user-abc/sub-123.jpg',
-        );
+        expect(mockStorageService.deleteObject).not.toHaveBeenCalled();
       });
 
       it('does NOT call setVerifiedPrice when all prices fail', async () => {

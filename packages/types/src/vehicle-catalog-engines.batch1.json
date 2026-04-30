@@ -59642,18 +59642,758 @@
           "notes": "BYD e-Platform 3.0; budget EV hatchback"
         }
       }
+    ],
+    "Ferrari": [
+      {
+        "key": "Ferrari_F355",
+        "wikidata_id": "Q697510",
+        "model_year_from": 1994,
+        "model_year_to": 1999,
+        "engines": [
+          {
+            "name": "3.5 V8 380",
+            "displacement_cc": 3496,
+            "power_kw": 280,
+            "power_hp": 380,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1994,
+            "year_to": 1999,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Berlinetta/Spider/GTS; naturally aspirated flat-plane V8"
+        }
+      },
+      {
+        "key": "Ferrari_550_575M",
+        "wikidata_id": "Q697511",
+        "model_year_from": 1996,
+        "model_year_to": 2006,
+        "engines": [
+          {
+            "name": "5.5 V12 485",
+            "displacement_cc": 5474,
+            "power_kw": 357,
+            "power_hp": 485,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1996,
+            "year_to": 2001,
+            "confidence": "high"
+          },
+          {
+            "name": "5.7 V12 515",
+            "displacement_cc": 5748,
+            "power_kw": 379,
+            "power_hp": 515,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2006,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "550 Maranello (1996-2001), 575M Maranello (2002-2006); front-engine V12 GT"
+        }
+      },
+      {
+        "key": "Ferrari_360_Modena",
+        "wikidata_id": "Q697512",
+        "model_year_from": 1999,
+        "model_year_to": 2005,
+        "engines": [
+          {
+            "name": "3.6 V8 400",
+            "displacement_cc": 3586,
+            "power_kw": 294,
+            "power_hp": 400,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1999,
+            "year_to": 2005,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Berlinetta/Spider/Challenge Stradale; mid-engine V8"
+        }
+      },
+      {
+        "key": "Ferrari_612_Scaglietti",
+        "wikidata_id": "Q697513",
+        "model_year_from": 2004,
+        "model_year_to": 2011,
+        "engines": [
+          {
+            "name": "5.7 V12 540",
+            "displacement_cc": 5748,
+            "power_kw": 397,
+            "power_hp": 540,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2011,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "2+2 front-engine V12 GT; one of the last gated-manual Ferraris"
+        }
+      },
+      {
+        "key": "Ferrari_F430",
+        "wikidata_id": "Q697514",
+        "model_year_from": 2004,
+        "model_year_to": 2009,
+        "engines": [
+          {
+            "name": "4.3 V8 490",
+            "displacement_cc": 4308,
+            "power_kw": 360,
+            "power_hp": 490,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "4.3 V8 Scuderia 510",
+            "displacement_cc": 4308,
+            "power_kw": 375,
+            "power_hp": 510,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2009,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Successor to 360; mid-engine; F430 Scuderia = track variant"
+        }
+      },
+      {
+        "key": "Ferrari_California_149",
+        "wikidata_id": "Q697515",
+        "model_year_from": 2008,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "4.3 V8 460",
+            "displacement_cc": 4297,
+            "power_kw": 338,
+            "power_hp": 460,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "3.9T V8 560",
+            "displacement_cc": 3855,
+            "power_kw": 412,
+            "power_hp": 560,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2017,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "California (2008-2012) and California T (2014-2017); front-engine folding hardtop GT"
+        }
+      },
+      {
+        "key": "Ferrari_458_Italia",
+        "wikidata_id": "Q697516",
+        "model_year_from": 2009,
+        "model_year_to": 2015,
+        "engines": [
+          {
+            "name": "4.5 V8 570",
+            "displacement_cc": 4499,
+            "power_kw": 419,
+            "power_hp": 570,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "4.5 V8 Speciale 597",
+            "displacement_cc": 4499,
+            "power_kw": 439,
+            "power_hp": 597,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "458 Italia/Spider/Speciale; last naturally aspirated Ferrari mid-engine"
+        }
+      },
+      {
+        "key": "Ferrari_488",
+        "wikidata_id": "Q697517",
+        "model_year_from": 2015,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "3.9T V8 670",
+            "displacement_cc": 3902,
+            "power_kw": 492,
+            "power_hp": 670,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "3.9T V8 Pista 720",
+            "displacement_cc": 3902,
+            "power_kw": 529,
+            "power_hp": 720,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "488 GTB/Spider/Pista; turbocharged successor to 458"
+        }
+      },
+      {
+        "key": "Ferrari_F8",
+        "wikidata_id": "Q697518",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "3.9T V8 720",
+            "displacement_cc": 3902,
+            "power_kw": 530,
+            "power_hp": 720,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.9T V8 Tributo 720",
+            "displacement_cc": 3902,
+            "power_kw": 530,
+            "power_hp": 720,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "F8 Tributo/Spider; evolution of 488 with same engine tuned differently"
+        }
+      },
+      {
+        "key": "Ferrari_Roma",
+        "wikidata_id": "Q697519",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "3.9T V8 620",
+            "displacement_cc": 3855,
+            "power_kw": 456,
+            "power_hp": 620,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Front-engine 2+ GT coupe; spiritual successor to California T"
+        }
+      },
+      {
+        "key": "Ferrari_SF90_Stradale",
+        "wikidata_id": "Q697520",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "4.0T V8 PHEV 1000",
+            "displacement_cc": 3990,
+            "power_kw": 735,
+            "power_hp": 1000,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "First PHEV Ferrari; 4.0T V8 + 3 electric motors; 1000hp combined"
+        }
+      },
+      {
+        "key": "Ferrari_Portofino",
+        "wikidata_id": "Q697521",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "3.9T V8 600",
+            "displacement_cc": 3855,
+            "power_kw": 441,
+            "power_hp": 600,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.9T V8 M 620",
+            "displacement_cc": 3855,
+            "power_kw": 456,
+            "power_hp": 620,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Portofino (2017-2020) and Portofino M (2020+); successor to California T"
+        }
+      },
+      {
+        "key": "Ferrari_Purosangue",
+        "wikidata_id": "Q697522",
+        "model_year_from": 2022,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "6.5 V12 725",
+            "displacement_cc": 6496,
+            "power_kw": 533,
+            "power_hp": 725,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Ferrari's first SUV; naturally aspirated V12 front-engine 4-door"
+        }
+      }
+    ],
+    "Lamborghini": [
+      {
+        "key": "Lamborghini_Diablo",
+        "wikidata_id": "Q697530",
+        "model_year_from": 1990,
+        "model_year_to": 2001,
+        "engines": [
+          {
+            "name": "5.7 V12 492",
+            "displacement_cc": 5707,
+            "power_kw": 362,
+            "power_hp": 492,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1990,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "5.7 V12 VT 530",
+            "displacement_cc": 5707,
+            "power_kw": 390,
+            "power_hp": 530,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2001,
+            "confidence": "high"
+          },
+          {
+            "name": "6.0 V12 SV 550",
+            "displacement_cc": 5992,
+            "power_kw": 404,
+            "power_hp": 550,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1999,
+            "year_to": 2001,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Successor to Countach; 5.7 base, 6.0 in final 6.0 and SV variants"
+        }
+      },
+      {
+        "key": "Lamborghini_Murciélago",
+        "wikidata_id": "Q697531",
+        "model_year_from": 2001,
+        "model_year_to": 2010,
+        "engines": [
+          {
+            "name": "6.2 V12 580",
+            "displacement_cc": 6192,
+            "power_kw": 426,
+            "power_hp": 580,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2006,
+            "confidence": "high"
+          },
+          {
+            "name": "6.5 V12 LP640 640",
+            "displacement_cc": 6496,
+            "power_kw": 471,
+            "power_hp": 640,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "6.5 V12 LP670-4 SV 670",
+            "displacement_cc": 6496,
+            "power_kw": 493,
+            "power_hp": 670,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2010,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Murcielago/Roadster; 6.2 base, 6.5 LP640 and LP670-4 SV"
+        }
+      },
+      {
+        "key": "Lamborghini_Gallardo",
+        "wikidata_id": "Q697532",
+        "model_year_from": 2003,
+        "model_year_to": 2013,
+        "engines": [
+          {
+            "name": "5.0 V10 500",
+            "displacement_cc": 4961,
+            "power_kw": 368,
+            "power_hp": 500,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "5.0 V10 LP560-4 560",
+            "displacement_cc": 5204,
+            "power_kw": 412,
+            "power_hp": 560,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "5.2 V10 Superleggera 570",
+            "displacement_cc": 5204,
+            "power_kw": 419,
+            "power_hp": 570,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2013,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Entry-level Lamborghini; 5.0 V10 (2003-2008), 5.2 LP560-4 (2008-2013)"
+        }
+      },
+      {
+        "key": "Lamborghini_Aventador",
+        "wikidata_id": "Q697533",
+        "model_year_from": 2011,
+        "model_year_to": 2022,
+        "engines": [
+          {
+            "name": "6.5 V12 LP700-4 700",
+            "displacement_cc": 6498,
+            "power_kw": 515,
+            "power_hp": 700,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "6.5 V12 LP740-4 S 740",
+            "displacement_cc": 6498,
+            "power_kw": 544,
+            "power_hp": 740,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "6.5 V12 SVJ 770",
+            "displacement_cc": 6498,
+            "power_kw": 566,
+            "power_hp": 770,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": 2022,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Murcielago successor; naturally aspirated 6.5 V12 throughout lifecycle"
+        }
+      },
+      {
+        "key": "Lamborghini_Huracán",
+        "wikidata_id": "Q697534",
+        "model_year_from": 2014,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "5.2 V10 LP610-4 610",
+            "displacement_cc": 5204,
+            "power_kw": 449,
+            "power_hp": 610,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "5.2 V10 EVO 640",
+            "displacement_cc": 5204,
+            "power_kw": 470,
+            "power_hp": 640,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "5.2 V10 STO 640",
+            "displacement_cc": 5204,
+            "power_kw": 470,
+            "power_hp": 640,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Gallardo successor; 5.2 V10 naturally aspirated; EVO facelift 2019"
+        }
+      },
+      {
+        "key": "Lamborghini_Urus",
+        "wikidata_id": "Q697535",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "4.0T V8 650",
+            "displacement_cc": 3996,
+            "power_kw": 478,
+            "power_hp": 650,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "4.0T V8 S 666",
+            "displacement_cc": 3996,
+            "power_kw": 490,
+            "power_hp": 666,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "4.0T V8 PHEV SE 800",
+            "displacement_cc": 3996,
+            "power_kw": 588,
+            "power_hp": 800,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2024,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Super SUV; shares MLB Evo platform with Porsche Cayenne, Audi Q7"
+        }
+      },
+      {
+        "key": "Lamborghini_Revuelto",
+        "wikidata_id": "Q697536",
+        "model_year_from": 2023,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "6.5 V12 PHEV 1015",
+            "displacement_cc": 6496,
+            "power_kw": 747,
+            "power_hp": 1015,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "Aventador successor; V12 + 3 electric motors; 1015hp combined"
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 676,
-    "engine_count": 3890,
+    "model_count": 696,
+    "engine_count": 3929,
     "engines_by_confidence": {
-      "high": 3831,
+      "high": 3870,
       "medium": 59,
       "low": 0
     },
     "models_by_confidence": {
-      "all_high": 645,
+      "all_high": 665,
       "has_medium": 31,
       "has_low": 0
     },

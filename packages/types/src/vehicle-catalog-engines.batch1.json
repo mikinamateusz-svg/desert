@@ -20393,6 +20393,124 @@
         "_meta": {
           "notes": "DE Wikipedia Toyota_Land_Cruiser_Prado_J90 (1996-2002). Compact 4WD. Leaf spring → coil spring. 3RZ-FE petrol, 1KZ-TE turbo diesel. 3/5-door. Popular used import to PL 1999-2006 as premium off-roader."
         }
+      },
+      {
+        "key": "Toyota_RAV4_XA20",
+        "wikidata_id": "Q1066124",
+        "model_year_from": 2000,
+        "model_year_to": 2005,
+        "engines": [
+          {
+            "name": "1.8 VVT-i 125",
+            "displacement_cc": 1794,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2000,
+            "year_to": 2005,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 VVT-i 150",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2000,
+            "year_to": 2005,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 D-4D 116",
+            "displacement_cc": 1995,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2005,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "XA20 platform; second gen RAV4 (3-door and 5-door)"
+        }
+      },
+      {
+        "key": "Toyota_RAV4_XA30",
+        "wikidata_id": "Q1370026",
+        "model_year_from": 2005,
+        "model_year_to": 2013,
+        "engines": [
+          {
+            "name": "2.0 VVT-i 152",
+            "displacement_cc": 1987,
+            "power_kw": 112,
+            "power_hp": 152,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5 VVT-i 179",
+            "displacement_cc": 2494,
+            "power_kw": 132,
+            "power_hp": 179,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 D-4D 136",
+            "displacement_cc": 2231,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 D-CAT 177",
+            "displacement_cc": 2231,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2013,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "XA30 platform; third gen RAV4, very popular in PL 2005-2013"
+        }
       }
     ],
     "Opel": [
@@ -23126,6 +23244,112 @@
         ],
         "_meta": {
           "notes": "DE Wikipedia Opel_Vectra_A (J89, 1988-1995). D-segment. C14NZ/C16NZ/C18NE/C20XE petrol, 17D/17DT Isuzu diesel. Sedan/hatch/estate. GSI 2.0 16v = C20XE. Popular used D-segment in PL 1993-1999."
+        }
+      },
+      {
+        "key": "Opel_Zafira_C_P12",
+        "wikidata_id": "Q1370027",
+        "model_year_from": 2011,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "1.4T 120",
+            "displacement_cc": 1364,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4T 140",
+            "displacement_cc": 1364,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6T 170",
+            "displacement_cc": 1598,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CDTI 100",
+            "displacement_cc": 1598,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CDTI 136",
+            "displacement_cc": 1598,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 CDTI 130",
+            "displacement_cc": 1956,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 CDTI 165",
+            "displacement_cc": 1956,
+            "power_kw": 121,
+            "power_hp": 165,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "P12/D2JO platform; 7-seat MPV, successor to Zafira B"
         }
       }
     ],
@@ -30427,6 +30651,187 @@
         "_meta": {
           "notes": "DE Wikipedia Ford_Mondeo_II (BAP/BFP/BNP, 1996-2000). Facelift of Mk1. Duratec 16v, Endura-DT diesel. ST200 = sport pack 2.5 V6. Very common in PL 1997-2003 as used D-segment."
         }
+      },
+      {
+        "key": "Ford_Fiesta_Mk5_JH2",
+        "wikidata_id": "Q2066785",
+        "model_year_from": 2001,
+        "model_year_to": 2008,
+        "engines": [
+          {
+            "name": "1.25i Duratec 75",
+            "displacement_cc": 1242,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4i Duratec 80",
+            "displacement_cc": 1388,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6i Duratec 100",
+            "displacement_cc": 1596,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 ST 150",
+            "displacement_cc": 1999,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2008,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 TDCi 68",
+            "displacement_cc": 1399,
+            "power_kw": 50,
+            "power_hp": 68,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2008,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "JH2 B-car platform; fifth gen Fiesta, common in PL 2001-2008"
+        }
+      },
+      {
+        "key": "Ford_CMax_Mk1_C214",
+        "wikidata_id": "Q697989",
+        "model_year_from": 2003,
+        "model_year_to": 2010,
+        "engines": [
+          {
+            "name": "1.6i 16V 101",
+            "displacement_cc": 1596,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2003,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8i 16V 125",
+            "displacement_cc": 1796,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2003,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0i 16V 145",
+            "displacement_cc": 1999,
+            "power_kw": 107,
+            "power_hp": 145,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDCi 90",
+            "displacement_cc": 1560,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2003,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TDCi 109",
+            "displacement_cc": 1560,
+            "power_kw": 80,
+            "power_hp": 109,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TDCi 115",
+            "displacement_cc": 1753,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2003,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TDCi 136",
+            "displacement_cc": 1998,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2003,
+            "year_to": 2010,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "C214 platform; based on Focus Mk2; compact MPV very popular in PL"
+        }
       }
     ],
     "BMW": [
@@ -32655,6 +33060,879 @@
         "_meta": {
           "notes": "DE Wikipedia BMW_5er_E34 (1988-1996). M43/M50/M60 petrol, S38 (M5), M51 diesel. Sedan/touring. First E34 Touring 1992. Very popular as used prestige import in PL 1995-2003."
         }
+      },
+      {
+        "key": "BMW_1_E87",
+        "wikidata_id": "Q848785",
+        "model_year_from": 2004,
+        "model_year_to": 2011,
+        "engines": [
+          {
+            "name": "116i 115",
+            "displacement_cc": 1596,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "118i 129",
+            "displacement_cc": 1995,
+            "power_kw": 95,
+            "power_hp": 129,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "120i 150",
+            "displacement_cc": 1995,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "125i 218",
+            "displacement_cc": 2996,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "116d 115",
+            "displacement_cc": 1995,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2009,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "118d 143",
+            "displacement_cc": 1995,
+            "power_kw": 105,
+            "power_hp": 143,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "120d 163",
+            "displacement_cc": 1995,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "123d 204",
+            "displacement_cc": 1995,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2011,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "E81/E87 platform; first 1 Series generation"
+        }
+      },
+      {
+        "key": "BMW_1_F20",
+        "wikidata_id": "Q1065895",
+        "model_year_from": 2011,
+        "model_year_to": 2019,
+        "engines": [
+          {
+            "name": "116i 109",
+            "displacement_cc": 1598,
+            "power_kw": 80,
+            "power_hp": 109,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "118i 136",
+            "displacement_cc": 1499,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "120i 184",
+            "displacement_cc": 1998,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "125i 218",
+            "displacement_cc": 1998,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "M140i 340",
+            "displacement_cc": 2998,
+            "power_kw": 250,
+            "power_hp": 340,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2016,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "116d 116",
+            "displacement_cc": 1496,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "118d 150",
+            "displacement_cc": 1995,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2019,
+            "confidence": "high"
+          },
+          {
+            "name": "120d 190",
+            "displacement_cc": 1995,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2019,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "F20/F21 UKL1 platform; second 1 Series gen"
+        }
+      },
+      {
+        "key": "BMW_1_F40",
+        "wikidata_id": "Q56007985",
+        "model_year_from": 2019,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "116i 109",
+            "displacement_cc": 1499,
+            "power_kw": 80,
+            "power_hp": 109,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "118i 140",
+            "displacement_cc": 1499,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "120i 178",
+            "displacement_cc": 1998,
+            "power_kw": 131,
+            "power_hp": 178,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "128ti 265",
+            "displacement_cc": 1998,
+            "power_kw": 195,
+            "power_hp": 265,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "M135i xDrive 306",
+            "displacement_cc": 1998,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "116d 116",
+            "displacement_cc": 1496,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "118d 150",
+            "displacement_cc": 1995,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "120d 190",
+            "displacement_cc": 1995,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "F40 UKL2 platform; FWD-based, third 1 Series gen"
+        }
+      },
+      {
+        "key": "BMW_X5_E53",
+        "wikidata_id": "Q697990",
+        "model_year_from": 1999,
+        "model_year_to": 2006,
+        "engines": [
+          {
+            "name": "3.0i 231",
+            "displacement_cc": 2979,
+            "power_kw": 170,
+            "power_hp": 231,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1999,
+            "year_to": 2006,
+            "confidence": "high"
+          },
+          {
+            "name": "4.4i 320",
+            "displacement_cc": 4398,
+            "power_kw": 235,
+            "power_hp": 320,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1999,
+            "year_to": 2006,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0d 184",
+            "displacement_cc": 2926,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2006,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "E53 platform; first X5 generation, popular SUV in PL"
+        }
+      },
+      {
+        "key": "BMW_X5_E70",
+        "wikidata_id": "Q1065900",
+        "model_year_from": 2006,
+        "model_year_to": 2013,
+        "engines": [
+          {
+            "name": "xDrive30i 272",
+            "displacement_cc": 2996,
+            "power_kw": 200,
+            "power_hp": 272,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive35i 306",
+            "displacement_cc": 2979,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive30d 235",
+            "displacement_cc": 2993,
+            "power_kw": 173,
+            "power_hp": 235,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive35d 286",
+            "displacement_cc": 2993,
+            "power_kw": 210,
+            "power_hp": 286,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2013,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "E70 platform; second X5 generation"
+        }
+      },
+      {
+        "key": "BMW_X5_F15",
+        "wikidata_id": "Q15895119",
+        "model_year_from": 2013,
+        "model_year_to": 2018,
+        "engines": [
+          {
+            "name": "xDrive35i 306",
+            "displacement_cc": 2979,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive40e PHEV 313",
+            "displacement_cc": 1997,
+            "power_kw": 230,
+            "power_hp": 313,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive25d 218",
+            "displacement_cc": 1995,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive30d 258",
+            "displacement_cc": 2993,
+            "power_kw": 190,
+            "power_hp": 258,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive40d 313",
+            "displacement_cc": 2993,
+            "power_kw": 230,
+            "power_hp": 313,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2013,
+            "year_to": 2018,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "F15 platform; third X5 generation"
+        }
+      },
+      {
+        "key": "BMW_X5_G05",
+        "wikidata_id": "Q56007992",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "xDrive40i 340",
+            "displacement_cc": 2998,
+            "power_kw": 250,
+            "power_hp": 340,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive45e PHEV 394",
+            "displacement_cc": 2998,
+            "power_kw": 290,
+            "power_hp": 394,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2019,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive30d 286",
+            "displacement_cc": 2993,
+            "power_kw": 210,
+            "power_hp": 286,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive40d 340",
+            "displacement_cc": 2993,
+            "power_kw": 250,
+            "power_hp": 340,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "G05 CLAR platform; fourth X5 generation"
+        }
+      },
+      {
+        "key": "BMW_X1_E84",
+        "wikidata_id": "Q1065897",
+        "model_year_from": 2009,
+        "model_year_to": 2015,
+        "engines": [
+          {
+            "name": "sDrive20i 184",
+            "displacement_cc": 1997,
+            "power_kw": 135,
+            "power_hp": 184,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive25i 218",
+            "displacement_cc": 2996,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "sDrive18d 143",
+            "displacement_cc": 1995,
+            "power_kw": 105,
+            "power_hp": 143,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive20d 177",
+            "displacement_cc": 1995,
+            "power_kw": 130,
+            "power_hp": 177,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive25d 218",
+            "displacement_cc": 1995,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2012,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "E84 platform; first X1 generation"
+        }
+      },
+      {
+        "key": "BMW_X1_F48",
+        "wikidata_id": "Q20892319",
+        "model_year_from": 2015,
+        "model_year_to": 2022,
+        "engines": [
+          {
+            "name": "sDrive18i 140",
+            "displacement_cc": 1499,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive20i 192",
+            "displacement_cc": 1998,
+            "power_kw": 141,
+            "power_hp": 192,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive25e PHEV 220",
+            "displacement_cc": 1499,
+            "power_kw": 162,
+            "power_hp": 220,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "sDrive18d 150",
+            "displacement_cc": 1995,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive20d 190",
+            "displacement_cc": 1995,
+            "power_kw": 140,
+            "power_hp": 190,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2022,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive25d 231",
+            "displacement_cc": 1995,
+            "power_kw": 170,
+            "power_hp": 231,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2022,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "F48 UKL2 platform; second X1 generation, FWD-based"
+        }
+      },
+      {
+        "key": "BMW_X1_U11",
+        "wikidata_id": "Q113568086",
+        "model_year_from": 2022,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "sDrive18i 136",
+            "displacement_cc": 1499,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive23i 218",
+            "displacement_cc": 1998,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive30e PHEV 326",
+            "displacement_cc": 1499,
+            "power_kw": 240,
+            "power_hp": 326,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "sDrive18d 150",
+            "displacement_cc": 1995,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "xDrive23d 204",
+            "displacement_cc": 1995,
+            "power_kw": 150,
+            "power_hp": 204,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "iX1 xDrive30 313",
+            "displacement_cc": 0,
+            "power_kw": 230,
+            "power_hp": 313,
+            "fuel_type": "EV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2022,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "U11 FAAR platform; third X1 generation"
+        }
       }
     ],
     "Hyundai": [
@@ -34082,6 +35360,281 @@
         "_meta": {
           "notes": "E-GMP 800V; electric fastback sedan"
         }
+      },
+      {
+        "key": "Hyundai_Getz_TB",
+        "wikidata_id": "Q697982",
+        "model_year_from": 2002,
+        "model_year_to": 2009,
+        "engines": [
+          {
+            "name": "1.1i 63",
+            "displacement_cc": 1086,
+            "power_kw": 46,
+            "power_hp": 63,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2002,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3i 83",
+            "displacement_cc": 1341,
+            "power_kw": 61,
+            "power_hp": 83,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2002,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4i 97",
+            "displacement_cc": 1399,
+            "power_kw": 71,
+            "power_hp": 97,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6i 106",
+            "displacement_cc": 1599,
+            "power_kw": 78,
+            "power_hp": 106,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 CRDi 82",
+            "displacement_cc": 1493,
+            "power_kw": 60,
+            "power_hp": 82,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2002,
+            "year_to": 2009,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "TB platform; popular budget hatch in PL 2002-2009"
+        }
+      },
+      {
+        "key": "Hyundai_ix35_LM",
+        "wikidata_id": "Q1370022",
+        "model_year_from": 2009,
+        "model_year_to": 2015,
+        "engines": [
+          {
+            "name": "1.6 GDi 135",
+            "displacement_cc": 1591,
+            "power_kw": 99,
+            "power_hp": 135,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 GDi 163",
+            "displacement_cc": 1998,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 MPi 150",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 CRDi 115",
+            "displacement_cc": 1685,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2015,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 CRDi 136",
+            "displacement_cc": 1995,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2009,
+            "year_to": 2015,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "LM platform; sold as ix35 or Tucson Mk2 depending on market"
+        }
+      },
+      {
+        "key": "Hyundai_i10_Mk1_PA",
+        "wikidata_id": "Q1370017",
+        "model_year_from": 2007,
+        "model_year_to": 2013,
+        "engines": [
+          {
+            "name": "1.1i 65",
+            "displacement_cc": 1086,
+            "power_kw": 48,
+            "power_hp": 65,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2007,
+            "year_to": 2013,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2i 78",
+            "displacement_cc": 1248,
+            "power_kw": 57,
+            "power_hp": 78,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2013,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "PA platform; first gen i10, city car"
+        }
+      },
+      {
+        "key": "Hyundai_i20_Mk1_PB",
+        "wikidata_id": "Q1370019",
+        "model_year_from": 2008,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "1.2i 78",
+            "displacement_cc": 1248,
+            "power_kw": 57,
+            "power_hp": 78,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4i 100",
+            "displacement_cc": 1399,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6i 126",
+            "displacement_cc": 1591,
+            "power_kw": 93,
+            "power_hp": 126,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 CRDi 75",
+            "displacement_cc": 1396,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2014,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 CRDi 90",
+            "displacement_cc": 1582,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2008,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "PB platform; first gen i20 subcompact"
+        }
       }
     ],
     "Kia": [
@@ -35087,6 +36640,370 @@
         ],
         "_meta": {
           "notes": "E-GMP platform; 800V architecture, Hyundai Ioniq 5 sibling"
+        }
+      },
+      {
+        "key": "Kia_Rio_Mk1_DC",
+        "wikidata_id": "Q697987",
+        "model_year_from": 2000,
+        "model_year_to": 2005,
+        "engines": [
+          {
+            "name": "1.3i 75",
+            "displacement_cc": 1343,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2000,
+            "year_to": 2005,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5i 98",
+            "displacement_cc": 1493,
+            "power_kw": 72,
+            "power_hp": 98,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2000,
+            "year_to": 2005,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DC/RD platform; first gen Rio, entry-level in PL"
+        }
+      },
+      {
+        "key": "Kia_Rio_Mk2_JB",
+        "wikidata_id": "Q1370021",
+        "model_year_from": 2005,
+        "model_year_to": 2011,
+        "engines": [
+          {
+            "name": "1.4i 97",
+            "displacement_cc": 1399,
+            "power_kw": 71,
+            "power_hp": 97,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6i 110",
+            "displacement_cc": 1599,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 CRDi 90",
+            "displacement_cc": 1493,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2011,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "JB platform; second gen Rio, popular budget car in PL"
+        }
+      },
+      {
+        "key": "Kia_Rio_Mk3_UB",
+        "wikidata_id": "Q15735433",
+        "model_year_from": 2011,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "1.2 CVVT 85",
+            "displacement_cc": 1248,
+            "power_kw": 63,
+            "power_hp": 85,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 CVVT 107",
+            "displacement_cc": 1396,
+            "power_kw": 79,
+            "power_hp": 107,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 GDi 135",
+            "displacement_cc": 1591,
+            "power_kw": 99,
+            "power_hp": 135,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.1 CRDi 75",
+            "displacement_cc": 1120,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 CRDi 90",
+            "displacement_cc": 1396,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "UB platform; third gen Rio"
+        }
+      },
+      {
+        "key": "Kia_Rio_Mk4_YB",
+        "wikidata_id": "Q28051608",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 T-GDi 100",
+            "displacement_cc": 998,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 T-GDi 120",
+            "displacement_cc": 998,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "DSG"
+            ],
+            "year_from": 2020,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 MPI 84",
+            "displacement_cc": 1248,
+            "power_kw": 62,
+            "power_hp": 84,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2021,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 CRDi 90",
+            "displacement_cc": 1396,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2017,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "YB platform; fourth gen Rio, current"
+        }
+      },
+      {
+        "key": "Kia_Picanto_Mk1_SA",
+        "wikidata_id": "Q697988",
+        "model_year_from": 2004,
+        "model_year_to": 2011,
+        "engines": [
+          {
+            "name": "1.0i 61",
+            "displacement_cc": 999,
+            "power_kw": 45,
+            "power_hp": 61,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2004,
+            "year_to": 2011,
+            "confidence": "high"
+          },
+          {
+            "name": "1.1i 65",
+            "displacement_cc": 1086,
+            "power_kw": 48,
+            "power_hp": 65,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2011,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "SA platform; popular city car in PL"
+        }
+      },
+      {
+        "key": "Kia_Picanto_Mk2_TA",
+        "wikidata_id": "Q15735431",
+        "model_year_from": 2011,
+        "model_year_to": 2017,
+        "engines": [
+          {
+            "name": "1.0 MPi 69",
+            "displacement_cc": 999,
+            "power_kw": 51,
+            "power_hp": 69,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 MPi 85",
+            "displacement_cc": 1248,
+            "power_kw": 63,
+            "power_hp": 85,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2017,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "TA platform; second gen Picanto"
+        }
+      },
+      {
+        "key": "Kia_Picanto_Mk3_JA",
+        "wikidata_id": "Q28051606",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "1.0 MPi 67",
+            "displacement_cc": 999,
+            "power_kw": 49,
+            "power_hp": 67,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.0 T-GDi 100",
+            "displacement_cc": 998,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "DSG"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 MPi 84",
+            "displacement_cc": 1248,
+            "power_kw": 62,
+            "power_hp": 84,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "JA platform; third gen Picanto, current"
         }
       }
     ],
@@ -37251,6 +39168,199 @@
         ],
         "_meta": {
           "notes": "DE Wikipedia Renault_Laguna_I (B56, 1993-2001). D-segment. F7R/F8Q/G8T/Z7X petrol, F9Q/G9T diesel. Hatch only (5-door). Nevada estate also. Facelift 1998. Popular D-segment in PL 1996-2002."
+        }
+      },
+      {
+        "key": "Renault_Laguna_II_BG0",
+        "wikidata_id": "Q1066121",
+        "model_year_from": 2001,
+        "model_year_to": 2007,
+        "engines": [
+          {
+            "name": "1.6i 16V 107",
+            "displacement_cc": 1598,
+            "power_kw": 79,
+            "power_hp": 107,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8i 16V 120",
+            "displacement_cc": 1783,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0i 16V 135",
+            "displacement_cc": 1998,
+            "power_kw": 99,
+            "power_hp": 135,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0T 170",
+            "displacement_cc": 1998,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 dCi 100",
+            "displacement_cc": 1870,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 dCi 120",
+            "displacement_cc": 1870,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 dCi 150",
+            "displacement_cc": 1995,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2007,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "BG0/KG0 platform; exec sedan/estate/hatch popular in PL"
+        }
+      },
+      {
+        "key": "Renault_Clio_III_BR0",
+        "wikidata_id": "Q1066118",
+        "model_year_from": 2005,
+        "model_year_to": 2009,
+        "engines": [
+          {
+            "name": "1.2i 16V 75",
+            "displacement_cc": 1149,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4i 16V 98",
+            "displacement_cc": 1390,
+            "power_kw": 72,
+            "power_hp": 98,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6i 16V 110",
+            "displacement_cc": 1598,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2005,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 RS 197",
+            "displacement_cc": 1998,
+            "power_kw": 145,
+            "power_hp": 197,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 85",
+            "displacement_cc": 1461,
+            "power_kw": 63,
+            "power_hp": 85,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2009,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 106",
+            "displacement_cc": 1461,
+            "power_kw": 78,
+            "power_hp": 106,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2009,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "BR0/CR0 platform; Clio III pre-facelift (facelift 2009-2012 already covered)"
         }
       }
     ],
@@ -40837,6 +42947,174 @@
         ],
         "_meta": {
           "notes": "ZE1 platform; one of the first mass-market EVs in PL"
+        }
+      },
+      {
+        "key": "Nissan_Micra_K11",
+        "wikidata_id": "Q697993",
+        "model_year_from": 1992,
+        "model_year_to": 2002,
+        "engines": [
+          {
+            "name": "1.0i 16V 54",
+            "displacement_cc": 998,
+            "power_kw": 40,
+            "power_hp": 54,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1992,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3i 16V 75",
+            "displacement_cc": 1275,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1992,
+            "year_to": 2002,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "K11 platform; second gen Micra, popular city car in PL"
+        }
+      },
+      {
+        "key": "Nissan_Micra_K12",
+        "wikidata_id": "Q1370023",
+        "model_year_from": 2002,
+        "model_year_to": 2010,
+        "engines": [
+          {
+            "name": "1.2i 65",
+            "displacement_cc": 1240,
+            "power_kw": 48,
+            "power_hp": 65,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4i 88",
+            "displacement_cc": 1386,
+            "power_kw": 65,
+            "power_hp": 88,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2002,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 65",
+            "displacement_cc": 1461,
+            "power_kw": 48,
+            "power_hp": 65,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2003,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 82",
+            "displacement_cc": 1461,
+            "power_kw": 60,
+            "power_hp": 82,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2005,
+            "year_to": 2010,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "K12 platform; third gen Micra"
+        }
+      },
+      {
+        "key": "Nissan_Qashqai_J10",
+        "wikidata_id": "Q1370025",
+        "model_year_from": 2006,
+        "model_year_to": 2010,
+        "engines": [
+          {
+            "name": "1.6i 16V 115",
+            "displacement_cc": 1598,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0i 16V 141",
+            "displacement_cc": 1997,
+            "power_kw": 104,
+            "power_hp": 141,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 dCi 106",
+            "displacement_cc": 1461,
+            "power_kw": 78,
+            "power_hp": 106,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2006,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 dCi 150",
+            "displacement_cc": 1995,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2010,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "J10 pre-facelift; original Qashqai launch gen 2006-2010"
         }
       }
     ],
@@ -47428,6 +49706,124 @@
         "_meta": {
           "notes": "DE Wikipedia Mitsubishi_Pajero_II (V20/V40, 1991-1999). Body-on-frame 4WD. 6G72 V6 petrol, 4D56/4M40 diesel. Short/long wheelbase. SuperSelect 4WD. Popular used luxury off-roader import in PL 1995-2005."
         }
+      },
+      {
+        "key": "Mitsubishi_Carisma_DA",
+        "wikidata_id": "Q697994",
+        "model_year_from": 1995,
+        "model_year_to": 2004,
+        "engines": [
+          {
+            "name": "1.6i SOHC 99",
+            "displacement_cc": 1597,
+            "power_kw": 73,
+            "power_hp": 99,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1995,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 GDi 122",
+            "displacement_cc": 1834,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1996,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 Di-D 102",
+            "displacement_cc": 1870,
+            "power_kw": 75,
+            "power_hp": 102,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1999,
+            "year_to": 2004,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DA platform; popular compact in PL late 1990s-2000s"
+        }
+      },
+      {
+        "key": "Mitsubishi_Outlander_Mk2_CW",
+        "wikidata_id": "Q1370024",
+        "model_year_from": 2006,
+        "model_year_to": 2012,
+        "engines": [
+          {
+            "name": "2.0 MIVEC 147",
+            "displacement_cc": 1998,
+            "power_kw": 108,
+            "power_hp": 147,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.4 MIVEC 170",
+            "displacement_cc": 2360,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2012,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 Di-D 140",
+            "displacement_cc": 1968,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2006,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 Di-D 150",
+            "displacement_cc": 2179,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2010,
+            "year_to": 2012,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "CW platform; second gen Outlander"
+        }
       }
     ],
     "Alfa Romeo": [
@@ -47802,6 +50198,224 @@
         ],
         "_meta": {
           "notes": "DE Wikipedia Alfa_Romeo_Junior (1.4/Milano, 2024-). CMP platform (Stellantis). Rebadged Peugeot e-208 platform. 1.2T PureTech + 48V BSG → PB_95. EV: 54kWh/115kW. Veloce PHEV: 1.2T + rear e-motor AWD, system 206kW."
+        }
+      },
+      {
+        "key": "Alfa_156_932",
+        "wikidata_id": "Q697977",
+        "model_year_from": 1997,
+        "model_year_to": 2007,
+        "engines": [
+          {
+            "name": "1.6 TS 120",
+            "displacement_cc": 1598,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1997,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TS 144",
+            "displacement_cc": 1747,
+            "power_kw": 106,
+            "power_hp": 144,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1997,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TS 155",
+            "displacement_cc": 1970,
+            "power_kw": 114,
+            "power_hp": 155,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1997,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5 V6 192",
+            "displacement_cc": 2492,
+            "power_kw": 141,
+            "power_hp": 192,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1997,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 JTS 165",
+            "displacement_cc": 1970,
+            "power_kw": 121,
+            "power_hp": 165,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2002,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 JTD 105",
+            "displacement_cc": 1910,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1997,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 JTD 140",
+            "displacement_cc": 1910,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2000,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "2.4 JTD 140",
+            "displacement_cc": 2387,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1997,
+            "year_to": 2007,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "932 platform; exec sedan/estate popular in PL late 1990s-2000s"
+        }
+      },
+      {
+        "key": "Alfa_147_937",
+        "wikidata_id": "Q697976",
+        "model_year_from": 2000,
+        "model_year_to": 2010,
+        "engines": [
+          {
+            "name": "1.4 TS 90",
+            "displacement_cc": 1368,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2000,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TS 120",
+            "displacement_cc": 1598,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2000,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 TS 150",
+            "displacement_cc": 1970,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2000,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "3.2 GTA 250",
+            "displacement_cc": 3179,
+            "power_kw": 184,
+            "power_hp": 250,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2002,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 JTD 100",
+            "displacement_cc": 1910,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2000,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 JTD 115",
+            "displacement_cc": 1910,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2000,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 JTD 140",
+            "displacement_cc": 1910,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2002,
+            "year_to": 2010,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "937 platform; compact hatch, popular in PL 2000s"
         }
       }
     ],
@@ -56503,15 +59117,15 @@
     ]
   },
   "stats": {
-    "model_count": 634,
-    "engine_count": 3691,
+    "model_count": 669,
+    "engine_count": 3857,
     "engines_by_confidence": {
-      "high": 3632,
+      "high": 3798,
       "medium": 59,
       "low": 0
     },
     "models_by_confidence": {
-      "all_high": 603,
+      "all_high": 638,
       "has_medium": 31,
       "has_low": 0
     },

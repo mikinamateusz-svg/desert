@@ -9118,6 +9118,543 @@
         "_meta": {
           "notes": "DE Wikipedia Volkswagen_Passat_B5 (3B/3BG, 1996-2005). D-segment. PL33 platform. B5.5 facelift 2000 = 3BG. 1.8T = AWT/AEB. 2.5 TDI V6 = AFB. 1.9 TDI = PD from 2000. Major D-segment in PL."
         }
+      },
+      {
+        "key": "VW_Polo_Mk2_86C",
+        "wikidata_id": "Q729940",
+        "model_year_from": 1981,
+        "model_year_to": 1994,
+        "engines": [
+          {
+            "name": "1.0 45 KM",
+            "displacement_cc": 999,
+            "power_kw": 33,
+            "power_hp": 45,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1981,
+            "year_to": 1994,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 55 KM",
+            "displacement_cc": 1272,
+            "power_kw": 40,
+            "power_hp": 55,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1981,
+            "year_to": 1994,
+            "confidence": "high"
+          },
+          {
+            "name": "G40 1.3 Supercharged 115 KM",
+            "displacement_cc": 1272,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1987,
+            "year_to": 1994,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 D 45 KM",
+            "displacement_cc": 1272,
+            "power_kw": 33,
+            "power_hp": 45,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1981,
+            "year_to": 1994,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volkswagen_Polo_86C (1981-1994). B-segment. 3/5-door hatch + Coupe. G40 = G-Lader supercharger. Flooded PL market as used imports in early 1990s post-communism."
+        }
+      },
+      {
+        "key": "VW_Polo_Mk3_6N",
+        "wikidata_id": "Q729944",
+        "model_year_from": 1994,
+        "model_year_to": 2001,
+        "engines": [
+          {
+            "name": "1.0 50 KM",
+            "displacement_cc": 999,
+            "power_kw": 37,
+            "power_hp": 50,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1994,
+            "year_to": 2001,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 60 KM",
+            "displacement_cc": 1390,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1994,
+            "year_to": 2001,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 GTI 120 KM",
+            "displacement_cc": 1598,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 2001,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 SDI 64 KM",
+            "displacement_cc": 1896,
+            "power_kw": 47,
+            "power_hp": 64,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 2001,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TDI 90 KM",
+            "displacement_cc": 1896,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1996,
+            "year_to": 2001,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volkswagen_Polo_6N (1994-2001). PQ24 platform. AEV (1.0), AEA/AEX (1.4), AEE/AFT (1.6). 1.9 TDI = ALE engine. GTI 1.6 = AFT. Facelift 1999 = 6N2. Very popular in PL 1996-2003."
+        }
+      },
+      {
+        "key": "VW_Golf_II_19E",
+        "wikidata_id": "Q625711",
+        "model_year_from": 1983,
+        "model_year_to": 1992,
+        "engines": [
+          {
+            "name": "1.3 55 KM",
+            "displacement_cc": 1272,
+            "power_kw": 40,
+            "power_hp": 55,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1983,
+            "year_to": 1992,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 72 KM",
+            "displacement_cc": 1595,
+            "power_kw": 53,
+            "power_hp": 72,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1983,
+            "year_to": 1992,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 90 KM",
+            "displacement_cc": 1781,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1983,
+            "year_to": 1992,
+            "confidence": "high"
+          },
+          {
+            "name": "GTI 1.8 112 KM",
+            "displacement_cc": 1781,
+            "power_kw": 82,
+            "power_hp": 112,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1983,
+            "year_to": 1992,
+            "confidence": "high"
+          },
+          {
+            "name": "GTI 16v 139 KM",
+            "displacement_cc": 1781,
+            "power_kw": 102,
+            "power_hp": 139,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1987,
+            "year_to": 1992,
+            "confidence": "high"
+          },
+          {
+            "name": "Country 4Motion 1.8 90 KM",
+            "displacement_cc": 1781,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1990,
+            "year_to": 1992,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TD 80 KM",
+            "displacement_cc": 1588,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1985,
+            "year_to": 1992,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volkswagen_Golf_II (19E, 1983-1992). PQ24 predecessor. GTI HE/KR engines. 16v = 9A. Country = raised 4WD variant. Massive used import wave to PL 1990-1996. Most recognisable old Golf in PL."
+        }
+      },
+      {
+        "key": "VW_Golf_III_1H",
+        "wikidata_id": "Q625716",
+        "model_year_from": 1991,
+        "model_year_to": 1998,
+        "engines": [
+          {
+            "name": "1.4 60 KM",
+            "displacement_cc": 1390,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 101 KM",
+            "displacement_cc": 1595,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1991,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 90 KM",
+            "displacement_cc": 1781,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "GTI 2.0 116 KM",
+            "displacement_cc": 1984,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "VR6 2.8 174 KM",
+            "displacement_cc": 2792,
+            "power_kw": 128,
+            "power_hp": 174,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 SD 64 KM",
+            "displacement_cc": 1896,
+            "power_kw": 47,
+            "power_hp": 64,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TDI 90 KM",
+            "displacement_cc": 1896,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TDI 110 KM",
+            "displacement_cc": 1896,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 1998,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volkswagen_Golf_III (1H, 1991-1998). PQ34 platform debut. ABD/AEA/AGN/AEK petrol. 1Y (SD) / 1Z/AHU (TDI) diesel. VR6 = AAA. GTI = 2E. Huge used import volumes to PL 1994-2002."
+        }
+      },
+      {
+        "key": "VW_Passat_B3_35i",
+        "wikidata_id": "Q551297",
+        "model_year_from": 1988,
+        "model_year_to": 1993,
+        "engines": [
+          {
+            "name": "1.6 72 KM",
+            "displacement_cc": 1595,
+            "power_kw": 53,
+            "power_hp": 72,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1988,
+            "year_to": 1993,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 90 KM",
+            "displacement_cc": 1781,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1988,
+            "year_to": 1993,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 115 KM",
+            "displacement_cc": 1984,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1988,
+            "year_to": 1993,
+            "confidence": "high"
+          },
+          {
+            "name": "VR6 2.8 174 KM",
+            "displacement_cc": 2792,
+            "power_kw": 128,
+            "power_hp": 174,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1993,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 TD 80 KM",
+            "displacement_cc": 1595,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1988,
+            "year_to": 1993,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TDI 75 KM",
+            "displacement_cc": 1896,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1993,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volkswagen_Passat_B3 (35i, 1988-1993). D-segment. Golf II platform stretched. RP/PF/ABK/AAA petrol, SB/1Z/AAZ diesel. Syncro 4WD optional. Major D-segment used import to PL 1992-1998."
+        }
+      },
+      {
+        "key": "VW_Passat_B4_3A",
+        "wikidata_id": "Q551298",
+        "model_year_from": 1993,
+        "model_year_to": 1996,
+        "engines": [
+          {
+            "name": "1.6 101 KM",
+            "displacement_cc": 1595,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 90 KM",
+            "displacement_cc": 1781,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 115 KM",
+            "displacement_cc": 1984,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1993,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "VR6 2.8 174 KM",
+            "displacement_cc": 2792,
+            "power_kw": 128,
+            "power_hp": 174,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TDI 90 KM",
+            "displacement_cc": 1896,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TDI 110 KM",
+            "displacement_cc": 1896,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 1996,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Volkswagen_Passat_B4 (3A, 1993-1996). Facelift of B3 platform before full PL46 replacement. ABD/ADZ/AAA petrol, 1Z/AHU diesel. Short run. Popular D-segment in PL 1994-2000."
+        }
       }
     ],
     "Skoda": [
@@ -19079,6 +19616,176 @@
         "_meta": {
           "notes": "DE Wikipedia Toyota_Avensis_II (T250, 2003-2009). D-segment. 1ZZ/2AZ petrol. 1CD/2AD diesel. Facelift 2006 adds 2.2 D-4D. Popular in PL as reliable used D-segment."
         }
+      },
+      {
+        "key": "Toyota_Corolla_E100",
+        "wikidata_id": "Q1419873",
+        "model_year_from": 1992,
+        "model_year_to": 2002,
+        "engines": [
+          {
+            "name": "1.3 75 KM",
+            "displacement_cc": 1331,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1992,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 113 KM",
+            "displacement_cc": 1587,
+            "power_kw": 83,
+            "power_hp": 113,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1992,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 116 KM",
+            "displacement_cc": 1762,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1992,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 D 73 KM",
+            "displacement_cc": 1974,
+            "power_kw": 54,
+            "power_hp": 73,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1992,
+            "year_to": 2002,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Toyota_Corolla_E100 (1992-2002). C-segment. 4E-FE (1.3), 4A-FE (1.6), 7A-FE (1.8), 2C diesel. Sedan/wagon/hatch. Facelift 1995 = E110. Toyota reliability drove popularity in PL as used import."
+        }
+      },
+      {
+        "key": "Toyota_LandCruiser_J80",
+        "wikidata_id": "Q1437234",
+        "model_year_from": 1989,
+        "model_year_to": 1997,
+        "engines": [
+          {
+            "name": "4.5 1FZ-FE 212 KM",
+            "displacement_cc": 4477,
+            "power_kw": 156,
+            "power_hp": 212,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1992,
+            "year_to": 1997,
+            "confidence": "high"
+          },
+          {
+            "name": "4.2 1HZ D 136 KM",
+            "displacement_cc": 4164,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1989,
+            "year_to": 1997,
+            "confidence": "high"
+          },
+          {
+            "name": "4.2 1HD-T TD 167 KM",
+            "displacement_cc": 4164,
+            "power_kw": 123,
+            "power_hp": 167,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1992,
+            "year_to": 1997,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Toyota_Land_Cruiser_J80 (1989-1997). Full-size 4WD. 1FZ-FE inline-6 petrol; 1HZ naturally-aspirated / 1HD-T turbo diesel inline-6. Solid axle. Legendary reliability. Used import in PL as status symbol."
+        }
+      },
+      {
+        "key": "Toyota_LandCruiser_Prado_J90",
+        "wikidata_id": "Q1437240",
+        "model_year_from": 1996,
+        "model_year_to": 2002,
+        "engines": [
+          {
+            "name": "2.7 3RZ-FE 150 KM",
+            "displacement_cc": 2694,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1996,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "3.4 5VZ-FE V6 185 KM",
+            "displacement_cc": 3378,
+            "power_kw": 136,
+            "power_hp": 185,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1996,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 1KZ-TE TD 130 KM",
+            "displacement_cc": 2982,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1996,
+            "year_to": 2002,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Toyota_Land_Cruiser_Prado_J90 (1996-2002). Compact 4WD. Leaf spring → coil spring. 3RZ-FE petrol, 1KZ-TE turbo diesel. 3/5-door. Popular used import to PL 1999-2006 as premium off-roader."
+        }
       }
     ],
     "Opel": [
@@ -21480,6 +22187,338 @@
         ],
         "_meta": {
           "notes": "DE Wikipedia Opel_Zafira_B (A05, 2005-2011). Compact MPV. Astra H platform. Flex7 retained. 1.9 CDTi = Fiat Multijet Z19DT. OPC 240PS also available. Popular in PL 2006-2011."
+        }
+      },
+      {
+        "key": "Opel_Corsa_A_S83",
+        "wikidata_id": "Q494302",
+        "model_year_from": 1982,
+        "model_year_to": 1993,
+        "engines": [
+          {
+            "name": "1.0 45 KM",
+            "displacement_cc": 993,
+            "power_kw": 33,
+            "power_hp": 45,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1982,
+            "year_to": 1993,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 55 KM",
+            "displacement_cc": 1196,
+            "power_kw": 40,
+            "power_hp": 55,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1982,
+            "year_to": 1993,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 70 KM",
+            "displacement_cc": 1297,
+            "power_kw": 51,
+            "power_hp": 70,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1982,
+            "year_to": 1993,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 GSI 100 KM",
+            "displacement_cc": 1598,
+            "power_kw": 74,
+            "power_hp": 100,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1987,
+            "year_to": 1993,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TD 50 KM",
+            "displacement_cc": 1488,
+            "power_kw": 37,
+            "power_hp": 50,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1987,
+            "year_to": 1993,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Opel_Corsa_A (S83/T85, 1982-1993). B-segment. 12S/13N/15D/16SH engines. GSI 1.6 = 16SH. 1.5 TD = Isuzu diesel. Significant used import to PL in early 1990s."
+        }
+      },
+      {
+        "key": "Opel_Corsa_B_S93",
+        "wikidata_id": "Q494303",
+        "model_year_from": 1993,
+        "model_year_to": 2000,
+        "engines": [
+          {
+            "name": "1.2 45 KM",
+            "displacement_cc": 1196,
+            "power_kw": 33,
+            "power_hp": 45,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 60 KM",
+            "displacement_cc": 1389,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 GSI 109 KM",
+            "displacement_cc": 1598,
+            "power_kw": 80,
+            "power_hp": 109,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 TD 67 KM",
+            "displacement_cc": 1488,
+            "power_kw": 49,
+            "power_hp": 67,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 D 60 KM",
+            "displacement_cc": 1686,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2000,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Opel_Corsa_B (S93, 1993-2000). B-segment. X12SZ/X14SZ/X16SZR petrol. 1.5 TD / 1.7 D = Isuzu diesel. Facelift 1997. Very popular in PL 1995-2003 as used and new."
+        }
+      },
+      {
+        "key": "Opel_Astra_F_T92",
+        "wikidata_id": "Q1165004",
+        "model_year_from": 1991,
+        "model_year_to": 2002,
+        "engines": [
+          {
+            "name": "1.4 60 KM",
+            "displacement_cc": 1389,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 75 KM",
+            "displacement_cc": 1598,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1991,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 116 KM",
+            "displacement_cc": 1796,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "GSI 2.0 16v 150 KM",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 D 57 KM",
+            "displacement_cc": 1686,
+            "power_kw": 42,
+            "power_hp": 57,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 TD 75 KM",
+            "displacement_cc": 1686,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1992,
+            "year_to": 2002,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Opel_Astra_F (T92, 1991-2002). C-segment. X14SZ/C16NZ/X18XE/C20XE petrol. X17D/X17DT Isuzu diesel. GSI 2.0 = C20XE. Hatch/sedan/estate/convertible. #1 selling car in PL 1995-1999."
+        }
+      },
+      {
+        "key": "Opel_Vectra_A_J89",
+        "wikidata_id": "Q1490475",
+        "model_year_from": 1988,
+        "model_year_to": 1995,
+        "engines": [
+          {
+            "name": "1.4 82 KM",
+            "displacement_cc": 1389,
+            "power_kw": 60,
+            "power_hp": 82,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1988,
+            "year_to": 1995,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 75 KM",
+            "displacement_cc": 1598,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1988,
+            "year_to": 1995,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 116 KM",
+            "displacement_cc": 1796,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1988,
+            "year_to": 1995,
+            "confidence": "high"
+          },
+          {
+            "name": "GSI 2.0 16v 150 KM",
+            "displacement_cc": 1998,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1988,
+            "year_to": 1995,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 D 57 KM",
+            "displacement_cc": 1686,
+            "power_kw": 42,
+            "power_hp": 57,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1988,
+            "year_to": 1995,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 TD 82 KM",
+            "displacement_cc": 1686,
+            "power_kw": 60,
+            "power_hp": 82,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1995,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Opel_Vectra_A (J89, 1988-1995). D-segment. C14NZ/C16NZ/C18NE/C20XE petrol, 17D/17DT Isuzu diesel. Sedan/hatch/estate. GSI 2.0 16v = C20XE. Popular used D-segment in PL 1993-1999."
         }
       }
     ],
@@ -25445,6 +26484,110 @@
         "_meta": {
           "notes": "DE Wikipedia Audi_A6_C5 (4B, 1997-2005). Passat B5 extended platform. AEB 1.8T, AGA/BDX V6. AYK 2.7T biturbo. BCE/BKH 4.2 V8 (S6). AFB/AKN 2.5 TDI V6. Facelift 2001. Popular E-segment import in PL."
         }
+      },
+      {
+        "key": "Audi_80_B4_8C",
+        "wikidata_id": "Q488413",
+        "model_year_from": 1991,
+        "model_year_to": 1994,
+        "engines": [
+          {
+            "name": "1.6 E 101 KM",
+            "displacement_cc": 1595,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1994,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 S 75 KM",
+            "displacement_cc": 1781,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1994,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 E 115 KM",
+            "displacement_cc": 1984,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1991,
+            "year_to": 1994,
+            "confidence": "high"
+          },
+          {
+            "name": "2.6 V6 150 KM",
+            "displacement_cc": 2598,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1992,
+            "year_to": 1994,
+            "confidence": "high"
+          },
+          {
+            "name": "2.8 V6 quattro 174 KM",
+            "displacement_cc": 2771,
+            "power_kw": 128,
+            "power_hp": 174,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1992,
+            "year_to": 1994,
+            "confidence": "high"
+          },
+          {
+            "name": "S2 2.2T 220 KM",
+            "displacement_cc": 2226,
+            "power_kw": 162,
+            "power_hp": 220,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1992,
+            "year_to": 1994,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TDI 90 KM",
+            "displacement_cc": 1896,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1994,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Audi_80_B4 (8C, 1991-1994). D-segment. Short run before A4 debut. ABD/ABK/AAH V6 petrol, 1Z TDI diesel. S2 = 3B/AAN turbo 5-cyl quattro. Cabriolet continued to 2000. Popular used in PL."
+        }
       }
     ],
     "Ford": [
@@ -28282,6 +29425,401 @@
         "_meta": {
           "notes": "DE Wikipedia Ford_Mondeo_III (B5Y/BWY/B4Y, 2000-2007). D-segment. CDHA/LCBA petrol. Duratec (HE) 2.0. ST220 = 3.0 Duratec. 2.0 TDCi = Duratorq DOHC. Popular in PL 2000-2007."
         }
+      },
+      {
+        "key": "Ford_Fiesta_Mk3_GFJ",
+        "wikidata_id": "Q1429978",
+        "model_year_from": 1989,
+        "model_year_to": 1995,
+        "engines": [
+          {
+            "name": "1.1 50 KM",
+            "displacement_cc": 1118,
+            "power_kw": 37,
+            "power_hp": 50,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1989,
+            "year_to": 1995,
+            "confidence": "high"
+          },
+          {
+            "name": "1.3 69 KM",
+            "displacement_cc": 1297,
+            "power_kw": 51,
+            "power_hp": 69,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1989,
+            "year_to": 1995,
+            "confidence": "high"
+          },
+          {
+            "name": "XR2i 1.6 108 KM",
+            "displacement_cc": 1597,
+            "power_kw": 79,
+            "power_hp": 108,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1989,
+            "year_to": 1995,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 D 60 KM",
+            "displacement_cc": 1753,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1989,
+            "year_to": 1995,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_Fiesta_Mk3 (GFJ, 1989-1995). B-segment. HCS/CVH engines. XR2i = CVH 1.6 EFI. 1.8 D = Endura-D. Popular used import to PL early 1990s."
+        }
+      },
+      {
+        "key": "Ford_Fiesta_Mk4_JH",
+        "wikidata_id": "Q1429985",
+        "model_year_from": 1995,
+        "model_year_to": 2002,
+        "engines": [
+          {
+            "name": "1.25 16v 75 KM",
+            "displacement_cc": 1242,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 16v 90 KM",
+            "displacement_cc": 1388,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 16v 103 KM",
+            "displacement_cc": 1596,
+            "power_kw": 76,
+            "power_hp": 103,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1999,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 D 60 KM",
+            "displacement_cc": 1753,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TDCi 75 KM",
+            "displacement_cc": 1753,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2001,
+            "year_to": 2002,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_Fiesta_Mk4/5 (JH/JD, 1995-2002). Zetec-SE 1.25/1.4/1.6. Endura-D diesel. Facelift 1999 = Mk5 in some markets. Popular in PL 1997-2004 as new and used."
+        }
+      },
+      {
+        "key": "Ford_Escort_Mk5_AAL",
+        "wikidata_id": "Q1437591",
+        "model_year_from": 1990,
+        "model_year_to": 2000,
+        "engines": [
+          {
+            "name": "1.3 60 KM",
+            "displacement_cc": 1297,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1990,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 73 KM",
+            "displacement_cc": 1392,
+            "power_kw": 54,
+            "power_hp": 73,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1990,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 90 KM",
+            "displacement_cc": 1596,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1990,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "RS2000 2.0 150 KM",
+            "displacement_cc": 1796,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 D 60 KM",
+            "displacement_cc": 1753,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1990,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TD 90 KM",
+            "displacement_cc": 1753,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2000,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_Escort_Mk5/6 (AAL/AFL/ALL, 1990-2000). C-segment. HCS/CVH/Zetec petrol, Endura-D/Endura-DT diesel. RS2000 = RWD. Facelift 1992 = Mk6. Common used import in PL 1993-2001."
+        }
+      },
+      {
+        "key": "Ford_Mondeo_Mk1_GBP",
+        "wikidata_id": "Q1478885",
+        "model_year_from": 1993,
+        "model_year_to": 1996,
+        "engines": [
+          {
+            "name": "1.6 90 KM",
+            "displacement_cc": 1597,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 115 KM",
+            "displacement_cc": 1796,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 136 KM",
+            "displacement_cc": 1988,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1993,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5 V6 170 KM",
+            "displacement_cc": 2544,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1993,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TD 88 KM",
+            "displacement_cc": 1753,
+            "power_kw": 65,
+            "power_hp": 88,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 1996,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_Mondeo_I (GBP/BNP/BFP, 1993-1996). Car of the Year 1994. D-segment. Zeta/Duratec petrol, Endura-DT diesel. Sedan/hatch/estate. Benchmark D-segment in PL 1994-1999."
+        }
+      },
+      {
+        "key": "Ford_Mondeo_Mk2_BAP",
+        "wikidata_id": "Q1478893",
+        "model_year_from": 1996,
+        "model_year_to": 2000,
+        "engines": [
+          {
+            "name": "1.6 90 KM",
+            "displacement_cc": 1597,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1996,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 116 KM",
+            "displacement_cc": 1796,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1996,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 130 KM",
+            "displacement_cc": 1988,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1996,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5 V6 170 KM",
+            "displacement_cc": 2544,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1996,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "ST200 2.5 V6 202 KM",
+            "displacement_cc": 2544,
+            "power_kw": 149,
+            "power_hp": 202,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1996,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 TD 90 KM",
+            "displacement_cc": 1753,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1996,
+            "year_to": 2000,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_Mondeo_II (BAP/BFP/BNP, 1996-2000). Facelift of Mk1. Duratec 16v, Endura-DT diesel. ST200 = sport pack 2.5 V6. Very common in PL 1997-2003 as used D-segment."
+        }
       }
     ],
     "BMW": [
@@ -30228,6 +31766,287 @@
         ],
         "_meta": {
           "notes": "DE Wikipedia BMW_5er_E60 (2003-2010). Chris Bangle design. M54/N52 inline-6. N62 V8 (545i). S85 V10 (M5). N47 (520d) / M57N2 (525d/530d). SMG replaced by DKG (DSG) on M5. Popular in PL 2006-2012 as used E-segment."
+        }
+      },
+      {
+        "key": "BMW_3er_E36",
+        "wikidata_id": "Q168560",
+        "model_year_from": 1990,
+        "model_year_to": 2000,
+        "engines": [
+          {
+            "name": "316i 1.6 102 KM",
+            "displacement_cc": 1596,
+            "power_kw": 75,
+            "power_hp": 102,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1993,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "318i 1.8 115 KM",
+            "displacement_cc": 1795,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1990,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "320i 2.0 150 KM",
+            "displacement_cc": 1991,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1990,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "323i 2.5 170 KM",
+            "displacement_cc": 2494,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1995,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "325i 2.5 192 KM",
+            "displacement_cc": 2494,
+            "power_kw": 141,
+            "power_hp": 192,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1990,
+            "year_to": 1995,
+            "confidence": "high"
+          },
+          {
+            "name": "328i 2.8 193 KM",
+            "displacement_cc": 2793,
+            "power_kw": 142,
+            "power_hp": 193,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1994,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "M3 3.0 286 KM",
+            "displacement_cc": 2990,
+            "power_kw": 210,
+            "power_hp": 286,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1992,
+            "year_to": 1995,
+            "confidence": "high"
+          },
+          {
+            "name": "M3 3.2 321 KM",
+            "displacement_cc": 3201,
+            "power_kw": 236,
+            "power_hp": 321,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "318tds 1.7 90 KM",
+            "displacement_cc": 1665,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1994,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "325td 2.5 115 KM",
+            "displacement_cc": 2498,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1994,
+            "confidence": "high"
+          },
+          {
+            "name": "325tds 2.5 143 KM",
+            "displacement_cc": 2498,
+            "power_kw": 105,
+            "power_hp": 143,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1993,
+            "year_to": 2000,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia BMW_3er_E36 (1990-2000). M43/M50/M52 petrol, S50/S52 (M3). M41 (318tds), M51 (325td/tds) diesel. Coupe/sedan/touring/convertible/compact. The defining 1990s used premium in PL."
+        }
+      },
+      {
+        "key": "BMW_5er_E34",
+        "wikidata_id": "Q178670",
+        "model_year_from": 1988,
+        "model_year_to": 1996,
+        "engines": [
+          {
+            "name": "518i 1.8 115 KM",
+            "displacement_cc": 1795,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1991,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "520i 2.0 150 KM",
+            "displacement_cc": 1991,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1988,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "525i 2.5 192 KM",
+            "displacement_cc": 2494,
+            "power_kw": 141,
+            "power_hp": 192,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1990,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "530i 3.0 218 KM",
+            "displacement_cc": 2996,
+            "power_kw": 160,
+            "power_hp": 218,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1992,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "540i 4.0 V8 286 KM",
+            "displacement_cc": 3982,
+            "power_kw": 210,
+            "power_hp": 286,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1992,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "M5 3.8 340 KM",
+            "displacement_cc": 3795,
+            "power_kw": 250,
+            "power_hp": 340,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1992,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "525td 2.5 115 KM",
+            "displacement_cc": 2498,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1991,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "525tds 2.5 143 KM",
+            "displacement_cc": 2498,
+            "power_kw": 105,
+            "power_hp": 143,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1991,
+            "year_to": 1996,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia BMW_5er_E34 (1988-1996). M43/M50/M60 petrol, S38 (M5), M51 diesel. Sedan/touring. First E34 Touring 1992. Very popular as used prestige import in PL 1995-2003."
         }
       }
     ],
@@ -34421,6 +36240,235 @@
         "_meta": {
           "notes": "DE Wikipedia Renault_Scénic_II (JM, 2003-2009). Compact MPV. Grand Scénic = 7-seat version. K9K diesel popular. Facelift 2006. Strong seller in PL 2003-2009."
         }
+      },
+      {
+        "key": "Renault_Clio_I_BB",
+        "wikidata_id": "Q1086699",
+        "model_year_from": 1990,
+        "model_year_to": 1998,
+        "engines": [
+          {
+            "name": "1.2 58 KM",
+            "displacement_cc": 1171,
+            "power_kw": 43,
+            "power_hp": 58,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1990,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 80 KM",
+            "displacement_cc": 1390,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1990,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "Williams 2.0 16v 150 KM",
+            "displacement_cc": 1794,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 1997,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 D 65 KM",
+            "displacement_cc": 1870,
+            "power_kw": 48,
+            "power_hp": 65,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1998,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Renault_Clio_I (BB/CB, 1990-1998). Car of the Year 1991. B-segment. C3G/F3P/F7P petrol, F8Q diesel. Williams = F7R 2.0 150PS homologation special. Popular in PL 1993-2000 as used."
+        }
+      },
+      {
+        "key": "Renault_19_B53",
+        "wikidata_id": "Q1097220",
+        "model_year_from": 1988,
+        "model_year_to": 1996,
+        "engines": [
+          {
+            "name": "1.2 58 KM",
+            "displacement_cc": 1171,
+            "power_kw": 43,
+            "power_hp": 58,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1988,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 80 KM",
+            "displacement_cc": 1390,
+            "power_kw": 59,
+            "power_hp": 80,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1988,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 16v 137 KM",
+            "displacement_cc": 1764,
+            "power_kw": 101,
+            "power_hp": 137,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1990,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 D 65 KM",
+            "displacement_cc": 1870,
+            "power_kw": 48,
+            "power_hp": 65,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1988,
+            "year_to": 1996,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TD 95 KM",
+            "displacement_cc": 1870,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1992,
+            "year_to": 1996,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Renault_19 (B/C53, 1988-1996). C-segment, predecessor to Megane. E7J/F3P/F7P petrol, F8Q diesel. 16S = F7P 16v. Chamade = sedan variant. Used import in PL 1992-1998."
+        }
+      },
+      {
+        "key": "Renault_Laguna_I_B56",
+        "wikidata_id": "Q1291892",
+        "model_year_from": 1993,
+        "model_year_to": 2001,
+        "engines": [
+          {
+            "name": "1.6 90 KM",
+            "displacement_cc": 1596,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2001,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 110 KM",
+            "displacement_cc": 1783,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2001,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 135 KM",
+            "displacement_cc": 1998,
+            "power_kw": 99,
+            "power_hp": 135,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1993,
+            "year_to": 2001,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 V6 170 KM",
+            "displacement_cc": 2946,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1994,
+            "year_to": 2001,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 dTi 98 KM",
+            "displacement_cc": 1870,
+            "power_kw": 72,
+            "power_hp": 98,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 2001,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 dT 113 KM",
+            "displacement_cc": 2188,
+            "power_kw": 83,
+            "power_hp": 113,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2001,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Renault_Laguna_I (B56, 1993-2001). D-segment. F7R/F8Q/G8T/Z7X petrol, F9Q/G9T diesel. Hatch only (5-door). Nevada estate also. Facelift 1998. Popular D-segment in PL 1996-2002."
+        }
       }
     ],
     "Dacia": [
@@ -36694,6 +38742,285 @@
         ],
         "_meta": {
           "notes": "DE Wikipedia Mercedes-Benz_E-Klasse_W211 (2002-2009). E-segment. M271 (E200K), M272 V6, M113 V8 (E55). OM646 (220 CDI), OM648 (270 CDI), OM642 V6 (280/320 CDI). Facelift 2006. Very popular used E-segment in PL."
+        }
+      },
+      {
+        "key": "Mercedes_C_W202",
+        "wikidata_id": "Q671467",
+        "model_year_from": 1993,
+        "model_year_to": 2000,
+        "engines": [
+          {
+            "name": "C 180 122 KM",
+            "displacement_cc": 1799,
+            "power_kw": 90,
+            "power_hp": 122,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1993,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "C 200 136 KM",
+            "displacement_cc": 1998,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1993,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "C 220 150 KM",
+            "displacement_cc": 2199,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1993,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "C 280 193 KM",
+            "displacement_cc": 2799,
+            "power_kw": 142,
+            "power_hp": 193,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1993,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "C 43 AMG 306 KM",
+            "displacement_cc": 4266,
+            "power_kw": 225,
+            "power_hp": 306,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1997,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "C 220 D 95 KM",
+            "displacement_cc": 2155,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1993,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "C 250 TD 150 KM",
+            "displacement_cc": 2497,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1993,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "C 200 CDI 102 KM",
+            "displacement_cc": 2148,
+            "power_kw": 75,
+            "power_hp": 102,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1999,
+            "year_to": 2000,
+            "confidence": "high"
+          },
+          {
+            "name": "C 220 CDI 125 KM",
+            "displacement_cc": 2148,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1999,
+            "year_to": 2000,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mercedes-Benz_C-Klasse_W202 (1993-2000). D-segment. M111/M103/M104/M113 petrol. OM601/OM604/OM605/OM646 diesel. Sedan/estate/coupe. CDI from 1999. Defining entry-premium used car in PL 1996-2005."
+        }
+      },
+      {
+        "key": "Mercedes_E_W210",
+        "wikidata_id": "Q671567",
+        "model_year_from": 1995,
+        "model_year_to": 2002,
+        "engines": [
+          {
+            "name": "E 200 136 KM",
+            "displacement_cc": 1998,
+            "power_kw": 100,
+            "power_hp": 136,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1995,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "E 220 150 KM",
+            "displacement_cc": 2199,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1995,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "E 280 193 KM",
+            "displacement_cc": 2799,
+            "power_kw": 142,
+            "power_hp": 193,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1995,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "E 320 224 KM",
+            "displacement_cc": 3199,
+            "power_kw": 165,
+            "power_hp": 224,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1995,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "E 55 AMG 354 KM",
+            "displacement_cc": 5439,
+            "power_kw": 260,
+            "power_hp": 354,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1997,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "E 220 D 95 KM",
+            "displacement_cc": 2155,
+            "power_kw": 70,
+            "power_hp": 95,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1995,
+            "year_to": 1999,
+            "confidence": "high"
+          },
+          {
+            "name": "E 290 TD 129 KM",
+            "displacement_cc": 2874,
+            "power_kw": 95,
+            "power_hp": 129,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1995,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "E 200 CDI 102 KM",
+            "displacement_cc": 2148,
+            "power_kw": 75,
+            "power_hp": 102,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1999,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "E 220 CDI 125 KM",
+            "displacement_cc": 2148,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1999,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "E 270 CDI 170 KM",
+            "displacement_cc": 2685,
+            "power_kw": 125,
+            "power_hp": 170,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1999,
+            "year_to": 2002,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mercedes-Benz_E-Klasse_W210 (1995-2002). E-segment. M111/M104/M112/M113 petrol. OM604/OM605/OM611/OM612/OM613 diesel. CDI common rail from 1999. Facelift 1999. Popular used E-segment in PL 2000-2008."
         }
       }
     ],
@@ -40103,6 +42430,376 @@
         "_meta": {
           "notes": "DE Wikipedia Peugeot_307 (3A/C, 2001-2007). C-segment. PF2 platform. Sedan/SW wagon/CC coupe variants. Facelift 2005. Popular in PL 2002-2007 especially diesel."
         }
+      },
+      {
+        "key": "Peugeot_205_20A",
+        "wikidata_id": "Q181866",
+        "model_year_from": 1983,
+        "model_year_to": 1998,
+        "engines": [
+          {
+            "name": "1.1 60 KM",
+            "displacement_cc": 1124,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1983,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 75 KM",
+            "displacement_cc": 1360,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1983,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "GTI 1.6 105 KM",
+            "displacement_cc": 1580,
+            "power_kw": 77,
+            "power_hp": 105,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1984,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "GTI 1.9 130 KM",
+            "displacement_cc": 1905,
+            "power_kw": 96,
+            "power_hp": 130,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1986,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 D 60 KM",
+            "displacement_cc": 1769,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1983,
+            "year_to": 1998,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Peugeot_205 (20A/C, 1983-1998). Car of the Year 1984. B-segment. TU engine family. GTI 1.6/1.9 = legendary hot hatch. Very popular as used import in PL 1990-1998."
+        }
+      },
+      {
+        "key": "Peugeot_106_1A",
+        "wikidata_id": "Q179819",
+        "model_year_from": 1991,
+        "model_year_to": 2003,
+        "engines": [
+          {
+            "name": "1.0 50 KM",
+            "displacement_cc": 954,
+            "power_kw": 37,
+            "power_hp": 50,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 2003,
+            "confidence": "high"
+          },
+          {
+            "name": "1.1 60 KM",
+            "displacement_cc": 1124,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 2003,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 75 KM",
+            "displacement_cc": 1360,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 2003,
+            "confidence": "high"
+          },
+          {
+            "name": "GTI 1.6 103 KM",
+            "displacement_cc": 1587,
+            "power_kw": 76,
+            "power_hp": 103,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1996,
+            "year_to": 2003,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Peugeot_106 (1A/C, 1991-2003). A/B-segment. TU series engines. GTI 1.6 = TU5JP4 hot hatch. Facelift 1996. Electric version also. Popular budget import in PL 1993-2002."
+        }
+      },
+      {
+        "key": "Peugeot_306_7A",
+        "wikidata_id": "Q182060",
+        "model_year_from": 1993,
+        "model_year_to": 2002,
+        "engines": [
+          {
+            "name": "1.1 60 KM",
+            "displacement_cc": 1124,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 75 KM",
+            "displacement_cc": 1360,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 89 KM",
+            "displacement_cc": 1587,
+            "power_kw": 65,
+            "power_hp": 89,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "GTI-6 2.0 167 KM",
+            "displacement_cc": 1997,
+            "power_kw": 123,
+            "power_hp": 167,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1996,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 D 69 KM",
+            "displacement_cc": 1905,
+            "power_kw": 51,
+            "power_hp": 69,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TD 92 KM",
+            "displacement_cc": 1905,
+            "power_kw": 68,
+            "power_hp": 92,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 HDi 90 KM",
+            "displacement_cc": 1997,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1999,
+            "year_to": 2002,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Peugeot_306 (7A/C, 1993-2002). C-segment. TU/XU engines petrol, DW diesel. GTI-6 = XU10J4RS 167PS manual 6-speed. Cabrio variant. Popular used import in PL 1996-2003."
+        }
+      },
+      {
+        "key": "Peugeot_406_8B",
+        "wikidata_id": "Q183176",
+        "model_year_from": 1995,
+        "model_year_to": 2004,
+        "engines": [
+          {
+            "name": "1.6 89 KM",
+            "displacement_cc": 1587,
+            "power_kw": 65,
+            "power_hp": 89,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 16v 112 KM",
+            "displacement_cc": 1761,
+            "power_kw": 82,
+            "power_hp": 112,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 135 KM",
+            "displacement_cc": 1997,
+            "power_kw": 99,
+            "power_hp": 135,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1995,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 V6 194 KM",
+            "displacement_cc": 2946,
+            "power_kw": 143,
+            "power_hp": 194,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1995,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "Coupe 3.0 V6 211 KM",
+            "displacement_cc": 2946,
+            "power_kw": 155,
+            "power_hp": 211,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1997,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TD 90 KM",
+            "displacement_cc": 1905,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 HDi 90 KM",
+            "displacement_cc": 1997,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1999,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "2.0 HDi 110 KM",
+            "displacement_cc": 1997,
+            "power_kw": 81,
+            "power_hp": 110,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1999,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "2.2 HDi 133 KM",
+            "displacement_cc": 2179,
+            "power_kw": 98,
+            "power_hp": 133,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 2000,
+            "year_to": 2004,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Peugeot_406 (8B/C, 1995-2004). D-segment. XU/EW petrol, DW diesel. Coupe by Pininfarina. HDi = common rail from 1999. Sedan/estate/coupe. Popular in PL 1998-2006 especially diesel."
+        }
       }
     ],
     "Seat": [
@@ -41051,6 +43748,95 @@
         ],
         "_meta": {
           "notes": "DE Wikipedia Seat_León_1P (2005-2012). PQ35 platform. FR = sport trim. Cupra 265 = 2.0 TSI AWD optional. Facelift 2009. Popular in PL as sporty VW-group C-segment."
+        }
+      },
+      {
+        "key": "Seat_Ibiza_Mk2_6K",
+        "wikidata_id": "Q3488170",
+        "model_year_from": 1993,
+        "model_year_to": 2002,
+        "engines": [
+          {
+            "name": "1.0 50 KM",
+            "displacement_cc": 999,
+            "power_kw": 37,
+            "power_hp": 50,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 60 KM",
+            "displacement_cc": 1390,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 101 KM",
+            "displacement_cc": 1595,
+            "power_kw": 74,
+            "power_hp": 101,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "GTI 2.0 115 KM",
+            "displacement_cc": 1984,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 SDI 64 KM",
+            "displacement_cc": 1896,
+            "power_kw": 47,
+            "power_hp": 64,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1996,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.9 TDI 90 KM",
+            "displacement_cc": 1896,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1996,
+            "year_to": 2002,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Seat_Ibiza_6K (1993-2002). PQ24 platform. AEH/AKQ/ABF/APE petrol, AGP/AGR diesel. GTI 2.0 = ABF. 3/5-door + Cordoba sedan. Facelift 1999. Popular in PL 1995-2004."
         }
       }
     ],
@@ -42151,6 +44937,232 @@
         "_meta": {
           "notes": "DE Wikipedia Fiat_Stilo (192, 2001-2007). C-segment. FIRE/Fire engines petrol. 1.9 JTD Multijet common rail diesel. 3-door/5-door/Multiwagon. Abarth = 2.4 5-cyl. Popular in PL early 2000s."
         }
+      },
+      {
+        "key": "Fiat_126p_650",
+        "wikidata_id": "Q207898",
+        "model_year_from": 1972,
+        "model_year_to": 2000,
+        "engines": [
+          {
+            "name": "0.65 23 KM",
+            "displacement_cc": 650,
+            "power_kw": 17,
+            "power_hp": 23,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1972,
+            "year_to": 1993,
+            "confidence": "high"
+          },
+          {
+            "name": "0.65 26 KM",
+            "displacement_cc": 650,
+            "power_kw": 19,
+            "power_hp": 26,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 2000,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Fiat_126 'Maluch' (650, 1972-2000). Air-cooled 2-cyl rear engine. Produced in Bielsko-Biała PL. Most iconic Polish car ever. EL version with catalyst 1994+. Production ended 2000."
+        }
+      },
+      {
+        "key": "Fiat_Cinquecento_170",
+        "wikidata_id": "Q213842",
+        "model_year_from": 1991,
+        "model_year_to": 1998,
+        "engines": [
+          {
+            "name": "0.7 704 29 KM",
+            "displacement_cc": 704,
+            "power_kw": 21,
+            "power_hp": 29,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "0.9 899 39 KM",
+            "displacement_cc": 899,
+            "power_kw": 29,
+            "power_hp": 39,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "Sporting 1.1 54 KM",
+            "displacement_cc": 1108,
+            "power_kw": 40,
+            "power_hp": 54,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1994,
+            "year_to": 1998,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Fiat_Cinquecento (170, 1991-1998). A-segment successor to 126p. Produced in Tychy (Bielsko). 704cc/899cc 2-cyl. Sporting 1.1 = FIRE inline-4. Replaced by Seicento 1998."
+        }
+      },
+      {
+        "key": "Fiat_Uno_138",
+        "wikidata_id": "Q672099",
+        "model_year_from": 1983,
+        "model_year_to": 1995,
+        "engines": [
+          {
+            "name": "1.0 45 KM",
+            "displacement_cc": 999,
+            "power_kw": 33,
+            "power_hp": 45,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1983,
+            "year_to": 1995,
+            "confidence": "high"
+          },
+          {
+            "name": "1.1 55 KM",
+            "displacement_cc": 1108,
+            "power_kw": 40,
+            "power_hp": 55,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1983,
+            "year_to": 1995,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 Turbo ie 118 KM",
+            "displacement_cc": 1372,
+            "power_kw": 87,
+            "power_hp": 118,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1985,
+            "year_to": 1995,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 ie 70 KM",
+            "displacement_cc": 1372,
+            "power_kw": 51,
+            "power_hp": 70,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1985,
+            "year_to": 1995,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 D 45 KM",
+            "displacement_cc": 1372,
+            "power_kw": 33,
+            "power_hp": 45,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1983,
+            "year_to": 1995,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Fiat_Uno (138, 1983-1995). B-segment hatch, Car of the Year 1984. FIRE engine family. Turbo ie = turbocharged 1.4. Very common in PL 1990s as first car after communism."
+        }
+      },
+      {
+        "key": "Fiat_Punto_Mk1_176",
+        "wikidata_id": "Q1098494",
+        "model_year_from": 1993,
+        "model_year_to": 1999,
+        "engines": [
+          {
+            "name": "1.1 54 KM",
+            "displacement_cc": 1108,
+            "power_kw": 40,
+            "power_hp": 54,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 1999,
+            "confidence": "high"
+          },
+          {
+            "name": "1.2 75 KM",
+            "displacement_cc": 1242,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 1999,
+            "confidence": "high"
+          },
+          {
+            "name": "GT 1.4 Turbo 133 KM",
+            "displacement_cc": 1372,
+            "power_kw": 98,
+            "power_hp": 133,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 1999,
+            "confidence": "high"
+          },
+          {
+            "name": "1.7 D 57 KM",
+            "displacement_cc": 1698,
+            "power_kw": 42,
+            "power_hp": 57,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1993,
+            "year_to": 1999,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Fiat_Punto (176, 1993-1999). Car of the Year 1995. B-segment. FIRE 1.1/1.2, 1.4 Turbo GT. 1.7 D = indirect injection. Very popular in PL mid-1990s as new B-segment."
+        }
       }
     ],
     "Tesla": [
@@ -43100,6 +46112,106 @@
         "_meta": {
           "notes": "DE Wikipedia Mazda_CX-60 (KH, 2022-). New large platform, inline-6 diesel. PHEV: 2.5L Atkinson + e-motor, system 241kW plug-in. 8AT torque converter."
         }
+      },
+      {
+        "key": "Mazda_323_BG",
+        "wikidata_id": "Q1752070",
+        "model_year_from": 1989,
+        "model_year_to": 1994,
+        "engines": [
+          {
+            "name": "1.3 73 KM",
+            "displacement_cc": 1323,
+            "power_kw": 54,
+            "power_hp": 73,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1989,
+            "year_to": 1994,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 88 KM",
+            "displacement_cc": 1597,
+            "power_kw": 65,
+            "power_hp": 88,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1989,
+            "year_to": 1994,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 4WD Turbo 140 KM",
+            "displacement_cc": 1840,
+            "power_kw": 103,
+            "power_hp": 140,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1989,
+            "year_to": 1994,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mazda_323_BG (1989-1994). C-segment. B3/B6/BP engines. GTX = 4WD turbo rally homologation. Hatch/sedan. Used import in PL 1993-1999 as reliable C-segment alternative."
+        }
+      },
+      {
+        "key": "Mazda_323_BA",
+        "wikidata_id": "Q1752078",
+        "model_year_from": 1994,
+        "model_year_to": 1998,
+        "engines": [
+          {
+            "name": "1.3 75 KM",
+            "displacement_cc": 1323,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1994,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 88 KM",
+            "displacement_cc": 1498,
+            "power_kw": 65,
+            "power_hp": 88,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1994,
+            "year_to": 1998,
+            "confidence": "high"
+          },
+          {
+            "name": "1.8 116 KM",
+            "displacement_cc": 1840,
+            "power_kw": 85,
+            "power_hp": 116,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1994,
+            "year_to": 1998,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mazda_323_BA (1994-1998). C-segment. B3/Z5/BP engines. Sedan/hatch/estate. Last 323 before rebrand to Mazda 3. Used in PL 1997-2003."
+        }
       }
     ],
     "Mitsubishi": [
@@ -43356,6 +46468,71 @@
         ],
         "_meta": {
           "notes": "DE Wikipedia Mitsubishi_Eclipse_Cross (GK, 2017-). Facelift 2021: PHEV added, 1.5T petrol retained in some markets, SUV-coupé rear restyled to SUV. PHEV: 2.4 Atkinson + dual e-motor AWD. CVT = INVECS-III."
+        }
+      },
+      {
+        "key": "Mitsubishi_Pajero_Mk2_V20",
+        "wikidata_id": "Q1064300",
+        "model_year_from": 1991,
+        "model_year_to": 1999,
+        "engines": [
+          {
+            "name": "3.0 V6 144 KM",
+            "displacement_cc": 2972,
+            "power_kw": 106,
+            "power_hp": 144,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1991,
+            "year_to": 1999,
+            "confidence": "high"
+          },
+          {
+            "name": "3.5 V6 GDI 208 KM",
+            "displacement_cc": 3497,
+            "power_kw": 153,
+            "power_hp": 208,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 1994,
+            "year_to": 1999,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5 TD 99 KM",
+            "displacement_cc": 2477,
+            "power_kw": 73,
+            "power_hp": 99,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1999,
+            "confidence": "high"
+          },
+          {
+            "name": "2.8 TD 120 KM",
+            "displacement_cc": 2835,
+            "power_kw": 88,
+            "power_hp": 120,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 1993,
+            "year_to": 1999,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Mitsubishi_Pajero_II (V20/V40, 1991-1999). Body-on-frame 4WD. 6G72 V6 petrol, 4D56/4M40 diesel. Short/long wheelbase. SuperSelect 4WD. Popular used luxury off-roader import in PL 1995-2005."
         }
       }
     ],
@@ -46506,6 +49683,30 @@
         "_meta": {
           "notes": "DE Wikipedia Daewoo_Nubira (J100/J150, 1997-2003). C-segment. Very common in PL 2000-2003. 2.0 CDX top trim. Replaced by Chevrolet Lacetti."
         }
+      },
+      {
+        "key": "Daewoo_Tico",
+        "wikidata_id": "Q1153017",
+        "model_year_from": 1991,
+        "model_year_to": 2001,
+        "engines": [
+          {
+            "name": "0.8 796 41 KM",
+            "displacement_cc": 796,
+            "power_kw": 30,
+            "power_hp": 41,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 2001,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Daewoo_Tico (1991-2001). A-segment, based on Suzuki Alto. F8C engine. Assembled by FSO/Daewoo Poland in Lublin. Very popular in PL as budget first car in 1990s."
+        }
       }
     ],
     "Honda": [
@@ -47347,6 +50548,119 @@
         ],
         "_meta": {
           "notes": "DE Wikipedia Honda_Civic_XI (FL1/FL5, 2022-). EU: e:HEV full hybrid (LEB + 2 e-motors) as standard. PHEV also available. Type R FL5 = K20C1 329PS. No diesel offered."
+        }
+      },
+      {
+        "key": "Honda_Civic_Mk5_EG",
+        "wikidata_id": "Q1456035",
+        "model_year_from": 1991,
+        "model_year_to": 1995,
+        "engines": [
+          {
+            "name": "1.3 75 KM",
+            "displacement_cc": 1343,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1995,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 90 KM",
+            "displacement_cc": 1493,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1995,
+            "confidence": "high"
+          },
+          {
+            "name": "VTi 1.6 125 KM",
+            "displacement_cc": 1590,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 1995,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_Civic_V (EG, 1991-1995). C-segment. D13B2/D15Z1/D16Z6 VTEC. 3/4/5-door. First VTEC in a mainstream Honda. Popular reliability-first used import in PL 1995-2002."
+        }
+      },
+      {
+        "key": "Honda_Civic_Mk6_EK",
+        "wikidata_id": "Q1456036",
+        "model_year_from": 1995,
+        "model_year_to": 2001,
+        "engines": [
+          {
+            "name": "1.4 90 KM",
+            "displacement_cc": 1396,
+            "power_kw": 66,
+            "power_hp": 90,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 2001,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 VTEC 115 KM",
+            "displacement_cc": 1493,
+            "power_kw": 85,
+            "power_hp": 115,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 2001,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 VTEC 125 KM",
+            "displacement_cc": 1590,
+            "power_kw": 92,
+            "power_hp": 125,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1995,
+            "year_to": 2001,
+            "confidence": "high"
+          },
+          {
+            "name": "Type R 1.8 185 KM",
+            "displacement_cc": 1797,
+            "power_kw": 136,
+            "power_hp": 185,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1997,
+            "year_to": 2001,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Honda_Civic_VI (EK, 1995-2001). C-segment. D14A/D15Z/D16Y/B18C6 engines. Type R = B18C6 DOHC VTEC 8500 rpm. Cult used import in PL 1998-2005 for tuner community."
         }
       }
     ],
@@ -48805,18 +52119,148 @@
           "notes": "DE Wikipedia Subaru_BRZ_II (ZD8, 2021-). Co-developed with Toyota (GR86 II). FA24D naturally aspirated boxer, larger displacement for better torque. RWD only. Traction control / LSD."
         }
       }
+    ],
+    "FSO": [
+      {
+        "key": "FSO_Polonez",
+        "wikidata_id": "Q629782",
+        "model_year_from": 1978,
+        "model_year_to": 2002,
+        "engines": [
+          {
+            "name": "1.3 55 KM",
+            "displacement_cc": 1301,
+            "power_kw": 40,
+            "power_hp": 55,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1978,
+            "year_to": 1991,
+            "confidence": "high"
+          },
+          {
+            "name": "1.5 MPI 82 KM",
+            "displacement_cc": 1481,
+            "power_kw": 60,
+            "power_hp": 82,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1991,
+            "year_to": 2002,
+            "confidence": "high"
+          },
+          {
+            "name": "1.6 D 65 KM",
+            "displacement_cc": 1598,
+            "power_kw": 48,
+            "power_hp": 65,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1990,
+            "year_to": 2002,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Fiat_Polonez / FSO_Polonez (1978-2002). Large family car, Poland-designed on Fiat 125p platform. Later = Caro/Atu variants. 1.5 MPI = Fiat Fire injection. 1.6D = VM Motori diesel. Iconic PL domestic car."
+        }
+      }
+    ],
+    "Citroën": [
+      {
+        "key": "Citroen_Saxo_S0",
+        "wikidata_id": "Q685800",
+        "model_year_from": 1996,
+        "model_year_to": 2004,
+        "engines": [
+          {
+            "name": "1.0 50 KM",
+            "displacement_cc": 954,
+            "power_kw": 37,
+            "power_hp": 50,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1996,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "1.1 60 KM",
+            "displacement_cc": 1124,
+            "power_kw": 44,
+            "power_hp": 60,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1996,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "1.4 75 KM",
+            "displacement_cc": 1360,
+            "power_kw": 55,
+            "power_hp": 75,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1996,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "VTS 1.6 98 KM",
+            "displacement_cc": 1587,
+            "power_kw": 72,
+            "power_hp": 98,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1996,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "VTS 1.6 118 KM",
+            "displacement_cc": 1587,
+            "power_kw": 87,
+            "power_hp": 118,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual"
+            ],
+            "year_from": 1999,
+            "year_to": 2004,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Citroën_Saxo (S0, 1996-2004). B-segment, Peugeot 106 sibling. TU series. VTS = sport trim 16v. Shared with 106. Popular budget sporty B-segment in PL 1998-2004."
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 519,
-    "engine_count": 3206,
+    "model_count": 562,
+    "engine_count": 3431,
     "engines_by_confidence": {
-      "high": 3153,
+      "high": 3378,
       "medium": 53
     },
     "models_by_confidence": {
       "medium": 26,
-      "high": 493
+      "high": 536
     },
     "models_with_low_confidence": 0
   }

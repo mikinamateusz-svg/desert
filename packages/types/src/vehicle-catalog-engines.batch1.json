@@ -26079,6 +26079,43 @@
         "_meta": {
           "notes": "DE Wikipedia Ford_Mustang (S650, 2023-). EU-spec 5.0 V8 ~450PS. Dark Horse: flat-plane 5.0 V8 ~500PS with 6MT or optional Tremec 7DCT → DSG. Exact EU PS figures may vary slightly."
         }
+      },
+      {
+        "key": "Ford_Expedition_U553",
+        "wikidata_id": "Q1412609",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "3.5 EcoBoost V6 380 KM",
+            "displacement_cc": 3497,
+            "power_kw": 280,
+            "power_hp": 380,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "medium"
+          },
+          {
+            "name": "3.5 EcoBoost V6 High Output 406 KM",
+            "displacement_cc": 3497,
+            "power_kw": 298,
+            "power_hp": 406,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "medium"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Ford_Expedition (U553, 2018-). Full-size BOF SUV. 3.5 EB twin-turbo V6; std 375HP/380PS; HO trim 400HP/406PS. 10AT SelectShift. RWD or 4WD. EU gray import. MAX = extended wheelbase."
+        }
       }
     ],
     "BMW": [
@@ -41101,6 +41138,106 @@
         "_meta": {
           "notes": "DE Wikipedia Dodge_Challenger (LC, 2008-2023). RWD coupe. Manual available on V6/5.7/6.4. Hellcat/Redeye: automatic only (TorqueFlite 8AT)."
         }
+      },
+      {
+        "key": "Dodge_GrandCaravan_RT",
+        "wikidata_id": "Q229310",
+        "model_year_from": 2008,
+        "model_year_to": 2020,
+        "engines": [
+          {
+            "name": "3.3 V6 178 KM",
+            "displacement_cc": 3301,
+            "power_kw": 131,
+            "power_hp": 178,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6 V6 Pentastar 291 KM",
+            "displacement_cc": 3604,
+            "power_kw": 214,
+            "power_hp": 291,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Dodge_Grand_Caravan (RT, 2008-2020). US-market sibling of Chrysler Grand Voyager. No diesel. Gray imports to PL/EU. 6AT. Sold as bare-bones SE alongside premium Chrysler Town & Country."
+        }
+      },
+      {
+        "key": "Dodge_Durango_DS",
+        "wikidata_id": "Q1230023",
+        "model_year_from": 2011,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "3.6 V6 Pentastar 295 KM",
+            "displacement_cc": 3604,
+            "power_kw": 217,
+            "power_hp": 295,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "5.7 HEMI V8 363 KM",
+            "displacement_cc": 5654,
+            "power_kw": 267,
+            "power_hp": 363,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "6.4 HEMI SRT V8 475 KM",
+            "displacement_cc": 6424,
+            "power_kw": 349,
+            "power_hp": 475,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2014,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "6.2 HEMI Hellcat V8 720 KM",
+            "displacement_cc": 6166,
+            "power_kw": 529,
+            "power_hp": 720,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": 2021,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Dodge_Durango (DS, 2011-). 3-row SUV, AWD or RWD. Platform shared with Jeep Grand Cherokee WK2. 8AT TorqueFlite. Hellcat edition: limited 2021 production only. No diesel in EU spec."
+        }
       }
     ],
     "Chevrolet": [
@@ -41286,6 +41423,193 @@
         "_meta": {
           "notes": "DE Wikipedia Chevrolet_Corvette (C8, 2020-). Mid-engine layout. LT2 V8 + 8DCT (dual clutch) → DSG. Z06: flat-plane 5.5 V8 LT6. E-Ray: 6.2 V8 + 97kW front e-motor, non-plug HEV → PB_95 (uses gen energy from engine). AWD on E-Ray."
         }
+      },
+      {
+        "key": "Chevrolet_Suburban_K2UC",
+        "wikidata_id": "Q1069093",
+        "model_year_from": 2015,
+        "model_year_to": 2020,
+        "engines": [
+          {
+            "name": "5.3 V8 360 KM",
+            "displacement_cc": 5328,
+            "power_kw": 265,
+            "power_hp": 360,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "6.2 V8 426 KM",
+            "displacement_cc": 6162,
+            "power_kw": 313,
+            "power_hp": 426,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 Duramax diesel 281 KM",
+            "displacement_cc": 2967,
+            "power_kw": 206,
+            "power_hp": 281,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2020,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Chevrolet_Suburban (K2UC/GMTK2, 2015-2020). Full-size body-on-frame SUV, 8-9 seats. LWB version of Tahoe. 6AT→8AT Hydra-Matic. 3.0 Duramax inline-6 added for MY2020 only."
+        }
+      },
+      {
+        "key": "Chevrolet_Suburban_T1XX",
+        "wikidata_id": "Q1069093",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "5.3 V8 360 KM",
+            "displacement_cc": 5328,
+            "power_kw": 265,
+            "power_hp": 360,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "6.2 V8 426 KM",
+            "displacement_cc": 6162,
+            "power_kw": 313,
+            "power_hp": 426,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 Duramax diesel 281 KM",
+            "displacement_cc": 2967,
+            "power_kw": 206,
+            "power_hp": 281,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Chevrolet_Suburban (T1XX, 2021-). New gen with independent rear suspension. 10AT Hydra-Matic. RWD or 4WD. Platform shared with Tahoe T1XX, GMC Yukon XL, Cadillac Escalade ESV."
+        }
+      },
+      {
+        "key": "Chevrolet_Tahoe_K2UC",
+        "wikidata_id": "Q1069094",
+        "model_year_from": 2015,
+        "model_year_to": 2020,
+        "engines": [
+          {
+            "name": "5.3 V8 360 KM",
+            "displacement_cc": 5328,
+            "power_kw": 265,
+            "power_hp": 360,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2020,
+            "confidence": "high"
+          },
+          {
+            "name": "6.2 V8 426 KM",
+            "displacement_cc": 6162,
+            "power_kw": 313,
+            "power_hp": 426,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Chevrolet_Tahoe (K2UC/GMTK2, 2015-2020). SWB version of Suburban. 5-door 8-seat SUV, 6AT→8AT. No diesel option (diesel only added on MY2020 Suburban, not Tahoe)."
+        }
+      },
+      {
+        "key": "Chevrolet_Tahoe_T1XX",
+        "wikidata_id": "Q1069094",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "5.3 V8 360 KM",
+            "displacement_cc": 5328,
+            "power_kw": 265,
+            "power_hp": 360,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "6.2 V8 426 KM",
+            "displacement_cc": 6162,
+            "power_kw": 313,
+            "power_hp": 426,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 Duramax diesel 281 KM",
+            "displacement_cc": 2967,
+            "power_kw": 206,
+            "power_hp": 281,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Chevrolet_Tahoe (T1XX, 2021-). New gen, independent rear suspension. 10AT Hydra-Matic. RWD or 4WD. Diesel LM2 Duramax added from launch (unlike K2UC)."
+        }
       }
     ],
     "RAM": [
@@ -41402,18 +41726,364 @@
           "notes": "DE Wikipedia RAM_1500 (DT, 2018-). 5th gen. eTorque = 48V belt-starter-generator mHEV → PB_95. 8AT. TRX: supercharged Hellcat 6.2. Popular grey import to PL."
         }
       }
+    ],
+    "Chrysler": [
+      {
+        "key": "Chrysler_Voyager_RG",
+        "wikidata_id": "Q228153",
+        "model_year_from": 2001,
+        "model_year_to": 2007,
+        "engines": [
+          {
+            "name": "2.4 152 KM",
+            "displacement_cc": 2429,
+            "power_kw": 112,
+            "power_hp": 152,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "3.3 V6 180 KM",
+            "displacement_cc": 3301,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "3.8 V6 221 KM",
+            "displacement_cc": 3778,
+            "power_kw": 163,
+            "power_hp": 221,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2007,
+            "confidence": "high"
+          },
+          {
+            "name": "2.5 CRD 143 KM",
+            "displacement_cc": 2499,
+            "power_kw": 105,
+            "power_hp": 143,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2001,
+            "year_to": 2004,
+            "confidence": "high"
+          },
+          {
+            "name": "2.8 CRD 150 KM",
+            "displacement_cc": 2776,
+            "power_kw": 110,
+            "power_hp": 150,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "manual",
+              "automatic"
+            ],
+            "year_from": 2004,
+            "year_to": 2007,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Chrysler_Voyager (RG/RS, 2001-2007). In EU sold as Voyager (SWB) and Grand Voyager (LWB). EU diesel: VM Motori sourced (2.5 CRD then 2.8 CRD). 3.8 V6 = Town & Country US equivalent. 4AT."
+        }
+      },
+      {
+        "key": "Chrysler_GrandVoyager_RT",
+        "wikidata_id": "Q228153",
+        "model_year_from": 2008,
+        "model_year_to": 2016,
+        "engines": [
+          {
+            "name": "3.3 V6 180 KM",
+            "displacement_cc": 3301,
+            "power_kw": 132,
+            "power_hp": 180,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2010,
+            "confidence": "high"
+          },
+          {
+            "name": "3.6 V6 Pentastar 291 KM",
+            "displacement_cc": 3604,
+            "power_kw": 214,
+            "power_hp": 291,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2011,
+            "year_to": 2016,
+            "confidence": "high"
+          },
+          {
+            "name": "2.8 CRD 163 KM",
+            "displacement_cc": 2776,
+            "power_kw": 120,
+            "power_hp": 163,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2008,
+            "year_to": 2016,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Chrysler_Grand_Voyager (RT, 2008-2016). US equivalent: Town & Country. EU had diesel 2.8 CRD (VM Motori) throughout; petrol switched 3.3→3.6 Pentastar 2011. 6AT Aisin."
+        }
+      },
+      {
+        "key": "Chrysler_Pacifica_RU",
+        "wikidata_id": "Q25090462",
+        "model_year_from": 2017,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "3.6 V6 Pentastar 291 KM",
+            "displacement_cc": 3604,
+            "power_kw": 214,
+            "power_hp": 291,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Hybrid 3.6 PHEV 264 KM",
+            "displacement_cc": 3604,
+            "power_kw": 194,
+            "power_hp": 264,
+            "fuel_type": "PHEV",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2017,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Chrysler_Pacifica (RU, 2017-). Replaced Grand Voyager. Standard: 3.6 Pentastar + 9AT. Hybrid: 3.6L Atkinson + dual e-motors, 16→18.2kWh PHEV, e-CVT style → automatic. System 194kW/264PS."
+        }
+      }
+    ],
+    "Cadillac": [
+      {
+        "key": "Cadillac_Escalade_GMT900",
+        "wikidata_id": "Q493775",
+        "model_year_from": 2007,
+        "model_year_to": 2014,
+        "engines": [
+          {
+            "name": "6.2 V8 409 KM",
+            "displacement_cc": 6162,
+            "power_kw": 301,
+            "power_hp": 409,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2007,
+            "year_to": 2014,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Cadillac_Escalade (GMT900, 2007-2014). Full-size luxury BOF SUV. 6.2 V8 L92 403HP/409PS. 6AT Hydra-Matic. RWD or AWD. Also ESV (extended) variant. Premium gray import to PL."
+        }
+      },
+      {
+        "key": "Cadillac_Escalade_K2XX",
+        "wikidata_id": "Q493775",
+        "model_year_from": 2015,
+        "model_year_to": 2020,
+        "engines": [
+          {
+            "name": "6.2 V8 426 KM",
+            "displacement_cc": 6162,
+            "power_kw": 313,
+            "power_hp": 426,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2015,
+            "year_to": 2020,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Cadillac_Escalade (K2XX/GMTK2, 2015-2020). Shared platform with Suburban K2UC. 6.2 V8 L86 420HP/426PS. 8AT Hydra-Matic. AWD or RWD. ESV (long) and standard variants."
+        }
+      },
+      {
+        "key": "Cadillac_Escalade_T1XX",
+        "wikidata_id": "Q493775",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "6.2 V8 426 KM",
+            "displacement_cc": 6162,
+            "power_kw": 313,
+            "power_hp": 426,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 Duramax diesel 281 KM",
+            "displacement_cc": 2967,
+            "power_kw": 206,
+            "power_hp": 281,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Escalade V 6.2 Supercharged 692 KM",
+            "displacement_cc": 6162,
+            "power_kw": 509,
+            "power_hp": 692,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2023,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Cadillac_Escalade (T1XX, 2021-). New independent rear suspension. 10AT Hydra-Matic. 6.2 V8 L87 420HP. Diesel LM2. Escalade V: supercharged LT4 V8 682HP/692PS from 2023. Also ESV variant."
+        }
+      }
+    ],
+    "Lincoln": [
+      {
+        "key": "Lincoln_Navigator_L663",
+        "wikidata_id": "Q745009",
+        "model_year_from": 2018,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "3.5 EcoBoost V6 456 KM",
+            "displacement_cc": 3497,
+            "power_kw": 335,
+            "power_hp": 456,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2018,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia Lincoln_Navigator (L663, 2018-). Premium full-size BOF SUV on same Expedition platform. Twin-turbo 3.5 EB 450HP/456PS. 10AT. AWD or RWD. Standard and L (extended) wheelbase. Premium gray import to PL."
+        }
+      }
+    ],
+    "GMC": [
+      {
+        "key": "GMC_Yukon_T1XX",
+        "wikidata_id": "Q1099617",
+        "model_year_from": 2021,
+        "model_year_to": null,
+        "engines": [
+          {
+            "name": "5.3 V8 360 KM",
+            "displacement_cc": 5328,
+            "power_kw": 265,
+            "power_hp": 360,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "6.2 V8 426 KM",
+            "displacement_cc": 6162,
+            "power_kw": 313,
+            "power_hp": 426,
+            "fuel_type": "PB_95",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          },
+          {
+            "name": "3.0 Duramax diesel 281 KM",
+            "displacement_cc": 2967,
+            "power_kw": 206,
+            "power_hp": 281,
+            "fuel_type": "ON",
+            "transmission_options": [
+              "automatic"
+            ],
+            "year_from": 2021,
+            "year_to": null,
+            "confidence": "high"
+          }
+        ],
+        "_meta": {
+          "notes": "DE Wikipedia GMC_Yukon (T1XX, 2021-). Sibling of Chevrolet Suburban (Yukon XL) / Tahoe (Yukon). Same GMT T1XX platform and engines. 10AT Hydra-Matic. Denali and AT4 trims most common as EU gray imports."
+        }
+      }
     ]
   },
   "stats": {
-    "model_count": 407,
-    "engine_count": 2745,
+    "model_count": 422,
+    "engine_count": 2783,
     "engines_by_confidence": {
-      "high": 2695,
-      "medium": 50
+      "high": 2731,
+      "medium": 52
     },
     "models_by_confidence": {
-      "medium": 24,
-      "high": 383
+      "medium": 25,
+      "high": 397
     },
     "models_with_low_confidence": 0
   }

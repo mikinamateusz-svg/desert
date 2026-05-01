@@ -740,13 +740,14 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       updatedAt: new Date(),
     };
 
-    // Update submission: mark verified, store validated prices only, null photo key + GPS atomically
+    // Update submission: mark verified, store validated prices only, null GPS atomically.
+    // photo_r2_key intentionally kept — cleanup worker removes it after REJECTED_PHOTO_RETENTION_DAYS
+    // so admins can view the photo in the review panel while it's still fresh.
     await this.prisma.submission.update({
       where: { id: submissionId },
       data: {
         status: SubmissionStatus.verified,
         price_data: validatedPrices as unknown as Prisma.InputJsonValue,
-        photo_r2_key: null,
         gps_lat: null,
         gps_lng: null,
       },
@@ -755,8 +756,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     // Research retention: verified submissions are the high-signal samples for
     // the benchmark corpus — we want rawPrices (what OCR saw) AND validatedPrices
     // (what shipped to the cache) so post-hoc we can tell which fuels got
-    // dropped by validation. Run BEFORE the R2 delete below so the photo still
-    // exists to copy.
+    // dropped by validation.
     if (updated.photo_r2_key) {
       await this.researchRetention.captureIfEnabled({
         submissionId,
@@ -770,17 +770,6 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         flagReason: null,
         capturedAt: updated.created_at,
       });
-    }
-
-    // Delete photo from R2 (best-effort — log on failure, do not throw)
-    if (updated.photo_r2_key) {
-      await this.storageService
-        .deleteObject(updated.photo_r2_key)
-        .catch((err: Error) =>
-          this.logger.error(
-            `Failed to delete R2 object ${updated.photo_r2_key} for submission ${submissionId}: ${err.message}`,
-          ),
-        );
     }
 
     // Write price history + invalidate / rewrite Redis cache (best-effort — DB fallback serves price on miss)

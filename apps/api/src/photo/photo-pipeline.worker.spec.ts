@@ -1691,26 +1691,24 @@ describe('PhotoPipelineWorker', () => {
         );
       });
 
-      it('nulls photo_r2_key in the same update that sets verified', async () => {
+      it('keeps photo_r2_key when setting verified (cleanup worker removes after retention window)', async () => {
         setupHappyPath();
 
         await capturedProcessor!(makeJob('sub-123'));
 
         expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
           expect.objectContaining({
-            data: expect.objectContaining({ status: 'verified', photo_r2_key: null }),
+            data: expect.not.objectContaining({ photo_r2_key: null }),
           }),
         );
       });
 
-      it('deletes photo from R2', async () => {
+      it('does not delete photo from R2 on verification (cleanup worker handles it)', async () => {
         setupHappyPath();
 
         await capturedProcessor!(makeJob('sub-123'));
 
-        expect(mockStorageService.deleteObject).toHaveBeenCalledWith(
-          'submissions/user-abc/sub-123.jpg',
-        );
+        expect(mockStorageService.deleteObject).not.toHaveBeenCalled();
       });
 
       it('calls setVerifiedPrice with correct stationId and prices', async () => {

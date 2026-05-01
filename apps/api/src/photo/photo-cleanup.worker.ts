@@ -73,13 +73,13 @@ export class PhotoCleanupWorker implements OnModuleInit {
     );
   }
 
-  /** Delete photos for `rejected` submissions older than REJECTED_PHOTO_RETENTION_DAYS. */
+  /** Delete photos for `rejected` and `verified` submissions older than REJECTED_PHOTO_RETENTION_DAYS. */
   private async cleanupRejectedPhotos(): Promise<void> {
     const cutoff = new Date(Date.now() - this.rejectedRetentionDays * 86_400_000);
 
     const stale = await this.prisma.submission.findMany({
       where: {
-        status: 'rejected',
+        status: { in: ['rejected', 'verified'] },
         photo_r2_key: { not: null },
         created_at: { lt: cutoff },
       },
@@ -88,7 +88,7 @@ export class PhotoCleanupWorker implements OnModuleInit {
     });
 
     if (stale.length === 0) {
-      this.logger.log(`No rejected photos older than ${this.rejectedRetentionDays} days to clean up`);
+      this.logger.log(`No rejected/verified photos older than ${this.rejectedRetentionDays} days to clean up`);
       return;
     }
 
@@ -103,12 +103,12 @@ export class PhotoCleanupWorker implements OnModuleInit {
         deleted++;
       } catch (e: unknown) {
         this.logger.warn(
-          `Failed to delete rejected photo ${sub.photo_r2_key}: ${e instanceof Error ? e.message : String(e)}`,
+          `Failed to delete photo ${sub.photo_r2_key}: ${e instanceof Error ? e.message : String(e)}`,
         );
       }
     }
 
-    this.logger.log(`Rejected photo cleanup: deleted ${deleted}/${stale.length} photos older than ${this.rejectedRetentionDays} days`);
+    this.logger.log(`Short-retention photo cleanup: deleted ${deleted}/${stale.length} photos older than ${this.rejectedRetentionDays} days`);
   }
 
   /** Delete photos for non-rejected submissions (shadow_rejected etc.) older than 30 days. */

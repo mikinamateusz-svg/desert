@@ -2,12 +2,25 @@ name: Build Android APK
 
 on:
   workflow_dispatch: # manual trigger from GitHub Actions UI
+    inputs:
+      phase2:
+        description: 'Enable Phase 2 features (vehicles, fill-up logging, savings). Default OFF — flip ON for internal acceptance testing.'
+        type: boolean
+        default: false
   push:
     branches: [main]
     paths:
       - 'apps/mobile/**'
       - 'packages/**'
       - 'pnpm-lock.yaml'
+
+# Phase 2 build-time gate: read from workflow_dispatch input when manually
+# triggered, otherwise default to "false" so auto-builds on push produce
+# stable artefacts that match prod intent. Code defaults to ON when this var
+# is unset (see apps/mobile/src/config/flags.ts), so we set it explicitly
+# here for both branches to avoid accidental Phase 2 leakage in CI APKs.
+env:
+  EXPO_PUBLIC_PHASE_2: ${{ github.event.inputs.phase2 == 'true' && 'true' || 'false' }}
 
 jobs:
   build-apk:
@@ -67,6 +80,9 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: litro-android-${{ github.sha }}
+          # Suffix the artifact name with the Phase 2 state so artifacts from
+          # different runs don't get confused. github.sha + flag state =
+          # uniquely identifies the build.
+          name: litro-android-${{ github.sha }}-phase2-${{ env.EXPO_PUBLIC_PHASE_2 }}
           path: apps/mobile/android/app/build/outputs/apk/release/*.apk
           retention-days: 30

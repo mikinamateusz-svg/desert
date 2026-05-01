@@ -27,7 +27,6 @@ async function fetchStationsAt(lat: number, lng: number, radius: number): Promis
 
 export default function MapContainer({ stations: initialStations, defaultLat, defaultLng, t }: Props) {
   const mapRef = useRef<MapRef>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
   const [selected, setSelected] = useState<StationWithPrice | null>(null);
   const [selectedFuel, setSelectedFuel] = useState<FuelType>('PB_95');
   const [mapBounds, setMapBounds] = useState<MapBounds | null>(null);
@@ -69,31 +68,18 @@ export default function MapContainer({ stations: initialStations, defaultLat, de
     : stations;
 
   // Pan/zoom to selected station.
-  // Mobile: fixed offset above bottom sheet.
-  // Desktop: measure the card's actual DOM position to compute exact offsetY so the
-  // pin lands in the centre of the visible map area above the card.
+  // Mobile: fixed offset above bottom sheet (sheet covers full width below).
+  // Desktop: pin at exact canvas centre. The detail card sits bottom-left and
+  // the sidebar sits right, but they only obscure parts of the map — having
+  // the pin in the geometric centre matches the convention of major map UIs
+  // and stays clearly visible.
   useEffect(() => {
     if (!selected) return;
     const map = mapRef.current;
     if (!map) return;
     const isMobile = window.innerWidth < 1024;
 
-    if (isMobile) {
-      map.flyTo({ center: [selected.lng, selected.lat], zoom: MOBILE_SELECT_ZOOM, offset: [0, -150], duration: 600 });
-      return;
-    }
-
-    // React commits DOM before effects fire, so panelRef.current is available here.
-    const canvas = map.getCanvas();
-    const canvasRect = canvas.getBoundingClientRect();
-    let offsetY = 0;
-    if (panelRef.current) {
-      const cardRect = panelRef.current.getBoundingClientRect();
-      // Usable map height = distance from canvas top to card top
-      const usableHeight = cardRect.top - canvasRect.top;
-      // Place pin at centre of usable area; offsetY is relative to canvas centre
-      offsetY = usableHeight / 2 - canvasRect.height / 2;
-    }
+    const offsetY = isMobile ? -150 : 0;
     map.flyTo({ center: [selected.lng, selected.lat], zoom: MOBILE_SELECT_ZOOM, offset: [0, offsetY], duration: 600 });
   }, [selected]);
 
@@ -146,7 +132,6 @@ export default function MapContainer({ stations: initialStations, defaultLat, de
           relative to the full map+sidebar container, avoiding nested stacking issues */}
       {selected && (
         <StationDetailPanel
-          ref={panelRef}
           station={selected}
           selectedFuel={selectedFuel}
           t={t}

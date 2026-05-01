@@ -107,6 +107,40 @@ interface Props {
   onBoundsChange: (bounds: MapBounds) => void;
 }
 
+/**
+ * Restore the map view from a `#lat,lng,zoom` URL hash if present, so refresh
+ * keeps the user where they were instead of bouncing back to the country-wide
+ * default. Hash format mirrors the convention used by Google Maps / OSM /
+ * Mapbox examples — three comma-separated decimals after the `#`.
+ *
+ * SSR-safe: returns the prop defaults on the server and during the first
+ * client render before useEffect fires; the map's initialViewState reads
+ * this once via the useState initializer (which only runs in the browser).
+ */
+function readHashView(
+  defaultLat: number,
+  defaultLng: number,
+  defaultZoom: number,
+): { lat: number; lng: number; zoom: number } {
+  if (typeof window === 'undefined') {
+    return { lat: defaultLat, lng: defaultLng, zoom: defaultZoom };
+  }
+  const m = window.location.hash.match(/^#(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?),(\d+(?:\.\d+)?)$/);
+  if (!m) return { lat: defaultLat, lng: defaultLng, zoom: defaultZoom };
+  const lat = parseFloat(m[1]!);
+  const lng = parseFloat(m[2]!);
+  const zoom = parseFloat(m[3]!);
+  // Sanity-clamp so a malformed hash can't crash the map.
+  if (
+    !Number.isFinite(lat) || lat < -90 || lat > 90 ||
+    !Number.isFinite(lng) || lng < -180 || lng > 180 ||
+    !Number.isFinite(zoom) || zoom < 0 || zoom > 22
+  ) {
+    return { lat: defaultLat, lng: defaultLng, zoom: defaultZoom };
+  }
+  return { lat, lng, zoom };
+}
+
 export default function MapView({
   mapRef,
   stations,
@@ -119,10 +153,12 @@ export default function MapView({
   onFuelChange,
   onBoundsChange,
 }: Props) {
+  // Read once on first render — the initialiser runs in the browser only.
+  const [initialView] = useState(() => readHashView(defaultLat, defaultLng, 6));
   const [noneInView, setNoneInView] = useState(false);
-  const [viewCenter, setViewCenter] = useState<{ lat: number; lng: number }>({ lat: defaultLat, lng: defaultLng });
+  const [viewCenter, setViewCenter] = useState<{ lat: number; lng: number }>({ lat: initialView.lat, lng: initialView.lng });
   const [viewportRadiusM, setViewportRadiusM] = useState(MIN_COLOR_RADIUS_M);
-  const [zoom, setZoom] = useState(6);
+  const [zoom, setZoom] = useState(initialView.zoom);
   const [bbox, setBbox] = useState<[number, number, number, number]>([-180, -90, 180, 90]);
 
   const priceTiers = useMemo(
@@ -155,10 +191,18 @@ export default function MapView({
       onBoundsChange({ north: b.getNorth(), south: b.getSouth(), east: b.getEast(), west: b.getWest() });
       const cLat = b.getCenter().lat;
       const cLng = b.getCenter().lng;
+      const z = e.target.getZoom();
       setViewCenter({ lat: cLat, lng: cLng });
       setViewportRadiusM(haversineMetres(cLat, cLng, b.getNorth(), b.getEast()));
-      setZoom(e.target.getZoom());
+      setZoom(z);
       setBbox([b.getWest(), b.getSouth(), b.getEast(), b.getNorth()]);
+      // Persist current view to the URL hash so refresh restores it.
+      // replaceState (not pushState) keeps the back-button history clean.
+      // 4 dp ≈ 11 m precision — plenty for restoring view, keeps URL short.
+      if (typeof window !== 'undefined') {
+        const hash = `#${cLat.toFixed(4)},${cLng.toFixed(4)},${z.toFixed(2)}`;
+        window.history.replaceState(null, '', hash);
+      }
     }
   }
 
@@ -202,9 +246,9 @@ export default function MapView({
         ref={mapRef}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
         initialViewState={{
-          longitude: defaultLng,
-          latitude: defaultLat,
-          zoom: 6,
+          longitude: initialView.lng,
+          latitude: initialView.lat,
+          zoom: initialView.zoom,
         }}
         mapStyle="mapbox://styles/mapbox/streets-v12"
         style={{ width: '100%', height: '100%' }}

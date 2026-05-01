@@ -1,0 +1,653 @@
+photo_id,submission_id,station_name,final_status,flag_reason,captured_at,actual_prices,model_id,model_label,ocr_prices,confidence,latency_ms,input_tokens,output_tokens,cost_usd,error,raw_response_excerpt
+ca6417d0-695f-40bb-9c8f-67f1d8dabf83,8a728f8e-8c8a-4d6b-955d-bb5d8d7d4c53,MOYA,verified,,2026-04-27T17:12:41.891Z,"{""ON"":7.01,""LPG"":3.64,""PB_95"":6.17}",claude-haiku-4-5,Haiku 4.5,"[{""fuel_type"":""ON"",""price_per_litre"":6.11},{""fuel_type"":""PB_95"",""price_per_litre"":6.11},{""fuel_type"":""LPG"",""price_per_litre"":3.59}]",0.85,2613,2052,111,0.002607,,"```json {   ""prices"": [     { ""fuel_type"": ""ON"", ""price_per_litre"": 6.11 },     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.11 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 3.59 }   ],   ""confidence_score"": 0.85 } ```"
+ca6417d0-695f-40bb-9c8f-67f1d8dabf83,8a728f8e-8c8a-4d6b-955d-bb5d8d7d4c53,MOYA,verified,,2026-04-27T17:12:41.891Z,"{""ON"":7.01,""LPG"":3.64,""PB_95"":6.17}",claude-sonnet-4-6,Sonnet 4.6,"[{""fuel_type"":""ON"",""price_per_litre"":7.01},{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""LPG"",""price_per_litre"":3.64}]",0.82,3313,2052,111,0.007821,,"```json {   ""prices"": [     { ""fuel_type"": ""ON"", ""price_per_litre"": 7.01 },     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.17 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 3.64 }   ],   ""confidence_score"": 0.82 } ```"
+ca6417d0-695f-40bb-9c8f-67f1d8dabf83,8a728f8e-8c8a-4d6b-955d-bb5d8d7d4c53,MOYA,verified,,2026-04-27T17:12:41.891Z,"{""ON"":7.01,""LPG"":3.64,""PB_95"":6.17}",gemini-2.5-flash-lite,Gemini Flash-Lite,"[{""fuel_type"":""ON"",""price_per_litre"":7.01},{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""LPG"",""price_per_litre"":3.64}]",0.9,3781,720,117,0.000119,,"{   ""prices"": [     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 7.01     },     {       ""fuel_type"": ""PB_95"",       ""price_per_litre"": 6.17     },     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 3.64     }   ],   ""confidence_score"": 0.9 }"
+ca6417d0-695f-40bb-9c8f-67f1d8dabf83,8a728f8e-8c8a-4d6b-955d-bb5d8d7d4c53,MOYA,verified,,2026-04-27T17:12:41.891Z,"{""ON"":7.01,""LPG"":3.64,""PB_95"":6.17}",gemini-2.5-flash,Gemini Flash,"[{""fuel_type"":""ON"",""price_per_litre"":7.01},{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""LPG"",""price_per_litre"":3.64}]",1,4822,720,117,0.000509,,"{   ""prices"": [     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 7.01     },     {       ""fuel_type"": ""PB_95"",       ""price_per_litre"": 6.17     },     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 3.64     }   ],   ""confidence_score"": 1.0 }"
+ca6417d0-695f-40bb-9c8f-67f1d8dabf83,8a728f8e-8c8a-4d6b-955d-bb5d8d7d4c53,MOYA,verified,,2026-04-27T17:12:41.891Z,"{""ON"":7.01,""LPG"":3.64,""PB_95"":6.17}",gemini-2.5-pro,Gemini Pro,,,,,,,"gemini 429: {
+  ""error"": {
+    ""code"": 429,
+    ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\nPlease retry in 17.876622112s."",
+    ""status"": ""RESOURCE_EXHAUSTED"",
+    ""details"": [
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.Help"",
+        ""links"": [
+          {
+            ""description"": ""Learn more about Gemini API quotas"",
+            ""url"": ""https://ai.google.dev/gemini-api/docs/rate-limits""
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.QuotaFailure"",
+        ""violations"": [
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerDay-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerDayPerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerMinutePerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""model"": ""gemini-2.5-pro"",
+              ""location"": ""global""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerMinute-FreeTier"",
+            ""quotaDimensions"": {
+              ""model"": ""gemini-2.5-pro"",
+              ""location"": ""global""
+            }
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.RetryInfo"",
+        ""retryDelay"": ""17s""
+      }
+    ]
+  }
+}
+",
+63a3d552-5ae8-41be-9721-a55dcd67e157,9e61b0eb-c445-43a8-9f69-89b27d565ffe,MOYA Petrol station,rejected,price_out_of_range,2026-04-27T17:04:18.751Z,"{""ON"":6.99,""LPG"":3.69,""PB_95"":6.17,""PB_98"":6.69}",claude-haiku-4-5,Haiku 4.5,"[{""fuel_type"":""ON"",""price_per_litre"":6.99},{""fuel_type"":""PB_95"",""price_per_litre"":6.11},{""fuel_type"":""ON"",""price_per_litre"":6.69},{""fuel_type"":""ON"",""price_per_litre"":3.69},{""fuel_type"":""LPG"",""price_per_litre"":3.49}]",0.75,3333,2052,161,0.002857,,"```json {   ""prices"": [     { ""fuel_type"": ""ON"", ""price_per_litre"": 6.99 },     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.11 },     { ""fuel_type"": ""ON"", ""price_per_litre"": 6.69 },     { ""fuel_type"": ""ON"", ""price_per_litre"": 3.69 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 3.49 }   ],   ""confidence_score"": 0.75 } ```"
+63a3d552-5ae8-41be-9721-a55dcd67e157,9e61b0eb-c445-43a8-9f69-89b27d565ffe,MOYA Petrol station,rejected,price_out_of_range,2026-04-27T17:04:18.751Z,"{""ON"":6.99,""LPG"":3.69,""PB_95"":6.17,""PB_98"":6.69}",claude-sonnet-4-6,Sonnet 4.6,"[{""fuel_type"":""ON"",""price_per_litre"":6.99},{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":6.69},{""fuel_type"":""PB_98"",""price_per_litre"":6.69},{""fuel_type"":""LPG"",""price_per_litre"":3.69}]",0.78,3271,2052,167,0.008661,,"```json {   ""prices"": [     { ""fuel_type"": ""ON"", ""price_per_litre"": 6.99 },     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.17 },     { ""fuel_type"": ""ON_PREMIUM"", ""price_per_litre"": 6.69 },     { ""fuel_type"": ""PB_98"", ""price_per_litre"": 6.69 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 3.69 }   ],   ""confidence_score"": 0.78 } ```"
+63a3d552-5ae8-41be-9721-a55dcd67e157,9e61b0eb-c445-43a8-9f69-89b27d565ffe,MOYA Petrol station,rejected,price_out_of_range,2026-04-27T17:04:18.751Z,"{""ON"":6.99,""LPG"":3.69,""PB_95"":6.17,""PB_98"":6.69}",gemini-2.5-flash-lite,Gemini Flash-Lite,"[{""fuel_type"":""ON"",""price_per_litre"":6.99},{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""PB_98"",""price_per_litre"":6.69},{""fuel_type"":""LPG"",""price_per_litre"":3.69},{""fuel_type"":""AdBlue"",""price_per_litre"":3.49}]",0.9,8442,720,181,0.000144,,"{   ""prices"": [     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 6.99     },     {       ""fuel_type"": ""PB_95"",       ""price_per_litre"": 6.17     },     {       ""fuel_type"": ""PB_98"",       ""price_per_litre"": 6.69     },     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 3.69     },     {       ""fuel_type"": ""AdBlue"",       ""price_per_litre"": 3.49     }   ],   ""confidence_score"": 0.9 }"
+63a3d552-5ae8-41be-9721-a55dcd67e157,9e61b0eb-c445-43a8-9f69-89b27d565ffe,MOYA Petrol station,rejected,price_out_of_range,2026-04-27T17:04:18.751Z,"{""ON"":6.99,""LPG"":3.69,""PB_95"":6.17,""PB_98"":6.69}",gemini-2.5-flash,Gemini Flash,"[{""fuel_type"":""ON"",""price_per_litre"":6.99},{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""PB_98"",""price_per_litre"":6.69},{""fuel_type"":""LPG"",""price_per_litre"":3.69}]",0.95,5942,720,151,0.000594,,"{   ""prices"": [     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 6.99     },     {       ""fuel_type"": ""PB_95"",       ""price_per_litre"": 6.17     },     {       ""fuel_type"": ""PB_98"",       ""price_per_litre"": 6.69     },     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 3.69     }   ],   ""confidence_score"": 0.95 }"
+63a3d552-5ae8-41be-9721-a55dcd67e157,9e61b0eb-c445-43a8-9f69-89b27d565ffe,MOYA Petrol station,rejected,price_out_of_range,2026-04-27T17:04:18.751Z,"{""ON"":6.99,""LPG"":3.69,""PB_95"":6.17,""PB_98"":6.69}",gemini-2.5-pro,Gemini Pro,,,,,,,"gemini 429: {
+  ""error"": {
+    ""code"": 429,
+    ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\nPlease retry in 25.113332917s."",
+    ""status"": ""RESOURCE_EXHAUSTED"",
+    ""details"": [
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.Help"",
+        ""links"": [
+          {
+            ""description"": ""Learn more about Gemini API quotas"",
+            ""url"": ""https://ai.google.dev/gemini-api/docs/rate-limits""
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.QuotaFailure"",
+        ""violations"": [
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerDay-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerMinute-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerMinutePerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerDayPerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.RetryInfo"",
+        ""retryDelay"": ""25s""
+      }
+    ]
+  }
+}
+",
+ac1631c1-291a-4e38-8c8d-27b37abb6803,6a944a3e-d698-4b0b-a5ae-b1eb3d1323d0,MOL Petrol station,verified,,2026-04-27T16:36:26.773Z,"{""ON"":7.01,""LPG"":3.77,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",claude-haiku-4-5,Haiku 4.5,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""ON"",""price_per_litre"":7.01},{""fuel_type"":""PB_98"",""price_per_litre"":6.71},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":7.01},{""fuel_type"":""LPG"",""price_per_litre"":3.77}]",0.85,3351,2052,167,0.002887,,"```json {   ""prices"": [     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.17 },     { ""fuel_type"": ""ON"", ""price_per_litre"": 7.01 },     { ""fuel_type"": ""PB_98"", ""price_per_litre"": 6.71 },     { ""fuel_type"": ""ON_PREMIUM"", ""price_per_litre"": 7.01 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 3.77 }   ],   ""confidence_score"": 0.85 } ```"
+ac1631c1-291a-4e38-8c8d-27b37abb6803,6a944a3e-d698-4b0b-a5ae-b1eb3d1323d0,MOL Petrol station,verified,,2026-04-27T16:36:26.773Z,"{""ON"":7.01,""LPG"":3.77,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",claude-sonnet-4-6,Sonnet 4.6,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""ON"",""price_per_litre"":7.01},{""fuel_type"":""LPG"",""price_per_litre"":3.77},{""fuel_type"":""PB_98"",""price_per_litre"":6.71},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":7.01}]",0.82,3759,2052,167,0.008661,,"```json {   ""prices"": [     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.17 },     { ""fuel_type"": ""ON"", ""price_per_litre"": 7.01 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 3.77 },     { ""fuel_type"": ""PB_98"", ""price_per_litre"": 6.71 },     { ""fuel_type"": ""ON_PREMIUM"", ""price_per_litre"": 7.01 }   ],   ""confidence_score"": 0.82 } ```"
+ac1631c1-291a-4e38-8c8d-27b37abb6803,6a944a3e-d698-4b0b-a5ae-b1eb3d1323d0,MOL Petrol station,verified,,2026-04-27T16:36:26.773Z,"{""ON"":7.01,""LPG"":3.77,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",gemini-2.5-flash-lite,Gemini Flash-Lite,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""ON"",""price_per_litre"":7.01},{""fuel_type"":""LPG"",""price_per_litre"":3.77},{""fuel_type"":""PB_98"",""price_per_litre"":6.71},{""fuel_type"":""ON"",""price_per_litre"":7.01}]",0.9,11952,720,180,0.000144,,"{   ""prices"": [     {       ""fuel_type"": ""PB_95"",       ""price_per_litre"": 6.17     },     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 7.01     },     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 3.77     },     {       ""fuel_type"": ""PB_98"",       ""price_per_litre"": 6.71     },     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 7.01     }   ],   ""confidence_score"": 0.9 }"
+ac1631c1-291a-4e38-8c8d-27b37abb6803,6a944a3e-d698-4b0b-a5ae-b1eb3d1323d0,MOL Petrol station,verified,,2026-04-27T16:36:26.773Z,"{""ON"":7.01,""LPG"":3.77,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",gemini-2.5-flash,Gemini Flash,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""ON"",""price_per_litre"":7.01},{""fuel_type"":""LPG"",""price_per_litre"":3.77},{""fuel_type"":""PB_98"",""price_per_litre"":6.71},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":7.01}]",1,8334,720,183,0.000674,,"{   ""prices"": [     {       ""fuel_type"": ""PB_95"",       ""price_per_litre"": 6.17     },     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 7.01     },     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 3.77     },     {       ""fuel_type"": ""PB_98"",       ""price_per_litre"": 6.71     },     {       ""fuel_type"": ""ON_PREMIUM"",       ""price_per_litre"": 7.01     }   ],   ""confidence_score"": 1.0 }"
+ac1631c1-291a-4e38-8c8d-27b37abb6803,6a944a3e-d698-4b0b-a5ae-b1eb3d1323d0,MOL Petrol station,verified,,2026-04-27T16:36:26.773Z,"{""ON"":7.01,""LPG"":3.77,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",gemini-2.5-pro,Gemini Pro,,,,,,,"gemini 429: {
+  ""error"": {
+    ""code"": 429,
+    ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\nPlease retry in 32.962686963s."",
+    ""status"": ""RESOURCE_EXHAUSTED"",
+    ""details"": [
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.Help"",
+        ""links"": [
+          {
+            ""description"": ""Learn more about Gemini API quotas"",
+            ""url"": ""https://ai.google.dev/gemini-api/docs/rate-limits""
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.QuotaFailure"",
+        ""violations"": [
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerDay-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerDayPerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerMinutePerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerMinute-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.RetryInfo"",
+        ""retryDelay"": ""32s""
+      }
+    ]
+  }
+}
+",
+49d5174d-51c8-4ad6-8546-53aa7ed1614d,15407bc2-6be3-4cd6-9657-10383af312f9,Orlen,verified,,2026-04-27T16:25:59.081Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",claude-haiku-4-5,Haiku 4.5,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""PB_98"",""price_per_litre"":6.99},{""fuel_type"":""ON"",""price_per_litre"":6.77},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":6.71},{""fuel_type"":""LPG"",""price_per_litre"":7.01}]",0.85,2590,2052,167,0.002887,,"```json {   ""prices"": [     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.17 },     { ""fuel_type"": ""PB_98"", ""price_per_litre"": 6.99 },     { ""fuel_type"": ""ON"", ""price_per_litre"": 6.77 },     { ""fuel_type"": ""ON_PREMIUM"", ""price_per_litre"": 6.71 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 7.01 }   ],   ""confidence_score"": 0.85 } ```"
+49d5174d-51c8-4ad6-8546-53aa7ed1614d,15407bc2-6be3-4cd6-9657-10383af312f9,Orlen,verified,,2026-04-27T16:25:59.081Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",claude-sonnet-4-6,Sonnet 4.6,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""ON"",""price_per_litre"":6.99},{""fuel_type"":""LPG"",""price_per_litre"":3.77},{""fuel_type"":""PB_98"",""price_per_litre"":6.71},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":7.01}]",0.82,4803,2052,167,0.008661,,"```json {   ""prices"": [     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.17 },     { ""fuel_type"": ""ON"", ""price_per_litre"": 6.99 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 3.77 },     { ""fuel_type"": ""PB_98"", ""price_per_litre"": 6.71 },     { ""fuel_type"": ""ON_PREMIUM"", ""price_per_litre"": 7.01 }   ],   ""confidence_score"": 0.82 } ```"
+49d5174d-51c8-4ad6-8546-53aa7ed1614d,15407bc2-6be3-4cd6-9657-10383af312f9,Orlen,verified,,2026-04-27T16:25:59.081Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",gemini-2.5-flash-lite,Gemini Flash-Lite,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""ON"",""price_per_litre"":6.99},{""fuel_type"":""LPG"",""price_per_litre"":3.77},{""fuel_type"":""PB_98"",""price_per_litre"":6.71},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":7.01}]",0.9,10582,720,183,0.000145,,"{   ""prices"": [     {       ""fuel_type"": ""PB_95"",       ""price_per_litre"": 6.17     },     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 6.99     },     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 3.77     },     {       ""fuel_type"": ""PB_98"",       ""price_per_litre"": 6.71     },     {       ""fuel_type"": ""ON_PREMIUM"",       ""price_per_litre"": 7.01     }   ],   ""confidence_score"": 0.9 }"
+49d5174d-51c8-4ad6-8546-53aa7ed1614d,15407bc2-6be3-4cd6-9657-10383af312f9,Orlen,verified,,2026-04-27T16:25:59.081Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",gemini-2.5-flash,Gemini Flash,,,,,,,"gemini 503: {
+  ""error"": {
+    ""code"": 503,
+    ""message"": ""This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."",
+    ""status"": ""UNAVAILABLE""
+  }
+}
+",
+49d5174d-51c8-4ad6-8546-53aa7ed1614d,15407bc2-6be3-4cd6-9657-10383af312f9,Orlen,verified,,2026-04-27T16:25:59.081Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",gemini-2.5-pro,Gemini Pro,,,,,,,"gemini 429: {
+  ""error"": {
+    ""code"": 429,
+    ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\nPlease retry in 32.327239388s."",
+    ""status"": ""RESOURCE_EXHAUSTED"",
+    ""details"": [
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.Help"",
+        ""links"": [
+          {
+            ""description"": ""Learn more about Gemini API quotas"",
+            ""url"": ""https://ai.google.dev/gemini-api/docs/rate-limits""
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.QuotaFailure"",
+        ""violations"": [
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerDay-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerDayPerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""model"": ""gemini-2.5-pro"",
+              ""location"": ""global""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerMinutePerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerMinute-FreeTier"",
+            ""quotaDimensions"": {
+              ""model"": ""gemini-2.5-pro"",
+              ""location"": ""global""
+            }
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.RetryInfo"",
+        ""retryDelay"": ""32s""
+      }
+    ]
+  }
+}
+",
+8734d634-6301-4dde-a272-85f9813298b4,e958c528-7d42-4f8b-86ae-0bac582232db,Stacja Paliw OKTAN - Rokicińska,rejected,price_out_of_range,2026-04-27T16:22:56.464Z,"{""ON"":6.97,""LPG"":3.77,""PB_95"":6.13,""PB_98"":6.68,""ON_PREMIUM"":7.01}",claude-haiku-4-5,Haiku 4.5,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.97},{""fuel_type"":""PB_98"",""price_per_litre"":6.19},{""fuel_type"":""ON"",""price_per_litre"":6.68},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":7.11},{""fuel_type"":""LPG"",""price_per_litre"":10.1}]",0.85,2587,2052,167,0.002887,,"```json {   ""prices"": [     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.97 },     { ""fuel_type"": ""PB_98"", ""price_per_litre"": 6.19 },     { ""fuel_type"": ""ON"", ""price_per_litre"": 6.68 },     { ""fuel_type"": ""ON_PREMIUM"", ""price_per_litre"": 7.11 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 10.10 }   ],   ""confidence_score"": 0.85 } ```"
+8734d634-6301-4dde-a272-85f9813298b4,e958c528-7d42-4f8b-86ae-0bac582232db,Stacja Paliw OKTAN - Rokicińska,rejected,price_out_of_range,2026-04-27T16:22:56.464Z,"{""ON"":6.97,""LPG"":3.77,""PB_95"":6.13,""PB_98"":6.68,""ON_PREMIUM"":7.01}",claude-sonnet-4-6,Sonnet 4.6,"[{""fuel_type"":""ON"",""price_per_litre"":6.97},{""fuel_type"":""PB_95"",""price_per_litre"":6.13},{""fuel_type"":""PB_98"",""price_per_litre"":5.68},{""fuel_type"":""LPG"",""price_per_litre"":2.77},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":7.01}]",0.72,4914,2052,167,0.008661,,"```json {   ""prices"": [     { ""fuel_type"": ""ON"", ""price_per_litre"": 6.97 },     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.13 },     { ""fuel_type"": ""PB_98"", ""price_per_litre"": 5.68 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 2.77 },     { ""fuel_type"": ""ON_PREMIUM"", ""price_per_litre"": 7.01 }   ],   ""confidence_score"": 0.72 } ```"
+8734d634-6301-4dde-a272-85f9813298b4,e958c528-7d42-4f8b-86ae-0bac582232db,Stacja Paliw OKTAN - Rokicińska,rejected,price_out_of_range,2026-04-27T16:22:56.464Z,"{""ON"":6.97,""LPG"":3.77,""PB_95"":6.13,""PB_98"":6.68,""ON_PREMIUM"":7.01}",gemini-2.5-flash-lite,Gemini Flash-Lite,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.97},{""fuel_type"":""PB_98"",""price_per_litre"":6.13},{""fuel_type"":""ON"",""price_per_litre"":5.68},{""fuel_type"":""LPG"",""price_per_litre"":7.77},{""fuel_type"":""ON"",""price_per_litre"":7.01}]",0.8,18076,720,180,0.000144,,"{   ""prices"": [     {       ""fuel_type"": ""PB_95"",       ""price_per_litre"": 6.97     },     {       ""fuel_type"": ""PB_98"",       ""price_per_litre"": 6.13     },     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 5.68     },     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 7.77     },     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 7.01     }   ],   ""confidence_score"": 0.8 }"
+8734d634-6301-4dde-a272-85f9813298b4,e958c528-7d42-4f8b-86ae-0bac582232db,Stacja Paliw OKTAN - Rokicińska,rejected,price_out_of_range,2026-04-27T16:22:56.464Z,"{""ON"":6.97,""LPG"":3.77,""PB_95"":6.13,""PB_98"":6.68,""ON_PREMIUM"":7.01}",gemini-2.5-flash,Gemini Flash,"[{""fuel_type"":""ON"",""price_per_litre"":6.97},{""fuel_type"":""PB_95"",""price_per_litre"":6.13},{""fuel_type"":""PB_98"",""price_per_litre"":6.68},{""fuel_type"":""LPG"",""price_per_litre"":3.77},{""fuel_type"":""ON"",""price_per_litre"":7.01}]",0.95,8192,720,181,0.000669,,"{   ""prices"": [     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 6.97     },     {       ""fuel_type"": ""PB_95"",       ""price_per_litre"": 6.13     },     {       ""fuel_type"": ""PB_98"",       ""price_per_litre"": 6.68     },     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 3.77     },     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 7.01     }   ],   ""confidence_score"": 0.95 }"
+8734d634-6301-4dde-a272-85f9813298b4,e958c528-7d42-4f8b-86ae-0bac582232db,Stacja Paliw OKTAN - Rokicińska,rejected,price_out_of_range,2026-04-27T16:22:56.464Z,"{""ON"":6.97,""LPG"":3.77,""PB_95"":6.13,""PB_98"":6.68,""ON_PREMIUM"":7.01}",gemini-2.5-pro,Gemini Pro,,,,,,,"gemini 429: {
+  ""error"": {
+    ""code"": 429,
+    ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\nPlease retry in 27.273918757s."",
+    ""status"": ""RESOURCE_EXHAUSTED"",
+    ""details"": [
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.Help"",
+        ""links"": [
+          {
+            ""description"": ""Learn more about Gemini API quotas"",
+            ""url"": ""https://ai.google.dev/gemini-api/docs/rate-limits""
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.QuotaFailure"",
+        ""violations"": [
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerDay-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerMinute-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerMinutePerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerDayPerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.RetryInfo"",
+        ""retryDelay"": ""27s""
+      }
+    ]
+  }
+}
+",
+ddf8af63-9db6-4371-86ac-a9cf008e4940,aad962b3-7315-4db1-8ea1-4add381a7ff3,Auto Gas Station,verified,,2026-04-27T16:18:49.084Z,"{""LPG"":3.72}",claude-haiku-4-5,Haiku 4.5,"[{""fuel_type"":""LPG"",""price_per_litre"":3.72}]",0.65,1859,2052,58,0.002342,,"```json {   ""prices"": [     { ""fuel_type"": ""LPG"", ""price_per_litre"": 3.72 }   ],   ""confidence_score"": 0.65 } ```"
+ddf8af63-9db6-4371-86ac-a9cf008e4940,aad962b3-7315-4db1-8ea1-4add381a7ff3,Auto Gas Station,verified,,2026-04-27T16:18:49.084Z,"{""LPG"":3.72}",claude-sonnet-4-6,Sonnet 4.6,"[{""fuel_type"":""LPG"",""price_per_litre"":3.72}]",0.82,3736,2052,58,0.007026,,"```json {   ""prices"": [     { ""fuel_type"": ""LPG"", ""price_per_litre"": 3.72 }   ],   ""confidence_score"": 0.82 } ```"
+ddf8af63-9db6-4371-86ac-a9cf008e4940,aad962b3-7315-4db1-8ea1-4add381a7ff3,Auto Gas Station,verified,,2026-04-27T16:18:49.084Z,"{""LPG"":3.72}",gemini-2.5-flash-lite,Gemini Flash-Lite,"[{""fuel_type"":""LPG"",""price_per_litre"":3.72}]",0.8,20516,720,54,0.000094,,"{   ""prices"": [     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 3.72     }   ],   ""confidence_score"": 0.8 }"
+ddf8af63-9db6-4371-86ac-a9cf008e4940,aad962b3-7315-4db1-8ea1-4add381a7ff3,Auto Gas Station,verified,,2026-04-27T16:18:49.084Z,"{""LPG"":3.72}",gemini-2.5-flash,Gemini Flash,"[{""fuel_type"":""LPG"",""price_per_litre"":3.72}]",0.9,5307,720,54,0.000351,,"{   ""prices"": [     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 3.72     }   ],   ""confidence_score"": 0.9 }"
+ddf8af63-9db6-4371-86ac-a9cf008e4940,aad962b3-7315-4db1-8ea1-4add381a7ff3,Auto Gas Station,verified,,2026-04-27T16:18:49.084Z,"{""LPG"":3.72}",gemini-2.5-pro,Gemini Pro,,,,,,,"gemini 429: {
+  ""error"": {
+    ""code"": 429,
+    ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\nPlease retry in 30.880050104s."",
+    ""status"": ""RESOURCE_EXHAUSTED"",
+    ""details"": [
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.Help"",
+        ""links"": [
+          {
+            ""description"": ""Learn more about Gemini API quotas"",
+            ""url"": ""https://ai.google.dev/gemini-api/docs/rate-limits""
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.QuotaFailure"",
+        ""violations"": [
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerDay-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerMinute-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerMinutePerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerDayPerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.RetryInfo"",
+        ""retryDelay"": ""30s""
+      }
+    ]
+  }
+}
+",
+682e4d1e-5dc2-4878-9fd5-eaadb3592dee,9edb7f98-c83f-4c07-ac16-2d6a9af48433,Shell,shadow_rejected,pb95_outside_rack_band,2026-04-27T16:16:31.583Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.17}",claude-haiku-4-5,Haiku 4.5,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.11},{""fuel_type"":""ON"",""price_per_litre"":6.99},{""fuel_type"":""LPG"",""price_per_litre"":3.77}]",0.85,2098,2052,111,0.002607,,"```json {   ""prices"": [     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.11 },     { ""fuel_type"": ""ON"", ""price_per_litre"": 6.99 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 3.77 }   ],   ""confidence_score"": 0.85 } ```"
+682e4d1e-5dc2-4878-9fd5-eaadb3592dee,9edb7f98-c83f-4c07-ac16-2d6a9af48433,Shell,shadow_rejected,pb95_outside_rack_band,2026-04-27T16:16:31.583Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.17}",claude-sonnet-4-6,Sonnet 4.6,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""ON"",""price_per_litre"":6.99},{""fuel_type"":""LPG"",""price_per_litre"":3.77}]",0.92,3016,2052,111,0.007821,,"```json {   ""prices"": [     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.17 },     { ""fuel_type"": ""ON"", ""price_per_litre"": 6.99 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 3.77 }   ],   ""confidence_score"": 0.92 } ```"
+682e4d1e-5dc2-4878-9fd5-eaadb3592dee,9edb7f98-c83f-4c07-ac16-2d6a9af48433,Shell,shadow_rejected,pb95_outside_rack_band,2026-04-27T16:16:31.583Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.17}",gemini-2.5-flash-lite,Gemini Flash-Lite,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""ON"",""price_per_litre"":6.99},{""fuel_type"":""LPG"",""price_per_litre"":3.77}]",0.9,5365,720,117,0.000119,,"{   ""prices"": [     {       ""fuel_type"": ""PB_95"",       ""price_per_litre"": 6.17     },     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 6.99     },     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 3.77     }   ],   ""confidence_score"": 0.9 }"
+682e4d1e-5dc2-4878-9fd5-eaadb3592dee,9edb7f98-c83f-4c07-ac16-2d6a9af48433,Shell,shadow_rejected,pb95_outside_rack_band,2026-04-27T16:16:31.583Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.17}",gemini-2.5-flash,Gemini Flash,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""ON"",""price_per_litre"":6.99},{""fuel_type"":""LPG"",""price_per_litre"":3.77}]",0.95,5849,720,118,0.000511,,"{   ""prices"": [     {       ""fuel_type"": ""PB_95"",       ""price_per_litre"": 6.17     },     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 6.99     },     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 3.77     }   ],   ""confidence_score"": 0.95 }"
+682e4d1e-5dc2-4878-9fd5-eaadb3592dee,9edb7f98-c83f-4c07-ac16-2d6a9af48433,Shell,shadow_rejected,pb95_outside_rack_band,2026-04-27T16:16:31.583Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.17}",gemini-2.5-pro,Gemini Pro,,,,,,,"gemini 429: {
+  ""error"": {
+    ""code"": 429,
+    ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\nPlease retry in 37.610059703s."",
+    ""status"": ""RESOURCE_EXHAUSTED"",
+    ""details"": [
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.Help"",
+        ""links"": [
+          {
+            ""description"": ""Learn more about Gemini API quotas"",
+            ""url"": ""https://ai.google.dev/gemini-api/docs/rate-limits""
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.QuotaFailure"",
+        ""violations"": [
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerDayPerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerMinutePerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerMinute-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerDay-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.RetryInfo"",
+        ""retryDelay"": ""37s""
+      }
+    ]
+  }
+}
+",
+3f0c52af-7ca8-4864-ae5e-eb3ffeddf0f3,6ee0840a-20c7-4a87-9f1d-636863a19834,bp,rejected,price_out_of_range,2026-04-27T16:07:40.367Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.1,""PB_98"":6.71,""ON_PREMIUM"":7.01}",claude-haiku-4-5,Haiku 4.5,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.99},{""fuel_type"":""PB_98"",""price_per_litre"":6.1},{""fuel_type"":""ON"",""price_per_litre"":3.11},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":10.1},{""fuel_type"":""LPG"",""price_per_litre"":6.11}]",0.75,2302,2052,167,0.002887,,"```json {   ""prices"": [     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.99 },     { ""fuel_type"": ""PB_98"", ""price_per_litre"": 6.1 },     { ""fuel_type"": ""ON"", ""price_per_litre"": 3.11 },     { ""fuel_type"": ""ON_PREMIUM"", ""price_per_litre"": 10.1 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 6.11 }   ],   ""confidence_score"": 0.75 } ```"
+3f0c52af-7ca8-4864-ae5e-eb3ffeddf0f3,6ee0840a-20c7-4a87-9f1d-636863a19834,bp,rejected,price_out_of_range,2026-04-27T16:07:40.367Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.1,""PB_98"":6.71,""ON_PREMIUM"":7.01}",claude-sonnet-4-6,Sonnet 4.6,"[{""fuel_type"":""ON"",""price_per_litre"":6.99},{""fuel_type"":""PB_95"",""price_per_litre"":6.1},{""fuel_type"":""LPG"",""price_per_litre"":3.77},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":7.01},{""fuel_type"":""PB_98"",""price_per_litre"":6.71}]",0.72,4243,2052,167,0.008661,,"```json {   ""prices"": [     { ""fuel_type"": ""ON"", ""price_per_litre"": 6.99 },     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.10 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 3.77 },     { ""fuel_type"": ""ON_PREMIUM"", ""price_per_litre"": 7.01 },     { ""fuel_type"": ""PB_98"", ""price_per_litre"": 6.71 }   ],   ""confidence_score"": 0.72 } ```"
+3f0c52af-7ca8-4864-ae5e-eb3ffeddf0f3,6ee0840a-20c7-4a87-9f1d-636863a19834,bp,rejected,price_out_of_range,2026-04-27T16:07:40.367Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.1,""PB_98"":6.71,""ON_PREMIUM"":7.01}",gemini-2.5-flash-lite,Gemini Flash-Lite,"[{""fuel_type"":""ON"",""price_per_litre"":6.99},{""fuel_type"":""PB_95"",""price_per_litre"":6.1},{""fuel_type"":""LPG"",""price_per_litre"":3.77},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":7.01},{""fuel_type"":""PB_98"",""price_per_litre"":6.71}]",0.9,4798,720,182,0.000145,,"{   ""prices"": [     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 6.99     },     {       ""fuel_type"": ""PB_95"",       ""price_per_litre"": 6.1     },     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 3.77     },     {       ""fuel_type"": ""ON_PREMIUM"",       ""price_per_litre"": 7.01     },     {       ""fuel_type"": ""PB_98"",       ""price_per_litre"": 6.71     }   ],   ""confidence_score"": 0.9 }"
+3f0c52af-7ca8-4864-ae5e-eb3ffeddf0f3,6ee0840a-20c7-4a87-9f1d-636863a19834,bp,rejected,price_out_of_range,2026-04-27T16:07:40.367Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.1,""PB_98"":6.71,""ON_PREMIUM"":7.01}",gemini-2.5-flash,Gemini Flash,"[{""fuel_type"":""ON"",""price_per_litre"":6.99},{""fuel_type"":""PB_95"",""price_per_litre"":6.1},{""fuel_type"":""LPG"",""price_per_litre"":3.77},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":7.01},{""fuel_type"":""PB_98"",""price_per_litre"":6.71}]",1,4788,720,182,0.000671,,"{   ""prices"": [     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 6.99     },     {       ""fuel_type"": ""PB_95"",       ""price_per_litre"": 6.1     },     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 3.77     },     {       ""fuel_type"": ""ON_PREMIUM"",       ""price_per_litre"": 7.01     },     {       ""fuel_type"": ""PB_98"",       ""price_per_litre"": 6.71     }   ],   ""confidence_score"": 1.0 }"
+3f0c52af-7ca8-4864-ae5e-eb3ffeddf0f3,6ee0840a-20c7-4a87-9f1d-636863a19834,bp,rejected,price_out_of_range,2026-04-27T16:07:40.367Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.1,""PB_98"":6.71,""ON_PREMIUM"":7.01}",gemini-2.5-pro,Gemini Pro,,,,,,,"gemini 429: {
+  ""error"": {
+    ""code"": 429,
+    ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\nPlease retry in 40.646672231s."",
+    ""status"": ""RESOURCE_EXHAUSTED"",
+    ""details"": [
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.Help"",
+        ""links"": [
+          {
+            ""description"": ""Learn more about Gemini API quotas"",
+            ""url"": ""https://ai.google.dev/gemini-api/docs/rate-limits""
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.QuotaFailure"",
+        ""violations"": [
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerDay-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerDayPerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerMinutePerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerMinute-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.RetryInfo"",
+        ""retryDelay"": ""40s""
+      }
+    ]
+  }
+}
+",
+d7eb7bf7-644e-48c9-94e4-0cf1bd0ae170,22dd43ad-bf21-4588-abc2-23e134727191,bp,rejected,price_out_of_range,2026-04-27T16:07:12.916Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",claude-haiku-4-5,Haiku 4.5,,,,,,,download: fetch failed,
+d7eb7bf7-644e-48c9-94e4-0cf1bd0ae170,22dd43ad-bf21-4588-abc2-23e134727191,bp,rejected,price_out_of_range,2026-04-27T16:07:12.916Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",claude-sonnet-4-6,Sonnet 4.6,,,,,,,download: fetch failed,
+d7eb7bf7-644e-48c9-94e4-0cf1bd0ae170,22dd43ad-bf21-4588-abc2-23e134727191,bp,rejected,price_out_of_range,2026-04-27T16:07:12.916Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",gemini-2.5-flash-lite,Gemini Flash-Lite,,,,,,,download: fetch failed,
+d7eb7bf7-644e-48c9-94e4-0cf1bd0ae170,22dd43ad-bf21-4588-abc2-23e134727191,bp,rejected,price_out_of_range,2026-04-27T16:07:12.916Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",gemini-2.5-flash,Gemini Flash,,,,,,,download: fetch failed,
+d7eb7bf7-644e-48c9-94e4-0cf1bd0ae170,22dd43ad-bf21-4588-abc2-23e134727191,bp,rejected,price_out_of_range,2026-04-27T16:07:12.916Z,"{""ON"":6.99,""LPG"":3.77,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",gemini-2.5-pro,Gemini Pro,,,,,,,download: fetch failed,
+19ec9249-d6b2-4545-9fe8-8b4635238f52,e22d9ec7-c3e1-47ea-b3f1-9f95e24dd3a4,"P.P.H.U. ""NOTEX""",verified,,2026-04-27T15:42:45.938Z,"{""ON"":7.01,""LPG"":3.65,""PB_95"":6.17,""PB_98"":6.71}",claude-haiku-4-5,Haiku 4.5,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.11},{""fuel_type"":""PB_98"",""price_per_litre"":6.51},{""fuel_type"":""ON"",""price_per_litre"":6.31},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":6.65},{""fuel_type"":""LPG"",""price_per_litre"":3.65}]",0.65,2232,2052,167,0.002887,,"```json {   ""prices"": [     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.11 },     { ""fuel_type"": ""PB_98"", ""price_per_litre"": 6.51 },     { ""fuel_type"": ""ON"", ""price_per_litre"": 6.31 },     { ""fuel_type"": ""ON_PREMIUM"", ""price_per_litre"": 6.65 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 3.65 }   ],   ""confidence_score"": 0.65 } ```"
+19ec9249-d6b2-4545-9fe8-8b4635238f52,e22d9ec7-c3e1-47ea-b3f1-9f95e24dd3a4,"P.P.H.U. ""NOTEX""",verified,,2026-04-27T15:42:45.938Z,"{""ON"":7.01,""LPG"":3.65,""PB_95"":6.17,""PB_98"":6.71}",claude-sonnet-4-6,Sonnet 4.6,"[{""fuel_type"":""ON"",""price_per_litre"":7.01},{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""PB_98"",""price_per_litre"":6.71},{""fuel_type"":""LPG"",""price_per_litre"":3.65}]",0.62,3120,2052,139,0.008241,,"```json {   ""prices"": [     { ""fuel_type"": ""ON"", ""price_per_litre"": 7.01 },     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.17 },     { ""fuel_type"": ""PB_98"", ""price_per_litre"": 6.71 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 3.65 }   ],   ""confidence_score"": 0.62 } ```"
+19ec9249-d6b2-4545-9fe8-8b4635238f52,e22d9ec7-c3e1-47ea-b3f1-9f95e24dd3a4,"P.P.H.U. ""NOTEX""",verified,,2026-04-27T15:42:45.938Z,"{""ON"":7.01,""LPG"":3.65,""PB_95"":6.17,""PB_98"":6.71}",gemini-2.5-flash-lite,Gemini Flash-Lite,"[{""fuel_type"":""ON"",""price_per_litre"":7.01},{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""PB_98"",""price_per_litre"":6.17},{""fuel_type"":""LPG"",""price_per_litre"":3.65}]",0.9,18222,720,150,0.000132,,"{   ""prices"": [     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 7.01     },     {       ""fuel_type"": ""PB_95"",       ""price_per_litre"": 6.17     },     {       ""fuel_type"": ""PB_98"",       ""price_per_litre"": 6.17     },     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 3.65     }   ],   ""confidence_score"": 0.9 }"
+19ec9249-d6b2-4545-9fe8-8b4635238f52,e22d9ec7-c3e1-47ea-b3f1-9f95e24dd3a4,"P.P.H.U. ""NOTEX""",verified,,2026-04-27T15:42:45.938Z,"{""ON"":7.01,""LPG"":3.65,""PB_95"":6.17,""PB_98"":6.71}",gemini-2.5-flash,Gemini Flash,"[{""fuel_type"":""ON"",""price_per_litre"":7.01},{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""PB_98"",""price_per_litre"":6.11},{""fuel_type"":""LPG"",""price_per_litre"":3.65}]",0.9,4991,720,150,0.000591,,"{   ""prices"": [     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 7.01     },     {       ""fuel_type"": ""PB_95"",       ""price_per_litre"": 6.17     },     {       ""fuel_type"": ""PB_98"",       ""price_per_litre"": 6.11     },     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 3.65     }   ],   ""confidence_score"": 0.9 }"
+19ec9249-d6b2-4545-9fe8-8b4635238f52,e22d9ec7-c3e1-47ea-b3f1-9f95e24dd3a4,"P.P.H.U. ""NOTEX""",verified,,2026-04-27T15:42:45.938Z,"{""ON"":7.01,""LPG"":3.65,""PB_95"":6.17,""PB_98"":6.71}",gemini-2.5-pro,Gemini Pro,,,,,,,"gemini 429: {
+  ""error"": {
+    ""code"": 429,
+    ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\nPlease retry in 9.631510423s."",
+    ""status"": ""RESOURCE_EXHAUSTED"",
+    ""details"": [
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.Help"",
+        ""links"": [
+          {
+            ""description"": ""Learn more about Gemini API quotas"",
+            ""url"": ""https://ai.google.dev/gemini-api/docs/rate-limits""
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.QuotaFailure"",
+        ""violations"": [
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerDay-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerDayPerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerMinutePerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerMinute-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.RetryInfo"",
+        ""retryDelay"": ""9s""
+      }
+    ]
+  }
+}
+",
+fda0cc9b-92f8-452a-a398-119afca90fdf,b4c56049-675d-4c49-af7e-850a32a518fc,Stacja Paliw ORLEN,rejected,price_out_of_range,2026-04-26T20:58:03.591Z,"{""ON"":6.99,""LPG"":3.79,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",claude-haiku-4-5,Haiku 4.5,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""PB_98"",""price_per_litre"":4.99},{""fuel_type"":""ON"",""price_per_litre"":5.79},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":6.19},{""fuel_type"":""LPG"",""price_per_litre"":7.01}]",0.65,3647,2052,167,0.002887,,"```json {   ""prices"": [     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.17 },     { ""fuel_type"": ""PB_98"", ""price_per_litre"": 4.99 },     { ""fuel_type"": ""ON"", ""price_per_litre"": 5.79 },     { ""fuel_type"": ""ON_PREMIUM"", ""price_per_litre"": 6.19 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 7.01 }   ],   ""confidence_score"": 0.65 } ```"
+fda0cc9b-92f8-452a-a398-119afca90fdf,b4c56049-675d-4c49-af7e-850a32a518fc,Stacja Paliw ORLEN,rejected,price_out_of_range,2026-04-26T20:58:03.591Z,"{""ON"":6.99,""LPG"":3.79,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",claude-sonnet-4-6,Sonnet 4.6,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""PB_98"",""price_per_litre"":6.99},{""fuel_type"":""LPG"",""price_per_litre"":3.79},{""fuel_type"":""ON"",""price_per_litre"":6.71},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":7.01}]",0.55,3449,2052,167,0.008661,,"```json {   ""prices"": [     { ""fuel_type"": ""PB_95"", ""price_per_litre"": 6.17 },     { ""fuel_type"": ""PB_98"", ""price_per_litre"": 6.99 },     { ""fuel_type"": ""LPG"", ""price_per_litre"": 3.79 },     { ""fuel_type"": ""ON"", ""price_per_litre"": 6.71 },     { ""fuel_type"": ""ON_PREMIUM"", ""price_per_litre"": 7.01 }   ],   ""confidence_score"": 0.55 } ```"
+fda0cc9b-92f8-452a-a398-119afca90fdf,b4c56049-675d-4c49-af7e-850a32a518fc,Stacja Paliw ORLEN,rejected,price_out_of_range,2026-04-26T20:58:03.591Z,"{""ON"":6.99,""LPG"":3.79,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",gemini-2.5-flash-lite,Gemini Flash-Lite,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""ON"",""price_per_litre"":6.99},{""fuel_type"":""PB_98"",""price_per_litre"":3.79},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":6.71},{""fuel_type"":""LPG"",""price_per_litre"":7.01}]",0.8,5975,720,183,0.000145,,"{   ""prices"": [     {       ""fuel_type"": ""PB_95"",       ""price_per_litre"": 6.17     },     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 6.99     },     {       ""fuel_type"": ""PB_98"",       ""price_per_litre"": 3.79     },     {       ""fuel_type"": ""ON_PREMIUM"",       ""price_per_litre"": 6.71     },     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 7.01     }   ],   ""confidence_score"": 0.8 }"
+fda0cc9b-92f8-452a-a398-119afca90fdf,b4c56049-675d-4c49-af7e-850a32a518fc,Stacja Paliw ORLEN,rejected,price_out_of_range,2026-04-26T20:58:03.591Z,"{""ON"":6.99,""LPG"":3.79,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",gemini-2.5-flash,Gemini Flash,"[{""fuel_type"":""PB_95"",""price_per_litre"":6.17},{""fuel_type"":""ON"",""price_per_litre"":6.99},{""fuel_type"":""LPG"",""price_per_litre"":3.79},{""fuel_type"":""ON_PREMIUM"",""price_per_litre"":6.71},{""fuel_type"":""PB_98"",""price_per_litre"":7.01}]",0.95,6579,720,184,0.000676,,"{   ""prices"": [     {       ""fuel_type"": ""PB_95"",       ""price_per_litre"": 6.17     },     {       ""fuel_type"": ""ON"",       ""price_per_litre"": 6.99     },     {       ""fuel_type"": ""LPG"",       ""price_per_litre"": 3.79     },     {       ""fuel_type"": ""ON_PREMIUM"",       ""price_per_litre"": 6.71     },     {       ""fuel_type"": ""PB_98"",       ""price_per_litre"": 7.01     }   ],   ""confidence_score"": 0.95 }"
+fda0cc9b-92f8-452a-a398-119afca90fdf,b4c56049-675d-4c49-af7e-850a32a518fc,Stacja Paliw ORLEN,rejected,price_out_of_range,2026-04-26T20:58:03.591Z,"{""ON"":6.99,""LPG"":3.79,""PB_95"":6.17,""PB_98"":6.71,""ON_PREMIUM"":7.01}",gemini-2.5-pro,Gemini Pro,,,,,,,"gemini 429: {
+  ""error"": {
+    ""code"": 429,
+    ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\nPlease retry in 8.350459616s."",
+    ""status"": ""RESOURCE_EXHAUSTED"",
+    ""details"": [
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.Help"",
+        ""links"": [
+          {
+            ""description"": ""Learn more about Gemini API quotas"",
+            ""url"": ""https://ai.google.dev/gemini-api/docs/rate-limits""
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.QuotaFailure"",
+        ""violations"": [
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerMinute-FreeTier"",
+            ""quotaDimensions"": {
+              ""model"": ""gemini-2.5-pro"",
+              ""location"": ""global""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerMinutePerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""model"": ""gemini-2.5-pro"",
+              ""location"": ""global""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_requests"",
+            ""quotaId"": ""GenerateRequestsPerDayPerProjectPerModel-FreeTier"",
+            ""quotaDimensions"": {
+              ""location"": ""global"",
+              ""model"": ""gemini-2.5-pro""
+            }
+          },
+          {
+            ""quotaMetric"": ""generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"",
+            ""quotaId"": ""GenerateContentInputTokensPerModelPerDay-FreeTier"",
+            ""quotaDimensions"": {
+              ""model"": ""gemini-2.5-pro"",
+              ""location"": ""global""
+            }
+          }
+        ]
+      },
+      {
+        ""@type"": ""type.googleapis.com/google.rpc.RetryInfo"",
+        ""retryDelay"": ""8s""
+      }
+    ]
+  }
+}
+",

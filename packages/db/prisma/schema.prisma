@@ -53,30 +53,31 @@ enum SettlementTier {
 }
 
 model User {
-  id               String       @id @default(uuid())
-  supertokens_id   String?      @unique
-  email            String?      @unique
-  display_name     String?
-  role             UserRole     @default(DRIVER)
-  fleet_id         String?
-  trust_score      Int          @default(100)
-  shadow_banned    Boolean      @default(false)
-  deleted_at       DateTime?
-  deletion_reason  String?
-  created_at       DateTime     @default(now())
-  updated_at       DateTime     @updatedAt
-  submissions              Submission[]
-  notificationPreference   NotificationPreference?
-  userConsents             UserConsent[]
-  anomalyAlerts            AnomalyAlert[]
-  vehicles                 Vehicle[]
+  id                     String                  @id @default(uuid())
+  supertokens_id         String?                 @unique
+  email                  String?                 @unique
+  display_name           String?
+  role                   UserRole                @default(DRIVER)
+  fleet_id               String?
+  trust_score            Int                     @default(100)
+  shadow_banned          Boolean                 @default(false)
+  deleted_at             DateTime?
+  deletion_reason        String?
+  created_at             DateTime                @default(now())
+  updated_at             DateTime                @updatedAt
+  submissions            Submission[]
+  notificationPreference NotificationPreference?
+  userConsents           UserConsent[]
+  anomalyAlerts          AnomalyAlert[]
+  vehicles               Vehicle[]
+  fillUps                FillUp[]
 }
 
 model Station {
-  id                     String          @id @default(uuid())
+  id                     String                                @id @default(uuid())
   name                   String
   address                String?
-  google_places_id       String?         @unique
+  google_places_id       String?                               @unique
   location               Unsupported("geography(Point,4326)")?
   last_synced_at         DateTime?
   // Classification fields (populated by Story 2.14)
@@ -84,14 +85,15 @@ model Station {
   station_type           StationType?
   voivodeship            String?
   settlement_tier        SettlementTier?
-  is_border_zone_de      Boolean         @default(false)
-  classification_version Int             @default(0)
-  hidden                 Boolean         @default(false)
-  created_at             DateTime        @default(now())
-  updated_at             DateTime        @updatedAt
+  is_border_zone_de      Boolean                               @default(false)
+  classification_version Int                                   @default(0)
+  hidden                 Boolean                               @default(false)
+  created_at             DateTime                              @default(now())
+  updated_at             DateTime                              @updatedAt
   submissions            Submission[]
   staleness              StationFuelStaleness[]
   priceHistory           PriceHistory[]
+  fillUps                FillUp[]
 
   @@index([voivodeship])
 }
@@ -103,11 +105,11 @@ model Submission {
   price_data           Json
   photo_r2_key         String?
   ocr_confidence_score Float?
-  gps_lat              Float?           // nulled by Story 3.4 worker after station matching
-  gps_lng              Float?           // nulled by Story 3.4 worker after station matching
+  gps_lat              Float? // nulled by Story 3.4 worker after station matching
+  gps_lng              Float? // nulled by Story 3.4 worker after station matching
   source               PriceSource      @default(community)
   status               SubmissionStatus @default(pending)
-  flag_reason          String?          // set when status = shadow_rejected: 'logo_mismatch' | 'low_trust'
+  flag_reason          String? // set when status = shadow_rejected: 'logo_mismatch' | 'low_trust'
   created_at           DateTime         @default(now())
   updated_at           DateTime         @updatedAt
   user                 User             @relation(fields: [user_id], references: [id])
@@ -124,10 +126,10 @@ model Submission {
 /// flat `research/<id>.jpg` key (user_id stripped from path). Daily cleanup
 /// worker sweeps rows + R2 objects past `retained_until`.
 model ResearchPhoto {
-  id             String     @id @default(uuid())
-  submission_id  String     @unique
-  r2_key         String     // research/<submission_id>.jpg
-  station_id     String?    // snapshot (submission may null this later)
+  id             String           @id @default(uuid())
+  submission_id  String           @unique
+  r2_key         String // research/<submission_id>.jpg
+  station_id     String? // snapshot (submission may null this later)
   /// Rounded to 4 decimal places (~10m precision) at write time. Snapshotted
   /// from the submission BEFORE rejectSubmission nulls them for GDPR. Lets us
   /// diagnose no_station_match (closest station? wrong radius?) without
@@ -135,17 +137,17 @@ model ResearchPhoto {
   /// GPS or the call site didn't supply it.
   gps_lat        Float?
   gps_lng        Float?
-  ocr_prices     Json       // what OCR extracted (pre-validation)
-  final_prices   Json?      // what pipeline verified — null for rejected/shadow_rejected
-  actual_prices  Json?      // filled in by admin when labeling ground truth
-  label_notes    String?    // optional admin comment: "blurry", "partial occlusion", etc.
-  final_status   SubmissionStatus  // status at time of retention capture
-  flag_reason    String?    // flag_reason at retention capture (e.g. 'low_trust', 'no_station_match')
-  captured_at    DateTime   // original submission created_at
+  ocr_prices     Json // what OCR extracted (pre-validation)
+  final_prices   Json? // what pipeline verified — null for rejected/shadow_rejected
+  actual_prices  Json? // filled in by admin when labeling ground truth
+  label_notes    String? // optional admin comment: "blurry", "partial occlusion", etc.
+  final_status   SubmissionStatus // status at time of retention capture
+  flag_reason    String? // flag_reason at retention capture (e.g. 'low_trust', 'no_station_match')
+  captured_at    DateTime // original submission created_at
   retained_until DateTime
-  created_at     DateTime   @default(now())
-  updated_at     DateTime   @updatedAt
-  submission     Submission @relation(fields: [submission_id], references: [id], onDelete: Cascade)
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @updatedAt
+  submission     Submission       @relation(fields: [submission_id], references: [id], onDelete: Cascade)
 
   @@index([retained_until])
 }
@@ -166,8 +168,8 @@ model UserConsent {
 model MarketSignal {
   id                   String     @id @default(uuid())
   signal_type          SignalType
-  value                Float      // PLN/litre
-  pct_change           Float?     // fraction (0.03 = 3%), NOT a percentage — Story 2.8 must read accordingly; null for first ingestion
+  value                Float // PLN/litre
+  pct_change           Float? // fraction (0.03 = 3%), NOT a percentage — Story 2.8 must read accordingly; null for first ingestion
   significant_movement Boolean    @default(false)
   recorded_at          DateTime   @default(now())
   created_at           DateTime   @default(now())
@@ -176,22 +178,22 @@ model MarketSignal {
 }
 
 model NotificationPreference {
-  id               String   @id @default(uuid())
-  user_id          String   @unique
-  expo_push_token  String?
-  price_drops      Boolean  @default(true)
-  sharp_rise       Boolean  @default(true)
-  monthly_summary  Boolean  @default(true)
-  created_at       DateTime @default(now())
-  updated_at       DateTime @updatedAt
-  user             User     @relation(fields: [user_id], references: [id])
+  id              String   @id @default(uuid())
+  user_id         String   @unique
+  expo_push_token String?
+  price_drops     Boolean  @default(true)
+  sharp_rise      Boolean  @default(true)
+  monthly_summary Boolean  @default(true)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+  user            User     @relation(fields: [user_id], references: [id])
 }
 
 model StationFuelStaleness {
   id         String   @id @default(uuid())
   station_id String
-  fuel_type  String   // 'PB_95' | 'PB_98' | 'ON' | 'ON_PREMIUM' | 'LPG'
-  reason     String   // 'orlen_movement'
+  fuel_type  String // 'PB_95' | 'PB_98' | 'ON' | 'ON_PREMIUM' | 'LPG'
+  reason     String // 'orlen_movement'
   flagged_at DateTime @default(now())
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -207,16 +209,16 @@ model StationFuelStaleness {
 /// recent row per (source, fuel, value_type) within their max_age_hours
 /// window. See _bmad-output/planning-artifacts/price-validation-framework.md.
 model PriceReferencePoint {
-  id           String   @id @default(uuid())
-  source       String   // 'orlen_rack' | 'popihn_weekly_retail' | 'epetrol_daily_retail' | ...
-  fuel_type    String   // 'PB_95' | 'PB_98' | 'ON' | 'ON_PREMIUM' | 'LPG'
-  value_type   String   // 'rack_net' | 'retail_mean' | 'retail_p95' | 'gov_max'
-  value        Float
-  unit         String   @default("PLN/l")
-  as_of        DateTime // when the source claims this was valid
-  sample_size  Int?
-  metadata     Json?
-  recorded_at  DateTime @default(now())
+  id          String   @id @default(uuid())
+  source      String // 'orlen_rack' | 'popihn_weekly_retail' | 'epetrol_daily_retail' | ...
+  fuel_type   String // 'PB_95' | 'PB_98' | 'ON' | 'ON_PREMIUM' | 'LPG'
+  value_type  String // 'rack_net' | 'retail_mean' | 'retail_p95' | 'gov_max'
+  value       Float
+  unit        String   @default("PLN/l")
+  as_of       DateTime // when the source claims this was valid
+  sample_size Int?
+  metadata    Json?
+  recorded_at DateTime @default(now())
 
   @@index([source, fuel_type, as_of(sort: Desc)])
   @@index([fuel_type, value_type, as_of(sort: Desc)])
@@ -227,16 +229,16 @@ model PriceReferencePoint {
 /// parameter schemas, and action semantics are documented in the framework
 /// doc (planning-artifacts/price-validation-framework.md).
 model PriceValidationRule {
-  id           String   @id @default(uuid())
-  rule_type    String   // 'absolute_band' | 'relative_to_reference' | 'cross_fuel_delta' (future)
-  applies_to   String   // fuel_type or '*'
-  parameters   Json     // type-specific — see framework doc §Architecture L2
-  action       String   // 'reject' | 'shadow_reject' | 'flag' | 'log_only'
-  reason_code  String   // human-readable id surfaced in admin review queue
-  enabled      Boolean  @default(true)
-  notes        String?
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
+  id          String   @id @default(uuid())
+  rule_type   String // 'absolute_band' | 'relative_to_reference' | 'cross_fuel_delta' (future)
+  applies_to  String // fuel_type or '*'
+  parameters  Json // type-specific — see framework doc §Architecture L2
+  action      String // 'reject' | 'shadow_reject' | 'flag' | 'log_only'
+  reason_code String // human-readable id surfaced in admin review queue
+  enabled     Boolean  @default(true)
+  notes       String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 
   @@index([enabled, rule_type])
 }
@@ -245,8 +247,8 @@ model PriceValidationRule {
 /// (default "1.23", flipped to "1.08" during Ministry of Finance reduced-rate
 /// periods). Evaluator reads values at rule-evaluation time.
 model SystemConfig {
-  key         String   @id  // e.g. 'vat_multiplier'
-  value       String        // stringified — parse per key
+  key         String   @id // e.g. 'vat_multiplier'
+  value       String // stringified — parse per key
   description String?
   updated_at  DateTime @updatedAt
 }
@@ -255,7 +257,7 @@ model AdminAuditLog {
   id            String   @id @default(uuid())
   // Intentionally not a FK — log must be retained if admin account is deleted
   admin_user_id String
-  action        String   // 'APPROVE' | 'REJECT' | 'SHADOW_BAN' | 'UNBAN'
+  action        String // 'APPROVE' | 'REJECT' | 'SHADOW_BAN' | 'UNBAN'
   submission_id String?
   notes         String?
   created_at    DateTime @default(now())
@@ -267,7 +269,7 @@ model AdminAuditLog {
 model AnomalyAlert {
   id           String    @id @default(uuid())
   user_id      String
-  alert_type   String    // 'high_frequency' | 'price_variance' | 'station_spread'
+  alert_type   String // 'high_frequency' | 'price_variance' | 'station_spread'
   detail       Json
   created_at   DateTime  @default(now())
   dismissed_at DateTime?
@@ -280,15 +282,14 @@ model AnomalyAlert {
 model PriceHistory {
   id          String      @id @default(uuid())
   station_id  String
-  fuel_type   String      // 'PB_95' | 'PB_98' | 'ON' | 'ON_PREMIUM' | 'LPG'
-  price       Float       // PLN/litre
+  fuel_type   String // 'PB_95' | 'PB_98' | 'ON' | 'ON_PREMIUM' | 'LPG'
+  price       Float // PLN/litre
   source      PriceSource
   recorded_at DateTime    @default(now())
   station     Station     @relation(fields: [station_id], references: [id], onDelete: Cascade)
 
   @@index([station_id, fuel_type, recorded_at(sort: Desc)])
 }
-
 
 model Vehicle {
   id              String   @id @default(uuid())
@@ -317,24 +318,59 @@ model Vehicle {
   // Restrict matches the migration; account-deletion (Story 1.8) must drop
   // vehicles in the same transaction or it will hit a FK error.
   user            User     @relation(fields: [user_id], references: [id], onDelete: Restrict)
+  fillUps         FillUp[]
 
   @@index([user_id])
 }
 
+/// Per-driver fill-up records (Story 5.2). Created from pump-meter OCR or
+/// manual entry. When the GPS at capture matches a station within 200 m, we
+/// also write a community PriceHistory entry for that (station × fuel_type)
+/// — fill-ups are pre-confirmed by the driver, so they bypass the photo
+/// pipeline / trust score / logo match. GPS coordinates themselves are never
+/// stored on the FillUp (privacy — same pattern as Submission).
+model FillUp {
+  id                  String   @id @default(uuid())
+  user_id             String
+  vehicle_id          String
+  station_id          String? // null when GPS match failed
+  fuel_type           String // 'PB_95' | 'PB_98' | 'ON' | 'ON_PREMIUM' | 'LPG'
+  litres              Float
+  total_cost_pln      Float
+  price_per_litre_pln Float
+  /// Median price for this voivodeship × fuel_type at the time of the
+  /// fill-up, captured from RegionalBenchmark (Story 5.0). Used to compute
+  /// per-driver savings vs. area average (Story 5.3). Null when no
+  /// benchmark exists yet (cold-start regions, or when station match failed
+  /// so we don't know the voivodeship).
+  area_avg_at_fillup  Float?
+  /// Manual numeric entry in this story; OCR-based capture added in 5.4.
+  odometer_km         Int?
+  filled_at           DateTime @default(now())
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+  user                User     @relation(fields: [user_id], references: [id], onDelete: Restrict)
+  vehicle             Vehicle  @relation(fields: [vehicle_id], references: [id], onDelete: Restrict)
+  /// Station deletion shouldn't orphan history rows — keep the fill-up,
+  /// drop the link.
+  station             Station? @relation(fields: [station_id], references: [id], onDelete: SetNull)
+
+  @@index([user_id, filled_at(sort: Desc)])
+  @@index([vehicle_id, filled_at(sort: Desc)])
+}
 
 model RegionalBenchmark {
   id            String   @id @default(uuid())
   voivodeship   String
-  fuel_type     String   // 'PB_95' | 'PB_98' | 'ON' | 'ON_PREMIUM' | 'LPG'
-  median_price  Float    // PLN/litre
-  station_count Int      // number of stations contributing to this benchmark
+  fuel_type     String // 'PB_95' | 'PB_98' | 'ON' | 'ON_PREMIUM' | 'LPG'
+  median_price  Float // PLN/litre
+  station_count Int // number of stations contributing to this benchmark
   calculated_at DateTime @default(now())
 
   // No unique on (voivodeship, fuel_type) — each daily run appends a new snapshot
   // row so we preserve history. Index supports getLatestForStation lookup.
   @@index([voivodeship, fuel_type, calculated_at(sort: Desc)])
 }
-
 
 model DailyApiCost {
   id          String   @id @default(cuid())

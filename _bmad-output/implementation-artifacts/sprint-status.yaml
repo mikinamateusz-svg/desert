@@ -848,8 +848,10 @@ epics:
       - id: 5.2
         title: "Pump Meter OCR & Fill-Up Recording"
         file: 5-2-pump-meter-ocr-fillup-recording.md
-        status: ready-for-dev
+        status: in-progress
         ready_date: 2026-04-07
+        dev_started: 2026-05-01
+        note: "Chunk A backend shipped 2026-05-01: FillUp model + migration 20260501000000, FillupOcrService (Haiku 4.5, 10s timeout, Haiku-rated spend tracking), FillupService (vehicle ownership check, 200m GPS match, RegionalBenchmark snapshot, optional PriceHistory write + staleness clear, atomic vehicle lock), FillupController (3 endpoints), FillupModule wired. 28 new tests (13 OCR + 15 service) → 944/944 api pass. Chunk B (mobile UI + i18n + Phase 2 flag wrap) deferred to next session. Pre-launch follow-up: consent/legal docs need fill-up data section."
       - id: 5.3
         title: "Savings vs. Area Average Calculation"
         file: 5-3-savings-vs-area-average-calculation.md

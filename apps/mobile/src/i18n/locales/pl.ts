@@ -299,6 +299,38 @@ export default {
     impactMessage: 'Kierowcy w okolicy zobaczą tę aktualizację',
     done: 'Wróć do mapy',
   },
+  fillup: {
+    logFillupCta: 'Zapisz tankowanie',
+    cameraOverlay: 'Skieruj na wyświetlacz dystrybutora',
+    processing: 'Odczytuję wyświetlacz…',
+    confirmTitle: 'Potwierdź tankowanie',
+    totalCost: 'Łączny koszt (PLN)',
+    volume: 'Ilość (L)',
+    pricePerLitre: 'Cena za litr (PLN/L)',
+    fuelType: 'Rodzaj paliwa',
+    saveButton: 'Zapisz tankowanie',
+    retakePrompt:
+      'Nie udało się odczytać wyświetlacza — sprawdź wartości poniżej lub wpisz ręcznie.',
+    enterManually: 'Wpisz ręcznie',
+    odometerNudgeTitle: 'Śledzić zużycie paliwa?',
+    odometerNudgeSubtitle:
+      'Dodaj stan licznika, aby obliczyć l/100km z czasem.',
+    odometerLabel: 'Licznik (km)',
+    odometerPlaceholder: 'np. 87450',
+    addOdometer: 'Dodaj odczyt',
+    skipOdometer: 'Pomiń',
+    celebrationFillup: '{{litres}} L · {{cost}} PLN',
+    celebrationCommunity: '{{fuelType}} w {{station}} zaktualizowane ✓',
+    nudgeOtherPrices:
+      'Inne ceny na tej stacji mogą być nieaktualne — dodaj je też?',
+    addPrice: 'Dodaj cenę →',
+    done: 'Gotowe',
+    errorSaving: 'Nie udało się zapisać tankowania — spróbuj ponownie.',
+    noVehicleTitle: 'Najpierw dodaj swój pojazd',
+    noVehicleAction: 'Dodaj mój samochód',
+    locationRequired:
+      'Lokalizacja jest potrzebna, aby dopasować tankowanie do stacji.',
+  },
   vehicles: {
     setup: {
       title: 'Dodaj pojazd',

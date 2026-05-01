@@ -298,6 +298,38 @@ export default {
     impactMessage: 'Drivers nearby will see this update',
     done: 'Back to map',
   },
+  fillup: {
+    logFillupCta: 'Log fill-up',
+    cameraOverlay: 'Point at pump display',
+    processing: 'Reading your pump display…',
+    confirmTitle: 'Confirm fill-up',
+    totalCost: 'Total cost (PLN)',
+    volume: 'Volume (L)',
+    pricePerLitre: 'Price per litre (PLN/L)',
+    fuelType: 'Fuel type',
+    saveButton: 'Save fill-up',
+    retakePrompt:
+      "Could not read display — please check the values below or enter them manually.",
+    enterManually: 'Enter manually',
+    odometerNudgeTitle: 'Track fuel consumption?',
+    odometerNudgeSubtitle:
+      'Add your odometer reading to calculate l/100km over time.',
+    odometerLabel: 'Odometer (km)',
+    odometerPlaceholder: 'e.g. 87450',
+    addOdometer: 'Add reading',
+    skipOdometer: 'Skip',
+    celebrationFillup: '{{litres}} L · {{cost}} PLN',
+    celebrationCommunity: '{{fuelType}} at {{station}} updated ✓',
+    nudgeOtherPrices:
+      'Other prices at this station may be outdated — add them too?',
+    addPrice: 'Add price →',
+    done: 'Done',
+    errorSaving: 'Failed to save fill-up — try again.',
+    noVehicleTitle: 'Set up your vehicle first',
+    noVehicleAction: 'Add my car',
+    locationRequired:
+      'Location is needed to match your fill-up to a station.',
+  },
   vehicles: {
     setup: {
       title: 'Add vehicle',

@@ -24,6 +24,7 @@ import { useNearbyStations } from '../../src/hooks/useNearbyStations';
 import { useNearbyPrices } from '../../src/hooks/useNearbyPrices';
 import { computePriceColorMap } from '../../src/utils/priceColor';
 import type { StationDto } from '../../src/api/stations';
+import { flags } from '../../src/config/flags';
 
 // Mapbox token must be set before any MapView renders.
 // In EAS builds, the token comes from eas.json env. In CI/local builds,
@@ -532,6 +533,38 @@ export default function MapScreen() {
         recentreEnabled={location != null}
       />
 
+      {/* Phase 2: Log fill-up FAB. Renders only when the build-time flag is
+          on (development / preview-phase2 EAS profiles, GitHub workflow_dispatch
+          with phase2=true). Lives above the MapFABGroup row so it doesn't
+          collide with the cheapest pill / Add price / locate-me layout —
+          intentional separation of "log my own fill-up" from the existing
+          "contribute a price board photo" mental model. */}
+      {flags.phase2 && !splashVisible && !selectedStation && (
+        <View style={[styles.fillupFabWrapper, { bottom: insets.bottom + 76 }]}>
+          <TouchableOpacity
+            style={styles.fillupFab}
+            onPress={() => {
+              if (!accessToken) {
+                // Guests get the same auth gate as Add price — keeps the
+                // contribution paths symmetrical for sign-up nudges.
+                setShowContributionGate(true);
+                return;
+              }
+              // fillup-capture handles the no-vehicles guard inline (renders
+              // a "Set up your vehicle first" prompt when vehicles list is
+              // empty). Spec calls for "do not block navigation entirely —
+              // just show the prompt", which the screen does.
+              router.push('/(app)/fillup-capture');
+            }}
+            accessibilityRole="button"
+            accessibilityLabel={t('fillup.logFillupCta')}
+          >
+            <Ionicons name="receipt-outline" size={16} color={tokens.neutral.n0} />
+            <Text style={styles.fillupFabText}>{t('fillup.logFillupCta')}</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       {/* "None in view" toast */}
       {noneInView && (
         <View style={styles.cheapestToast} pointerEvents="none">
@@ -633,6 +666,33 @@ const styles = StyleSheet.create({
     height: 44,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  // Phase 2: Log fill-up FAB (above the MapFABGroup row)
+  fillupFabWrapper: {
+    position: 'absolute',
+    left: 14,
+  },
+  fillupFab: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    height: 36,
+    paddingHorizontal: 14,
+    borderRadius: tokens.radius.full,
+    // Distinct visual treatment from the dark "Add price" pill — accent
+    // colour communicates this is a separate contribution path.
+    backgroundColor: tokens.brand.accent,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  fillupFabText: {
+    color: tokens.neutral.n0,
+    fontSize: 13,
+    fontWeight: '700',
   },
 
   // Fuel type selector

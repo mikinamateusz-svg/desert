@@ -106,30 +106,30 @@ Then the same fuel type confirmation → odometer nudge → save flow applies �
   - [x] T5a: `apps/api/src/fillup/fillup.module.ts` — imports StationModule, RegionalBenchmarkModule, PhotoModule (for OcrSpendService); exports FillupService for Stories 5.3 / 5.5
   - [x] T5b: `FillupModule` registered in `apps/api/src/app.module.ts` after VehicleModule
 
-- [ ] T6: Mobile — API client (AC3, AC6)
-  - [ ] T6a: Create `apps/mobile/src/api/fillups.ts` — typed interfaces + wrappers for OCR, create, list endpoints
+- [x] T6: Mobile — API client (AC3, AC6)
+  - [x] T6a: `apps/mobile/src/api/fillups.ts` — typed `FillUp` / `FillupOcrResult` / `CreateFillupPayload` / `CreateFillupResponse` / `ListFillupsResponse` interfaces + `apiRunFillupOcr` (multipart), `apiCreateFillup`, `apiListFillups`. Mirrors the auth header / fetch pattern from `vehicles.ts`. OCR upload deliberately skips the `Content-Type` header so fetch derives the multipart boundary (same trick used by submissions.ts).
 
-- [ ] T7: Mobile — `fillup-capture.tsx` screen (AC1–AC5, AC7–AC11)
-  - [ ] T7a: Create `apps/mobile/app/(app)/fillup-capture.tsx`
-  - [ ] T7b: Step 0 `'camera'`: CameraView with pump-display framing overlay; location check on mount (same `useLocation` hook); respects `MIN_FREE_BYTES` check
-  - [ ] T7c: Step 1 `'processing'`: spinner + "Reading your pump display…"; calls `POST /fillups/ocr`; on success advance to `'confirm'`; on `confidence=0` advance to `'manual'`; on network error / timeout advance to `'manual'`
-  - [ ] T7d: Step 2 `'confirm'`: shows extracted cost/litres/price-per-litre (or manual inputs if coming from `'manual'` step); fuel type selector (5 options); "Save" button
-  - [ ] T7e: Step 2b `'manual'`: three numeric inputs (Total cost PLN, Volume L, Price per litre PLN/L); same "Save" flow
-  - [ ] T7f: Step 3 `'odometer'`: single numeric input "Odometer reading (km)" + "Add reading" button; "Skip" link; either advances to `'saving'`
-  - [ ] T7g: Step 4 `'saving'`: calls `POST /fillups`; on success navigate to `'celebration'`; on error show retry banner
-  - [ ] T7h: Step 5 `'celebration'`: shows fill-up summary (litres + total PLN); community update badge if station matched; "Add price →" nudge for other fuel types; "Done" navigates to log screen
+- [x] T7: Mobile — `fillup-capture.tsx` screen (AC1–AC5, AC7–AC11)
+  - [x] T7a: Outer-component Phase 2 gate — `flags.phase2 === false` returns `<Redirect href="/(app)" />` so Phase 1 prod APK can't deep-link in. Inner content holds all hooks (Rules-of-Hooks clean, mirrors the pattern from log.tsx / vehicle-setup.tsx).
+  - [x] T7b: Step `'camera'` — `CameraView` with pump-display framing rectangle (narrower / shorter than the price-board overlay because pump LCDs are smaller and closer). `useLocation` permission gate flows into `'location-required'` step. Camera-mount-on-focus + permission-undetermined-prompt patterns lifted from capture.tsx. `MIN_FREE_BYTES` storage check before `takePictureAsync`.
+  - [x] T7c: Step `'processing'` — `apiRunFillupOcr` call. Server contract: always 200, `confidence: 0` on any failure. Client routes to `'confirm'` when `confidence ≥ 0.6` AND all three required values are present, otherwise `'manual'` with partial pre-fill.
+  - [x] T7d: Step `'confirm'` — shared form with `'manual'` (same fields, same Save flow). Fuel-type chip row + vehicle chip row (only when >1 vehicle — single-vehicle case is auto-selected and hidden).
+  - [x] T7e: Step `'manual'` — same form as confirm but with retake-prompt copy. Pre-filled with whatever OCR returned; user types in any nulls.
+  - [x] T7f: Step `'odometer'` — numeric input + "Add reading" + "Skip". Both paths route to `'saving'`. `// TODO(Story 5.4)` comment marks where the photo-OCR option will be added.
+  - [x] T7g: Step `'saving'` — `apiCreateFillup` call. On success → `'celebration'`. On error → bounce back to `'manual'` with `errorMessage` so the user doesn't lose their typed values.
+  - [x] T7h: Step `'celebration'` — fill-up summary (`{{litres}} L · {{cost}} PLN`), community-updated badge (only when `stationMatched && communityUpdated`), "Add price →" nudge that routes to `/(app)/capture`, "Done" → log screen.
 
-- [ ] T8: Mobile — add "Log fill-up" entry point to map screen (`index.tsx`) (AC1)
-  - [ ] T8a: Add a "Log fill-up" FAB or bottom-sheet action on the map screen that navigates to `/(app)/fillup-capture`
-  - [ ] T8b: If no vehicles set up: show a prompt "Set up your vehicle first" → navigate to `/(app)/vehicle-setup`
+- [x] T8: Mobile — add "Log fill-up" entry point to map screen (`index.tsx`) (AC1)
+  - [x] T8a: Phase-2-gated `TouchableOpacity` rendered above the existing `MapFABGroup` row. Accent colour (different from the dark "Add price" pill) to avoid mental-model confusion between "log my own fill-up" and "contribute a price-board photo". Hidden during splash + while a station detail sheet is open. Guest tap opens the same `SoftSignUpSheet` as Add price (symmetry — the photo + the fill-up are both contribution paths).
+  - [x] T8b: No-vehicles guard implemented inline on `fillup-capture.tsx` (renders the "Set up your vehicle first" prompt when `vehicles.length === 0`) rather than blocking navigation. Spec called for "do not block navigation entirely — just show the prompt", which the screen does.
 
-- [ ] T9: i18n — all 3 locales (AC1–AC11)
-  - [ ] T9a: Add `fillup` section to `apps/mobile/src/i18n/locales/{en,pl,uk}.ts` (see Dev Notes)
+- [x] T9: i18n — all 3 locales (AC1–AC11)
+  - [x] T9a: `fillup` section added to `apps/mobile/src/i18n/locales/{en,pl,uk}.ts` (~25 keys/locale): `logFillupCta`, camera/processing/confirm/odometer/celebration copy, `addPrice` nudge, `errorSaving`, `noVehicleTitle`/`noVehicleAction`, `locationRequired`. Re-uses `vehicles.fuelTypes.*` for fuel-type pill labels so we don't duplicate translations.
 
-- [ ] T10: Tests
-  - [ ] T10a: `fillup-ocr.service.spec.ts` — returns nulls (confidence 0) when OCR response missing required fields; parses cost/litres/price correctly from valid response; handles JSON parse failure gracefully
-  - [ ] T10b: `fillup.service.spec.ts` — creates FillUp with correct fields; writes PriceHistory when station matched; skips PriceHistory when no station; sets vehicle is_locked to true; stores area_avg_at_fillup from benchmark; rejects vehicle not belonging to user
-  - [ ] T10c: Full regression suite — all existing tests still pass
+- [x] T10: Tests
+  - [x] T10a: `fillup-ocr.service.spec.ts` — 13 tests covering Haiku call shape, AbortSignal timeout, never-throws on API error, Haiku-rated spend tracking ($1/M in, $5/M out — separate from Gemini-rated `OcrSpendService.computeCostUsd`), JSON parse / value coercion / fuel-type validation / confidence clamping / parse failure recovery.
+  - [x] T10b: `fillup.service.spec.ts` — 15 tests covering NotFound on missing vehicle, Forbidden on cross-user, GPS station match writes PriceHistory + clears staleness, benchmark snapshot present / null, no-match path skips PriceHistory + benchmark + staleness, missing GPS skips matching entirely, vehicle locks on first fill-up via atomic `updateMany`, no-op fast path when already locked, custom `filledAt` honoured, PriceHistory + staleness failures don't propagate.
+  - [x] T10c: Full regression — 944/944 api + 22/22 mobile pass; tsc clean across api / mobile / types.
 
 ## Dev Notes
 
@@ -416,7 +416,29 @@ Backend complete:
 - **OcrSpendService docstring drift**: `computeCostUsd` comment says "Claude API call" but the constants are Gemini rates. Rename or add per-model rates in a separate cleanup story.
 - **Cap awareness**: the existing $20/day OCR cap is now shared across two services (Gemini Flash for price boards + Haiku for fill-ups). At nominal Haiku cost ~$0.002/call, that's ~10K fillup-OCR calls/day before the cap bites — plenty of headroom.
 
-### Completion Notes List (deferred section — kept blank during dev)
+### Completion Notes List (chunk B close-out — 2026-05-01)
+
+**Chunk B mobile UI shipped.**
+
+Mobile complete:
+- `apps/mobile/src/api/fillups.ts` — typed wrappers for the 3 endpoints
+- `apps/mobile/app/(app)/fillup-capture.tsx` — 6-step wizard (camera → processing → confirm/manual → odometer → saving → celebration), location-required + camera-error states. Outer Phase 2 gate via `flags.phase2`; inner content holds all hooks. Includes a deep-link safety net for the no-vehicles case so a stale link can't crash the screen.
+- `apps/mobile/app/(app)/_layout.tsx` — `fillup-capture` registered as a hidden tab (`href: null`).
+- `apps/mobile/app/(app)/index.tsx` — Phase-2-gated "Log fill-up" FAB above the existing `MapFABGroup` row. Accent colour, distinct from the dark "Add price" pill. Guest tap reuses the existing `SoftSignUpSheet` for symmetry.
+- `apps/mobile/src/i18n/locales/{en,pl,uk}.ts` — `fillup` section added (~25 keys per locale, plus `logFillupCta` for the FAB label).
+
+**Tests:** 944/944 api + 22/22 mobile pass. Tsc clean across api / mobile / types.
+
+**Phase 1 prod APK invariant held end-to-end:**
+- `flags.phase2 = false` for production EAS profile → `index.tsx` doesn't render the Log fill-up FAB → user can't reach the screen via UI.
+- `fillup-capture.tsx` itself has an outer-component `<Redirect href="/(app)" />` when `flags.phase2` is off → deep-links / stale notifications can't surface the screen either.
+- Backend endpoints exist on the shared prod API but are unreachable from the prod APK (no client-side caller).
+
+**Open items / known follow-ups:**
+- **Pre-launch consent / legal** — fill-ups introduce new data collection (cost, volume, fuel, station, area_avg, optional odometer). Privacy policy + terms drafts in `_bmad-output/planning-artifacts/privacy-policy-draft-pl.md` need a feature-specific consent AC + data-processing section before public launch. Not blocking for solo / acceptance testing.
+- **Code review pass owed** — chunks A + B haven't been adversarially reviewed yet. Per `feedback_code_review.md` this should run before final story close-out. Will dispatch on next session unless something urgent surfaces from manual testing first.
+- **Gemini-vs-Haiku decision** — Mateusz is collecting more pump-display photos to benchmark Gemini Flash against Haiku for this OCR endpoint. If Gemini wins, swap is a ~30 line change in `FillupOcrService` (move `messages.create` call to a Gemini-shaped POST + drop the Haiku-rate spend pre-computation since `OcrSpendService.computeCostUsd` is already Gemini-keyed).
+- **Logo benchmark side-task** — `_bmad-output/analysis/run-logo-benchmark.mjs` + `analyse-logo-benchmark.mjs` shipped to support an unrelated Gemini-vs-Haiku decision for Story 3.6 (logo recognition). Not part of 5.2 scope; tracked separately.
 
 ### File List
 

@@ -133,6 +133,12 @@ export default function AppLayout() {
         options={{ href: null, headerShown: false }}
       />
 
+      {/* ── Fill-up capture: Story 5.2, Phase 2-gated entry from map FAB ── */}
+      <Tabs.Screen
+        name="fillup-capture"
+        options={{ href: null, headerShown: false }}
+      />
+
     </Tabs>
   );
 }

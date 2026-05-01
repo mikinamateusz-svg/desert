@@ -300,6 +300,38 @@ export default {
     impactMessage: 'Водії поблизу побачать це оновлення',
     done: 'Назад до карти',
   },
+  fillup: {
+    logFillupCta: 'Записати заправку',
+    cameraOverlay: 'Наведіть на дисплей пістолета',
+    processing: 'Зчитую дисплей…',
+    confirmTitle: 'Підтвердьте заправку',
+    totalCost: 'Загальна вартість (PLN)',
+    volume: "Об'єм (L)",
+    pricePerLitre: 'Ціна за літр (PLN/L)',
+    fuelType: 'Тип пального',
+    saveButton: 'Зберегти заправку',
+    retakePrompt:
+      'Не вдалося зчитати дисплей — перевірте значення нижче або введіть вручну.',
+    enterManually: 'Ввести вручну',
+    odometerNudgeTitle: 'Відстежувати витрату пального?',
+    odometerNudgeSubtitle:
+      'Додайте показник одометра для розрахунку л/100 км з часом.',
+    odometerLabel: 'Одометр (км)',
+    odometerPlaceholder: 'напр. 87450',
+    addOdometer: 'Додати показник',
+    skipOdometer: 'Пропустити',
+    celebrationFillup: '{{litres}} L · {{cost}} PLN',
+    celebrationCommunity: '{{fuelType}} на {{station}} оновлено ✓',
+    nudgeOtherPrices:
+      'Інші ціни на цій станції можуть бути застарілими — додати їх теж?',
+    addPrice: 'Додати ціну →',
+    done: 'Готово',
+    errorSaving: 'Не вдалося зберегти заправку — спробуйте ще раз.',
+    noVehicleTitle: 'Спочатку додайте свій транспортний засіб',
+    noVehicleAction: 'Додати моє авто',
+    locationRequired:
+      'Потрібна геолокація для прив\'язки заправки до станції.',
+  },
   vehicles: {
     setup: {
       title: 'Додати автомобіль',

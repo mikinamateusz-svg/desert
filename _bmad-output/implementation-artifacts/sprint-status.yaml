@@ -851,7 +851,8 @@ epics:
         status: in-progress
         ready_date: 2026-04-07
         dev_started: 2026-05-01
-        note: "Chunk A backend shipped 2026-05-01: FillUp model + migration 20260501000000, FillupOcrService (Haiku 4.5, 10s timeout, Haiku-rated spend tracking), FillupService (vehicle ownership check, 200m GPS match, RegionalBenchmark snapshot, optional PriceHistory write + staleness clear, atomic vehicle lock), FillupController (3 endpoints), FillupModule wired. 28 new tests (13 OCR + 15 service) → 944/944 api pass. Chunk B (mobile UI + i18n + Phase 2 flag wrap) deferred to next session. Pre-launch follow-up: consent/legal docs need fill-up data section."
+        dev_completed: 2026-05-01
+        note: "Chunk A (backend) + Chunk B (mobile UI) both shipped 2026-05-01. Backend: FillUp model + migration, FillupOcrService (Haiku 4.5, 10s timeout, Haiku-rated spend), FillupService, FillupController. Mobile: 6-step wizard (camera → OCR → confirm/manual → odometer → saving → celebration) at apps/mobile/app/(app)/fillup-capture.tsx, fillups API client, Phase-2-gated 'Log fill-up' FAB on map, fillup i18n in en/pl/uk. Outer-component flags.phase2 gate on the screen + redirect when off; FAB hidden behind same flag. 944/944 api + 22/22 mobile pass; tsc clean. Status remains in-progress until code review runs (chunks A+B together) — feedback_code_review.md rule. Pre-launch: privacy policy + terms need fill-up data section before public launch."
       - id: 5.3
         title: "Savings vs. Area Average Calculation"
         file: 5-3-savings-vs-area-average-calculation.md

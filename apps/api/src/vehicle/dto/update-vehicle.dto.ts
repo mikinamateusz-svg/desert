@@ -26,7 +26,8 @@ export class UpdateVehicleDto {
   @IsOptional()
   @IsInt()
   @Min(1970)
-  @Max(new Date().getFullYear() + 1)
+  // See create-vehicle.dto.ts for why we use a fixed wide ceiling.
+  @Max(2100)
   year?: number;
 
   @IsOptional()

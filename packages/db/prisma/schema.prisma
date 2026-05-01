@@ -314,7 +314,9 @@ model Vehicle {
   user_entered    Boolean  @default(false)
   created_at      DateTime @default(now())
   updated_at      DateTime @updatedAt
-  user            User     @relation(fields: [user_id], references: [id])
+  // Restrict matches the migration; account-deletion (Story 1.8) must drop
+  // vehicles in the same transaction or it will hit a FK error.
+  user            User     @relation(fields: [user_id], references: [id], onDelete: Restrict)
 
   @@index([user_id])
 }

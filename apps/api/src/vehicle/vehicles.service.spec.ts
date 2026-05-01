@@ -4,20 +4,26 @@ import { VehiclesService } from './vehicles.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 const mockFindMany = jest.fn();
+const mockFindFirst = jest.fn();
 const mockFindUnique = jest.fn();
+const mockFindUniqueOrThrow = jest.fn();
 const mockCreate = jest.fn();
 const mockUpdate = jest.fn();
 const mockUpdateMany = jest.fn();
 const mockDelete = jest.fn();
+const mockDeleteMany = jest.fn();
 
 const mockPrisma = {
   vehicle: {
     findMany: mockFindMany,
+    findFirst: mockFindFirst,
     findUnique: mockFindUnique,
+    findUniqueOrThrow: mockFindUniqueOrThrow,
     create: mockCreate,
     update: mockUpdate,
     updateMany: mockUpdateMany,
     delete: mockDelete,
+    deleteMany: mockDeleteMany,
   },
 };
 
@@ -190,12 +196,13 @@ describe('VehiclesService', () => {
     it('updates nickname on an unlocked vehicle', async () => {
       const existing = makeVehicle({ is_locked: false });
       mockFindUnique.mockResolvedValueOnce(existing);
-      mockUpdate.mockResolvedValueOnce({ ...existing, nickname: 'Renamed' });
+      mockUpdateMany.mockResolvedValueOnce({ count: 1 });
+      mockFindUniqueOrThrow.mockResolvedValueOnce({ ...existing, nickname: 'Renamed' });
 
       await service.updateVehicle(USER_ID, VEHICLE_ID, { nickname: 'Renamed' });
 
-      expect(mockUpdate).toHaveBeenCalledWith({
-        where: { id: VEHICLE_ID },
+      expect(mockUpdateMany).toHaveBeenCalledWith({
+        where: { id: VEHICLE_ID, user_id: USER_ID, is_locked: false },
         data: { nickname: 'Renamed' },
       });
     });
@@ -203,7 +210,8 @@ describe('VehiclesService', () => {
     it('updates make/model/year on an unlocked vehicle', async () => {
       const existing = makeVehicle({ is_locked: false });
       mockFindUnique.mockResolvedValueOnce(existing);
-      mockUpdate.mockResolvedValueOnce(existing);
+      mockUpdateMany.mockResolvedValueOnce({ count: 1 });
+      mockFindUniqueOrThrow.mockResolvedValueOnce(existing);
 
       await service.updateVehicle(USER_ID, VEHICLE_ID, {
         make: 'Skoda',
@@ -211,8 +219,8 @@ describe('VehiclesService', () => {
         year: 2021,
       });
 
-      expect(mockUpdate).toHaveBeenCalledWith({
-        where: { id: VEHICLE_ID },
+      expect(mockUpdateMany).toHaveBeenCalledWith({
+        where: { id: VEHICLE_ID, user_id: USER_ID, is_locked: false },
         data: { make: 'Skoda', model: 'Octavia', year: 2021 },
       });
     });
@@ -220,15 +228,13 @@ describe('VehiclesService', () => {
     it('only updates the fields explicitly present in the DTO', async () => {
       const existing = makeVehicle({ is_locked: false });
       mockFindUnique.mockResolvedValueOnce(existing);
-      mockUpdate.mockResolvedValueOnce(existing);
+      mockUpdateMany.mockResolvedValueOnce({ count: 1 });
+      mockFindUniqueOrThrow.mockResolvedValueOnce(existing);
 
       await service.updateVehicle(USER_ID, VEHICLE_ID, { nickname: 'X' });
 
-      expect(mockUpdate).toHaveBeenCalledWith({
-        where: { id: VEHICLE_ID },
-        data: { nickname: 'X' },
-      });
-      const callArgs = mockUpdate.mock.calls[0][0] as { data: Record<string, unknown> };
+      const callArgs = mockUpdateMany.mock.calls[0]![0] as { data: Record<string, unknown> };
+      expect(callArgs.data).toEqual({ nickname: 'X' });
       expect(callArgs.data).not.toHaveProperty('make');
       expect(callArgs.data).not.toHaveProperty('model');
       expect(callArgs.data).not.toHaveProperty('year');
@@ -242,7 +248,7 @@ describe('VehiclesService', () => {
       await expect(
         service.updateVehicle(USER_ID, VEHICLE_ID, { make: 'Skoda' }),
       ).rejects.toBeInstanceOf(ConflictException);
-      expect(mockUpdate).not.toHaveBeenCalled();
+      expect(mockUpdateMany).not.toHaveBeenCalled();
     });
 
     it('rejects with 409 when caller tries to change model on a locked vehicle', async () => {
@@ -261,15 +267,43 @@ describe('VehiclesService', () => {
       ).rejects.toBeInstanceOf(ConflictException);
     });
 
+    it('rejects with 409 when caller tries to change fuel_type on a locked vehicle (history-corrupting)', async () => {
+      mockFindUnique.mockResolvedValueOnce(makeVehicle({ is_locked: true, fuel_type: 'ON' }));
+
+      await expect(
+        service.updateVehicle(USER_ID, VEHICLE_ID, { fuel_type: 'PB_95' }),
+      ).rejects.toBeInstanceOf(ConflictException);
+      expect(mockUpdateMany).not.toHaveBeenCalled();
+    });
+
+    it('rejects with 409 when caller tries to change displacement_cc on a locked vehicle', async () => {
+      mockFindUnique.mockResolvedValueOnce(makeVehicle({ is_locked: true, displacement_cc: 1598 }));
+
+      await expect(
+        service.updateVehicle(USER_ID, VEHICLE_ID, { displacement_cc: 1968 }),
+      ).rejects.toBeInstanceOf(ConflictException);
+      expect(mockUpdateMany).not.toHaveBeenCalled();
+    });
+
+    it('rejects with 409 when caller tries to change power_kw on a locked vehicle', async () => {
+      mockFindUnique.mockResolvedValueOnce(makeVehicle({ is_locked: true, power_kw: 85 }));
+
+      await expect(
+        service.updateVehicle(USER_ID, VEHICLE_ID, { power_kw: 110 }),
+      ).rejects.toBeInstanceOf(ConflictException);
+      expect(mockUpdateMany).not.toHaveBeenCalled();
+    });
+
     it('allows nickname change on a locked vehicle (history-safe)', async () => {
       const existing = makeVehicle({ is_locked: true });
       mockFindUnique.mockResolvedValueOnce(existing);
-      mockUpdate.mockResolvedValueOnce({ ...existing, nickname: 'Dad-mobile' });
+      mockUpdateMany.mockResolvedValueOnce({ count: 1 });
+      mockFindUniqueOrThrow.mockResolvedValueOnce({ ...existing, nickname: 'Dad-mobile' });
 
       await service.updateVehicle(USER_ID, VEHICLE_ID, { nickname: 'Dad-mobile' });
 
-      expect(mockUpdate).toHaveBeenCalledWith({
-        where: { id: VEHICLE_ID },
+      expect(mockUpdateMany).toHaveBeenCalledWith({
+        where: { id: VEHICLE_ID, user_id: USER_ID, is_locked: true },
         data: { nickname: 'Dad-mobile' },
       });
     });
@@ -277,19 +311,21 @@ describe('VehiclesService', () => {
     it('allows engine_variant change on a locked vehicle (e.g. correcting a typo)', async () => {
       const existing = makeVehicle({ is_locked: true });
       mockFindUnique.mockResolvedValueOnce(existing);
-      mockUpdate.mockResolvedValueOnce(existing);
+      mockUpdateMany.mockResolvedValueOnce({ count: 1 });
+      mockFindUniqueOrThrow.mockResolvedValueOnce(existing);
 
       await service.updateVehicle(USER_ID, VEHICLE_ID, {
         engine_variant: '2.0 TDI 150 KM',
       });
 
-      expect(mockUpdate).toHaveBeenCalled();
+      expect(mockUpdateMany).toHaveBeenCalled();
     });
 
     it('does NOT trigger 409 when DTO repeats the existing make/model/year (no actual change)', async () => {
       const existing = makeVehicle({ is_locked: true, make: 'Volkswagen', model: 'Golf', year: 2020 });
       mockFindUnique.mockResolvedValueOnce(existing);
-      mockUpdate.mockResolvedValueOnce(existing);
+      mockUpdateMany.mockResolvedValueOnce({ count: 1 });
+      mockFindUniqueOrThrow.mockResolvedValueOnce(existing);
 
       await service.updateVehicle(USER_ID, VEHICLE_ID, {
         make: 'Volkswagen',
@@ -298,36 +334,63 @@ describe('VehiclesService', () => {
         nickname: 'X',
       });
 
-      expect(mockUpdate).toHaveBeenCalled();
+      expect(mockUpdateMany).toHaveBeenCalled();
+    });
+
+    it('throws 409 when concurrent FillUp locks the vehicle between read and write (TOCTOU close)', async () => {
+      // Vehicle observed unlocked; a concurrent FillUp flips is_locked to true
+      // before our updateMany fires. updateMany returns count: 0 because the
+      // is_locked: false predicate no longer matches.
+      mockFindUnique.mockResolvedValueOnce(makeVehicle({ is_locked: false }));
+      mockUpdateMany.mockResolvedValueOnce({ count: 0 });
+
+      await expect(
+        service.updateVehicle(USER_ID, VEHICLE_ID, { make: 'Skoda' }),
+      ).rejects.toBeInstanceOf(ConflictException);
+      expect(mockFindUniqueOrThrow).not.toHaveBeenCalled();
     });
   });
 
   describe('deleteVehicle', () => {
-    it('deletes an unlocked vehicle', async () => {
-      mockFindUnique.mockResolvedValueOnce(makeVehicle({ is_locked: false }));
-      mockDelete.mockResolvedValueOnce({});
+    it('deletes an unlocked vehicle via atomic deleteMany', async () => {
+      mockDeleteMany.mockResolvedValueOnce({ count: 1 });
 
       await service.deleteVehicle(USER_ID, VEHICLE_ID);
 
-      expect(mockDelete).toHaveBeenCalledWith({ where: { id: VEHICLE_ID } });
+      expect(mockDeleteMany).toHaveBeenCalledWith({
+        where: { id: VEHICLE_ID, user_id: USER_ID, is_locked: false },
+      });
+      expect(mockFindFirst).not.toHaveBeenCalled();
     });
 
     it('rejects with 409 when the vehicle is locked (has fill-up history)', async () => {
-      mockFindUnique.mockResolvedValueOnce(makeVehicle({ is_locked: true }));
+      mockDeleteMany.mockResolvedValueOnce({ count: 0 });
+      mockFindFirst.mockResolvedValueOnce(makeVehicle({ is_locked: true }));
 
       await expect(service.deleteVehicle(USER_ID, VEHICLE_ID)).rejects.toBeInstanceOf(
         ConflictException,
       );
-      expect(mockDelete).not.toHaveBeenCalled();
     });
 
     it('throws NotFound (not Forbidden) when trying to delete another user\'s vehicle', async () => {
-      mockFindUnique.mockResolvedValueOnce(makeVehicle({ user_id: OTHER_USER_ID }));
+      // Cross-user delete: deleteMany is scoped to user_id so count is 0;
+      // findFirst (also user-scoped) returns null because the vehicle belongs
+      // to a different user.
+      mockDeleteMany.mockResolvedValueOnce({ count: 0 });
+      mockFindFirst.mockResolvedValueOnce(null);
 
       await expect(service.deleteVehicle(USER_ID, VEHICLE_ID)).rejects.toBeInstanceOf(
         NotFoundException,
       );
-      expect(mockDelete).not.toHaveBeenCalled();
+    });
+
+    it('throws NotFound when the vehicle id does not exist at all', async () => {
+      mockDeleteMany.mockResolvedValueOnce({ count: 0 });
+      mockFindFirst.mockResolvedValueOnce(null);
+
+      await expect(service.deleteVehicle(USER_ID, VEHICLE_ID)).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
     });
   });
 

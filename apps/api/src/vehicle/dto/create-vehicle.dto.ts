@@ -34,7 +34,11 @@ export class CreateVehicleDto {
 
   @IsInt()
   @Min(1970)
-  @Max(new Date().getFullYear() + 1)
+  // Fixed wide ceiling rather than `new Date().getFullYear() + 1` because
+  // class-validator decorators evaluate at module load — a long-running
+  // process would freeze the cap to last year's "+1" and reject valid
+  // current-model-year input on Jan 1. Mobile UI clamps to a tighter range.
+  @Max(2100)
   year!: number;
 
   @IsOptional()

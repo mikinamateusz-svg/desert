@@ -123,6 +123,15 @@ export default function AppLayout() {
         }}
       />
 
+      {/* ── Vehicle setup + edit: navigated from the Log tab ── */}
+      <Tabs.Screen
+        name="vehicle-setup"
+        options={{ href: null, headerShown: false }}
+      />
+      <Tabs.Screen
+        name="vehicle/[id]"
+        options={{ href: null, headerShown: false }}
+      />
 
     </Tabs>
   );

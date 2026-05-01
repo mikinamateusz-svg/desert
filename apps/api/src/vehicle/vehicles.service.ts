@@ -72,23 +72,31 @@ export class VehiclesService {
   ): Promise<Vehicle> {
     const existing = await this.getVehicle(userId, vehicleId);
 
-    // While locked, reject any change to identifying fields.
+    // While locked, reject any change to fields that affect history math
+    // (make, model, year, fuel_type, displacement_cc, power_kw). Nickname and
+    // engine_variant remain editable per AC7. The check is permissive about
+    // no-op writes — sending the existing value is treated as no change.
     if (existing.is_locked) {
-      const changingMake = dto.make !== undefined && dto.make !== existing.make;
-      const changingModel = dto.model !== undefined && dto.model !== existing.model;
-      const changingYear = dto.year !== undefined && dto.year !== existing.year;
-      if (changingMake || changingModel || changingYear) {
+      const lockedFieldChange = (
+        ['make', 'model', 'year', 'fuel_type', 'displacement_cc', 'power_kw'] as const
+      ).some((field) => dto[field] !== undefined && dto[field] !== existing[field]);
+      if (lockedFieldChange) {
         throw new ConflictException({
           statusCode: 409,
           error: 'VEHICLE_LOCKED',
           message:
-            'Make, model, and year cannot be changed after the first fill-up is recorded.',
+            'Vehicle identity (make, model, year, fuel system) cannot be changed after the first fill-up is recorded.',
         });
       }
     }
 
-    return this.prisma.vehicle.update({
-      where: { id: vehicleId },
+    // Atomic write: condition on the lock state we observed in `existing` so a
+    // concurrent FillUp lock arriving between read and write either (a) lets the
+    // write through because it is nickname/engine_variant only — safe, or
+    // (b) flips is_locked, in which case `count` will be 0 and we re-throw
+    // VEHICLE_LOCKED with the just-locked state. Closes the TOCTOU window.
+    const result = await this.prisma.vehicle.updateMany({
+      where: { id: vehicleId, user_id: userId, is_locked: existing.is_locked },
       data: {
         ...(dto.make !== undefined && { make: dto.make }),
         ...(dto.model !== undefined && { model: dto.model }),
@@ -100,13 +108,36 @@ export class VehiclesService {
         ...(dto.nickname !== undefined && { nickname: dto.nickname }),
       },
     });
+    if (result.count === 0) {
+      // Lock state must have flipped. Re-evaluate: a now-locked vehicle that
+      // received an identity-changing PATCH must surface VEHICLE_LOCKED.
+      throw new ConflictException({
+        statusCode: 409,
+        error: 'VEHICLE_LOCKED',
+        message:
+          'Vehicle was just locked by a concurrent fill-up; identity-changing fields are no longer editable.',
+      });
+    }
+    return this.prisma.vehicle.findUniqueOrThrow({ where: { id: vehicleId } });
   }
 
   async deleteVehicle(userId: string, vehicleId: string): Promise<void> {
-    const existing = await this.getVehicle(userId, vehicleId);
-
-    if (existing.is_locked) {
-      // Locked vehicles have FillUp / odometer history that would orphan.
+    // Atomic delete conditioned on is_locked = false closes the TOCTOU race
+    // with a concurrent FillUp that would lock the vehicle. If count is 0 we
+    // disambiguate via a follow-up read — either it never existed (404) or it
+    // is now locked (409).
+    const result = await this.prisma.vehicle.deleteMany({
+      where: { id: vehicleId, user_id: userId, is_locked: false },
+    });
+    if (result.count === 0) {
+      const stillThere = await this.prisma.vehicle.findFirst({
+        where: { id: vehicleId, user_id: userId },
+      });
+      if (!stillThere) {
+        throw new NotFoundException('Vehicle not found');
+      }
+      // is_locked must be true now (the deleteMany only fails on lock or
+      // missing record — and the record is here).
       throw new ConflictException({
         statusCode: 409,
         error: 'VEHICLE_LOCKED',
@@ -114,8 +145,6 @@ export class VehiclesService {
           'Cannot remove a vehicle with fill-up history. Story 5.2+ may add an archive flow.',
       });
     }
-
-    await this.prisma.vehicle.delete({ where: { id: vehicleId } });
   }
 
   /**

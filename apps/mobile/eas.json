@@ -17,14 +17,25 @@
       "env": {
         "EXPO_PUBLIC_API_URL": "https://desert-production-ac37.up.railway.app",
         "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "481368978057-9skd9qo5al694f7b31k016u77v7ofq9o.apps.googleusercontent.com",
-        "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID": "481368978057-je3npcpnhofoh7foscfrfhf9dd8tnr1b.apps.googleusercontent.com"
+        "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID": "481368978057-je3npcpnhofoh7foscfrfhf9dd8tnr1b.apps.googleusercontent.com",
+        "EXPO_PUBLIC_PHASE_2": "false"
+      }
+    },
+    "preview-phase2": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://desert-production-ac37.up.railway.app",
+        "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "481368978057-9skd9qo5al694f7b31k016u77v7ofq9o.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID": "481368978057-je3npcpnhofoh7foscfrfhf9dd8tnr1b.apps.googleusercontent.com",
+        "EXPO_PUBLIC_PHASE_2": "true"
       }
     },
     "production": {
       "env": {
         "EXPO_PUBLIC_API_URL": "https://desert-production-ac37.up.railway.app",
         "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "481368978057-9skd9qo5al694f7b31k016u77v7ofq9o.apps.googleusercontent.com",
-        "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID": "481368978057-je3npcpnhofoh7foscfrfhf9dd8tnr1b.apps.googleusercontent.com"
+        "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID": "481368978057-je3npcpnhofoh7foscfrfhf9dd8tnr1b.apps.googleusercontent.com",
+        "EXPO_PUBLIC_PHASE_2": "false"
       }
     }
   },

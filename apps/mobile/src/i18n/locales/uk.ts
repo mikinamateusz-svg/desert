@@ -312,6 +312,7 @@ export default {
     saveButton: 'Зберегти заправку',
     retakePrompt:
       'Не вдалося зчитати дисплей — перевірте значення нижче або введіть вручну.',
+    retakeButton: 'Сфотографувати знову',
     enterManually: 'Ввести вручну',
     odometerNudgeTitle: 'Відстежувати витрату пального?',
     odometerNudgeSubtitle:

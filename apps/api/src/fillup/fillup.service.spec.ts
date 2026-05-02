@@ -7,6 +7,7 @@ import { RegionalBenchmarkService } from '../regional-benchmark/regional-benchma
 
 const mockVehicleFindUnique = jest.fn();
 const mockVehicleUpdateMany = jest.fn();
+const mockUserFindUnique = jest.fn();
 const mockFillupCreate = jest.fn();
 const mockFillupFindMany = jest.fn();
 const mockFillupCount = jest.fn();
@@ -15,6 +16,7 @@ const mockStalenessDeleteMany = jest.fn();
 
 const mockPrisma = {
   vehicle: { findUnique: mockVehicleFindUnique, updateMany: mockVehicleUpdateMany },
+  user: { findUnique: mockUserFindUnique },
   fillUp: { create: mockFillupCreate, findMany: mockFillupFindMany, count: mockFillupCount },
   priceHistory: { create: mockPriceHistoryCreate },
   stationFuelStaleness: { deleteMany: mockStalenessDeleteMany },
@@ -59,6 +61,9 @@ describe('FillupService', () => {
     mockVehicleUpdateMany.mockResolvedValue({ count: 1 });
     mockPriceHistoryCreate.mockResolvedValue({});
     mockStalenessDeleteMany.mockResolvedValue({ count: 0 });
+    // Default: user is not shadow-banned. Individual tests override when
+    // exercising the shadow-ban path.
+    mockUserFindUnique.mockResolvedValue({ shadow_banned: false });
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -116,6 +121,65 @@ describe('FillupService', () => {
       });
       expect(result.stationMatched).toBe(true);
       expect(result.stationName).toBe('Orlen Łódź');
+      expect(result.communityUpdated).toBe(true);
+    });
+
+    it('skips community PriceHistory write when the user is shadow-banned (P-3)', async () => {
+      mockVehicleFindUnique.mockResolvedValueOnce(makeVehicle());
+      mockFindNearestStation.mockResolvedValueOnce({ id: STATION_ID, name: 'Orlen Łódź' });
+      mockGetLatestForStation.mockResolvedValueOnce({ medianPrice: 6.5 });
+      mockUserFindUnique.mockResolvedValueOnce({ shadow_banned: true });
+
+      const result = await service.createFillup(USER_ID, baseDto());
+
+      // FillUp itself still saves — driver's own history is theirs.
+      expect(mockFillupCreate).toHaveBeenCalled();
+      // Community side-effects suppressed.
+      expect(mockPriceHistoryCreate).not.toHaveBeenCalled();
+      expect(mockStalenessDeleteMany).not.toHaveBeenCalled();
+      // stationMatched still true — the station was matched, just no community write.
+      expect(result.stationMatched).toBe(true);
+      expect(result.communityUpdated).toBe(false);
+    });
+
+    it('skips community PriceHistory write when price is below the plausibility band (P-4)', async () => {
+      mockVehicleFindUnique.mockResolvedValueOnce(makeVehicle());
+      mockFindNearestStation.mockResolvedValueOnce({ id: STATION_ID, name: 'Orlen Łódź' });
+      mockGetLatestForStation.mockResolvedValueOnce({ medianPrice: 6.5 });
+
+      // PB_95 band is 4.0–12.0 PLN/L. 1.00 is a typo; community write must skip.
+      const garbage = { ...baseDto(), pricePerLitrePln: 1.0 };
+      const result = await service.createFillup(USER_ID, garbage);
+
+      expect(mockFillupCreate).toHaveBeenCalled();
+      expect(mockPriceHistoryCreate).not.toHaveBeenCalled();
+      expect(mockStalenessDeleteMany).not.toHaveBeenCalled();
+      expect(result.communityUpdated).toBe(false);
+    });
+
+    it('skips community PriceHistory write when price is above the plausibility band (P-4)', async () => {
+      mockVehicleFindUnique.mockResolvedValueOnce(makeVehicle());
+      mockFindNearestStation.mockResolvedValueOnce({ id: STATION_ID, name: 'Orlen Łódź' });
+      mockGetLatestForStation.mockResolvedValueOnce({ medianPrice: 6.5 });
+
+      // PB_95 max is 12.0 PLN/L. 50 is impossible; community write must skip.
+      const garbage = { ...baseDto(), pricePerLitrePln: 50 };
+      const result = await service.createFillup(USER_ID, garbage);
+
+      expect(mockPriceHistoryCreate).not.toHaveBeenCalled();
+      expect(result.communityUpdated).toBe(false);
+    });
+
+    it('still writes community PriceHistory at LPG band edges (band lookup is fuel-type-aware)', async () => {
+      mockVehicleFindUnique.mockResolvedValueOnce(makeVehicle());
+      mockFindNearestStation.mockResolvedValueOnce({ id: STATION_ID, name: 'Orlen Łódź' });
+      mockGetLatestForStation.mockResolvedValueOnce({ medianPrice: 3.5 });
+
+      // LPG band is 2.0–6.0 PLN/L — 3.0 is fine, where 3.0 for PB_95 would be below band.
+      const lpg = { ...baseDto(), fuelType: 'LPG' as const, pricePerLitrePln: 3.0 };
+      const result = await service.createFillup(USER_ID, lpg);
+
+      expect(mockPriceHistoryCreate).toHaveBeenCalled();
       expect(result.communityUpdated).toBe(true);
     });
 

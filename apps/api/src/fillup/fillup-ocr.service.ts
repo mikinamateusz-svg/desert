@@ -85,6 +85,34 @@ export class FillupOcrService {
     photoBuffer: Buffer,
     mediaType: 'image/jpeg' | 'image/png' = 'image/jpeg',
   ): Promise<FillupOcrResult> {
+    // Spend-cap precheck (P-2). Per project memory `project_ocr_spend_cap.md`
+    // the daily cap is a hard, fail-closed kill switch. The original
+    // implementation called Anthropic unconditionally and only recorded spend
+    // afterwards — a burst could blow past the cap. Now we bail BEFORE the
+    // paid call when the day's spend is already at or above the cap. The
+    // Gemini-backed price-board OCR shares the same Redis bucket so this
+    // protects both pipelines together.
+    //
+    // On Redis blip the cap reads default to 0 spend → call proceeds (fail-
+    // open on infra outage rather than blocking the entire OCR feature).
+    // The recordSpend path below also fails open.
+    try {
+      const [dailySpend, spendCap] = await Promise.all([
+        this.spend.getDailySpend(),
+        this.spend.getSpendCap(),
+      ]);
+      if (Number.isFinite(dailySpend) && Number.isFinite(spendCap) && dailySpend >= spendCap) {
+        this.logger.warn(
+          `FillupOcr: daily spend cap reached ($${dailySpend.toFixed(2)} / $${spendCap.toFixed(2)}) — refusing to call Haiku, returning empty result.`,
+        );
+        return this.emptyResult();
+      }
+    } catch (e) {
+      this.logger.warn(
+        `FillupOcr: spend-cap precheck failed (${e instanceof Error ? e.message : String(e)}) — proceeding fail-open to avoid blocking the OCR feature on a Redis blip.`,
+      );
+    }
+
     try {
       const base64Image = photoBuffer.toString('base64');
 
@@ -113,17 +141,26 @@ export class FillupOcrService {
       // Track Haiku spend separately from Gemini OCR — Haiku rates ≠ Gemini
       // rates, so we can't use OcrSpendService.computeCostUsd which is keyed
       // to Gemini. Pre-compute and pass the precomputed cost into recordSpend.
-      const inputTokens = response.usage.input_tokens;
-      const outputTokens = response.usage.output_tokens;
-      const costUsd =
-        (inputTokens / 1_000_000) * HAIKU_INPUT_USD_PER_MTOKEN +
-        (outputTokens / 1_000_000) * HAIKU_OUTPUT_USD_PER_MTOKEN;
-      // Best-effort — never fail an OCR call because spend tracking blipped.
-      void this.spend.recordSpend(costUsd).catch((e) =>
-        this.logger.warn(
-          `recordSpend failed (Haiku $${costUsd.toFixed(4)}): ${e instanceof Error ? e.message : String(e)}`,
-        ),
-      );
+      //
+      // P-5 hardening: guard against SDK shape drift / streaming variants
+      // where `usage` or its token counts could be undefined. Direct
+      // `.input_tokens` deref previously masqueraded as a Haiku failure
+      // (TypeError swallowed by outer catch) — wasted spend, no result.
+      const inputTokens = response.usage?.input_tokens ?? 0;
+      const outputTokens = response.usage?.output_tokens ?? 0;
+      if (inputTokens > 0 || outputTokens > 0) {
+        const costUsd =
+          (inputTokens / 1_000_000) * HAIKU_INPUT_USD_PER_MTOKEN +
+          (outputTokens / 1_000_000) * HAIKU_OUTPUT_USD_PER_MTOKEN;
+        // Best-effort — never fail an OCR call because spend tracking blipped.
+        void this.spend.recordSpend(costUsd).catch((e) =>
+          this.logger.warn(
+            `recordSpend failed (Haiku $${costUsd.toFixed(4)}): ${e instanceof Error ? e.message : String(e)}`,
+          ),
+        );
+      } else {
+        this.logger.warn('FillupOcr: response.usage missing token counts — skipping spend record.');
+      }
 
       const rawText =
         response.content[0]?.type === 'text' ? response.content[0].text : '';

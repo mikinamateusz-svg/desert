@@ -61,13 +61,20 @@ export class FillupController {
 
     let photoBuffer: Buffer | null = null;
 
-    const parts = req.parts({ limits: { fileSize: MAX_PHOTO_BYTES, fields: 5 } });
+    // `files: 1` blocks the DoS amplifier where a malicious client appends
+    // multiple file parts to a single request — fastify rejects the second
+    // file before the iterator yields it, so we never buffer extra megabytes
+    // into memory. `fields: 5` keeps the existing field cap (this endpoint
+    // doesn't read any fields, but defence in depth).
+    const parts = req.parts({ limits: { fileSize: MAX_PHOTO_BYTES, files: 1, fields: 5 } });
     for await (const part of parts) {
       if (part.type === 'file' && part.fieldname === 'photo' && !photoBuffer) {
         photoBuffer = await part.toBuffer();
       } else if (part.type === 'file') {
-        // Drain unexpected file parts to avoid stalling the multipart stream
-        // (same pattern as submissions.controller).
+        // Drain the unexpected file part to avoid stalling the multipart
+        // stream — `files: 1` should make this branch unreachable in
+        // practice, but keep the drain as a belt-and-suspenders guard
+        // against future limit changes (same pattern as submissions.controller).
         await part.toBuffer();
       }
       // Fields are intentionally ignored on this endpoint — OCR only reads

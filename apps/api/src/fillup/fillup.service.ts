@@ -8,6 +8,7 @@ import { FillUp } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StationService } from '../station/station.service.js';
 import { RegionalBenchmarkService } from '../regional-benchmark/regional-benchmark.service.js';
+import { PRICE_BANDS } from '../ocr/ocr.service.js';
 import { CreateFillupDto } from './dto/create-fillup.dto.js';
 
 export interface CreateFillupResult {
@@ -70,6 +71,18 @@ export class FillupService {
       throw new ForbiddenException('Vehicle does not belong to the authenticated user');
     }
 
+    // P-3: shadow-ban check. The community PriceHistory write below is the
+    // exact thing the photo pipeline gates on trust score / shadow ban. A
+    // shadow-banned user submitting via the fill-up path would otherwise
+    // pollute community price data unfiltered — explicitly skip the
+    // community write for them. The fill-up itself still saves (driver's
+    // own history is theirs to keep regardless of trust state).
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { shadow_banned: true },
+    });
+    const isShadowBanned = user?.shadow_banned === true;
+
     // GPS station match — only when both coordinates were supplied. Either
     // missing means we save the fill-up without a station link (AC8).
     const gpsAvailable = dto.gpsLat !== undefined && dto.gpsLng !== undefined;
@@ -103,11 +116,35 @@ export class FillupService {
       },
     });
 
-    // Side-effects only when station matched. Failures here are logged but
-    // not re-thrown — the FillUp itself is the primary resource and a
-    // failed staleness clear or PriceHistory write shouldn't 500 the user.
+    // P-4: price-plausibility check. The community PriceHistory write
+    // depends on driver-supplied price; without a band check, a typo'd
+    // 1.00 PLN/L value would clear the staleness flag with garbage data
+    // and skew the community map. Reuse the OCR-side `PRICE_BANDS` table
+    // so the two contribution paths apply the same plausibility window.
+    // Out-of-band → save the fill-up, skip the community side-effects.
+    const band = PRICE_BANDS[dto.fuelType];
+    const priceWithinBand =
+      !!band &&
+      dto.pricePerLitrePln >= band.min &&
+      dto.pricePerLitrePln <= band.max;
+
+    // Eligibility gates collapsed: station matched + user not shadow-banned +
+    // price plausible. All three must hold to write the community price.
+    const eligibleForCommunityWrite = !!stationId && !isShadowBanned && priceWithinBand;
+
+    if (stationId && !eligibleForCommunityWrite) {
+      this.logger.log(
+        `FillUp ${fillUp.id} matched station ${stationId} but skipped community write — ` +
+        `${isShadowBanned ? 'user shadow-banned' : ''}` +
+        `${!priceWithinBand ? `${isShadowBanned ? '; ' : ''}price ${dto.pricePerLitrePln} out of band for ${dto.fuelType}` : ''}`,
+      );
+    }
+
+    // Side-effects only when eligible. Failures here are logged but not
+    // re-thrown — the FillUp itself is the primary resource and a failed
+    // staleness clear or PriceHistory write shouldn't 500 the user.
     let communityUpdated = false;
-    if (stationId) {
+    if (eligibleForCommunityWrite) {
       try {
         await this.prisma.priceHistory.create({
           data: {

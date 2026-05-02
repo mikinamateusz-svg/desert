@@ -32,6 +32,8 @@ const validJsonResponse = JSON.stringify({
 });
 
 const mockRecordSpend = jest.fn();
+const mockGetDailySpend = jest.fn();
+const mockGetSpendCap = jest.fn();
 
 // ── Test suite ──────────────────────────────────────────────────────────────
 
@@ -41,12 +43,23 @@ describe('FillupOcrService', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     mockRecordSpend.mockResolvedValue(0);
+    // Default: spend well under cap. Individual tests override for the
+    // cap-reached path.
+    mockGetDailySpend.mockResolvedValue(0);
+    mockGetSpendCap.mockResolvedValue(20);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         FillupOcrService,
         { provide: ConfigService, useValue: { getOrThrow: () => 'sk-ant-test-key' } },
-        { provide: OcrSpendService, useValue: { recordSpend: mockRecordSpend } },
+        {
+          provide: OcrSpendService,
+          useValue: {
+            recordSpend: mockRecordSpend,
+            getDailySpend: mockGetDailySpend,
+            getSpendCap: mockGetSpendCap,
+          },
+        },
       ],
     }).compile();
 
@@ -133,6 +146,70 @@ describe('FillupOcrService', () => {
       ).resolves.toEqual(
         expect.objectContaining({ totalCostPln: 314.5, litres: 47.3 }),
       );
+    });
+
+    it('refuses to call Haiku when daily spend cap is already reached (P-2)', async () => {
+      mockGetDailySpend.mockResolvedValueOnce(20.5); // already over $20 cap
+      mockGetSpendCap.mockResolvedValueOnce(20);
+
+      const result = await service.extractFromPumpMeter(Buffer.from('img'));
+
+      // No Anthropic call → no spend recorded → empty result.
+      expect(mockMessagesCreate).not.toHaveBeenCalled();
+      expect(mockRecordSpend).not.toHaveBeenCalled();
+      expect(result).toEqual({
+        totalCostPln: null,
+        litres: null,
+        pricePerLitrePln: null,
+        fuelTypeSuggestion: null,
+        confidence: 0,
+      });
+    });
+
+    it('refuses to call Haiku at the exact cap boundary (>= comparison)', async () => {
+      mockGetDailySpend.mockResolvedValueOnce(20);
+      mockGetSpendCap.mockResolvedValueOnce(20);
+
+      await service.extractFromPumpMeter(Buffer.from('img'));
+
+      expect(mockMessagesCreate).not.toHaveBeenCalled();
+    });
+
+    it('proceeds fail-open when the spend-cap precheck itself errors (Redis blip)', async () => {
+      mockGetDailySpend.mockRejectedValueOnce(new Error('Redis timeout'));
+      mockMessagesCreate.mockResolvedValueOnce(makeApiResponse(validJsonResponse));
+
+      const result = await service.extractFromPumpMeter(Buffer.from('img'));
+
+      // Don't block the OCR feature on infra outage — call still fires.
+      expect(mockMessagesCreate).toHaveBeenCalled();
+      expect(result.totalCostPln).toBe(314.5);
+    });
+
+    it('skips spend recording when response.usage is missing (P-5 null guard)', async () => {
+      // Simulate an SDK shape drift / streaming variant where usage isn't returned.
+      mockMessagesCreate.mockResolvedValueOnce({
+        content: [{ type: 'text', text: validJsonResponse }],
+        // usage block missing entirely
+      });
+
+      const result = await service.extractFromPumpMeter(Buffer.from('img'));
+
+      expect(mockRecordSpend).not.toHaveBeenCalled();
+      // Result is still parsed and returned — we just don't double-charge
+      // the spend bucket on a malformed usage block.
+      expect(result.totalCostPln).toBe(314.5);
+    });
+
+    it('skips spend recording when usage.input_tokens / output_tokens are zero', async () => {
+      mockMessagesCreate.mockResolvedValueOnce({
+        content: [{ type: 'text', text: validJsonResponse }],
+        usage: { input_tokens: 0, output_tokens: 0 },
+      });
+
+      await service.extractFromPumpMeter(Buffer.from('img'));
+
+      expect(mockRecordSpend).not.toHaveBeenCalled();
     });
   });
 

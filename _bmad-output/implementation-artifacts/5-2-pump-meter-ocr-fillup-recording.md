@@ -1,6 +1,6 @@
 # Story 5.2: Pump Meter OCR & Fill-Up Recording
 
-Status: in-progress
+Status: review
 
 ## Story
 
@@ -29,7 +29,7 @@ And the response is synchronous (within the HTTP request) — no BullMQ queue fo
 **AC4 — Fuel type confirmation:**
 Given OCR has extracted a fuel type suggestion from the pump display
 When the driver sees the confirmation screen
-Then the suggested fuel type is displayed with a one-tap correction option (dropdown: LPG, Diesel, PB 95, PB 98, ON Premium)
+Then the suggested fuel type is displayed with a one-tap correction option — implemented as a chip row with the 5 grades (PB_95, PB_98, ON, ON_PREMIUM, LPG); spec originally said "dropdown" but chip row was substituted because it requires fewer taps and surfaces all options at once
 And they are never blocked — the correction is always available
 
 **AC5 — Odometer nudge:**
@@ -61,7 +61,7 @@ And no community update badge is shown on the confirmation screen
 **AC9 — OCR failure fallback:**
 Given OCR cannot extract all three required values (cost, volume, price per litre)
 When processing completes
-Then the driver is shown a retake prompt — they may tap "Enter manually" as a fallback to type in the three values
+Then the driver is shown the values extracted so far (with retake-hint copy at the top of the form) and a "Retake photo" secondary button as the primary recovery path — they may also tap "Enter manually" or simply correct the values inline if some OCR extraction succeeded. Retake clears OCR-derived fields (photo, cost/volume/price/fuel) but preserves GPS coords so the second attempt doesn't re-roll the location-required gate.
 
 **AC10 — OCR service down:**
 Given the OCR endpoint returns a 5xx error or times out (>10 seconds)
@@ -439,6 +439,67 @@ Mobile complete:
 - **Code review pass owed** — chunks A + B haven't been adversarially reviewed yet. Per `feedback_code_review.md` this should run before final story close-out. Will dispatch on next session unless something urgent surfaces from manual testing first.
 - **Gemini-vs-Haiku decision** — Mateusz is collecting more pump-display photos to benchmark Gemini Flash against Haiku for this OCR endpoint. If Gemini wins, swap is a ~30 line change in `FillupOcrService` (move `messages.create` call to a Gemini-shaped POST + drop the Haiku-rate spend pre-computation since `OcrSpendService.computeCostUsd` is already Gemini-keyed).
 - **Logo benchmark side-task** — `_bmad-output/analysis/run-logo-benchmark.mjs` + `analyse-logo-benchmark.mjs` shipped to support an unrelated Gemini-vs-Haiku decision for Story 3.6 (logo recognition). Not part of 5.2 scope; tracked separately.
+
+## Code Review (2026-05-01)
+
+Reviewed by Blind Hunter + Edge Case Hunter + Acceptance Auditor on combined chunk A + B diff (3,946 lines across 17 files). Acceptance Auditor: **10/11 ACs satisfied at spec-intent level; AC9 had a real gap**.
+
+### Patches applied (8)
+
+**Backend (5):**
+- **P-2** [`fillup-ocr.service.ts:103-129`] **Spend-cap precheck added** before the Anthropic call. Per memory `project_ocr_spend_cap.md` the daily cap is fail-closed; previously the OCR endpoint called Haiku unconditionally and only recorded spend after-the-fact (a burst could blow past the cap). Now `getDailySpend() + getSpendCap()` are read first; if `daily >= cap`, return empty result + log without firing the paid call. Fail-open on Redis blip so infra outage doesn't block the entire OCR feature.
+- **P-3** [`fillup.service.ts:78-84, 130-148`] **Shadow-banned user check** before the community PriceHistory write. The community write previously bypassed the trust score / shadow-ban gate that price-board submissions go through — a shadow-banned user could pollute community prices unfiltered. Now `prisma.user.findUnique({ select: shadow_banned })` is consulted; the FillUp itself still saves (driver's own history), but the PriceHistory + staleness clear are skipped.
+- **P-4** [`fillup.service.ts:131-138, ocr.service.ts import`] **Price-plausibility band check** before the community write. Reuses `PRICE_BANDS` from `OcrService` so both contribution paths apply the same plausibility window (PB_95/98/ON/ON_PREMIUM 4.0–12.0 PLN/L, LPG 2.0–6.0). Out-of-band prices save the FillUp but skip the community side-effects + log the reason.
+- **P-5** [`fillup-ocr.service.ts:158-178`] **Null guards on `response.usage`**. Direct `.input_tokens` deref previously masqueraded as a Haiku failure (TypeError swallowed by outer catch — wasted spend, no result). Now `response.usage?.input_tokens ?? 0` and skip the spend record if both token counts are missing or zero. Result is still parsed and returned regardless.
+- **P-6** [`fillup.controller.ts:67`] **Multipart `files: 1` cap**. Blocks the DoS amplifier where a malicious client appends multiple file parts (each buffered up to 5 MB into memory before being discarded). Drain-loop kept as belt-and-suspenders.
+
+**Mobile (3):**
+- **P-1** [`fillup-capture.tsx:617-636`, locale files × 3] **Retake button on the manual step**. Resolves AC9 gap: previously OCR failure left the user on `manual` with retake-hint copy but no retake action, only the X close button (which exited the entire flow). New secondary button clears OCR-derived fields (photo, cost/volume/price/fuel) and returns to the camera step; preserves GPS coords so the next attempt doesn't re-roll the location gate. Added `fillup.retakeButton` i18n key in en/pl/uk that was specced but missing in chunk B.
+- **P-7** [`fillup-capture.tsx:103-114, 198-210, 256, 280, 290`] **Unmount guard via `cancelledRef`**. The 10s OCR call can resolve after the user has backed out of the screen — without this, `applyOcrResult` would call `setDraft`/`setStep` on an unmounted component (React warning + leaked photo file). Mirrors the pattern from `log.tsx`.
+- **P-8** [`fillup-capture.tsx:115-119, 250-260, 296-299`] **Synchronous double-tap guard via `submittingRef`**. State-based check `step === 'saving'` doesn't catch back-to-back taps because React state updates are batched — both taps see the same closure with stale step. The ref flips synchronously, so the second tap bails immediately. Released in a `finally` block so save failures don't lock the user out of retry.
+
+### Tests added (9)
+
+- `fillup.service.spec.ts` — 4 new: shadow-banned user skips community write but FillUp persists; price below band skips community write; price above band skips community write; LPG band edges work correctly with fuel-type-aware lookup.
+- `fillup-ocr.service.spec.ts` — 5 new: refuses Haiku call at cap reached; refuses at exact cap boundary (≥ comparison); fail-open when Redis precheck blips; skip spend recording on missing `usage` block; skip spend recording on zero token counts.
+
+Total: 953/953 api (was 944, +9) + 22/22 mobile pass. Tsc clean across types/api/mobile.
+
+### Deferred (10)
+
+- **D-1** Photo file leak — both intermediate full-quality and compressed JPEGs accumulate in cache dir on every capture. Cross-cutting (same issue in `capture.tsx`).
+- **D-2** Mobile API client cross-cutting gaps — no 401 token refresh, no fetch timeout, no JSON-parse guard for non-JSON 5xx bodies, `localhost` fallback for missing `EXPO_PUBLIC_API_URL`. Same pattern as 5.1 D-5; address holistically.
+- **D-3** Migration `updated_at` no `DEFAULT CURRENT_TIMESTAMP` — cross-cutting; Story 0.1 territory.
+- **D-4** Cross-field DTO validation `totalCostPln ≈ litres × pricePerLitrePln` — defer; OCR drift is rare and the price-band check now catches the worst cases.
+- **D-5** `filledAt` unbounded (accepts year 2095 or 1970) — low-risk; rate-limited so abuse is bounded. Add `@MaxDate`/`@MinDate` in a future polish pass.
+- **D-6** Odometer monotonic check across fillups — depends on Story 5.6 design; defer.
+- **D-7** Composite `(user_id, vehicle_id, filled_at DESC)` index for filtered queries — perf at scale, not blocking MVP.
+- **D-8** Markdown-fence stripping regex doesn't handle leading prose — rare with Haiku at temperature 0.
+- **D-9** AC5 Skip CTA visibility — uses `tokens.neutral.n400`. Spec wanted "clearly visible". Discoverable but visually subordinate; cosmetic.
+- **D-10** Odometer NumericField silently rounds typo'd decimal — acceptable for v1.
+
+### Bad spec amendments applied
+
+- **B-1** AC4 wording amended in this file: "dropdown" → "chip row" reflecting the actual implementation. Functionally equivalent; chip row requires fewer taps and surfaces all options at once.
+- **B-2** AC9 wording amended in this file: makes Retake explicit as the primary recovery path with manual entry as the fallback (matches the implementation after P-1).
+
+### Rejected as noise (~10)
+
+- `list[0]!` non-null after length check (defensive)
+- DTO duplicated across layers (intentional per-layer validation)
+- `router.replace` on celebration (works as designed)
+- "Always 200 contract overstated" (multipart errors legitimately ≠ OCR errors)
+- `Math.round` on integer NumericField (defensive)
+- `list.length === 1` vs `> 1` same body (cosmetic; both work)
+- Anthropic SDK keepAlive (premature optimisation)
+- `media_type` hardcoded image/jpeg (controller forces JPEG via mobile compress; PNG path unused)
+- `res.json()` always called (handled via D-2)
+- Multi-content-block check on Haiku response (premature; current model returns single block)
+
+### Change Log
+
+- 2026-05-01 — Closed Story 5.2: chunks A (backend) + B (mobile UI) shipped. 9 new tests for code-review patches. Status: review.
+- 2026-05-01 — Code review: 8 patches applied + 10 deferred + 10 rejected. 953/953 api + 22/22 mobile pass post-patches. AC9 closed by P-1 (Retake button + i18n key). Spec amended for AC4 (chip row) and AC9 (retake-as-primary).
 
 ### File List
 

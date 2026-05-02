@@ -310,6 +310,7 @@ export default {
     saveButton: 'Save fill-up',
     retakePrompt:
       "Could not read display — please check the values below or enter them manually.",
+    retakeButton: 'Retake photo',
     enterManually: 'Enter manually',
     odometerNudgeTitle: 'Track fuel consumption?',
     odometerNudgeSubtitle:

@@ -96,13 +96,30 @@ function FillupCaptureContent() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
   const [cameraKey, setCameraKey] = useState(0);
+  // Cancellation latch flipped by the unmount cleanup. The 10s OCR call can
+  // resolve after the user has already backed out of the screen — without
+  // this, applyOcrResult would call setDraft / setStep on an unmounted
+  // component (React warning + leaked photo file).
+  const cancelledRef = useRef(false);
+  // Synchronous double-tap guard for handleSave. Reading `step === 'saving'`
+  // doesn't catch back-to-back taps because React state updates are batched —
+  // both taps see the closure's stale step value before the next render.
+  // A ref flips synchronously, so the second tap bails immediately.
+  const submittingRef = useRef(false);
 
   // Force a fresh camera mount on focus — same pattern as capture.tsx, mitigates
   // the black-preview Android session loss after backgrounding.
   useFocusEffect(
     useCallback(() => {
+      cancelledRef.current = false;
       setCameraReady(false);
       setCameraKey((k) => k + 1);
+      return () => {
+        // Latch is flipped on blur so any in-flight OCR / save callback that
+        // fires after the user has navigated away no-ops instead of writing
+        // to unmounted state.
+        cancelledRef.current = true;
+      };
     }, []),
   );
 
@@ -178,6 +195,7 @@ function FillupCaptureContent() {
       const photoUri = compressed.uri;
       const gpsLat = location?.lat;
       const gpsLng = location?.lng;
+      if (cancelledRef.current) return;
       setDraft({ photoUri, gpsLat, gpsLng });
       setStep('processing');
 
@@ -186,10 +204,12 @@ function FillupCaptureContent() {
       // need to handle timeouts client-side beyond the network catch.
       try {
         const ocr = await apiRunFillupOcr(accessToken, photoUri);
+        if (cancelledRef.current) return;
         applyOcrResult(ocr, { photoUri, gpsLat, gpsLng });
       } catch (e) {
         // eslint-disable-next-line no-console
         console.warn('apiRunFillupOcr failed', e);
+        if (cancelledRef.current) return;
         // Network error / 4xx — go straight to manual entry per AC10.
         setDraft((prev) => ({ ...prev, photoUri, gpsLat, gpsLng }));
         setStep('manual');
@@ -234,8 +254,17 @@ function FillupCaptureContent() {
 
   const handleSave = useCallback(async () => {
     if (!accessToken) return;
+    // Double-tap guard: a second tap that lands before setStep('saving')
+    // paints would otherwise fire two POSTs → two FillUps + two community
+    // PriceHistory writes for the same physical fill-up. Use a ref so the
+    // guard works under React's batched state update model — checking
+    // `step === 'saving'` doesn't catch synchronous double-taps because
+    // both taps share the same closure with stale step.
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     if (!selectedVehicleId) {
       setErrorMessage(t('fillup.errorSaving'));
+      submittingRef.current = false;
       return;
     }
     if (
@@ -245,6 +274,7 @@ function FillupCaptureContent() {
       !draft.fuelType
     ) {
       setErrorMessage(t('fillup.errorSaving'));
+      submittingRef.current = false;
       return;
     }
 
@@ -261,6 +291,7 @@ function FillupCaptureContent() {
         gpsLng: draft.gpsLng,
         odometerKm: draft.odometerKm,
       });
+      if (cancelledRef.current) return;
       setCelebration({
         litres: draft.litres,
         totalCostPln: draft.totalCostPln,
@@ -273,10 +304,15 @@ function FillupCaptureContent() {
     } catch (e) {
       // eslint-disable-next-line no-console
       console.warn('apiCreateFillup failed', e);
+      if (cancelledRef.current) return;
       setErrorMessage(t('fillup.errorSaving'));
       // Bounce back to manual entry so the user can retry without losing
       // the values they just confirmed.
       setStep('manual');
+    } finally {
+      // Always release the guard — without this, a save failure leaves the
+      // ref true and the user can never retry.
+      submittingRef.current = false;
     }
   }, [accessToken, selectedVehicleId, draft, t]);
 
@@ -497,6 +533,33 @@ function FillupCaptureContent() {
             <Text style={styles.secondaryButtonText}>{t('fillup.enterManually')}</Text>
           </TouchableOpacity>
         )}
+
+        {/* AC9: when OCR fails the user lands on 'manual' with retake-hint
+            copy at the top of the form. Retake should be the primary path
+            back ("Enter manually" is the fallback per spec) — without this
+            button the only way out is the X close which exits the entire
+            flow and discards the photo. Retake clears OCR-derived fields
+            so the next attempt starts clean. */}
+        {step === 'manual' && (
+          <TouchableOpacity
+            style={styles.secondaryButton}
+            onPress={() => {
+              setDraft({
+                photoUri: undefined,
+                gpsLat: draft.gpsLat,
+                gpsLng: draft.gpsLng,
+                // Clear OCR-derived values + fuelType so the retake start
+                // from a clean slate. Preserve gps so the camera step
+                // doesn't re-roll a coord-denied gate flicker.
+              });
+              setErrorMessage(null);
+              setStep('camera');
+            }}
+            accessibilityRole="button"
+          >
+            <Text style={styles.secondaryButtonText}>{t('fillup.retakeButton')}</Text>
+          </TouchableOpacity>
+        )}
       </SafeAreaForm>
     );
   }
@@ -539,6 +602,8 @@ function FillupCaptureContent() {
         <TouchableOpacity
           style={styles.skipButton}
           onPress={() => {
+            // No explicit guard needed — handleSave's `submittingRef` catches
+            // the second tap synchronously regardless of which CTA fired it.
             setDraft({ ...draft, odometerKm: undefined });
             void handleSave();
           }}

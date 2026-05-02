@@ -311,6 +311,7 @@ export default {
     saveButton: 'Zapisz tankowanie',
     retakePrompt:
       'Nie udało się odczytać wyświetlacza — sprawdź wartości poniżej lub wpisz ręcznie.',
+    retakeButton: 'Zrób zdjęcie ponownie',
     enterManually: 'Wpisz ręcznie',
     odometerNudgeTitle: 'Śledzić zużycie paliwa?',
     odometerNudgeSubtitle:

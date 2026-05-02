@@ -848,11 +848,14 @@ epics:
       - id: 5.2
         title: "Pump Meter OCR & Fill-Up Recording"
         file: 5-2-pump-meter-ocr-fillup-recording.md
-        status: in-progress
+        status: review
         ready_date: 2026-04-07
         dev_started: 2026-05-01
         dev_completed: 2026-05-01
-        note: "Chunk A (backend) + Chunk B (mobile UI) both shipped 2026-05-01. Backend: FillUp model + migration, FillupOcrService (Haiku 4.5, 10s timeout, Haiku-rated spend), FillupService, FillupController. Mobile: 6-step wizard (camera → OCR → confirm/manual → odometer → saving → celebration) at apps/mobile/app/(app)/fillup-capture.tsx, fillups API client, Phase-2-gated 'Log fill-up' FAB on map, fillup i18n in en/pl/uk. Outer-component flags.phase2 gate on the screen + redirect when off; FAB hidden behind same flag. 944/944 api + 22/22 mobile pass; tsc clean. Status remains in-progress until code review runs (chunks A+B together) — feedback_code_review.md rule. Pre-launch: privacy policy + terms need fill-up data section before public launch."
+        review_date: 2026-05-01
+        review_findings: "8 patches applied, 10 deferred, ~10 rejected. Backend (5): P-2 spend-cap precheck before Anthropic call (kill switch was bypass-able by burst); P-3 shadow-banned user check skips community PriceHistory write; P-4 price-plausibility band check (reuses OcrService PRICE_BANDS) skips community write on garbage prices; P-5 null guards on response.usage; P-6 multipart files:1 cap (DoS amplifier). Mobile (3): P-1 Retake button on manual step + retakeButton i18n key in en/pl/uk (closes AC9 gap — was specced but missing); P-7 cancelledRef unmount guard around OCR call; P-8 submittingRef synchronous double-tap guard (state-based check didn't work under React batching). Spec amendments: AC4 'dropdown' → 'chip row' (substitution noted), AC9 wording made retake-as-primary explicit."
+        patches_applied: "2026-05-01 — all 8 patches applied; +9 new tests (4 service + 5 OCR). 953/953 api (was 944) + 22/22 mobile pass; tsc clean across types/api/mobile."
+        note: "Chunk A (backend) + Chunk B (mobile UI) both shipped 2026-05-01. Backend: FillUp model + migration, FillupOcrService (Haiku 4.5, 10s timeout, Haiku-rated spend, spend-cap precheck), FillupService (vehicle ownership, GPS match, RegionalBenchmark snapshot, shadow-ban + price-band guarded community write, atomic vehicle lock), FillupController (3 endpoints, multipart files:1 cap). Mobile: 6-step wizard with Retake/manual/odometer/celebration steps, Phase-2-gated 'Log fill-up' FAB on map, fillup i18n in en/pl/uk. Outer-component flags.phase2 gate. Pre-launch: privacy policy + terms need fill-up data section before public launch."
       - id: 5.3
         title: "Savings vs. Area Average Calculation"
         file: 5-3-savings-vs-area-average-calculation.md

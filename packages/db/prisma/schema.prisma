@@ -71,6 +71,7 @@ model User {
   anomalyAlerts          AnomalyAlert[]
   vehicles               Vehicle[]
   fillUps                FillUp[]
+  odometerReadings       OdometerReading[]
 }
 
 model Station {
@@ -292,33 +293,34 @@ model PriceHistory {
 }
 
 model Vehicle {
-  id              String   @id @default(uuid())
-  user_id         String
-  make            String
-  model           String
-  year            Int
+  id               String            @id @default(uuid())
+  user_id          String
+  make             String
+  model            String
+  year             Int
   // Free-text label as commonly written in Polish car listings (e.g. "1.6 TDI 115 KM").
   // May come from the curated catalog or from the user's free-text fallback path.
-  engine_variant  String?
-  displacement_cc Int?
-  power_kw        Int?
+  engine_variant   String?
+  displacement_cc  Int?
+  power_kw         Int?
   // Stored as string (not enum) to avoid coupling: catalog may grow new fuel types
   // (CNG, hydrogen, etc.) faster than schema migrations. DTO @IsIn validator
   // restricts the accepted set at the API boundary.
-  fuel_type       String
-  nickname        String?
+  fuel_type        String
+  nickname         String?
   // Set true by Story 5.2 on first FillUp. While locked, PATCH rejects make/model/year
   // changes and DELETE is blocked — preserves history consistency.
-  is_locked       Boolean  @default(false)
+  is_locked        Boolean           @default(false)
   // True if any of make/model/year/engine came via free-text fallback (catalog miss).
   // Analytics signal for promoting popular missing entries into the curated catalog later.
-  user_entered    Boolean  @default(false)
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
+  user_entered     Boolean           @default(false)
+  created_at       DateTime          @default(now())
+  updated_at       DateTime          @updatedAt
   // Restrict matches the migration; account-deletion (Story 1.8) must drop
   // vehicles in the same transaction or it will hit a FK error.
-  user            User     @relation(fields: [user_id], references: [id], onDelete: Restrict)
-  fillUps         FillUp[]
+  user             User              @relation(fields: [user_id], references: [id], onDelete: Restrict)
+  fillUps          FillUp[]
+  odometerReadings OdometerReading[]
 
   @@index([user_id])
 }
@@ -330,40 +332,83 @@ model Vehicle {
 /// pipeline / trust score / logo match. GPS coordinates themselves are never
 /// stored on the FillUp (privacy — same pattern as Submission).
 model FillUp {
-  id                  String   @id @default(uuid())
-  user_id             String
-  vehicle_id          String
-  station_id          String? // null when GPS match failed
-  fuel_type           String // 'PB_95' | 'PB_98' | 'ON' | 'ON_PREMIUM' | 'LPG'
-  litres              Float
-  total_cost_pln      Float
-  price_per_litre_pln Float
+  id                      String           @id @default(uuid())
+  user_id                 String
+  vehicle_id              String
+  station_id              String? // null when GPS match failed
+  fuel_type               String // 'PB_95' | 'PB_98' | 'ON' | 'ON_PREMIUM' | 'LPG'
+  litres                  Float
+  total_cost_pln          Float
+  price_per_litre_pln     Float
   /// Median price for this voivodeship × fuel_type at the time of the
   /// fill-up, captured from RegionalBenchmark (Story 5.0). Used to compute
   /// per-driver savings vs. area average (Story 5.3). Null when no
   /// benchmark exists yet (cold-start regions, or when station match failed
   /// so we don't know the voivodeship).
-  area_avg_at_fillup  Float?
-  /// Manual numeric entry in this story; OCR-based capture added in 5.4.
-  odometer_km         Int?
+  area_avg_at_fillup      Float?
+  /// Manual numeric entry in Story 5.2; OCR-based capture added in 5.4
+  /// (and the OdometerReading.km value also writes back here when an
+  /// odometer reading is auto-linked to this fill-up).
+  odometer_km             Int?
   /// Voivodeship resolved at fill-up time (Story 5.3). Two paths:
   ///   1. Station matched → station.voivodeship copied here
   ///   2. No station but GPS available → reverse-geocoded via Nominatim
   /// Used to look up the regional benchmark when no station match exists,
   /// so savings vs. area average can still be computed for unmapped pumps.
   /// Snapshot at fill-up time — never updated afterwards.
-  voivodeship         String?
-  filled_at           DateTime @default(now())
-  created_at          DateTime @default(now())
-  updated_at          DateTime @updatedAt
-  user                User     @relation(fields: [user_id], references: [id], onDelete: Restrict)
-  vehicle             Vehicle  @relation(fields: [vehicle_id], references: [id], onDelete: Restrict)
+  voivodeship             String?
+  /// Story 5.4: l/100km consumption rate, populated when the next
+  /// OdometerReading triggers calculation. Stored on the most recent
+  /// FillUp in the segment between two odometer readings. Null when:
+  ///   - Baseline (no previous odometer reading exists for the vehicle)
+  ///   - No odometer reading has been saved yet after this fill-up
+  ///   - No fill-ups in the segment between two readings
+  consumption_l_per_100km Float?
+  filled_at               DateTime         @default(now())
+  created_at              DateTime         @default(now())
+  updated_at              DateTime         @updatedAt
+  user                    User             @relation(fields: [user_id], references: [id], onDelete: Restrict)
+  vehicle                 Vehicle          @relation(fields: [vehicle_id], references: [id], onDelete: Restrict)
   /// Station deletion shouldn't orphan history rows — keep the fill-up,
   /// drop the link.
-  station             Station? @relation(fields: [station_id], references: [id], onDelete: SetNull)
+  station                 Station?         @relation(fields: [station_id], references: [id], onDelete: SetNull)
+  /// Back-relation to the OdometerReading that was captured at this
+  /// fill-up (Story 5.4 auto-link, AC7). At most one reading per fill-up
+  /// — enforced by OdometerReading.fillup_id @unique.
+  odometerReading         OdometerReading?
 
   @@index([user_id, filled_at(sort: Desc)])
   @@index([vehicle_id, filled_at(sort: Desc)])
+}
+
+/// Story 5.4: per-vehicle odometer snapshot. Created from dashboard-OCR or
+/// manual numeric entry, optionally auto-linked to a FillUp recorded within
+/// the same 30-minute window. Pairs of consecutive readings drive the
+/// l/100km consumption calculation written back to the most recent FillUp
+/// in the segment between them. First reading per vehicle is a baseline —
+/// no consumption value computed.
+model OdometerReading {
+  id          String   @id @default(uuid())
+  user_id     String
+  vehicle_id  String
+  /// At-most-one OdometerReading per FillUp (enforced by @unique). Either
+  /// the driver explicitly captured the reading inside the fill-up
+  /// celebration flow, or the auto-link logic matched a fill-up within
+  /// 30 minutes of this reading's recorded_at.
+  fillup_id   String?  @unique
+  km          Int
+  recorded_at DateTime @default(now())
+  created_at  DateTime @default(now())
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Restrict)
+  vehicle     Vehicle  @relation(fields: [vehicle_id], references: [id], onDelete: Restrict)
+  /// FillUp deletion shouldn't orphan the odometer reading — drop the
+  /// link, keep the km history. Mirrors FillUp.station's onDelete: SetNull.
+  fillup      FillUp?  @relation(fields: [fillup_id], references: [id], onDelete: SetNull)
+
+  // Index supports `findFirst({ where: vehicle_id, orderBy: recorded_at desc })`
+  // — the canonical "previous reading" query for the consumption calc.
+  @@index([vehicle_id, recorded_at(sort: Desc)])
+  @@index([user_id])
 }
 
 model RegionalBenchmark {

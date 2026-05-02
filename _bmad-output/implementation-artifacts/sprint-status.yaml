@@ -870,8 +870,9 @@ epics:
       - id: 5.4
         title: "Odometer OCR & Consumption Tracking"
         file: 5-4-odometer-ocr-consumption-tracking.md
-        status: ready-for-dev
+        status: in-progress
         ready_date: 2026-04-07
+        dev_started: 2026-05-02
       - id: 5.5
         title: "Personal History & Summaries"
         file: 5-5-personal-history-summaries.md

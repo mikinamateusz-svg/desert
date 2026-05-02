@@ -13,6 +13,8 @@ const mockStationFindUnique = jest.fn();
 const mockFillupCreate = jest.fn();
 const mockFillupFindMany = jest.fn();
 const mockFillupCount = jest.fn();
+const mockFillupAggregate = jest.fn();
+const mockQueryRaw = jest.fn();
 const mockPriceHistoryCreate = jest.fn();
 const mockStalenessDeleteMany = jest.fn();
 
@@ -20,9 +22,15 @@ const mockPrisma = {
   vehicle: { findUnique: mockVehicleFindUnique, updateMany: mockVehicleUpdateMany },
   user: { findUnique: mockUserFindUnique },
   station: { findUnique: mockStationFindUnique },
-  fillUp: { create: mockFillupCreate, findMany: mockFillupFindMany, count: mockFillupCount },
+  fillUp: {
+    create: mockFillupCreate,
+    findMany: mockFillupFindMany,
+    count: mockFillupCount,
+    aggregate: mockFillupAggregate,
+  },
   priceHistory: { create: mockPriceHistoryCreate },
   stationFuelStaleness: { deleteMany: mockStalenessDeleteMany },
+  $queryRaw: mockQueryRaw,
 };
 
 const mockFindNearestStation = jest.fn();
@@ -76,6 +84,15 @@ describe('FillupService', () => {
     // station matched).
     mockLookupByGps.mockResolvedValue(null);
     mockGetLatestForVoivodeship.mockResolvedValue(null);
+    // listFillups defaults — empty aggregate + zero raw savings so the
+    // existing 3 tests that don't override these still get a clean
+    // summary block back (instead of undefined-traversal errors).
+    mockFillupAggregate.mockResolvedValue({
+      _sum: { total_cost_pln: 0, litres: 0 },
+      _avg: { price_per_litre_pln: null, consumption_l_per_100km: null },
+      _count: { _all: 0 },
+    });
+    mockQueryRaw.mockResolvedValue([{ total_savings: 0, counted: BigInt(0) }]);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -443,29 +460,50 @@ describe('FillupService', () => {
     });
   });
 
-  // ── listFillups ─────────────────────────────────────────────────────────
+  // ── listFillups (Story 5.5: period + summary + vehicleId='all') ─────────
 
   describe('listFillups', () => {
-    it('paginates newest-first scoped to the user', async () => {
+    it('paginates newest-first scoped to the user (no vehicle filter)', async () => {
       mockFillupFindMany.mockResolvedValueOnce([{ id: 'fu-2' }, { id: 'fu-1' }]);
       mockFillupCount.mockResolvedValueOnce(2);
 
-      const result = await service.listFillups(USER_ID, undefined, 1, 20);
+      const result = await service.listFillups(USER_ID, undefined, 'all', 1, 20);
 
-      expect(mockFillupFindMany).toHaveBeenCalledWith({
-        where: { user_id: USER_ID },
-        orderBy: { filled_at: 'desc' },
-        skip: 0,
-        take: 20,
-      });
-      expect(result).toEqual({ data: [{ id: 'fu-2' }, { id: 'fu-1' }], total: 2, page: 1, limit: 20 });
+      expect(mockFillupFindMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { user_id: USER_ID },
+          orderBy: { filled_at: 'desc' },
+          skip: 0,
+          take: 20,
+          // Vehicle + station joins are needed by the mobile FillUpCard.
+          include: {
+            vehicle: { select: { id: true, nickname: true, make: true, model: true } },
+            station: { select: { id: true, name: true } },
+          },
+        }),
+      );
+      expect(result.data).toEqual([{ id: 'fu-2' }, { id: 'fu-1' }]);
+      expect(result.total).toBe(2);
     });
 
-    it('filters by vehicleId when provided (still scoped to user)', async () => {
+    it("treats vehicleId='all' as no vehicle filter (AC4)", async () => {
       mockFillupFindMany.mockResolvedValueOnce([]);
       mockFillupCount.mockResolvedValueOnce(0);
 
-      await service.listFillups(USER_ID, VEHICLE_ID, 1, 20);
+      await service.listFillups(USER_ID, 'all', 'all', 1, 20);
+
+      expect(mockFillupFindMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { user_id: USER_ID }, // no vehicle_id predicate
+        }),
+      );
+    });
+
+    it('filters by vehicleId when a UUID is provided (still scoped to user)', async () => {
+      mockFillupFindMany.mockResolvedValueOnce([]);
+      mockFillupCount.mockResolvedValueOnce(0);
+
+      await service.listFillups(USER_ID, VEHICLE_ID, 'all', 1, 20);
 
       expect(mockFillupFindMany).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -474,14 +512,138 @@ describe('FillupService', () => {
       );
     });
 
+    it('applies a filled_at >= cutoff predicate for period=30d', async () => {
+      mockFillupFindMany.mockResolvedValueOnce([]);
+      mockFillupCount.mockResolvedValueOnce(0);
+
+      const before = Date.now();
+      await service.listFillups(USER_ID, undefined, '30d', 1, 20);
+      const after = Date.now();
+
+      const findCall = mockFillupFindMany.mock.calls[0][0] as {
+        where: { filled_at: { gte: Date } };
+      };
+      const cutoff = findCall.where.filled_at.gte.getTime();
+      // Expect the cutoff to land within [before-30d, after-30d].
+      expect(cutoff).toBeGreaterThanOrEqual(before - 30 * 24 * 60 * 60 * 1000 - 50);
+      expect(cutoff).toBeLessThanOrEqual(after - 30 * 24 * 60 * 60 * 1000 + 50);
+    });
+
+    it("omits the date predicate entirely for period='all'", async () => {
+      mockFillupFindMany.mockResolvedValueOnce([]);
+      mockFillupCount.mockResolvedValueOnce(0);
+
+      await service.listFillups(USER_ID, undefined, 'all', 1, 20);
+
+      const findCall = mockFillupFindMany.mock.calls[0][0] as {
+        where: Record<string, unknown>;
+      };
+      expect(findCall.where).toEqual({ user_id: USER_ID });
+    });
+
     it('clamps page below 1 and limit above 100', async () => {
       mockFillupFindMany.mockResolvedValueOnce([]);
       mockFillupCount.mockResolvedValueOnce(0);
 
-      await service.listFillups(USER_ID, undefined, -3, 9999);
+      await service.listFillups(USER_ID, undefined, 'all', -3, 9999);
 
       expect(mockFillupFindMany).toHaveBeenCalledWith(
         expect.objectContaining({ skip: 0, take: 100 }),
+      );
+    });
+
+    // ── Summary aggregation (AC3 / AC6) ─────────────────────────────────
+
+    it('returns a populated summary when fill-ups exist in the period', async () => {
+      mockFillupFindMany.mockResolvedValueOnce([{ id: 'fu-1' }]);
+      mockFillupCount.mockResolvedValueOnce(3);
+      mockFillupAggregate.mockResolvedValueOnce({
+        _sum: { total_cost_pln: 942.5, litres: 140.3 },
+        _avg: { price_per_litre_pln: 6.7184, consumption_l_per_100km: 7.234 },
+        _count: { _all: 3 },
+      });
+      mockQueryRaw.mockResolvedValueOnce([{ total_savings: 12.34567, counted: BigInt(2) }]);
+
+      const result = await service.listFillups(USER_ID, undefined, '3m', 1, 20);
+
+      expect(result.summary).toEqual({
+        totalSpendPln: 942.5,
+        totalLitres: 140.3,
+        avgPricePerLitrePln: 6.718, // 3dp rounding
+        totalSavingsPln: 12.35,     // 2dp grosz rounding
+        avgConsumptionL100km: 7.2,  // 1dp rounding
+        fillupCount: 3,
+      });
+    });
+
+    it('returns null totalSavingsPln when no fill-ups have area_avg (AC2 distinction)', async () => {
+      mockFillupFindMany.mockResolvedValueOnce([{ id: 'fu-1' }]);
+      mockFillupCount.mockResolvedValueOnce(1);
+      mockFillupAggregate.mockResolvedValueOnce({
+        _sum: { total_cost_pln: 100, litres: 15 },
+        _avg: { price_per_litre_pln: 6.66, consumption_l_per_100km: null },
+        _count: { _all: 1 },
+      });
+      mockQueryRaw.mockResolvedValueOnce([{ total_savings: 0, counted: BigInt(0) }]);
+
+      const result = await service.listFillups(USER_ID, undefined, '3m', 1, 20);
+
+      // counted=0 → null, NOT 0. Mobile uses null to hide the card entirely
+      // ("no comparable area data") rather than render "0 PLN saved".
+      expect(result.summary.totalSavingsPln).toBeNull();
+    });
+
+    it('returns null avgConsumptionL100km when no fill-ups have a consumption value (AC6)', async () => {
+      mockFillupFindMany.mockResolvedValueOnce([{ id: 'fu-1' }]);
+      mockFillupCount.mockResolvedValueOnce(1);
+      mockFillupAggregate.mockResolvedValueOnce({
+        _sum: { total_cost_pln: 100, litres: 15 },
+        _avg: { price_per_litre_pln: 6.66, consumption_l_per_100km: null },
+        _count: { _all: 1 },
+      });
+
+      const result = await service.listFillups(USER_ID, undefined, '3m', 1, 20);
+
+      expect(result.summary.avgConsumptionL100km).toBeNull();
+    });
+
+    it('returns zeroed summary when no fill-ups exist in the period (empty state)', async () => {
+      // Defaults from beforeEach already cover this — empty aggregate +
+      // zero counted savings → summary with 0 spend / 0 litres / nulls
+      // for averages + null savings / 0 fill-up count.
+      mockFillupFindMany.mockResolvedValueOnce([]);
+      mockFillupCount.mockResolvedValueOnce(0);
+
+      const result = await service.listFillups(USER_ID, undefined, '30d', 1, 20);
+
+      expect(result.summary).toEqual({
+        totalSpendPln: 0,
+        totalLitres: 0,
+        avgPricePerLitrePln: null,
+        totalSavingsPln: null,
+        avgConsumptionL100km: null,
+        fillupCount: 0,
+      });
+    });
+
+    // P13: the $queryRaw branch for savings is structural — built up from
+    // Prisma.sql fragments based on whether scopedVehicleId / startDate
+    // are set. Easy to invert a condition by accident. Asserting that
+    // both filters reach the raw query when both are provided guards
+    // that path.
+    it('passes both vehicle scope and period cutoff to the savings raw query', async () => {
+      mockFillupFindMany.mockResolvedValueOnce([]);
+      mockFillupCount.mockResolvedValueOnce(0);
+
+      await service.listFillups(USER_ID, VEHICLE_ID, '30d', 1, 20);
+
+      expect(mockQueryRaw).toHaveBeenCalledTimes(1);
+      // Prisma.sql produces a tagged template object — values are exposed
+      // on the first arg as `.values`. Assert both the user, the vehicle,
+      // and a Date cutoff are present in the parameter set.
+      const [sqlArg] = mockQueryRaw.mock.calls[0] as [{ values: unknown[] }];
+      expect(sqlArg.values).toEqual(
+        expect.arrayContaining([USER_ID, VEHICLE_ID, expect.any(Date)]),
       );
     });
   });

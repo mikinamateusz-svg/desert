@@ -21,9 +21,43 @@ export interface FillUp {
   total_cost_pln: number;
   price_per_litre_pln: number;
   area_avg_at_fillup: number | null;
+  /** Story 5.4: l/100km set when an odometer reading closes the segment. */
+  consumption_l_per_100km: number | null;
   odometer_km: number | null;
+  voivodeship: string | null;
   filled_at: string;
   created_at: string;
+}
+
+/**
+ * History list payload (Story 5.5). Joined vehicle + station are returned
+ * inline so the FillUpCard can render labels without a per-row fetch.
+ * Vehicle is always present (every fill-up has a vehicle); station is
+ * null when GPS match failed at fill-up time OR when the station was
+ * deleted afterwards (FK SetNull).
+ */
+export interface FillupListItem extends FillUp {
+  vehicle: {
+    id: string;
+    nickname: string | null;
+    make: string;
+    model: string;
+  };
+  station: { id: string; name: string } | null;
+}
+
+export type FillupPeriod = '30d' | '3m' | '12m' | 'all';
+
+export interface FillupSummary {
+  totalSpendPln: number;
+  totalLitres: number;
+  /** Null when no fill-ups in period — UI hides the card. */
+  avgPricePerLitrePln: number | null;
+  /** Null when no fill-ups in period have area_avg_at_fillup. */
+  totalSavingsPln: number | null;
+  /** Null when no fill-ups in period have a consumption value. */
+  avgConsumptionL100km: number | null;
+  fillupCount: number;
 }
 
 export interface CreateFillupPayload {
@@ -52,10 +86,11 @@ export interface CreateFillupResponse {
 }
 
 export interface ListFillupsResponse {
-  data: FillUp[];
+  data: FillupListItem[];
   total: number;
   page: number;
   limit: number;
+  summary: FillupSummary;
 }
 
 class ApiError extends Error {
@@ -137,14 +172,23 @@ export async function apiCreateFillup(
   });
 }
 
+export interface ListFillupsParams {
+  /** Vehicle UUID, or 'all' / undefined for cross-vehicle history. */
+  vehicleId?: string;
+  /** Defaults server-side to '3m' if omitted — match if you change the UI default. */
+  period?: FillupPeriod;
+  page?: number;
+  limit?: number;
+}
+
 export async function apiListFillups(
   accessToken: string,
-  vehicleId?: string,
-  page = 1,
-  limit = 20,
+  params: ListFillupsParams = {},
 ): Promise<ListFillupsResponse> {
+  const { vehicleId, period, page = 1, limit = 20 } = params;
   const qs = new URLSearchParams({ page: String(page), limit: String(limit) });
   if (vehicleId) qs.set('vehicleId', vehicleId);
+  if (period) qs.set('period', period);
   return request<ListFillupsResponse>(`/v1/me/fillups?${qs.toString()}`, {
     method: 'GET',
     headers: { Authorization: `Bearer ${accessToken}` },

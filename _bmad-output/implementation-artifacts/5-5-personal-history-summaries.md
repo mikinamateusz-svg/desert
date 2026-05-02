@@ -1,6 +1,6 @@
 # Story 5.5: Personal History & Summaries
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 

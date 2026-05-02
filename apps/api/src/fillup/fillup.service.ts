@@ -4,13 +4,15 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { FillUp } from '@prisma/client';
+import { FillUp, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StationService } from '../station/station.service.js';
 import { RegionalBenchmarkService } from '../regional-benchmark/regional-benchmark.service.js';
 import { PRICE_BANDS } from '../ocr/ocr.service.js';
 import { CreateFillupDto } from './dto/create-fillup.dto.js';
 import { VoivodeshipLookupService } from './voivodeship-lookup.service.js';
+
+export type FillupPeriod = '30d' | '3m' | '12m' | 'all';
 
 export interface CreateFillupResult {
   fillUp: FillUp;
@@ -31,14 +33,71 @@ export interface CreateFillupResult {
   savingsPln: number | null;
 }
 
+/**
+ * Per-fill-up payload returned to the mobile log screen (Story 5.5).
+ * Includes vehicle + station joins so the FillUpCard can render labels
+ * without a follow-up round-trip per row.
+ */
+export interface FillupListItem extends FillUp {
+  vehicle: {
+    id: string;
+    nickname: string | null;
+    make: string;
+    model: string;
+  };
+  station: { id: string; name: string } | null;
+}
+
+/**
+ * Aggregate summary for the selected period × vehicle filter (Story 5.5).
+ * Computed against the FULL filtered set (not just the current page) so
+ * page 2+ shows the same totals.
+ *
+ * Nulls vs zeros:
+ *   - `avgPricePerLitrePln` / `avgConsumptionL100km` — null when no
+ *     fill-ups (or no consumption data) exist in the period. Mobile
+ *     omits the card entirely per AC3 / AC6, never renders zero.
+ *   - `totalSavingsPln` — null when no fill-ups in the period have
+ *     `area_avg_at_fillup` populated. Distinguishes "no comparable
+ *     data" from "broke even".
+ *   - `totalSpendPln` / `totalLitres` / `fillupCount` — always 0+.
+ */
+export interface FillupSummary {
+  totalSpendPln: number;
+  totalLitres: number;
+  avgPricePerLitrePln: number | null;
+  totalSavingsPln: number | null;
+  avgConsumptionL100km: number | null;
+  fillupCount: number;
+}
+
 export interface ListFillupsResult {
-  data: FillUp[];
+  data: FillupListItem[];
   total: number;
   page: number;
   limit: number;
+  summary: FillupSummary;
 }
 
 const STATION_MATCH_RADIUS_METRES = 200;
+
+/**
+ * Period → start-of-window. `all` returns null = no date predicate.
+ * Implemented as `Date.now() - delta` rather than the `setMonth(...)`
+ * pattern in the spec — `setMonth` mutates the source and on edge dates
+ * (e.g. May 31 → Feb 31 collapses to March 3) gives off-by-days.
+ * `Date.now() - 30 days * msPerDay` is exact.
+ */
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+function periodStart(period: FillupPeriod): Date | null {
+  const now = Date.now();
+  switch (period) {
+    case '30d': return new Date(now - 30 * MS_PER_DAY);
+    case '3m':  return new Date(now - 90 * MS_PER_DAY);
+    case '12m': return new Date(now - 365 * MS_PER_DAY);
+    case 'all': return null;
+  }
+}
 
 /**
  * Per-driver fill-up CRUD.
@@ -250,13 +309,22 @@ export class FillupService {
   }
 
   /**
-   * Paginated history, newest first. Optional `vehicleId` filter scoped to
-   * the caller (cross-user vehicles silently return zero rows because the
-   * user_id filter is the outer predicate).
+   * Paginated history + summary, newest first.
+   *
+   * Filters:
+   *   - `vehicleId` — undefined OR `'all'` returns fill-ups across all
+   *     of the caller's vehicles. Any other value scopes to that vehicle
+   *     (cross-user vehicles silently return zero rows because user_id
+   *     is the outer predicate).
+   *   - `period` — `30d | 3m | 12m | all`. `all` skips the date filter.
+   *
+   * The `summary` is computed against the full filtered set (not just
+   * the current page) so totals stay stable across pagination.
    */
   async listFillups(
     userId: string,
     vehicleId: string | undefined,
+    period: FillupPeriod,
     page: number,
     limit: number,
   ): Promise<ListFillupsResult> {
@@ -264,20 +332,94 @@ export class FillupService {
     const safeLimit = Math.max(1, Math.min(limit, 100));
     const skip = (safePage - 1) * safeLimit;
 
-    const where = vehicleId
-      ? { user_id: userId, vehicle_id: vehicleId }
-      : { user_id: userId };
+    // Treat the literal 'all' as "no vehicle filter" — mirrors the mobile
+    // chip selector's "All vehicles" option (AC4).
+    const scopedVehicleId = vehicleId && vehicleId !== 'all' ? vehicleId : undefined;
 
-    const [data, total] = await Promise.all([
+    const startDate = periodStart(period);
+    const where: Prisma.FillUpWhereInput = {
+      user_id: userId,
+      ...(scopedVehicleId ? { vehicle_id: scopedVehicleId } : {}),
+      ...(startDate ? { filled_at: { gte: startDate } } : {}),
+    };
+
+    const [data, total, aggregate, savingsRow] = await Promise.all([
       this.prisma.fillUp.findMany({
         where,
         orderBy: { filled_at: 'desc' },
         skip,
         take: safeLimit,
+        include: {
+          vehicle: { select: { id: true, nickname: true, make: true, model: true } },
+          station: { select: { id: true, name: true } },
+        },
       }),
       this.prisma.fillUp.count({ where }),
+      this.prisma.fillUp.aggregate({
+        where,
+        _sum: { total_cost_pln: true, litres: true },
+        _avg: { price_per_litre_pln: true, consumption_l_per_100km: true },
+        _count: { _all: true },
+      }),
+      // Savings — SUM over fill-ups with an area_avg snapshot. Prisma's
+      // aggregate _sum can't compute a multi-column expression, so we drop
+      // to $queryRaw. The where clause is parameterised (no string
+      // interpolation of caller input); optional vehicle / period predicates
+      // are Prisma.sql fragments to preserve parameterisation.
+      //
+      // P11: per-row grosz-integer arithmetic mirrors the client-side
+      // `calculateSavings` (apps/mobile/src/utils/savings.ts) — round each
+      // side to grosz BEFORE subtracting BEFORE summing. Prevents the
+      // summary-card total from drifting by grosz vs the sum of visible
+      // rows on the screen, which detail-oriented users would notice.
+      // Final divide by 100.0 returns the value to PLN.
+      this.prisma.$queryRaw<Array<{ total_savings: number | null; counted: bigint }>>(
+        Prisma.sql`
+          SELECT
+            COALESCE(SUM(
+              ROUND((area_avg_at_fillup * litres * 100)::numeric)
+              - ROUND((price_per_litre_pln * litres * 100)::numeric)
+            ), 0)::float / 100.0 AS total_savings,
+            COUNT(*) AS counted
+          FROM "FillUp"
+          WHERE user_id = ${userId}
+            AND area_avg_at_fillup IS NOT NULL
+            ${scopedVehicleId ? Prisma.sql`AND vehicle_id = ${scopedVehicleId}` : Prisma.empty}
+            ${startDate ? Prisma.sql`AND filled_at >= ${startDate}` : Prisma.empty}
+        `,
+      ),
     ]);
 
-    return { data, total, page: safePage, limit: safeLimit };
+    const fillupCount = aggregate._count._all;
+    // `counted` from the raw query = number of rows that actually had an
+    // area_avg_at_fillup. When zero, the sum is meaningless — surface null
+    // so the mobile UI can hide the "Total saved" card per AC2 / AC3
+    // (no comparable area data, not "broke even").
+    const savingsRowFirst = savingsRow[0];
+    const savingsCounted = savingsRowFirst ? Number(savingsRowFirst.counted) : 0;
+    const totalSavingsPln =
+      savingsCounted > 0 && savingsRowFirst
+        ? // Round to grosz (2dp) to match the per-row savings rendering on
+          // the celebration screen — keeps the summary number stable across
+          // page reloads even with FP drift in the SQL sum.
+          Math.round((savingsRowFirst.total_savings ?? 0) * 100) / 100
+        : null;
+
+    const summary: FillupSummary = {
+      totalSpendPln: aggregate._sum.total_cost_pln ?? 0,
+      totalLitres: aggregate._sum.litres ?? 0,
+      avgPricePerLitrePln:
+        aggregate._avg.price_per_litre_pln !== null && fillupCount > 0
+          ? Math.round(aggregate._avg.price_per_litre_pln * 1000) / 1000
+          : null,
+      totalSavingsPln,
+      avgConsumptionL100km:
+        aggregate._avg.consumption_l_per_100km !== null
+          ? Math.round(aggregate._avg.consumption_l_per_100km * 10) / 10
+          : null,
+      fillupCount,
+    };
+
+    return { data: data as FillupListItem[], total, page: safePage, limit: safeLimit, summary };
   }
 }

@@ -15,9 +15,18 @@ import { FastifyRequest } from 'fastify';
 import { UserRole } from '@prisma/client';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 import { CurrentUser } from '../auth/current-user.decorator.js';
-import { FillupService } from './fillup.service.js';
+import { FillupService, type FillupPeriod } from './fillup.service.js';
 import { FillupOcrService, type FillupOcrResult } from './fillup-ocr.service.js';
 import { CreateFillupDto } from './dto/create-fillup.dto.js';
+
+const ALLOWED_PERIODS: ReadonlySet<FillupPeriod> = new Set(['30d', '3m', '12m', 'all']);
+
+// RFC 4122 UUID v1–v5 — covers Prisma's @default(uuid()) output (v4).
+// We don't bother distinguishing versions; the only consumer is "is this a
+// plausible vehicle id". Anything else (including 'ALL', 'null', or
+// whitespace) gets rejected so we don't silently scope to a non-existent
+// vehicle and return an empty list that looks like "you have no fill-ups".
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 // Mirrors the Vehicle controller's allow-list — every authenticated role that
 // can drive needs to log fill-ups. Admin included so admins can debug their
@@ -101,16 +110,32 @@ export class FillupController {
   }
 
   /**
-   * Paginated history. Optional ?vehicleId= filter scoped to the caller.
+   * Paginated history + period summary (Story 5.5).
+   *   - ?vehicleId=<uuid> | 'all' | omitted → vehicle scoping; 'all' or
+   *     omitted both mean "across all vehicles for this user".
+   *   - ?period=30d | 3m | 12m | all → time window for both list AND
+   *     summary aggregates. Default '3m' matches the mobile default
+   *     segmented-control selection.
+   *   - ?page / ?limit → pagination over the data array; summary is
+   *     computed against the full filtered set, not just the page.
    */
   @Get()
   @Roles(...ALL_DRIVING_ROLES)
   list(
     @CurrentUser('id') userId: string,
     @Query('vehicleId') vehicleId: string | undefined,
+    @Query('period', new DefaultValuePipe('3m')) period: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
   ) {
-    return this.fillups.listFillups(userId, vehicleId, page, limit);
+    if (!ALLOWED_PERIODS.has(period as FillupPeriod)) {
+      throw new BadRequestException(`Invalid period. Expected one of: 30d, 3m, 12m, all`);
+    }
+    if (vehicleId !== undefined && vehicleId !== 'all' && !UUID_RE.test(vehicleId)) {
+      // Garbage like '?vehicleId=ALL' (uppercase) or '?vehicleId=null' would
+      // otherwise produce an empty list silently. 400 surfaces the typo.
+      throw new BadRequestException(`Invalid vehicleId. Expected a UUID or 'all'.`);
+    }
+    return this.fillups.listFillups(userId, vehicleId, period as FillupPeriod, page, limit);
   }
 }

@@ -880,8 +880,13 @@ epics:
       - id: 5.5
         title: "Personal History & Summaries"
         file: 5-5-personal-history-summaries.md
-        status: ready-for-dev
+        status: review
         ready_date: 2026-04-07
+        dev_started: 2026-05-02
+        dev_completed: 2026-05-02
+        review_date: 2026-05-02
+        review_findings: "7/8 ACs MET (AC1 PARTIAL — sort by created_at instead of last-fillup; defer to product). 13 patches applied: P1 (request-gen counter for scope/period/pagination races), P2 (dedupe-on-append for offset-pagination duplicates), P3 (locale-aware toLocaleString — PL/UK comma decimals), P4 (PERIOD_I18N_KEY map), P5 (reset scopeDefaultedRef on auth change), P6 (vehiclesLoading reset on early return), P7 (Promise.all+finally for refresh spinner), P8 (hide totalSaved card when exact zero), P9 (suppress empty state when historyError set), P10 (loading spinner at top of header), P11 (server SQL grosz-integer savings sum — matches per-row client math), P12 (controller validates vehicleId as UUID|'all' — rejects 'ALL'/'null' garbage), P13 (raw SQL combo test). Defers: B2 unweighted vs weighted avg price (product question), 3m/12m use 90/365 days vs calendar months (documented intentional), onEndReachedThreshold=0.5 (documented intentional). Rejects: B10 Prisma Decimal (schema is Float), B15 missing index (already exists), E11 search_path schema-qualification (single-schema project)."
+        patches_applied: "2026-05-02 — 13 of 13 applied; +8 new api tests (vehicleId='all', period 30d cutoff, period 'all' omits date, populated summary, null savings, null consumption, empty summary, raw SQL combo). 1036/1036 api (was 1028) + 31/31 mobile pass; tsc clean across api + mobile."
       - id: 5.6
         title: "Real-World Consumption Benchmarks by Vehicle"
         file: 5-6-consumption-benchmarks-by-vehicle.md

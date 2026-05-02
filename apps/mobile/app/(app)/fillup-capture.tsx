@@ -109,18 +109,33 @@ function FillupCaptureContent() {
 
   // Force a fresh camera mount on focus — same pattern as capture.tsx, mitigates
   // the black-preview Android session loss after backgrounding.
+  //
+  // Also resets the wizard state on focus. fillup-capture is registered as a
+  // hidden Tabs.Screen, so react-navigation keeps it mounted across blur —
+  // without an explicit reset, the next "Log fill-up" entry would resume on
+  // the previous celebration step (or worse, a half-filled manual form from
+  // a prior aborted attempt). Mirrors the same fix applied to vehicle-setup.
   useFocusEffect(
     useCallback(() => {
       cancelledRef.current = false;
+      submittingRef.current = false;
       setCameraReady(false);
       setCameraKey((k) => k + 1);
+      // State reset to a clean wizard start. Note we DON'T reset `vehicles` —
+      // re-fetching on every focus would burn a network round-trip for a list
+      // that almost never changes mid-session.
+      setStep(locationDenied ? 'location-required' : 'camera');
+      setDraft({});
+      setCelebration(null);
+      setErrorMessage(null);
+      setIsCapturing(false);
       return () => {
         // Latch is flipped on blur so any in-flight OCR / save callback that
         // fires after the user has navigated away no-ops instead of writing
         // to unmounted state.
         cancelledRef.current = true;
       };
-    }, []),
+    }, [locationDenied]),
   );
 
   // First-launch camera permission. Pattern lifted from capture.tsx — Android

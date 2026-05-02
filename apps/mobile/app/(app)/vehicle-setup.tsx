@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -14,7 +14,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Redirect, router } from 'expo-router';
+import { Redirect, router, useFocusEffect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import {
   getMakes,
@@ -104,6 +104,23 @@ function VehicleSetupScreenContent() {
   const [picker, setPicker] = useState<DraftField | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Reset on focus so each "Add vehicle" entry starts fresh.
+  // vehicle-setup is registered as a hidden Tabs.Screen in _layout.tsx, and
+  // react-navigation defaults to keeping tab screens mounted across blur —
+  // so useState(EMPTY_DRAFT) only fires on the very first mount, then stale
+  // draft (make/model/year/engine/nickname from a previous attempt) persists
+  // into the next entry. Without this reset, a user who added a Golf and
+  // then taps "Add another vehicle" lands on a screen pre-filled with Golf,
+  // making them wonder if they tapped the wrong thing.
+  useFocusEffect(
+    useCallback(() => {
+      setDraft(EMPTY_DRAFT);
+      setPicker(null);
+      setError(null);
+      setSubmitting(false);
+    }, []),
+  );
 
   const makes = useMemo(() => getMakes(), []);
   const models = useMemo<CatalogModel[]>(

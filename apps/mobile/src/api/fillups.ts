@@ -64,9 +64,16 @@ class ApiError extends Error {
 }
 
 async function request<T>(path: string, options: RequestInit): Promise<T> {
+  // Same Content-Type-when-body-present rule as admin-api.ts and vehicles.ts.
+  // No DELETE callers in this client today, but a future "delete a fill-up"
+  // endpoint would otherwise hit the same Fastify 400.
+  const hasBody = options.body !== undefined && options.body !== null;
   const res = await fetch(`${API_BASE}${path}`, {
     ...options,
-    headers: { 'Content-Type': 'application/json', ...options.headers },
+    headers: {
+      ...(hasBody ? { 'Content-Type': 'application/json' } : {}),
+      ...options.headers,
+    },
   });
   if (res.status === 204) return undefined as unknown as T;
   const body = (await res.json()) as Record<string, unknown>;

@@ -44,9 +44,19 @@ class ApiError extends Error {
 }
 
 async function request<T>(path: string, options: RequestInit): Promise<T> {
+  // Only declare application/json when we actually send a body. Fastify
+  // rejects POST/PATCH/DELETE requests with `Content-Type: application/json`
+  // and an empty body (status 400, "Body cannot be empty when content-type
+  // is set to 'application/json'") — this used to silently break the
+  // no-body DELETE /v1/me/vehicles/:id endpoint until the alert was wired
+  // to surface real errors. Same fix applied to admin-api.ts.
+  const hasBody = options.body !== undefined && options.body !== null;
   const res = await fetch(`${API_BASE}${path}`, {
     ...options,
-    headers: { 'Content-Type': 'application/json', ...options.headers },
+    headers: {
+      ...(hasBody ? { 'Content-Type': 'application/json' } : {}),
+      ...options.headers,
+    },
   });
   if (res.status === 204) return undefined as unknown as T;
   const body = (await res.json()) as Record<string, unknown>;

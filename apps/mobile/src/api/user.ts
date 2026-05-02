@@ -12,9 +12,18 @@ class ApiError extends Error {
 }
 
 async function request<T>(path: string, options: RequestInit): Promise<T> {
+  // Same Content-Type-when-body-present rule applied to vehicles.ts /
+  // fillups.ts / admin-api.ts. Affects apiDeleteAccount (DELETE /v1/me,
+  // GDPR erasure) and apiRequestDataExport (POST /v1/me/export with no
+  // body) — both would otherwise hit Fastify's "Body cannot be empty
+  // when content-type is set to 'application/json'" 400.
+  const hasBody = options.body !== undefined && options.body !== null;
   const res = await fetch(`${API_BASE}${path}`, {
     ...options,
-    headers: { 'Content-Type': 'application/json', ...options.headers },
+    headers: {
+      ...(hasBody ? { 'Content-Type': 'application/json' } : {}),
+      ...options.headers,
+    },
   });
   if (res.status === 204) return undefined as unknown as T;
   const body = (await res.json()) as Record<string, unknown>;

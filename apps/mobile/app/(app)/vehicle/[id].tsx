@@ -118,7 +118,17 @@ function VehicleEditScreenContent() {
             } catch (e) {
               // eslint-disable-next-line no-console
               console.warn('vehicle delete failed', e);
-              Alert.alert('', t('vehicles.edit.deleteError'));
+              // Surface the API error message rather than a generic toast —
+              // the previous Content-Type-on-empty-body bug returned 400
+              // with a useful message that was completely hidden by the
+              // generic deleteError fallback. Now the user sees what
+              // actually went wrong (locked, network, etc.) and we can
+              // diagnose without checking the JS console.
+              const apiMessage = e instanceof Error ? e.message : '';
+              Alert.alert(
+                t('vehicles.edit.deleteError'),
+                apiMessage || undefined,
+              );
             }
           },
         },

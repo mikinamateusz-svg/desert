@@ -53,7 +53,11 @@ export const tokens = {
 
   // ── Tab bar (light theme) ────────────────────────────────────────────────
   tabBar: {
-    background: '#ffffff',
+    // Faintly tinted instead of pure white so the bar reads as a layer
+    // distinct from the white Android gesture-nav indicator below it. On
+    // pure-white, the tab bar visually merged with the system gesture area
+    // and made tap-vs-swipe targets ambiguous on Xiaomi/MIUI devices.
+    background: '#f4f4f4',
     border:     '#e5e7eb',
     active:     '#f59e0b',
     inactive:   '#9ca3af',

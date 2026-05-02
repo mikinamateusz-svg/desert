@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
@@ -14,6 +14,7 @@ import { tokens } from '../../src/theme';
 import { useAuth } from '../../src/store/auth.store';
 import { apiListVehicles, type Vehicle } from '../../src/api/vehicles';
 import { flags } from '../../src/config/flags';
+import { TopChrome } from '../../src/components/TopChrome';
 
 // Phase 2 gate lives at the entry point so the inner component (with all the
 // hooks for vehicle fetching) is never mounted in production builds. Keeps the
@@ -26,9 +27,12 @@ export default function LogScreen() {
 function ComingSoonScreen() {
   const { t } = useTranslation();
   return (
-    <View style={styles.guestContainer}>
-      <Text style={styles.guestTitle}>{t('log.comingSoonTitle')}</Text>
-      <Text style={styles.guestSubtitle}>{t('log.comingSoonSubtitle')}</Text>
+    <View style={styles.screen}>
+      <TopChrome />
+      <View style={styles.guestContainer}>
+        <Text style={styles.guestTitle}>{t('log.comingSoonTitle')}</Text>
+        <Text style={styles.guestSubtitle}>{t('log.comingSoonSubtitle')}</Text>
+      </View>
     </View>
   );
 }
@@ -107,8 +111,11 @@ function LogScreenContent() {
     }, [loadVehicles]),
   );
 
+  // Build the body once, then wrap in TopChrome — all three branches
+  // (guest / loading / list) share the same chrome + safe-area treatment.
+  let body: ReactNode;
   if (!accessToken) {
-    return (
+    body = (
       <View style={styles.guestContainer}>
         <Text style={styles.guestTitle}>{t('log.guestTitle')}</Text>
         <Text style={styles.guestSubtitle}>{t('log.guestSubtitle')}</Text>
@@ -120,89 +127,95 @@ function LogScreenContent() {
         </TouchableOpacity>
       </View>
     );
-  }
-
-  if (loading && vehicles === null) {
-    return (
+  } else if (loading && vehicles === null) {
+    body = (
       <View style={styles.center}>
         <ActivityIndicator color={tokens.brand.accent} />
       </View>
     );
+  } else {
+    body = (
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => loadVehicles('refresh')}
+          />
+        }
+      >
+        <Text style={styles.sectionTitle}>{t('log.vehiclesTitle')}</Text>
+        <Text style={styles.sectionSubtitle}>{t('log.vehiclesSubtitle')}</Text>
+
+        {error && <Text style={styles.errorText}>{error}</Text>}
+
+        {vehicles && vehicles.length === 0 ? (
+          <View style={styles.emptyCard}>
+            <Text style={styles.emptyTitle}>{t('log.emptyTitle')}</Text>
+            <Text style={styles.emptySubtitle}>{t('log.emptySubtitle')}</Text>
+            <TouchableOpacity
+              style={styles.primaryButton}
+              onPress={() => router.push('/(app)/vehicle-setup')}
+            >
+              <Text style={styles.primaryButtonText}>{t('log.addVehicle')}</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <>
+            {vehicles?.map((v) => {
+              const nickname = v.nickname?.trim();
+              const identity = `${v.year} ${v.make} ${v.model}`;
+              const a11yLabel = nickname
+                ? `${nickname}, ${identity}${v.engine_variant ? `, ${v.engine_variant}` : ''}`
+                : `${identity}${v.engine_variant ? `, ${v.engine_variant}` : ''}`;
+              return (
+                <TouchableOpacity
+                  key={v.id}
+                  style={styles.vehicleCard}
+                  onPress={() =>
+                    router.push({
+                      pathname: '/(app)/vehicle/[id]',
+                      params: { id: v.id },
+                    })
+                  }
+                  accessibilityRole="button"
+                  accessibilityLabel={a11yLabel}
+                >
+                  <View style={styles.vehicleCardBody}>
+                    <Text style={styles.vehicleNickname}>{nickname || identity}</Text>
+                    <Text style={styles.vehicleSubtitle}>
+                      {identity}
+                      {v.engine_variant ? ` · ${v.engine_variant}` : ''}
+                    </Text>
+                  </View>
+                  <Text style={styles.vehicleChevron}>›</Text>
+                </TouchableOpacity>
+              );
+            })}
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => router.push('/(app)/vehicle-setup')}
+              accessibilityRole="button"
+            >
+              <Text style={styles.addButtonText}>+ {t('log.addVehicle')}</Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </ScrollView>
+    );
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={() => loadVehicles('refresh')}
-        />
-      }
-    >
-      <Text style={styles.sectionTitle}>{t('log.vehiclesTitle')}</Text>
-      <Text style={styles.sectionSubtitle}>{t('log.vehiclesSubtitle')}</Text>
-
-      {error && <Text style={styles.errorText}>{error}</Text>}
-
-      {vehicles && vehicles.length === 0 ? (
-        <View style={styles.emptyCard}>
-          <Text style={styles.emptyTitle}>{t('log.emptyTitle')}</Text>
-          <Text style={styles.emptySubtitle}>{t('log.emptySubtitle')}</Text>
-          <TouchableOpacity
-            style={styles.primaryButton}
-            onPress={() => router.push('/(app)/vehicle-setup')}
-          >
-            <Text style={styles.primaryButtonText}>{t('log.addVehicle')}</Text>
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <>
-          {vehicles?.map((v) => {
-            const nickname = v.nickname?.trim();
-            const identity = `${v.year} ${v.make} ${v.model}`;
-            const a11yLabel = nickname
-              ? `${nickname}, ${identity}${v.engine_variant ? `, ${v.engine_variant}` : ''}`
-              : `${identity}${v.engine_variant ? `, ${v.engine_variant}` : ''}`;
-            return (
-              <TouchableOpacity
-                key={v.id}
-                style={styles.vehicleCard}
-                onPress={() =>
-                  router.push({
-                    pathname: '/(app)/vehicle/[id]',
-                    params: { id: v.id },
-                  })
-                }
-                accessibilityRole="button"
-                accessibilityLabel={a11yLabel}
-              >
-                <View style={styles.vehicleCardBody}>
-                  <Text style={styles.vehicleNickname}>{nickname || identity}</Text>
-                  <Text style={styles.vehicleSubtitle}>
-                    {identity}
-                    {v.engine_variant ? ` · ${v.engine_variant}` : ''}
-                  </Text>
-                </View>
-                <Text style={styles.vehicleChevron}>›</Text>
-              </TouchableOpacity>
-            );
-          })}
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => router.push('/(app)/vehicle-setup')}
-            accessibilityRole="button"
-          >
-            <Text style={styles.addButtonText}>+ {t('log.addVehicle')}</Text>
-          </TouchableOpacity>
-        </>
-      )}
-    </ScrollView>
+    <View style={styles.screen}>
+      <TopChrome />
+      {body}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: tokens.surface.page },
   container: {
     flex: 1,
     backgroundColor: tokens.surface.page,

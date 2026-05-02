@@ -25,6 +25,7 @@ import { useNearbyPrices } from '../../src/hooks/useNearbyPrices';
 import { computePriceColorMap } from '../../src/utils/priceColor';
 import type { StationDto } from '../../src/api/stations';
 import { flags } from '../../src/config/flags';
+import { TopChrome } from '../../src/components/TopChrome';
 
 // Mapbox token must be set before any MapView renders.
 // In EAS builds, the token comes from eas.json env. In CI/local builds,
@@ -507,23 +508,11 @@ export default function MapScreen() {
         </ScrollView>
       </View>
 
-      {/* Top bar */}
-      <View style={[styles.topBar, { paddingTop: insets.top }]}>
-        <Text style={styles.wordmark}>
-          litr<Text style={styles.wordmarkAccent}>o</Text>
-        </Text>
-        <View style={styles.topBarActions}>
-          {/* Bell icon hidden for Phase 1 — alerts are Epic 6 (Phase 2).
-              Re-enable when alert preferences and push notifications are implemented. */}
-          <TouchableOpacity
-            style={styles.topBarButton}
-            onPress={() => router.push('/(app)/account')}
-            accessibilityLabel={t('map.openMenu')}
-          >
-            <Ionicons name="menu" size={22} color={tokens.brand.ink} />
-          </TouchableOpacity>
-        </View>
-      </View>
+      {/* Shared TopChrome — extracted so Activity + Log get the same wordmark
+          + menu without duplicating the JSX. `overlay` mode positions it
+          absolutely over the map canvas; tab screens use the default
+          flex-flow mode. */}
+      <TopChrome overlay />
 
       <MapFABGroup
         onAddPrice={() => void handleAddPrice()}
@@ -531,39 +520,25 @@ export default function MapScreen() {
         onRecentre={handleRecentre}
         showCheapest={!selectedStation && !splashVisible}
         recentreEnabled={location != null}
-      />
-
-      {/* Phase 2: Log fill-up FAB. Renders only when the build-time flag is
-          on (development / preview-phase2 EAS profiles, GitHub workflow_dispatch
-          with phase2=true). Lives above the MapFABGroup row so it doesn't
-          collide with the cheapest pill / Add price / locate-me layout —
-          intentional separation of "log my own fill-up" from the existing
-          "contribute a price board photo" mental model. */}
-      {flags.phase2 && !splashVisible && !selectedStation && (
-        <View style={[styles.fillupFabWrapper, { bottom: insets.bottom + 76 }]}>
-          <TouchableOpacity
-            style={styles.fillupFab}
-            onPress={() => {
-              if (!accessToken) {
-                // Guests get the same auth gate as Add price — keeps the
-                // contribution paths symmetrical for sign-up nudges.
-                setShowContributionGate(true);
-                return;
+        // Phase 2 only — undefined when the flag is off (production EAS
+        // profile / push builds with EXPO_PUBLIC_PHASE_2=false), in which
+        // case MapFABGroup drops the Log fill-up FAB and renders a 3-FAB
+        // row. Keeps the build-time gate consolidated here in index.tsx.
+        onLogFillup={
+          flags.phase2 && !splashVisible && !selectedStation
+            ? () => {
+                if (!accessToken) {
+                  // Guests get the same auth gate as Add price — keeps the
+                  // contribution paths symmetrical for sign-up nudges.
+                  setShowContributionGate(true);
+                  return;
+                }
+                // fillup-capture handles the no-vehicles guard inline.
+                router.push('/(app)/fillup-capture');
               }
-              // fillup-capture handles the no-vehicles guard inline (renders
-              // a "Set up your vehicle first" prompt when vehicles list is
-              // empty). Spec calls for "do not block navigation entirely —
-              // just show the prompt", which the screen does.
-              router.push('/(app)/fillup-capture');
-            }}
-            accessibilityRole="button"
-            accessibilityLabel={t('fillup.logFillupCta')}
-          >
-            <Ionicons name="receipt-outline" size={16} color={tokens.neutral.n0} />
-            <Text style={styles.fillupFabText}>{t('fillup.logFillupCta')}</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+            : undefined
+        }
+      />
 
       {/* "None in view" toast */}
       {noneInView && (
@@ -628,71 +603,6 @@ const styles = StyleSheet.create({
   },
   clusterTextSmall: {
     fontSize: 12,
-  },
-
-  // Top bar
-  topBar: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 40,
-    paddingBottom: 6,
-    paddingHorizontal: 16,
-    backgroundColor: tokens.surface.card,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  wordmark: {
-    fontSize: 20,
-    fontWeight: '800',
-    color: tokens.brand.ink,
-    letterSpacing: -0.5,
-  },
-  wordmarkAccent: {
-    color: tokens.brand.accent,
-  },
-  topBarActions: {
-    flexDirection: 'row',
-  },
-  topBarButton: {
-    width: 44,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  // Phase 2: Log fill-up FAB (above the MapFABGroup row)
-  fillupFabWrapper: {
-    position: 'absolute',
-    left: 14,
-  },
-  fillupFab: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    height: 36,
-    paddingHorizontal: 14,
-    borderRadius: tokens.radius.full,
-    // Distinct visual treatment from the dark "Add price" pill — accent
-    // colour communicates this is a separate contribution path.
-    backgroundColor: tokens.brand.accent,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-  fillupFabText: {
-    color: tokens.neutral.n0,
-    fontSize: 13,
-    fontWeight: '700',
   },
 
   // Fuel type selector

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo, type ReactNode } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import { apiGetSubmissions, type Submission } from '../../src/api/submissions';
 import { SummaryHeader } from '../../src/components/activity/SummaryHeader';
 import { SubmissionRow } from '../../src/components/activity/SubmissionRow';
 import { deriveSummary } from '../../src/components/activity/deriveSummary';
+import { TopChrome } from '../../src/components/TopChrome';
 
 const LIMIT = 20;
 
@@ -84,33 +85,30 @@ export default function ActivityScreen() {
     [summary, hasMore],
   );
 
-  // P3: wait for auth to restore from storage before deciding what to show
+  // Compute the body once, then wrap in TopChrome — all five paths share
+  // the same chrome + safe-area treatment instead of each path needing its
+  // own SafeAreaView wrapper.
+  let body: ReactNode;
   if (authLoading) {
-    return (
+    body = (
       <View style={styles.center}>
         <ActivityIndicator size="large" color={tokens.brand.accent} />
       </View>
     );
-  }
-
-  if (!accessToken) {
-    return (
+  } else if (!accessToken) {
+    body = (
       <View style={styles.center}>
         <Text style={styles.emptyTitle}>{t('activity.signInPrompt')}</Text>
       </View>
     );
-  }
-
-  if (isLoading) {
-    return (
+  } else if (isLoading) {
+    body = (
       <View style={styles.center}>
         <ActivityIndicator size="large" color={tokens.brand.accent} />
       </View>
     );
-  }
-
-  if (error) {
-    return (
+  } else if (error) {
+    body = (
       <View style={styles.center}>
         <Text style={styles.errorText}>{error}</Text>
         <TouchableOpacity style={styles.retryButton} onPress={() => void loadPage(1, true)}>
@@ -118,42 +116,50 @@ export default function ActivityScreen() {
         </TouchableOpacity>
       </View>
     );
+  } else {
+    body = (
+      <FlatList
+        style={styles.list}
+        contentContainerStyle={submissions.length === 0 ? styles.emptyContainer : undefined}
+        data={submissions}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <SubmissionRow item={item} onPress={handleRowPress} />}
+        ListHeaderComponent={listHeader}
+        ListEmptyComponent={
+          <View style={styles.center}>
+            <Text style={styles.emptyTitle}>{t('activity.emptyTitle')}</Text>
+            <Text style={styles.emptySubtitle}>{t('activity.emptySubtitle')}</Text>
+          </View>
+        }
+        ListFooterComponent={
+          hasMore ? (
+            <TouchableOpacity
+              style={styles.loadMoreButton}
+              onPress={() => void loadPage(page + 1, false)}
+              disabled={isLoadingMore}
+            >
+              {isLoadingMore ? (
+                <ActivityIndicator size="small" color={tokens.brand.accent} />
+              ) : (
+                <Text style={styles.loadMoreText}>{t('activity.loadMore')}</Text>
+              )}
+            </TouchableOpacity>
+          ) : null
+        }
+      />
+    );
   }
 
   return (
-    <FlatList
-      style={styles.list}
-      contentContainerStyle={submissions.length === 0 ? styles.emptyContainer : undefined}
-      data={submissions}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <SubmissionRow item={item} onPress={handleRowPress} />}
-      ListHeaderComponent={listHeader}
-      ListEmptyComponent={
-        <View style={styles.center}>
-          <Text style={styles.emptyTitle}>{t('activity.emptyTitle')}</Text>
-          <Text style={styles.emptySubtitle}>{t('activity.emptySubtitle')}</Text>
-        </View>
-      }
-      ListFooterComponent={
-        hasMore ? (
-          <TouchableOpacity
-            style={styles.loadMoreButton}
-            onPress={() => void loadPage(page + 1, false)}
-            disabled={isLoadingMore}
-          >
-            {isLoadingMore ? (
-              <ActivityIndicator size="small" color={tokens.brand.accent} />
-            ) : (
-              <Text style={styles.loadMoreText}>{t('activity.loadMore')}</Text>
-            )}
-          </TouchableOpacity>
-        ) : null
-      }
-    />
+    <View style={styles.screen}>
+      <TopChrome />
+      {body}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: tokens.surface.page },
   list: { flex: 1, backgroundColor: tokens.surface.page },
   emptyContainer: { flex: 1 },
   center: {

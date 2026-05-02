@@ -182,4 +182,43 @@ describe('RegionalBenchmarkService', () => {
       expect(findFirstCall.orderBy).toEqual({ calculated_at: 'desc' });
     });
   });
+
+  // ── getLatestForVoivodeship (Story 5.3) ──────────────────────────────────
+
+  describe('getLatestForVoivodeship', () => {
+    it('returns null when no benchmark exists for the voivodeship × fuel_type', async () => {
+      mockFindFirst.mockResolvedValueOnce(null);
+
+      const result = await service.getLatestForVoivodeship('opolskie', 'LPG');
+
+      expect(result).toBeNull();
+      // Critical: skips the Station lookup entirely (caller already
+      // resolved the voivodeship via Nominatim or station snapshot).
+      expect(mockStationFindUnique).not.toHaveBeenCalled();
+    });
+
+    it('returns { medianPrice } from the most recent benchmark for the voivodeship', async () => {
+      mockFindFirst.mockResolvedValueOnce({ median_price: 6.42 });
+
+      const result = await service.getLatestForVoivodeship('lodzkie', 'PB_95');
+
+      expect(result).toEqual({ medianPrice: 6.42 });
+      expect(mockFindFirst).toHaveBeenCalledWith({
+        where: { voivodeship: 'lodzkie', fuel_type: 'PB_95' },
+        orderBy: { calculated_at: 'desc' },
+        select: { median_price: true },
+      });
+    });
+
+    it('orders by calculated_at desc so the most recent snapshot wins', async () => {
+      mockFindFirst.mockResolvedValueOnce({ median_price: 5.99 });
+
+      await service.getLatestForVoivodeship('mazowieckie', 'ON');
+
+      const call = mockFindFirst.mock.calls[0][0] as {
+        orderBy: { calculated_at: 'asc' | 'desc' };
+      };
+      expect(call.orderBy).toEqual({ calculated_at: 'desc' });
+    });
+  });
 });

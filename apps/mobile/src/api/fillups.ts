@@ -43,6 +43,12 @@ export interface CreateFillupResponse {
   stationMatched: boolean;
   stationName: string | null;
   communityUpdated: boolean;
+  /**
+   * Pre-computed savings vs area average (Story 5.3). null when the server
+   * couldn't resolve a benchmark for this fill-up's voivodeship × fuel_type.
+   * Mobile renders nothing for null per AC2.
+   */
+  savingsPln: number | null;
 }
 
 export interface ListFillupsResponse {

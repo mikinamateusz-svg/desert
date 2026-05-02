@@ -4,10 +4,12 @@ import { FillupService } from './fillup.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StationService } from '../station/station.service.js';
 import { RegionalBenchmarkService } from '../regional-benchmark/regional-benchmark.service.js';
+import { VoivodeshipLookupService } from './voivodeship-lookup.service.js';
 
 const mockVehicleFindUnique = jest.fn();
 const mockVehicleUpdateMany = jest.fn();
 const mockUserFindUnique = jest.fn();
+const mockStationFindUnique = jest.fn();
 const mockFillupCreate = jest.fn();
 const mockFillupFindMany = jest.fn();
 const mockFillupCount = jest.fn();
@@ -17,6 +19,7 @@ const mockStalenessDeleteMany = jest.fn();
 const mockPrisma = {
   vehicle: { findUnique: mockVehicleFindUnique, updateMany: mockVehicleUpdateMany },
   user: { findUnique: mockUserFindUnique },
+  station: { findUnique: mockStationFindUnique },
   fillUp: { create: mockFillupCreate, findMany: mockFillupFindMany, count: mockFillupCount },
   priceHistory: { create: mockPriceHistoryCreate },
   stationFuelStaleness: { deleteMany: mockStalenessDeleteMany },
@@ -24,6 +27,8 @@ const mockPrisma = {
 
 const mockFindNearestStation = jest.fn();
 const mockGetLatestForStation = jest.fn();
+const mockGetLatestForVoivodeship = jest.fn();
+const mockLookupByGps = jest.fn();
 
 const USER_ID = 'user-A';
 const OTHER_USER_ID = 'user-B';
@@ -64,13 +69,27 @@ describe('FillupService', () => {
     // Default: user is not shadow-banned. Individual tests override when
     // exercising the shadow-ban path.
     mockUserFindUnique.mockResolvedValue({ shadow_banned: false });
+    // Default: station has a voivodeship. Story 5.3 adds the station lookup
+    // to populate FillUp.voivodeship from station.voivodeship when matched.
+    mockStationFindUnique.mockResolvedValue({ voivodeship: 'lodzkie' });
+    // Default: GPS reverse-geocode returns null (only consulted when no
+    // station matched).
+    mockLookupByGps.mockResolvedValue(null);
+    mockGetLatestForVoivodeship.mockResolvedValue(null);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         FillupService,
         { provide: PrismaService, useValue: mockPrisma },
         { provide: StationService, useValue: { findNearestStation: mockFindNearestStation } },
-        { provide: RegionalBenchmarkService, useValue: { getLatestForStation: mockGetLatestForStation } },
+        {
+          provide: RegionalBenchmarkService,
+          useValue: {
+            getLatestForStation: mockGetLatestForStation,
+            getLatestForVoivodeship: mockGetLatestForVoivodeship,
+          },
+        },
+        { provide: VoivodeshipLookupService, useValue: { lookupByGps: mockLookupByGps } },
       ],
     }).compile();
 
@@ -181,6 +200,127 @@ describe('FillupService', () => {
 
       expect(mockPriceHistoryCreate).toHaveBeenCalled();
       expect(result.communityUpdated).toBe(true);
+    });
+
+    // ── Story 5.3: voivodeship resolution + savings ────────────────────
+
+    it('snapshots voivodeship from station when matched (Story 5.3)', async () => {
+      mockVehicleFindUnique.mockResolvedValueOnce(makeVehicle());
+      mockFindNearestStation.mockResolvedValueOnce({ id: STATION_ID, name: 'Orlen Łódź' });
+      mockStationFindUnique.mockResolvedValueOnce({ voivodeship: 'lodzkie' });
+      mockGetLatestForStation.mockResolvedValueOnce({ medianPrice: 6.5 });
+
+      await service.createFillup(USER_ID, baseDto());
+
+      // FillUp row carries the station's voivodeship.
+      expect(mockFillupCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ voivodeship: 'lodzkie' }),
+        }),
+      );
+      // Should NOT call Nominatim when a station was matched — the station's
+      // voivodeship is authoritative. Nominatim is the fallback only.
+      expect(mockLookupByGps).not.toHaveBeenCalled();
+    });
+
+    it('reverse-geocodes voivodeship via Nominatim when no station matched (Story 5.3 AC3)', async () => {
+      mockVehicleFindUnique.mockResolvedValueOnce(makeVehicle());
+      mockFindNearestStation.mockResolvedValueOnce(null);
+      mockLookupByGps.mockResolvedValueOnce('mazowieckie');
+      mockGetLatestForVoivodeship.mockResolvedValueOnce({ medianPrice: 6.4 });
+
+      const result = await service.createFillup(USER_ID, baseDto());
+
+      expect(mockLookupByGps).toHaveBeenCalledWith(51.7592, 19.456);
+      // Voivodeship-keyed benchmark lookup (not station-keyed).
+      expect(mockGetLatestForVoivodeship).toHaveBeenCalledWith('mazowieckie', 'PB_95');
+      expect(mockGetLatestForStation).not.toHaveBeenCalled();
+      // Result should still report stationMatched: false (no station link)
+      // but the FillUp row carries the reverse-geocoded voivodeship and a
+      // benchmark-derived areaAvg.
+      expect(result.stationMatched).toBe(false);
+      expect(mockFillupCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            voivodeship: 'mazowieckie',
+            area_avg_at_fillup: 6.4,
+            station_id: null,
+          }),
+        }),
+      );
+    });
+
+    it('saves voivodeship: null when GPS reverse-geocode returns null', async () => {
+      mockVehicleFindUnique.mockResolvedValueOnce(makeVehicle());
+      mockFindNearestStation.mockResolvedValueOnce(null);
+      mockLookupByGps.mockResolvedValueOnce(null);
+
+      await service.createFillup(USER_ID, baseDto());
+
+      expect(mockFillupCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            voivodeship: null,
+            area_avg_at_fillup: null,
+          }),
+        }),
+      );
+      // No benchmark lookup on either path when voivodeship is null.
+      expect(mockGetLatestForStation).not.toHaveBeenCalled();
+      expect(mockGetLatestForVoivodeship).not.toHaveBeenCalled();
+    });
+
+    it('skips Nominatim entirely when GPS coords are missing (no fillback path)', async () => {
+      mockVehicleFindUnique.mockResolvedValueOnce(makeVehicle());
+
+      const dto = baseDto();
+      delete (dto as { gpsLat?: number }).gpsLat;
+      delete (dto as { gpsLng?: number }).gpsLng;
+
+      await service.createFillup(USER_ID, dto);
+
+      expect(mockLookupByGps).not.toHaveBeenCalled();
+      expect(mockFillupCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ voivodeship: null }),
+        }),
+      );
+    });
+
+    it('returns positive savingsPln when paid below area average (Story 5.3 AC1)', async () => {
+      mockVehicleFindUnique.mockResolvedValueOnce(makeVehicle());
+      mockFindNearestStation.mockResolvedValueOnce({ id: STATION_ID, name: 'Orlen Łódź' });
+      mockStationFindUnique.mockResolvedValueOnce({ voivodeship: 'lodzkie' });
+      mockGetLatestForStation.mockResolvedValueOnce({ medianPrice: 7.0 });
+
+      // After P-3 grosz-integer math, the result is deterministic across
+      // platforms. round(7.0×47.3×100) − round(6.65×47.3×100) = 33110 − 31455 = 1655 → 16.55.
+      const result = await service.createFillup(USER_ID, baseDto());
+
+      expect(result.savingsPln).toBe(16.55);
+    });
+
+    it('returns negative savingsPln when paid above area average', async () => {
+      mockVehicleFindUnique.mockResolvedValueOnce(makeVehicle());
+      mockFindNearestStation.mockResolvedValueOnce({ id: STATION_ID, name: 'Orlen Łódź' });
+      mockStationFindUnique.mockResolvedValueOnce({ voivodeship: 'lodzkie' });
+      mockGetLatestForStation.mockResolvedValueOnce({ medianPrice: 6.0 });
+
+      // P-3: deterministic via grosz-integer math.
+      const result = await service.createFillup(USER_ID, baseDto());
+
+      expect(result.savingsPln).toBe(-30.75);
+    });
+
+    it('returns savingsPln: null when areaAvgAtFillup is missing (Story 5.3 AC2)', async () => {
+      mockVehicleFindUnique.mockResolvedValueOnce(makeVehicle());
+      mockFindNearestStation.mockResolvedValueOnce(null);
+      mockLookupByGps.mockResolvedValueOnce('lodzkie');
+      mockGetLatestForVoivodeship.mockResolvedValueOnce(null); // no benchmark
+
+      const result = await service.createFillup(USER_ID, baseDto());
+
+      expect(result.savingsPln).toBeNull();
     });
 
     it('snapshots area_avg_at_fillup from RegionalBenchmark when station matched', async () => {

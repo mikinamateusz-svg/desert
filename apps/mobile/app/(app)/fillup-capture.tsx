@@ -27,6 +27,7 @@ import type { FillupFuelType, FillupOcrResult } from '../../src/api/fillups';
 import { apiListVehicles } from '../../src/api/vehicles';
 import type { Vehicle } from '../../src/api/vehicles';
 import { flags } from '../../src/config/flags';
+import { SavingsDisplay } from '../../src/components/SavingsDisplay';
 
 const MIN_FREE_BYTES = 5 * 1024 * 1024; // 5 MB — same threshold as price-board capture
 const OCR_CONFIDENCE_THRESHOLD = 0.6;
@@ -65,6 +66,13 @@ interface CelebrationData {
   stationMatched: boolean;
   stationName: string | null;
   communityUpdated: boolean;
+  /**
+   * Story 5.3: pre-computed savings vs. area average. null = no comparable
+   * area data (no station match AND no GPS reverse-geocode hit, OR no
+   * benchmark for the resolved voivodeship × fuel_type). The
+   * SavingsDisplay component renders nothing for null per AC2.
+   */
+  savingsPln: number | null;
 }
 
 // ── Phase 2 gate ──────────────────────────────────────────────────────────
@@ -314,6 +322,7 @@ function FillupCaptureContent() {
         stationMatched: response.stationMatched,
         stationName: response.stationName,
         communityUpdated: response.communityUpdated,
+        savingsPln: response.savingsPln ?? null,
       });
       setStep('celebration');
     } catch (e) {
@@ -655,6 +664,10 @@ function FillupCaptureContent() {
               cost: celebration.totalCostPln.toFixed(2),
             })}
           </Text>
+          {/* Story 5.3: savings vs area average. Renders nothing when
+              savingsPln is null (no benchmark available) per AC2 — no
+              placeholder, no zero, no error message. */}
+          <SavingsDisplay savingsPln={celebration.savingsPln} />
           {celebration.communityUpdated && celebration.stationName && (
             <Text style={styles.celebrationCommunity}>
               {t('fillup.celebrationCommunity', {

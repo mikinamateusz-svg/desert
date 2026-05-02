@@ -346,6 +346,13 @@ model FillUp {
   area_avg_at_fillup  Float?
   /// Manual numeric entry in this story; OCR-based capture added in 5.4.
   odometer_km         Int?
+  /// Voivodeship resolved at fill-up time (Story 5.3). Two paths:
+  ///   1. Station matched → station.voivodeship copied here
+  ///   2. No station but GPS available → reverse-geocoded via Nominatim
+  /// Used to look up the regional benchmark when no station match exists,
+  /// so savings vs. area average can still be computed for unmapped pumps.
+  /// Snapshot at fill-up time — never updated afterwards.
+  voivodeship         String?
   filled_at           DateTime @default(now())
   created_at          DateTime @default(now())
   updated_at          DateTime @updatedAt

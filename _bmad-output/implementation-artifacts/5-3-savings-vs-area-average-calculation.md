@@ -1,6 +1,6 @@
 # Story 5.3: Savings vs. Area Average Calculation
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -301,7 +301,80 @@ claude-sonnet-4-6
 
 ### Debug Log References
 
+- `Math.round(... * 100) / 100` produces non-deterministic results across Node versions when the intermediate float lands near a .5 boundary (e.g. `Math.round(-30.745 * 100) / 100` → -30.74 on some platforms, -30.75 on others). Switched both server (`fillup.service.ts`) and client (`savings.ts`) to grosz-integer arithmetic — `Math.round(a * litres * 100) - Math.round(p * litres * 100)` — so each side rounds independently to integer grosz before subtracting. Result is platform-stable.
+- Tests had to use tolerance windows initially (`> 16.5, < 16.6`) because of the FP drift; after the P-3 fix, switched to exact equality assertions (`toBe(16.55)`) since the math is now deterministic.
+
 ### Completion Notes List
+
+**2026-05-02 — Story 5.3 implementation + code review pass.**
+
+Backend:
+- `FillUp.voivodeship` column added via migration `20260502000000_add_fillup_voivodeship`. Snapshot at fill-up time, never updated.
+- `VoivodeshipLookupService` (Nominatim reverse-geocode, 24h Redis cache, 5-min cache for transient failures, fail-silent).
+- `RegionalBenchmarkService.getLatestForVoivodeship()` — voivodeship-keyed lookup that skips the Station join.
+- `FillupService.createFillup()` extended: voivodeship resolved via station snapshot OR Nominatim fallback; benchmark looked up via voivodeship when station-keyed lookup unavailable; `savingsPln` pre-computed server-side via grosz-integer math.
+
+Mobile:
+- `calculateSavings` utility + `SavingsDisplay` component (green for saved, amber for above average — never red).
+- Wired into `fillup-capture.tsx` celebration step.
+- i18n keys `savedPln` + `aboveAvgPln` added to en/pl/uk.
+
+**Tests:** +33 new across `voivodeship-lookup.service.spec.ts`, `regional-benchmark.service.spec.ts`, `fillup.service.spec.ts`, `savings.test.ts`. Final: 986/986 api + 31/31 mobile pass. Tsc clean across types/api/mobile.
+
+**Phase 1 prod APK invariant held:**
+- Backend changes purely additive (new column, new service, new method, new logic branch — no existing API surface changed).
+- Mobile changes inside fillup-capture / Phase-2-gated celebration screen. Phase 1 APK doesn't render `SavingsDisplay`.
+
+### Code Review (2026-05-02)
+
+Reviewed by Blind Hunter + Edge Case Hunter + Acceptance Auditor on the full Story 5.3 diff (~1,200 lines / 17 files). Acceptance Auditor: **4/4 ACs cleanly satisfied**.
+
+#### Patches applied (8)
+
+**Privacy / Nominatim compliance:**
+- **P-1** [`voivodeship-lookup.service.ts:106-115, 132`] **GPS rounded to 2dp BEFORE both cache key construction AND the outbound URL.** The 2dp rounding was previously applied only to the cache key — the URL passed full ~10m precision. Privacy posture now matches docstring: GPS shared with Nominatim is at city-block precision, not 10m.
+- **P-2** [`voivodeship-lookup.service.ts:142-144, 156`] **Logs scrubbed of full-precision coords.** All warn-level log lines that include lat/lng now use the 2dp-rounded values via `.toFixed(2)`. Full-precision GPS in app logs (which typically have looser retention/access controls than the DB) is a GDPR liability we shouldn't take.
+- **P-7** [`voivodeship-lookup.service.ts:24-30, 137-167`] **Distinguish transient (HTTP 429 / 5xx / network) failures from definitive misses (HTTP 4xx other than 429, 2xx with unmapped state).** Transient failures cache for 5 minutes (`TRANSIENT_FAILURE_TTL_SECONDS`); definitive misses cache for 24 hours. Previously a single 429 blip poisoned a 1km² cell for a full day.
+- **P-9** [`voivodeship-lookup.service.ts:108-110`] **Coordinate range validation** — reject `Math.abs(lat) > 90 || Math.abs(lng) > 180` before the Nominatim call. Saves a wasted cache slot + Nominatim quota slot for geographically meaningless inputs.
+
+**Math correctness:**
+- **P-3** [`fillup.service.ts:240-245` + `savings.ts:24-32`] **Grosz-integer arithmetic for savings.** Replaced `Math.round((a-p)*l*100)/100` (FP-vulnerable around .5 boundaries; tests required tolerance windows) with `Math.round(a*l*100) - Math.round(p*l*100)` (each side rounds to integer grosz before subtracting; result is platform-stable). Trade-off: at very small price differences the new method can be 1 grosz off vs the naive method, which is fine for our display purposes. Tests now use exact equality (`toBe(16.55)`) instead of tolerance windows.
+
+**Mobile:**
+- **P-5** [`SavingsDisplay.tsx:34-38`] **Render nothing when savings === 0.** Previously displayed "You saved 0.00 PLN vs. area average" — misleading celebration for the rare exact-match case. Now treats zero like null (no notable savings → hide line).
+- **P-12** [`SavingsDisplay.tsx:30-33`] **Number.isFinite guard** — defensive against API contract drift. Today the contract is `number | null` but a server bug could leak NaN/Infinity; rendering "NaN PLN" to the user would be worse than silently hiding the line.
+
+**i18n:**
+- **P-14** [`pl.ts:savedPln`] **Polish gender-neutral phrasing.** Replaced "Zaoszczędziłeś" (masculine past tense) with impersonal "Zaoszczędzono" so the message reads correctly for any user regardless of gender. Standard Polish marketing-copy convention for the same reason.
+
+#### Tests added (7)
+
+- `voivodeship-lookup.service.spec.ts`: 7 new — P-9 lat/lng range validation (×2), P-1 rounded coords in URL, P-7 cache TTLs (429 / 5xx / network → 5 min, 4xx → 24h).
+- `savings.test.ts` + `fillup.service.spec.ts`: existing tolerance-window assertions tightened to exact equality after P-3 made the math deterministic.
+
+#### Deferred (8)
+
+- **D-1** No global Nominatim rate limiter — relying on the 24h cache + low beta volume; revisit if traffic grows.
+- **D-2** Cache stampede on simultaneous misses for the same 1 km² — rare in beta; mitigation would be SET NX lock.
+- **D-3** No DB index on `FillUp.voivodeship` — Story 6.5 (regional rollups) will add when the query pattern lands.
+- **D-4** Server vs client `calculateSavings` is duplicated logic — both use the same grosz-integer pattern after P-3, so drift is bounded to platform FP edge cases. Real fix is a shared util in `@desert/types`; defer until Story 5.5 history screen actually consumes it.
+- **D-5** PLN amount formatting uses dot decimal not Polish comma (`16.55` vs `16,55`) — i18n polish for the next pass; affects all monetary display, not just savings.
+- **D-6** Pre-Story-5.3 FillUp rows have NULL voivodeship — only Mateusz's test data affected; if a backfill is needed later, run a one-off script to copy `Station.voivodeship` for FillUps with non-null `station_id`.
+- **D-7** `calculateSavings` accepts `litres ≤ 0` and produces a "savings" value — DTO `@IsNumber()` `@Min(0.1)` validates at the API boundary; this defensive check is belt-and-suspenders.
+- **D-8** Test assertions can't catch a sign-flip in tests where the result lands inside the tolerance window — P-3 made tests exact, so this is now a residual concern only for any future test that re-introduces a window.
+
+#### Spec amendment recommendation (1)
+
+- **B-1** Spec dev notes hardcode example values (`#16a34a` green / `desert-app` UA / `'null'` sentinel) but implementation uses `tokens.fresh.recent` / `litro-app` UA / `__none__` sentinel. All defensible product evolution (token system, brand rename, sentinel disambiguation), not real bugs. Recommend updating spec dev notes to reflect actuals so future readers don't see drift.
+
+#### Rejected as noise (~12)
+
+Premature memoization, cosmetic margins, defensive empty-checks on integer-validated DTOs, edge cases for non-Polish coords (out of scope), unicode normalization (Nominatim is consistent in practice), HTML injection via numeric coords (no string coords accepted), `marginVertical` vs `marginTop`, `'null'` vs `__none__` sentinel naming.
+
+### Change Log
+
+- 2026-05-02 — Closed Story 5.3: backend voivodeship resolution + savings calculation, mobile SavingsDisplay component. 4/4 ACs satisfied.
+- 2026-05-02 — Code review: 8 patches applied + 8 deferred + 1 spec amendment recommended. 986/986 api + 31/31 mobile pass post-patches.
 
 ### File List
 

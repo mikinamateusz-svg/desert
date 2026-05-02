@@ -320,6 +320,8 @@ export default {
     addOdometer: 'Add reading',
     skipOdometer: 'Skip',
     celebrationFillup: '{{litres}} L · {{cost}} PLN',
+    savedPln: 'You saved {{amount}} PLN vs. area average',
+    aboveAvgPln: '{{amount}} PLN above area average',
     celebrationCommunity: '{{fuelType}} at {{station}} updated ✓',
     nudgeOtherPrices:
       'Other prices at this station may be outdated — add them too?',

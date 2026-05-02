@@ -321,6 +321,12 @@ export default {
     addOdometer: 'Dodaj odczyt',
     skipOdometer: 'Pomiń',
     celebrationFillup: '{{litres}} L · {{cost}} PLN',
+    // Impersonal "Zaoszczędzono" instead of gendered past-tense
+    // "Zaoszczędziłeś" (masculine) so the message reads correctly for any
+    // user regardless of gender. Polish marketing copy commonly uses this
+    // form for the same reason.
+    savedPln: 'Zaoszczędzono {{amount}} PLN vs średnia w regionie',
+    aboveAvgPln: '{{amount}} PLN powyżej średniej w regionie',
     celebrationCommunity: '{{fuelType}} w {{station}} zaktualizowane ✓',
     nudgeOtherPrices:
       'Inne ceny na tej stacji mogą być nieaktualne — dodaj je też?',

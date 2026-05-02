@@ -322,6 +322,8 @@ export default {
     addOdometer: 'Додати показник',
     skipOdometer: 'Пропустити',
     celebrationFillup: '{{litres}} L · {{cost}} PLN',
+    savedPln: 'Ви заощадили {{amount}} PLN порівняно із середнім по регіону',
+    aboveAvgPln: '{{amount}} PLN вище середнього по регіону',
     celebrationCommunity: '{{fuelType}} на {{station}} оновлено ✓',
     nudgeOtherPrices:
       'Інші ціни на цій станції можуть бути застарілими — додати їх теж?',

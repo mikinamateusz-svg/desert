@@ -10,6 +10,7 @@ import { StationService } from '../station/station.service.js';
 import { RegionalBenchmarkService } from '../regional-benchmark/regional-benchmark.service.js';
 import { PRICE_BANDS } from '../ocr/ocr.service.js';
 import { CreateFillupDto } from './dto/create-fillup.dto.js';
+import { VoivodeshipLookupService } from './voivodeship-lookup.service.js';
 
 export interface CreateFillupResult {
   fillUp: FillUp;
@@ -18,6 +19,16 @@ export interface CreateFillupResult {
   stationName: string | null;
   /** True only when we wrote a community PriceHistory entry. */
   communityUpdated: boolean;
+  /**
+   * Pre-computed savings vs area average for the celebration screen
+   * (Story 5.3). null when area_avg_at_fillup couldn't be resolved
+   * (no station match AND no GPS reverse-geocode hit, or no benchmark
+   * exists for the resolved voivodeship × fuel_type). Positive values =
+   * driver paid less than the regional median; negative = above.
+   * Computed server-side so the float math doesn't drift between
+   * platforms.
+   */
+  savingsPln: number | null;
 }
 
 export interface ListFillupsResult {
@@ -52,6 +63,7 @@ export class FillupService {
     private readonly prisma: PrismaService,
     private readonly stations: StationService,
     private readonly benchmarks: RegionalBenchmarkService,
+    private readonly voivodeshipLookup: VoivodeshipLookupService,
   ) {}
 
   async createFillup(userId: string, dto: CreateFillupDto): Promise<CreateFillupResult> {
@@ -91,13 +103,41 @@ export class FillupService {
       : null;
     const stationId = matched?.id ?? null;
 
-    // RegionalBenchmark snapshot — only when station matched (otherwise we
-    // don't know the voivodeship and can't pick a benchmark). null is a
-    // first-class value here; downstream savings calc (Story 5.3) treats it
-    // as "no comparable area data" rather than substituting a synthetic.
-    const benchmark = stationId
-      ? await this.benchmarks.getLatestForStation(stationId, dto.fuelType)
-      : null;
+    // Story 5.3: voivodeship resolution — two paths.
+    //   (1) If the station matched, look up its voivodeship in the DB. The
+    //       station search above doesn't return it, so we re-fetch the
+    //       station's voivodeship column here.
+    //   (2) If no station match but GPS was provided, reverse-geocode via
+    //       Nominatim. Privacy: GPS coords leave our infra → 3rd party
+    //       (rounded to 2dp at cache-key time). Pre-launch follow-up to
+    //       update privacy policy.
+    // The voivodeship snapshot lets us compute savings vs area average even
+    // for fill-ups at unmapped pumps.
+    let voivodeship: string | null = null;
+    if (stationId) {
+      const station = await this.prisma.station.findUnique({
+        where: { id: stationId },
+        select: { voivodeship: true },
+      });
+      voivodeship = station?.voivodeship ?? null;
+    } else if (gpsAvailable) {
+      voivodeship = await this.voivodeshipLookup.lookupByGps(dto.gpsLat!, dto.gpsLng!);
+    }
+
+    // RegionalBenchmark snapshot. Two paths matching the voivodeship
+    // resolution above:
+    //   - Station matched → station-keyed lookup (existing 5.2 path)
+    //   - GPS-only with resolved voivodeship → voivodeship-keyed lookup (5.3)
+    // null is a first-class value — savings calc on both server + mobile
+    // treats it as "no comparable area data" rather than 0.
+    let areaAvgAtFillup: number | null = null;
+    if (stationId) {
+      const benchmark = await this.benchmarks.getLatestForStation(stationId, dto.fuelType);
+      areaAvgAtFillup = benchmark?.medianPrice ?? null;
+    } else if (voivodeship) {
+      const benchmark = await this.benchmarks.getLatestForVoivodeship(voivodeship, dto.fuelType);
+      areaAvgAtFillup = benchmark?.medianPrice ?? null;
+    }
 
     const filledAt = dto.filledAt ? new Date(dto.filledAt) : new Date();
 
@@ -110,8 +150,9 @@ export class FillupService {
         litres: dto.litres,
         total_cost_pln: dto.totalCostPln,
         price_per_litre_pln: dto.pricePerLitrePln,
-        area_avg_at_fillup: benchmark?.medianPrice ?? null,
+        area_avg_at_fillup: areaAvgAtFillup,
         odometer_km: dto.odometerKm ?? null,
+        voivodeship,
         filled_at: filledAt,
       },
     });
@@ -186,11 +227,25 @@ export class FillupService {
       });
     }
 
+    // Story 5.3: pre-compute savings server-side so the float math is
+    // canonical. Use grosz-integer arithmetic (round each side to grosz
+    // before subtracting) so the result is platform-stable — the prior
+    // pattern `Math.round((a-p)*l*100)/100` was vulnerable to FP drift
+    // around .5 boundaries (~16.55 vs 16.56 across Node versions). null
+    // when areaAvgAtFillup is missing — mobile SavingsDisplay renders
+    // nothing in that case (AC2).
+    const savingsPln =
+      areaAvgAtFillup !== null
+        ? (Math.round(areaAvgAtFillup * dto.litres * 100) -
+           Math.round(dto.pricePerLitrePln * dto.litres * 100)) / 100
+        : null;
+
     return {
       fillUp,
       stationMatched: stationId !== null,
       stationName: matched?.name ?? null,
       communityUpdated,
+      savingsPln,
     };
   }
 

@@ -859,8 +859,14 @@ epics:
       - id: 5.3
         title: "Savings vs. Area Average Calculation"
         file: 5-3-savings-vs-area-average-calculation.md
-        status: ready-for-dev
+        status: review
         ready_date: 2026-04-07
+        dev_started: 2026-05-02
+        dev_completed: 2026-05-02
+        review_date: 2026-05-02
+        review_findings: "8 patches applied, 8 deferred, ~12 rejected. Privacy/Nominatim (4): P-1 GPS rounded to 2dp before BOTH cache key AND Nominatim URL (was only cache key); P-2 logs scrubbed of full-precision coords; P-7 distinguish transient (429/5xx/network → 5min cache) from definitive failures (4xx → 24h cache); P-9 coordinate range validation. Math (1): P-3 grosz-integer arithmetic for savings (was FP-vulnerable around .5 boundaries). Mobile (2): P-5 hide line when savingsPln === 0; P-12 Number.isFinite guard. i18n (1): P-14 Polish gender-neutral 'Zaoszczędzono' (was masculine 'Zaoszczędziłeś'). Acceptance Auditor: 4/4 ACs cleanly satisfied."
+        patches_applied: "2026-05-02 — all 8 applied; +7 new tests; tightened FP tolerance windows to exact equality after P-3. 986/986 api (was 979) + 31/31 mobile pass; tsc clean across types/api/mobile."
+        note: "Backend: FillUp.voivodeship migration, VoivodeshipLookupService (Nominatim, 24h/5min cache), RegionalBenchmarkService.getLatestForVoivodeship, FillupService extended with voivodeship resolution + grosz-integer savings. Mobile: calculateSavings utility, SavingsDisplay component (green/amber, never red), wired into fillup-capture celebration step + i18n in en/pl/uk. Pre-launch: privacy policy needs Nominatim disclosure (GPS coords leave our infra to a third party for the first time, even though rounded to 2dp)."
       - id: 5.4
         title: "Odometer OCR & Consumption Tracking"
         file: 5-4-odometer-ocr-consumption-tracking.md

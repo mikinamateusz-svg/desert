@@ -99,4 +99,26 @@ export class RegionalBenchmarkService {
 
     return benchmark ? { medianPrice: benchmark.median_price } : null;
   }
+
+  /**
+   * Same as getLatestForStation but takes a voivodeship slug directly —
+   * skips the Station lookup. Used by Story 5.3 when a fill-up has no
+   * matched station but the voivodeship was reverse-geocoded from GPS,
+   * so savings vs. area average can still be computed for unmapped pumps.
+   *
+   * Returns null when no benchmark exists for the (voivodeship × fuelType)
+   * combination — caller treats null as "no comparable data".
+   */
+  async getLatestForVoivodeship(
+    voivodeship: string,
+    fuelType: string,
+  ): Promise<{ medianPrice: number } | null> {
+    const benchmark = await this.prisma.regionalBenchmark.findFirst({
+      where: { voivodeship, fuel_type: fuelType },
+      orderBy: { calculated_at: 'desc' },
+      select: { median_price: true },
+    });
+
+    return benchmark ? { medianPrice: benchmark.median_price } : null;
+  }
 }

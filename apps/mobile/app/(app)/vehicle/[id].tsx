@@ -114,7 +114,17 @@ function VehicleEditScreenContent() {
           onPress: async () => {
             try {
               await apiDeleteVehicle(accessToken, vehicle.id);
-              router.back();
+              // Pass the deleted ID back to /log so it can drop the row from
+              // its cached list immediately. Without this hint, the list
+              // shows the deleted vehicle until the focus refetch resolves
+              // (~300ms–2s of network latency) — long enough for the user
+              // to tap it again and hit a 404. router.replace not back, so
+              // the params actually reach the log screen (back doesn't push
+              // params; replace does).
+              router.replace({
+                pathname: '/(app)/log',
+                params: { deletedId: vehicle.id },
+              });
             } catch (e) {
               // eslint-disable-next-line no-console
               console.warn('vehicle delete failed', e);

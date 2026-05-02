@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useFocusEffect, router } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { tokens } from '../../src/theme';
 import { useAuth } from '../../src/store/auth.store';
@@ -37,10 +37,29 @@ function LogScreenContent() {
   const { t } = useTranslation();
   const { accessToken } = useAuth();
 
+  // `deletedId` is set by vehicle/[id].tsx after a successful DELETE — see
+  // its handleDelete onPress. We use it for an optimistic local prune so the
+  // user doesn't see (and tap) the deleted row during the focus-refetch
+  // network round-trip. The refetch still runs and reconciles canonically,
+  // this just smooths the visible jump.
+  const params = useLocalSearchParams<{ deletedId?: string }>();
+
   const [vehicles, setVehicles] = useState<Vehicle[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Optimistic prune: when we land here with ?deletedId=xxx, drop that row
+  // from cached list immediately. Runs once per param value (we wipe the
+  // search params via router.setParams so the same hint can't re-fire).
+  useEffect(() => {
+    const deletedId = params.deletedId;
+    if (!deletedId) return;
+    setVehicles((prev) => (prev ? prev.filter((v) => v.id !== deletedId) : prev));
+    // Clear the param so a back-navigation that re-mounts this screen
+    // doesn't re-apply a stale hint.
+    router.setParams({ deletedId: undefined });
+  }, [params.deletedId]);
 
   // Ref so loadVehicles can read "have we loaded once?" without putting the
   // mutable `vehicles` state into useFocusEffect's deps (which would re-create

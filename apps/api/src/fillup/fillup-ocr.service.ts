@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import Anthropic from '@anthropic-ai/sdk';
 import { OcrSpendService } from '../photo/ocr-spend.service.js';
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -20,6 +19,16 @@ export interface FillupOcrResult {
   confidence: number;
 }
 
+interface GeminiResponse {
+  candidates?: Array<{
+    content?: { parts?: Array<{ text?: string }> };
+  }>;
+  usageMetadata?: {
+    promptTokenCount?: number;
+    candidatesTokenCount?: number;
+  };
+}
+
 // ── Constants ──────────────────────────────────────────────────────────────
 
 const VALID_FUEL_TYPES: ReadonlySet<string> = new Set([
@@ -30,16 +39,19 @@ const VALID_FUEL_TYPES: ReadonlySet<string> = new Set([
   'LPG',
 ]);
 
-// Claude Haiku 4.5 pricing — input $1/M, output $5/M (USD).
-// Independent from the Gemini-rate constants in OcrSpendService so cost
-// tracking stays accurate regardless of which model a call uses.
-const HAIKU_INPUT_USD_PER_MTOKEN = 1.0;
-const HAIKU_OUTPUT_USD_PER_MTOKEN = 5.0;
-
 // 10s wall-clock cap per AC10. The mobile client expects to never wait
 // longer than this for the OCR endpoint; on abort we return confidence: 0
 // so the user is routed straight to manual entry.
-const HAIKU_TIMEOUT_MS = 10_000;
+const GEMINI_TIMEOUT_MS = 10_000;
+
+const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
+// Match the price-board OCR model (Story 3.5) — single Gemini Flash for all
+// vision tasks lets us share spend tracking constants in OcrSpendService
+// (which were already keyed to Gemini Flash rates). Switched from Claude
+// Haiku 4.5 on 2026-05-02; Mateusz to benchmark against Haiku later when
+// pump-meter ground-truth photos are collected. See memory:
+// project_vision_model_refactor.md for the eventual shared-helper plan.
+const GEMINI_MODEL = 'gemini-2.5-flash';
 
 const PUMP_METER_OCR_PROMPT = `You are reading a fuel pump meter display.
 
@@ -60,42 +72,40 @@ Return only valid JSON — no markdown, no code fences:
 
 // ── Service ────────────────────────────────────────────────────────────────
 
+/**
+ * Sends a pump meter photo to Gemini Flash and extracts cost/volume/price/fuel.
+ *
+ * NEVER throws — all errors (timeout, network, parse failure, low confidence,
+ * spend cap reached) collapse to `{ confidence: 0, ...nulls }` so the
+ * controller can return 200 and the mobile client routes the user to manual
+ * entry per AC9 / AC10.
+ *
+ * Spend tracking shares the daily cap with the price-board OCR pipeline
+ * (both go through `OcrSpendService.recordSpend`). Cost computation uses
+ * `computeCostUsd` directly since both pipelines now use the same Gemini
+ * Flash rates.
+ */
 @Injectable()
 export class FillupOcrService {
   private readonly logger = new Logger(FillupOcrService.name);
-  private readonly client: Anthropic;
+  private readonly apiKey: string;
 
   constructor(
     private readonly config: ConfigService,
     private readonly spend: OcrSpendService,
   ) {
-    this.client = new Anthropic({
-      apiKey: this.config.getOrThrow<string>('ANTHROPIC_API_KEY'),
-    });
+    this.apiKey = this.config.getOrThrow<string>('GEMINI_API_KEY');
   }
 
-  /**
-   * Sends a pump meter photo to Claude Haiku and extracts cost/volume/price/fuel.
-   *
-   * NEVER throws — all errors (timeout, network, parse failure, low confidence)
-   * collapse to `{ confidence: 0, ...nulls }` so the controller can return 200
-   * and the mobile client routes the user to manual entry per AC9 / AC10.
-   */
   async extractFromPumpMeter(
     photoBuffer: Buffer,
     mediaType: 'image/jpeg' | 'image/png' = 'image/jpeg',
   ): Promise<FillupOcrResult> {
-    // Spend-cap precheck (P-2). Per project memory `project_ocr_spend_cap.md`
-    // the daily cap is a hard, fail-closed kill switch. The original
-    // implementation called Anthropic unconditionally and only recorded spend
-    // afterwards — a burst could blow past the cap. Now we bail BEFORE the
-    // paid call when the day's spend is already at or above the cap. The
-    // Gemini-backed price-board OCR shares the same Redis bucket so this
-    // protects both pipelines together.
-    //
-    // On Redis blip the cap reads default to 0 spend → call proceeds (fail-
-    // open on infra outage rather than blocking the entire OCR feature).
-    // The recordSpend path below also fails open.
+    // Spend-cap precheck (P-2 from Story 5.2 CR). Per project memory
+    // `project_ocr_spend_cap.md` the daily cap is a hard, fail-closed kill
+    // switch. Bail BEFORE the paid call when the day's spend is already at
+    // or above the cap. Fail-open on Redis blip so infra outage doesn't
+    // block the entire OCR feature.
     try {
       const [dailySpend, spendCap] = await Promise.all([
         this.spend.getDailySpend(),
@@ -103,7 +113,7 @@ export class FillupOcrService {
       ]);
       if (Number.isFinite(dailySpend) && Number.isFinite(spendCap) && dailySpend >= spendCap) {
         this.logger.warn(
-          `FillupOcr: daily spend cap reached ($${dailySpend.toFixed(2)} / $${spendCap.toFixed(2)}) — refusing to call Haiku, returning empty result.`,
+          `FillupOcr: daily spend cap reached ($${dailySpend.toFixed(2)} / $${spendCap.toFixed(2)}) — refusing to call Gemini, returning empty result.`,
         );
         return this.emptyResult();
       }
@@ -115,55 +125,61 @@ export class FillupOcrService {
 
     try {
       const base64Image = photoBuffer.toString('base64');
+      const url = `${GEMINI_API_BASE}/${GEMINI_MODEL}:generateContent?key=${this.apiKey}`;
 
-      const response = await this.client.messages.create(
-        {
-          model: 'claude-haiku-4-5',
-          // 256 tokens fits the JSON object comfortably (~70 tokens for the
-          // shape + values). Keeping this tight bounds Haiku output cost.
-          max_tokens: 256,
-          messages: [
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
             {
               role: 'user',
-              content: [
-                {
-                  type: 'image',
-                  source: { type: 'base64', media_type: mediaType, data: base64Image },
-                },
-                { type: 'text', text: PUMP_METER_OCR_PROMPT },
+              parts: [
+                { inline_data: { mime_type: mediaType, data: base64Image } },
+                { text: PUMP_METER_OCR_PROMPT },
               ],
             },
           ],
-        },
-        { signal: AbortSignal.timeout(HAIKU_TIMEOUT_MS) },
-      );
+          generationConfig: {
+            responseMimeType: 'application/json',
+            // Deterministic decoding for OCR — temperature 0 gives the
+            // model's most-confident reading every time. Same as price-
+            // board OCR.
+            temperature: 0.0,
+          },
+        }),
+        signal: AbortSignal.timeout(GEMINI_TIMEOUT_MS),
+      });
 
-      // Track Haiku spend separately from Gemini OCR — Haiku rates ≠ Gemini
-      // rates, so we can't use OcrSpendService.computeCostUsd which is keyed
-      // to Gemini. Pre-compute and pass the precomputed cost into recordSpend.
-      //
-      // P-5 hardening: guard against SDK shape drift / streaming variants
-      // where `usage` or its token counts could be undefined. Direct
-      // `.input_tokens` deref previously masqueraded as a Haiku failure
-      // (TypeError swallowed by outer catch) — wasted spend, no result.
-      const inputTokens = response.usage?.input_tokens ?? 0;
-      const outputTokens = response.usage?.output_tokens ?? 0;
+      if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        this.logger.warn(
+          `FillupOcr: Gemini ${res.status} — falling back to manual: ${body.slice(0, 200)}`,
+        );
+        return this.emptyResult();
+      }
+
+      const responseBody = (await res.json()) as GeminiResponse;
+      const inputTokens = responseBody.usageMetadata?.promptTokenCount ?? 0;
+      const outputTokens = responseBody.usageMetadata?.candidatesTokenCount ?? 0;
       if (inputTokens > 0 || outputTokens > 0) {
-        const costUsd =
-          (inputTokens / 1_000_000) * HAIKU_INPUT_USD_PER_MTOKEN +
-          (outputTokens / 1_000_000) * HAIKU_OUTPUT_USD_PER_MTOKEN;
-        // Best-effort — never fail an OCR call because spend tracking blipped.
+        // OcrSpendService.computeCostUsd is keyed to Gemini Flash rates
+        // (matches the model we use here), so we can call it directly
+        // instead of pre-computing per-model rates as the previous Haiku
+        // implementation had to do. Best-effort recordSpend — never fail
+        // an OCR call because spend tracking blipped.
+        const costUsd = this.spend.computeCostUsd(inputTokens, outputTokens);
         void this.spend.recordSpend(costUsd).catch((e) =>
           this.logger.warn(
-            `recordSpend failed (Haiku $${costUsd.toFixed(4)}): ${e instanceof Error ? e.message : String(e)}`,
+            `recordSpend failed (Gemini $${costUsd.toFixed(4)}): ${e instanceof Error ? e.message : String(e)}`,
           ),
         );
       } else {
-        this.logger.warn('FillupOcr: response.usage missing token counts — skipping spend record.');
+        this.logger.warn('FillupOcr: response.usageMetadata missing token counts — skipping spend record.');
       }
 
       const rawText =
-        response.content[0]?.type === 'text' ? response.content[0].text : '';
+        responseBody.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
       return this.parseResponse(rawText);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
@@ -173,7 +189,7 @@ export class FillupOcrService {
   }
 
   /**
-   * Parses Haiku's JSON response. Returns the empty result on any parse
+   * Parses Gemini's JSON response. Returns the empty result on any parse
    * failure or missing required value — never throws. The controller surfaces
    * `confidence: 0` to the mobile client which then routes to manual entry.
    */

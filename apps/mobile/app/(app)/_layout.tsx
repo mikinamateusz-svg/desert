@@ -139,6 +139,12 @@ export default function AppLayout() {
         options={{ href: null, headerShown: false }}
       />
 
+      {/* ── Odometer capture: Story 5.4, Phase 2-gated entry from log tab ── */}
+      <Tabs.Screen
+        name="odometer-capture"
+        options={{ href: null, headerShown: false }}
+      />
+
     </Tabs>
   );
 }

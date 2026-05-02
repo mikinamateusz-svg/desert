@@ -870,9 +870,13 @@ epics:
       - id: 5.4
         title: "Odometer OCR & Consumption Tracking"
         file: 5-4-odometer-ocr-consumption-tracking.md
-        status: in-progress
+        status: review
         ready_date: 2026-04-07
         dev_started: 2026-05-02
+        dev_completed: 2026-05-02
+        review_date: 2026-05-02
+        review_findings: "11/11 ACs MET. 10 patches identified; P7 rejected on re-read (the fail-closed/fail-open comment is internally consistent). 9 applied: P1 (auto-link race + P2002 soften), P2 (symmetric ±30min auto-link window), P3 (recordedAt bounds + temporal invariant), P4 (logger.warn on bad explicit fillupId), P5 (localize SafeAreaForm Close), P6 (NumericField dead code), P8 (ConsumptionResult comment + kmDelta non-null), P9 (recordedAt path tests), P10 (OCR upper-bound = DTO upper-bound). Notable defers: spend-cap precheck race (cross-cutting OCR pattern), client-side km plausibility (UX polish), token-rotation step jitter (known bug). Spec drifts: Gemini Flash instead of Claude Haiku (per project_vision_model_refactor.md memory)."
+        patches_applied: "2026-05-02 — 9 of 10 applied; +6 new api tests (3 P3 recordedAt cases, 1 P10 cap, 2 P4 fillupId softening). 1028/1028 api (was 1022) pass; mobile tsc clean."
       - id: 5.5
         title: "Personal History & Summaries"
         file: 5-5-personal-history-summaries.md

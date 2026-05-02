@@ -1,6 +1,6 @@
 # Story 5.4: Odometer OCR & Consumption Tracking
 
-Status: in-progress
+Status: review
 
 ## Story
 

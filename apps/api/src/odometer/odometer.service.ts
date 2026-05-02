@@ -5,7 +5,7 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { OdometerReading } from '@prisma/client';
+import { OdometerReading, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateOdometerDto } from './dto/create-odometer.dto.js';
 
@@ -15,16 +15,27 @@ import { CreateOdometerDto } from './dto/create-odometer.dto.js';
 // would miss the common "log fill-up, walk to car, take odo photo" flow.
 const AUTO_LINK_WINDOW_MS = 30 * 60 * 1000;
 
+// Grace allowed on user-supplied `recordedAt` vs server clock — covers
+// minor mobile/server clock skew without letting a caller backdate a
+// reading into the future to corrupt the segment baseline.
+const RECORDED_AT_FUTURE_GRACE_MS = 5 * 60 * 1000;
+
 export interface CreateReadingResult {
   reading: OdometerReading;
   consumption: ConsumptionResult | null;
 }
 
+/**
+ * Returned only when there IS a previous reading (i.e. not the baseline).
+ * Baseline reads return `consumption: null` on `CreateReadingResult` and
+ * skip this object entirely. So `kmDelta` is always populated here; the
+ * consumption / litres pair is null only when no fill-ups fell in the
+ * segment between the two readings (AC5).
+ */
 export interface ConsumptionResult {
-  /** Null when baseline (no previous reading) or no fill-ups in segment. */
+  /** Null when no fill-ups in segment. */
   consumptionL100km: number | null;
-  /** Null when baseline. */
-  kmDelta: number | null;
+  kmDelta: number;
   /** Null when no fill-ups in segment. */
   litresInSegment: number | null;
 }
@@ -113,6 +124,31 @@ export class OdometerService {
 
     const recordedAt = dto.recordedAt ? new Date(dto.recordedAt) : new Date();
 
+    // Bound caller-supplied `recordedAt`. The DTO only validates ISO format,
+    // so without these checks a client could backdate a reading below the
+    // previous one (scrambling the consumption baseline) or future-date it
+    // (the auto-link window slides into a region where no fill-ups exist
+    // and consumption math divides by an inflated kmDelta on the next save).
+    const futureCeiling = Date.now() + RECORDED_AT_FUTURE_GRACE_MS;
+    if (recordedAt.getTime() > futureCeiling) {
+      throw new UnprocessableEntityException({
+        statusCode: 422,
+        error: 'INVALID_RECORDED_AT',
+        message: 'recordedAt cannot be in the future.',
+      });
+    }
+    if (prevReading && recordedAt.getTime() <= prevReading.recorded_at.getTime()) {
+      // The km validation alone (above) only enforces ordering by km, not
+      // by time. A reading dated before the previous one would slot into
+      // the wrong place in `orderBy: recorded_at desc` and corrupt all
+      // future consumption queries. Reject explicitly.
+      throw new UnprocessableEntityException({
+        statusCode: 422,
+        error: 'INVALID_RECORDED_AT',
+        message: 'recordedAt must be after the previous reading.',
+      });
+    }
+
     // Save the reading first. Auto-link runs after so we have a
     // reading.id to point fillup_id at. If no fillup_id is resolved
     // (neither explicit nor auto-link), reading stands alone.
@@ -138,31 +174,52 @@ export class OdometerService {
         where: { id: dto.fillupId },
         select: { id: true, user_id: true, vehicle_id: true, odometerReading: { select: { id: true } } },
       });
-      if (
-        fillup &&
-        fillup.user_id === userId &&
-        fillup.vehicle_id === dto.vehicleId &&
-        !fillup.odometerReading
-      ) {
-        linkedFillupId = fillup.id;
-      } else if (fillup && fillup.odometerReading) {
-        // Already linked — log and skip silently rather than throwing.
-        // Possible cause: double-tap on the celebration "Save reading"
-        // button. The reading itself is still valid stand-alone.
+      if (!fillup) {
+        // Caller passed a fillupId that doesn't resolve. Could be a stale
+        // mobile cache or a deleted fill-up. Logged so the case is visible
+        // in telemetry — silent fall-through to stand-alone save would
+        // mask a client-side bug indefinitely.
+        this.logger.warn(
+          `[OdometerService] Explicit fillupId=${dto.fillupId} not found — saving stand-alone.`,
+        );
+      } else if (fillup.user_id !== userId || fillup.vehicle_id !== dto.vehicleId) {
+        // Caller passed a fillupId that resolves to someone else's fill-up
+        // OR to a different vehicle of the same user. Either way the link
+        // is structurally inconsistent — log + drop. We don't throw because
+        // the reading itself is still a valid record; refusing the whole
+        // save over a bad link would be over-strict.
+        this.logger.warn(
+          `[OdometerService] Explicit fillupId=${dto.fillupId} does not match user=${userId} vehicle=${dto.vehicleId} — saving stand-alone.`,
+        );
+      } else if (fillup.odometerReading) {
+        // Already linked — possible cause: double-tap on the celebration
+        // "Save reading" button. The reading itself is still valid
+        // stand-alone.
         this.logger.warn(
           `[OdometerService] FillUp ${dto.fillupId} already has a linked reading — saving stand-alone.`,
         );
+      } else {
+        linkedFillupId = fillup.id;
       }
     } else {
-      // Auto-link — search for an unlinked fill-up within the window.
-      const cutoff = new Date(recordedAt.getTime() - AUTO_LINK_WINDOW_MS);
+      // Auto-link — search for an unlinked fill-up within ±AUTO_LINK_WINDOW.
+      // Symmetric so the standalone-capture flow catches the common pattern
+      // of "take odometer photo at the pump → walk to register → log fill-up
+      // a minute later" where the fill-up's filled_at is *after* the
+      // reading's recordedAt. A one-sided lookback would miss it.
+      const earliest = new Date(recordedAt.getTime() - AUTO_LINK_WINDOW_MS);
+      const latest = new Date(recordedAt.getTime() + AUTO_LINK_WINDOW_MS);
       const recentFillup = await this.prisma.fillUp.findFirst({
         where: {
           vehicle_id: dto.vehicleId,
           user_id: userId,
-          filled_at: { gte: cutoff, lte: recordedAt },
+          filled_at: { gte: earliest, lte: latest },
           odometerReading: null,
         },
+        // Prefer the fill-up closest in time. Postgres can't sort by absolute
+        // delta natively without a raw expression, so we order by descending
+        // filled_at and let the LIMIT 1 pick the most recent — same heuristic
+        // as before. Good enough since the window is only 30 minutes.
         orderBy: { filled_at: 'desc' },
         select: { id: true },
       });
@@ -173,17 +230,34 @@ export class OdometerService {
     // FillUp.odometer_km updates either both succeed or both fail together
     // — no half-linked state where the reading points at a fill-up but
     // the fill-up still shows the old odometer_km.
+    //
+    // Concurrency: two readings created back-to-back can both pass the
+    // `odometerReading: null` check above (TOCTOU) and both attempt to set
+    // OdometerReading.fillup_id = X here. The unique index on fillup_id
+    // makes the second one throw P2002. We swallow the unique violation
+    // and let the reading stand alone — the first writer wins the link.
     if (linkedFillupId) {
-      await this.prisma.$transaction([
-        this.prisma.odometerReading.update({
-          where: { id: reading.id },
-          data: { fillup_id: linkedFillupId },
-        }),
-        this.prisma.fillUp.update({
-          where: { id: linkedFillupId },
-          data: { odometer_km: dto.km },
-        }),
-      ]);
+      try {
+        await this.prisma.$transaction([
+          this.prisma.odometerReading.update({
+            where: { id: reading.id },
+            data: { fillup_id: linkedFillupId },
+          }),
+          this.prisma.fillUp.update({
+            where: { id: linkedFillupId },
+            data: { odometer_km: dto.km },
+          }),
+        ]);
+      } catch (err) {
+        if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+          this.logger.warn(
+            `[OdometerService] FillUp ${linkedFillupId} link lost a race with a concurrent reading — saving stand-alone.`,
+          );
+          linkedFillupId = null;
+        } else {
+          throw err;
+        }
+      }
     }
 
     // Compute consumption only if there was a previous reading (AC3).

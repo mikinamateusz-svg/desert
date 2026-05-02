@@ -204,8 +204,12 @@ export class OdometerOcrService {
   private coerceKm(value: unknown): number | null {
     // Accepts integers (the prompt asks for integer km). Floor any
     // floating-point Gemini occasionally returns. Reject zero, negatives,
-    // non-finite values.
+    // non-finite values, and anything above the DTO's upper bound — a
+    // hallucinated 9-digit reading would otherwise round-trip to the
+    // mobile client and only fail at DTO validation on submit, after
+    // wasting a confirmation screen.
     if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) return null;
+    if (value > 2_000_000) return null;
     return Math.floor(value);
   }
 

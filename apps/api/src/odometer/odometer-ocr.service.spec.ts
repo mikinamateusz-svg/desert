@@ -113,6 +113,15 @@ describe('OdometerOcrService', () => {
       expect((await service.extractKm(Buffer.from('img'))).km).toBeNull();
     });
 
+    it('coerces hallucinated km above 2,000,000 to null (DTO upper bound)', async () => {
+      // Without this guard, a 9-digit hallucination would round-trip to the
+      // mobile client and only fail at DTO validation on submit.
+      global.fetch = jest.fn().mockResolvedValue(
+        geminiResponse(JSON.stringify({ km: 999_999_999, confidence: 0.9 })),
+      );
+      expect((await service.extractKm(Buffer.from('img'))).km).toBeNull();
+    });
+
     it('returns the empty result on AbortError (10s timeout, AC9)', async () => {
       global.fetch = jest.fn().mockRejectedValue(new DOMException('aborted', 'AbortError'));
 

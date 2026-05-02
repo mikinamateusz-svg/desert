@@ -194,6 +194,13 @@ function LogScreenContent() {
               );
             })}
             <TouchableOpacity
+              style={styles.recordOdometerButton}
+              onPress={() => router.push('/(app)/odometer-capture')}
+              accessibilityRole="button"
+            >
+              <Text style={styles.recordOdometerText}>{t('log.recordOdometer')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               style={styles.addButton}
               onPress={() => router.push('/(app)/vehicle-setup')}
               accessibilityRole="button"
@@ -330,6 +337,20 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     color: tokens.brand.accent,
+  },
+  recordOdometerButton: {
+    marginTop: 8,
+    paddingVertical: 14,
+    borderRadius: tokens.radius.md,
+    borderWidth: 1,
+    borderColor: tokens.neutral.n200,
+    alignItems: 'center',
+    backgroundColor: tokens.surface.card,
+  },
+  recordOdometerText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: tokens.neutral.n500,
   },
   primaryButton: {
     paddingVertical: 14,

@@ -88,6 +88,7 @@ export default {
   common: {
     close: 'Zamknij',
     cancel: 'Anuluj',
+    or: 'LUB',
   },
   log: {
     comingSoonTitle: 'Dziennik paliwa — wkrótce',
@@ -97,6 +98,7 @@ export default {
     emptyTitle: 'Brak pojazdów',
     emptySubtitle: 'Dodaj swój pierwszy pojazd, aby zacząć śledzić tankowania.',
     addVehicle: 'Dodaj pojazd',
+    recordOdometer: 'Zapisz stan licznika',
     guestTitle: 'Zaloguj się, aby śledzić pojazdy',
     guestSubtitle: 'Zapisuj tankowania i zużycie — wszystko prywatnie.',
     guestSignIn: 'Zaloguj się',
@@ -320,6 +322,23 @@ export default {
     odometerPlaceholder: 'np. 87450',
     addOdometer: 'Dodaj odczyt',
     skipOdometer: 'Pomiń',
+    takePhoto: 'Zrób zdjęcie',
+    odometerCameraOverlay: 'Skieruj na licznik',
+    odometerProcessing: 'Odczytuję licznik…',
+    odometerConfirmTitle: 'Potwierdź odczyt',
+    odometerConfirmSubtitle:
+      'Dotknij, aby edytować, jeśli coś jest nie tak.',
+    odometerRetake: 'Zrób zdjęcie ponownie',
+    odometerOcrFailed:
+      'Nie udało się odczytać licznika — wpisz wartość ręcznie.',
+    odometerSaveFailed: 'Nie udało się zapisać odczytu licznika.',
+    odometerNegativeDelta:
+      'Odczyt musi być większy niż {{previousKm}} km (poprzedni odczyt).',
+    odometerBaseline:
+      'Zapisano jako wartość początkową — l/100km pojawi się po kolejnym tankowaniu.',
+    odometerNoFillups:
+      'Dystans zapisany — brak tankowań w tym odcinku, więc nie da się obliczyć l/100km.',
+    consumptionResult: '{{value}} l/100km na tym tanku',
     celebrationFillup: '{{litres}} L · {{cost}} PLN',
     // Impersonal "Zaoszczędzono" instead of gendered past-tense
     // "Zaoszczędziłeś" (masculine) so the message reads correctly for any
@@ -398,5 +417,38 @@ export default {
       EV: 'Elektryczny',
       PHEV: 'Hybryda Plug-in',
     },
+  },
+  odometer: {
+    title: 'Stan licznika',
+    chooseSubtitle:
+      'Zrób zdjęcie licznika lub wpisz przebieg ręcznie.',
+    takePhoto: 'Zrób zdjęcie',
+    enterManually: 'Wpisz ręcznie',
+    cameraOverlay: 'Skieruj na licznik',
+    processing: 'Odczytuję licznik…',
+    confirmTitle: 'Potwierdź odczyt',
+    confirmSubtitle: 'Dotknij, aby edytować, jeśli coś jest nie tak.',
+    manualTitle: 'Wpisz odczyt',
+    kmLabel: 'Kilometry',
+    kmPlaceholder: 'np. 87450',
+    saveButton: 'Zapisz odczyt',
+    retake: 'Zrób zdjęcie ponownie',
+    selectVehicleTitle: 'Wybierz pojazd',
+    selectVehicleSubtitle: 'Do którego auta dotyczy ten odczyt?',
+    savedTitle: 'Odczyt zapisany',
+    savedKm: '{{km}} km',
+    savedConsumption: '{{value}} l/100km na tym tanku',
+    savedBaseline:
+      'Zapisano jako wartość początkową — l/100km pojawi się po kolejnym tankowaniu.',
+    savedNoFillups:
+      'Dystans zapisany — brak tankowań w tym odcinku, więc nie da się obliczyć l/100km.',
+    done: 'Gotowe',
+    ocrFailed:
+      'Nie udało się odczytać licznika — wpisz wartość ręcznie.',
+    errorSaving: 'Nie udało się zapisać odczytu. Spróbuj ponownie.',
+    negativeDelta:
+      'Odczyt musi być większy niż {{previousKm}} km (poprzedni odczyt).',
+    noVehicleTitle: 'Najpierw dodaj pojazd',
+    noVehicleAction: 'Dodaj moje auto',
   },
 } as const;

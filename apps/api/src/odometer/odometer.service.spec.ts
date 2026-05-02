@@ -364,6 +364,105 @@ describe('OdometerService', () => {
 
       expect(mockTransaction).not.toHaveBeenCalled();
     });
+
+    it('skips the explicit link when fillupId does not resolve', async () => {
+      mockVehicleFindUnique.mockResolvedValueOnce(makeVehicle());
+      mockReadingFindFirst.mockResolvedValueOnce(null);
+      mockFillupFindUnique.mockResolvedValueOnce(null); // garbage / deleted fillup
+
+      await service.createReading(USER_ID, baseDto({ km: 50000, fillupId: 'bogus' }));
+
+      // Reading still saves stand-alone; auto-link findFirst is NOT consulted
+      // because the explicit branch was already taken.
+      expect(mockReadingCreate).toHaveBeenCalled();
+      expect(mockFillupFindFirst).not.toHaveBeenCalled();
+      expect(mockTransaction).not.toHaveBeenCalled();
+    });
+
+    it('softens P2002 (concurrent link race) to a stand-alone save', async () => {
+      mockVehicleFindUnique.mockResolvedValueOnce(makeVehicle());
+      mockReadingFindFirst.mockResolvedValueOnce(null);
+      mockFillupFindFirst.mockResolvedValueOnce({ id: FILLUP_ID });
+      // Simulate the unique-index collision: Prisma throws P2002 when a
+      // concurrent reading already attached to the same fill-up.
+      const p2002 = Object.assign(new Error('Unique constraint failed'), {
+        code: 'P2002',
+      });
+      Object.setPrototypeOf(
+        p2002,
+        // Match the runtime check `err instanceof Prisma.PrismaClientKnownRequestError`.
+        // We can't easily import the real class without runtime overhead in
+        // the mock, so reach for the prototype the service compares against.
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        require('@prisma/client').Prisma.PrismaClientKnownRequestError.prototype,
+      );
+      mockTransaction.mockRejectedValueOnce(p2002);
+
+      const result = await service.createReading(USER_ID, baseDto({ km: 50000 }));
+
+      expect(result.reading).toBeDefined();
+      // Re-throwing would be wrong — the reading row is real, just unlinked.
+      expect(mockTransaction).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  // ── P3: recordedAt bounds ──────────────────────────────────────────────
+
+  describe('createReading — recordedAt bounds (P3)', () => {
+    it('throws 422 INVALID_RECORDED_AT when recordedAt is more than 5 minutes in the future', async () => {
+      mockVehicleFindUnique.mockResolvedValueOnce(makeVehicle());
+      mockReadingFindFirst.mockResolvedValueOnce(null);
+      const tenMinAhead = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+
+      try {
+        await service.createReading(USER_ID, baseDto({ km: 50000, recordedAt: tenMinAhead }));
+        fail('Expected UnprocessableEntityException');
+      } catch (e) {
+        const err = e as UnprocessableEntityException;
+        expect((err.getResponse() as Record<string, unknown>)['error']).toBe('INVALID_RECORDED_AT');
+      }
+      expect(mockReadingCreate).not.toHaveBeenCalled();
+    });
+
+    it('throws 422 INVALID_RECORDED_AT when recordedAt is at or before previous reading', async () => {
+      mockVehicleFindUnique.mockResolvedValueOnce(makeVehicle());
+      mockReadingFindFirst.mockResolvedValueOnce(
+        makeReading({ km: 100000, recorded_at: new Date('2026-05-10T10:00:00.000Z') }),
+      );
+
+      try {
+        // Backdated to BEFORE the most recent reading. km is fine, time is not.
+        await service.createReading(
+          USER_ID,
+          baseDto({ km: 100500, recordedAt: '2026-05-01T10:00:00.000Z' }),
+        );
+        fail('Expected UnprocessableEntityException');
+      } catch (e) {
+        const err = e as UnprocessableEntityException;
+        expect((err.getResponse() as Record<string, unknown>)['error']).toBe('INVALID_RECORDED_AT');
+      }
+      expect(mockReadingCreate).not.toHaveBeenCalled();
+    });
+
+    it('accepts an explicit recordedAt that is after the previous reading', async () => {
+      mockVehicleFindUnique.mockResolvedValueOnce(makeVehicle());
+      mockReadingFindFirst.mockResolvedValueOnce(
+        makeReading({ km: 100000, recorded_at: new Date('2026-05-01T10:00:00.000Z') }),
+      );
+      mockFillupFindFirst.mockResolvedValueOnce(null);
+      mockReadingFindUniqueOrThrow.mockResolvedValue(makeReading({ km: 100500 }));
+      mockFillupFindMany.mockResolvedValueOnce([]);
+
+      const recordedAt = '2026-05-02T11:30:00.000Z';
+      await service.createReading(USER_ID, baseDto({ km: 100500, recordedAt }));
+
+      // Verify the create used our supplied recordedAt, not a server now()
+      expect(mockReadingCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ recorded_at: new Date(recordedAt) }),
+        }),
+      );
+    });
   });
 
   // ── listReadings ────────────────────────────────────────────────────────

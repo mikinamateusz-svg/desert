@@ -88,6 +88,7 @@ export default {
   common: {
     close: 'Close',
     cancel: 'Cancel',
+    or: 'OR',
   },
   log: {
     // Shown when the Phase 2 feature flag is OFF (production builds). When ON,
@@ -99,6 +100,7 @@ export default {
     emptyTitle: 'No vehicles yet',
     emptySubtitle: 'Add your first vehicle to start tracking fill-ups.',
     addVehicle: 'Add vehicle',
+    recordOdometer: 'Record odometer reading',
     guestTitle: 'Sign in to track your vehicles',
     guestSubtitle: 'Save your fill-ups and consumption — we keep it private.',
     guestSignIn: 'Sign in',
@@ -319,6 +321,23 @@ export default {
     odometerPlaceholder: 'e.g. 87450',
     addOdometer: 'Add reading',
     skipOdometer: 'Skip',
+    takePhoto: 'Take a photo',
+    odometerCameraOverlay: 'Point at the odometer display',
+    odometerProcessing: 'Reading odometer…',
+    odometerConfirmTitle: 'Confirm reading',
+    odometerConfirmSubtitle:
+      'Tap to edit if anything looks off.',
+    odometerRetake: 'Retake photo',
+    odometerOcrFailed:
+      "Couldn't read the odometer — please enter the value manually.",
+    odometerSaveFailed: "Couldn't save the odometer reading.",
+    odometerNegativeDelta:
+      'Reading must be greater than {{previousKm}} km (your last reading).',
+    odometerBaseline:
+      'Saved as your starting reading — l/100km will appear after your next fill-up.',
+    odometerNoFillups:
+      "Distance saved — no fill-ups in this segment, so we can't compute l/100km yet.",
+    consumptionResult: '{{value}} l/100km this tank',
     celebrationFillup: '{{litres}} L · {{cost}} PLN',
     savedPln: 'You saved {{amount}} PLN vs. area average',
     aboveAvgPln: '{{amount}} PLN above area average',
@@ -393,5 +412,38 @@ export default {
       EV: 'Electric',
       PHEV: 'Plug-in Hybrid',
     },
+  },
+  odometer: {
+    title: 'Record odometer',
+    chooseSubtitle:
+      'Take a photo of the odometer or enter the kilometres manually.',
+    takePhoto: 'Take a photo',
+    enterManually: 'Enter manually',
+    cameraOverlay: 'Point at the odometer display',
+    processing: 'Reading odometer…',
+    confirmTitle: 'Confirm reading',
+    confirmSubtitle: 'Tap to edit if anything looks off.',
+    manualTitle: 'Enter reading',
+    kmLabel: 'Kilometres',
+    kmPlaceholder: 'e.g. 87450',
+    saveButton: 'Save reading',
+    retake: 'Retake photo',
+    selectVehicleTitle: 'Choose a vehicle',
+    selectVehicleSubtitle: 'Pick which car this reading is for.',
+    savedTitle: 'Reading saved',
+    savedKm: '{{km}} km',
+    savedConsumption: '{{value}} l/100km this tank',
+    savedBaseline:
+      'Saved as your starting reading — l/100km will appear after your next fill-up.',
+    savedNoFillups:
+      "Distance saved — no fill-ups in this segment, so we can't compute l/100km yet.",
+    done: 'Done',
+    ocrFailed:
+      "Couldn't read the odometer — please enter the value manually.",
+    errorSaving: "Couldn't save the reading. Please try again.",
+    negativeDelta:
+      'Reading must be greater than {{previousKm}} km (your last reading).',
+    noVehicleTitle: 'Add a vehicle first',
+    noVehicleAction: 'Add my car',
   },
 } as const;

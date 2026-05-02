@@ -88,6 +88,7 @@ export default {
   common: {
     close: 'Закрити',
     cancel: 'Скасувати',
+    or: 'АБО',
   },
   log: {
     comingSoonTitle: 'Журнал пального — незабаром',
@@ -97,6 +98,7 @@ export default {
     emptyTitle: 'Ще немає автомобілів',
     emptySubtitle: 'Додайте перший автомобіль, щоб почати облік заправок.',
     addVehicle: 'Додати автомобіль',
+    recordOdometer: 'Записати показник одометра',
     guestTitle: 'Увійдіть, щоб відстежувати автомобілі',
     guestSubtitle: 'Зберігайте заправки та витрати — все приватно.',
     guestSignIn: 'Увійти',
@@ -321,6 +323,23 @@ export default {
     odometerPlaceholder: 'напр. 87450',
     addOdometer: 'Додати показник',
     skipOdometer: 'Пропустити',
+    takePhoto: 'Зробити фото',
+    odometerCameraOverlay: 'Наведіть на одометр',
+    odometerProcessing: 'Зчитую одометр…',
+    odometerConfirmTitle: 'Підтвердьте показник',
+    odometerConfirmSubtitle:
+      'Натисніть, щоб відредагувати, якщо щось не так.',
+    odometerRetake: 'Сфотографувати знову',
+    odometerOcrFailed:
+      'Не вдалося зчитати одометр — введіть значення вручну.',
+    odometerSaveFailed: 'Не вдалося зберегти показник одометра.',
+    odometerNegativeDelta:
+      'Показник має бути більшим за {{previousKm}} км (попередній показник).',
+    odometerBaseline:
+      'Збережено як стартовий показник — л/100 км з\'явиться після наступної заправки.',
+    odometerNoFillups:
+      'Відстань збережено — у цьому сегменті немає заправок, тому л/100 км поки що не обчислити.',
+    consumptionResult: '{{value}} л/100 км на цьому баку',
     celebrationFillup: '{{litres}} L · {{cost}} PLN',
     savedPln: 'Ви заощадили {{amount}} PLN порівняно із середнім по регіону',
     aboveAvgPln: '{{amount}} PLN вище середнього по регіону',
@@ -395,5 +414,38 @@ export default {
       EV: 'Електро',
       PHEV: 'Гібрид Plug-in',
     },
+  },
+  odometer: {
+    title: 'Показник одометра',
+    chooseSubtitle:
+      'Сфотографуйте одометр або введіть пробіг вручну.',
+    takePhoto: 'Зробити фото',
+    enterManually: 'Ввести вручну',
+    cameraOverlay: 'Наведіть на одометр',
+    processing: 'Зчитую одометр…',
+    confirmTitle: 'Підтвердьте показник',
+    confirmSubtitle: 'Натисніть, щоб відредагувати, якщо щось не так.',
+    manualTitle: 'Введіть показник',
+    kmLabel: 'Кілометри',
+    kmPlaceholder: 'напр. 87450',
+    saveButton: 'Зберегти показник',
+    retake: 'Сфотографувати знову',
+    selectVehicleTitle: 'Оберіть автомобіль',
+    selectVehicleSubtitle: 'До якого авто стосується цей показник?',
+    savedTitle: 'Показник збережено',
+    savedKm: '{{km}} км',
+    savedConsumption: '{{value}} л/100 км на цьому баку',
+    savedBaseline:
+      'Збережено як стартовий показник — л/100 км з\'явиться після наступної заправки.',
+    savedNoFillups:
+      'Відстань збережено — у цьому сегменті немає заправок, тому л/100 км поки що не обчислити.',
+    done: 'Готово',
+    ocrFailed:
+      'Не вдалося зчитати одометр — введіть значення вручну.',
+    errorSaving: 'Не вдалося зберегти показник. Спробуйте ще раз.',
+    negativeDelta:
+      'Показник має бути більшим за {{previousKm}} км (попередній показник).',
+    noVehicleTitle: 'Спочатку додайте автомобіль',
+    noVehicleAction: 'Додати моє авто',
   },
 } as const;

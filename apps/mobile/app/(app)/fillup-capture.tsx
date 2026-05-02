@@ -26,6 +26,8 @@ import { apiRunFillupOcr, apiCreateFillup } from '../../src/api/fillups';
 import type { FillupFuelType, FillupOcrResult } from '../../src/api/fillups';
 import { apiListVehicles } from '../../src/api/vehicles';
 import type { Vehicle } from '../../src/api/vehicles';
+import { apiRunOdometerOcr, apiCreateOdometer, OdometerApiError } from '../../src/api/odometer';
+import type { ConsumptionResult } from '../../src/api/odometer';
 import { flags } from '../../src/config/flags';
 import { SavingsDisplay } from '../../src/components/SavingsDisplay';
 
@@ -35,13 +37,16 @@ const OCR_CONFIDENCE_THRESHOLD = 0.6;
 const FUEL_OPTIONS: FillupFuelType[] = ['PB_95', 'PB_98', 'ON', 'ON_PREMIUM', 'LPG'];
 
 type Step =
-  | 'camera'           // viewfinder + capture button
-  | 'processing'       // OCR running, spinner + copy
-  | 'confirm'          // OCR succeeded — show extracted values for confirmation
-  | 'manual'           // OCR failed / low confidence / user retook + chose manual
-  | 'odometer'         // optional odometer reading nudge
-  | 'saving'           // POST /fillups in flight
-  | 'celebration'      // success — fill-up summary + community badge + nudge
+  | 'camera'             // viewfinder + capture button
+  | 'processing'         // OCR running, spinner + copy
+  | 'confirm'            // OCR succeeded — show extracted values for confirmation
+  | 'manual'             // OCR failed / low confidence / user retook + chose manual
+  | 'odometer'           // odometer nudge — Take photo or Enter manually
+  | 'odometer-camera'    // viewfinder for odometer photo
+  | 'odometer-ocr'       // odometer OCR running, spinner
+  | 'odometer-confirm'   // OCR succeeded — confirm extracted km
+  | 'saving'             // POST /fillups in flight
+  | 'celebration'        // success — fill-up summary + community badge + nudge
   | 'location-required'
   | 'error';
 
@@ -73,7 +78,25 @@ interface CelebrationData {
    * SavingsDisplay component renders nothing for null per AC2.
    */
   savingsPln: number | null;
+  /**
+   * Story 5.4: consumption result from the linked odometer reading. Three
+   * shapes:
+   *   - null              → no odometer reading was attempted (user skipped)
+   *   - { kind: 'baseline' } → reading saved, but it's the first for the
+   *     vehicle so no l/100km can be computed yet
+   *   - { kind: 'consumption', l100km, kmDelta } → consumption available
+   *   - { kind: 'no-fillups' } → reading saved but no fill-ups in segment
+   *   - { kind: 'error', message } → odometer save failed (e.g.
+   *     NEGATIVE_DELTA); fill-up still succeeded
+   */
+  odometer: OdometerOutcome | null;
 }
+
+type OdometerOutcome =
+  | { kind: 'baseline' }
+  | { kind: 'consumption'; l100km: number; kmDelta: number }
+  | { kind: 'no-fillups'; kmDelta: number }
+  | { kind: 'error'; message: string };
 
 // ── Phase 2 gate ──────────────────────────────────────────────────────────
 //
@@ -104,6 +127,12 @@ function FillupCaptureContent() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
   const [cameraKey, setCameraKey] = useState(0);
+  // Odometer-specific OCR state (kept separate from the pump-meter draft so
+  // a confirmed pump reading doesn't get clobbered by an in-flight odometer
+  // OCR result). odoError surfaces low-confidence / network failure on the
+  // nudge step.
+  const [odoKmDraft, setOdoKmDraft] = useState<number | undefined>(undefined);
+  const [odoError, setOdoError] = useState<string | null>(null);
   // Cancellation latch flipped by the unmount cleanup. The 10s OCR call can
   // resolve after the user has already backed out of the screen — without
   // this, applyOcrResult would call setDraft / setStep on an unmounted
@@ -137,6 +166,8 @@ function FillupCaptureContent() {
       setCelebration(null);
       setErrorMessage(null);
       setIsCapturing(false);
+      setOdoKmDraft(undefined);
+      setOdoError(null);
       return () => {
         // Latch is flipped on blur so any in-flight OCR / save callback that
         // fires after the user has navigated away no-ops instead of writing
@@ -273,6 +304,61 @@ function FillupCaptureContent() {
     }
   }
 
+  // ── Odometer capture (in-flow) ─────────────────────────────────────────
+
+  const handleOdometerCapture = useCallback(async () => {
+    if (!cameraRef.current || isCapturing || !accessToken) return;
+    setIsCapturing(true);
+    setOdoError(null);
+    try {
+      const photo = await cameraRef.current.takePictureAsync({ quality: 1 });
+      if (!photo) {
+        setIsCapturing(false);
+        return;
+      }
+      const compressed = await ImageManipulator.manipulateAsync(
+        photo.uri,
+        [{ resize: { width: 1920 } }],
+        { compress: 0.75, format: ImageManipulator.SaveFormat.JPEG },
+      );
+      if (cancelledRef.current) return;
+      setStep('odometer-ocr');
+
+      try {
+        const ocr = await apiRunOdometerOcr(accessToken, compressed.uri);
+        if (cancelledRef.current) return;
+        const goodConfidence = ocr.km !== null && ocr.confidence >= OCR_CONFIDENCE_THRESHOLD;
+        if (goodConfidence) {
+          setOdoKmDraft(ocr.km ?? undefined);
+          setStep('odometer-confirm');
+        } else {
+          // Low confidence / null km → bounce back to nudge with manual
+          // input pre-focused. Pre-fill the field if we have ANY value
+          // (even sub-threshold) so the user only edits if needed.
+          if (ocr.km !== null) {
+            setDraft((prev) => ({ ...prev, odometerKm: ocr.km ?? undefined }));
+          }
+          setOdoError(t('fillup.odometerOcrFailed'));
+          setStep('odometer');
+        }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn('apiRunOdometerOcr failed', e);
+        if (cancelledRef.current) return;
+        setOdoError(t('fillup.odometerOcrFailed'));
+        setStep('odometer');
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn('handleOdometerCapture failed', e);
+      if (cancelledRef.current) return;
+      setOdoError(t('fillup.odometerOcrFailed'));
+      setStep('odometer');
+    } finally {
+      setIsCapturing(false);
+    }
+  }, [isCapturing, accessToken, t]);
+
   // ── Save ─────────────────────────────────────────────────────────────────
 
   const handleSave = useCallback(async () => {
@@ -304,6 +390,12 @@ function FillupCaptureContent() {
     setStep('saving');
     setErrorMessage(null);
     try {
+      // odometerKm is intentionally NOT passed here. When the user provided
+      // a reading, we route it through POST /v1/me/odometer below — that
+      // endpoint creates the OdometerReading row AND updates FillUp.
+      // odometer_km in the same transaction. Going through the dedicated
+      // endpoint also runs NEGATIVE_DELTA validation; passing odometerKm
+      // here would silently bypass it and leave a bad value on the FillUp.
       const response = await apiCreateFillup(accessToken, {
         vehicleId: selectedVehicleId,
         fuelType: draft.fuelType,
@@ -312,9 +404,38 @@ function FillupCaptureContent() {
         pricePerLitrePln: draft.pricePerLitrePln,
         gpsLat: draft.gpsLat,
         gpsLng: draft.gpsLng,
-        odometerKm: draft.odometerKm,
       });
       if (cancelledRef.current) return;
+
+      // Optional odometer reading. Failure here doesn't roll the fill-up
+      // back — the fill-up is the primary record. We surface the failure
+      // inline on the celebration screen so the user knows the reading
+      // didn't stick.
+      let odometerOutcome: OdometerOutcome | null = null;
+      if (draft.odometerKm !== undefined) {
+        try {
+          const odoResponse = await apiCreateOdometer(accessToken, {
+            vehicleId: selectedVehicleId,
+            km: draft.odometerKm,
+            fillupId: response.fillUp.id,
+          });
+          if (cancelledRef.current) return;
+          odometerOutcome = consumptionToOutcome(odoResponse.consumption);
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.warn('apiCreateOdometer failed', e);
+          if (cancelledRef.current) return;
+          if (e instanceof OdometerApiError && e.error === 'NEGATIVE_DELTA' && e.previousKm !== undefined) {
+            odometerOutcome = {
+              kind: 'error',
+              message: t('fillup.odometerNegativeDelta', { previousKm: e.previousKm }),
+            };
+          } else {
+            odometerOutcome = { kind: 'error', message: t('fillup.odometerSaveFailed') };
+          }
+        }
+      }
+
       setCelebration({
         litres: draft.litres,
         totalCostPln: draft.totalCostPln,
@@ -323,6 +444,7 @@ function FillupCaptureContent() {
         stationName: response.stationName,
         communityUpdated: response.communityUpdated,
         savingsPln: response.savingsPln ?? null,
+        odometer: odometerOutcome,
       });
       setStep('celebration');
     } catch (e) {
@@ -598,26 +720,44 @@ function FillupCaptureContent() {
       >
         <Text style={styles.odoSubtitle}>{t('fillup.odometerNudgeSubtitle')}</Text>
 
+        {/* OCR fast-path button — opens the in-flow odometer camera. The
+            manual entry field below is the always-available fallback per
+            AC8 ("manual entry must always work without OCR"). */}
+        <TouchableOpacity
+          style={styles.primaryButton}
+          onPress={() => {
+            // Force a fresh camera mount so we don't get a black preview
+            // from a stale CameraView session that was previously bound to
+            // the pump-meter capture step.
+            setCameraReady(false);
+            setCameraKey((k) => k + 1);
+            setOdoError(null);
+            setStep('odometer-camera');
+          }}
+          accessibilityRole="button"
+        >
+          <Text style={styles.primaryButtonText}>{t('fillup.takePhoto')}</Text>
+        </TouchableOpacity>
+
+        {odoError && <Text style={styles.errorText}>{odoError}</Text>}
+
+        <Text style={styles.orDivider}>{t('common.or')}</Text>
+
         <FieldLabel>{t('fillup.odometerLabel')}</FieldLabel>
-        {/*
-          Story 5.4 plan: a "Take photo" option will appear here for OCR-based
-          odometer reading. Until then, plain numeric input.
-        */}
         <NumericField
           value={draft.odometerKm}
-          onChange={(v) =>
-            setDraft({
-              ...draft,
-              odometerKm: v !== undefined && Number.isInteger(v) ? v : v !== undefined ? Math.round(v) : undefined,
-            })
-          }
+          onChange={(v) => setDraft({ ...draft, odometerKm: v })}
           placeholder={t('fillup.odometerPlaceholder')}
           integer
         />
 
         <TouchableOpacity
-          style={styles.primaryButton}
+          style={[
+            styles.primaryButton,
+            draft.odometerKm === undefined && styles.primaryButtonDisabled,
+          ]}
           onPress={() => void handleSave()}
+          disabled={draft.odometerKm === undefined}
           accessibilityRole="button"
         >
           <Text style={styles.primaryButtonText}>{t('fillup.addOdometer')}</Text>
@@ -634,6 +774,123 @@ function FillupCaptureContent() {
           accessibilityRole="button"
         >
           <Text style={styles.skipText}>{t('fillup.skipOdometer')}</Text>
+        </TouchableOpacity>
+      </SafeAreaForm>
+    );
+  }
+
+  // ── Render: odometer camera (full-screen viewfinder) ─────────────────────
+
+  if (step === 'odometer-camera') {
+    return (
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" />
+        {permission?.granted ? (
+          <CameraView
+            key={cameraKey}
+            ref={cameraRef}
+            style={StyleSheet.absoluteFill}
+            facing="back"
+            onCameraReady={() => setCameraReady(true)}
+            onMountError={() => setStep('error')}
+          />
+        ) : (
+          <View style={[StyleSheet.absoluteFill, styles.cameraLoading]}>
+            <ActivityIndicator size="large" color={tokens.neutral.n0} />
+          </View>
+        )}
+
+        <TouchableOpacity
+          style={[styles.cancelButton, { top: insets.top + 12 }]}
+          onPress={() => setStep('odometer')}
+          accessibilityRole="button"
+        >
+          <Text style={styles.cancelText}>{t('contribution.cancel')}</Text>
+        </TouchableOpacity>
+
+        {/* Same framing rectangle pattern as pump-meter — odometers are also
+            small LCDs / dials photographed close-up. */}
+        <View style={styles.framingGuide} pointerEvents="none">
+          <View style={[styles.corner, styles.cornerTL]} />
+          <View style={[styles.corner, styles.cornerTR]} />
+          <View style={[styles.corner, styles.cornerBL]} />
+          <View style={[styles.corner, styles.cornerBR]} />
+        </View>
+
+        <Text style={[styles.frameHint, { bottom: insets.bottom + 168 }]}>
+          {t('fillup.odometerCameraOverlay')}
+        </Text>
+
+        <TouchableOpacity
+          style={[styles.captureButton, { bottom: insets.bottom + 32 }]}
+          onPress={() => void handleOdometerCapture()}
+          disabled={isCapturing || !cameraReady}
+          accessibilityLabel={t('contribution.takePhoto')}
+          accessibilityRole="button"
+        />
+      </View>
+    );
+  }
+
+  // ── Render: odometer OCR processing ──────────────────────────────────────
+
+  if (step === 'odometer-ocr') {
+    return (
+      <View style={styles.fullscreen}>
+        <ActivityIndicator size="large" color={tokens.brand.accent} />
+        <Text style={styles.processingText}>{t('fillup.odometerProcessing')}</Text>
+      </View>
+    );
+  }
+
+  // ── Render: odometer confirm (post-OCR) ─────────────────────────────────
+
+  if (step === 'odometer-confirm') {
+    return (
+      <SafeAreaForm
+        title={t('fillup.odometerConfirmTitle')}
+        onBack={() => setStep('odometer')}
+      >
+        <Text style={styles.odoSubtitle}>{t('fillup.odometerConfirmSubtitle')}</Text>
+
+        <FieldLabel>{t('fillup.odometerLabel')}</FieldLabel>
+        <NumericField
+          value={odoKmDraft}
+          onChange={setOdoKmDraft}
+          placeholder={t('fillup.odometerPlaceholder')}
+          integer
+        />
+
+        <TouchableOpacity
+          style={[
+            styles.primaryButton,
+            (odoKmDraft === undefined || odoKmDraft <= 0) && styles.primaryButtonDisabled,
+          ]}
+          onPress={() => {
+            if (odoKmDraft === undefined || odoKmDraft <= 0) return;
+            // Persist the confirmed value into the main draft, then route
+            // straight into save — the user has already explicitly confirmed
+            // the value here, no need to bounce back through the nudge.
+            setDraft((prev) => ({ ...prev, odometerKm: odoKmDraft }));
+            void handleSave();
+          }}
+          disabled={odoKmDraft === undefined || odoKmDraft <= 0}
+          accessibilityRole="button"
+        >
+          <Text style={styles.primaryButtonText}>{t('fillup.addOdometer')}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.secondaryButton}
+          onPress={() => {
+            setOdoKmDraft(undefined);
+            setCameraReady(false);
+            setCameraKey((k) => k + 1);
+            setStep('odometer-camera');
+          }}
+          accessibilityRole="button"
+        >
+          <Text style={styles.secondaryButtonText}>{t('fillup.odometerRetake')}</Text>
         </TouchableOpacity>
       </SafeAreaForm>
     );
@@ -668,6 +925,9 @@ function FillupCaptureContent() {
               savingsPln is null (no benchmark available) per AC2 — no
               placeholder, no zero, no error message. */}
           <SavingsDisplay savingsPln={celebration.savingsPln} />
+          {/* Story 5.4: consumption / baseline / error from the linked
+              odometer reading. Hidden when no odometer was attempted. */}
+          {celebration.odometer && <OdometerOutcomeRow outcome={celebration.odometer} />}
           {celebration.communityUpdated && celebration.stationName && (
             <Text style={styles.celebrationCommunity}>
               {t('fillup.celebrationCommunity', {
@@ -711,6 +971,43 @@ function FillupCaptureContent() {
 }
 
 // ── Helpers / sub-components ───────────────────────────────────────────────
+
+function consumptionToOutcome(consumption: ConsumptionResult | null): OdometerOutcome {
+  // Caller already gates on `draft.odometerKm !== undefined` so an
+  // odometer record was definitely created — null `consumption` from the
+  // server means the new reading is the baseline (first-ever for the
+  // vehicle) and there's nothing to compute yet.
+  if (consumption === null) return { kind: 'baseline' };
+  if (consumption.consumptionL100km !== null) {
+    return {
+      kind: 'consumption',
+      l100km: consumption.consumptionL100km,
+      kmDelta: consumption.kmDelta,
+    };
+  }
+  // kmDelta present but no fill-ups in segment (AC5) — distance is logged,
+  // l/100km isn't computable.
+  return { kind: 'no-fillups', kmDelta: consumption.kmDelta };
+}
+
+function OdometerOutcomeRow({ outcome }: { outcome: OdometerOutcome }) {
+  const { t } = useTranslation();
+  if (outcome.kind === 'baseline') {
+    return <Text style={styles.consumptionBaseline}>{t('fillup.odometerBaseline')}</Text>;
+  }
+  if (outcome.kind === 'consumption') {
+    return (
+      <Text style={styles.consumptionResult}>
+        {t('fillup.consumptionResult', { value: outcome.l100km.toFixed(1) })}
+      </Text>
+    );
+  }
+  if (outcome.kind === 'no-fillups') {
+    return <Text style={styles.consumptionBaseline}>{t('fillup.odometerNoFillups')}</Text>;
+  }
+  // 'error'
+  return <Text style={styles.odometerError}>{outcome.message}</Text>;
+}
 
 function readyToContinue(draft: Draft, selectedVehicleId: string | null): boolean {
   return (
@@ -1055,5 +1352,34 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     textAlign: 'center',
     lineHeight: 20,
+  },
+  orDivider: {
+    fontSize: 12,
+    color: tokens.neutral.n400,
+    textAlign: 'center',
+    marginVertical: 16,
+    fontWeight: '600',
+    letterSpacing: 1,
+  },
+  consumptionResult: {
+    fontSize: 16,
+    color: tokens.brand.ink,
+    fontWeight: '600',
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  consumptionBaseline: {
+    fontSize: 13,
+    color: tokens.neutral.n500,
+    marginTop: 8,
+    textAlign: 'center',
+    lineHeight: 18,
+  },
+  odometerError: {
+    fontSize: 13,
+    color: tokens.price.expensive,
+    marginTop: 8,
+    textAlign: 'center',
+    lineHeight: 18,
   },
 });

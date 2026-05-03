@@ -113,30 +113,25 @@ interface Props {
  * default. Hash format mirrors the convention used by Google Maps / OSM /
  * Mapbox examples — three comma-separated decimals after the `#`.
  *
- * SSR-safe: returns the prop defaults on the server and during the first
- * client render before useEffect fires; the map's initialViewState reads
- * this once via the useState initializer (which only runs in the browser).
+ * Returns null when no valid hash is present (or on SSR). Applied inside
+ * onLoad via map.jumpTo, NOT via initialViewState — initialViewState is
+ * captured during SSR (where window is unavailable) and React reuses the
+ * SSR state on hydration without re-running useState initializers, so the
+ * hash would be invisible there.
  */
-function readHashView(
-  defaultLat: number,
-  defaultLng: number,
-  defaultZoom: number,
-): { lat: number; lng: number; zoom: number } {
-  if (typeof window === 'undefined') {
-    return { lat: defaultLat, lng: defaultLng, zoom: defaultZoom };
-  }
+function readHashView(): { lat: number; lng: number; zoom: number } | null {
+  if (typeof window === 'undefined') return null;
   const m = window.location.hash.match(/^#(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?),(\d+(?:\.\d+)?)$/);
-  if (!m) return { lat: defaultLat, lng: defaultLng, zoom: defaultZoom };
+  if (!m) return null;
   const lat = parseFloat(m[1]!);
   const lng = parseFloat(m[2]!);
   const zoom = parseFloat(m[3]!);
-  // Sanity-clamp so a malformed hash can't crash the map.
   if (
     !Number.isFinite(lat) || lat < -90 || lat > 90 ||
     !Number.isFinite(lng) || lng < -180 || lng > 180 ||
     !Number.isFinite(zoom) || zoom < 0 || zoom > 22
   ) {
-    return { lat: defaultLat, lng: defaultLng, zoom: defaultZoom };
+    return null;
   }
   return { lat, lng, zoom };
 }
@@ -153,12 +148,10 @@ export default function MapView({
   onFuelChange,
   onBoundsChange,
 }: Props) {
-  // Read once on first render — the initialiser runs in the browser only.
-  const [initialView] = useState(() => readHashView(defaultLat, defaultLng, 6));
   const [noneInView, setNoneInView] = useState(false);
-  const [viewCenter, setViewCenter] = useState<{ lat: number; lng: number }>({ lat: initialView.lat, lng: initialView.lng });
+  const [viewCenter, setViewCenter] = useState<{ lat: number; lng: number }>({ lat: defaultLat, lng: defaultLng });
   const [viewportRadiusM, setViewportRadiusM] = useState(MIN_COLOR_RADIUS_M);
-  const [zoom, setZoom] = useState(initialView.zoom);
+  const [zoom, setZoom] = useState(6);
   const [bbox, setBbox] = useState<[number, number, number, number]>([-180, -90, 180, 90]);
 
   const priceTiers = useMemo(
@@ -246,13 +239,19 @@ export default function MapView({
         ref={mapRef}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
         initialViewState={{
-          longitude: initialView.lng,
-          latitude: initialView.lat,
-          zoom: initialView.zoom,
+          longitude: defaultLng,
+          latitude: defaultLat,
+          zoom: 6,
         }}
         mapStyle="mapbox://styles/mapbox/streets-v12"
         style={{ width: '100%', height: '100%' }}
         onLoad={e => {
+          // Apply hash position post-mount (initialViewState is locked in
+          // during SSR — see readHashView comment).
+          const view = readHashView();
+          if (view) {
+            e.target.jumpTo({ center: [view.lng, view.lat], zoom: view.zoom });
+          }
           handleMoveEnd(e);
           // Expose the map instance to window for e2e tests to control zoom
           if (typeof window !== 'undefined') {

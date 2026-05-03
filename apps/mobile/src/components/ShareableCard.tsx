@@ -24,9 +24,10 @@ export interface ShareableCardProps {
  * a PNG by the parent screen using react-native-view-shot.
  *
  * Display size 320×320 (looks fine inline as a preview); the parent's
- * ViewShot is configured with `pixelRatio: 2` → captured at 640×640 px,
+ * ViewShot is configured with `width/height: 640` → captured at 640×640 px,
  * a good balance of quality vs file size for WhatsApp / Instagram
- * Stories upload.
+ * Stories upload. (`pixelRatio` doesn't exist on react-native-view-shot
+ * 4.x's CaptureOptions, despite common references suggesting it does.)
  *
  * Branding rules:
  *   - Amber stripe top + bottom (brand.accent #f59e0b)

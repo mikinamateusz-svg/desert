@@ -267,11 +267,13 @@ function SavingsSummaryContent() {
             <View style={styles.cardWrap}>
               <ViewShot
                 ref={cardRef}
-                // pixelRatio: 2 captures the 320×320 card view at native
-                // 2× density → 640×640 PNG, sharp on retina/high-DPI
-                // share targets. Earlier `width/height: 640` upscaled
-                // via blit, which produced soft text.
-                options={{ format: 'png', quality: 1, result: 'tmpfile', pixelRatio: 2 }}
+                // width/height force the captured PNG to 640×640 regardless
+                // of the device's native pixel ratio — keeps the output
+                // size consistent across 1x/2x/3x devices for upload.
+                // (`pixelRatio` doesn't exist on this version of
+                // react-native-view-shot's CaptureOptions type, despite
+                // common docs claiming otherwise.)
+                options={{ format: 'png', quality: 1, result: 'tmpfile', width: 640, height: 640 }}
               >
                 <ShareableCard
                   monthLabel={monthLabel}

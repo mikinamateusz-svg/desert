@@ -10,6 +10,23 @@ import { ClaimMethod, ClaimStatus, Prisma, UserRole } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { lookupChainByEmail } from './chain-domains.js';
 
+// P1 (CR BLOCKER fix): default-OFF feature flag for the DOMAIN_MATCH
+// auto-approve fast path. The User model has no `email_verified` column
+// today, and `AuthService.register` doesn't send a confirmation email —
+// so without this flag, anyone could register `attacker@orlen.pl` and
+// instantly receive STATION_MANAGER role on every ORLEN station via the
+// auto-approve branch. Until email verification ships in a future
+// story, DOMAIN_MATCH is recorded as a hint in `verification_evidence`
+// (admin sees the chain match in the queue) but the claim sits in
+// PENDING for human review. Flip this env var to "true" only AFTER
+// email verification is enforced at registration.
+//
+// Read at call time (not module-load) so tests can override per-case
+// via `process.env.STATION_CLAIM_AUTO_APPROVE_ENABLED = 'true'`.
+function isAutoApproveEnabled(): boolean {
+  return process.env.STATION_CLAIM_AUTO_APPROVE_ENABLED === 'true';
+}
+
 export interface CreateClaimInput {
   stationId: string;
   applicantNotes?: string;
@@ -125,76 +142,109 @@ export class StationClaimService {
       );
     }
 
-    // Domain-match attempt — auto-approve when email domain belongs to
-    // a known chain AND the station's brand matches.
+    // Domain-match attempt. Recorded in verification_evidence so the
+    // admin queue can show "chain employee" hint regardless of auto-
+    // approve state. Whether the claim auto-approves depends on the
+    // AUTO_APPROVE_ENABLED env flag (default false — see top-of-file
+    // comment for the email-verification rationale).
     const chain = user.email ? lookupChainByEmail(user.email) : null;
-    const autoApprove = chain !== null && station.brand === chain.brand;
+    const matchedChain = chain !== null && station.brand === chain.brand;
+    const evidence = matchedChain
+      ? { matchedDomain: chain!.domain, matchedBrand: chain!.brand }
+      : null;
 
-    if (autoApprove) {
+    if (matchedChain && isAutoApproveEnabled()) {
       // Single transaction: upsert claim as APPROVED + grant STATION_MANAGER
       // role (unless the user already has an elevated role we shouldn't
       // overwrite). Atomic so a partial failure can't leave the user
       // role-bumped without a claim row OR vice versa.
-      const result = await this.prisma.$transaction(async (tx) => {
-        const claim = await tx.stationClaim.upsert({
-          where: { station_id_user_id: { station_id: station.id, user_id: userId } },
-          update: {
-            status: ClaimStatus.APPROVED,
-            verification_method_used: ClaimMethod.DOMAIN_MATCH,
-            applicant_notes: input.applicantNotes ?? null,
-            verification_evidence: { matchedDomain: chain.domain, matchedBrand: chain.brand },
-            rejection_reason: null,
-            reviewer_notes: null,
-            reviewed_at: new Date(),
-            reviewed_by_user_id: null, // automated, not an admin
-          },
-          create: {
-            station_id: station.id,
-            user_id: userId,
-            status: ClaimStatus.APPROVED,
-            verification_method_used: ClaimMethod.DOMAIN_MATCH,
-            applicant_notes: input.applicantNotes ?? null,
-            verification_evidence: { matchedDomain: chain.domain, matchedBrand: chain.brand },
-            reviewed_at: new Date(),
-          },
-        });
-        // Only bump role for plain DRIVER accounts. Admins / fleet managers /
-        // data buyers keep their elevated role.
-        if (user.role === UserRole.DRIVER) {
-          await tx.user.update({
+      //
+      // Race protection: a partial unique index `WHERE status='APPROVED'`
+      // on Station Claim's station_id (added in migration
+      // 20260503020000_station_claim_unique_approved) makes the DB reject
+      // the second of two concurrent auto-approves for the same station.
+      // We catch P2002 on that constraint and convert to a Conflict so
+      // the second user gets the standard "already managed" message.
+      try {
+        const result = await this.prisma.$transaction(async (tx) => {
+          // P1 part 2: re-read role inside the tx so concurrent admin
+          // role-elevation can't be silently downgraded by us.
+          const txUser = await tx.user.findUnique({
             where: { id: userId },
-            data: { role: UserRole.STATION_MANAGER },
+            select: { role: true },
           });
+          const claim = await tx.stationClaim.upsert({
+            where: { station_id_user_id: { station_id: station.id, user_id: userId } },
+            update: {
+              status: ClaimStatus.APPROVED,
+              verification_method_used: ClaimMethod.DOMAIN_MATCH,
+              applicant_notes: input.applicantNotes ?? null,
+              verification_evidence: evidence ?? Prisma.JsonNull,
+              rejection_reason: null,
+              reviewer_notes: null,
+              reviewed_at: new Date(),
+              reviewed_by_user_id: null, // automated, not an admin
+            },
+            create: {
+              station_id: station.id,
+              user_id: userId,
+              status: ClaimStatus.APPROVED,
+              verification_method_used: ClaimMethod.DOMAIN_MATCH,
+              applicant_notes: input.applicantNotes ?? null,
+              verification_evidence: evidence ?? Prisma.JsonNull,
+              reviewed_at: new Date(),
+            },
+          });
+          if (txUser?.role === UserRole.DRIVER) {
+            await tx.user.update({
+              where: { id: userId },
+              data: { role: UserRole.STATION_MANAGER },
+            });
+          }
+          return claim;
+        });
+        this.logger.log(
+          `[StationClaim] Auto-approved claim ${result.id} via DOMAIN_MATCH (${chain!.domain} → ${chain!.brand}) for user ${userId} / station ${station.id}`,
+        );
+        return result;
+      } catch (err) {
+        if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+          // Lost the auto-approve race to a concurrent claim. Surface
+          // the standard "already managed" conflict.
+          throw new ConflictException(
+            'This station is already managed by a verified owner. Contact support if you believe this is an error.',
+          );
         }
-        return claim;
-      });
-      this.logger.log(
-        `[StationClaim] Auto-approved claim ${result.id} via DOMAIN_MATCH (${chain.domain} → ${chain.brand}) for user ${userId} / station ${station.id}`,
-      );
-      return result;
+        throw err;
+      }
     }
 
     // No auto-approve → manual queue. Upsert PENDING (handles the
     // re-submit-after-rejection case by reusing the row).
+    //
+    // P5: keep prior reviewer_notes + rejection_reason on re-submit so
+    // the next admin reviewing has context about WHY the prior attempt
+    // failed. Without this the audit trail vanished on every resubmit.
+    // verification_evidence still gets refreshed because the chain
+    // match may have flipped (user changed email, brand reclassified).
     return this.prisma.stationClaim.upsert({
       where: { station_id_user_id: { station_id: station.id, user_id: userId } },
       update: {
         status: ClaimStatus.PENDING,
         applicant_notes: input.applicantNotes ?? null,
-        // Wipe any prior reviewer feedback so the queue shows a fresh
-        // claim, not the residue of a past rejection.
-        rejection_reason: null,
-        reviewer_notes: null,
-        reviewed_at: null,
-        reviewed_by_user_id: null,
-        verification_method_used: null,
-        verification_evidence: Prisma.JsonNull,
+        verification_method_used: matchedChain ? ClaimMethod.DOMAIN_MATCH : null,
+        verification_evidence: evidence ?? Prisma.JsonNull,
+        // reviewer_notes / rejection_reason / reviewed_at /
+        // reviewed_by_user_id intentionally NOT cleared — preserves
+        // audit trail across re-submissions.
       },
       create: {
         station_id: station.id,
         user_id: userId,
         status: ClaimStatus.PENDING,
         applicant_notes: input.applicantNotes ?? null,
+        verification_method_used: matchedChain ? ClaimMethod.DOMAIN_MATCH : null,
+        verification_evidence: evidence ?? Prisma.JsonNull,
       },
     });
   }
@@ -301,31 +351,43 @@ export class StationClaimService {
       );
     }
 
-    return this.prisma.$transaction(async (tx) => {
-      const updated = await tx.stationClaim.update({
-        where: { id: claimId },
-        data: {
-          status: ClaimStatus.APPROVED,
-          verification_method_used: input.method,
-          verification_evidence: input.verificationEvidence ?? Prisma.JsonNull,
-          reviewer_notes: input.reviewerNotes ?? null,
-          rejection_reason: null,
-          reviewed_at: new Date(),
-          reviewed_by_user_id: input.reviewerUserId,
-        },
-      });
-      const user = await tx.user.findUnique({
-        where: { id: claim.user_id },
-        select: { role: true },
-      });
-      if (user?.role === UserRole.DRIVER) {
-        await tx.user.update({
-          where: { id: claim.user_id },
-          data: { role: UserRole.STATION_MANAGER },
+    try {
+      return await this.prisma.$transaction(async (tx) => {
+        const updated = await tx.stationClaim.update({
+          where: { id: claimId },
+          data: {
+            status: ClaimStatus.APPROVED,
+            verification_method_used: input.method,
+            verification_evidence: input.verificationEvidence ?? Prisma.JsonNull,
+            reviewer_notes: input.reviewerNotes ?? null,
+            rejection_reason: null,
+            reviewed_at: new Date(),
+            reviewed_by_user_id: input.reviewerUserId,
+          },
         });
+        const user = await tx.user.findUnique({
+          where: { id: claim.user_id },
+          select: { role: true },
+        });
+        if (user?.role === UserRole.DRIVER) {
+          await tx.user.update({
+            where: { id: claim.user_id },
+            data: { role: UserRole.STATION_MANAGER },
+          });
+        }
+        return updated;
+      });
+    } catch (err) {
+      // P2: another claim was approved for this station between our
+      // precheck and the update (race with auto-approve OR another
+      // admin). Partial unique index throws P2002 → surface as Conflict.
+      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+        throw new ConflictException(
+          'Another claim for this station was approved while this one was being reviewed. Refresh and reject this claim instead.',
+        );
       }
-      return updated;
-    });
+      throw err;
+    }
   }
 
   /** Admin reject. rejection_reason is REQUIRED — surfaces to applicant. */

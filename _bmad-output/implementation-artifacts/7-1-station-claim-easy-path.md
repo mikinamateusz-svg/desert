@@ -3,7 +3,7 @@
 ## Metadata
 - **Epic:** 7 — Station Partner Portal
 - **Story ID:** 7.1
-- **Status:** ready-for-dev
+- **Status:** review
 - **Date:** 2026-04-07
 - **Depends on:** Stories 2.1 (Station DB + google_places_id), 2.14 (brand field populated), 1.1/1.2 (auth)
 - **Required by:** 7.2 (hard path fallback), 7.3 (self-service price updates), 7.4 (performance metrics)

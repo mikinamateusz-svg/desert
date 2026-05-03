@@ -106,9 +106,12 @@ describe('StationClaimService', () => {
       expect(lookupChainByEmail('owner@my-private-station.pl')).toBeNull();
     });
 
-    it('returns null for malformed addresses', () => {
+    it('returns null for malformed addresses (incl empty local part — P4 CR fix)', () => {
       expect(lookupChainByEmail('not-an-email')).toBeNull();
-      expect(lookupChainByEmail('@orlen.pl')).toEqual({ domain: 'orlen.pl', brand: 'ORLEN' });
+      // Empty local part must NOT match — without this guard a future
+      // bug that sets user.email to just a domain string would silently
+      // grant STATION_MANAGER role on every chain match.
+      expect(lookupChainByEmail('@orlen.pl')).toBeNull();
       expect(lookupChainByEmail('jan@')).toBeNull();
     });
   });
@@ -138,7 +141,10 @@ describe('StationClaimService', () => {
       ).rejects.toBeInstanceOf(ForbiddenException);
     });
 
-    it('auto-approves on domain match (orlen.pl email + ORLEN brand) AND bumps DRIVER → STATION_MANAGER', async () => {
+    it('auto-approves on domain match (orlen.pl email + ORLEN brand) AND bumps DRIVER → STATION_MANAGER (flag enabled)', async () => {
+      // P1: auto-approve is gated behind STATION_CLAIM_AUTO_APPROVE_ENABLED
+      // env var (default off). Enable it locally for this test.
+      process.env.STATION_CLAIM_AUTO_APPROVE_ENABLED = 'true';
       mockStationFindUnique.mockResolvedValueOnce(makeStation({ brand: 'ORLEN' }));
       mockUserFindUnique
         .mockResolvedValueOnce(makeUser({ email: 'manager@orlen.pl', role: UserRole.DRIVER }))
@@ -147,26 +153,59 @@ describe('StationClaimService', () => {
       mockClaimFindUnique.mockResolvedValueOnce(null); // no existing claim
       mockClaimFindFirst.mockResolvedValueOnce(null); // no other-user APPROVED
 
+      try {
+        const result = await service.createClaim(USER_ID, { stationId: STATION_ID });
+
+        expect(result.status).toBe(ClaimStatus.APPROVED);
+        expect(mockClaimUpsert).toHaveBeenCalledWith(
+          expect.objectContaining({
+            create: expect.objectContaining({
+              status: ClaimStatus.APPROVED,
+              verification_method_used: ClaimMethod.DOMAIN_MATCH,
+              verification_evidence: { matchedDomain: 'orlen.pl', matchedBrand: 'ORLEN' },
+            }),
+          }),
+        );
+        // Role bump fires because user was DRIVER.
+        expect(mockUserUpdate).toHaveBeenCalledWith({
+          where: { id: USER_ID },
+          data: { role: UserRole.STATION_MANAGER },
+        });
+      } finally {
+        delete process.env.STATION_CLAIM_AUTO_APPROVE_ENABLED;
+      }
+    });
+
+    it('records DOMAIN_MATCH evidence but stays PENDING when auto-approve flag is off (default — P1)', async () => {
+      // The default mode for the foreseeable future: chain employees
+      // submitting via their corporate email get a hint in evidence so
+      // the admin queue can shortlist them, but no role bump until ops
+      // verifies (because we don't yet verify email ownership at signup).
+      mockStationFindUnique.mockResolvedValueOnce(makeStation({ brand: 'ORLEN' }));
+      mockUserFindUnique.mockResolvedValueOnce(
+        makeUser({ email: 'manager@orlen.pl', role: UserRole.DRIVER }),
+      );
+      mockClaimFindUnique.mockResolvedValueOnce(null);
+      mockClaimFindFirst.mockResolvedValueOnce(null);
+
       const result = await service.createClaim(USER_ID, { stationId: STATION_ID });
 
-      expect(result.status).toBe(ClaimStatus.APPROVED);
+      expect(result.status).toBe(ClaimStatus.PENDING);
       expect(mockClaimUpsert).toHaveBeenCalledWith(
         expect.objectContaining({
           create: expect.objectContaining({
-            status: ClaimStatus.APPROVED,
+            status: ClaimStatus.PENDING,
             verification_method_used: ClaimMethod.DOMAIN_MATCH,
             verification_evidence: { matchedDomain: 'orlen.pl', matchedBrand: 'ORLEN' },
           }),
         }),
       );
-      // Role bump fires because user was DRIVER.
-      expect(mockUserUpdate).toHaveBeenCalledWith({
-        where: { id: USER_ID },
-        data: { role: UserRole.STATION_MANAGER },
-      });
+      // Critically: no role bump when auto-approve is off.
+      expect(mockUserUpdate).not.toHaveBeenCalled();
     });
 
-    it('does NOT bump role when user is already FLEET_MANAGER / DATA_BUYER / ADMIN', async () => {
+    it('does NOT bump role when user is already FLEET_MANAGER / DATA_BUYER / ADMIN (flag enabled)', async () => {
+      process.env.STATION_CLAIM_AUTO_APPROVE_ENABLED = 'true';
       mockStationFindUnique.mockResolvedValueOnce(makeStation({ brand: 'ORLEN' }));
       mockUserFindUnique
         .mockResolvedValueOnce(makeUser({ email: 'admin@orlen.pl', role: UserRole.ADMIN }))
@@ -174,10 +213,13 @@ describe('StationClaimService', () => {
       mockClaimFindUnique.mockResolvedValueOnce(null);
       mockClaimFindFirst.mockResolvedValueOnce(null);
 
-      await service.createClaim(USER_ID, { stationId: STATION_ID });
-
-      // ADMIN should not be downgraded to STATION_MANAGER.
-      expect(mockUserUpdate).not.toHaveBeenCalled();
+      try {
+        await service.createClaim(USER_ID, { stationId: STATION_ID });
+        // ADMIN should not be downgraded to STATION_MANAGER.
+        expect(mockUserUpdate).not.toHaveBeenCalled();
+      } finally {
+        delete process.env.STATION_CLAIM_AUTO_APPROVE_ENABLED;
+      }
     });
 
     it('does NOT auto-approve when chain matches BUT brand differs (orlen.pl email + BP station)', async () => {
@@ -256,7 +298,7 @@ describe('StationClaimService', () => {
       ).rejects.toBeInstanceOf(ConflictException);
     });
 
-    it('allows re-submission after REJECTED — reuses the row, transitions back to PENDING', async () => {
+    it('allows re-submission after REJECTED — reuses the row, transitions back to PENDING, PRESERVES audit trail (P5)', async () => {
       mockStationFindUnique.mockResolvedValueOnce(makeStation());
       mockUserFindUnique.mockResolvedValueOnce(makeUser({ email: 'jan@gmail.com' }));
       // Existing claim is REJECTED — falls through both PENDING/AWAITING_DOCS
@@ -267,17 +309,22 @@ describe('StationClaimService', () => {
       const result = await service.createClaim(USER_ID, { stationId: STATION_ID });
 
       expect(result.status).toBe(ClaimStatus.PENDING);
-      // Upsert update branch must clear residue from the prior rejection.
-      expect(mockClaimUpsert).toHaveBeenCalledWith(
-        expect.objectContaining({
-          update: expect.objectContaining({
-            status: ClaimStatus.PENDING,
-            rejection_reason: null,
-            reviewer_notes: null,
-            reviewed_at: null,
-          }),
-        }),
-      );
+      // P5: do NOT wipe reviewer_notes / rejection_reason / reviewed_at /
+      // reviewed_by_user_id on re-submit — the next admin reviewing the
+      // re-submission needs the prior context. Only status + notes +
+      // verification_evidence get refreshed.
+      const upsertCall = mockClaimUpsert.mock.calls[0][0];
+      expect(upsertCall.update).toEqual({
+        status: ClaimStatus.PENDING,
+        applicant_notes: null,
+        verification_method_used: null,
+        verification_evidence: expect.anything(),
+      });
+      // Explicitly assert the audit-preserving fields are NOT set in the update.
+      expect(upsertCall.update).not.toHaveProperty('rejection_reason');
+      expect(upsertCall.update).not.toHaveProperty('reviewer_notes');
+      expect(upsertCall.update).not.toHaveProperty('reviewed_at');
+      expect(upsertCall.update).not.toHaveProperty('reviewed_by_user_id');
     });
   });
 

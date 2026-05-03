@@ -68,10 +68,16 @@ export const CHAIN_DOMAIN_WHITELIST: readonly ChainDomainEntry[] = [
  * Email handling: case-insensitive, anything after the LAST `@` is the
  * domain. We deliberately don't handle plus-addressing or other RFC
  * exotica — chain employees will have plain corporate emails.
+ *
+ * P4 (CR fix): require a non-empty local part. `'@orlen.pl'` would
+ * otherwise resolve to ORLEN, which combined with a future bug that
+ * sets `user.email` to just a domain string would silently grant
+ * STATION_MANAGER role.
  */
 export function lookupChainByEmail(email: string): ChainDomainEntry | null {
   const lastAt = email.lastIndexOf('@');
-  if (lastAt < 0) return null;
+  // > 0 (not >= 0) — local part must have at least one character.
+  if (lastAt <= 0) return null;
   const domain = email.slice(lastAt + 1).toLowerCase().trim();
   if (!domain) return null;
   return CHAIN_DOMAIN_WHITELIST.find((e) => e.domain === domain) ?? null;

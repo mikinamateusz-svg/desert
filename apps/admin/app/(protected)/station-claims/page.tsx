@@ -48,7 +48,12 @@ export default async function StationClaimsPage({
         ? 'PENDING'
         : undefined;
 
-  const page = parseInt(params.page ?? '1', 10) || 1;
+  // P8 (CR fix): cap page to prevent ?page=999999 triggering a
+  // skip = (page-1) * limit scan over potentially many rows. Real
+  // queues never exceed ~50 entries; 50 page * 50 limit = 2500 row
+  // ceiling is plenty.
+  const rawPage = parseInt(params.page ?? '1', 10) || 1;
+  const page = Math.min(Math.max(1, rawPage), 50);
 
   let result: StationClaimListResult | null = null;
   let error: string | null = null;
@@ -57,7 +62,13 @@ export default async function StationClaimsPage({
     if (statusFilter) qs.set('status', statusFilter);
     result = await adminFetch<StationClaimListResult>(`/v1/admin/station-claims?${qs.toString()}`);
   } catch (e) {
-    error = e instanceof AdminApiError ? e.message : 'Failed to load claims.';
+    // P7: same safe-message rule as the detail page.
+    if (e instanceof AdminApiError) {
+      console.error('[admin claim list] AdminApiError', e.status, e.message);
+      error = e.status >= 500 ? 'API error — please retry.' : 'Failed to load claims.';
+    } else {
+      error = 'Failed to load claims.';
+    }
   }
 
   const totalPages = result ? Math.ceil(result.total / PAGE_LIMIT) : 0;

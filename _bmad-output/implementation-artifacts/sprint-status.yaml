@@ -966,8 +966,13 @@ epics:
       - id: 7.1
         title: "Station Claim — Easy Path"
         file: 7-1-station-claim-easy-path.md
-        status: ready-for-dev
+        status: review
         ready_date: 2026-04-07
+        dev_started: 2026-05-03
+        dev_completed: 2026-05-03
+        review_date: 2026-05-03
+        review_findings: "Most substantive review of the project so far — 1 BLOCKER, 5 HIGH, ~10 MEDIUM. Backend chunk A and admin queue chunk B shipped clean (a776b06, 5a02665). Chunk C scaffolds apps/partner Next.js app + adds public station-search endpoint + applies 8 patches: P1 (BLOCKER — gate DOMAIN_MATCH auto-approve behind STATION_CLAIM_AUTO_APPROVE_ENABLED env flag, default OFF, until email verification ships; without this anyone could register attacker@orlen.pl and instantly STATION_MANAGER any ORLEN station — the entire DOMAIN_MATCH security model rests on email ownership which we don't verify), P2 (partial unique index WHERE status=APPROVED + P2002 catch in createClaim auto-approve and approveClaim — race-safe regardless of P1 flag), P3 (escape ILIKE % and _ wildcards in searchByName + Throttle 30/min on search endpoint + 100-char query cap — global throttler at 3/h would brick the claim flow), P4 (lookupChainByEmail rejects @orlen.pl with empty local part), P5 (re-submit after REJECTED preserves reviewer_notes/rejection_reason/reviewed_at — audit trail no longer wiped), P6 (station-management page enforces APPROVED-claim ownership server-side, fail-closed redirect to /home), P7 (admin error rendering filters AdminApiError.message to safe strings, logs raw), P8 (admin list page cap=50). Major DEFERS: Edge #15 multi-tab refresh-token rotation race (cross-cutting auth fix), Edge #1/2/3 cookie/JWT issues (pre-existing patterns in apps/admin), spec violations re Google OAuth (intentionally dropped per design discussion), CI Vercel deploy step for apps/partner (ops task), no-claim-status on search results (UX nice-to-have). Notable design drift from spec all intentional: module renamed station-claim (more accurate), AWAITING_DOCS added (Story 7.2 prep), admin claim review UI added (compensates for GBP drop)."
+        patches_applied: "2026-05-03 — 8 of 8 applied. New schema migration 20260503020000_station_claim_unique_approved adds the partial unique index. New env var STATION_CLAIM_AUTO_APPROVE_ENABLED controls auto-approve (default false; flip when email verification is added). +2 new api tests (default-off auto-approve, P4 empty-local-part). 1087/1087 api + 37/37 admin pass; tsc + lint clean across all 9 workspaces."
       - id: 7.2
         title: "Station Claim — Hard Path"
         file: 7-2-station-claim-hard-path.md

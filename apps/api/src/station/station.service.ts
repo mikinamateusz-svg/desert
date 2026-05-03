@@ -101,4 +101,49 @@ export class StationService {
       LIMIT 500
     `;
   }
+
+  /**
+   * Story 7.1: name + address full-text search for the partner portal's
+   * claim-search page. Case-insensitive substring match on name OR
+   * address. Hidden stations excluded.
+   *
+   * Coordinates are returned so the result list can show distance hints
+   * if needed; today the partner portal uses just name + address. Limit
+   * is small (50) — search is strictly for "find the station I want to
+   * claim", not browse.
+   *
+   * P3 (CR fix): ILIKE wildcards `%` and `_` in user input are escaped
+   * — without this, `q=%` matches every row → full table scan + DoS.
+   * Length capped at 100 chars to bound the regex work. The `@Throttle`
+   * override on the controller endpoint backs this with a per-IP rate
+   * limit independent of the global throttler.
+   */
+  async searchByName(query: string, limit = 50): Promise<StationInArea[]> {
+    const trimmed = query.trim();
+    if (trimmed.length < 2) return [];
+    // Reject pathologically long queries before they hit Postgres.
+    if (trimmed.length > 100) return [];
+    // Escape ILIKE meta-characters so user input is treated as literal
+    // text. Backslash must be escaped first — order matters.
+    const escaped = trimmed
+      .replace(/\\/g, '\\\\')
+      .replace(/%/g, '\\%')
+      .replace(/_/g, '\\_');
+    const pattern = `%${escaped}%`;
+    return this.prisma.$queryRaw<StationInArea[]>`
+      SELECT
+        id,
+        name,
+        address,
+        google_places_id,
+        brand,
+        ST_Y(location::geometry) AS lat,
+        ST_X(location::geometry) AS lng
+      FROM "Station"
+      WHERE hidden = false
+        AND (name ILIKE ${pattern} OR address ILIKE ${pattern})
+      ORDER BY name ASC
+      LIMIT ${limit}
+    `;
+  }
 }

@@ -29,7 +29,14 @@ export default async function StationClaimDetailPage({ params }: PageProps) {
     if (e instanceof AdminApiError && e.status === 404) {
       notFound();
     }
-    error = e instanceof AdminApiError ? e.message : 'Failed to load claim.';
+    // P7 (CR fix): don't render the raw API error verbatim — it can
+    // include stack hints / validation guts. Map to user-safe categories.
+    if (e instanceof AdminApiError) {
+      console.error('[admin claim detail] AdminApiError', e.status, e.message);
+      error = e.status >= 500 ? 'API error — please retry.' : 'Failed to load claim.';
+    } else {
+      error = 'Failed to load claim.';
+    }
   }
 
   if (error || !claim) {

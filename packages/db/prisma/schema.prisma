@@ -21,6 +21,35 @@ enum ConsentType {
   CORE_SERVICE
 }
 
+/// Story 7.1: lifecycle of a station ownership claim.
+///   PENDING        — submitted, awaiting ops review
+///   AWAITING_DOCS  — ops asked the applicant for documents (Story 7.2)
+///   APPROVED       — verified, applicant granted STATION_MANAGER role
+///   REJECTED       — verification failed; rejection_reason explains why
+enum ClaimStatus {
+  PENDING
+  AWAITING_DOCS
+  APPROVED
+  REJECTED
+}
+
+/// Story 7.1: how the claim was (or will be) verified. The set is small
+/// on purpose — postcard / Google OAuth were considered and dropped:
+///   - DOMAIN_MATCH  — applicant's email domain matches a known chain
+///                     domain AND station.brand matches → auto-approve
+///   - PHONE_CALLBACK — ops called the station's published phone number
+///                      and received verbal confirmation
+///   - DOCUMENT       — applicant uploaded ID + business registration /
+///                      franchise agreement / utility bill (Story 7.2)
+///   - HEAD_OFFICE_EMAIL — chain head office confirmed via known partners@
+///                         address that the franchisee/manager is authorised
+enum ClaimMethod {
+  DOMAIN_MATCH
+  PHONE_CALLBACK
+  DOCUMENT
+  HEAD_OFFICE_EMAIL
+}
+
 enum SubmissionStatus {
   pending
   verified
@@ -72,6 +101,7 @@ model User {
   vehicles               Vehicle[]
   fillUps                FillUp[]
   odometerReadings       OdometerReading[]
+  stationClaims          StationClaim[]
 }
 
 model Station {
@@ -95,6 +125,7 @@ model Station {
   staleness              StationFuelStaleness[]
   priceHistory           PriceHistory[]
   fillUps                FillUp[]
+  claims                 StationClaim[]
 
   @@index([voivodeship])
 }
@@ -447,6 +478,57 @@ model ConsumptionBenchmark {
   calculated_at      DateTime @default(now())
 
   @@index([make, model, engine_variant, fuel_type, calculated_at(sort: Desc)])
+}
+
+/// Story 7.1: a station owner's request to manage prices for a station.
+///
+/// Verification protocol (verification_method_used + verification_evidence):
+///   - DOMAIN_MATCH       — applicant's email domain matched a chain we
+///                          trust (e.g. @orlen.pl) AND station.brand
+///                          matched. Auto-approved at submission time.
+///   - PHONE_CALLBACK     — ops dialed the station's published phone
+///                          number and got verbal confirmation.
+///                          reviewer_notes captures the call summary.
+///   - DOCUMENT           — applicant uploaded ID + franchise agreement /
+///                          business registration / utility bill (Story 7.2).
+///   - HEAD_OFFICE_EMAIL  — chain head office confirmed the franchisee /
+///                          manager via a partners@ address we recognise.
+///
+/// applicant_notes: free-text from the applicant ("I'm the owner of XYZ
+///                  since 2018"). Surfaces in the admin queue.
+/// verification_evidence: flexible Json bag — phone call notes, doc URLs,
+///                        head-office email subject, etc. Story 7.2 fills
+///                        in the document URL fields.
+/// rejection_reason: surfaced to the applicant when REJECTED so they can
+///                   fix and re-submit.
+///
+/// Uniqueness: at most one claim per (station, user) pair — re-submissions
+/// after rejection should reuse the row (admin updates status back to
+/// PENDING + clears rejection_reason).
+model StationClaim {
+  id                        String      @id @default(uuid())
+  station_id                String
+  user_id                   String
+  status                    ClaimStatus @default(PENDING)
+  /// Set when status moves to APPROVED — null while PENDING/AWAITING_DOCS.
+  verification_method_used  ClaimMethod?
+  applicant_notes           String?
+  verification_evidence     Json?
+  reviewer_notes            String?
+  rejection_reason          String?
+  created_at                DateTime    @default(now())
+  updated_at                DateTime    @updatedAt
+  reviewed_at               DateTime?
+  /// admin User.id — set when an ops user takes a manual action
+  reviewed_by_user_id       String?
+
+  station Station @relation(fields: [station_id], references: [id])
+  user    User    @relation(fields: [user_id], references: [id])
+
+  @@unique([station_id, user_id])
+  @@index([station_id])
+  @@index([user_id])
+  @@index([status])
 }
 
 model DailyApiCost {

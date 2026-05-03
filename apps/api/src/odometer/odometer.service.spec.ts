@@ -4,6 +4,7 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { OdometerService } from './odometer.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
@@ -388,14 +389,11 @@ describe('OdometerService', () => {
       const p2002 = Object.assign(new Error('Unique constraint failed'), {
         code: 'P2002',
       });
-      Object.setPrototypeOf(
-        p2002,
-        // Match the runtime check `err instanceof Prisma.PrismaClientKnownRequestError`.
-        // We can't easily import the real class without runtime overhead in
-        // the mock, so reach for the prototype the service compares against.
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        require('@prisma/client').Prisma.PrismaClientKnownRequestError.prototype,
-      );
+      // Match the runtime check `err instanceof Prisma.PrismaClientKnownRequestError`
+      // — set the synthesized error's prototype to the real Prisma class so
+      // the instanceof guard in the service code recognises it as a known
+      // P2002 collision rather than a generic Error.
+      Object.setPrototypeOf(p2002, Prisma.PrismaClientKnownRequestError.prototype);
       mockTransaction.mockRejectedValueOnce(p2002);
 
       const result = await service.createReading(USER_ID, baseDto({ km: 50000 }));

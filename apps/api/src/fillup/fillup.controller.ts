@@ -138,4 +138,35 @@ export class FillupController {
     }
     return this.fillups.listFillups(userId, vehicleId, period as FillupPeriod, page, limit);
   }
+
+  /**
+   * Story 5.7: month-bounded savings summary for the share screen.
+   *
+   * Required query params: ?year=YYYY&month=M (M = 1-12).
+   *
+   * Always returns 200 with a `MonthlySummary` body — empty months are a
+   * valid response (`fillupCount: 0`, totals at 0, savings null), not a
+   * 404. Mobile screen handles the empty case with a "no savings" panel
+   * and hides the Share button per AC4.
+   *
+   * Bounded inputs: year ∈ [2000, currentYear+1] guards against epoch /
+   * future-typo URLs that would otherwise produce trivially empty
+   * responses or, worse, ambiguous UTC bucketing for far dates.
+   */
+  @Get('monthly-summary')
+  @Roles(...ALL_DRIVING_ROLES)
+  monthlySummary(
+    @CurrentUser('id') userId: string,
+    @Query('year', ParseIntPipe) year: number,
+    @Query('month', ParseIntPipe) month: number,
+  ) {
+    const currentYear = new Date().getFullYear();
+    if (year < 2000 || year > currentYear + 1) {
+      throw new BadRequestException(`Invalid year ${year}. Expected 2000–${currentYear + 1}.`);
+    }
+    if (month < 1 || month > 12) {
+      throw new BadRequestException(`Invalid month ${month}. Expected 1–12.`);
+    }
+    return this.fillups.getMonthlySummary(userId, year, month);
+  }
 }

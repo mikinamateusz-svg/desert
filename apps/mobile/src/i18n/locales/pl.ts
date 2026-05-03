@@ -448,6 +448,46 @@ export default {
     plnPerL: 'PLN/L',
     litresUnit: 'L',
     consumptionUnit: 'L/100km',
+    viewMonthlySummary: 'Zobacz miesięczne podsumowanie →',
+  },
+  savingsSummary: {
+    title: 'Miesięczne podsumowanie',
+    // Impersonal "Zaoszczędzono" per the prior Story 5.3 decision —
+    // gendered "Zaoszczędziłeś" excludes female-identifying users.
+    savedAmount: 'Zaoszczędzono {{amount}} PLN',
+    fillupCount_one: '{{count}} tankowanie',
+    fillupCount_few: '{{count}} tankowania',
+    fillupCount_many: '{{count}} tankowań',
+    fillupCount_other: '{{count}} tankowań',
+    spendLine: '{{amount}} PLN wydane',
+    litresLine: '{{amount}} L łącznie',
+    shareButton: 'Udostępnij moje oszczędności',
+    sharing: 'Przygotowuję kartę…',
+    shareDialogTitle: 'Udostępnij swoje oszczędności',
+    noSavings: 'Brak danych o oszczędnościach za ten miesiąc.',
+    noSavingsHint: 'Zatankuj na stacji z dostępnymi danymi porównawczymi, aby zobaczyć oszczędności.',
+    loadError: 'Nie udało się wczytać podsumowania. Spróbuj ponownie.',
+    retry: 'Spróbuj ponownie',
+    back: 'Wróć',
+    shareUnavailable: 'Udostępnianie nie jest dostępne na tym urządzeniu.',
+    shareCaptureFailed: 'Nie udało się przygotować obrazu. Spróbuj ponownie.',
+    signInRequired: 'Zaloguj się, aby zobaczyć podsumowanie oszczędności.',
+    signIn: 'Zaloguj się',
+  },
+  savingsCard: {
+    saved: 'Zaoszczędzono',
+    onFuelThisMonth: 'na paliwie w tym miesiącu',
+    // Polish has 4 plural forms — flat `fillups: 'tankowań'` was
+    // ungrammatical for counts of 1 ("1 tankowań" → must be "1 tankowanie")
+    // and 2-4 ("2 tankowań" → must be "2 tankowania"). The card is a
+    // public-facing PNG, so the bug was visible to every share recipient.
+    fillups: 'tankowań',
+    fillupCount_one: '{{count}} tankowanie',
+    fillupCount_few: '{{count}} tankowania',
+    fillupCount_many: '{{count}} tankowań',
+    fillupCount_other: '{{count}} tankowań',
+    topPercent: 'top {{pct}}% w {{region}}',
+    brandTagline: 'desert · tracker cen paliwa',
   },
   odometer: {
     title: 'Stan licznika',

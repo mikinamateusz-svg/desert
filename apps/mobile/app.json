@@ -50,7 +50,8 @@
           "cameraPermission": "Allow Litro to access your camera to photograph fuel station price boards."
         }
       ],
-      "@react-native-google-signin/google-signin"
+      "@react-native-google-signin/google-signin",
+      "expo-sharing"
     ],
     "experiments": {
       "typedRoutes": false

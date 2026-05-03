@@ -1,6 +1,6 @@
 # Story 5.7: Savings Summary Sharing
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 

@@ -900,8 +900,13 @@ epics:
       - id: 5.7
         title: "Savings Summary Sharing"
         file: 5-7-savings-summary-sharing.md
-        status: ready-for-dev
+        status: review
         ready_date: 2026-04-07
+        dev_started: 2026-05-03
+        dev_completed: 2026-05-03
+        review_date: 2026-05-03
+        review_findings: "6/6 ACs MET. 10 patches applied. P1 (Polish/Ukrainian plurals on the publicly-shared card — 'tankowań' was grammatically wrong for 1, 2-4 counts), P2 (Hermes Android with limited ICU silently emits ASCII numbers; manual comma fallback for PL/UK locales — applied symmetrically in ShareableCard.formatAmountForLocale + screen formatNum), P3 (dropped dead forwardRef<View> from ShareableCard — ref was never propagated; switched ViewShot from width/height upscale to pixelRatio:2 for sharp 640px capture), P4 (route-param guard against NaN/out-of-range — `?year=foo` and `?year=1e9` now fall back to current month instead of 400), P5 (handleShare reorder — isAvailableAsync first, capture-failure surfaced via shareError state instead of silent swallow, ref-null guard with user feedback), P6 (logged-out cold-start via Story 6.5 deep link no longer infinite-spinners — explicit auth-required state with sign-in CTA), P7 (toLocaleUpperCase + numberOfLines + adjustsFontSizeToFit prevent Cyrillic 'ВЕРЕСЕНЬ 2026' overflow on the captured PNG), P8 (dropped `t` from data-fetch effect deps — was refetching on every language change), P9 (Header back button accessibilityLabel changed from 'common.close' to 'savingsSummary.back' — visible/announced labels now match), P10 (explicit Retry button on error state). Defers: spend/raw-WHERE drift (cross-cutting from 5.5), unweighted vs weighted avg price (semantic question), no controller test (cross-cutting), Story 6.7 PRIVACY note: shared PNG will leak voivodeship + savings amount once 6.7 wires rankingPercentile/rankingVoivodeship — flag in 6.7 spec. Open QA item: tmpfile FileProvider compat on Xiaomi/Samsung OEM Androids — needs alpha device test."
+        patches_applied: "2026-05-03 — 10 of 10 applied. New mobile deps via expo install (expo-sharing ~55.0.18, react-native-view-shot 4.0.3) — fresh native build required for testing. 1057/1057 api + 31/31 mobile pass; mobile tsc clean."
 
   - epic: 6
     stories:

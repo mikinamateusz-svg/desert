@@ -34,6 +34,7 @@
     "expo-notifications": "^55.0.13",
     "expo-router": "~55.0.7",
     "expo-secure-store": "^55.0.9",
+    "expo-sharing": "~55.0.18",
     "expo-sqlite": "~55.0.11",
     "expo-status-bar": "~55.0.4",
     "expo-web-browser": "^55.0.10",
@@ -43,6 +44,7 @@
     "react-i18next": "^16.6.1",
     "react-native": "0.83.2",
     "react-native-svg": "15.15.3",
+    "react-native-view-shot": "4.0.3",
     "react-native-web": "^0.21.0",
     "supercluster": "^8.0.1"
   },

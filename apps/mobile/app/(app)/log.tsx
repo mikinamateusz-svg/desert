@@ -523,6 +523,28 @@ function ListHeader({
 
           {summary && <SummaryCards summary={summary} />}
 
+          {/* Story 5.7: monthly-summary entry point. Visible only when the
+              user is looking at the rolling 30-day window AND has positive
+              savings — same gating principle as the Share button on the
+              summary screen itself (never prompt sharing of a bad outcome,
+              AC4). Routes to the savings-summary screen for the *current*
+              calendar month — the rolling 30d window is a reasonable proxy. */}
+          {period === '30d' && summary && summary.totalSavingsPln !== null && summary.totalSavingsPln > 0 && (
+            <TouchableOpacity
+              style={styles.monthlySummaryLink}
+              onPress={() => {
+                const now = new Date();
+                router.push({
+                  pathname: '/(app)/savings-summary',
+                  params: { year: String(now.getFullYear()), month: String(now.getMonth() + 1) },
+                });
+              }}
+              accessibilityRole="button"
+            >
+              <Text style={styles.monthlySummaryLinkText}>{t('history.viewMonthlySummary')}</Text>
+            </TouchableOpacity>
+          )}
+
           {/* Story 5.6: real-world consumption benchmark for the selected
               vehicle's make × model × engine variant. Only shown when a
               specific vehicle is selected (not 'all') — cross-vehicle
@@ -1154,5 +1176,21 @@ const styles = StyleSheet.create({
     color: tokens.neutral.n400,
     marginTop: 12,
     textAlign: 'center',
+  },
+
+  // Story 5.7: monthly-summary link (between summary cards + benchmark)
+  monthlySummaryLink: {
+    paddingVertical: 14,
+    marginBottom: 16,
+    alignItems: 'center',
+    borderRadius: tokens.radius.md,
+    borderWidth: 1,
+    borderColor: tokens.brand.accent,
+    backgroundColor: '#fffbeb',
+  },
+  monthlySummaryLinkText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: tokens.brand.accent,
   },
 });

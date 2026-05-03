@@ -60,6 +60,25 @@ export interface FillupSummary {
   fillupCount: number;
 }
 
+/**
+ * Story 5.7: calendar-month summary feeding the savings-summary screen
+ * + ShareableCard. Empty months are a valid response (totals at 0,
+ * `totalSavingsPln: null`).
+ */
+export interface MonthlySummaryDto {
+  year: number;
+  /** 1–12. */
+  month: number;
+  totalSavingsPln: number | null;
+  fillupCount: number;
+  totalSpendPln: number;
+  totalLitres: number;
+  avgPricePerLitrePln: number | null;
+  /** Story 6.7: e.g. 20 = "top 20% in your voivodeship". null until 6.7. */
+  rankingPercentile: number | null;
+  rankingVoivodeship: string | null;
+}
+
 export interface CreateFillupPayload {
   vehicleId: string;
   fuelType: FillupFuelType;
@@ -190,6 +209,23 @@ export async function apiListFillups(
   if (vehicleId) qs.set('vehicleId', vehicleId);
   if (period) qs.set('period', period);
   return request<ListFillupsResponse>(`/v1/me/fillups?${qs.toString()}`, {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+}
+
+/**
+ * Story 5.7: month-bounded summary for the savings-summary screen.
+ * `month` is 1-based (1–12) to match the human calendar — server-side
+ * we convert to 0-based for Date.UTC.
+ */
+export async function apiGetMonthlySummary(
+  accessToken: string,
+  year: number,
+  month: number,
+): Promise<MonthlySummaryDto> {
+  const qs = new URLSearchParams({ year: String(year), month: String(month) });
+  return request<MonthlySummaryDto>(`/v1/me/fillups/monthly-summary?${qs.toString()}`, {
     method: 'GET',
     headers: { Authorization: `Bearer ${accessToken}` },
   });

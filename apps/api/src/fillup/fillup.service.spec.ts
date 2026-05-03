@@ -647,4 +647,112 @@ describe('FillupService', () => {
       );
     });
   });
+
+  // ── getMonthlySummary (Story 5.7) ───────────────────────────────────────
+
+  describe('getMonthlySummary', () => {
+    it('aggregates fill-ups for the specified UTC month', async () => {
+      mockFillupAggregate.mockResolvedValueOnce({
+        _sum: { total_cost_pln: 942.5, litres: 140.3 },
+        _avg: { price_per_litre_pln: 6.7184 },
+        _count: { _all: 6 },
+      });
+      mockQueryRaw.mockResolvedValueOnce([{ total_savings: 94.12, counted: BigInt(5) }]);
+
+      const result = await service.getMonthlySummary(USER_ID, 2026, 3);
+
+      expect(result).toEqual({
+        year: 2026,
+        month: 3,
+        fillupCount: 6,
+        totalSpendPln: 942.5,
+        totalLitres: 140.3,
+        avgPricePerLitrePln: 6.718, // 3dp
+        totalSavingsPln: 94.12,     // 2dp grosz
+        rankingPercentile: null,
+        rankingVoivodeship: null,
+      });
+
+      // Verify the aggregate uses a UTC-anchored half-open window
+      // [2026-03-01 UTC, 2026-04-01 UTC).
+      const aggCall = mockFillupAggregate.mock.calls[0][0] as {
+        where: { filled_at: { gte: Date; lt: Date } };
+      };
+      expect(aggCall.where.filled_at.gte.toISOString()).toBe('2026-03-01T00:00:00.000Z');
+      expect(aggCall.where.filled_at.lt.toISOString()).toBe('2026-04-01T00:00:00.000Z');
+    });
+
+    it('handles December (year-rollover) bucketing — month=12 uses next year for end', async () => {
+      mockFillupAggregate.mockResolvedValueOnce({
+        _sum: { total_cost_pln: 0, litres: 0 },
+        _avg: { price_per_litre_pln: null },
+        _count: { _all: 0 },
+      });
+      mockQueryRaw.mockResolvedValueOnce([{ total_savings: 0, counted: BigInt(0) }]);
+
+      await service.getMonthlySummary(USER_ID, 2026, 12);
+
+      const aggCall = mockFillupAggregate.mock.calls[0][0] as {
+        where: { filled_at: { gte: Date; lt: Date } };
+      };
+      expect(aggCall.where.filled_at.gte.toISOString()).toBe('2026-12-01T00:00:00.000Z');
+      expect(aggCall.where.filled_at.lt.toISOString()).toBe('2027-01-01T00:00:00.000Z');
+    });
+
+    it('returns totalSavingsPln: null when no fill-ups have area_avg (vs broke-even = 0)', async () => {
+      mockFillupAggregate.mockResolvedValueOnce({
+        _sum: { total_cost_pln: 100, litres: 15 },
+        _avg: { price_per_litre_pln: 6.66 },
+        _count: { _all: 1 },
+      });
+      mockQueryRaw.mockResolvedValueOnce([{ total_savings: 0, counted: BigInt(0) }]);
+
+      const result = await service.getMonthlySummary(USER_ID, 2026, 3);
+
+      // counted=0 → null, NOT 0. AC4 hides Share button when null OR <= 0.
+      expect(result.totalSavingsPln).toBeNull();
+    });
+
+    it('returns zeroed summary for an empty month — never an error', async () => {
+      mockFillupAggregate.mockResolvedValueOnce({
+        _sum: { total_cost_pln: 0, litres: 0 },
+        _avg: { price_per_litre_pln: null },
+        _count: { _all: 0 },
+      });
+      mockQueryRaw.mockResolvedValueOnce([{ total_savings: 0, counted: BigInt(0) }]);
+
+      const result = await service.getMonthlySummary(USER_ID, 2026, 3);
+
+      expect(result).toEqual({
+        year: 2026,
+        month: 3,
+        fillupCount: 0,
+        totalSpendPln: 0,
+        totalLitres: 0,
+        avgPricePerLitrePln: null,
+        totalSavingsPln: null,
+        rankingPercentile: null,
+        rankingVoivodeship: null,
+      });
+    });
+
+    it('uses ROUND-then-SUM grosz integer math in the savings raw query (matches client SavingsDisplay)', async () => {
+      mockFillupAggregate.mockResolvedValueOnce({
+        _sum: { total_cost_pln: 0, litres: 0 },
+        _avg: { price_per_litre_pln: null },
+        _count: { _all: 0 },
+      });
+      mockQueryRaw.mockResolvedValueOnce([{ total_savings: 0, counted: BigInt(0) }]);
+
+      await service.getMonthlySummary(USER_ID, 2026, 3);
+
+      // The Prisma.sql template includes 'ROUND(' in the SQL text — proxy
+      // for "we're doing per-row grosz integer math, not float SUM".
+      const [sqlArg] = mockQueryRaw.mock.calls[0] as [{ strings?: readonly string[] }];
+      const fullSql = (sqlArg.strings ?? []).join('');
+      expect(fullSql).toContain('ROUND');
+      expect(fullSql).toContain('area_avg_at_fillup');
+      expect(fullSql).toContain('price_per_litre_pln');
+    });
+  });
 });

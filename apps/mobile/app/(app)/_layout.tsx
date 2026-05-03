@@ -145,6 +145,12 @@ export default function AppLayout() {
         options={{ href: null, headerShown: false }}
       />
 
+      {/* ── Savings summary: Story 5.7, Phase 2-gated entry from log tab + 6.5 deep link ── */}
+      <Tabs.Screen
+        name="savings-summary"
+        options={{ href: null, headerShown: false }}
+      />
+
     </Tabs>
   );
 }

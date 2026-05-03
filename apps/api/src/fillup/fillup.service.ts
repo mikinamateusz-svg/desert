@@ -79,6 +79,32 @@ export interface ListFillupsResult {
   summary: FillupSummary;
 }
 
+/**
+ * Calendar-month summary for the savings-summary screen (Story 5.7).
+ * Identical aggregate shape as the period summary, but bounded by an
+ * exact calendar month rather than a rolling window. Used as the data
+ * source for the shareable monthly card.
+ *
+ * Ranking fields are placeholders for Story 6.7 (savings leaderboard) —
+ * always null in this story; the mobile card omits the ranking pill
+ * gracefully when null per AC3.
+ */
+export interface MonthlySummary {
+  year: number;
+  /** 1–12, calendar month. */
+  month: number;
+  /** null when no fill-ups in the month have area_avg_at_fillup. */
+  totalSavingsPln: number | null;
+  fillupCount: number;
+  totalSpendPln: number;
+  totalLitres: number;
+  avgPricePerLitrePln: number | null;
+  /** Story 6.7: e.g. 20 means "top 20% in your voivodeship". null until 6.7 ships. */
+  rankingPercentile: number | null;
+  /** Story 6.7: voivodeship slug for the ranking. null until 6.7 ships. */
+  rankingVoivodeship: string | null;
+}
+
 const STATION_MATCH_RADIUS_METRES = 200;
 
 /**
@@ -421,5 +447,89 @@ export class FillupService {
     };
 
     return { data: data as FillupListItem[], total, page: safePage, limit: safeLimit, summary };
+  }
+
+  /**
+   * Story 5.7: month-bounded summary for the savings-summary screen.
+   *
+   * Window: `[year-month-01 00:00:00 UTC, next-month-01 00:00:00 UTC)`.
+   * Half-open so a fill-up logged at exactly midnight on the 1st of the
+   * next month belongs to the next month, never both. UTC-based — the
+   * mobile UI labels the month from the same year/month integers it
+   * passed in, so the user's local timezone shouldn't shift bucketing
+   * (a fill-up at 23:59 local on the last day of the month stays in
+   * that month, even if it was already 01:xx UTC).
+   *
+   * Empty months are not an error — `fillupCount: 0` + nullable totals
+   * is a valid, expected response (e.g. user opens the share screen
+   * for a month with no logging activity).
+   *
+   * Savings sum mirrors the per-row grosz-integer math used by the
+   * client SavingsDisplay (see fillup.service.ts list summary, P11
+   * fix in Story 5.5) — keeps the monthly total byte-equal to the sum
+   * of individual savings rows the user can see.
+   */
+  async getMonthlySummary(
+    userId: string,
+    year: number,
+    month: number,
+  ): Promise<MonthlySummary> {
+    // Date.UTC bypasses local-tz inference: passing (2026, 2, 1) builds
+    // 2026-03-01 00:00 UTC regardless of where the server is. The month
+    // index is 0-based for Date.UTC but our DTO/spec uses 1-based.
+    const start = new Date(Date.UTC(year, month - 1, 1));
+    const end = new Date(Date.UTC(year, month, 1));
+
+    const where = { user_id: userId, filled_at: { gte: start, lt: end } };
+
+    const [aggregate, savingsRow] = await Promise.all([
+      this.prisma.fillUp.aggregate({
+        where,
+        _sum: { total_cost_pln: true, litres: true },
+        _avg: { price_per_litre_pln: true },
+        _count: { _all: true },
+      }),
+      // counted is needed to distinguish "broke even" (sum = 0 with rows)
+      // from "no comparable data" (no rows with area_avg_at_fillup) —
+      // mobile uses null to hide the savings line entirely vs render 0.
+      this.prisma.$queryRaw<Array<{ total_savings: number | null; counted: bigint }>>(
+        Prisma.sql`
+          SELECT
+            COALESCE(SUM(
+              ROUND((area_avg_at_fillup * litres * 100)::numeric)
+              - ROUND((price_per_litre_pln * litres * 100)::numeric)
+            ), 0)::float / 100.0 AS total_savings,
+            COUNT(*) AS counted
+          FROM "FillUp"
+          WHERE user_id = ${userId}
+            AND filled_at >= ${start}
+            AND filled_at < ${end}
+            AND area_avg_at_fillup IS NOT NULL
+        `,
+      ),
+    ]);
+
+    const fillupCount = aggregate._count._all;
+    const savingsRowFirst = savingsRow[0];
+    const savingsCounted = savingsRowFirst ? Number(savingsRowFirst.counted) : 0;
+    const totalSavingsPln =
+      savingsCounted > 0 && savingsRowFirst
+        ? Math.round((savingsRowFirst.total_savings ?? 0) * 100) / 100
+        : null;
+
+    return {
+      year,
+      month,
+      fillupCount,
+      totalSpendPln: aggregate._sum.total_cost_pln ?? 0,
+      totalLitres: aggregate._sum.litres ?? 0,
+      avgPricePerLitrePln:
+        aggregate._avg.price_per_litre_pln !== null && fillupCount > 0
+          ? Math.round(aggregate._avg.price_per_litre_pln * 1000) / 1000
+          : null,
+      totalSavingsPln,
+      rankingPercentile: null,   // populated by Story 6.7
+      rankingVoivodeship: null,  // populated by Story 6.7
+    };
   }
 }

@@ -15,6 +15,7 @@ import { CreateVehicleDto } from './dto/create-vehicle.dto.js';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto.js';
 import { CurrentUser } from '../auth/current-user.decorator.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
+import { ConsumptionBenchmarkService } from '../consumption-benchmark/consumption-benchmark.service.js';
 
 // Vehicles are a per-driver resource — every authenticated role that can drive
 // should be able to manage them. Admin included so admins can debug their own
@@ -29,7 +30,10 @@ const ALL_DRIVING_ROLES = [
 
 @Controller('v1/me/vehicles')
 export class VehiclesController {
-  constructor(private readonly vehiclesService: VehiclesService) {}
+  constructor(
+    private readonly vehiclesService: VehiclesService,
+    private readonly benchmarks: ConsumptionBenchmarkService,
+  ) {}
 
   /** List all vehicles owned by the authenticated user. */
   @Get()
@@ -76,5 +80,26 @@ export class VehiclesController {
     @Param('id', new ParseUUIDPipe()) vehicleId: string,
   ) {
     await this.vehiclesService.deleteVehicle(userId, vehicleId);
+  }
+
+  /**
+   * Story 5.6: real-world consumption benchmark for this vehicle's
+   * make × model × engine_variant. Returns null when:
+   *   - The vehicle has no engine_variant (AC6)
+   *   - No benchmark snapshot exists yet (early launch, or <10
+   *     contributing drivers — AC2)
+   *
+   * Always 200; mobile treats null as "omit the section entirely". The
+   * leading getVehicle() call enforces ownership before we reveal any
+   * benchmark data — same 404-on-cross-user convention as GET /:id.
+   */
+  @Get(':id/benchmark')
+  @Roles(...ALL_DRIVING_ROLES)
+  async benchmark(
+    @CurrentUser('id') userId: string,
+    @Param('id', new ParseUUIDPipe()) vehicleId: string,
+  ) {
+    await this.vehiclesService.getVehicle(userId, vehicleId);
+    return this.benchmarks.getForVehicle(vehicleId, userId);
   }
 }

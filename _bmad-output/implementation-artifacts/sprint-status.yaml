@@ -890,8 +890,13 @@ epics:
       - id: 5.6
         title: "Real-World Consumption Benchmarks by Vehicle"
         file: 5-6-consumption-benchmarks-by-vehicle.md
-        status: ready-for-dev
+        status: review
         ready_date: 2026-04-07
+        dev_started: 2026-05-03
+        dev_completed: 2026-05-03
+        review_date: 2026-05-03
+        review_findings: "6/6 ACs MET. 13 patches applied (most substantive review yet — strong findings on statistical correctness + privacy gap). P1+P2 (CTE rewrote per-driver-AVG → median across drivers; fixes both heavy-user bias and the cross-vehicle double-counting bug for users owning 2+ same-model vehicles), P3 (added fuel_type to cohort key; EV/PHEV/diesel variants of same model no longer pool), P4 (catalog-only via user_entered=false; free-text fragmentation defeated privacy floor), P5 (server-side driverCount clamp at 10 for cohorts <20 — was leaking exact count over wire despite mobile 10+ display), P6 (7-day max-age filter on snapshot lookup — stale snapshots persisted forever, undoing privacy floor when cohort shrank), P7 (filter soft-deleted users from aggregates — GDPR), P8 (pin window cutoff once in JS instead of NOW() per query — retries now reproducible), P9 (own-avg now scopes by (make, model, engine, fuel) for the user, not by vehicle_id — apples-to-apples with cohort), P10 (module comment fix), P11 (log Redis quit failures), P12 (getQueue type narrowing), P13 (round1dp helper with Number.EPSILON for FP-stable rounding). Auditor T2b: added skipped count to return shape. Defers: distance-weighted vs unweighted average (semantic question), retention strategy on append-only table, BullMQ upsertJobScheduler refactor (cross-cutting across all workers), Polish plural rules on driverCountExact, shared types package, no integration test against real Postgres for SQL behavior."
+        patches_applied: "2026-05-03 — 13 of 13 applied; +6 new tests (skipped count, fixed cutoff date, max-age filter, privacy clamp at 10/exact at 20+, own-avg scope by triple). 1052/1052 api (was 1036 + 10 chunk-A baseline) pass; mobile tsc clean. Schema migration includes fuel_type column + index update."
       - id: 5.7
         title: "Savings Summary Sharing"
         file: 5-7-savings-summary-sharing.md

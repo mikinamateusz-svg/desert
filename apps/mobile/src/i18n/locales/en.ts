@@ -413,6 +413,15 @@ export default {
       PHEV: 'Plug-in Hybrid',
     },
   },
+  benchmark: {
+    title: 'Real-world consumption',
+    subtitle: 'Based on community data — not manufacturer claims',
+    yours: 'Your average',
+    community: 'Community average',
+    unit: 'L/100km',
+    driverCountMin: '10+ drivers',
+    driverCountExact: '{{count}} drivers',
+  },
   history: {
     vehicleSelectorAll: 'All vehicles',
     period30d: 'Last 30 days',

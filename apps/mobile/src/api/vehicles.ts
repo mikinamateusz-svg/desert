@@ -32,6 +32,35 @@ export interface CreateVehiclePayload {
 
 export type UpdateVehiclePayload = Partial<CreateVehiclePayload>;
 
+/**
+ * Story 5.6: real-world consumption benchmark for a vehicle's
+ * make × model × engine_variant combination. The endpoint always returns
+ * 200; the mobile UI omits the section entirely when the body is null
+ * (no benchmark snapshot exists yet, OR the vehicle has no engine_variant).
+ */
+export interface ConsumptionBenchmarkDto {
+  make: string;
+  model: string;
+  engineVariant: string;
+  /** EV / PHEV / diesel variants of the same model never pool. */
+  fuelType: string;
+  /** Community median l/100km, rounded to 1dp server-side. */
+  medianL100km: number;
+  /**
+   * Privacy-clamped server-side: returns 10 (the floor) for cohorts of
+   * 10–19 drivers; exact count for ≥ 20. UI renders the clamped value
+   * as "10+ drivers".
+   */
+  driverCount: number;
+  calculatedAt: string;
+  /**
+   * Driver's avg over the same 90-day window AND the same (make, model,
+   * engine, fuel) tuple — apples-to-apples with the community comparator.
+   * Null when the driver has no consumption data yet.
+   */
+  yourAvgL100km: number | null;
+}
+
 class ApiError extends Error {
   constructor(
     message: string,
@@ -108,6 +137,21 @@ export async function apiUpdateVehicle(
 export async function apiDeleteVehicle(accessToken: string, id: string): Promise<void> {
   await request<void>(`/v1/me/vehicles/${id}`, {
     method: 'DELETE',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+}
+
+/**
+ * Fetch the per-vehicle real-world consumption benchmark. Body is `null`
+ * when no benchmark exists (early launch / <10 drivers / vehicle missing
+ * engine_variant — caller hides the section).
+ */
+export async function apiGetVehicleBenchmark(
+  accessToken: string,
+  id: string,
+): Promise<ConsumptionBenchmarkDto | null> {
+  return request<ConsumptionBenchmarkDto | null>(`/v1/me/vehicles/${id}/benchmark`, {
+    method: 'GET',
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 }

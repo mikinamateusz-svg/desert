@@ -22,6 +22,7 @@ import { RegionalBenchmarkModule } from './regional-benchmark/regional-benchmark
 import { VehicleModule } from './vehicle/vehicle.module.js';
 import { FillupModule } from './fillup/fillup.module.js';
 import { OdometerModule } from './odometer/odometer.module.js';
+import { ConsumptionBenchmarkModule } from './consumption-benchmark/consumption-benchmark.module.js';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { JwtAuthGuard } from './auth/jwt-auth.guard.js';
 import { RolesGuard } from './auth/guards/roles.guard.js';
@@ -53,6 +54,7 @@ import { RolesGuard } from './auth/guards/roles.guard.js';
     VehicleModule,
     FillupModule,
     OdometerModule,
+    ConsumptionBenchmarkModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

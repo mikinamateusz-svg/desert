@@ -1,6 +1,6 @@
 # Story 5.6: Real-World Consumption Benchmarks by Vehicle
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 

@@ -415,6 +415,15 @@ export default {
       PHEV: 'Гібрид Plug-in',
     },
   },
+  benchmark: {
+    title: 'Реальна витрата палива',
+    subtitle: 'На основі даних спільноти — не заяв виробника',
+    yours: 'Ваша середня',
+    community: 'Середня спільноти',
+    unit: 'L/100km',
+    driverCountMin: '10+ водіїв',
+    driverCountExact: '{{count}} водіїв',
+  },
   history: {
     vehicleSelectorAll: 'Всі транспортні засоби',
     period30d: 'Останні 30 днів',

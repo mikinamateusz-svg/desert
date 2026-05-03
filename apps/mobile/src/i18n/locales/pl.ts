@@ -418,6 +418,15 @@ export default {
       PHEV: 'Hybryda Plug-in',
     },
   },
+  benchmark: {
+    title: 'Rzeczywiste zużycie paliwa',
+    subtitle: 'Na podstawie danych społeczności — nie danych producenta',
+    yours: 'Twoja średnia',
+    community: 'Średnia społeczności',
+    unit: 'L/100km',
+    driverCountMin: '10+ kierowców',
+    driverCountExact: '{{count}} kierowców',
+  },
   history: {
     vehicleSelectorAll: 'Wszystkie pojazdy',
     period30d: 'Ostatnie 30 dni',

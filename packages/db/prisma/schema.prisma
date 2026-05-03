@@ -424,6 +424,31 @@ model RegionalBenchmark {
   @@index([voivodeship, fuel_type, calculated_at(sort: Desc)])
 }
 
+/// Story 5.6: real-world consumption benchmarks per (make × model × engine
+/// variant). Computed daily by ConsumptionBenchmarkWorker from the last
+/// 90 days of FillUp.consumption_l_per_100km values, with two eligibility
+/// filters: each contributing driver must have ≥3 segments for the vehicle
+/// (filters out single-data-point noise), and each (make/model/engine)
+/// group must have ≥10 distinct contributing drivers (privacy + signal).
+/// Append-only — each daily run inserts a new snapshot, preserving history
+/// for trend analysis. The mobile log screen looks up the most recent
+/// snapshot via the index below.
+model ConsumptionBenchmark {
+  id                 String   @id @default(uuid())
+  make               String
+  model              String
+  engine_variant     String
+  /// Story 5.6 P3: fuel_type is part of the cohort key. Without it, an
+  /// EV / PHEV / diesel variant of the same nameplate would silently
+  /// pool. Vehicle.fuel_type is the source of truth (catalog-controlled).
+  fuel_type          String
+  median_l_per_100km Float
+  driver_count       Int
+  calculated_at      DateTime @default(now())
+
+  @@index([make, model, engine_variant, fuel_type, calculated_at(sort: Desc)])
+}
+
 model DailyApiCost {
   id          String   @id @default(cuid())
   date        DateTime @unique @db.Date

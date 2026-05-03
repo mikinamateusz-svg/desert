@@ -13,7 +13,12 @@ import { useFocusEffect, useLocalSearchParams, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { tokens } from '../../src/theme';
 import { useAuth } from '../../src/store/auth.store';
-import { apiListVehicles, type Vehicle } from '../../src/api/vehicles';
+import {
+  apiListVehicles,
+  apiGetVehicleBenchmark,
+  type Vehicle,
+  type ConsumptionBenchmarkDto,
+} from '../../src/api/vehicles';
 import {
   apiListFillups,
   type FillupListItem,
@@ -518,7 +523,13 @@ function ListHeader({
 
           {summary && <SummaryCards summary={summary} />}
 
-          {/* TODO(Story 5.6): benchmark section here */}
+          {/* Story 5.6: real-world consumption benchmark for the selected
+              vehicle's make × model × engine variant. Only shown when a
+              specific vehicle is selected (not 'all') — cross-vehicle
+              benchmarks would mix engine variants and become meaningless.
+              Renders nothing on null backend response (no qualifying data
+              yet) per AC2. */}
+          {scope !== ALL_VEHICLES && <BenchmarkSection vehicleId={scope} />}
 
           {historyError && <Text style={styles.errorText}>{historyError}</Text>}
         </>
@@ -602,6 +613,82 @@ function SummaryCard({ label, value, highlight, fullWidth }: SummaryCardProps) {
         {value}
       </Text>
       <Text style={styles.summaryLabel}>{label}</Text>
+    </View>
+  );
+}
+
+// ── BenchmarkSection (Story 5.6) ───────────────────────────────────────────
+
+// Minimum count below which we round to "10+ drivers" for privacy. Mirrors
+// the spec's anonymisation principle (AC3): the threshold (10 drivers) is
+// already the floor for showing a benchmark at all, so anything 10–19 is a
+// small enough cohort that a precise count starts to feel identifying.
+const BENCHMARK_PRIVACY_FLOOR = 20;
+
+function BenchmarkSection({ vehicleId }: { vehicleId: string }) {
+  const { t, i18n } = useTranslation();
+  const { accessToken } = useAuth();
+  // Tri-state: 'loading' (silent), null (omit per AC2), populated (render).
+  // Distinguishing 'loading' from null prevents a flash of the section
+  // when the network is fast — null is the final omit-state.
+  const [benchmark, setBenchmark] = useState<ConsumptionBenchmarkDto | null | 'loading'>('loading');
+
+  useEffect(() => {
+    if (!accessToken) {
+      setBenchmark(null);
+      return;
+    }
+    setBenchmark('loading');
+    let cancelled = false;
+    apiGetVehicleBenchmark(accessToken, vehicleId)
+      .then((result) => {
+        if (cancelled) return;
+        setBenchmark(result);
+      })
+      .catch((e) => {
+        // eslint-disable-next-line no-console
+        console.warn('apiGetVehicleBenchmark failed', e);
+        // Network / auth failure → omit silently. The section is
+        // supplementary; degrading to "no benchmark" is the right
+        // failure mode (AC2 already says null = hide entirely).
+        if (!cancelled) setBenchmark(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [vehicleId, accessToken]);
+
+  // AC2: silent during load + null backend response → omit entirely.
+  if (benchmark === 'loading' || benchmark === null) return null;
+
+  const yourAvg = benchmark.yourAvgL100km !== null
+    ? formatNumber(benchmark.yourAvgL100km, i18n.language, 1)
+    : null;
+  const communityAvg = formatNumber(benchmark.medianL100km, i18n.language, 1);
+
+  const driverCountLabel = benchmark.driverCount < BENCHMARK_PRIVACY_FLOOR
+    ? t('benchmark.driverCountMin')
+    : t('benchmark.driverCountExact', { count: benchmark.driverCount });
+
+  return (
+    <View style={styles.benchmarkCard}>
+      <Text style={styles.benchmarkTitle}>{t('benchmark.title')}</Text>
+      <Text style={styles.benchmarkSubtitle}>{t('benchmark.subtitle')}</Text>
+      <View style={styles.benchmarkRow}>
+        {yourAvg !== null && (
+          <View style={styles.benchmarkStat}>
+            <Text style={styles.benchmarkValue}>{yourAvg}</Text>
+            <Text style={styles.benchmarkUnit}>{t('benchmark.unit')}</Text>
+            <Text style={styles.benchmarkStatLabel}>{t('benchmark.yours')}</Text>
+          </View>
+        )}
+        <View style={styles.benchmarkStat}>
+          <Text style={styles.benchmarkValue}>{communityAvg}</Text>
+          <Text style={styles.benchmarkUnit}>{t('benchmark.unit')}</Text>
+          <Text style={styles.benchmarkStatLabel}>{t('benchmark.community')}</Text>
+        </View>
+      </View>
+      <Text style={styles.benchmarkFooter}>{driverCountLabel}</Text>
     </View>
   );
 }
@@ -1012,6 +1099,60 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: tokens.neutral.n500,
     marginBottom: 16,
+    textAlign: 'center',
+  },
+
+  // Benchmark card (Story 5.6)
+  benchmarkCard: {
+    padding: 16,
+    borderRadius: tokens.radius.md,
+    borderWidth: 1,
+    borderColor: tokens.neutral.n200,
+    backgroundColor: tokens.surface.card,
+    marginBottom: 16,
+  },
+  benchmarkTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: tokens.brand.ink,
+    marginBottom: 2,
+  },
+  // AC3: clearly labelled as community-sourced. The subtitle text is the
+  // primary signal — keep it visible (not a tiny footnote).
+  benchmarkSubtitle: {
+    fontSize: 12,
+    color: tokens.neutral.n500,
+    marginBottom: 12,
+  },
+  benchmarkRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 8,
+  },
+  benchmarkStat: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  benchmarkValue: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: tokens.brand.ink,
+  },
+  benchmarkUnit: {
+    fontSize: 11,
+    color: tokens.neutral.n500,
+    marginTop: 2,
+  },
+  benchmarkStatLabel: {
+    fontSize: 12,
+    color: tokens.neutral.n500,
+    marginTop: 6,
+    fontWeight: '500',
+  },
+  benchmarkFooter: {
+    fontSize: 11,
+    color: tokens.neutral.n400,
+    marginTop: 12,
     textAlign: 'center',
   },
 });

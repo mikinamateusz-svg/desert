@@ -2,6 +2,19 @@
 
 Status: ready-for-dev
 
+> **Pre-implementation note from Story 5.7 review (2026-05-03):**
+> When this story populates `rankingPercentile` and `rankingVoivodeship`
+> on the `MonthlySummaryDto` (consumed by the Story 5.7 ShareableCard),
+> the captured PNG will leak the user's voivodeship + savings amount to
+> every share recipient — currently rendered without any consent prompt.
+> The card wiring (`ShareableCard.tsx` + `savings-summary.tsx`) is
+> already in place; lighting up the ranking pill needs an opt-in or a
+> "hide region from share image" toggle.
+> Surfaces in: `apps/mobile/src/components/ShareableCard.tsx` (the
+> conditional `rankingPercentile !== null && rankingVoivodeship` block).
+> AC to add: explicit consent before the first ranking-bearing share,
+> OR a per-share toggle to omit the region pill.
+
 ## Story
 
 As a **driver**,

@@ -29,6 +29,7 @@ const translations = {
       stations: 'Stacje',
       metrics: 'Metryki',
       stationSync: 'Synchronizacja stacji',
+      stationClaims: 'Wnioski o stację',
     },
     login: {
       title: 'Panel admina',
@@ -51,6 +52,7 @@ const translations = {
       stations: { title: 'Stacje', description: 'Zarządzaj stacjami paliw.' },
       metrics: { title: 'Metryki', description: 'Przegląd operacyjnych wskaźników produktu.' },
       stationSync: { title: 'Synchronizacja stacji', description: 'Wyzwól synchronizację z Google Places i monitoruj status.' },
+      stationClaims: { title: 'Wnioski o stację', description: 'Weryfikuj wnioski właścicieli stacji.' },
     },
     stationSync: {
       statusLabel: 'Status',
@@ -274,6 +276,49 @@ const translations = {
       stationSelected: 'Wybrano:',
       stationClear: 'Wyczyść',
     },
+    stationClaims: {
+      filterAll: 'Wszystkie',
+      filterPending: 'Oczekujące',
+      filterAwaitingDocs: 'Oczekuje na dokumenty',
+      filterApproved: 'Zatwierdzone',
+      filterRejected: 'Odrzucone',
+      colApplicant: 'Wnioskodawca',
+      colStation: 'Stacja',
+      colBrand: 'Marka',
+      colStatus: 'Status',
+      colSubmitted: 'Złożono',
+      colActions: '',
+      viewLink: 'Zobacz',
+      noClaims: 'Brak wniosków.',
+      backToList: '← Wszystkie wnioski',
+      sectionApplicant: 'Wnioskodawca',
+      sectionStation: 'Stacja',
+      sectionApplicantNotes: 'Notatki wnioskodawcy',
+      sectionReviewerNotes: 'Notatki ostatniego review',
+      sectionRejection: 'Powód odrzucenia',
+      sectionTimeline: 'Historia',
+      sectionEvidence: 'Dowód weryfikacji',
+      timelineCreated: 'Złożono',
+      timelineReviewed: 'Zweryfikowano',
+      noteNoApplicantNotes: 'Wnioskodawca nie dodał notatek.',
+      lookupCeidg: 'Szukaj w CEIDG',
+      lookupKrs: 'Szukaj w KRS',
+      sectionActions: 'Akcje',
+      actionApprove: 'Zatwierdź',
+      actionReject: 'Odrzuć',
+      actionRequestDocs: 'Poproś o dokumenty',
+      methodLabel: 'Metoda weryfikacji',
+      methodPhoneCallback: 'Telefon do stacji',
+      methodDocument: 'Dokumenty',
+      methodHeadOfficeEmail: 'E-mail z centrali',
+      reviewerNotesLabel: 'Twoje notatki (opcjonalne)',
+      reviewerNotesPlaceholder: 'np. „Zadzwoniłem, potwierdziła kierowniczka Anna…"',
+      rejectionReasonLabel: 'Powód odrzucenia (widoczny dla wnioskodawcy)',
+      rejectionReasonPlaceholder: 'Wyjaśnij dlaczego — wnioskodawca to zobaczy.',
+      requestDocsHint: 'Wyślij prośbę o dokumenty (np. umowę franczyzową, dowód osobisty).',
+      finalisedNote: 'Wniosek został rozstrzygnięty — brak dalszych akcji.',
+      autoApproveNote: 'Wniosek zatwierdzony automatycznie przez dopasowanie domeny e-mail.',
+    },
   },
   en: {
     nav: {
@@ -283,6 +328,7 @@ const translations = {
       stations: 'Stations',
       metrics: 'Metrics',
       stationSync: 'Station Sync',
+      stationClaims: 'Station claims',
     },
     login: {
       title: 'Admin panel',
@@ -305,6 +351,7 @@ const translations = {
       stations: { title: 'Stations', description: 'Manage fuel stations.' },
       metrics: { title: 'Metrics', description: 'Operational product metrics overview.' },
       stationSync: { title: 'Station Sync', description: 'Trigger a Google Places sync and monitor progress.' },
+      stationClaims: { title: 'Station claims', description: 'Verify station owner claim submissions.' },
     },
     stationSync: {
       statusLabel: 'Status',
@@ -528,6 +575,49 @@ const translations = {
       stationSelected: 'Selected:',
       stationClear: 'Clear',
     },
+    stationClaims: {
+      filterAll: 'All',
+      filterPending: 'Pending',
+      filterAwaitingDocs: 'Awaiting docs',
+      filterApproved: 'Approved',
+      filterRejected: 'Rejected',
+      colApplicant: 'Applicant',
+      colStation: 'Station',
+      colBrand: 'Brand',
+      colStatus: 'Status',
+      colSubmitted: 'Submitted',
+      colActions: '',
+      viewLink: 'View',
+      noClaims: 'No claims.',
+      backToList: '← All claims',
+      sectionApplicant: 'Applicant',
+      sectionStation: 'Station',
+      sectionApplicantNotes: 'Applicant notes',
+      sectionReviewerNotes: 'Reviewer notes (most recent)',
+      sectionRejection: 'Rejection reason',
+      sectionTimeline: 'Timeline',
+      sectionEvidence: 'Verification evidence',
+      timelineCreated: 'Submitted',
+      timelineReviewed: 'Reviewed',
+      noteNoApplicantNotes: 'Applicant left no notes.',
+      lookupCeidg: 'Look up in CEIDG',
+      lookupKrs: 'Look up in KRS',
+      sectionActions: 'Actions',
+      actionApprove: 'Approve',
+      actionReject: 'Reject',
+      actionRequestDocs: 'Request documents',
+      methodLabel: 'Verification method',
+      methodPhoneCallback: 'Phone callback',
+      methodDocument: 'Document upload',
+      methodHeadOfficeEmail: 'Head office email',
+      reviewerNotesLabel: 'Your notes (optional)',
+      reviewerNotesPlaceholder: 'e.g. "Called the station; manager Anna confirmed…"',
+      rejectionReasonLabel: 'Rejection reason (visible to the applicant)',
+      rejectionReasonPlaceholder: 'Explain why — the applicant will see this.',
+      requestDocsHint: 'Send a request for documents (e.g. franchise agreement, ID).',
+      finalisedNote: 'This claim has been finalised — no further actions.',
+      autoApproveNote: 'This claim was auto-approved via email-domain match.',
+    },
   },
   uk: {
     nav: {
@@ -537,6 +627,7 @@ const translations = {
       stations: 'Станції',
       metrics: 'Метрики',
       stationSync: 'Синхронізація станцій',
+      stationClaims: 'Заявки на станцію',
     },
     login: {
       title: 'Панель адміна',
@@ -559,6 +650,7 @@ const translations = {
       stations: { title: 'Станції', description: 'Управління автозаправними станціями.' },
       metrics: { title: 'Метрики', description: 'Огляд операційних показників продукту.' },
       stationSync: { title: 'Синхронізація станцій', description: 'Запустіть синхронізацію з Google Places та відстежуйте статус.' },
+      stationClaims: { title: 'Заявки на станцію', description: 'Перевіряйте заявки власників станцій.' },
     },
     stationSync: {
       statusLabel: 'Статус',
@@ -782,6 +874,49 @@ const translations = {
       stationSelected: 'Вибрано:',
       stationClear: 'Очистити',
     },
+    stationClaims: {
+      filterAll: 'Усі',
+      filterPending: 'Очікують',
+      filterAwaitingDocs: 'Очікують документи',
+      filterApproved: 'Затверджені',
+      filterRejected: 'Відхилені',
+      colApplicant: 'Заявник',
+      colStation: 'Станція',
+      colBrand: 'Бренд',
+      colStatus: 'Статус',
+      colSubmitted: 'Подано',
+      colActions: '',
+      viewLink: 'Переглянути',
+      noClaims: 'Заявок немає.',
+      backToList: '← Усі заявки',
+      sectionApplicant: 'Заявник',
+      sectionStation: 'Станція',
+      sectionApplicantNotes: 'Нотатки заявника',
+      sectionReviewerNotes: 'Нотатки останнього review',
+      sectionRejection: 'Причина відхилення',
+      sectionTimeline: 'Історія',
+      sectionEvidence: 'Підтвердження',
+      timelineCreated: 'Подано',
+      timelineReviewed: 'Перевірено',
+      noteNoApplicantNotes: 'Заявник не залишив нотаток.',
+      lookupCeidg: 'Пошук у CEIDG',
+      lookupKrs: 'Пошук у KRS',
+      sectionActions: 'Дії',
+      actionApprove: 'Затвердити',
+      actionReject: 'Відхилити',
+      actionRequestDocs: 'Запросити документи',
+      methodLabel: 'Метод верифікації',
+      methodPhoneCallback: 'Дзвінок на станцію',
+      methodDocument: 'Документи',
+      methodHeadOfficeEmail: 'E-mail з центрального офісу',
+      reviewerNotesLabel: 'Ваші нотатки (опціонально)',
+      reviewerNotesPlaceholder: 'напр. „Зателефонував, менеджер Анна підтвердила…"',
+      rejectionReasonLabel: 'Причина відхилення (видно заявнику)',
+      rejectionReasonPlaceholder: 'Поясніть чому — заявник це побачить.',
+      requestDocsHint: 'Надішліть запит на документи (напр. договір франчайзингу, посвідчення).',
+      finalisedNote: 'Заявку остаточно розглянуто — подальші дії недоступні.',
+      autoApproveNote: 'Заявка автоматично затверджена через збіг домену e-mail.',
+    },
   },
 } as const;
 
@@ -902,7 +1037,7 @@ export interface StationSyncTranslations {
 }
 
 export interface Translations {
-  nav: { submissions: string; users: string; deadLetter: string; stations: string; metrics: string; stationSync: string };
+  nav: { submissions: string; users: string; deadLetter: string; stations: string; metrics: string; stationSync: string; stationClaims: string };
   login: {
     title: string;
     emailLabel: string;
@@ -1000,6 +1135,49 @@ export interface Translations {
     stationSelected: string;
     stationClear: string;
   };
+  stationClaims: {
+    filterAll: string;
+    filterPending: string;
+    filterAwaitingDocs: string;
+    filterApproved: string;
+    filterRejected: string;
+    colApplicant: string;
+    colStation: string;
+    colBrand: string;
+    colStatus: string;
+    colSubmitted: string;
+    colActions: string;
+    viewLink: string;
+    noClaims: string;
+    backToList: string;
+    sectionApplicant: string;
+    sectionStation: string;
+    sectionApplicantNotes: string;
+    sectionReviewerNotes: string;
+    sectionRejection: string;
+    sectionTimeline: string;
+    sectionEvidence: string;
+    timelineCreated: string;
+    timelineReviewed: string;
+    noteNoApplicantNotes: string;
+    lookupCeidg: string;
+    lookupKrs: string;
+    sectionActions: string;
+    actionApprove: string;
+    actionReject: string;
+    actionRequestDocs: string;
+    methodLabel: string;
+    methodPhoneCallback: string;
+    methodDocument: string;
+    methodHeadOfficeEmail: string;
+    reviewerNotesLabel: string;
+    reviewerNotesPlaceholder: string;
+    rejectionReasonLabel: string;
+    rejectionReasonPlaceholder: string;
+    requestDocsHint: string;
+    finalisedNote: string;
+    autoApproveNote: string;
+  };
   sections: {
     submissions: { title: string; description: string };
     users: { title: string; description: string };
@@ -1007,6 +1185,7 @@ export interface Translations {
     stations: { title: string; description: string };
     metrics: { title: string; description: string };
     stationSync: { title: string; description: string };
+    stationClaims: { title: string; description: string };
   };
 }
 

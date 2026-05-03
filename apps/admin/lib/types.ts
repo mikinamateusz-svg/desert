@@ -112,3 +112,51 @@ export interface UserDetail {
   };
   alerts: AnomalyAlertRow[];
 }
+
+// ── Story 7.1 — station claims (admin queue) ─────────────────────────────
+
+export type ClaimStatusValue = 'PENDING' | 'AWAITING_DOCS' | 'APPROVED' | 'REJECTED';
+export type ClaimMethodValue = 'DOMAIN_MATCH' | 'PHONE_CALLBACK' | 'DOCUMENT' | 'HEAD_OFFICE_EMAIL';
+
+export interface ClaimStation {
+  id: string;
+  name: string;
+  address: string | null;
+  brand: string | null;
+  voivodeship?: string | null;
+}
+
+export interface ClaimUser {
+  id: string;
+  email: string | null;
+  display_name: string | null;
+  role: string;
+}
+
+export interface StationClaimRow {
+  id: string;
+  station_id: string;
+  user_id: string;
+  status: ClaimStatusValue;
+  verification_method_used: ClaimMethodValue | null;
+  applicant_notes: string | null;
+  reviewer_notes: string | null;
+  rejection_reason: string | null;
+  // verification_evidence is a flexible Json bag (phone-call summary,
+  // doc URLs, head-office email subject) — typed `unknown` because the
+  // shape varies per method.
+  verification_evidence: unknown;
+  created_at: string;
+  updated_at: string;
+  reviewed_at: string | null;
+  reviewed_by_user_id: string | null;
+  station: ClaimStation;
+  user: ClaimUser;
+}
+
+export interface StationClaimListResult {
+  data: StationClaimRow[];
+  total: number;
+  page: number;
+  limit: number;
+}

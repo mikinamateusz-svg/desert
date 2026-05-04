@@ -65,14 +65,14 @@ describe('OcrService', () => {
   // ── extractPrices ────────────────────────────────────────────────────────
 
   describe('extractPrices', () => {
-    it('calls Gemini 2.5 Flash API with base64 image and structured prompt', async () => {
+    it('calls Gemini 2.5 Pro API with base64 image and structured prompt', async () => {
       mockFetch.mockResolvedValueOnce(makeGeminiResponse(validJsonResponse));
       const buffer = Buffer.from('fake-image-data');
 
       await service.extractPrices(buffer);
 
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining('gemini-2.5-flash'),
+        expect.stringContaining('gemini-2.5-pro'),
         expect.objectContaining({
           method: 'POST',
           body: expect.stringContaining('inline_data'),

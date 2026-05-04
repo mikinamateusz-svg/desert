@@ -76,10 +76,10 @@ describe('OcrSpendService', () => {
   // ── computeCostUsd ──────────────────────────────────────────────────────────
 
   describe('computeCostUsd', () => {
-    it('computes cost using Gemini Flash input and output token rates', () => {
-      // 1M input tokens = $0.30, 1M output tokens = $2.50
+    it('computes cost using Gemini Pro input and output token rates', () => {
+      // 1M input tokens = $1.25, 1M output tokens = $10.00
       const cost = service.computeCostUsd(1_000_000, 1_000_000);
-      expect(cost).toBeCloseTo(2.80, 5);
+      expect(cost).toBeCloseTo(11.25, 5);
     });
 
     it('returns 0 for 0 tokens', () => {
@@ -94,8 +94,8 @@ describe('OcrSpendService', () => {
 
     it('computes realistic per-call cost (1000 input + 200 output tokens)', () => {
       const cost = service.computeCostUsd(1000, 200);
-      // (1000/1_000_000)*0.30 + (200/1_000_000)*2.50 = 0.0003 + 0.0005 = 0.0008
-      expect(cost).toBeCloseTo(0.0008, 6);
+      // (1000/1_000_000)*1.25 + (200/1_000_000)*10.00 = 0.00125 + 0.002 = 0.00325
+      expect(cost).toBeCloseTo(0.00325, 6);
     });
   });
 

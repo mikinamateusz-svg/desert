@@ -41,7 +41,7 @@ export const PRICE_BANDS: Record<string, { min: number; max: number }> = {
 const VALID_FUEL_TYPES = new Set(Object.keys(PRICE_BANDS));
 
 const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
-const GEMINI_MODEL = 'gemini-2.5-flash';
+const GEMINI_MODEL = 'gemini-2.5-pro';
 
 const OCR_PROMPT = `You are analyzing a photo of a fuel station price board in Poland.
 Extract all visible fuel prices. For each price you find, return:

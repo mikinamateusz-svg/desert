@@ -4,9 +4,11 @@ import type Redis from 'ioredis';
 import { REDIS_CLIENT } from '../redis/redis.module.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
-// Gemini 2.5 Flash pricing (USD per million tokens) — update if Google changes rates.
-const COST_PER_INPUT_MTOKEN_USD = 0.30;
-const COST_PER_OUTPUT_MTOKEN_USD = 2.50;
+// Gemini 2.5 Pro pricing (USD per million tokens) — update if Google changes rates.
+// Switched from Flash (0.30/2.50) on 2026-05-04 after benchmark showed Pro at
+// 96.3% accuracy vs Flash 87.7% — extra $92/mo at 50k OCRs is cheap for 9pp.
+const COST_PER_INPUT_MTOKEN_USD = 1.25;
+const COST_PER_OUTPUT_MTOKEN_USD = 10.0;
 
 const DEFAULT_COST_ALERT_THRESHOLD_USD = 50;
 const MONTHLY_ALERT_TTL_SECONDS = 32 * 24 * 3600;

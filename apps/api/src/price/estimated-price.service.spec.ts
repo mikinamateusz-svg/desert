@@ -257,6 +257,52 @@ describe('EstimatedPriceService', () => {
       expect(row!.sources?.LPG).toBe('seeded');
     });
 
+    it('estimates PB_95 and ON for gaz-named station when community has reported non-LPG fuels', async () => {
+      // Regression: a gaz-named station like "Cha-El-Gaz" with a partial OCR
+      // (PB_98+ON_PREMIUM+LPG covered, missing PB_95+ON) used to permanently
+      // hide PB_95/ON because the LPG-only filter ran regardless of community
+      // evidence. The filter must only apply at cold-start seeding.
+      mockQueryRaw.mockResolvedValueOnce([
+        { signal_type: 'orlen_rack_pb95', value: 5.80 },
+        { signal_type: 'orlen_rack_on',   value: 5.90 },
+        { signal_type: 'orlen_rack_lpg',  value: 2.40 },
+      ]);
+
+      const gazStation: StationClassificationRow = { ...baseStation, name: 'Cha-El-Gaz. Chądzyński A.' };
+      const coveredFuelsPerStation = new Map<string, Set<string>>();
+      coveredFuelsPerStation.set('station-1', new Set(['PB_98', 'ON_PREMIUM', 'LPG']));
+
+      const result = await service.computeEstimatesForStations([gazStation], coveredFuelsPerStation);
+      const row = result.get('station-1');
+
+      expect(row).toBeDefined();
+      expect(row!.priceRanges?.PB_95).toBeDefined();
+      expect(row!.priceRanges?.ON).toBeDefined();
+      expect(row!.sources?.PB_95).toBe('seeded');
+      expect(row!.sources?.ON).toBe('seeded');
+    });
+
+    it('keeps LPG-only filter for gaz-named station when community has only LPG (no multi-fuel evidence)', async () => {
+      // The cold-start path: a gaz-named station with only LPG community data
+      // should still skip PB_95/ON estimates — same name might be a true
+      // LPG-only station; without contradicting evidence, stay conservative.
+      mockQueryRaw.mockResolvedValueOnce([
+        { signal_type: 'orlen_rack_pb95', value: 5.80 },
+        { signal_type: 'orlen_rack_on',   value: 5.90 },
+        { signal_type: 'orlen_rack_lpg',  value: 2.40 },
+      ]);
+
+      const gazStation: StationClassificationRow = { ...baseStation, name: 'Auto-Gaz Warszawa' };
+      const coveredFuelsPerStation = new Map<string, Set<string>>();
+      coveredFuelsPerStation.set('station-1', new Set(['LPG']));
+
+      const result = await service.computeEstimatesForStations([gazStation], coveredFuelsPerStation);
+      const row = result.get('station-1');
+
+      // station already has LPG covered → no further estimates → no row
+      expect(row).toBeUndefined();
+    });
+
     it('returns estimated rows (fallback) when no rack prices available', async () => {
       mockQueryRaw.mockResolvedValueOnce([]); // no rack data
 

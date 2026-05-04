@@ -129,11 +129,20 @@ export class EstimatedPriceService {
       const sources: Record<string, 'community' | 'seeded'> = {};
       const estimateLabel: Record<string, 'market_estimate' | 'estimated'> = {};
 
-      // LPG/gas-only stations should only receive LPG estimates, never PB/ON.
-      // Matches (case-insensitive): "LPG", "GAZ" (standalone word), "AUTOGAZ",
-      // "AUTO-GAZ", "AUTO GAZ", "CNG", "STACJA GAZU", "GAZ-POINT".
-      const isLpgOnly = /\b(LPG|GAZ|AUTOGAZ|AUTO[ -]GAZ|CNG|GAZU)\b/i.test(station.name)
-        || /GAZ[- ]?POINT/i.test(station.name);
+      // LPG/gas-only filter — applies ONLY at cold-start seeding (no community
+      // data yet). Once a community submission has reported any non-LPG fuel,
+      // the station has proven multi-fuel, so we estimate the full set of
+      // gaps. Without this guard a partial OCR (e.g. captured PB_98+ON_PREMIUM
+      // but missed PB_95) would leave PB_95 and ON permanently missing on
+      // gaz-named stations like "Cha-El-Gaz".
+      // Regex matches (case-insensitive): "LPG", "GAZ" (standalone word),
+      // "AUTOGAZ", "AUTO-GAZ", "AUTO GAZ", "CNG", "STACJA GAZU", "GAZ-POINT".
+      const hasNonLpgCommunity =
+        !!coveredFuels && Array.from(coveredFuels).some(ft => ft !== 'LPG');
+      const nameLooksLpgOnly =
+        /\b(LPG|GAZ|AUTOGAZ|AUTO[ -]GAZ|CNG|GAZU)\b/i.test(station.name) ||
+        /GAZ[- ]?POINT/i.test(station.name);
+      const isLpgOnly = nameLooksLpgOnly && !hasNonLpgCommunity;
 
       for (const fuelType of ESTIMABLE_FUEL_TYPES) {
         if (coveredFuels?.has(fuelType)) continue;

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView, Linking, Alert } from 'react-native';
 import Mapbox, { MapView, Camera, MarkerView } from '@rnmapbox/maps';
 import Supercluster from 'supercluster';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { tokens } from '../../src/theme';
@@ -115,12 +115,26 @@ export default function MapScreen() {
     }
   }, [location, permissionDenied, loadingGPS]);
 
-  const { stations, error: stationsError } = useNearbyStations(
+  const { stations, error: stationsError, refresh: refreshStations } = useNearbyStations(
     accessToken,
     fetchCenter,
   );
 
-  const { prices, error: pricesError } = useNearbyPrices(accessToken, fetchCenter);
+  const { prices, error: pricesError, refresh: refreshPrices } = useNearbyPrices(accessToken, fetchCenter);
+
+  // Keep the map fresh:
+  // - on focus (covers user returning from capture flow with their own contribution
+  //   AND backgrounding/foregrounding the app)
+  // - 60s poll while map is focused (covers other contributors' updates)
+  // Stations rarely change, so they're only refreshed on focus, not polled.
+  useFocusEffect(
+    useCallback(() => {
+      refreshStations();
+      refreshPrices();
+      const id = setInterval(refreshPrices, 60_000);
+      return () => clearInterval(id);
+    }, [refreshStations, refreshPrices]),
+  );
 
   // Advance loading splash stage as data arrives.
   // P2: guests (no token) and error states must still dismiss the splash.

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { apiGetNearbyPrices, type StationPriceDto } from '../api/prices';
 import type { LocationCoords } from './useLocation';
 
@@ -13,11 +13,22 @@ const coordKey = (lat: number, lng: number, token: string | null) =>
 export function useNearbyPrices(
   accessToken: string | null,
   center: LocationCoords | null,
-): { prices: StationPriceDto[]; loading: boolean; error: boolean } {
+): { prices: StationPriceDto[]; loading: boolean; error: boolean; refresh: () => void } {
   const [prices, setPrices] = useState<StationPriceDto[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [refreshTick, setRefreshTick] = useState(0);
   const abortRef = useRef<AbortController | null>(null);
+
+  // Force a fresh fetch by clearing the current-center cache entry and bumping
+  // the effect's dep tick. Used by the map screen on focus + 60s poll so the
+  // user sees their own contribution and other live updates without panning.
+  const refresh = useCallback(() => {
+    if (center && Number.isFinite(center.lat) && Number.isFinite(center.lng)) {
+      coordCache.delete(coordKey(center.lat, center.lng, accessToken));
+    }
+    setRefreshTick(t => t + 1);
+  }, [accessToken, center?.lat, center?.lng]);
 
   useEffect(() => {
     if (!center) {
@@ -87,7 +98,7 @@ export function useNearbyPrices(
     return () => {
       controller.abort();
     };
-  }, [accessToken, center?.lat, center?.lng]);
+  }, [accessToken, center?.lat, center?.lng, refreshTick]);
 
-  return { prices, loading, error };
+  return { prices, loading, error, refresh };
 }

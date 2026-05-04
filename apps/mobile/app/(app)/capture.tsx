@@ -86,6 +86,10 @@ export default function CaptureScreen() {
     locationDeniedParam || permissionDenied ? 'location-required' : 'camera',
   );
   const [cameraError, setCameraError] = useState(false);
+  // Captures the underlying error string from onMountError + watchdog timeout.
+  // Surfaced on the error screen so we can collect actual failure reasons via
+  // user screenshots while there's no remote telemetry wired up.
+  const [cameraErrorDetail, setCameraErrorDetail] = useState<string | null>(null);
   const [isCapturing, setIsCapturing] = useState(false);
 
   // Camera lifecycle plumbing for the black-preview fix:
@@ -181,7 +185,10 @@ export default function CaptureScreen() {
     if (screenState !== 'camera') return;
     if (!permission?.granted) return;
     if (cameraReady) return;
-    const id = setTimeout(() => setShowRetry(true), CAMERA_READY_TIMEOUT_MS);
+    const id = setTimeout(() => {
+      setShowRetry(true);
+      setCameraErrorDetail(`onCameraReady did not fire within ${CAMERA_READY_TIMEOUT_MS}ms (mount #${cameraKey})`);
+    }, CAMERA_READY_TIMEOUT_MS);
     return () => clearTimeout(id);
   }, [screenState, permission?.granted, cameraReady, cameraKey]);
 
@@ -355,6 +362,11 @@ export default function CaptureScreen() {
     return (
       <View style={[styles.fullscreen, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
         <Text style={styles.errorTitle}>{t('contribution.cameraUnavailable')}</Text>
+        {cameraErrorDetail && (
+          <Text style={styles.errorDetail} selectable>
+            {cameraErrorDetail}
+          </Text>
+        )}
         <TouchableOpacity style={styles.errorBack} onPress={handleBack} accessibilityRole="button">
           <Text style={styles.errorBackText}>{t('contribution.goBack')}</Text>
         </TouchableOpacity>
@@ -376,8 +388,12 @@ export default function CaptureScreen() {
               style={StyleSheet.absoluteFill}
               facing="back"
               zoom={zoomLevel}
-              onCameraReady={() => { setCameraError(false); setCameraReady(true); }}
-              onMountError={() => { setCameraError(true); setScreenState('error'); }}
+              onCameraReady={() => { setCameraError(false); setCameraErrorDetail(null); setCameraReady(true); }}
+              onMountError={(e: { message?: string } | undefined) => {
+                setCameraErrorDetail(e?.message ?? 'onMountError fired without a message');
+                setCameraError(true);
+                setScreenState('error');
+              }}
             />
           ) : (
             // Permission still loading or being requested — placeholder spinner
@@ -534,8 +550,16 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '600',
     color: tokens.brand.ink,
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  errorDetail: {
+    fontSize: 12,
+    fontFamily: 'monospace',
+    color: tokens.neutral.n400,
     marginBottom: 24,
     textAlign: 'center',
+    paddingHorizontal: 8,
   },
   errorBack: {
     backgroundColor: tokens.brand.accent,

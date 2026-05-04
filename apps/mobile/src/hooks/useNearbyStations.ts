@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiGetNearbyStations, type StationDto } from '../api/stations';
 import type { LocationCoords } from './useLocation';
@@ -15,11 +15,19 @@ const coordKey = (lat: number, lng: number, token: string | null) =>
 export function useNearbyStations(
   accessToken: string | null,
   center: LocationCoords | null,
-): { stations: StationDto[]; loading: boolean; error: boolean } {
+): { stations: StationDto[]; loading: boolean; error: boolean; refresh: () => void } {
   const [stations, setStations] = useState<StationDto[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [refreshTick, setRefreshTick] = useState(0);
   const abortRef = useRef<AbortController | null>(null);
+
+  const refresh = useCallback(() => {
+    if (center && Number.isFinite(center.lat) && Number.isFinite(center.lng)) {
+      coordCache.delete(coordKey(center.lat, center.lng, accessToken));
+    }
+    setRefreshTick(t => t + 1);
+  }, [accessToken, center?.lat, center?.lng]);
 
   // Load cache on mount for instant display — only apply if no fresh data has arrived yet
   useEffect(() => {
@@ -103,7 +111,7 @@ export function useNearbyStations(
     return () => {
       controller.abort();
     };
-  }, [accessToken, center?.lat, center?.lng]);
+  }, [accessToken, center?.lat, center?.lng, refreshTick]);
 
-  return { stations, loading, error };
+  return { stations, loading, error, refresh };
 }

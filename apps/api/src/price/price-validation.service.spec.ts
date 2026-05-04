@@ -276,4 +276,83 @@ describe('PriceValidationService', () => {
       expect(ABSOLUTE_BANDS['AdBlue']).toEqual({ min: 3.0, max: 15.0 });
     });
   });
+
+  // ── Rule evaluator integration ────────────────────────────────────────────
+
+  describe('rule evaluator escalation', () => {
+    it('escalates whole submission to shadow_reject when any per-fuel shadow_reject rule fires', async () => {
+      // Tier 1 passes for both fuels — only the rule fires.
+      mockQueryRaw.mockResolvedValueOnce([
+        recentRow('PB_95', 6.40),
+        recentRow('ON_PREMIUM', 7.30),
+      ]);
+      mockEvaluator.evaluate.mockResolvedValueOnce({
+        overall: 'shadow_reject',
+        softFlags: [],
+        perFuel: [
+          {
+            fuel_type: 'PB_95',
+            passed: false,
+            rulesFired: [
+              { rule_id: 'rule_rel_pb95', action: 'shadow_reject', reason_code: 'pb95_outside_rack_band' },
+            ],
+          },
+          {
+            fuel_type: 'ON_PREMIUM',
+            passed: true,
+            rulesFired: [],
+          },
+        ],
+      });
+
+      const result = await service.validatePrices(STATION_ID, [
+        price('PB_95', 6.40),
+        price('ON_PREMIUM', 7.31),
+      ]);
+
+      // Both fuels demoted — admins see the full OCR output for review.
+      expect(result.valid).toHaveLength(0);
+      expect(result.invalid).toHaveLength(2);
+      expect(result.invalid.map(i => i.fuel_type).sort()).toEqual(['ON_PREMIUM', 'PB_95']);
+      expect(result.rule_overall).toBe('shadow_reject');
+      expect(result.rule_reason_code).toBe('pb95_outside_rack_band');
+    });
+
+    it('demotes only the failing fuel when rule action is reject (no shadow_reject in mix)', async () => {
+      mockQueryRaw.mockResolvedValueOnce([
+        recentRow('PB_95', 6.40),
+        recentRow('ON', 6.50),
+      ]);
+      mockEvaluator.evaluate.mockResolvedValueOnce({
+        overall: 'reject',
+        softFlags: [],
+        perFuel: [
+          {
+            fuel_type: 'PB_95',
+            passed: false,
+            rulesFired: [
+              { rule_id: 'rule_abs_pb95', action: 'reject', reason_code: 'pb95_absolute_band' },
+            ],
+          },
+          {
+            fuel_type: 'ON',
+            passed: true,
+            rulesFired: [],
+          },
+        ],
+      });
+
+      const result = await service.validatePrices(STATION_ID, [
+        price('PB_95', 6.40),
+        price('ON', 6.50),
+      ]);
+
+      // PB_95 demoted, ON survives — partial submission ships.
+      expect(result.valid).toHaveLength(1);
+      expect(result.valid[0].fuel_type).toBe('ON');
+      expect(result.invalid).toHaveLength(1);
+      expect(result.invalid[0].fuel_type).toBe('PB_95');
+      expect(result.rule_reason_code).toBe('pb95_absolute_band');
+    });
+  });
 });

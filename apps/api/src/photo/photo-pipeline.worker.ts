@@ -698,9 +698,18 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       // See planning-artifacts/price-validation-framework.md §Decisions 3.
       if (rule_overall === 'shadow_reject') {
         const reason = rule_reason_code ?? 'price_validation_rule';
+        // Preserve rawPrices in price_data so admins can see what OCR
+        // extracted when reviewing the shadow-rejected submission.
         await this.prisma.submission.update({
           where: { id: submissionId },
-          data: { status: SubmissionStatus.shadow_rejected, flag_reason: reason },
+          data: {
+            status: SubmissionStatus.shadow_rejected,
+            flag_reason: reason,
+            price_data: rawPrices.map(p => ({
+              fuel_type: p.fuel_type,
+              price_per_litre: p.price_per_litre,
+            })) as unknown as Prisma.InputJsonValue,
+          },
         });
         if (updated.photo_r2_key) {
           await this.researchRetention.captureIfEnabled({

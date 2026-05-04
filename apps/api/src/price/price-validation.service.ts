@@ -137,33 +137,60 @@ export class PriceValidationService {
       return { valid, invalid };
     }
 
-    // Demote per-fuel prices the evaluator marked as failed.
-    const stillValid: ValidatedPrice[] = [];
-    for (const v of valid) {
-      const outcome = ruleResult.perFuel.find(o => o.fuel_type === v.fuel_type);
-      if (outcome && !outcome.passed) {
-        const first = outcome.rulesFired[0];
+    // Action handling:
+    //   shadow_reject — escalate the WHOLE submission (don't silently drop
+    //     fuels). Worker routes to shadow_rejected so admins can review the
+    //     OCR output and verify against the photo. The intent of
+    //     shadow_reject is "looks suspicious, needs human eyes" — silently
+    //     dropping a fuel hides exactly the problem the rule was meant to
+    //     surface (and used to make valid prices vanish from the map).
+    //   reject — demote that fuel to invalid; the rest of the submission
+    //     still ships if other prices pass.
+    const firstShadowReject = ruleResult.perFuel
+      .flatMap(o => o.rulesFired)
+      .find(r => r.action === 'shadow_reject');
+
+    if (firstShadowReject) {
+      for (const v of valid) {
         invalid.push({
           fuel_type: v.fuel_type,
           price_per_litre: v.price_per_litre,
-          reason: `rule_${first?.reason_code ?? 'unknown'}`,
+          reason: `rule_${firstShadowReject.reason_code}`,
+        });
+      }
+      return {
+        valid: [],
+        invalid,
+        rule_overall: 'shadow_reject',
+        rule_reason_code: firstShadowReject.reason_code,
+      };
+    }
+
+    // No shadow_reject rules fired — apply per-fuel reject demotion.
+    const stillValid: ValidatedPrice[] = [];
+    for (const v of valid) {
+      const outcome = ruleResult.perFuel.find(o => o.fuel_type === v.fuel_type);
+      const rejectRule = outcome?.rulesFired.find(r => r.action === 'reject');
+      if (rejectRule) {
+        invalid.push({
+          fuel_type: v.fuel_type,
+          price_per_litre: v.price_per_litre,
+          reason: `rule_${rejectRule.reason_code}`,
         });
       } else {
         stillValid.push(v);
       }
     }
 
-    // Find the first hard-action reason_code for the pipeline worker to
-    // surface as flag_reason on shadow_rejected/rejected submissions.
-    const firstHardFailure = ruleResult.perFuel
+    const firstReject = ruleResult.perFuel
       .flatMap(o => o.rulesFired)
-      .find(r => r.action === 'reject' || r.action === 'shadow_reject');
+      .find(r => r.action === 'reject');
 
     return {
       valid: stillValid,
       invalid,
       rule_overall: ruleResult.overall,
-      rule_reason_code: firstHardFailure?.reason_code,
+      rule_reason_code: firstReject?.reason_code,
     };
   }
 

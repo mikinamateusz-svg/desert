@@ -40,10 +40,15 @@ const makeRow = (stationId: string) => ({
   updatedAt: now,
 });
 
-// DB row shape (scalar source, as returned by findPricesByStationIds raw query)
+// DB row shape (scalar source, JSON array as returned by findPricesByStationIds
+// raw query — Submission.price_data is an array of {fuel_type, price_per_litre}).
 const makeDbRow = (stationId: string) => ({
   stationId,
-  prices: { PB_95: 6.42, ON: 6.89, LPG: 2.89 },
+  priceData: [
+    { fuel_type: 'PB_95', price_per_litre: 6.42 },
+    { fuel_type: 'ON',    price_per_litre: 6.89 },
+    { fuel_type: 'LPG',   price_per_litre: 2.89 },
+  ],
   source: 'community' as const,
   updatedAt: now,
 });
@@ -218,7 +223,15 @@ describe('PriceService', () => {
       mockPriceCache.getMany.mockResolvedValueOnce(new Map([['station-1', null]]));
       // Submission: PB_95=6.20, ON=5.80
       mockPrisma.$queryRaw.mockResolvedValueOnce([
-        { stationId: 'station-1', prices: { PB_95: 6.20, ON: 5.80 }, updatedAt: submissionDate, source: 'community' },
+        {
+          stationId: 'station-1',
+          priceData: [
+            { fuel_type: 'PB_95', price_per_litre: 6.20 },
+            { fuel_type: 'ON',    price_per_litre: 5.80 },
+          ],
+          updatedAt: submissionDate,
+          source: 'community',
+        },
       ]);
       // Admin override: PB_95=6.50, newer
       mockPrisma.$queryRaw.mockResolvedValueOnce([
@@ -241,7 +254,12 @@ describe('PriceService', () => {
       mockPrisma.$queryRaw.mockResolvedValueOnce([makeStation('station-1')]);
       mockPriceCache.getMany.mockResolvedValueOnce(new Map([['station-1', null]]));
       mockPrisma.$queryRaw.mockResolvedValueOnce([
-        { stationId: 'station-1', prices: { PB_95: 6.35 }, updatedAt: submissionDate, source: 'community' },
+        {
+          stationId: 'station-1',
+          priceData: [{ fuel_type: 'PB_95', price_per_litre: 6.35 }],
+          updatedAt: submissionDate,
+          source: 'community',
+        },
       ]);
       mockPrisma.$queryRaw.mockResolvedValueOnce([
         { stationId: 'station-1', fuelType: 'PB_95', price: 6.50, recordedAt: overrideDate },

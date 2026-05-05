@@ -167,14 +167,21 @@ export class PriceService {
   private async findPricesByStationIds(stationIds: string[]): Promise<StationPriceRow[]> {
     if (stationIds.length === 0) return [];
 
-    // Query 1: latest verified submission per station (all fuel types in price_data JSON)
+    // Query 1: latest verified submission per station (all fuel types in price_data JSON).
+    // Submission.price_data is a JSON ARRAY of {fuel_type, price_per_litre} objects,
+    // not a Record — convert to a fuel-keyed map below.
     const submissionRows = await this.prisma.$queryRaw<
-      { stationId: string; prices: Record<string, number>; updatedAt: Date; source: 'community' | 'seeded' }[]
+      {
+        stationId: string;
+        priceData: Array<{ fuel_type: string; price_per_litre: number }> | null;
+        updatedAt: Date;
+        source: 'community' | 'seeded';
+      }[]
     >(
       Prisma.sql`
         SELECT DISTINCT ON (sub.station_id)
           sub.station_id   AS "stationId",
-          sub.price_data   AS prices,
+          sub.price_data   AS "priceData",
           sub.created_at   AS "updatedAt",
           sub.source       AS source
         FROM "Submission" sub
@@ -208,12 +215,25 @@ export class PriceService {
       overrideMap.get(row.stationId)!.set(row.fuelType, { price: row.price, recordedAt: row.recordedAt });
     }
 
-    // Convert submission rows, merging any newer admin override per fuel type
+    // Convert submission rows, merging any newer admin override per fuel type.
+    // priceData is a JSON array — flatten to a Record<fuel_type, price>. The
+    // earlier `{ ...row.prices }` produced numeric-keyed entries (the array
+    // indexes), which made downstream consumers see no PB_95/ON/etc. keys.
     const result: StationPriceRow[] = submissionRows.map(row => {
-      const prices: Record<string, number> = { ...row.prices };
-      const sources: Record<string, 'community' | 'seeded' | 'admin_override'> = Object.fromEntries(
-        Object.keys(row.prices).map(ft => [ft, row.source]),
-      );
+      const prices: Record<string, number> = {};
+      const sources: Record<string, 'community' | 'seeded' | 'admin_override'> = {};
+      for (const entry of row.priceData ?? []) {
+        if (
+          entry &&
+          typeof entry === 'object' &&
+          typeof entry.fuel_type === 'string' &&
+          typeof entry.price_per_litre === 'number' &&
+          Number.isFinite(entry.price_per_litre)
+        ) {
+          prices[entry.fuel_type] = entry.price_per_litre;
+          sources[entry.fuel_type] = row.source;
+        }
+      }
       const stationOverrides = overrideMap.get(row.stationId);
       if (stationOverrides) {
         for (const [ft, ov] of stationOverrides) {

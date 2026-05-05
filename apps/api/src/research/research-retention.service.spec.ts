@@ -8,6 +8,7 @@ import { StorageService } from '../storage/storage.service.js';
 
 const mockResearchPhoto = {
   create: jest.fn(),
+  findUnique: jest.fn(),
   findMany: jest.fn(),
   delete: jest.fn(),
 };
@@ -59,6 +60,9 @@ describe('ResearchRetentionService', () => {
     jest.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
     jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
     jest.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
+    // Default: no existing row — captureIfEnabled proceeds with copy + insert.
+    // Tests asserting the requeue-no-op path override this with a row.
+    mockResearchPhoto.findUnique.mockResolvedValue(null);
   });
 
   describe('isEnabled', () => {
@@ -91,6 +95,20 @@ describe('ResearchRetentionService', () => {
       await svc.captureIfEnabled({ ...baseInput, photoR2Key: '' });
       expect(mockStorage.copyObject).not.toHaveBeenCalled();
       expect(mockResearchPhoto.create).not.toHaveBeenCalled();
+    });
+
+    it('is a no-op when a ResearchPhoto already exists for the submission (requeue safety)', async () => {
+      // Regression: requeue used to copy R2 → unique-constraint fail → rollback
+      // delete on the same R2 key the existing row points to, corrupting the
+      // original capture.
+      const svc = await buildService('30');
+      mockResearchPhoto.findUnique.mockResolvedValueOnce({ id: 'rp-existing' });
+
+      await svc.captureIfEnabled(baseInput);
+
+      expect(mockStorage.copyObject).not.toHaveBeenCalled();
+      expect(mockResearchPhoto.create).not.toHaveBeenCalled();
+      expect(mockStorage.deleteObject).not.toHaveBeenCalled();
     });
 
     it('happy path: copies object, creates DB row with retained_until in the future', async () => {

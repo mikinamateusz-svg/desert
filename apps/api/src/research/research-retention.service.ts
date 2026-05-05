@@ -73,6 +73,18 @@ export class ResearchRetentionService {
     if (days === 0) return;
     if (!input.photoR2Key) return;
 
+    // Skip if a ResearchPhoto row already exists for this submission. The
+    // r2_key + DB row are written together by an earlier capture (typically
+    // the original processing); doing it again on requeue would copy R2,
+    // hit a unique-constraint failure on submission_id, then "rollback" by
+    // deleting the R2 object that the existing row points to — corrupting
+    // the original capture.
+    const existing = await this.prisma.researchPhoto.findUnique({
+      where: { submission_id: input.submissionId },
+      select: { id: true },
+    });
+    if (existing) return;
+
     const destKey = `research/${input.submissionId}.jpg`;
 
     try {

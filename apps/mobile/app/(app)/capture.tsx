@@ -42,11 +42,17 @@ const ZOOM_LEVELS = [
   { label: '5×', value: 0.6 },
 ] as const;
 
-// If onCameraReady doesn't fire within this window, surface a tap-to-retry
-// overlay. expo-camera occasionally mounts to a black preview on Android
-// (lost session after backgrounding, mid-flight permission grant, etc.) and
-// silently never recovers — this gives the user agency to remount.
-const CAMERA_READY_TIMEOUT_MS = 3000;
+// If onCameraReady doesn't fire within this window, kick a remount.
+// expo-camera occasionally mounts to a black preview on Android (lost session
+// after backgrounding, mid-flight permission grant, etc.) and silently never
+// recovers. We auto-remount up to MAX_AUTO_REMOUNTS times before showing the
+// manual retry overlay — most stalls clear on the second mount.
+const CAMERA_READY_TIMEOUT_MS = 4000;
+const MAX_AUTO_REMOUNTS = 3;
+// Delay between unmount and remount so the native camera session can fully
+// tear down before we re-init. Without this, back-to-back remounts often
+// stay stuck on the same broken session.
+const REMOUNT_GAP_MS = 250;
 
 type ScreenState =
   | 'camera'
@@ -98,13 +104,22 @@ export default function CaptureScreen() {
   const [cameraKey, setCameraKey] = useState(0);
   const [cameraReady, setCameraReady] = useState(false);
   const [showRetry, setShowRetry] = useState(false);
+  const [cameraMounted, setCameraMounted] = useState(true);
   const [zoomLevel, setZoomLevel] = useState<number>(0);
+  const autoRemountCountRef = useRef(0);
 
   const remountCamera = useCallback(() => {
     setCameraReady(false);
     setShowRetry(false);
     setCameraError(false);
-    setCameraKey(k => k + 1);
+    // Unmount → wait → remount with a fresh key. The unmount step is what
+    // makes auto-recovery actually work; bumping the React key while keeping
+    // the component mounted often leaves the broken native session attached.
+    setCameraMounted(false);
+    setTimeout(() => {
+      setCameraKey(k => k + 1);
+      setCameraMounted(true);
+    }, REMOUNT_GAP_MS);
   }, []);
 
   const [capturedPhoto, setCapturedPhoto] = useState<CapturedPhoto | null>(null);
@@ -174,19 +189,33 @@ export default function CaptureScreen() {
     return () => sub.remove();
   }, [remountCamera]);
 
+  // Reset auto-remount counter when the preview goes live — next stall
+  // gets a fresh allowance.
+  useEffect(() => {
+    if (cameraReady) autoRemountCountRef.current = 0;
+  }, [cameraReady]);
+
   // Watchdog: if onCameraReady doesn't fire within CAMERA_READY_TIMEOUT_MS,
-  // surface the retry overlay. Cleared once the preview is live or the user
-  // leaves the camera state.
+  // auto-remount up to MAX_AUTO_REMOUNTS times before surfacing the retry
+  // overlay so the user sees something instead of a frozen black preview.
   useEffect(() => {
     if (screenState !== 'camera') return;
     if (!permission?.granted) return;
     if (cameraReady) return;
+    if (!cameraMounted) return;
     const id = setTimeout(() => {
-      setShowRetry(true);
-      setCameraErrorDetail(`onCameraReady did not fire within ${CAMERA_READY_TIMEOUT_MS}ms (mount #${cameraKey})`);
+      if (autoRemountCountRef.current < MAX_AUTO_REMOUNTS) {
+        autoRemountCountRef.current += 1;
+        remountCamera();
+      } else {
+        setShowRetry(true);
+        setCameraErrorDetail(
+          `onCameraReady did not fire within ${CAMERA_READY_TIMEOUT_MS}ms after ${MAX_AUTO_REMOUNTS} auto-remounts (mount #${cameraKey})`,
+        );
+      }
     }, CAMERA_READY_TIMEOUT_MS);
     return () => clearTimeout(id);
-  }, [screenState, permission?.granted, cameraReady, cameraKey]);
+  }, [screenState, permission?.granted, cameraReady, cameraKey, cameraMounted, remountCamera]);
 
   const runQualityCheck = useCallback(async (uri: string): Promise<QualityFlag> => {
     try {
@@ -373,19 +402,26 @@ export default function CaptureScreen() {
       {screenState === 'camera' && (
         <>
           {permission?.granted ? (
-            <CameraView
-              key={cameraKey}
-              ref={cameraRef}
-              style={StyleSheet.absoluteFill}
-              facing="back"
-              zoom={zoomLevel}
-              onCameraReady={() => { setCameraError(false); setCameraErrorDetail(null); setCameraReady(true); }}
-              onMountError={(e: { message?: string } | undefined) => {
-                setCameraErrorDetail(e?.message ?? 'onMountError fired without a message');
-                setCameraError(true);
-                setScreenState('error');
-              }}
-            />
+            cameraMounted ? (
+              <CameraView
+                key={cameraKey}
+                ref={cameraRef}
+                style={StyleSheet.absoluteFill}
+                facing="back"
+                zoom={zoomLevel}
+                onCameraReady={() => { setCameraError(false); setCameraErrorDetail(null); setCameraReady(true); }}
+                onMountError={(e: { message?: string } | undefined) => {
+                  setCameraErrorDetail(e?.message ?? 'onMountError fired without a message');
+                  setCameraError(true);
+                  setScreenState('error');
+                }}
+              />
+            ) : (
+              // Brief gap between unmount and remount so the native session can
+              // fully tear down. Without this, repeated remounts often stay
+              // stuck on the same broken session.
+              <View style={[StyleSheet.absoluteFill, styles.cameraLoading]} />
+            )
           ) : (
             // Permission still loading or being requested — placeholder spinner
             // so the user doesn't see a black void while the OS prompt resolves.

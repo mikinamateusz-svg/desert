@@ -5,9 +5,10 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
+  RefreshControl,
   StyleSheet,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { tokens } from '../../src/theme';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
@@ -62,6 +63,17 @@ export default function ActivityScreen() {
   useEffect(() => {
     void loadPage(1, true);
   }, [loadPage]);
+
+  // Refresh on focus + 30s poll while focused so newly-submitted rows + status
+  // transitions (pending → verified/rejected) appear without re-login.
+  // Pipeline can be slow with retries; keep the poll cadence tight here.
+  useFocusEffect(
+    useCallback(() => {
+      void loadPage(1, true);
+      const id = setInterval(() => void loadPage(1, true), 30_000);
+      return () => clearInterval(id);
+    }, [loadPage]),
+  );
 
   const hasMore = page * LIMIT < total;
   const summary = useMemo(() => deriveSummary(submissions), [submissions]);
@@ -124,6 +136,13 @@ export default function ActivityScreen() {
         data={submissions}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <SubmissionRow item={item} onPress={handleRowPress} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={() => void loadPage(1, true)}
+            tintColor={tokens.brand.accent}
+          />
+        }
         ListHeaderComponent={listHeader}
         ListEmptyComponent={
           <View style={styles.center}>

@@ -25,7 +25,6 @@ import { haversineMetres } from '../../src/utils/haversine';
 import { enqueueSubmission } from '../../src/services/captureQueue';
 import { LocationRequiredScreen } from '../../src/components/contribution/LocationRequiredScreen';
 import { StationDisambiguationSheet } from '../../src/components/contribution/StationDisambiguationSheet';
-import { PriceConfirmationCard } from '../../src/components/contribution/PriceConfirmationCard';
 import type { FuelType } from '@desert/types';
 import type { StationDto } from '../../src/api/stations';
 
@@ -53,7 +52,6 @@ type ScreenState =
   | 'camera'
   | 'quality-check'
   | 'disambiguation'
-  | 'confirm'
   | 'location-required'
   | 'error';
 
@@ -112,8 +110,7 @@ export default function CaptureScreen() {
   const [capturedPhoto, setCapturedPhoto] = useState<CapturedPhoto | null>(null);
   const [qualityFlag, setQualityFlag] = useState<QualityFlag | null>(null);
 
-  const [selectedFuelType, setSelectedFuelType] = useState<FuelType>(storedFuelType);
-  const [preselectedStationId, setPreselectedStationId] = useState<string | undefined>(undefined);
+  const [selectedFuelType] = useState<FuelType>(storedFuelType);
 
   // Reuse nearby stations hook — centre on current GPS while on camera screen
   const { stations } = useNearbyStations(accessToken, location);
@@ -140,13 +137,6 @@ export default function CaptureScreen() {
   // Post-capture stations — filtered from the same hook output at capture time
   const [captureNearbyStations, setCaptureNearbyStations] = useState<StationDto[]>([]);
 
-
-  const resolvedStation = preselectedStationId
-    ? (stations.find(s => s.id === preselectedStationId) ?? null)
-    : nearbyStations.length === 1
-      ? nearbyStations[0] ?? null
-      : null;
-
   const handleBack = useCallback(() => {
     router.back();
   }, []);
@@ -165,8 +155,14 @@ export default function CaptureScreen() {
   // returns from background. expo-camera's native session is fragile across
   // these transitions and can leave the preview black. Bumping cameraKey is
   // cheap (sub-100ms remount) and reliably restores the live preview.
+  // Also reset capture-flow state so a previous session's disambiguation
+  // modal or captured photo doesn't bleed into a fresh capture attempt.
   useFocusEffect(
     useCallback(() => {
+      setCapturedPhoto(null);
+      setQualityFlag(null);
+      setCaptureNearbyStations([]);
+      setScreenState(prev => (prev === 'location-required' || prev === 'error' ? prev : 'camera'));
       remountCamera();
     }, [remountCamera]),
   );
@@ -286,21 +282,34 @@ export default function CaptureScreen() {
     }
   }, [cameraRef, isCapturing, location, stations, runQualityCheck, t]);
 
-  const handleUseAnyway = useCallback(() => {
+  const handleUseAnyway = useCallback(async () => {
     if (captureNearbyStations.length >= 2) {
       setScreenState('disambiguation');
-    } else {
-      if (captureNearbyStations.length === 1) {
-        setPreselectedStationId(captureNearbyStations[0]!.id);
-      }
-      setScreenState('confirm');
+      return;
     }
-  }, [captureNearbyStations]);
+    // 0 or 1 station — fire-and-forget like the happy path
+    if (!capturedPhoto) return;
+    const matchedId = captureNearbyStations.length === 1 ? captureNearbyStations[0]!.id : undefined;
+    const matchedName = captureNearbyStations.length === 1 ? captureNearbyStations[0]!.name : undefined;
+    try {
+      await enqueueSubmission({
+        photoUri: capturedPhoto.uri,
+        fuelType: selectedFuelType,
+        manualPrice: undefined,
+        preselectedStationId: matchedId,
+        gpsLat: capturedPhoto.gpsLat,
+        gpsLng: capturedPhoto.gpsLng,
+        capturedAt: capturedPhoto.capturedAt,
+      });
+      router.replace({ pathname: '/(app)/confirm', params: { stationName: matchedName } });
+    } catch {
+      Alert.alert(t('contribution.storageFull'));
+    }
+  }, [captureNearbyStations, capturedPhoto, selectedFuelType, t]);
 
   const handleRetake = useCallback(() => {
     setCapturedPhoto(null);
     setQualityFlag(null);
-    setPreselectedStationId(undefined);
     setScreenState('camera');
   }, []);
 
@@ -323,32 +332,14 @@ export default function CaptureScreen() {
     }
   }, [capturedPhoto, stations, selectedFuelType, t]);
 
+  // Dismissing disambiguation = "none of these is the right station" — there's
+  // no reasonable submission to make in that case (backend would reject for
+  // no_station_match), so retake the photo at the right place instead.
   const handleDisambiguationDismiss = useCallback(() => {
-    setPreselectedStationId(undefined);
-    setScreenState('confirm');
+    setCapturedPhoto(null);
+    setQualityFlag(null);
+    setScreenState('camera');
   }, []);
-
-  // AC1 perf goal: confirmation screen should appear within 300ms of the driver
-  // tapping "Confirm". enqueueSubmission() is a synchronous SQLite INSERT so the
-  // only latency here is router.replace() — well within target on any modern device.
-  const handleConfirm = useCallback(async (manualPrice: number | undefined) => {
-    if (!capturedPhoto) return;
-    try {
-      await enqueueSubmission({
-        photoUri: capturedPhoto.uri,
-        fuelType: selectedFuelType,
-        manualPrice,
-        preselectedStationId,
-        gpsLat: capturedPhoto.gpsLat,
-        gpsLng: capturedPhoto.gpsLng,
-        capturedAt: capturedPhoto.capturedAt,
-      });
-      router.replace('/(app)/confirm');
-    } catch {
-      // SQLite write failed (device storage full or DB error)
-      Alert.alert(t('contribution.storageFull'));
-    }
-  }, [capturedPhoto, selectedFuelType, preselectedStationId, t]);
 
   // ── Location required ────────────────────────────────────────────────────
   if (screenState === 'location-required') {
@@ -507,25 +498,6 @@ export default function CaptureScreen() {
         onDismiss={handleDisambiguationDismiss}
       />
 
-      {/* ── Price confirmation card ───────────────────────────────────── */}
-      {screenState === 'confirm' && (
-        <View style={[StyleSheet.absoluteFill, styles.confirmOverlay]}>
-          {/* Blurred photo thumbnail hint area */}
-          <TouchableOpacity style={styles.confirmBackdrop} onPress={handleRetake} />
-          <PriceConfirmationCard
-            fuelType={selectedFuelType}
-            stationName={resolvedStation?.name ?? null}
-            onFuelTypeChange={setSelectedFuelType}
-            onConfirm={(price) => void handleConfirm(price)}
-            onWrongStation={() => {
-              setPreselectedStationId(undefined);
-              if (captureNearbyStations.length >= 2) {
-                setScreenState('disambiguation');
-              }
-            }}
-          />
-        </View>
-      )}
     </View>
   );
 }
@@ -758,11 +730,4 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 
-  // Confirmation overlay
-  confirmOverlay: {
-    justifyContent: 'flex-end',
-  },
-  confirmBackdrop: {
-    flex: 1,
-  },
 });

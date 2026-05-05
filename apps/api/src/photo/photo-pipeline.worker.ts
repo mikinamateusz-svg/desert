@@ -691,45 +691,45 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       );
     }
 
-    if (valid.length === 0) {
-      // If the rule evaluator flagged shadow_reject (data-driven sanity
-      // layer) rather than raw Tier 1/3 failure, route to shadow_rejected so
-      // the admin can review the photo + OCR output rather than deleting it.
-      // See planning-artifacts/price-validation-framework.md §Decisions 3.
-      if (rule_overall === 'shadow_reject') {
-        const reason = rule_reason_code ?? 'price_validation_rule';
-        // Preserve rawPrices in price_data so admins can see what OCR
-        // extracted when reviewing the shadow-rejected submission.
-        await this.prisma.submission.update({
-          where: { id: submissionId },
-          data: {
-            status: SubmissionStatus.shadow_rejected,
-            flag_reason: reason,
-            price_data: rawPrices.map(p => ({
-              fuel_type: p.fuel_type,
-              price_per_litre: p.price_per_litre,
-            })) as unknown as Prisma.InputJsonValue,
-          },
+    // shadow_reject routing — fires whenever ANY fuel triggered a rule with
+    // action=shadow_reject, regardless of how many other fuels passed. The
+    // suspect price needs human eyes on it before any of this submission's
+    // data ships, so we hold the entire row (price_data = rawPrices for
+    // admin visibility) rather than partially-shipping the survivors.
+    if (rule_overall === 'shadow_reject') {
+      const reason = rule_reason_code ?? 'price_validation_rule';
+      await this.prisma.submission.update({
+        where: { id: submissionId },
+        data: {
+          status: SubmissionStatus.shadow_rejected,
+          flag_reason: reason,
+          price_data: rawPrices.map(p => ({
+            fuel_type: p.fuel_type,
+            price_per_litre: p.price_per_litre,
+          })) as unknown as Prisma.InputJsonValue,
+        },
+      });
+      if (updated.photo_r2_key) {
+        await this.researchRetention.captureIfEnabled({
+          submissionId,
+          stationId: updated.station_id,
+          photoR2Key: updated.photo_r2_key,
+          gpsLat: updated.gps_lat,
+          gpsLng: updated.gps_lng,
+          ocrPrices: rawPrices,
+          finalPrices: null,
+          finalStatus: SubmissionStatus.shadow_rejected,
+          flagReason: reason,
+          capturedAt: updated.created_at,
         });
-        if (updated.photo_r2_key) {
-          await this.researchRetention.captureIfEnabled({
-            submissionId,
-            stationId: updated.station_id,
-            photoR2Key: updated.photo_r2_key,
-            gpsLat: updated.gps_lat,
-            gpsLng: updated.gps_lng,
-            ocrPrices: rawPrices,
-            finalPrices: null,
-            finalStatus: SubmissionStatus.shadow_rejected,
-            flagReason: reason,
-            capturedAt: updated.created_at,
-          });
-        }
-        this.logger.log(
-          `Submission ${submissionId}: all prices failed evaluator rules → shadow_rejected (${reason})`,
-        );
-        return;
       }
+      this.logger.log(
+        `Submission ${submissionId}: shadow_rejected (${reason}) — ${valid.length}/${valid.length + invalid.length} fuels would have passed; held for admin review`,
+      );
+      return;
+    }
+
+    if (valid.length === 0) {
       await this.rejectSubmission(updated, 'price_validation_failed', rawPrices);
       return;
     }

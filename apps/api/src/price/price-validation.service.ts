@@ -137,51 +137,39 @@ export class PriceValidationService {
       return { valid, invalid };
     }
 
-    // Action handling:
-    //   shadow_reject — escalate the WHOLE submission (don't silently drop
-    //     fuels). Worker routes to shadow_rejected so admins can review the
-    //     OCR output and verify against the photo. The intent of
-    //     shadow_reject is "looks suspicious, needs human eyes" — silently
-    //     dropping a fuel hides exactly the problem the rule was meant to
-    //     surface (and used to make valid prices vanish from the map).
-    //   reject — demote that fuel to invalid; the rest of the submission
-    //     still ships if other prices pass.
-    const firstShadowReject = ruleResult.perFuel
-      .flatMap(o => o.rulesFired)
-      .find(r => r.action === 'shadow_reject');
-
-    if (firstShadowReject) {
-      for (const v of valid) {
-        invalid.push({
-          fuel_type: v.fuel_type,
-          price_per_litre: v.price_per_litre,
-          reason: `rule_${firstShadowReject.reason_code}`,
-        });
-      }
-      return {
-        valid: [],
-        invalid,
-        rule_overall: 'shadow_reject',
-        rule_reason_code: firstShadowReject.reason_code,
-      };
-    }
-
-    // No shadow_reject rules fired — apply per-fuel reject demotion.
+    // Per-fuel demotion: a fuel is dropped from `valid` only if its OWN
+    // outcome failed. Other fuels (that didn't trigger any rule) keep going.
+    // Submission-level routing happens in the worker based on rule_overall:
+    //   - rule_overall === 'shadow_reject' → submission lands in admin queue
+    //     for review even when some fuels passed (worker preserves rawPrices).
+    //   - rule_overall === 'reject' or 'passed' → normal verify path with
+    //     surviving fuels.
+    // The earlier "escalate-and-mark-everything-invalid" approach over-applied
+    // a single fuel's failure to all fuels, which silently shadow_rejected
+    // prices that hadn't violated anything.
     const stillValid: ValidatedPrice[] = [];
     for (const v of valid) {
       const outcome = ruleResult.perFuel.find(o => o.fuel_type === v.fuel_type);
-      const rejectRule = outcome?.rulesFired.find(r => r.action === 'reject');
-      if (rejectRule) {
+      const failingRule = outcome?.rulesFired.find(
+        r => r.action === 'reject' || r.action === 'shadow_reject',
+      );
+      if (failingRule) {
         invalid.push({
           fuel_type: v.fuel_type,
           price_per_litre: v.price_per_litre,
-          reason: `rule_${rejectRule.reason_code}`,
+          reason: `rule_${failingRule.reason_code}`,
         });
       } else {
         stillValid.push(v);
       }
     }
 
+    // Surface the worst hard-action reason_code for the worker to put on
+    // flag_reason. shadow_reject takes precedence over reject for visibility
+    // (admin queue is more useful than silent rejection).
+    const firstShadowReject = ruleResult.perFuel
+      .flatMap(o => o.rulesFired)
+      .find(r => r.action === 'shadow_reject');
     const firstReject = ruleResult.perFuel
       .flatMap(o => o.rulesFired)
       .find(r => r.action === 'reject');
@@ -190,7 +178,7 @@ export class PriceValidationService {
       valid: stillValid,
       invalid,
       rule_overall: ruleResult.overall,
-      rule_reason_code: firstReject?.reason_code,
+      rule_reason_code: firstShadowReject?.reason_code ?? firstReject?.reason_code,
     };
   }
 

@@ -280,8 +280,11 @@ describe('PriceValidationService', () => {
   // ── Rule evaluator integration ────────────────────────────────────────────
 
   describe('rule evaluator escalation', () => {
-    it('escalates whole submission to shadow_reject when any per-fuel shadow_reject rule fires', async () => {
-      // Tier 1 passes for both fuels — only the rule fires.
+    it('demotes only the failing fuel when shadow_reject rule fires; rule_overall escalates submission', async () => {
+      // Tier 1 passes for both fuels — only the rule fires for PB_95.
+      // Per-fuel result: PB_95 dropped, ON_PREMIUM survives.
+      // Submission-level: rule_overall='shadow_reject' tells the worker to
+      // route the entire submission to admin queue for review.
       mockQueryRaw.mockResolvedValueOnce([
         recentRow('PB_95', 6.40),
         recentRow('ON_PREMIUM', 7.30),
@@ -310,10 +313,9 @@ describe('PriceValidationService', () => {
         price('ON_PREMIUM', 7.31),
       ]);
 
-      // Both fuels demoted — admins see the full OCR output for review.
-      expect(result.valid).toHaveLength(0);
-      expect(result.invalid).toHaveLength(2);
-      expect(result.invalid.map(i => i.fuel_type).sort()).toEqual(['ON_PREMIUM', 'PB_95']);
+      expect(result.valid.map(v => v.fuel_type)).toEqual(['ON_PREMIUM']);
+      expect(result.invalid).toHaveLength(1);
+      expect(result.invalid[0].fuel_type).toBe('PB_95');
       expect(result.rule_overall).toBe('shadow_reject');
       expect(result.rule_reason_code).toBe('pb95_outside_rack_band');
     });

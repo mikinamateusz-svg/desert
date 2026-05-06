@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { PhotoPipelineWorker } from './photo-pipeline.worker.js';
 import { PhotoCleanupWorker } from './photo-cleanup.worker.js';
 import { OcrSpendService } from './ocr-spend.service.js';
@@ -11,9 +11,20 @@ import { PriceModule } from '../price/price.module.js';
 import { RedisModule } from '../redis/redis.module.js';
 import { UserModule } from '../user/user.module.js';
 import { ResearchModule } from '../research/research.module.js';
+import { SubmissionsModule } from '../submissions/submissions.module.js';
 
 @Module({
-  imports: [StationModule, StorageModule, OcrModule, LogoModule, PriceModule, RedisModule, UserModule, ResearchModule],
+  imports: [
+    StationModule,
+    StorageModule,
+    OcrModule,
+    LogoModule,
+    PriceModule,
+    RedisModule,
+    UserModule,
+    ResearchModule,
+    forwardRef(() => SubmissionsModule),
+  ],
   providers: [PhotoPipelineWorker, PhotoCleanupWorker, OcrSpendService, SubmissionDedupService],
   exports: [PhotoPipelineWorker, SubmissionDedupService, OcrSpendService],
 })

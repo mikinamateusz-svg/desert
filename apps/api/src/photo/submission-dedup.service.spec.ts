@@ -6,10 +6,12 @@ import { REDIS_CLIENT } from '../redis/redis.module.js';
 
 const mockRedisGet = jest.fn();
 const mockRedisSet = jest.fn();
+const mockRedisDel = jest.fn();
 
 const mockRedis = {
   get: mockRedisGet,
   set: mockRedisSet,
+  del: mockRedisDel,
 };
 
 // ── Test suite ───────────────────────────────────────────────────────────────
@@ -21,6 +23,7 @@ describe('SubmissionDedupService', () => {
     jest.clearAllMocks();
     mockRedisGet.mockResolvedValue(null);
     mockRedisSet.mockResolvedValue('OK');
+    mockRedisDel.mockResolvedValue(1);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -118,6 +121,47 @@ describe('SubmissionDedupService', () => {
         'EX',
         24 * 3600,
       );
+    });
+  });
+
+  // ── liftDedup (Story 3.14 — flag-wrong) ─────────────────────────────────────
+
+  describe('liftDedup', () => {
+    it('deletes both station and hash dedup keys when both are provided', async () => {
+      await service.liftDedup('station-abc', 'deadbeef');
+      expect(mockRedisDel).toHaveBeenCalledWith('dedup:station:station-abc');
+      expect(mockRedisDel).toHaveBeenCalledWith('dedup:hash:deadbeef');
+      expect(mockRedisDel).toHaveBeenCalledTimes(2);
+    });
+
+    it('skips station delete when stationId is null', async () => {
+      await service.liftDedup(null, 'deadbeef');
+      expect(mockRedisDel).toHaveBeenCalledTimes(1);
+      expect(mockRedisDel).toHaveBeenCalledWith('dedup:hash:deadbeef');
+    });
+
+    it('skips hash delete when photoHash is null', async () => {
+      await service.liftDedup('station-abc', null);
+      expect(mockRedisDel).toHaveBeenCalledTimes(1);
+      expect(mockRedisDel).toHaveBeenCalledWith('dedup:station:station-abc');
+    });
+
+    it('is a no-op when both args are null', async () => {
+      await service.liftDedup(null, null);
+      expect(mockRedisDel).not.toHaveBeenCalled();
+    });
+
+    it('does not throw when one Redis delete fails', async () => {
+      mockRedisDel.mockRejectedValueOnce(new Error('Redis down'));
+      mockRedisDel.mockResolvedValueOnce(1);
+      await expect(service.liftDedup('station-abc', 'deadbeef')).resolves.toBeUndefined();
+      // Both attempts should be made even if the first fails
+      expect(mockRedisDel).toHaveBeenCalledTimes(2);
+    });
+
+    it('does not throw when both Redis deletes fail (best-effort semantics)', async () => {
+      mockRedisDel.mockRejectedValue(new Error('Redis down'));
+      await expect(service.liftDedup('station-abc', 'deadbeef')).resolves.toBeUndefined();
     });
   });
 });

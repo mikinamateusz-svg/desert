@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { createHash } from 'node:crypto';
 import type Redis from 'ioredis';
 import { REDIS_CLIENT } from '../redis/redis.module.js';
@@ -11,6 +11,8 @@ const HASH_DEDUP_TTL_SECONDS = 24 * 3600;
 
 @Injectable()
 export class SubmissionDedupService {
+  private readonly logger = new Logger(SubmissionDedupService.name);
+
   constructor(@Inject(REDIS_CLIENT) private readonly redis: Redis) {}
 
   /** Compute SHA-256 hex digest of a photo buffer. */
@@ -49,5 +51,30 @@ export class SubmissionDedupService {
    */
   async recordHashDedup(hash: string): Promise<void> {
     await this.redis.set(`dedup:hash:${hash}`, '1', 'EX', HASH_DEDUP_TTL_SECONDS);
+  }
+
+  /**
+   * Lift both station and hash dedup keys for a submission. Used when a driver
+   * flags their own submission as wrong (Story 3.14) — without lifting, their
+   * immediate retake at the same station with the same scene would be silently
+   * dedup'd, defeating the self-correction loop.
+   *
+   * Best-effort: a Redis failure on either key logs but doesn't throw. The flag
+   * action shouldn't fail just because Redis is degraded; worst case the user
+   * waits 12h for the natural TTL to expire. Both deletes run in parallel.
+   */
+  async liftDedup(stationId: string | null, photoHash: string | null): Promise<void> {
+    const ops: Array<Promise<unknown>> = [];
+    if (stationId) ops.push(this.redis.del(`dedup:station:${stationId}`));
+    if (photoHash) ops.push(this.redis.del(`dedup:hash:${photoHash}`));
+    if (ops.length === 0) return;
+    const results = await Promise.allSettled(ops);
+    for (const r of results) {
+      if (r.status === 'rejected') {
+        this.logger.warn(
+          `liftDedup: Redis delete failed: ${r.reason instanceof Error ? r.reason.message : String(r.reason)}`,
+        );
+      }
+    }
   }
 }

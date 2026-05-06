@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { SubmissionsService } from '../submissions/submissions.service.js';
 import { ConfigService } from '@nestjs/config';
 import {
   PhotoPipelineWorker,
@@ -115,6 +116,10 @@ const mockResearchRetention = {
   captureIfEnabled: jest.fn(),
   isEnabled: jest.fn().mockReturnValue(false),
   cleanupExpired: jest.fn(),
+};
+
+const mockSubmissionsService = {
+  autoResolveFlaggedAtStation: jest.fn().mockResolvedValue(undefined),
 };
 
 // ── Test fixtures ──────────────────────────────────────────────────────────
@@ -274,6 +279,7 @@ describe('PhotoPipelineWorker', () => {
         { provide: SubmissionDedupService, useValue: mockSubmissionDedupService },
         { provide: TrustScoreService, useValue: mockTrustScoreService },
         { provide: ResearchRetentionService, useValue: mockResearchRetention },
+        { provide: SubmissionsService, useValue: mockSubmissionsService },
       ],
     }).compile();
 
@@ -351,6 +357,7 @@ describe('PhotoPipelineWorker', () => {
           { provide: SubmissionDedupService, useValue: mockSubmissionDedupService },
           { provide: TrustScoreService, useValue: mockTrustScoreService },
           { provide: ResearchRetentionService, useValue: mockResearchRetention },
+          { provide: SubmissionsService, useValue: mockSubmissionsService },
         ],
       }).compile();
 

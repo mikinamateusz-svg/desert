@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit, OnModuleDestroy, forwardRef } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Queue, Worker, type Job } from 'bullmq';
 import Redis from 'ioredis';
@@ -14,6 +14,7 @@ import { OcrSpendService } from './ocr-spend.service.js';
 import { SubmissionDedupService } from './submission-dedup.service.js';
 import { TrustScoreService } from '../user/trust-score.service.js';
 import { ResearchRetentionService } from '../research/research-retention.service.js';
+import { SubmissionsService } from '../submissions/submissions.service.js';
 
 export const PHOTO_PIPELINE_QUEUE = 'photo-pipeline';
 export const PHOTO_PIPELINE_JOB = 'process-submission';
@@ -58,6 +59,8 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     private readonly submissionDedupService: SubmissionDedupService,
     private readonly trustScoreService: TrustScoreService,
     private readonly researchRetention: ResearchRetentionService,
+    @Inject(forwardRef(() => SubmissionsService))
+    private readonly submissionsService: SubmissionsService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -787,6 +790,17 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         `Failed to write price cache/history for station ${stationId}, submission ${submissionId}: ${err.message}`,
       ),
     );
+
+    // Story 3.14 AC6 — auto-resolve any earlier user-flagged-wrong submission
+    // by the same driver at this station. The driver's resubmission counts as
+    // the resolution; admin doesn't need to review it. Best-effort.
+    await this.submissionsService
+      .autoResolveFlaggedAtStation(updated.user_id, stationId, submissionId)
+      .catch((err: Error) =>
+        this.logger.warn(
+          `Auto-resolve failed for user ${updated.user_id} at station ${stationId}: ${err.message}`,
+        ),
+      );
 
     // Clear staleness flags for all verified fuel types in a single batch query (best-effort)
     const validFuelTypes = valid.map(p => p.fuel_type);

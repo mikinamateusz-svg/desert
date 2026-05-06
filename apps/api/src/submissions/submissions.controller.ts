@@ -3,17 +3,19 @@ import {
   Get,
   Post,
   Req,
+  Param,
   Query,
   HttpCode,
   HttpStatus,
   BadRequestException,
 } from '@nestjs/common';
 import { FastifyRequest } from 'fastify';
-import { UserRole } from '@prisma/client';
+import { User, UserRole } from '@prisma/client';
 import { SubmissionsService } from './submissions.service.js';
 import { GetSubmissionsDto } from './dto/get-submissions.dto.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 import { CurrentUser } from '../auth/current-user.decorator.js';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('v1/submissions')
 export class SubmissionsController {
@@ -70,6 +72,28 @@ export class SubmissionsController {
       manualPrice: parseOptionalFloat(fields['manual_price']),
       preselectedStationId: fields['preselected_station_id'] || null,
     });
+  }
+
+  /**
+   * Story 3.14 — driver-initiated flag for an own verified submission with
+   * wrong prices. Withdraws the submission, restores previous prices, lifts
+   * dedup so the driver can retake immediately, and routes the submission to
+   * admin review.
+   *
+   * Rate limited at 5 actions / hour per user via Throttle (admins still
+   * subject to the throttle by decorator placement, but bypass the per-action
+   * 24h-window check inside the service).
+   */
+  @Post(':id/flag-wrong')
+  @Roles(UserRole.DRIVER, UserRole.ADMIN)
+  @HttpCode(HttpStatus.OK)
+  @Throttle({ default: { ttl: 3600, limit: 5 } })
+  async flagWrong(
+    @Param('id') submissionId: string,
+    @CurrentUser() user: User,
+  ): Promise<{ status: 'withdrawn' }> {
+    await this.submissionsService.flagWrong(submissionId, user.id, user.role);
+    return { status: 'withdrawn' };
   }
 }
 

@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
@@ -113,6 +113,31 @@ export class AdminResearchService {
     });
     if (!photo) throw new NotFoundException(`Research photo ${id} not found`);
     return this.storage.getObjectBuffer(photo.r2_key);
+  }
+
+  /**
+   * Re-copy the source Submission's photo into the ResearchPhoto's r2_key.
+   * Recovers from the requeue rollback bug that deleted the research R2
+   * object while leaving the DB row intact. No-op if the source photo is
+   * also gone (cleanup worker may have removed it after retention expired).
+   */
+  async repairR2(id: string): Promise<void> {
+    const photo = await this.prisma.researchPhoto.findUnique({
+      where: { id },
+      select: {
+        r2_key: true,
+        submission: { select: { photo_r2_key: true } },
+      },
+    });
+    if (!photo) throw new NotFoundException(`Research photo ${id} not found`);
+    const sourceKey = photo.submission?.photo_r2_key;
+    if (!sourceKey) {
+      throw new BadRequestException(
+        `Research photo ${id}: source submission has no photo_r2_key (cleanup worker likely removed it)`,
+      );
+    }
+    await this.storage.copyObject(sourceKey, photo.r2_key);
+    this.logger.log(`Research photo ${id}: R2 repaired from ${sourceKey} → ${photo.r2_key}`);
   }
 
   async label(id: string, input: LabelInput): Promise<void> {

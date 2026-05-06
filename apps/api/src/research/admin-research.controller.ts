@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Patch,
+  Post,
   Param,
   Query,
   Body,
@@ -81,5 +82,17 @@ export class AdminResearchController {
     reply.header('Content-Type', 'image/jpeg');
     reply.header('Cache-Control', 'private, max-age=300');
     void reply.send(buffer);
+  }
+
+  /**
+   * Repair an orphaned R2 object by re-copying from the source Submission's
+   * photo_r2_key. Recovery for the rollback bug where requeue would delete
+   * the research R2 object the existing DB row points to.
+   */
+  @Post(':id/repair-r2')
+  @HttpCode(HttpStatus.OK)
+  async repairR2(@Param('id') id: string): Promise<{ status: 'repaired' }> {
+    await this.service.repairR2(id);
+    return { status: 'repaired' };
   }
 }

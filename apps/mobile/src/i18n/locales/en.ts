@@ -294,6 +294,28 @@ export default {
     cameraUnavailable: 'Camera unavailable',
     goBack: 'Go back',
     queuePending: '{{count}} waiting to upload',
+    flagWrong: {
+      // Story 3.14 — driver flags own verified submission as wrong.
+      button: 'Wrong prices?',
+      confirmTitle: 'Withdraw this submission?',
+      confirmBody:
+        "Other drivers will see the previous prices until we review your photo. You can take another one right after.",
+      confirmCancel: 'Cancel',
+      confirmConfirm: 'Withdraw',
+      submitError: 'Could not withdraw. Please try again.',
+      // P-15: shown when API returns 400 (outside 24h window — possibly due
+      // to client/server clock skew making the row look fresh on the device).
+      windowExpiredError:
+        'Submissions can only be withdrawn within 24 hours. Please refresh your activity list.',
+      thanksTitle: 'Sorry — our bad.',
+      thanksBody:
+        "We'll review the photo to improve recognition. You're welcome to take another one — closer or at a better angle helps a lot.",
+      thanksRetake: 'Take another photo',
+      thanksBack: 'Back to activity',
+      withdrawnLabel: 'Withdrawn — under review',
+      priceConflictLabel: 'Checking price match',
+      underReviewLabel: 'Under review',
+    },
   },
   confirmation: {
     thankYou: 'Thank you!',

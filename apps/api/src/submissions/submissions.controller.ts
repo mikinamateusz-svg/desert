@@ -4,7 +4,9 @@ import {
   Post,
   Req,
   Param,
+  ParseUUIDPipe,
   Query,
+  UseGuards,
   HttpCode,
   HttpStatus,
   BadRequestException,
@@ -16,6 +18,7 @@ import { GetSubmissionsDto } from './dto/get-submissions.dto.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 import { CurrentUser } from '../auth/current-user.decorator.js';
 import { Throttle } from '@nestjs/throttler';
+import { FlagWrongThrottlerGuard } from './flag-wrong-throttler.guard.js';
 
 @Controller('v1/submissions')
 export class SubmissionsController {
@@ -80,16 +83,18 @@ export class SubmissionsController {
    * dedup so the driver can retake immediately, and routes the submission to
    * admin review.
    *
-   * Rate limited at 5 actions / hour per user via Throttle (admins still
-   * subject to the throttle by decorator placement, but bypass the per-action
-   * 24h-window check inside the service).
+   * Rate-limited at 5 actions / hour PER USER via FlagWrongThrottlerGuard
+   * (overrides the global IP-keyed ThrottlerGuard for this route only —
+   * fixes P-7 CGNAT issue). Admins bypass the rate limit entirely (P-8 /
+   * AC10) via the same guard's `shouldSkip` override.
    */
   @Post(':id/flag-wrong')
   @Roles(UserRole.DRIVER, UserRole.ADMIN)
+  @UseGuards(FlagWrongThrottlerGuard)
   @HttpCode(HttpStatus.OK)
   @Throttle({ default: { ttl: 3600, limit: 5 } })
   async flagWrong(
-    @Param('id') submissionId: string,
+    @Param('id', ParseUUIDPipe) submissionId: string,
     @CurrentUser() user: User,
   ): Promise<{ status: 'withdrawn' }> {
     await this.submissionsService.flagWrong(submissionId, user.id, user.role);

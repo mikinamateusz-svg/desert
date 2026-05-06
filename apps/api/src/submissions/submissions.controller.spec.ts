@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException } from '@nestjs/common';
 import { SubmissionsController } from './submissions.controller.js';
 import { SubmissionsService } from './submissions.service.js';
+import { FlagWrongThrottlerGuard } from './flag-wrong-throttler.guard.js';
 
 const mockSubmissionsService = {
   getMySubmissions: jest.fn(),
@@ -43,7 +44,14 @@ describe('SubmissionsController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [SubmissionsController],
       providers: [{ provide: SubmissionsService, useValue: mockSubmissionsService }],
-    }).compile();
+    })
+      // FlagWrongThrottlerGuard pulls THROTTLER:MODULE_OPTIONS from the
+      // ThrottlerModule which isn't in this isolated test module. We don't
+      // exercise rate limiting here — controller behaviour and guard
+      // behaviour are tested separately — so override with a no-op.
+      .overrideGuard(FlagWrongThrottlerGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     controller = module.get<SubmissionsController>(SubmissionsController);
   });

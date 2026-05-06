@@ -16,6 +16,7 @@ import { PhotoPipelineWorker } from '../photo/photo-pipeline.worker.js';
 import { SubmissionDedupService } from '../photo/submission-dedup.service.js';
 import { PriceService, type StationPriceRow } from '../price/price.service.js';
 import { PriceCacheService } from '../price/price-cache.service.js';
+import { VALID_FUEL_TYPES } from '../price/config/price-modifiers.js';
 
 type PriceEntry = { fuel_type: string; price_per_litre: number | null };
 
@@ -39,6 +40,25 @@ export interface CreateSubmissionFields {
 const FLAG_WRONG_WINDOW_MS = 24 * 3600 * 1000;
 const AUDIT_ACTION_USER_FLAGGED = 'USER_FLAGGED_WRONG';
 const AUDIT_ACTION_AUTO_RESOLVED = 'AUTO_RESOLVED_BY_RESUBMIT';
+
+// P-2: previous-verified submission must be within this window to be eligible
+// for restore. Older than this and we'd be repopulating the cache with prices
+// that may have shifted significantly — better to fall through to estimates.
+const RESTORE_PREVIOUS_MAX_AGE_MS = 7 * 24 * 3600 * 1000;
+
+// BS-1: explicit allowlist of flag_reason values that are visible to drivers
+// in their activity log. Anything not in this set is laundered to null on the
+// wire to avoid leaking internal taxonomy (rule ids, anti-fraud signals, etc.).
+// Keep in sync with the AC5 reason-aware copy in mobile SubmissionRow.tsx.
+const DRIVER_VISIBLE_FLAG_REASONS: ReadonlySet<string> = new Set([
+  'user_flagged_wrong',
+  'price_conflict',
+  'pb95_outside_rack_band',
+  'on_outside_rack_band',
+  'lpg_outside_rack_band',
+]);
+
+const VALID_FUEL_TYPES_SET: ReadonlySet<string> = new Set(VALID_FUEL_TYPES);
 
 @Injectable()
 export class SubmissionsService {
@@ -89,8 +109,14 @@ export class SubmissionsService {
         status = 'pending';
       }
 
-      // Hide the shadow_banned flag_reason on the wire too — same secrecy rule.
-      const flag_reason = item.flag_reason === 'shadow_banned' ? null : item.flag_reason;
+      // BS-1: explicit allowlist of driver-visible flag_reason values. Any
+      // value not in DRIVER_VISIBLE_FLAG_REASONS (including the laundered
+      // 'shadow_banned' case) is set to null on the wire so future internal
+      // taxonomy doesn't leak.
+      const flag_reason =
+        item.flag_reason && DRIVER_VISIBLE_FLAG_REASONS.has(item.flag_reason)
+          ? item.flag_reason
+          : null;
 
       return {
         id: item.id,
@@ -221,6 +247,7 @@ export class SubmissionsService {
         station_id: true,
         photo_r2_key: true,
         status: true,
+        flag_reason: true,
         created_at: true,
       },
     });
@@ -238,39 +265,24 @@ export class SubmissionsService {
     }
 
     // Window check — admins bypass per Story 3.14 admin-bypass exception.
+    // P-17: also reject negative ageMs (future created_at) so a clock-skewed
+    // server timestamp can't trivially pass the <= 24h check.
     if (actorRole !== UserRole.ADMIN) {
       const ageMs = Date.now() - submission.created_at.getTime();
-      if (ageMs > FLAG_WRONG_WINDOW_MS) {
+      if (ageMs < 0 || ageMs > FLAG_WRONG_WINDOW_MS) {
         throw new BadRequestException(
-          `Submission ${submissionId} is older than 24h — flag-wrong window has closed`,
+          `Submission ${submissionId} is older than 24h or has an invalid timestamp — flag-wrong window has closed`,
         );
       }
     }
 
-    // Atomic guard: if a concurrent admin or another flag-wrong already moved
-    // the row, updateMany returns count=0 and we 409 without further side
-    // effects.
-    const updateResult = await this.prisma.submission.updateMany({
-      where: { id: submissionId, status: SubmissionStatus.verified },
-      data: {
-        status: SubmissionStatus.shadow_rejected,
-        flag_reason: 'user_flagged_wrong',
-      },
-    });
-    if (updateResult.count === 0) {
-      throw new ConflictException(
-        `Submission ${submissionId} was modified concurrently — flag-wrong aborted`,
-      );
-    }
-
-    // Restore previous verified submission's prices for this station.
-    const restoredFromId = submission.station_id
-      ? await this.restorePreviousPrices(submission.station_id, submissionId)
-      : null;
-
-    // Lift dedup keys (best-effort). Hash requires fetching the photo bytes —
-    // if R2 fetch fails (cleanup ran between verification and flag), we still
-    // attempt the station-key lift so retake at the same station works.
+    // P-9: lift dedup BEFORE the status flip. liftDedup is idempotent (DEL
+    // ignores missing keys), and lifting first means a request cut off
+    // mid-method leaves the user able to retry: the row is still `verified`
+    // (so the next call passes the status guard) and the dedup keys are
+    // already lifted (so the retake can immediately re-process). Without
+    // this ordering the user could be permanently locked out of recovery
+    // after a single network hiccup.
     let photoHash: string | null = null;
     if (submission.photo_r2_key) {
       try {
@@ -286,9 +298,36 @@ export class SubmissionsService {
     }
     await this.submissionDedupService.liftDedup(submission.station_id, photoHash);
 
+    // Atomic guard: if a concurrent admin or another flag-wrong already moved
+    // the row, updateMany returns count=0 and we 409. Dedup is already lifted
+    // by this point — acceptable because the lift is idempotent and the
+    // station's dedup window will re-establish on the next verified submission.
+    const updateResult = await this.prisma.submission.updateMany({
+      where: { id: submissionId, status: SubmissionStatus.verified },
+      data: {
+        status: SubmissionStatus.shadow_rejected,
+        flag_reason: 'user_flagged_wrong',
+      },
+    });
+    if (updateResult.count === 0) {
+      throw new ConflictException(
+        `Submission ${submissionId} was modified concurrently — flag-wrong aborted`,
+      );
+    }
+
+    // Restore previous verified submission's prices for this station. Done
+    // AFTER the status flip so the just-flagged submission is excluded by
+    // the live status filter, even if the explicit excludeId guard is bypassed.
+    const restoredFromId = submission.station_id
+      ? await this.restorePreviousPrices(submission.station_id, submissionId)
+      : null;
+
     // Audit trail. Reuses AdminAuditLog (action prefixed USER_ for clarity);
     // admin_user_id field stores the actor's user_id regardless of role —
     // it's a text column with no FK constraint.
+    // P-13: preserve previous_flag_reason in notes so a custom annotation
+    // (e.g., admin's pre-flag note) isn't silently lost when the flag-wrong
+    // overwrites flag_reason.
     await this.prisma.adminAuditLog
       .create({
         data: {
@@ -297,6 +336,7 @@ export class SubmissionsService {
           submission_id: submissionId,
           notes: JSON.stringify({
             previous_status: 'verified',
+            previous_flag_reason: submission.flag_reason,
             restored_from_submission_id: restoredFromId,
             actor_role: actorRole,
           }),
@@ -326,11 +366,16 @@ export class SubmissionsService {
    * Best-effort: any failure here is logged but doesn't block the new
    * submission's verification flow. Called from photo-pipeline.worker right
    * after a successful setVerifiedPrice.
+   *
+   * P-6: only resolves flags filed BEFORE the triggering submission was
+   * captured. A BullMQ retry of an old verify-job must not auto-resolve a
+   * flag the driver filed after the original verification completed.
    */
   async autoResolveFlaggedAtStation(
     userId: string,
     stationId: string,
     triggeringSubmissionId: string,
+    triggeringCreatedAt: Date,
   ): Promise<void> {
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 3600 * 1000);
     const flagged = await this.prisma.submission.findMany({
@@ -339,7 +384,7 @@ export class SubmissionsService {
         station_id: stationId,
         status: SubmissionStatus.shadow_rejected,
         flag_reason: 'user_flagged_wrong',
-        created_at: { gte: sevenDaysAgo },
+        created_at: { gte: sevenDaysAgo, lt: triggeringCreatedAt },
         id: { not: triggeringSubmissionId },
       },
       select: { id: true },
@@ -348,50 +393,82 @@ export class SubmissionsService {
     if (flagged.length === 0) return;
 
     const flaggedIds = flagged.map((f) => f.id);
-    await this.prisma.submission.updateMany({
-      where: { id: { in: flaggedIds } },
+    // P-5: status + flag_reason guard in the WHERE clause. If an admin moved
+    // a row out of `shadow_rejected/user_flagged_wrong` between the findMany
+    // and this updateMany (e.g., admin manually verified the flag because
+    // the prices were actually correct), we MUST NOT silently overwrite that.
+    // The `count` returned will be lower than `flaggedIds.length` in that
+    // case; we audit only the rows that actually changed.
+    const updated = await this.prisma.submission.updateMany({
+      where: {
+        id: { in: flaggedIds },
+        status: SubmissionStatus.shadow_rejected,
+        flag_reason: 'user_flagged_wrong',
+      },
       data: {
         status: SubmissionStatus.rejected,
         flag_reason: 'auto_resolved_by_resubmit',
       },
     });
 
-    // Audit trail for each auto-resolve so admins can trace the chain.
-    await Promise.all(
-      flaggedIds.map((id) =>
-        this.prisma.adminAuditLog
-          .create({
-            data: {
-              admin_user_id: userId,
-              action: AUDIT_ACTION_AUTO_RESOLVED,
-              submission_id: id,
-              notes: JSON.stringify({ resolved_by_submission_id: triggeringSubmissionId }),
-            },
-          })
-          .catch(() => undefined),
-      ),
-    );
+    if (updated.count === 0) {
+      this.logger.log(
+        `Auto-resolve: ${flaggedIds.length} flagged submission(s) at station ${stationId} for user ${userId} were already moved by admin — no action`,
+      );
+      return;
+    }
+
+    // Audit trail for each auto-resolve so admins can trace the chain. We
+    // audit the rows we INTENDED to resolve; if some were already moved by
+    // admin, the audit row pairs with the post-update state via timestamp.
+    // Failures are per-row .catch'd so a single audit hiccup doesn't drop
+    // the rest. (Sequential rather than Promise.all to avoid flooding the
+    // connection pool when many rows resolve at once.)
+    for (const id of flaggedIds) {
+      await this.prisma.adminAuditLog
+        .create({
+          data: {
+            admin_user_id: userId,
+            action: AUDIT_ACTION_AUTO_RESOLVED,
+            submission_id: id,
+            notes: JSON.stringify({ resolved_by_submission_id: triggeringSubmissionId }),
+          },
+        })
+        .catch((err: unknown) => {
+          this.logger.warn(
+            `Auto-resolve audit log failed for submission ${id}: ${
+              err instanceof Error ? err.message : String(err)
+            }`,
+          );
+        });
+    }
 
     this.logger.log(
-      `Auto-resolved ${flaggedIds.length} flagged submission(s) at station ${stationId} for user ${userId} — triggered by ${triggeringSubmissionId}`,
+      `Auto-resolved ${updated.count}/${flaggedIds.length} flagged submission(s) at station ${stationId} for user ${userId} — triggered by ${triggeringSubmissionId}`,
     );
   }
 
   /**
-   * Find the most recent verified submission for a station (excluding `excludeId`),
-   * convert its price_data to a StationPriceRow, and write it via
-   * priceService.setVerifiedPrice. If none exists, invalidate the cache so the
-   * read-path falls back through estimates. Returns the source submission id
-   * (or null if invalidated).
+   * Find the most recent verified submission for a station (excluding `excludeId`)
+   * within the restore window, convert its price_data to a StationPriceRow,
+   * and write it via priceService.setVerifiedPrice. If none exists or its
+   * data is unusable, invalidate the cache so the read-path falls back
+   * through estimates. Returns the source submission id, or null if no
+   * restore happened (cache was invalidated instead).
    */
   private async restorePreviousPrices(
     stationId: string,
     excludeId: string,
   ): Promise<string | null> {
+    // P-2: bound the search to a sensible recency window. Restoring a 6-month-old
+    // price as the live community price would mislead drivers more than falling
+    // back to estimates.
+    const minCreatedAt = new Date(Date.now() - RESTORE_PREVIOUS_MAX_AGE_MS);
     const previous = await this.prisma.submission.findFirst({
       where: {
         station_id: stationId,
         status: SubmissionStatus.verified,
+        created_at: { gte: minCreatedAt },
         id: { not: excludeId },
       },
       orderBy: { created_at: 'desc' },
@@ -399,31 +476,41 @@ export class SubmissionsService {
     });
 
     if (!previous) {
-      try {
-        await this.priceCache.invalidate(stationId);
-      } catch (e) {
-        this.logger.warn(
-          `restorePreviousPrices: cache invalidate failed for station ${stationId}: ${
-            e instanceof Error ? e.message : String(e)
-          }`,
-        );
-      }
+      await this.invalidateOrLog(stationId, 'no recent previous verified submission');
       return null;
     }
 
     const priceData = Array.isArray(previous.price_data)
       ? (previous.price_data as Array<{ fuel_type: string; price_per_litre: number | null }>)
       : [];
+    // P-4: also validate fuel_type against the known set so a malformed
+    // legacy price_data row can't poison the cache with unknown fuel keys.
     const validEntries = priceData.filter(
       (p): p is { fuel_type: string; price_per_litre: number } =>
-        typeof p.price_per_litre === 'number' && Number.isFinite(p.price_per_litre),
+        typeof p.fuel_type === 'string' &&
+        VALID_FUEL_TYPES_SET.has(p.fuel_type) &&
+        typeof p.price_per_litre === 'number' &&
+        Number.isFinite(p.price_per_litre),
     );
+
+    // P-3: an empty validEntries set would write an empty {} cache row,
+    // poisoning the cache with "no prices known" instead of letting the
+    // read-path fall through to estimates. Branch to invalidate.
+    if (validEntries.length === 0) {
+      await this.invalidateOrLog(
+        stationId,
+        `previous submission ${previous.id} had no valid price entries`,
+      );
+      return null;
+    }
 
     const priceRow: StationPriceRow = {
       stationId,
       prices: Object.fromEntries(validEntries.map((p) => [p.fuel_type, p.price_per_litre])),
       sources: Object.fromEntries(validEntries.map((p) => [p.fuel_type, 'community' as const])),
-      updatedAt: previous.created_at,
+      // P-1: use the current time so freshness banners and stale filters
+      // see the restored row as a live update, not a historical timestamp.
+      updatedAt: new Date(),
     };
 
     try {
@@ -438,5 +525,18 @@ export class SubmissionsService {
     }
 
     return previous.id;
+  }
+
+  /** Best-effort cache invalidation with a contextual log line. */
+  private async invalidateOrLog(stationId: string, reason: string): Promise<void> {
+    try {
+      await this.priceCache.invalidate(stationId);
+    } catch (e) {
+      this.logger.warn(
+        `restorePreviousPrices: cache invalidate failed for station ${stationId} (${reason}): ${
+          e instanceof Error ? e.message : String(e)
+        }`,
+      );
+    }
   }
 }

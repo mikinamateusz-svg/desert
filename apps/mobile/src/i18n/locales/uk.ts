@@ -296,6 +296,28 @@ export default {
     cameraUnavailable: 'Камера недоступна',
     goBack: 'Назад',
     queuePending: '{{count}} очікує завантаження',
+    flagWrong: {
+      // Story 3.14 — driver flags own verified submission as wrong.
+      button: 'Неправильні ціни?',
+      confirmTitle: 'Відкликати це повідомлення?',
+      confirmBody:
+        'Інші водії бачитимуть попередні ціни, поки ми не перевіримо ваше фото. Ви можете одразу зробити нове фото.',
+      confirmCancel: 'Скасувати',
+      confirmConfirm: 'Відкликати',
+      submitError: 'Не вдалося відкликати. Спробуйте ще раз.',
+      // P-15: shown when API returns 400 (outside 24h window — possibly due
+      // to client/server clock skew making the row look fresh on the device).
+      windowExpiredError:
+        'Відкликати зголошення можна лише протягом 24 годин після його надсилання. Оновіть список активності.',
+      thanksTitle: 'Вибачте — це наша помилка.',
+      thanksBody:
+        'Ми перевіримо фото, щоб поліпшити розпізнавання. Запрошуємо зробити нове — ближче або під кращим кутом це дуже допомагає.',
+      thanksRetake: 'Зробити нове фото',
+      thanksBack: 'Назад до активності',
+      withdrawnLabel: 'Відкликано — на розгляді',
+      priceConflictLabel: 'Перевіряємо узгодженість цін',
+      underReviewLabel: 'На розгляді',
+    },
   },
   confirmation: {
     thankYou: 'Дякуємо!',

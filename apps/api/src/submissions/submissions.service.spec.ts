@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { UserRole } from '@prisma/client';
 import { SubmissionsService } from './submissions.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
@@ -479,7 +480,7 @@ describe('SubmissionsService', () => {
       // Make extra sure the buffer mock is in place for this test
       mockStorageService.getObjectBuffer.mockResolvedValueOnce(Buffer.from('photo-bytes-abc'));
 
-      await service.flagWrong(subId, userId, 'DRIVER' as never);
+      await service.flagWrong(subId, userId, UserRole.DRIVER);
 
       expect(mockPrismaService.submission.updateMany).toHaveBeenCalledWith({
         where: { id: subId, status: 'verified' },
@@ -498,13 +499,13 @@ describe('SubmissionsService', () => {
 
     it('throws NotFoundException when submission does not exist', async () => {
       mockPrismaService.submission.findUnique.mockResolvedValueOnce(null);
-      await expect(service.flagWrong(subId, userId, 'DRIVER' as never)).rejects.toThrow(
+      await expect(service.flagWrong(subId, userId, UserRole.DRIVER)).rejects.toThrow(
         /not found/i,
       );
     });
 
     it('throws ForbiddenException when caller is not the owner', async () => {
-      await expect(service.flagWrong(subId, 'other-user', 'DRIVER' as never)).rejects.toThrow(
+      await expect(service.flagWrong(subId, 'other-user', UserRole.DRIVER)).rejects.toThrow(
         /does not belong to caller/i,
       );
     });
@@ -514,7 +515,7 @@ describe('SubmissionsService', () => {
         ...verifiedSub,
         status: 'shadow_rejected',
       });
-      await expect(service.flagWrong(subId, userId, 'DRIVER' as never)).rejects.toThrow(
+      await expect(service.flagWrong(subId, userId, UserRole.DRIVER)).rejects.toThrow(
         /only verified is supported/i,
       );
     });
@@ -524,7 +525,7 @@ describe('SubmissionsService', () => {
         ...verifiedSub,
         created_at: new Date(Date.now() - 25 * 3600 * 1000),
       });
-      await expect(service.flagWrong(subId, userId, 'DRIVER' as never)).rejects.toThrow(
+      await expect(service.flagWrong(subId, userId, UserRole.DRIVER)).rejects.toThrow(
         /older than 24h/i,
       );
     });
@@ -540,7 +541,7 @@ describe('SubmissionsService', () => {
 
     it('throws ConflictException on concurrent modification (updateMany count = 0)', async () => {
       mockPrismaService.submission.updateMany.mockResolvedValueOnce({ count: 0 });
-      await expect(service.flagWrong(subId, userId, 'DRIVER' as never)).rejects.toThrow(
+      await expect(service.flagWrong(subId, userId, UserRole.DRIVER)).rejects.toThrow(
         /modified concurrently/i,
       );
     });
@@ -556,7 +557,7 @@ describe('SubmissionsService', () => {
       };
       mockPrismaService.submission.findFirst.mockResolvedValueOnce(prevSub);
 
-      await service.flagWrong(subId, userId, 'DRIVER' as never);
+      await service.flagWrong(subId, userId, UserRole.DRIVER);
 
       expect(mockPriceService.setVerifiedPrice).toHaveBeenCalledWith(
         stationId,
@@ -571,7 +572,7 @@ describe('SubmissionsService', () => {
     it('invalidates cache when no previous verified submission exists', async () => {
       mockPrismaService.submission.findFirst.mockResolvedValueOnce(null);
 
-      await service.flagWrong(subId, userId, 'DRIVER' as never);
+      await service.flagWrong(subId, userId, UserRole.DRIVER);
 
       expect(mockPriceCacheService.invalidate).toHaveBeenCalledWith(stationId);
       expect(mockPriceService.setVerifiedPrice).not.toHaveBeenCalled();
@@ -580,14 +581,14 @@ describe('SubmissionsService', () => {
     it('continues without throwing when photo R2 fetch fails (still lifts station dedup)', async () => {
       mockStorageService.getObjectBuffer.mockRejectedValueOnce(new Error('R2 down'));
 
-      await expect(service.flagWrong(subId, userId, 'DRIVER' as never)).resolves.toBeUndefined();
+      await expect(service.flagWrong(subId, userId, UserRole.DRIVER)).resolves.toBeUndefined();
       // station_id passed, but photoHash is null since hash compute failed
       expect(mockSubmissionDedupService.liftDedup).toHaveBeenCalledWith(stationId, null);
     });
 
     it('does not throw when audit log write fails (best-effort)', async () => {
       mockPrismaService.adminAuditLog.create.mockRejectedValueOnce(new Error('DB hiccup'));
-      await expect(service.flagWrong(subId, userId, 'DRIVER' as never)).resolves.toBeUndefined();
+      await expect(service.flagWrong(subId, userId, UserRole.DRIVER)).resolves.toBeUndefined();
     });
   });
 
@@ -601,10 +602,12 @@ describe('SubmissionsService', () => {
       mockPrismaService.adminAuditLog.create.mockResolvedValue({});
     });
 
+    const triggeringCreatedAt = new Date('2026-05-03T12:00:00Z');
+
     it('is a no-op when no flagged submissions exist for this user+station', async () => {
       mockPrismaService.submission.findMany.mockResolvedValueOnce([]);
 
-      await service.autoResolveFlaggedAtStation('user-1', 'station-1', 'sub-trigger');
+      await service.autoResolveFlaggedAtStation('user-1', 'station-1', 'sub-trigger', triggeringCreatedAt);
 
       expect(mockPrismaService.submission.updateMany).not.toHaveBeenCalled();
       expect(mockPrismaService.adminAuditLog.create).not.toHaveBeenCalled();
@@ -617,10 +620,16 @@ describe('SubmissionsService', () => {
       ]);
       mockPrismaService.submission.updateMany.mockResolvedValueOnce({ count: 2 });
 
-      await service.autoResolveFlaggedAtStation('user-1', 'station-1', 'sub-trigger');
+      await service.autoResolveFlaggedAtStation('user-1', 'station-1', 'sub-trigger', triggeringCreatedAt);
 
+      // P-5: updateMany guards on status + flag_reason to avoid clobbering
+      // a row an admin moved between findMany and updateMany.
       expect(mockPrismaService.submission.updateMany).toHaveBeenCalledWith({
-        where: { id: { in: ['flagged-1', 'flagged-2'] } },
+        where: {
+          id: { in: ['flagged-1', 'flagged-2'] },
+          status: 'shadow_rejected',
+          flag_reason: 'user_flagged_wrong',
+        },
         data: { status: 'rejected', flag_reason: 'auto_resolved_by_resubmit' },
       });
       // Audit log for each
@@ -630,7 +639,7 @@ describe('SubmissionsService', () => {
     it('excludes the triggering submission from the lookup', async () => {
       mockPrismaService.submission.findMany.mockResolvedValueOnce([]);
 
-      await service.autoResolveFlaggedAtStation('user-1', 'station-1', 'sub-trigger');
+      await service.autoResolveFlaggedAtStation('user-1', 'station-1', 'sub-trigger', triggeringCreatedAt);
 
       expect(mockPrismaService.submission.findMany).toHaveBeenCalledWith({
         where: expect.objectContaining({
@@ -639,9 +648,21 @@ describe('SubmissionsService', () => {
           station_id: 'station-1',
           status: 'shadow_rejected',
           flag_reason: 'user_flagged_wrong',
+          // P-6: only flags filed BEFORE the triggering submission was captured
+          created_at: expect.objectContaining({ lt: triggeringCreatedAt }),
         }),
         select: { id: true },
       });
+    });
+
+    it('does not auto-resolve when admin moved the row between findMany and updateMany (P-5)', async () => {
+      mockPrismaService.submission.findMany.mockResolvedValueOnce([{ id: 'flagged-1' }]);
+      mockPrismaService.submission.updateMany.mockResolvedValueOnce({ count: 0 });
+
+      await service.autoResolveFlaggedAtStation('user-1', 'station-1', 'sub-trigger', triggeringCreatedAt);
+
+      // No audit row written when nothing actually changed
+      expect(mockPrismaService.adminAuditLog.create).not.toHaveBeenCalled();
     });
   });
 });

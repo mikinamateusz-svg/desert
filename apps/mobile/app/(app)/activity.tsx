@@ -135,7 +135,13 @@ export default function ActivityScreen() {
         contentContainerStyle={submissions.length === 0 ? styles.emptyContainer : undefined}
         data={submissions}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <SubmissionRow item={item} onPress={handleRowPress} />}
+        renderItem={({ item }) => (
+          <SubmissionRow
+            item={item}
+            onPress={handleRowPress}
+            onFlaggedWrong={() => void loadPage(1, true)}
+          />
+        )}
         refreshControl={
           <RefreshControl
             refreshing={isLoading}

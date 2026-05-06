@@ -12,7 +12,15 @@ export interface Submission {
   id: string;
   station: { id: string; name: string } | null;
   price_data: PriceEntry[];
-  status: 'pending' | 'verified' | 'rejected';
+  status: 'pending' | 'verified' | 'rejected' | 'shadow_rejected';
+  /**
+   * Flag reason exposed by the API. Null for verified/pending rows. Common
+   * values: `user_flagged_wrong`, `price_conflict`, rule-based reasons like
+   * `pb95_outside_rack_band`. The shadow-banned secrecy invariant means
+   * `shadow_banned` itself is never on the wire — backend launders it to
+   * `pending` + null flag_reason before sending.
+   */
+  flag_reason: string | null;
   created_at: string;
 }
 
@@ -142,6 +150,29 @@ export async function apiGetSubmissions(
 ): Promise<SubmissionsResponse> {
   return request<SubmissionsResponse>(`/v1/submissions?page=${page}&limit=${limit}`, {
     method: 'GET',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+}
+
+/**
+ * Story 3.14 — flag own verified submission as wrong. Server transitions
+ * the submission to shadow_rejected, restores previous prices for the
+ * station, lifts dedup so the driver can immediately retake.
+ *
+ * Throws ApiError on non-2xx. Caller surfaces error codes to UI:
+ *   - 403 → not the owner
+ *   - 409 → already withdrawn / no longer verified
+ *   - 400 → outside 24h window
+ *   - 429 → rate-limited (5/hour)
+ */
+export async function apiFlagWrong(
+  accessToken: string,
+  submissionId: string,
+): Promise<{ status: 'withdrawn' }> {
+  // P-11: surface the parsed body so callers can branch on `status` if the
+  // server adds richer responses later (e.g., admin-bypass status='admin_withdrawn').
+  return request<{ status: 'withdrawn' }>(`/v1/submissions/${submissionId}/flag-wrong`, {
+    method: 'POST',
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 }

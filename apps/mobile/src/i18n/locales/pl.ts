@@ -295,6 +295,30 @@ export default {
     cameraUnavailable: 'Aparat niedostępny',
     goBack: 'Wróć',
     queuePending: '{{count}} czeka na przesłanie',
+    flagWrong: {
+      // Story 3.14 — driver flags own verified submission as wrong.
+      button: 'Złe ceny?',
+      confirmTitle: 'Wycofać to zgłoszenie?',
+      confirmBody:
+        'Inni kierowcy zobaczą poprzednie ceny, dopóki nie sprawdzimy zdjęcia. Możesz od razu zrobić nowe zdjęcie.',
+      confirmCancel: 'Anuluj',
+      confirmConfirm: 'Wycofaj',
+      // Generic error fallback shown if the API call fails for any non-409 reason.
+      submitError: 'Nie udało się wycofać zgłoszenia. Spróbuj ponownie.',
+      // P-15: shown when API returns 400 (outside 24h window — possibly due
+      // to client/server clock skew making the row look fresh on the device).
+      windowExpiredError:
+        'Można wycofać zgłoszenie tylko w ciągu 24 godzin od jego dodania. Odśwież listę aktywności.',
+      thanksTitle: 'Przepraszamy — to nasza wina.',
+      thanksBody:
+        'Sprawdzimy zdjęcie, żeby poprawić rozpoznawanie. Zachęcamy do zrobienia nowego — z bliska lub pod lepszym kątem to bardzo pomaga.',
+      thanksRetake: 'Zrób nowe zdjęcie',
+      thanksBack: 'Wróć do aktywności',
+      // Reason-aware copy for shadow_rejected rows in the activity list (AC5).
+      withdrawnLabel: 'Wycofane — w trakcie przeglądu',
+      priceConflictLabel: 'Sprawdzamy zgodność cen',
+      underReviewLabel: 'W trakcie przeglądu',
+    },
   },
   confirmation: {
     thankYou: 'Dzięki!',

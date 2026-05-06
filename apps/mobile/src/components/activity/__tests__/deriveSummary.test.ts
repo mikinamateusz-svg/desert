@@ -7,6 +7,7 @@ function sub(overrides: Partial<Submission>): Submission {
     station: null,
     price_data: [],
     status: 'verified',
+    flag_reason: null,
     created_at: '2026-04-22T10:00:00Z',
     ...overrides,
   };

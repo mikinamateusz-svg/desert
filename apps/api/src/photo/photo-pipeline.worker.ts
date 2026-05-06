@@ -794,13 +794,22 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     // Story 3.14 AC6 — auto-resolve any earlier user-flagged-wrong submission
     // by the same driver at this station. The driver's resubmission counts as
     // the resolution; admin doesn't need to review it. Best-effort.
-    await this.submissionsService
-      .autoResolveFlaggedAtStation(updated.user_id, stationId, submissionId)
-      .catch((err: Error) =>
-        this.logger.warn(
-          `Auto-resolve failed for user ${updated.user_id} at station ${stationId}: ${err.message}`,
-        ),
-      );
+    // P-14: defensive guard against forwardRef startup-order edge cases that
+    // could leave submissionsService undefined when this call lands.
+    if (this.submissionsService) {
+      await this.submissionsService
+        .autoResolveFlaggedAtStation(
+          updated.user_id,
+          stationId,
+          submissionId,
+          updated.created_at,
+        )
+        .catch((err: Error) =>
+          this.logger.warn(
+            `Auto-resolve failed for user ${updated.user_id} at station ${stationId}: ${err.message}`,
+          ),
+        );
+    }
 
     // Clear staleness flags for all verified fuel types in a single batch query (best-effort)
     const validFuelTypes = valid.map(p => p.fuel_type);

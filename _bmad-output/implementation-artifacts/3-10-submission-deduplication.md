@@ -233,3 +233,46 @@ Include `station=` and `submission=` in all DEDUP log messages.
 - `apps/api/src/submissions/submissions.service.spec.ts` (modified — Story 3.10 tests)
 - `_bmad-output/implementation-artifacts/3-10-submission-deduplication.md` (this file)
 - `_bmad-output/implementation-artifacts/sprint-status.yaml` (modified)
+
+---
+
+## Addendum (2026-05-06) — Dedup-Lift on User-Flagged Withdrawal
+
+**Trigger:** Story 3.14 requires that when a driver flags their submission as wrong, the dedup window for that station+photo is lifted so the same driver can immediately retake without hitting the duplicate path.
+
+**Scope of this addendum:** small extension to `SubmissionDedupService`. The full corroboration-based replacement of station dedup is tracked separately in **Story 3.16 (Consensus-Based Dedup)**.
+
+### New AC (additive to original spec)
+
+**AC10 — `liftDedup` method:**
+Given Story 3.14 calls `submissionDedupService.liftDedup(stationId, photoHash)` as part of the flag-wrong handler,
+When the method runs,
+Then it deletes both `dedup:station:{stationId}` and `dedup:hash:{photoHash}` from Redis (Promise.allSettled — best-effort, log on failure but don't throw),
+And subsequent submissions at that station + with that photo hash are not blocked by either L2 station or hash dedup.
+
+### Implementation
+
+```ts
+// apps/api/src/photo/submission-dedup.service.ts
+async liftDedup(stationId: string, photoHash: string): Promise<void> {
+  const results = await Promise.allSettled([
+    this.redis.del(`dedup:station:${stationId}`),
+    this.redis.del(`dedup:hash:${photoHash}`),
+  ]);
+  for (const r of results) {
+    if (r.status === 'rejected') {
+      this.logger.warn(`liftDedup: Redis delete failed: ${r.reason}`);
+    }
+  }
+}
+```
+
+### Test coverage
+
+- Unit: `liftDedup` — both keys exist (both deleted), only one exists (other no-op), Redis error on one (other still attempted, no throw), Redis fully down (no throw, both warnings logged).
+- No new integration tests needed; Story 3.14's flag-wrong tests cover the call site.
+
+### Files affected (delta — to be added with Story 3.14 PR, not a separate ship)
+
+- `apps/api/src/photo/submission-dedup.service.ts` — add `liftDedup` method
+- `apps/api/src/photo/submission-dedup.service.spec.ts` — add tests for `liftDedup`

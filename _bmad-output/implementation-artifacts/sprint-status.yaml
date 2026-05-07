@@ -754,8 +754,13 @@ epics:
       - id: 3.16
         title: Consensus-Based Submission Dedup
         file: 3-16-consensus-based-dedup.md
-        status: ready-for-dev
+        status: done
         ready_date: 2026-05-06
+        dev_started: 2026-05-07
+        dev_completed: 2026-05-07
+        review_date: 2026-05-07
+        review_findings: "31 patches applied (P-1..P-31) covering critical conflict-path correctness (P-1..P-5 reorder + atomic flip + audit actor + worker re-throw), dedup-record defenses (P-6..P-8 fail-open record skip + TTL race + value-range validation), admin actions transactional + audit + consensus seed (P-9..P-12, P-22, P-24), cross-page pagination for conflict pairs (P-21), BullMQ retry status guards (P-23). 7 deferred (D-1..D-7) ranging from CONCURRENTLY index creation to UK locale typo. 1 spec deviation (BAD-SPEC-1, signature drift) resolved by amending T6."
+        patches_applied: "2026-05-07 — committed as 8ffc266; 1168 API + 31 mobile tests pass; type-check + lint clean. **STAGING: run prisma migrate deploy manually** before next deploy lands (per project_staging_predeploy_broken.md)."
         note: >
           Replaces 3.10's binary 12h dedup with a corroboration-based record:
           first submission seeds, second corroborates (or conflicts), third+
@@ -764,6 +769,24 @@ epics:
           admin paired-review (newer-first cascade). Cache rolled back to prior
           verified per the 3.14 restorePreviousPrices pattern. Backend-only;
           schema migration is forward-only and additive. Cost ceiling: +$30/mo.
+
+      - id: 3.17
+        title: Activity Row Status Polish + Admin Cleanup
+        file: 3-17-activity-row-status-polish.md
+        status: ready-for-dev
+        ready_date: 2026-05-07
+        note: >
+          Replaces the generic "Under review" fallback with deterministic
+          per-reason inline copy for the full flag_reason taxonomy + adds a
+          tap-to-explain bottom sheet with reason-aware CTA (retake / dismiss /
+          support) + staleness hint for shadow_rejected rows older than 6h.
+          Admin-side absorbs deferred items from 3.14/3.16: confirmation
+          dialog before Both unusable; new Approve older button on conflict
+          pair cards (mirror approveNewer with auto_resolved_by_older); admin
+          detail page surfaces restored_from_submission_id from the
+          USER_FLAGGED_WRONG audit log; UK locale typo fixed (Сирпечні →
+          Конфліктні). No schema change; auto_resolved_by_older is additive
+          on the existing nullable text column.
 
   - id: 4
     name: Admin Operations & Data Integrity

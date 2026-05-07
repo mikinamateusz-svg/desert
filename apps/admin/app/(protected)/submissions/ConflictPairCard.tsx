@@ -5,6 +5,7 @@ import Link from 'next/link';
 import type { FlaggedSubmissionRow } from '../../../lib/types';
 import {
   approveNewerInConflict,
+  approveOlderInConflict,
   markBothUnusableInConflict,
   markNewerUnusableInConflict,
 } from './actions';
@@ -18,11 +19,19 @@ interface Props {
     newerLabel: string;
     olderLabel: string;
     approveNewer: string;
+    /** Story 3.17 — fourth paired-review action label. */
+    approveOlder: string;
     newerUnusable: string;
     bothUnusable: string;
+    /** Story 3.17 — Both unusable inline confirmation prompt. */
+    confirmBothUnusableTitle: string;
+    confirmBothUnusableYes: string;
+    cancel: string;
     review: string;
     errorGeneric: string;
     errorConflict: string;
+    /** Story 3.17 P-10 — 400 BadRequest from a stale UI submitting wrong target id. */
+    errorBadRequest: string;
   };
   locale: string;
 }
@@ -50,6 +59,10 @@ export default function ConflictPairCard({
 }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  // Story 3.17 — `Both unusable` toggles to inline confirmation rather
+  // than firing on the first click. Other actions (Approve newer/older,
+  // Newer unusable) are non-destructive enough to stay one-tap.
+  const [confirmingBothUnusable, setConfirmingBothUnusable] = useState(false);
 
   const handle = (
     action: () => Promise<{ error: string } | null>,
@@ -58,7 +71,13 @@ export default function ConflictPairCard({
       setError(null);
       const result = await action();
       if (result?.error === 'conflict') setError(copy.errorConflict);
+      else if (result?.error === 'badRequest') setError(copy.errorBadRequest);
       else if (result?.error) setError(copy.errorGeneric);
+      // P-11 (3.17 review) — on error, revert the inline confirmation
+      // panel back to the four-button row so the admin gets a clear
+      // re-evaluation moment with the error visible. Cancel-only would
+      // strand them in confirm-state with a stale destructive prompt.
+      if (result?.error) setConfirmingBothUnusable(false);
     });
   };
 
@@ -126,32 +145,69 @@ export default function ConflictPairCard({
         <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
       )}
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        <button
-          type="button"
-          disabled={isPending}
-          onClick={() => handle(() => approveNewerInConflict(conflictGroupId, newer.id))}
-          className="rounded bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
-        >
-          {copy.approveNewer}
-        </button>
-        <button
-          type="button"
-          disabled={isPending}
-          onClick={() => handle(() => markNewerUnusableInConflict(conflictGroupId, newer.id))}
-          className="rounded border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-        >
-          {copy.newerUnusable}
-        </button>
-        <button
-          type="button"
-          disabled={isPending}
-          onClick={() => handle(() => markBothUnusableInConflict(conflictGroupId))}
-          className="rounded border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-        >
-          {copy.bothUnusable}
-        </button>
-      </div>
+      {confirmingBothUnusable ? (
+        // Story 3.17 — inline confirmation for the Both unusable destructive
+        // action. Keeps the admin in-context (no full modal) and uses
+        // bg-red-* on the confirm button to signal destructive intent.
+        <div className="mt-4 rounded-md border border-red-200 bg-red-50 p-3">
+          <p className="mb-3 text-sm font-medium text-red-900">
+            {copy.confirmBothUnusableTitle}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              disabled={isPending}
+              onClick={() => setConfirmingBothUnusable(false)}
+              className="rounded border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+            >
+              {copy.cancel}
+            </button>
+            <button
+              type="button"
+              disabled={isPending}
+              onClick={() => handle(() => markBothUnusableInConflict(conflictGroupId))}
+              className="rounded bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+            >
+              {copy.confirmBothUnusableYes}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="mt-4 flex flex-wrap gap-2">
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={() => handle(() => approveNewerInConflict(conflictGroupId, newer.id))}
+            className="rounded bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+          >
+            {copy.approveNewer}
+          </button>
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={() => handle(() => approveOlderInConflict(conflictGroupId, older.id))}
+            className="rounded bg-emerald-100 px-3 py-1.5 text-sm font-medium text-emerald-900 hover:bg-emerald-200 disabled:opacity-50"
+          >
+            {copy.approveOlder}
+          </button>
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={() => handle(() => markNewerUnusableInConflict(conflictGroupId, newer.id))}
+            className="rounded border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+          >
+            {copy.newerUnusable}
+          </button>
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={() => setConfirmingBothUnusable(true)}
+            className="rounded border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+          >
+            {copy.bothUnusable}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

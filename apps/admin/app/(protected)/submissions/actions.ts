@@ -68,6 +68,33 @@ export async function approveNewerInConflict(
     });
   } catch (e) {
     if (e instanceof AdminApiError && e.status === 409) return { error: 'conflict' };
+    // P-10 (3.17 review) — 400 BadRequest from the paired-review endpoints
+    // means the UI is stale (e.g., the submission_id no longer matches the
+    // expected newer/older half). Surface a distinct error so the admin
+    // gets a "stale view — refresh" hint instead of a generic toast.
+    if (e instanceof AdminApiError && e.status === 400) return { error: 'badRequest' };
+    return { error: 'generic' };
+  }
+  redirect('/submissions');
+}
+
+// Story 3.17 — symmetric Approve older action.
+export async function approveOlderInConflict(
+  conflictGroupId: string,
+  olderSubmissionId: string,
+): Promise<ActionResult> {
+  try {
+    await adminFetch(`/v1/admin/submissions/conflict/${conflictGroupId}/approve-older`, {
+      method: 'POST',
+      body: JSON.stringify({ submission_id: olderSubmissionId }),
+    });
+  } catch (e) {
+    if (e instanceof AdminApiError && e.status === 409) return { error: 'conflict' };
+    // P-10 (3.17 review) — 400 BadRequest from the paired-review endpoints
+    // means the UI is stale (e.g., the submission_id no longer matches the
+    // expected newer/older half). Surface a distinct error so the admin
+    // gets a "stale view — refresh" hint instead of a generic toast.
+    if (e instanceof AdminApiError && e.status === 400) return { error: 'badRequest' };
     return { error: 'generic' };
   }
   redirect('/submissions');
@@ -84,6 +111,11 @@ export async function markNewerUnusableInConflict(
     });
   } catch (e) {
     if (e instanceof AdminApiError && e.status === 409) return { error: 'conflict' };
+    // P-10 (3.17 review) — 400 BadRequest from the paired-review endpoints
+    // means the UI is stale (e.g., the submission_id no longer matches the
+    // expected newer/older half). Surface a distinct error so the admin
+    // gets a "stale view — refresh" hint instead of a generic toast.
+    if (e instanceof AdminApiError && e.status === 400) return { error: 'badRequest' };
     return { error: 'generic' };
   }
   redirect('/submissions');
@@ -98,6 +130,11 @@ export async function markBothUnusableInConflict(
     });
   } catch (e) {
     if (e instanceof AdminApiError && e.status === 409) return { error: 'conflict' };
+    // P-10 (3.17 review) — 400 BadRequest from the paired-review endpoints
+    // means the UI is stale (e.g., the submission_id no longer matches the
+    // expected newer/older half). Surface a distinct error so the admin
+    // gets a "stale view — refresh" hint instead of a generic toast.
+    if (e instanceof AdminApiError && e.status === 400) return { error: 'badRequest' };
     return { error: 'generic' };
   }
   redirect('/submissions');

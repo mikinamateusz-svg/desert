@@ -4,6 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { tokens } from '../../theme';
 import type { Submission } from '../../api/submissions';
 import { FlagWrongConfirmSheet } from './FlagWrongConfirmSheet';
+import { FlagReasonExplainSheet } from './FlagReasonExplainSheet';
+import { flagReasonCopy } from './flagReasonCopy';
+import { staleness } from './staleness';
 
 interface Props {
   item: Submission;
@@ -21,25 +24,11 @@ function formatDateTime(iso: string, locale: string): string {
   return `${datePart}, ${timePart}`;
 }
 
-/**
- * Story 3.14 AC5 — pick the inline copy shown on a shadow_rejected row based
- * on flag_reason. Falls back to the generic "under review" string for unknown
- * or rule-based reasons (Story 3.17 will refine those once we have data on
- * which codes appear most).
- */
-function shadowRejectedLabel(flagReason: string | null, t: (k: string) => string): string {
-  if (flagReason === 'user_flagged_wrong') {
-    return t('contribution.flagWrong.withdrawnLabel');
-  }
-  if (flagReason === 'price_conflict') {
-    return t('contribution.flagWrong.priceConflictLabel');
-  }
-  return t('contribution.flagWrong.underReviewLabel');
-}
-
 function SubmissionRowBase({ item, onPress, onFlaggedWrong }: Props) {
   const { t, i18n } = useTranslation();
   const [confirmVisible, setConfirmVisible] = useState(false);
+  // Story 3.17 — tap-to-explain modal state for non-verified rows.
+  const [explainVisible, setExplainVisible] = useState(false);
   // P-16: optimistic flag state. Once the user confirms in the sheet, we
   // assume the API call will succeed (errors are handled in the sheet itself
   // via setErrorMsg) and flip the row to shadow_rejected immediately. The
@@ -53,9 +42,6 @@ function SubmissionRowBase({ item, onPress, onFlaggedWrong }: Props) {
   const isPending = effectiveStatus === 'pending';
   const isRejected = effectiveStatus === 'rejected';
   const isShadowRejected = effectiveStatus === 'shadow_rejected';
-
-  // Only verified rows with a matched station are actionable (tap → station detail).
-  const tappable = isVerified && station != null;
 
   // Story 3.14 AC1 — show flag-wrong button on driver's own verified rows
   // submitted within the last 24h. (Backend enforces ownership and window;
@@ -78,7 +64,31 @@ function SubmissionRowBase({ item, onPress, onFlaggedWrong }: Props) {
     .map((p) => `${t(`fuelTypes.${p.fuel_type}`, { defaultValue: p.fuel_type })}: ${p.price_per_litre.toFixed(2)}`)
     .join('  ');
 
-  const handlePress = useCallback(() => onPress(item), [onPress, item]);
+  // Story 3.17 — per-reason inline copy for non-verified rows. Story 4.3
+  // shadow_banned secrecy invariant: the backend launders shadow_rejected
+  // with flag_reason='shadow_banned' to status='pending' on the wire, so
+  // this code path never sees that case. Defensive guard kept anyway.
+  const isShadowBanned = effectiveFlagReason === 'shadow_banned';
+  // Story 3.17 — verified rows tap through to station detail (existing).
+  // shadow_rejected and rejected rows open the explain sheet ONLY when
+  // they have a flag_reason (P-5 — null flag_reason is a no-op per spec
+  // T10) AND aren't shadow_banned (P-4 — preserves Story 4.3 secrecy if
+  // the laundering ever fails). Pending rows are not tappable.
+  const explainable =
+    (isShadowRejected || isRejected) &&
+    !isShadowBanned &&
+    effectiveFlagReason !== null;
+  const tappable = (isVerified && station != null) || explainable;
+
+  const handlePress = useCallback(() => {
+    if (isVerified) {
+      onPress(item);
+    } else if (explainable) {
+      setExplainVisible(true);
+    }
+  }, [isVerified, explainable, onPress, item]);
+
+  const handleExplainDismiss = useCallback(() => setExplainVisible(false), []);
   const handleFlagPress = useCallback(() => setConfirmVisible(true), []);
   const handleConfirmDismiss = useCallback(() => setConfirmVisible(false), []);
   const handleFlagged = useCallback(() => {
@@ -88,6 +98,19 @@ function SubmissionRowBase({ item, onPress, onFlaggedWrong }: Props) {
     setOptimisticallyFlagged(true);
     onFlaggedWrong?.();
   }, [onFlaggedWrong]);
+
+  const showStaleness = isShadowRejected && !isShadowBanned;
+  const stalenessSuffix = showStaleness
+    ? staleness(new Date(item.created_at), new Date(), t)
+    : null;
+  const reasonCopy = explainable
+    ? flagReasonCopy(effectiveFlagReason, isShadowRejected ? 'shadow_rejected' : 'rejected', t)
+    : null;
+  const inlineLabel = reasonCopy
+    ? stalenessSuffix
+      ? `${reasonCopy.label} · ${stalenessSuffix}`
+      : reasonCopy.label
+    : null;
 
   const body = (
     <View style={styles.row}>
@@ -119,19 +142,33 @@ function SubmissionRowBase({ item, onPress, onFlaggedWrong }: Props) {
       {isPending && (
         <Text style={styles.pending}>{t('activity.pendingShort')}</Text>
       )}
-      {isShadowRejected && (
-        <Text style={styles.shadowRejected}>{shadowRejectedLabel(effectiveFlagReason, t)}</Text>
+      {isShadowRejected && inlineLabel && (
+        <Text style={styles.shadowRejected}>{inlineLabel}</Text>
       )}
-      {isRejected && (
-        <Text style={styles.rejectedDash}>—</Text>
+      {isRejected && inlineLabel && (
+        <Text style={styles.rejected}>{inlineLabel}</Text>
       )}
     </View>
   );
 
+  // P-8 (3.17 review) — explainable rows are now tappable for the
+  // tap-to-explain modal; verified-with-station rows are tappable for
+  // the station detail navigation. Both need explicit screen-reader
+  // semantics so the row is announced as a button rather than static
+  // text. The accessibilityHint differentiates the two affordances.
+  const accessibilityHint = isVerified
+    ? t('activity.tapHintStation', { defaultValue: '' })
+    : t('activity.tapHintExplain', { defaultValue: '' });
+
   return (
     <>
       {tappable ? (
-        <TouchableOpacity activeOpacity={0.6} onPress={handlePress}>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={handlePress}
+          accessibilityRole="button"
+          accessibilityHint={accessibilityHint || undefined}
+        >
           {body}
         </TouchableOpacity>
       ) : (
@@ -142,6 +179,12 @@ function SubmissionRowBase({ item, onPress, onFlaggedWrong }: Props) {
         submissionId={item.id}
         onDismiss={handleConfirmDismiss}
         onFlagged={handleFlagged}
+      />
+      <FlagReasonExplainSheet
+        visible={explainVisible}
+        flagReason={effectiveFlagReason}
+        status={isShadowRejected ? 'shadow_rejected' : 'rejected'}
+        onDismiss={handleExplainDismiss}
       />
     </>
   );
@@ -186,5 +229,5 @@ const styles = StyleSheet.create({
   },
   pending: { fontSize: 11, color: tokens.neutral.n500, fontStyle: 'italic' },
   shadowRejected: { fontSize: 12, color: tokens.neutral.n500, fontStyle: 'italic' },
-  rejectedDash: { fontSize: 13, color: tokens.neutral.n400 },
+  rejected: { fontSize: 12, color: tokens.neutral.n400, fontStyle: 'italic' },
 });

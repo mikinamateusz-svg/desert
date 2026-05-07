@@ -48,6 +48,8 @@ class ApproveDto {
 class ConflictNewerDto {
   // Story 3.16 — admin confirms which submission they consider "newer".
   // Defensive: if the UI ever sends a stale id, the service rejects it.
+  // Story 3.17 — also reused by approve-older (DTO is shape-compatible:
+  // either endpoint receives the id of the row admin wants to approve).
   @IsUUID()
   submission_id!: string;
 }
@@ -120,6 +122,24 @@ export class AdminSubmissionsController {
     @CurrentUser() admin: User,
   ) {
     await this.service.approveNewer(admin.id, conflictGroupId, body.submission_id);
+    return { status: 'resolved' };
+  }
+
+  /**
+   * Story 3.17 — approve the older half of a conflict pair: older →
+   * verified (with cache write + consensus seed), newer → rejected with
+   * `auto_resolved_by_older`. Mirror of `approve-newer`. Body specifies
+   * the older submission's id so a stale UI can't accidentally approve
+   * the wrong row.
+   */
+  @Post('conflict/:conflictGroupId/approve-older')
+  @HttpCode(HttpStatus.OK)
+  async approveOlder(
+    @Param('conflictGroupId', ParseUUIDPipe) conflictGroupId: string,
+    @Body() body: ConflictNewerDto,
+    @CurrentUser() admin: User,
+  ) {
+    await this.service.approveOlder(admin.id, conflictGroupId, body.submission_id);
     return { status: 'resolved' };
   }
 

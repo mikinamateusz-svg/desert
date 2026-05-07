@@ -88,11 +88,16 @@ export default async function SubmissionsPage({ searchParams }: Props) {
                   newerLabel: t.review.conflictNewerLabel,
                   olderLabel: t.review.conflictOlderLabel,
                   approveNewer: t.review.conflictApproveNewer,
+                  approveOlder: t.review.conflictApproveOlder,
                   newerUnusable: t.review.conflictNewerUnusable,
                   bothUnusable: t.review.conflictBothUnusable,
+                  confirmBothUnusableTitle: t.review.confirmBothUnusableTitle,
+                  confirmBothUnusableYes: t.review.confirmBothUnusableYes,
+                  cancel: t.review.cancel,
                   review: t.review.reviewLink,
                   errorGeneric: t.review.errorGeneric,
                   errorConflict: t.review.errorConflict,
+                  errorBadRequest: t.review.errorBadRequest,
                 }}
                 locale={locale}
               />

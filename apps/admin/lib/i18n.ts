@@ -260,6 +260,7 @@ const translations = {
       rejectedSuccess: 'Zgłoszenie odrzucone.',
       errorGeneric: 'Błąd. Spróbuj ponownie.',
       errorConflict: 'To zgłoszenie zostało już rozpatrzone.',
+      errorBadRequest: 'Widok jest nieaktualny — odśwież stronę i spróbuj ponownie.',
       errorNoStation: 'Brak dopasowanej stacji — wyszukaj i przypisz stację przed zatwierdzeniem.',
       stationLabel: 'Stacja',
       brandLabel: 'Marka stacji',
@@ -284,9 +285,16 @@ const translations = {
       conflictNewerLabel: 'Nowsze',
       conflictOlderLabel: 'Starsze',
       conflictApproveNewer: 'Zatwierdź nowsze',
+      conflictApproveOlder: 'Zatwierdź starsze',
       conflictNewerUnusable: 'Nowsze nieprzydatne',
       conflictBothUnusable: 'Oba nieprzydatne',
       conflictResolveSuccess: 'Sprzeczność rozwiązana.',
+      // Story 3.17 — Both unusable confirmation copy
+      confirmBothUnusableTitle: 'Oznaczyć oba jako nieprzydatne?',
+      confirmBothUnusableYes: 'Tak, oba nieprzydatne',
+      // Story 3.17 — admin detail page for user_flagged_wrong rows
+      restoredFromLabel: 'Przywrócono z',
+      restoredFromNone: 'brak (cache odświeżony estymatami)',
     },
     stationClaims: {
       filterAll: 'Wszystkie',
@@ -571,6 +579,7 @@ const translations = {
       rejectedSuccess: 'Submission rejected.',
       errorGeneric: 'Something went wrong. Try again.',
       errorConflict: 'This submission has already been reviewed.',
+      errorBadRequest: 'View is stale — refresh the page and try again.',
       errorNoStation: 'No station matched — search and assign a station before approving.',
       stationLabel: 'Station',
       brandLabel: 'Station brand',
@@ -595,9 +604,15 @@ const translations = {
       conflictNewerLabel: 'Newer',
       conflictOlderLabel: 'Older',
       conflictApproveNewer: 'Approve newer',
+      conflictApproveOlder: 'Approve older',
       conflictNewerUnusable: 'Newer unusable',
       conflictBothUnusable: 'Both unusable',
       conflictResolveSuccess: 'Conflict resolved.',
+      // Story 3.17
+      confirmBothUnusableTitle: 'Mark both unusable?',
+      confirmBothUnusableYes: 'Yes, both unusable',
+      restoredFromLabel: 'Restored from',
+      restoredFromNone: 'none (cache fell back to estimates)',
     },
     stationClaims: {
       filterAll: 'All',
@@ -857,7 +872,7 @@ const translations = {
         low_trust: 'Низький рейтинг довіри',
         pb98_below_pb95: 'PB98 < PB95',
         on_premium_below_on: 'ON Premium < ON',
-        price_conflict: 'Сирпечні ціни',
+        price_conflict: 'Конфліктні ціни',
         auto_resolved_by_newer: 'Замінено новішим',
         admin_marked_unusable: 'Позначено як непридатне',
       },
@@ -882,6 +897,7 @@ const translations = {
       rejectedSuccess: 'Заявку відхилено.',
       errorGeneric: 'Помилка. Спробуйте ще раз.',
       errorConflict: 'Цю заявку вже розглянуто.',
+      errorBadRequest: 'Перегляд застарілий — оновіть сторінку та спробуйте знову.',
       errorNoStation: 'Станцію не знайдено — знайдіть і призначте станцію перед затвердженням.',
       stationLabel: 'Станція',
       brandLabel: 'Бренд станції',
@@ -901,14 +917,20 @@ const translations = {
       stationSelected: 'Вибрано:',
       stationClear: 'Очистити',
       reviewLink: 'Перевірити',
-      // Story 3.16
-      conflictGroupBadge: 'Сирпечні заявки',
+      // Story 3.16 (3.17 AC7 — fixed Сирпечні typo to Конфліктні)
+      conflictGroupBadge: 'Конфліктні заявки',
       conflictNewerLabel: 'Новіша',
       conflictOlderLabel: 'Старіша',
       conflictApproveNewer: 'Затвердити новішу',
+      conflictApproveOlder: 'Затвердити старішу',
       conflictNewerUnusable: 'Новіша непридатна',
       conflictBothUnusable: 'Обидві непридатні',
       conflictResolveSuccess: 'Конфлікт вирішено.',
+      // Story 3.17
+      confirmBothUnusableTitle: 'Позначити обидві як непридатні?',
+      confirmBothUnusableYes: 'Так, обидві непридатні',
+      restoredFromLabel: 'Відновлено з',
+      restoredFromNone: 'немає (кеш повернувся до оцінок)',
     },
     stationClaims: {
       filterAll: 'Усі',
@@ -1152,6 +1174,7 @@ export interface Translations {
     rejectedSuccess: string;
     errorGeneric: string;
     errorConflict: string;
+    errorBadRequest: string;
     errorNoStation: string;
     stationLabel: string;
     brandLabel: string;
@@ -1177,9 +1200,17 @@ export interface Translations {
     conflictNewerLabel: string;
     conflictOlderLabel: string;
     conflictApproveNewer: string;
+    /** Story 3.17 — fourth paired-review action. */
+    conflictApproveOlder: string;
     conflictNewerUnusable: string;
     conflictBothUnusable: string;
     conflictResolveSuccess: string;
+    // Story 3.17 — Both unusable inline confirmation.
+    confirmBothUnusableTitle: string;
+    confirmBothUnusableYes: string;
+    // Story 3.17 — admin detail page restored_from_submission_id surfacing.
+    restoredFromLabel: string;
+    restoredFromNone: string;
   };
   stationClaims: {
     filterAll: string;

@@ -124,6 +124,9 @@ export default {
     },
     stationUnrecognised: 'Stacja nierozpoznana',
     pendingShort: 'W trakcie',
+    // Story 3.17 — accessibility hints for tappable activity rows.
+    tapHintStation: 'Otwiera szczegóły stacji',
+    tapHintExplain: 'Otwiera wyjaśnienie',
   },
   map: {
     signedInAs: 'Zalogowano jako {{name}}',
@@ -318,6 +321,51 @@ export default {
       withdrawnLabel: 'Wycofane — w trakcie przeglądu',
       priceConflictLabel: 'Sprawdzamy zgodność cen',
       underReviewLabel: 'W trakcie przeglądu',
+    },
+    // Story 3.17 — per-reason copy for the full flag_reason taxonomy +
+    // tap-to-explain modal. `label` is the inline italic line on the row,
+    // `explanation` is the modal body. CTA mapping is in flagReasonCopy.ts.
+    flagReason: {
+      // Modal CTAs (one of these is shown depending on the reason class).
+      ctaRetake: 'Zrób nowe zdjęcie',
+      ctaDismiss: 'Rozumiem',
+      ctaSupport: 'Skontaktuj się z pomocą',
+      ctaClose: 'Zamknij',
+      // Generic fallbacks when flag_reason is null or unrecognised.
+      underReviewGeneric: { label: 'W trakcie przeglądu', explanation: 'Twoje zgłoszenie czeka na ręczne sprawdzenie przez moderację. Daj nam chwilę.' },
+      rejectedGeneric: { label: 'Odrzucone', explanation: 'Z tym zgłoszeniem coś było nie tak. Sprawdź następne zdjęcia — z bliska i czytelnie pomaga najbardziej.' },
+      // Per-code label + explanation. Codes correspond to backend
+      // SubmissionStatus + flag_reason taxonomy as of 2026-05-07.
+      user_flagged_wrong: { label: 'Wycofane — w trakcie przeglądu', explanation: 'Sprawdzimy zdjęcie. Możesz od razu zrobić nowe — z bliska lub pod lepszym kątem to bardzo pomaga.' },
+      price_conflict: { label: 'Sprawdzamy zgodność cen', explanation: 'Inny kierowca podał inne ceny dla tej stacji. Czekamy na rozstrzygnięcie. Twoje zgłoszenie wraca do gry, jeśli wygra.' },
+      pb95_outside_rack_band: { label: 'Cena PB 95 odbiega od rynku — sprawdzamy', explanation: 'OCR odczytał cenę PB 95 daleko od typowych w okolicy. Sprawdzamy ręcznie — zwykle to drobny błąd odczytu.' },
+      on_outside_rack_band: { label: 'Cena ON odbiega od rynku — sprawdzamy', explanation: 'OCR odczytał cenę ON daleko od typowych w okolicy. Sprawdzamy ręcznie — zwykle to drobny błąd odczytu.' },
+      lpg_outside_rack_band: { label: 'Cena LPG odbiega od rynku — sprawdzamy', explanation: 'OCR odczytał cenę LPG daleko od typowych w okolicy. Sprawdzamy ręcznie — zwykle to drobny błąd odczytu.' },
+      low_trust: { label: 'Oczekuje na weryfikację konta', explanation: 'Twoje konto jest jeszcze świeże. Zgłoszenia trafiają do moderacji do czasu pierwszych potwierdzeń. To minie z czasem.' },
+      logo_mismatch: { label: 'Logo nie pasuje do stacji — sprawdzamy', explanation: 'Zdjęcie nie pasuje do logo stacji wybranej z mapy. Sprawdź czy stacja jest właściwa — lub zrób nowe zdjęcie.' },
+      dlq_final_failure: { label: 'Nie udało się przetworzyć — spróbuj ponownie', explanation: 'Coś poszło nie tak po stronie naszego serwera. Spróbuj zrobić zdjęcie jeszcze raz.' },
+      auto_resolved_by_resubmit: { label: 'Zastąpione nowszym zgłoszeniem', explanation: 'Zrobiłeś/aś nowsze zdjęcie tej stacji. Wcześniejsze zgłoszenie zostało rozliczone automatycznie.' },
+      auto_resolved_by_newer: { label: 'Zastąpione nowszym zgłoszeniem', explanation: 'Inne zgłoszenie z tej stacji zostało zatwierdzone jako bardziej aktualne. To normalne — dzięki za udział.' },
+      auto_resolved_by_older: { label: 'Zastąpione wcześniejszym zgłoszeniem', explanation: 'Inne zgłoszenie z tej stacji zostało zatwierdzone jako bardziej wiarygodne. To normalne — dzięki za udział.' },
+      admin_marked_unusable: { label: 'Zgłoszenie odrzucone przez moderację', explanation: 'Po przejrzeniu uznaliśmy, że tego zdjęcia nie da się dobrze odczytać. Następnym razem celuj bliżej w ceny na pylonie.' },
+      duplicate_submission: { label: 'Już mamy świeże zgłoszenie z tej stacji', explanation: 'Ktoś inny zgłosił ceny tej stacji w ciągu ostatnich 12 godzin. Spróbuj ponownie później lub na innej stacji.' },
+      no_prices_extracted: { label: 'Nie udało się odczytać cen ze zdjęcia', explanation: 'Na zdjęciu nie widać czytelnych cen. Spróbuj zrobić nowe — z bliska, równo i z dobrym oświetleniem.' },
+      no_station_match: { label: 'Nie znaleziono stacji w pobliżu', explanation: 'Według GPS nie ma stacji w okolicy. Sprawdź czy GPS jest włączony i celuj w pylon stacji.' },
+      price_out_of_range: { label: 'Cena poza zakresem — sprawdź zdjęcie', explanation: 'Odczytana cena wykracza poza dopuszczalny zakres dla tego paliwa. Możliwe, że OCR pomylił cyfry. Zrób nowe zdjęcie.' },
+      no_gps_coordinates: { label: 'Brak lokalizacji — włącz GPS i ponów', explanation: 'Nie udało się ustalić lokalizacji w trakcie wysyłki. Włącz GPS i zrób nowe zdjęcie.' },
+      dead_letter_discarded: { label: 'Zgłoszenie zostało odrzucone', explanation: 'Zgłoszenie nie zostało przetworzone — admin je odrzucił po wielokrotnych próbach.' },
+      // Staleness suffix appended to the inline label after >6h.
+      // P-9 (3.17 review) — Polish CLDR plural categories: one / few / many.
+      // The reachable range from the staleness helper is hours >= 6 and days
+      // >= 2, so `_one` is theoretically unreachable today. Keeping the
+      // singular form anyway as defense against a future threshold change.
+      // Abbreviation 'godz.' / 'dni' reads naturally for all >1 cases.
+      stalenessHours_one: 'Od godziny',
+      stalenessHours_few: 'Od {{count}} godz.',
+      stalenessHours_many: 'Od {{count}} godz.',
+      stalenessDays_one: 'Od dnia',
+      stalenessDays_few: 'Od {{count}} dni',
+      stalenessDays_many: 'Od {{count}} dni',
     },
   },
   confirmation: {

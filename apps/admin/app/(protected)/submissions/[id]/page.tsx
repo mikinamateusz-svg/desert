@@ -102,6 +102,26 @@ export default async function SubmissionDetailPage({ params }: Props) {
                 </div>
               </DetailRow>
             )}
+            {/* Story 3.17 AC6 — restored_from_submission_id surfacing for
+             * user_flagged_wrong rows. Null `restored_from_submission_id`
+             * means the cache fell back to estimates (no prior verified
+             * existed); we still render the row so admin sees the explicit
+             * "no prior to restore" signal. Section omitted entirely for
+             * any other flag_reason. */}
+            {submission.flag_reason === 'user_flagged_wrong' && (
+              <DetailRow label={t.review.restoredFromLabel}>
+                {submission.restored_from_submission_id ? (
+                  <Link
+                    href={`/submissions/${submission.restored_from_submission_id}`}
+                    className="font-mono text-xs text-gray-900 hover:underline"
+                  >
+                    {truncateId(submission.restored_from_submission_id)}
+                  </Link>
+                ) : (
+                  <span className="text-sm text-gray-500">{t.review.restoredFromNone}</span>
+                )}
+              </DetailRow>
+            )}
           </dl>
 
           <ReviewActions
@@ -124,4 +144,14 @@ function DetailRow({ label, children }: { label: string; children: React.ReactNo
       <dd className="text-sm text-gray-900">{children}</dd>
     </div>
   );
+}
+
+/**
+ * P-15 (3.17 review) — render the first 8 characters of an id, appending an
+ * ellipsis only when the input is actually longer. Avoids a stray '…' on
+ * shorter strings (defensive — UUIDs are always 36 chars, but the helper
+ * is shared with the conflict_group_id badge which gets the same truncation).
+ */
+function truncateId(id: string): string {
+  return id.length > 8 ? `${id.slice(0, 8)}…` : id;
 }

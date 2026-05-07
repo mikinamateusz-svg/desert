@@ -124,6 +124,8 @@ export default {
     },
     stationUnrecognised: 'Station not recognised',
     pendingShort: 'Processing',
+    tapHintStation: 'Opens station details',
+    tapHintExplain: 'Opens explanation',
   },
   map: {
     signedInAs: 'Signed in as {{name}}',
@@ -315,6 +317,41 @@ export default {
       withdrawnLabel: 'Withdrawn — under review',
       priceConflictLabel: 'Checking price match',
       underReviewLabel: 'Under review',
+    },
+    // Story 3.17 — per-reason copy for the activity-row tap-to-explain modal.
+    // PL is canonical; EN translations follow when we expand markets.
+    flagReason: {
+      ctaRetake: 'Take another photo',
+      ctaDismiss: 'Got it',
+      ctaSupport: 'Contact support',
+      ctaClose: 'Close',
+      underReviewGeneric: { label: 'Under review', explanation: 'Your submission is awaiting manual review. Hang tight.' },
+      rejectedGeneric: { label: 'Rejected', explanation: 'Something went wrong with this submission. Closer, clearer photos help most.' },
+      user_flagged_wrong: { label: 'Withdrawn — under review', explanation: 'We will review the photo. You can take another one right now — closer or at a better angle helps a lot.' },
+      price_conflict: { label: 'Checking price match', explanation: 'Another driver reported different prices for this station. We are reviewing — your submission stays in the running.' },
+      pb95_outside_rack_band: { label: 'PB 95 price differs from market — checking', explanation: 'OCR read a PB 95 price far from typical local levels. We are checking manually — usually a small read error.' },
+      on_outside_rack_band: { label: 'Diesel price differs from market — checking', explanation: 'OCR read a diesel price far from typical local levels. We are checking manually — usually a small read error.' },
+      lpg_outside_rack_band: { label: 'LPG price differs from market — checking', explanation: 'OCR read an LPG price far from typical local levels. We are checking manually — usually a small read error.' },
+      low_trust: { label: 'Awaiting account verification', explanation: 'Your account is still new. Submissions go to moderation until you have a few confirmed reads. This passes with time.' },
+      logo_mismatch: { label: 'Logo does not match the station — checking', explanation: 'The photo does not match the logo of the station you picked from the map. Check the station — or take a new photo.' },
+      dlq_final_failure: { label: 'Could not process — please try again', explanation: 'Something went wrong on our side. Try taking the photo again.' },
+      auto_resolved_by_resubmit: { label: 'Replaced by a newer submission', explanation: 'You took a fresher photo of this station. The earlier submission was resolved automatically.' },
+      auto_resolved_by_newer: { label: 'Replaced by a newer submission', explanation: 'Another submission for this station was approved as more current. Normal — thanks for taking part.' },
+      auto_resolved_by_older: { label: 'Replaced by an earlier submission', explanation: 'Another submission for this station was approved as more reliable. Normal — thanks for taking part.' },
+      admin_marked_unusable: { label: 'Submission rejected by moderation', explanation: 'After review we decided this photo could not be read reliably. Next time aim closer at the price totem.' },
+      duplicate_submission: { label: 'We already have a fresh report for this station', explanation: 'Someone else reported this station prices in the last 12 hours. Try again later or at a different station.' },
+      no_prices_extracted: { label: 'Could not read prices from the photo', explanation: 'No readable prices visible in the photo. Try a new one — closer, level, with good light.' },
+      no_station_match: { label: 'No station found nearby', explanation: 'GPS shows no station nearby. Check GPS is on, and aim at the station totem.' },
+      price_out_of_range: { label: 'Price out of range — check the photo', explanation: 'The read price is outside the allowed range for this fuel. OCR may have mis-read a digit. Take a new photo.' },
+      no_gps_coordinates: { label: 'No location data — turn on GPS and retry', explanation: 'Could not determine location during upload. Turn on GPS and take a new photo.' },
+      dead_letter_discarded: { label: 'Submission was rejected', explanation: 'The submission was not processed — admin discarded it after multiple attempts.' },
+      // P-9 (3.17 review) — English CLDR plural categories: one / other.
+      // Both reachable ranges (hours >= 6, days >= 2) bypass the `_one`
+      // form today; included anyway for future threshold flexibility.
+      stalenessHours_one: '1h ago',
+      stalenessHours_other: '{{count}}h ago',
+      stalenessDays_one: '1d ago',
+      stalenessDays_other: '{{count}}d ago',
     },
   },
   confirmation: {

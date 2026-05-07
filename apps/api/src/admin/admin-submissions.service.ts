@@ -34,6 +34,15 @@ export interface FlaggedSubmissionDetail extends FlaggedSubmissionRow {
   photo_url: string | null;
   gps_lat: number | null;
   gps_lng: number | null;
+  /**
+   * Story 3.17 — when `flag_reason === 'user_flagged_wrong'`, the prior
+   * verified submission whose prices were restored to the cache (or `null`
+   * if no prior existed and the cache fell back to estimates). Read from
+   * the matching `AdminAuditLog.notes` JSON written by 3.14's `flagWrong`.
+   * `null` when this submission isn't `user_flagged_wrong`, the audit row
+   * is missing, or the notes JSON is malformed.
+   */
+  restored_from_submission_id: string | null;
 }
 
 /**
@@ -69,6 +78,12 @@ const AUDIT_ACTION_REQUEUE = 'REQUEUE';
 // unusable") so dashboards can group by action type cleanly.
 const AUDIT_ACTION_APPROVE_NEWER = 'APPROVE_NEWER';
 const AUDIT_ACTION_AUTO_RESOLVED_BY_NEWER = 'AUTO_RESOLVED_BY_NEWER';
+// Story 3.17 — admin can approve the older half of a conflict pair directly,
+// instead of the 2-tap workaround (mark newer unusable → approve older via
+// single-row review). Mirrors APPROVE_NEWER / AUTO_RESOLVED_BY_NEWER but
+// flipped: older → verified, newer → rejected with auto_resolved_by_older.
+const AUDIT_ACTION_APPROVE_OLDER = 'APPROVE_OLDER';
+const AUDIT_ACTION_AUTO_RESOLVED_BY_OLDER = 'AUTO_RESOLVED_BY_OLDER';
 const AUDIT_ACTION_MARK_NEWER_UNUSABLE = 'MARK_NEWER_UNUSABLE';
 const AUDIT_ACTION_RELEASE_OLDER_TO_SINGLE_REVIEW = 'RELEASE_OLDER_TO_SINGLE_REVIEW';
 const AUDIT_ACTION_MARK_BOTH_UNUSABLE = 'MARK_BOTH_UNUSABLE';
@@ -293,6 +308,16 @@ export class AdminSubmissionsService {
         });
     }
 
+    // Story 3.17 — surface restored_from_submission_id from the matching
+    // USER_FLAGGED_WRONG audit log entry so admin can click through to
+    // verify which prior verified submission's prices were rolled back to
+    // the cache. Best-effort: missing audit row OR malformed notes JSON
+    // both resolve to null without 500ing the detail page.
+    const restored_from_submission_id =
+      submission.flag_reason === 'user_flagged_wrong'
+        ? await this.readRestoredFromAudit(id)
+        : null;
+
     return {
       id: submission.id,
       station_id: submission.station_id,
@@ -309,8 +334,67 @@ export class AdminSubmissionsService {
       // without revealing exact position. Nulled on approve/reject.
       gps_lat: submission.gps_lat != null ? Math.round(submission.gps_lat * 10000) / 10000 : null,
       gps_lng: submission.gps_lng != null ? Math.round(submission.gps_lng * 10000) / 10000 : null,
+      restored_from_submission_id,
     };
   }
+
+  /**
+   * Story 3.17 — fetch the most recent USER_FLAGGED_WRONG audit row for a
+   * submission and pull `restored_from_submission_id` out of its notes JSON.
+   *
+   * Returns null when:
+   *  - the audit row is missing (defensive — every flag-wrong should write
+   *    one, but the 3.14 audit write is `.catch()`-wrapped so a Redis blip
+   *    or transient DB error could have eaten it);
+   *  - the notes column is null / empty;
+   *  - the notes JSON is malformed (defensive — should never happen, but
+   *    we don't want a single corrupt row to 500 the detail page);
+   *  - the parsed object lacks `restored_from_submission_id` or has a
+   *    non-string value;
+   *  - P-1/P-2 (3.17 review) — the value isn't a canonical UUID. Return
+   *    is fed to the admin Link href, so a malformed audit row mustn't
+   *    yield `'../whatever'` or a full URL slipping into the route. UUID
+   *    validation also rejects the empty-string edge case, which would
+   *    otherwise produce a broken `/submissions/` link.
+   *  - the audit query itself throws (logged + null).
+   */
+  private async readRestoredFromAudit(submissionId: string): Promise<string | null> {
+    try {
+      const audit = await this.prisma.adminAuditLog.findFirst({
+        where: { submission_id: submissionId, action: 'USER_FLAGGED_WRONG' },
+        orderBy: { created_at: 'desc' },
+        select: { notes: true },
+      });
+      if (!audit?.notes) return null;
+      const parsed = JSON.parse(audit.notes) as unknown;
+      if (
+        parsed != null &&
+        typeof parsed === 'object' &&
+        'restored_from_submission_id' in parsed
+      ) {
+        const value = (parsed as { restored_from_submission_id: unknown })
+          .restored_from_submission_id;
+        return typeof value === 'string' && AdminSubmissionsService.UUID_REGEX.test(value)
+          ? value
+          : null;
+      }
+      return null;
+    } catch (e: unknown) {
+      this.logger.warn(
+        `readRestoredFromAudit: failed for ${submissionId}: ${
+          e instanceof Error ? e.message : String(e)
+        }`,
+      );
+      return null;
+    }
+  }
+
+  // P-1 (3.17 review) — canonical RFC 4122 UUID shape. Used only as a
+  // sanitizer for audit-log-sourced submission ids that flow into Link
+  // hrefs on the admin detail page; a malformed audit row mustn't be
+  // able to inject path segments or full URLs into the route.
+  private static readonly UUID_REGEX =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
   async approve(
     submissionId: string,
@@ -591,40 +675,50 @@ export class AdminSubmissionsService {
         (p): p is { fuel_type: string; price_per_litre: number } =>
           typeof p.price_per_litre === 'number' && Number.isFinite(p.price_per_litre),
       );
-      const priceRow: StationPriceRow = {
-        stationId: pair.newer.station_id,
-        prices: Object.fromEntries(
-          validNewerPrices.map((p) => [p.fuel_type, p.price_per_litre]),
-        ),
-        sources: Object.fromEntries(
-          validNewerPrices.map((p) => [p.fuel_type, 'community' as const]),
-        ),
-        updatedAt: new Date(),
-      };
-      await this.priceService.setVerifiedPrice(pair.newer.station_id, priceRow).catch((err: Error) =>
-        this.logger.error(
-          `approveNewer: setVerifiedPrice failed for station ${pair.newer.station_id}: ${err.message}`,
-        ),
-      );
-
-      // P-24 — seed a confirmed consensus record so the next driver
-      // within 12h skips OCR. Best-effort; admin already approved, so
-      // we don't block the response on Redis. Hash uses the same
-      // null-filtering as the cache write above (hashPriceData itself
-      // filters non-finite, but pass the validated list for symmetry).
-      const newerHash = SubmissionDedupService.hashPriceData(validNewerPrices);
-      await this.submissionDedupService
-        .recordStationConsensus(pair.newer.station_id, {
-          count: 2,
-          confirmed: true,
-          prices_hash: newerHash,
-          last_at: Date.now(),
-        })
-        .catch((err: Error) =>
-          this.logger.warn(
-            `approveNewer: recordStationConsensus failed for ${pair.newer.station_id}: ${err.message}`,
+      // P-3 (3.17 review) — empty validNewerPrices would write `prices: {}`,
+      // wiping existing verified prices for this station. Skip both the
+      // cache write AND the consensus seed when there's nothing valid to
+      // publish; the row still flips to verified.
+      if (validNewerPrices.length === 0) {
+        this.logger.warn(
+          `approveNewer: pair.newer ${pair.newer.id} has no finite prices — skipping cache write and consensus seed`,
+        );
+      } else {
+        const priceRow: StationPriceRow = {
+          stationId: pair.newer.station_id,
+          prices: Object.fromEntries(
+            validNewerPrices.map((p) => [p.fuel_type, p.price_per_litre]),
+          ),
+          sources: Object.fromEntries(
+            validNewerPrices.map((p) => [p.fuel_type, 'community' as const]),
+          ),
+          updatedAt: new Date(),
+        };
+        await this.priceService.setVerifiedPrice(pair.newer.station_id, priceRow).catch((err: Error) =>
+          this.logger.error(
+            `approveNewer: setVerifiedPrice failed for station ${pair.newer.station_id}: ${err.message}`,
           ),
         );
+
+        // P-24 — seed a confirmed consensus record so the next driver
+        // within 12h skips OCR. Best-effort; admin already approved, so
+        // we don't block the response on Redis. Hash uses the same
+        // null-filtering as the cache write above (hashPriceData itself
+        // filters non-finite, but pass the validated list for symmetry).
+        const newerHash = SubmissionDedupService.hashPriceData(validNewerPrices);
+        await this.submissionDedupService
+          .recordStationConsensus(pair.newer.station_id, {
+            count: 2,
+            confirmed: true,
+            prices_hash: newerHash,
+            last_at: Date.now(),
+          })
+          .catch((err: Error) =>
+            this.logger.warn(
+              `approveNewer: recordStationConsensus failed for ${pair.newer.station_id}: ${err.message}`,
+            ),
+          );
+      }
     }
 
     // P-11 / P-12 — best-effort audit; distinct action per row.
@@ -642,6 +736,131 @@ export class AdminSubmissionsService {
 
     this.logger.log(
       `Conflict ${conflictGroupId} resolved by ${adminUserId}: approved newer ${pair.newer.id}, rejected older ${pair.older.id}`,
+    );
+  }
+
+  /**
+   * Story 3.17 — approve the older submission in a price_conflict pair when
+   * admin determines the older reading is more credible (e.g., the newer
+   * photo is blurry / the newer driver has a low trust score / the older
+   * prices match the local rack). Mirrors {@link approveNewer} flipped:
+   * older → `verified` and writes its prices to the cache; newer → `rejected`
+   * with `flag_reason: 'auto_resolved_by_older'`. Both retain the shared
+   * `conflict_group_id` for audit traceability.
+   *
+   * Reuses the same transactional safety, cache rewrite, consensus seed,
+   * and per-row audit pattern as {@link approveNewer}; see those comments
+   * for the rationale (P-9 / P-12 / P-24 from the 3.16 review).
+   *
+   * Without this method the admin path was: "Mark newer unusable" + then
+   * approve the older via the existing single-row admin review — an extra
+   * tap and a status-context switch. The direct button keeps the four
+   * paired-review actions symmetric.
+   */
+  async approveOlder(
+    adminUserId: string,
+    conflictGroupId: string,
+    olderSubmissionId: string,
+  ): Promise<void> {
+    const pair = await this.loadConflictPair(conflictGroupId, olderSubmissionId, 'older');
+
+    await this.prisma.$transaction(async (tx) => {
+      const olderUpdated = await tx.submission.updateMany({
+        where: {
+          id: pair.older.id,
+          status: SubmissionStatus.shadow_rejected,
+          conflict_group_id: conflictGroupId,
+          flag_reason: 'price_conflict',
+        },
+        data: { status: SubmissionStatus.verified, flag_reason: null },
+      });
+      if (olderUpdated.count === 0) {
+        throw new ConflictException(
+          `Older submission ${pair.older.id} no longer in price_conflict — aborting`,
+        );
+      }
+
+      const newerUpdated = await tx.submission.updateMany({
+        where: {
+          id: pair.newer.id,
+          status: SubmissionStatus.shadow_rejected,
+          conflict_group_id: conflictGroupId,
+          flag_reason: 'price_conflict',
+        },
+        data: {
+          status: SubmissionStatus.rejected,
+          flag_reason: 'auto_resolved_by_older',
+        },
+      });
+      if (newerUpdated.count === 0) {
+        throw new ConflictException(
+          `Newer submission ${pair.newer.id} no longer in price_conflict — aborting`,
+        );
+      }
+    });
+
+    if (pair.older.station_id) {
+      const validOlderPrices = pair.older.price_data.filter(
+        (p): p is { fuel_type: string; price_per_litre: number } =>
+          typeof p.price_per_litre === 'number' && Number.isFinite(p.price_per_litre),
+      );
+      // P-3 (3.17 review) — empty validOlderPrices would write `prices: {}`
+      // to the cache, wiping whatever existing verified prices were there
+      // for this station. Skip both the cache write AND the consensus seed
+      // when there's nothing valid to publish; admin sees the row flipped
+      // to `verified` regardless, and the cache simply stays where it is.
+      // Mirrors Story 3.16 P-3 (empty-validEntries → invalidate-or-skip).
+      if (validOlderPrices.length === 0) {
+        this.logger.warn(
+          `approveOlder: pair.older ${pair.older.id} has no finite prices — skipping cache write and consensus seed`,
+        );
+      } else {
+        const priceRow: StationPriceRow = {
+          stationId: pair.older.station_id,
+          prices: Object.fromEntries(
+            validOlderPrices.map((p) => [p.fuel_type, p.price_per_litre]),
+          ),
+          sources: Object.fromEntries(
+            validOlderPrices.map((p) => [p.fuel_type, 'community' as const]),
+          ),
+          updatedAt: new Date(),
+        };
+        await this.priceService.setVerifiedPrice(pair.older.station_id, priceRow).catch((err: Error) =>
+          this.logger.error(
+            `approveOlder: setVerifiedPrice failed for station ${pair.older.station_id}: ${err.message}`,
+          ),
+        );
+
+        const olderHash = SubmissionDedupService.hashPriceData(validOlderPrices);
+        await this.submissionDedupService
+          .recordStationConsensus(pair.older.station_id, {
+            count: 2,
+            confirmed: true,
+            prices_hash: olderHash,
+            last_at: Date.now(),
+          })
+          .catch((err: Error) =>
+            this.logger.warn(
+              `approveOlder: recordStationConsensus failed for ${pair.older.station_id}: ${err.message}`,
+            ),
+          );
+      }
+    }
+
+    const auditNotes = JSON.stringify({
+      conflict_group_id: conflictGroupId,
+      partner_submission_id: pair.newer.id,
+    });
+    await this.writeAuditLog(adminUserId, AUDIT_ACTION_APPROVE_OLDER, pair.older.id, auditNotes).catch(() => {});
+    await this.writeAuditLog(
+      adminUserId,
+      AUDIT_ACTION_AUTO_RESOLVED_BY_OLDER,
+      pair.newer.id,
+      JSON.stringify({ conflict_group_id: conflictGroupId, partner_submission_id: pair.older.id }),
+    ).catch(() => {});
+
+    this.logger.log(
+      `Conflict ${conflictGroupId} resolved by ${adminUserId}: approved older ${pair.older.id}, rejected newer ${pair.newer.id}`,
     );
   }
 
@@ -784,12 +1003,18 @@ export class AdminSubmissionsService {
 
   /**
    * Load both rows of a price_conflict pair. Throws if the pair is no
-   * longer intact (already resolved by another admin, or `newerSubmissionId`
-   * doesn't belong to this group).
+   * longer intact (already resolved by another admin, or the targeted
+   * submission id doesn't match the expected half).
+   *
+   * Story 3.17 — `expectedTarget` defaults to `'newer'` to preserve the
+   * 3.16 callers (`approveNewer` / `markNewerUnusable` accept the newer's
+   * id in their wire body). `approveOlder` passes `'older'` so the
+   * BadRequest validation matches the older half.
    */
   private async loadConflictPair(
     conflictGroupId: string,
-    newerSubmissionId: string,
+    targetSubmissionId: string,
+    expectedTarget: 'newer' | 'older' = 'newer',
   ): Promise<{ newer: FlaggedSubmissionRow; older: FlaggedSubmissionRow }> {
     const rows = await this.prisma.submission.findMany({
       where: {
@@ -827,11 +1052,18 @@ export class AdminSubmissionsService {
         `Conflict ${conflictGroupId} has ${rows.length} active members — paired-review actions only support pairs (N=2)`,
       );
     }
+    // P-14 (3.17 review) — newer/older indexing depends on the
+    // `orderBy: { created_at: 'desc' }` clause above; rows[0] is the
+    // most recent, rows[1] the older. If a future refactor flips the
+    // sort direction, every paired-review caller (approveNewer,
+    // approveOlder, markNewerUnusable) silently approves the wrong half.
+    // Don't change the orderBy without auditing those call sites.
     const newer = rows[0]!;
     const older = rows[1]!;
-    if (newer.id !== newerSubmissionId) {
+    const expectedRow = expectedTarget === 'newer' ? newer : older;
+    if (expectedRow.id !== targetSubmissionId) {
       throw new BadRequestException(
-        `Submission ${newerSubmissionId} is not the newer half of conflict ${conflictGroupId}`,
+        `Submission ${targetSubmissionId} is not the ${expectedTarget} half of conflict ${conflictGroupId}`,
       );
     }
 

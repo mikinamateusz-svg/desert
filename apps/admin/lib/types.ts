@@ -18,6 +18,13 @@ export interface FlaggedSubmissionDetail extends FlaggedSubmissionRow {
   photo_url: string | null;
   gps_lat: number | null;
   gps_lng: number | null;
+  /**
+   * Story 3.17 — for `flag_reason: 'user_flagged_wrong'` rows, the prior
+   * verified submission whose prices were restored to the cache (or null
+   * when no prior existed and the cache fell back to estimates). Always
+   * null when the row isn't `user_flagged_wrong`.
+   */
+  restored_from_submission_id: string | null;
 }
 
 /**

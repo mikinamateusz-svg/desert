@@ -17,6 +17,9 @@ const mockSubmissionFindUnique = jest.fn();
 const mockSubmissionUpdateMany = jest.fn();
 const mockStalenessDeleteMany = jest.fn();
 const mockAuditLogCreate = jest.fn();
+// Story 3.17 — getDetail reads the latest USER_FLAGGED_WRONG audit row to
+// surface restored_from_submission_id. Default null = no audit row.
+const mockAuditLogFindFirst = jest.fn();
 const mockTransaction = jest.fn();
 
 const mockPrisma = {
@@ -27,7 +30,7 @@ const mockPrisma = {
     updateMany: mockSubmissionUpdateMany,
   },
   stationFuelStaleness: { deleteMany: mockStalenessDeleteMany },
-  adminAuditLog: { create: mockAuditLogCreate },
+  adminAuditLog: { create: mockAuditLogCreate, findFirst: mockAuditLogFindFirst },
   $transaction: mockTransaction,
 };
 
@@ -82,6 +85,7 @@ describe('AdminSubmissionsService', () => {
       Promise.all((fns as Array<Promise<unknown>>).map((f) => f)),
     );
     mockAuditLogCreate.mockResolvedValue({});
+    mockAuditLogFindFirst.mockResolvedValue(null);
     mockStalenessDeleteMany.mockResolvedValue({ count: 0 });
     mockSetVerifiedPrice.mockResolvedValue(undefined);
     mockDeleteObject.mockResolvedValue(undefined);
@@ -270,7 +274,19 @@ describe('AdminSubmissionsService', () => {
     const NEWER_ID = '00000000-0000-4000-8000-0000000000ne';
     const OLDER_ID = '00000000-0000-4000-8000-0000000000ol';
 
-    const makeRows = () => [
+    type ConflictRow = {
+      id: string;
+      station_id: string;
+      price_data: Array<{ fuel_type: string; price_per_litre: number | null }>;
+      ocr_confidence_score: number;
+      created_at: Date;
+      user_id: string;
+      flag_reason: string;
+      conflict_group_id: string;
+      station: { name: string };
+    };
+
+    const makeRows = (): ConflictRow[] => [
       // findMany returns desc by created_at — newer first.
       {
         id: NEWER_ID,
@@ -473,6 +489,113 @@ describe('AdminSubmissionsService', () => {
         await expect(service.markBothUnusable(ADMIN_ID, GROUP_ID)).resolves.toBeUndefined();
       });
     });
+
+    // Story 3.17 — symmetric Approve older action.
+    describe('approveOlder', () => {
+      it('flips older→verified, newer→rejected with auto_resolved_by_older, writes cache, seeds consensus', async () => {
+        mockSubmissionFindMany.mockResolvedValueOnce(makeRows());
+        // P-16 (3.17 review) — explicit per-call mocks instead of a blanket
+        // mockResolvedValue({ count: 1 }) so a regression that drops one
+        // updateMany call is caught by the toHaveBeenCalledTimes(2) below.
+        mockSubmissionUpdateMany
+          .mockResolvedValueOnce({ count: 1 })
+          .mockResolvedValueOnce({ count: 1 });
+
+        await service.approveOlder(ADMIN_ID, GROUP_ID, OLDER_ID);
+
+        expect(mockSubmissionUpdateMany).toHaveBeenCalledTimes(2);
+        const olderFlip = mockSubmissionUpdateMany.mock.calls.find(
+          ([args]: [{ where: { id: string } }]) => args.where.id === OLDER_ID,
+        );
+        expect(olderFlip[0].data).toEqual({ status: 'verified', flag_reason: null });
+        const newerFlip = mockSubmissionUpdateMany.mock.calls.find(
+          ([args]: [{ where: { id: string } }]) => args.where.id === NEWER_ID,
+        );
+        expect(newerFlip[0].data).toEqual({
+          status: 'rejected',
+          flag_reason: 'auto_resolved_by_older',
+        });
+        expect(mockSetVerifiedPrice).toHaveBeenCalled();
+        expect(mockRecordStationConsensus).toHaveBeenCalledWith(
+          STATION_ID,
+          expect.objectContaining({ count: 2, confirmed: true }),
+        );
+        const auditActions = mockAuditLogCreate.mock.calls.map(
+          ([{ data }]: [{ data: { action: string; submission_id: string } }]) => ({
+            action: data.action,
+            sub: data.submission_id,
+          }),
+        );
+        expect(auditActions).toContainEqual({ action: 'APPROVE_OLDER', sub: OLDER_ID });
+        expect(auditActions).toContainEqual({ action: 'AUTO_RESOLVED_BY_OLDER', sub: NEWER_ID });
+      });
+
+      it('throws ConflictException when newer flip returns count: 0 (transactional rollback)', async () => {
+        mockSubmissionFindMany.mockResolvedValueOnce(makeRows());
+        mockSubmissionUpdateMany
+          .mockResolvedValueOnce({ count: 1 }) // older flip ok
+          .mockResolvedValueOnce({ count: 0 }); // newer flip 0 → roll back
+
+        await expect(service.approveOlder(ADMIN_ID, GROUP_ID, OLDER_ID)).rejects.toThrow(
+          ConflictException,
+        );
+      });
+
+      it('throws BadRequestException when submitted id is the newer half (loadConflictPair guard)', async () => {
+        mockSubmissionFindMany.mockResolvedValueOnce(makeRows());
+        await expect(
+          service.approveOlder(ADMIN_ID, GROUP_ID, NEWER_ID),
+        ).rejects.toThrow(BadRequestException);
+      });
+
+      it('throws ConflictException when group has > 2 active members', async () => {
+        const rows = makeRows();
+        const third = { ...rows[1], id: 'sub-third', created_at: new Date('2026-05-07T08:00:00Z') };
+        mockSubmissionFindMany.mockResolvedValueOnce([...rows, third]);
+        await expect(
+          service.approveOlder(ADMIN_ID, GROUP_ID, OLDER_ID),
+        ).rejects.toThrow(ConflictException);
+      });
+
+      // P-17 (3.17 review) — failure-tolerance coverage to match the 3.16
+      // P-11 pattern. Audit log + cache-write failures are both `.catch()`-
+      // wrapped; the action should still resolve so the admin sees success
+      // for the load-bearing DB transitions.
+      it('does NOT throw when audit log write fails (best-effort)', async () => {
+        mockSubmissionFindMany.mockResolvedValueOnce(makeRows());
+        mockSubmissionUpdateMany.mockResolvedValue({ count: 1 });
+        mockAuditLogCreate.mockRejectedValueOnce(new Error('DB hiccup'));
+
+        await expect(
+          service.approveOlder(ADMIN_ID, GROUP_ID, OLDER_ID),
+        ).resolves.toBeUndefined();
+      });
+
+      it('does NOT throw when setVerifiedPrice fails (best-effort cache write)', async () => {
+        mockSubmissionFindMany.mockResolvedValueOnce(makeRows());
+        mockSubmissionUpdateMany.mockResolvedValue({ count: 1 });
+        mockSetVerifiedPrice.mockRejectedValueOnce(new Error('Redis unavailable'));
+
+        await expect(
+          service.approveOlder(ADMIN_ID, GROUP_ID, OLDER_ID),
+        ).resolves.toBeUndefined();
+        // Consensus seed runs after cache write, regardless of cache-write outcome.
+        expect(mockRecordStationConsensus).toHaveBeenCalled();
+      });
+
+      it('P-3 — skips cache write and consensus seed when older has no finite prices', async () => {
+        const rows = makeRows();
+        // Strip prices from older to all-null so validOlderPrices is empty.
+        rows[1].price_data = [{ fuel_type: 'PB_95', price_per_litre: null }];
+        mockSubmissionFindMany.mockResolvedValueOnce(rows);
+        mockSubmissionUpdateMany.mockResolvedValue({ count: 1 });
+
+        await service.approveOlder(ADMIN_ID, GROUP_ID, OLDER_ID);
+
+        expect(mockSetVerifiedPrice).not.toHaveBeenCalled();
+        expect(mockRecordStationConsensus).not.toHaveBeenCalled();
+      });
+    });
   });
 
   // ── getDetail ───────────────────────────────────────────────────────────────
@@ -526,6 +649,109 @@ describe('AdminSubmissionsService', () => {
       const detail = await service.getDetail(SUB_ID);
       expect(detail.photo_url).toBeNull();
       expect(Logger.prototype.warn).toHaveBeenCalled();
+    });
+
+    // Story 3.17 — restored_from_submission_id surfaced for user_flagged_wrong rows.
+
+    it('surfaces restored_from_submission_id from USER_FLAGGED_WRONG audit notes', async () => {
+      const PRIOR_UUID = '11111111-1111-4111-8111-111111111111';
+      mockSubmissionFindUnique.mockResolvedValue({
+        ...makeShadowRejected({ flag_reason: 'user_flagged_wrong' }),
+        station: { name: 'BP Kraków', brand: 'BP' },
+      });
+      mockAuditLogFindFirst.mockResolvedValueOnce({
+        notes: JSON.stringify({
+          previous_status: 'verified',
+          restored_from_submission_id: PRIOR_UUID,
+          actor_role: 'DRIVER',
+        }),
+      });
+
+      const detail = await service.getDetail(SUB_ID);
+
+      expect(detail.restored_from_submission_id).toBe(PRIOR_UUID);
+      expect(mockAuditLogFindFirst).toHaveBeenCalledWith({
+        where: { submission_id: SUB_ID, action: 'USER_FLAGGED_WRONG' },
+        orderBy: { created_at: 'desc' },
+        select: { notes: true },
+      });
+    });
+
+    it('P-1/P-2 — rejects non-UUID restored_from value (open-redirect / log-injection guard)', async () => {
+      mockSubmissionFindUnique.mockResolvedValue({
+        ...makeShadowRejected({ flag_reason: 'user_flagged_wrong' }),
+        station: null,
+      });
+      mockAuditLogFindFirst.mockResolvedValueOnce({
+        notes: JSON.stringify({
+          restored_from_submission_id: '../other-sub',
+        }),
+      });
+
+      const detail = await service.getDetail(SUB_ID);
+      expect(detail.restored_from_submission_id).toBeNull();
+    });
+
+    it('P-2 — rejects empty-string restored_from value', async () => {
+      mockSubmissionFindUnique.mockResolvedValue({
+        ...makeShadowRejected({ flag_reason: 'user_flagged_wrong' }),
+        station: null,
+      });
+      mockAuditLogFindFirst.mockResolvedValueOnce({
+        notes: JSON.stringify({ restored_from_submission_id: '' }),
+      });
+
+      const detail = await service.getDetail(SUB_ID);
+      expect(detail.restored_from_submission_id).toBeNull();
+    });
+
+    it('returns null when audit notes have null restored_from (no prior verified case)', async () => {
+      mockSubmissionFindUnique.mockResolvedValue({
+        ...makeShadowRejected({ flag_reason: 'user_flagged_wrong' }),
+        station: null,
+      });
+      mockAuditLogFindFirst.mockResolvedValueOnce({
+        notes: JSON.stringify({
+          previous_status: 'verified',
+          restored_from_submission_id: null,
+        }),
+      });
+
+      const detail = await service.getDetail(SUB_ID);
+      expect(detail.restored_from_submission_id).toBeNull();
+    });
+
+    it('returns null when audit row is missing entirely', async () => {
+      mockSubmissionFindUnique.mockResolvedValue({
+        ...makeShadowRejected({ flag_reason: 'user_flagged_wrong' }),
+        station: null,
+      });
+      mockAuditLogFindFirst.mockResolvedValueOnce(null);
+
+      const detail = await service.getDetail(SUB_ID);
+      expect(detail.restored_from_submission_id).toBeNull();
+    });
+
+    it('returns null when audit notes JSON is malformed (defensive)', async () => {
+      mockSubmissionFindUnique.mockResolvedValue({
+        ...makeShadowRejected({ flag_reason: 'user_flagged_wrong' }),
+        station: null,
+      });
+      mockAuditLogFindFirst.mockResolvedValueOnce({ notes: 'not-valid-json{{{' });
+
+      const detail = await service.getDetail(SUB_ID);
+      expect(detail.restored_from_submission_id).toBeNull();
+    });
+
+    it('does NOT query audit log when flag_reason is not user_flagged_wrong', async () => {
+      mockSubmissionFindUnique.mockResolvedValue({
+        ...makeShadowRejected({ flag_reason: 'logo_mismatch' }),
+        station: null,
+      });
+
+      const detail = await service.getDetail(SUB_ID);
+      expect(detail.restored_from_submission_id).toBeNull();
+      expect(mockAuditLogFindFirst).not.toHaveBeenCalled();
     });
   });
 

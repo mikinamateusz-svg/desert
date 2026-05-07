@@ -46,6 +46,10 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
   private redisForWorker!: Redis;
   // Story 3.9: true when worker has been paused due to daily spend cap
   private pausedForSpendCap = false;
+  // Operational safety net (2026-05-07 hotfix): timer for the periodic
+  // stale-pending sweep — re-enqueues submissions that have been stuck in
+  // `pending` longer than the OCR pipeline normally takes.
+  private stalePendingSweepTimer?: ReturnType<typeof setInterval>;
 
   constructor(
     private readonly config: ConfigService,
@@ -123,10 +127,12 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     });
 
     this.scheduleMidnightReset();
+    this.scheduleStalePendingSweep();
     this.logger.log('PhotoPipelineWorker initialised (Stories 3.4 GPS + 3.5 OCR + 3.6 Logo + 3.7 Price Validation + 3.9 Cost Controls active)');
   }
 
   async onModuleDestroy(): Promise<void> {
+    if (this.stalePendingSweepTimer) clearInterval(this.stalePendingSweepTimer);
     await this.worker?.close();
     await this.queue?.close();
     await Promise.allSettled([this.redisForQueue?.quit(), this.redisForWorker?.quit()]);
@@ -1182,6 +1188,89 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         this.scheduleMidnightReset(); // chain for next day
       })();
     }, msUntilMidnight).unref();
+  }
+
+  // ── Stale-pending sweeper (2026-05-07 hotfix) ──────────────────────────────
+
+  /**
+   * Operational safety net for submissions that get stuck in `pending`.
+   *
+   * The pipeline normally drives every submission to a terminal status
+   * (verified / rejected / shadow_rejected) within seconds, with retry
+   * + DLQ handling in `handleFinalFailure` for transient failures. But
+   * a few real-world cases bypass that:
+   *   - the BullMQ job was enqueued, but Redis lost the queue state
+   *     (worker restart, AOF disabled, eviction);
+   *   - the worker crashed mid-process before either the verify update
+   *     or `handleFinalFailure` ran;
+   *   - the queue was paused for the OCR spend cap and never resumed
+   *     for some pending rows that were enqueued just before the pause.
+   *
+   * Field-test data (May 2026) showed several drivers with submissions
+   * stuck in `W trakcie` for 30 min – 2 h. The fix is a periodic
+   * re-enqueue: any pending row that's older than {@link STALE_PENDING_MIN_AGE_MS}
+   * gets a fresh job pushed onto the queue with a unique jobId (so
+   * BullMQ's jobId dedup doesn't silently drop it). The worker's normal
+   * status guard (`if (status !== pending) return`) makes this a no-op
+   * for rows that have since transitioned, so the sweep is idempotent.
+   */
+  private static readonly STALE_PENDING_SWEEP_INTERVAL_MS = 10 * 60 * 1000; // 10 min
+  private static readonly STALE_PENDING_MIN_AGE_MS = 30 * 60 * 1000; // 30 min
+  private static readonly STALE_PENDING_BATCH = 50;
+
+  private scheduleStalePendingSweep(): void {
+    // Run once shortly after boot to catch anything stuck across a restart,
+    // then on the regular cadence. .unref() so the timer doesn't keep the
+    // process alive.
+    setTimeout(() => void this.sweepStalePending().catch((e: Error) =>
+      this.logger.error(`stale-pending sweep (initial) failed: ${e.message}`),
+    ), 30_000).unref();
+    this.stalePendingSweepTimer = setInterval(
+      () => void this.sweepStalePending().catch((e: Error) =>
+        this.logger.error(`stale-pending sweep failed: ${e.message}`),
+      ),
+      PhotoPipelineWorker.STALE_PENDING_SWEEP_INTERVAL_MS,
+    );
+    this.stalePendingSweepTimer.unref?.();
+  }
+
+  private async sweepStalePending(): Promise<void> {
+    const cutoff = new Date(Date.now() - PhotoPipelineWorker.STALE_PENDING_MIN_AGE_MS);
+    const stale = await this.prisma.submission.findMany({
+      where: {
+        status: SubmissionStatus.pending,
+        created_at: { lt: cutoff },
+      },
+      select: { id: true, created_at: true },
+      orderBy: { created_at: 'asc' },
+      take: PhotoPipelineWorker.STALE_PENDING_BATCH,
+    });
+
+    if (stale.length === 0) return;
+
+    this.logger.warn(
+      `[STALE-PENDING-SWEEP] re-enqueueing ${stale.length} submission(s) stuck in pending for >${PhotoPipelineWorker.STALE_PENDING_MIN_AGE_MS / 60_000} min`,
+    );
+
+    for (const sub of stale) {
+      // Unique jobId so BullMQ doesn't dedup against a stale completed
+      // job still in Redis history. Failures per-row .catch'd so a
+      // single Redis hiccup doesn't drop the rest of the batch.
+      await this.queue
+        .add(
+          PHOTO_PIPELINE_JOB,
+          { submissionId: sub.id },
+          {
+            jobId: `photo-${sub.id}-sweep-${Date.now()}`,
+            ...JOB_OPTIONS,
+          },
+        )
+        .catch((err: Error) =>
+          this.logger.warn(
+            `[STALE-PENDING-SWEEP] failed to re-enqueue ${sub.id}: ${err.message}`,
+          ),
+        );
+    }
   }
 
   private async rejectSubmission(

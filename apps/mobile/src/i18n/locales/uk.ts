@@ -134,7 +134,6 @@ export default {
     locationDenied: 'Доступ до місцезнаходження заборонено — показую стандартний район',
     locationDeniedDismiss: 'OK',
     offlineNotice: 'Офлайн — показую останні відомі станції',
-    stationsLoadError: 'Не вдалося завантажити станції',
     openAlerts: 'Відкрити сповіщення',
     openMenu: 'Відкрити меню',
     recentre: 'Повернутися до моєї локації',

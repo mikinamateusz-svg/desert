@@ -33,6 +33,17 @@ export class SubmissionsController {
     return this.submissionsService.getMySubmissions(userId, dto.page, dto.limit);
   }
 
+  /**
+   * Account-wide aggregate counts for the Activity-screen summary card.
+   * Independent of pagination — fixes the bug where the visible-page
+   * counter grew as the driver loaded more rows.
+   */
+  @Get('summary')
+  @Roles(UserRole.DRIVER, UserRole.ADMIN)
+  getMySubmissionsSummary(@CurrentUser('id') userId: string) {
+    return this.submissionsService.getMySubmissionsSummary(userId);
+  }
+
   @Post()
   @Roles(UserRole.DRIVER, UserRole.ADMIN)
   @HttpCode(HttpStatus.ACCEPTED)

@@ -12,7 +12,12 @@ import { router, useFocusEffect } from 'expo-router';
 import { tokens } from '../../src/theme';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
-import { apiGetSubmissions, type Submission } from '../../src/api/submissions';
+import {
+  apiGetSubmissions,
+  apiGetSubmissionsSummary,
+  type Submission,
+  type SubmissionsSummary,
+} from '../../src/api/submissions';
 import { SummaryHeader } from '../../src/components/activity/SummaryHeader';
 import { SubmissionRow } from '../../src/components/activity/SubmissionRow';
 import { deriveSummary } from '../../src/components/activity/deriveSummary';
@@ -30,6 +35,10 @@ export default function ActivityScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Account-wide summary for the header card. Independent of pagination so
+  // the count doesn't grow as the driver loads more pages. Null until first
+  // fetch returns; falls back to client-derived summary on null.
+  const [serverSummary, setServerSummary] = useState<SubmissionsSummary | null>(null);
   const loadingMoreRef = useRef(false);
 
   const loadPage = useCallback(
@@ -60,9 +69,23 @@ export default function ActivityScreen() {
     [accessToken, t],
   );
 
+  // Fetch the account-wide summary alongside page-1 loads. Failures are
+  // silent — the screen falls back to the client-derived summary computed
+  // from whatever submissions are loaded.
+  const loadSummary = useCallback(async () => {
+    if (!accessToken) return;
+    try {
+      const summary = await apiGetSubmissionsSummary(accessToken);
+      setServerSummary(summary);
+    } catch {
+      // Silent — we degrade to the client-derived summary.
+    }
+  }, [accessToken]);
+
   useEffect(() => {
     void loadPage(1, true);
-  }, [loadPage]);
+    void loadSummary();
+  }, [loadPage, loadSummary]);
 
   // Refresh on focus + 30s poll while focused so newly-submitted rows + status
   // transitions (pending → verified/rejected) appear without re-login.
@@ -70,13 +93,30 @@ export default function ActivityScreen() {
   useFocusEffect(
     useCallback(() => {
       void loadPage(1, true);
-      const id = setInterval(() => void loadPage(1, true), 30_000);
+      void loadSummary();
+      const id = setInterval(() => {
+        void loadPage(1, true);
+        void loadSummary();
+      }, 30_000);
       return () => clearInterval(id);
-    }, [loadPage]),
+    }, [loadPage, loadSummary]),
   );
 
   const hasMore = page * LIMIT < total;
-  const summary = useMemo(() => deriveSummary(submissions), [submissions]);
+  // Prefer server-side aggregate (account-wide totals) when available;
+  // fall back to the client derive over loaded submissions for the brief
+  // window before the summary fetch resolves OR when it fails.
+  const clientSummary = useMemo(() => deriveSummary(submissions), [submissions]);
+  const summary = serverSummary
+    ? {
+        verifiedCount: serverSummary.verifiedCount,
+        stationsCovered: serverSummary.stationsCovered,
+        activeSince: serverSummary.activeSince ? new Date(serverSummary.activeSince) : null,
+      }
+    : clientSummary;
+  // The "+" suffix on activeSince signals "may be earlier than shown".
+  // With server-side totals we know the real earliest, so suppress it.
+  const approxActiveSince = serverSummary ? false : hasMore;
 
   const handleRowPress = useCallback((item: Submission) => {
     // Guard empty station.id from backend drift — pushing `stationId=''` would
@@ -92,9 +132,9 @@ export default function ActivityScreen() {
   // Memo the element so the FlatList header reference is stable across renders.
   const listHeader = useMemo(
     () => (summary.verifiedCount > 0
-      ? <SummaryHeader summary={summary} approxActiveSince={hasMore} />
+      ? <SummaryHeader summary={summary} approxActiveSince={approxActiveSince} />
       : null),
-    [summary, hasMore],
+    [summary, approxActiveSince],
   );
 
   // Compute the body once, then wrap in TopChrome — all five paths share

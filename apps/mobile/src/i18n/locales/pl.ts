@@ -135,7 +135,6 @@ export default {
     locationDenied: 'Odmowa dostępu do lokalizacji — wyświetlam domyślny obszar',
     locationDeniedDismiss: 'OK',
     offlineNotice: 'Brak połączenia — wyświetlam ostatnio znane stacje',
-    stationsLoadError: 'Nie udało się załadować stacji',
     openAlerts: 'Otwórz alerty',
     openMenu: 'Otwórz menu',
     recentre: 'Wróć do mojej lokalizacji',

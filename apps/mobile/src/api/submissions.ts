@@ -154,6 +154,28 @@ export async function apiGetSubmissions(
   });
 }
 
+export interface SubmissionsSummary {
+  verifiedCount: number;
+  stationsCovered: number;
+  /** ISO-8601 string from the API; null when no verified submissions exist yet. */
+  activeSince: string | null;
+}
+
+/**
+ * Account-wide aggregate counts for the Activity-screen summary card.
+ * Independent of the paginated submissions list — replaces the previous
+ * client-side derive-from-loaded-page logic that grew the count as the
+ * driver paginated.
+ */
+export async function apiGetSubmissionsSummary(
+  accessToken: string,
+): Promise<SubmissionsSummary> {
+  return request<SubmissionsSummary>('/v1/submissions/summary', {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+}
+
 /**
  * Story 3.14 — flag own verified submission as wrong. Server transitions
  * the submission to shadow_rejected, restores previous prices for the

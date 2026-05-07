@@ -77,6 +77,50 @@ export class SubmissionsService {
     private readonly priceCache: PriceCacheService,
   ) {}
 
+  /**
+   * Activity-screen summary (verified-only aggregates).
+   *
+   * The activity screen previously derived these counts from whatever
+   * page of submissions was loaded, which made the header values grow
+   * as the driver paginated. This returns account-wide totals so the
+   * card reflects "13 submissions / 13 stations / Active since Jan 4"
+   * regardless of pagination state.
+   *
+   * Verified-only by design — pending/rejected/shadow_rejected rows
+   * shouldn't inflate the contribution count the driver sees.
+   */
+  async getMySubmissionsSummary(userId: string): Promise<{
+    verifiedCount: number;
+    stationsCovered: number;
+    activeSince: Date | null;
+  }> {
+    const [count, distinctStations, earliest] = await Promise.all([
+      this.prisma.submission.count({
+        where: { user_id: userId, status: SubmissionStatus.verified },
+      }),
+      this.prisma.submission.findMany({
+        where: {
+          user_id: userId,
+          status: SubmissionStatus.verified,
+          station_id: { not: null },
+        },
+        distinct: ['station_id'],
+        select: { station_id: true },
+      }),
+      this.prisma.submission.findFirst({
+        where: { user_id: userId, status: SubmissionStatus.verified },
+        orderBy: { created_at: 'asc' },
+        select: { created_at: true },
+      }),
+    ]);
+
+    return {
+      verifiedCount: count,
+      stationsCovered: distinctStations.length,
+      activeSince: earliest?.created_at ?? null,
+    };
+  }
+
   async getMySubmissions(userId: string, page: number, limit: number) {
     const skip = (page - 1) * limit;
 

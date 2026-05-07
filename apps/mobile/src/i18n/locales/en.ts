@@ -134,7 +134,6 @@ export default {
     locationDenied: 'Location access denied — showing default area',
     locationDeniedDismiss: 'OK',
     offlineNotice: 'Offline — showing last known stations',
-    stationsLoadError: 'Could not load stations',
     openAlerts: 'Open alerts',
     openMenu: 'Open menu',
     recentre: 'Re-centre map',

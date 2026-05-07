@@ -99,17 +99,21 @@ function SubmissionRowBase({ item, onPress, onFlaggedWrong }: Props) {
     onFlaggedWrong?.();
   }, [onFlaggedWrong]);
 
+  // Inline italic line only renders on shadow_rejected rows ("under review",
+  // staleness suffix, reason-aware copy from 3.17 AC1). Rejected rows show
+  // station name + date only — explanation lives in the tap-to-explain modal
+  // (3.17 deferred refinement: too-negative "Odrzucone" framing dropped).
   const showStaleness = isShadowRejected && !isShadowBanned;
   const stalenessSuffix = showStaleness
     ? staleness(new Date(item.created_at), new Date(), t)
     : null;
-  const reasonCopy = explainable
-    ? flagReasonCopy(effectiveFlagReason, isShadowRejected ? 'shadow_rejected' : 'rejected', t)
+  const shadowRejectedCopy = isShadowRejected && !isShadowBanned
+    ? flagReasonCopy(effectiveFlagReason, 'shadow_rejected', t)
     : null;
-  const inlineLabel = reasonCopy
+  const inlineLabel = shadowRejectedCopy
     ? stalenessSuffix
-      ? `${reasonCopy.label} · ${stalenessSuffix}`
-      : reasonCopy.label
+      ? `${shadowRejectedCopy.label} · ${stalenessSuffix}`
+      : shadowRejectedCopy.label
     : null;
 
   const body = (
@@ -144,9 +148,6 @@ function SubmissionRowBase({ item, onPress, onFlaggedWrong }: Props) {
       )}
       {isShadowRejected && inlineLabel && (
         <Text style={styles.shadowRejected}>{inlineLabel}</Text>
-      )}
-      {isRejected && inlineLabel && (
-        <Text style={styles.rejected}>{inlineLabel}</Text>
       )}
     </View>
   );
@@ -229,5 +230,4 @@ const styles = StyleSheet.create({
   },
   pending: { fontSize: 11, color: tokens.neutral.n500, fontStyle: 'italic' },
   shadowRejected: { fontSize: 12, color: tokens.neutral.n500, fontStyle: 'italic' },
-  rejected: { fontSize: 12, color: tokens.neutral.n400, fontStyle: 'italic' },
 });

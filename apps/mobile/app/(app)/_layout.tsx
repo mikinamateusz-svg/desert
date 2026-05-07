@@ -87,6 +87,10 @@ export default function AppLayout() {
         name="confirm"
         options={{ href: null, headerShown: false }}
       />
+      <Tabs.Screen
+        name="flag-wrong-thanks"
+        options={{ href: null, headerShown: false }}
+      />
 
       {/* ── Sub-screens: navigated from Account ── */}
       <Tabs.Screen

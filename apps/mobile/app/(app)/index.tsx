@@ -66,10 +66,6 @@ export default function MapScreen() {
   const [splashVisible, setSplashVisible] = useState(true);
   const handleSplashHidden = useCallback(() => setSplashVisible(false), []);
 
-  // Error banner state
-  const [errorBannerVisible, setErrorBannerVisible] = useState(false);
-  const errorDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   // Debounce ref for region change
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // any: CameraRef not exported from @rnmapbox/maps package root (moduleResolution:bundler)
@@ -90,7 +86,6 @@ export default function MapScreen() {
   // Clean up timers on unmount
   useEffect(() => () => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    if (errorDismissRef.current) clearTimeout(errorDismissRef.current);
   }, []);
 
   // Once GPS resolves (or is denied), initialise camera and fetch center
@@ -208,16 +203,6 @@ export default function MapScreen() {
     () => clusterIndex.getClusters(mapBbox, Math.floor(mapZoom)),
     [clusterIndex, mapBbox, mapZoom],
   );
-
-  // Auto-dismiss error banner after 4s (stations or prices failure)
-  useEffect(() => {
-    if (stationsError || pricesError) {
-      setErrorBannerVisible(true);
-      if (errorDismissRef.current) clearTimeout(errorDismissRef.current);
-      errorDismissRef.current = setTimeout(() => setErrorBannerVisible(false), 4000);
-    }
-    return () => { if (errorDismissRef.current) clearTimeout(errorDismissRef.current); };
-  }, [stationsError, pricesError]);
 
   const handleRegionChange = (feature: GeoJSON.Feature<GeoJSON.Point>) => {
     if (programmaticMoveRef.current) {
@@ -484,13 +469,6 @@ export default function MapScreen() {
         <LoadingScreen stage={loadingStage} onHidden={handleSplashHidden} />
       )}
 
-      {/* Stations error banner — auto-dismisses after 4s */}
-      {errorBannerVisible && (
-        <View style={styles.errorBanner} pointerEvents="none">
-          <Text style={styles.errorBannerText}>{t('map.stationsLoadError')}</Text>
-        </View>
-      )}
-
       {/* Location denied banner — below top bar + fuel selector */}
       {locationDeniedVisible && (
         <View style={[styles.locationDeniedBanner, { top: topBarHeight + 64 }]}>
@@ -652,29 +630,6 @@ const styles = StyleSheet.create({
   },
   fuelPillTextActive: {
     color: tokens.brand.ink,
-  },
-
-  // Error banner (auto-dismiss card)
-  errorBanner: {
-    position: 'absolute',
-    bottom: 130,
-    left: 14,
-    right: 14,
-    backgroundColor: tokens.surface.card,
-    borderRadius: tokens.radius.md,
-    borderLeftWidth: 4,
-    borderLeftColor: tokens.price.expensive,
-    paddingVertical: 12,
-    paddingHorizontal: 14,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.10,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  errorBannerText: {
-    color: tokens.brand.ink,
-    fontSize: 13,
   },
 
   // Location denied banner (card, below top bar + fuel selector)

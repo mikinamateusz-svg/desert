@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import { detectLocale, getTranslations } from '../../../lib/i18n';
+import { detectLocale, getTranslations, type Translations } from '../../../lib/i18n';
 import { adminFetch } from '../../../lib/admin-api';
-import type { SubmissionListResult } from '../../../lib/types';
+import type { SubmissionListResult, FlaggedSubmissionRow } from '../../../lib/types';
 import SubmissionsFilter from './SubmissionsFilter';
+import ConflictPairCard from './ConflictPairCard';
 
 const PAGE_SIZE = 20;
 
@@ -74,65 +75,36 @@ export default async function SubmissionsPage({ searchParams }: Props) {
       )}
 
       {result && result.data.length > 0 && (
-        <div className="mt-6">
-          <div className="overflow-x-auto rounded-lg border border-gray-200">
-            <table className="min-w-full divide-y divide-gray-200 text-sm">
-              <thead className="bg-gray-50">
-                <tr>
-                  {[
-                    t.review.columns.station,
-                    t.review.columns.prices,
-                    t.review.columns.confidence,
-                    t.review.columns.submitted,
-                    t.review.columns.contributor,
-                    t.review.columns.flag,
-                    '',
-                  ].map((header, i) => (
-                    <th
-                      key={i}
-                      className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                    >
-                      {header}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 bg-white">
-                {result.data.map((row) => (
-                  <tr key={row.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 font-medium text-gray-900">
-                      {row.station_name ?? t.review.unknown}
-                    </td>
-                    <td className="px-4 py-3 text-gray-700">{formatPrice(row.price_data)}</td>
-                    <td className="px-4 py-3 text-gray-500">
-                      {row.ocr_confidence_score != null
-                        ? `${(row.ocr_confidence_score * 100).toFixed(0)}%`
-                        : t.review.na}
-                    </td>
-                    <td className="px-4 py-3 text-gray-500">
-                      {new Date(row.created_at).toLocaleString(locale)}
-                    </td>
-                    <td className="px-4 py-3 font-mono text-xs text-gray-400">
-                      {row.user_id.slice(0, 8)}…
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="inline-flex rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
-                        {t.review.flagReason[row.flag_reason] ?? row.flag_reason}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <Link
-                        href={`/submissions/${row.id}`}
-                        className="text-sm font-medium text-gray-900 hover:underline"
-                      >
-                        Review →
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div className="mt-6 space-y-3">
+          {result.data.map((item) =>
+            item.kind === 'pair' ? (
+              <ConflictPairCard
+                key={item.conflict_group_id}
+                conflictGroupId={item.conflict_group_id}
+                newer={item.newer}
+                older={item.older}
+                copy={{
+                  badge: t.review.conflictGroupBadge,
+                  newerLabel: t.review.conflictNewerLabel,
+                  olderLabel: t.review.conflictOlderLabel,
+                  approveNewer: t.review.conflictApproveNewer,
+                  newerUnusable: t.review.conflictNewerUnusable,
+                  bothUnusable: t.review.conflictBothUnusable,
+                  review: t.review.reviewLink,
+                  errorGeneric: t.review.errorGeneric,
+                  errorConflict: t.review.errorConflict,
+                }}
+                locale={locale}
+              />
+            ) : (
+              <SingleRow
+                key={item.submission.id}
+                row={item.submission}
+                t={t}
+                locale={locale}
+              />
+            ),
+          )}
 
           {/* Pagination */}
           {totalPages > 1 && (
@@ -162,6 +134,48 @@ export default async function SubmissionsPage({ searchParams }: Props) {
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+function SingleRow({
+  row,
+  t,
+  locale,
+}: {
+  row: FlaggedSubmissionRow;
+  t: Translations;
+  locale: string;
+}) {
+  return (
+    <div className="rounded-md border border-gray-200 bg-white p-3 hover:bg-gray-50">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="font-medium text-gray-900">
+            {row.station_name ?? t.review.unknown}
+          </p>
+          <p className="mt-0.5 text-sm text-gray-700">{formatPrice(row.price_data)}</p>
+          <p className="mt-0.5 text-xs text-gray-500">
+            {new Date(row.created_at).toLocaleString(locale)}
+            {row.ocr_confidence_score != null
+              ? ` · ${(row.ocr_confidence_score * 100).toFixed(0)}%`
+              : ` · ${t.review.na}`}
+            {' · '}
+            <span className="font-mono text-gray-400">{row.user_id.slice(0, 8)}…</span>
+          </p>
+        </div>
+        <div className="flex flex-col items-end gap-2">
+          <span className="inline-flex rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
+            {t.review.flagReason[row.flag_reason] ?? row.flag_reason}
+          </span>
+          <Link
+            href={`/submissions/${row.id}`}
+            className="text-sm font-medium text-gray-900 hover:underline"
+          >
+            {t.review.reviewLink} →
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

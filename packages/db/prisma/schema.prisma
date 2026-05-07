@@ -141,7 +141,14 @@ model Submission {
   gps_lng              Float? // nulled by Story 3.4 worker after station matching
   source               PriceSource      @default(community)
   status               SubmissionStatus @default(pending)
-  flag_reason          String? // set when status = shadow_rejected: 'logo_mismatch' | 'low_trust'
+  flag_reason          String? // set when status = shadow_rejected: 'logo_mismatch' | 'low_trust' | 'user_flagged_wrong' | 'price_conflict' | rule-based
+  // Story 3.16: shared by both submissions in a price-conflict pair so the
+  // admin queue can present them as a single paired card. Partial index
+  // `Submission_conflict_group_id_idx WHERE conflict_group_id IS NOT NULL`
+  // exists at the DB layer (see migration 20260506000000) but Prisma cannot
+  // express partial WHERE in @@index, so the index is intentionally omitted
+  // from this schema — runtime queries still use it via the optimizer.
+  conflict_group_id    String?          @db.Uuid
   created_at           DateTime         @default(now())
   updated_at           DateTime         @updatedAt
   user                 User             @relation(fields: [user_id], references: [id])

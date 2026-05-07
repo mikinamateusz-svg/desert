@@ -15,6 +15,7 @@ import { SubmissionDedupService } from './submission-dedup.service.js';
 import { TrustScoreService } from '../user/trust-score.service.js';
 import { ResearchRetentionService } from '../research/research-retention.service.js';
 import { SubmissionsService } from '../submissions/submissions.service.js';
+import { MetricsCounterService } from '../metrics/metrics-counter.service.js';
 
 export const PHOTO_PIPELINE_QUEUE = 'photo-pipeline';
 export const PHOTO_PIPELINE_JOB = 'process-submission';
@@ -61,6 +62,7 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     private readonly researchRetention: ResearchRetentionService,
     @Inject(forwardRef(() => SubmissionsService))
     private readonly submissionsService: SubmissionsService,
+    private readonly metricsCounter: MetricsCounterService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -208,21 +210,49 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     // Resolve stationId: GPS path uses candidates[0], preselect path uses submission.station_id
     const stationId = candidates.length > 0 ? candidates[0].id : submission.station_id;
 
-    // Story 3.10: L2 station dedup — skip OCR if a verified result exists for this station
-    // Skip on retry: ocr_confidence_score already set means OCR ran in a prior BullMQ attempt
+    // Story 3.16 — L2 consensus check. Three outcomes:
+    //  - duplicate (count: 2, confirmed: true within 12h) → skip OCR, reject as duplicate.
+    //  - corroborate-candidate (count: 1) → run OCR; post-validation we either
+    //    confirm the record (newer wins cache) or detect a conflict and pair both rows.
+    //  - fresh (no record / corrupt / Redis blip) → run OCR normally; record count: 1 on verify.
+    // Skip on retry: ocr_confidence_score already set means OCR ran in a prior BullMQ attempt;
+    // re-running consensus would double-record and risk false-confirming the same submission.
+    let consensusReason: 'fresh' | 'corroborate-candidate' = 'fresh';
+    let prevPricesHash: string | null = null;
+    // P-6 (3.16 review) — track whether the consensus check actually
+    // succeeded vs. fell open on a Redis blip. If the check failed we
+    // can't safely write a `{ count: 1, confirmed: false }` record on
+    // verify because that would clobber a (possibly already confirmed)
+    // existing record. `consensusKnown=false` tells the verify path to
+    // skip the record write entirely; the record remains as it was.
+    let consensusKnown = true;
     if (stationId && submission.ocr_confidence_score === null) {
-      try {
-        const isDuplicate = await this.submissionDedupService.checkStationDedup(stationId);
-        if (isDuplicate) {
-          this.logger.log(
-            `[DEDUP-L2] station=${stationId} submission=${submissionId} — recent verified result exists, skipping OCR`,
+      const decision = await this.submissionDedupService
+        .checkStationConsensus(stationId)
+        .catch((e: unknown) => {
+          this.logger.warn(
+            `[DEDUP-L2] Redis check failed, proceeding as fresh: ${(e as Error).message}`,
           );
-          await this.rejectSubmission(submission, 'duplicate_submission');
-          return;
-        }
-      } catch (e: unknown) {
-        this.logger.warn(`[DEDUP-L2] Redis check failed, proceeding normally: ${(e as Error).message}`);
+          return null;
+        });
+      if (decision === null) {
+        consensusKnown = false;
+      } else if (decision.skip) {
+        this.logger.log(
+          `[DEDUP-L2] station=${stationId} submission=${submissionId} — confirmed corroboration exists, skipping OCR`,
+        );
+        this.metricsCounter.incrementDedupDecision('duplicate_skipped');
+        await this.rejectSubmission(submission, 'duplicate_submission');
+        return;
+      } else if (decision.reason === 'corroborate-candidate') {
+        consensusReason = 'corroborate-candidate';
+        prevPricesHash = decision.record.prices_hash;
       }
+    } else if (submission.ocr_confidence_score !== null) {
+      // BullMQ retry — we deliberately skipped the consensus check (per
+      // Story 3.10 P-2) so the previous attempt's stored hash is unknown
+      // here. Same guard applies: don't seed a record on retry.
+      consensusKnown = false;
     }
 
     // Story 3.5: OCR price extraction
@@ -247,7 +277,11 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       await this.rejectSubmission(submission, 'no_station_id');
       return;
     }
-    await this.runPriceValidationAndUpdate(submissionId, stationId);
+    await this.runPriceValidationAndUpdate(submissionId, stationId, {
+      consensusReason,
+      prevPricesHash,
+      consensusKnown,
+    });
   }
 
   // ── GPS matching step ──────────────────────────────────────────────────────
@@ -476,12 +510,10 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       },
     });
 
-    // Story 3.10: record dedup keys — best-effort, non-blocking
-    if (stationId) {
-      this.submissionDedupService.recordStationDedup(stationId).catch((e: Error) =>
-        this.logger.warn(`Failed to record station dedup key: ${e.message}`),
-      );
-    }
+    // Story 3.10/3.16: hash dedup recorded here (after OCR succeeds); the
+    // structured station consensus record is written later in the verify
+    // path of runPriceValidationAndUpdate, once we know the validated
+    // prices to hash. Both writes are best-effort.
     this.submissionDedupService.recordHashDedup(photoHash).catch((e: Error) =>
       this.logger.warn(`Failed to record hash dedup key: ${e.message}`),
     );
@@ -646,6 +678,18 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
   private async runPriceValidationAndUpdate(
     submissionId: string,
     stationId: string,
+    consensus: {
+      consensusReason: 'fresh' | 'corroborate-candidate';
+      prevPricesHash: string | null;
+      /**
+       * P-6 (3.16 review) — false when the L2 consensus check fell open
+       * on a Redis error or was skipped on BullMQ retry. In both cases
+       * we must NOT write a fresh `{ count: 1, confirmed: false }` record
+       * on the verify path — doing so could clobber a previously-confirmed
+       * record and re-enable OCR for the next submission at this station.
+       */
+      consensusKnown: boolean;
+    },
   ): Promise<void> {
     // Re-fetch to get price_data written by runOcrExtraction.
     // station_id + created_at are needed so rejectSubmission can hand off to
@@ -701,8 +745,13 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     // admin visibility) rather than partially-shipping the survivors.
     if (rule_overall === 'shadow_reject') {
       const reason = rule_reason_code ?? 'price_validation_rule';
-      await this.prisma.submission.update({
-        where: { id: submissionId },
+      // P-23 (3.16 review) — status guard so a BullMQ retry that already
+      // routed this submission elsewhere (e.g., to price_conflict on the
+      // first attempt) doesn't get overwritten by a rule-based shadow
+      // reject on the second attempt. updateMany returns count: 0
+      // silently when the row is no longer pending; we log and exit.
+      const flipped = await this.prisma.submission.updateMany({
+        where: { id: submissionId, status: SubmissionStatus.pending },
         data: {
           status: SubmissionStatus.shadow_rejected,
           flag_reason: reason,
@@ -712,6 +761,12 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
           })) as unknown as Prisma.InputJsonValue,
         },
       });
+      if (flipped.count === 0) {
+        this.logger.log(
+          `Submission ${submissionId}: rule-based shadow_reject skipped — row is no longer pending (likely retry after prior terminal state)`,
+        );
+        return;
+      }
       if (updated.photo_r2_key) {
         await this.researchRetention.captureIfEnabled({
           submissionId,
@@ -743,6 +798,92 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       price_per_litre: p.price_per_litre,
     }));
 
+    // Story 3.16 — consensus decision before we commit to verified.
+    //
+    //  - 'fresh': no prior record (or Redis blip). Verify normally; afterwards
+    //    seed the record with count: 1, confirmed: false, prices_hash: newHash.
+    //  - 'corroborate-candidate' with prevPricesHash === null: legacy boolean
+    //    or earlier fuel-set-mismatch write left the hash null. Treat as fresh
+    //    AND overwrite the record with count: 1.
+    //  - 'corroborate-candidate' with stored hash:
+    //      - hashes match → exact corroboration, confirm record, newer wins cache.
+    //      - within ±0.05 PLN/l → noise corroboration, confirm record, newer wins cache.
+    //      - fuel set differs → different scene; verify normally but DO NOT
+    //        update the dedup record (leave count: 1 so a same-fuel-set submission
+    //        can still corroborate later).
+    //      - beyond noise → conflict path. Hand off to detectAndRoutePriceConflict
+    //        which flips status to shadow_rejected, generates conflict_group_id,
+    //        rolls cache back, clears dedup. Skip the verified path entirely.
+    const newPricesHash = SubmissionDedupService.hashPriceData(validatedPrices);
+    let dedupOutcome: 'fresh' | 'confirm' | 'fuel-set-mismatch' | 'conflict' = 'fresh';
+
+    if (consensus.consensusReason === 'corroborate-candidate' && consensus.prevPricesHash !== null) {
+      if (newPricesHash === consensus.prevPricesHash) {
+        dedupOutcome = 'confirm';
+      } else {
+        // Hashes differ — fall back to per-fuel noise compare. Need the previous
+        // verified submission's actual price_data for the comparison.
+        const previous = await this.prisma.submission.findFirst({
+          where: {
+            station_id: stationId,
+            status: SubmissionStatus.verified,
+            id: { not: submissionId },
+          },
+          orderBy: { created_at: 'desc' },
+          select: { price_data: true },
+        });
+        const prevPrices = Array.isArray(previous?.price_data)
+          ? (previous.price_data as Array<{ fuel_type: string; price_per_litre: number | null }>)
+          : null;
+        if (prevPrices === null) {
+          // Stored hash exists but no verified row to compare against — most
+          // likely the partner was rejected/withdrawn between the dedup write
+          // and this OCR. Treat as fresh.
+          dedupOutcome = 'fresh';
+        } else {
+          const cmp = SubmissionDedupService.compareWithinNoise(prevPrices, validatedPrices);
+          if (cmp === 'within-noise') dedupOutcome = 'confirm';
+          else if (cmp === 'beyond-noise') dedupOutcome = 'conflict';
+          else dedupOutcome = 'fuel-set-mismatch';
+        }
+      }
+    }
+
+    if (dedupOutcome === 'conflict') {
+      // P-3 (3.16 review) — single update inside detectAndRoutePriceConflict
+      // persists price_data + flips status in one operation, so a reader
+      // never sees a `pending` row with new prices but no conflict status.
+      // P-4 (3.16 review) — no `if (this.submissionsService)` guard; if DI
+      // is misconfigured we want the throw to bubble so BullMQ retries,
+      // not a silent no-op leaving the submission half-flipped.
+      // P-5 (3.16 review) — only emit the conflict_detected metric on
+      // success. On routing failure we log + re-throw via the worker's
+      // standard retry path (BullMQ); the submission is left in `pending`
+      // and the next attempt will re-run the consensus + conflict path.
+      try {
+        await this.submissionsService.detectAndRoutePriceConflict({
+          stationId,
+          newSubmissionId: submissionId,
+          newSubmissionUserId: updated.user_id,
+          newPriceData: validatedPrices,
+          newPricesHash,
+          prevPricesHash: consensus.prevPricesHash,
+        });
+        this.metricsCounter.incrementDedupDecision('conflict_detected');
+        this.logger.log(
+          `Submission ${submissionId}: price_conflict at station ${stationId} — paired for admin review`,
+        );
+      } catch (err) {
+        this.logger.error(
+          `Conflict routing failed for ${submissionId} at station ${stationId}: ${
+            err instanceof Error ? err.message : String(err)
+          } — letting BullMQ retry`,
+        );
+        throw err;
+      }
+      return;
+    }
+
     const priceRow = {
       stationId,
       prices: Object.fromEntries(valid.map(p => [p.fuel_type, p.price_per_litre])),
@@ -755,8 +896,18 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     // Update submission: mark verified, store validated prices only, null GPS atomically.
     // photo_r2_key intentionally kept — cleanup worker removes it after REJECTED_PHOTO_RETENTION_DAYS
     // so admins can view the photo in the review panel while it's still fresh.
-    await this.prisma.submission.update({
-      where: { id: submissionId },
+    //
+    // P-23 (3.16 review) — status guard. On a BullMQ retry where the
+    // first attempt already routed this submission (to shadow_rejected
+    // via the conflict path, or to rejected via low_trust/logo), the row
+    // is no longer `pending`. Without this guard, the verify-path update
+    // would clobber the prior terminal state and surface as a verified
+    // submission in production. Skip silently — research retention,
+    // setVerifiedPrice, auto-resolve, and consensus-record writes below
+    // all need a successful flip to be meaningful, so an early return is
+    // the safe path.
+    const verifyFlipped = await this.prisma.submission.updateMany({
+      where: { id: submissionId, status: SubmissionStatus.pending },
       data: {
         status: SubmissionStatus.verified,
         price_data: validatedPrices as unknown as Prisma.InputJsonValue,
@@ -764,6 +915,12 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         gps_lng: null,
       },
     });
+    if (verifyFlipped.count === 0) {
+      this.logger.log(
+        `Submission ${submissionId}: verify path skipped — row is no longer pending (likely retry after prior terminal state)`,
+      );
+      return;
+    }
 
     // Research retention: verified submissions are the high-signal samples for
     // the benchmark corpus — we want rawPrices (what OCR saw) AND validatedPrices
@@ -790,6 +947,51 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         `Failed to write price cache/history for station ${stationId}, submission ${submissionId}: ${err.message}`,
       ),
     );
+
+    // Story 3.16 — record the consensus state for this station so the next
+    // submission within 12h either corroborates, conflicts, or skips OCR.
+    // 'fuel-set-mismatch' deliberately does NOT touch the existing record —
+    // a different fuel set is a different scene, and we want a same-fuel-set
+    // submission later in the window to still be able to corroborate the
+    // original. All other outcomes write a record reflecting the new state.
+    //
+    // P-6 (3.16 review) — also skip the record write when consensusKnown
+    // is false (Redis blip or BullMQ retry that bypassed the L2 check).
+    // Writing `count: 1, confirmed: false` would clobber a record that may
+    // already be confirmed and re-enable OCR for the next submission.
+    if (consensus.consensusKnown && dedupOutcome !== 'fuel-set-mismatch') {
+      const record =
+        dedupOutcome === 'confirm'
+          ? { count: 2, confirmed: true, prices_hash: newPricesHash, last_at: Date.now() }
+          : { count: 1, confirmed: false, prices_hash: newPricesHash, last_at: Date.now() };
+      this.submissionDedupService.recordStationConsensus(stationId, record).catch((e: Error) =>
+        this.logger.warn(
+          `Failed to record consensus for station ${stationId}: ${e.message}`,
+        ),
+      );
+    }
+
+    // Story 3.16 — emit one decision metric per verified submission. fresh /
+    // confirm-on-exact-hash / confirm-on-noise / fuel-set-mismatch all reach
+    // here; conflict path returned earlier with its own metric.
+    if (dedupOutcome === 'confirm') {
+      // Distinguish exact-hash from noise so we can monitor how often OCR
+      // round-trips agree to the digit vs. land within ±0.05.
+      const decision = newPricesHash === consensus.prevPricesHash
+        ? 'corroborated_exact'
+        : 'corroborated_within_noise';
+      this.metricsCounter.incrementDedupDecision(decision);
+    } else if (dedupOutcome === 'fuel-set-mismatch') {
+      // P-25 (3.16 review) — distinct bucket so the cost split tells the
+      // truth about whether this submission seeded a fresh record or just
+      // happened past an unrelated existing one.
+      this.metricsCounter.incrementDedupDecision('fuel_set_mismatch');
+    } else {
+      // 'fresh' covers genuine fresh and legacy migration stub upgrade —
+      // both are "this submission seeds a record"
+      // from a cost perspective.
+      this.metricsCounter.incrementDedupDecision('fresh');
+    }
 
     // Story 3.14 AC6 — auto-resolve any earlier user-flagged-wrong submission
     // by the same driver at this station. The driver's resubmission counts as

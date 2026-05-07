@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Param,
+  ParseUUIDPipe,
   Query,
   Body,
   HttpCode,
@@ -10,7 +11,7 @@ import {
   ParseIntPipe,
   DefaultValuePipe,
 } from '@nestjs/common';
-import { IsOptional, IsString, IsArray, ValidateNested, IsNumber, IsPositive } from 'class-validator';
+import { IsOptional, IsString, IsArray, IsUUID, ValidateNested, IsNumber, IsPositive } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 import { CurrentUser } from '../auth/current-user.decorator.js';
@@ -42,6 +43,13 @@ class ApproveDto {
   @IsOptional()
   @IsString()
   stationId?: string;
+}
+
+class ConflictNewerDto {
+  // Story 3.16 — admin confirms which submission they consider "newer".
+  // Defensive: if the UI ever sends a stale id, the service rejects it.
+  @IsUUID()
+  submission_id!: string;
 }
 
 @Controller('v1/admin/submissions')
@@ -94,5 +102,53 @@ export class AdminSubmissionsController {
   async requeue(@Param('id') id: string, @CurrentUser() admin: User) {
     await this.service.requeue(id, admin.id);
     return { status: 'requeued' };
+  }
+
+  // ── Story 3.16: paired-review actions on a price_conflict pair ─────────────
+
+  /**
+   * Approve the newer half of a conflict pair: newer → verified, older →
+   * rejected with `auto_resolved_by_newer`. Body specifies which submission
+   * the admin considers "newer" so a stale UI can't accidentally approve
+   * the wrong row.
+   */
+  @Post('conflict/:conflictGroupId/approve-newer')
+  @HttpCode(HttpStatus.OK)
+  async approveNewer(
+    @Param('conflictGroupId', ParseUUIDPipe) conflictGroupId: string,
+    @Body() body: ConflictNewerDto,
+    @CurrentUser() admin: User,
+  ) {
+    await this.service.approveNewer(admin.id, conflictGroupId, body.submission_id);
+    return { status: 'resolved' };
+  }
+
+  /**
+   * Mark the newer half unusable: newer → rejected, older released back into
+   * single-row review (flag_reason + conflict_group_id cleared on older only).
+   */
+  @Post('conflict/:conflictGroupId/newer-unusable')
+  @HttpCode(HttpStatus.OK)
+  async markNewerUnusable(
+    @Param('conflictGroupId', ParseUUIDPipe) conflictGroupId: string,
+    @Body() body: ConflictNewerDto,
+    @CurrentUser() admin: User,
+  ) {
+    await this.service.markNewerUnusable(admin.id, conflictGroupId, body.submission_id);
+    return { status: 'resolved' };
+  }
+
+  /**
+   * Mark both halves unusable: both → rejected with `admin_marked_unusable`.
+   * Cache stays where it is (read-path resolves from prior verified or estimates).
+   */
+  @Post('conflict/:conflictGroupId/both-unusable')
+  @HttpCode(HttpStatus.OK)
+  async markBothUnusable(
+    @Param('conflictGroupId', ParseUUIDPipe) conflictGroupId: string,
+    @CurrentUser() admin: User,
+  ) {
+    await this.service.markBothUnusable(admin.id, conflictGroupId);
+    return { status: 'resolved' };
   }
 }

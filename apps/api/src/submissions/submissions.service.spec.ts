@@ -49,6 +49,8 @@ const mockPhotoPipelineWorker = {
 
 const mockSubmissionDedupService = {
   checkStationDedup: jest.fn(),
+  // Story 3.16: createSubmission's L1 path now calls checkStationConsensus.
+  checkStationConsensus: jest.fn(),
   liftDedup: jest.fn(),
 };
 
@@ -89,6 +91,11 @@ describe('SubmissionsService', () => {
     jest.clearAllMocks();
 
     mockSubmissionDedupService.checkStationDedup.mockResolvedValue(false);
+    mockSubmissionDedupService.checkStationConsensus.mockResolvedValue({
+      skip: false,
+      reason: 'fresh',
+      record: null,
+    });
     mockSubmissionDedupService.liftDedup.mockResolvedValue(undefined);
     // Default: user is not shadow-banned
     mockPrismaService.user.findUnique.mockResolvedValue({ shadow_banned: false });
@@ -382,10 +389,14 @@ describe('SubmissionsService', () => {
       expect(mockPhotoPipelineWorker.enqueue).not.toHaveBeenCalled();
     });
 
-    // ── Story 3.10: L1 station dedup ─────────────────────────────────────────
+    // ── Story 3.10/3.16: L1 station consensus check ─────────────────────────
 
-    it('L1 dedup hit: returns early without R2 upload when preselected station has fresh result', async () => {
-      mockSubmissionDedupService.checkStationDedup.mockResolvedValueOnce(true);
+    it('L1 dedup hit: returns early without R2 upload when consensus is confirmed (count: 2)', async () => {
+      mockSubmissionDedupService.checkStationConsensus.mockResolvedValueOnce({
+        skip: true,
+        reason: 'duplicate',
+        record: { count: 2, confirmed: true, prices_hash: 'abc', last_at: Date.now() },
+      });
 
       const result = await service.createSubmission('user-abc', photoBuffer, {
         ...baseFields,
@@ -398,8 +409,28 @@ describe('SubmissionsService', () => {
       expect(mockPhotoPipelineWorker.enqueue).not.toHaveBeenCalled();
     });
 
-    it('L1 dedup miss: proceeds normally when no fresh result for preselected station', async () => {
-      mockSubmissionDedupService.checkStationDedup.mockResolvedValueOnce(false);
+    it('L1 dedup miss: proceeds normally when consensus is fresh', async () => {
+      mockSubmissionDedupService.checkStationConsensus.mockResolvedValueOnce({
+        skip: false,
+        reason: 'fresh',
+        record: null,
+      });
+
+      await service.createSubmission('user-abc', photoBuffer, {
+        ...baseFields,
+        preselectedStationId: 'station-xyz',
+      });
+
+      expect(mockStorageService.uploadBuffer).toHaveBeenCalled();
+      expect(mockPrismaService.submission.create).toHaveBeenCalled();
+    });
+
+    it('L1 corroborate-candidate: proceeds normally so worker can confirm or conflict', async () => {
+      mockSubmissionDedupService.checkStationConsensus.mockResolvedValueOnce({
+        skip: false,
+        reason: 'corroborate-candidate',
+        record: { count: 1, confirmed: false, prices_hash: 'abc', last_at: Date.now() },
+      });
 
       await service.createSubmission('user-abc', photoBuffer, {
         ...baseFields,
@@ -411,7 +442,7 @@ describe('SubmissionsService', () => {
     });
 
     it('L1 dedup Redis error: proceeds normally (fail-open)', async () => {
-      mockSubmissionDedupService.checkStationDedup.mockRejectedValueOnce(new Error('Redis down'));
+      mockSubmissionDedupService.checkStationConsensus.mockRejectedValueOnce(new Error('Redis down'));
 
       await service.createSubmission('user-abc', photoBuffer, {
         ...baseFields,
@@ -425,7 +456,7 @@ describe('SubmissionsService', () => {
     it('L1 dedup skipped for GPS path (no preselectedStationId)', async () => {
       await service.createSubmission('user-abc', photoBuffer, baseFields); // preselectedStationId: null
 
-      expect(mockSubmissionDedupService.checkStationDedup).not.toHaveBeenCalled();
+      expect(mockSubmissionDedupService.checkStationConsensus).not.toHaveBeenCalled();
       expect(mockStorageService.uploadBuffer).toHaveBeenCalled();
     });
 
@@ -663,6 +694,227 @@ describe('SubmissionsService', () => {
 
       // No audit row written when nothing actually changed
       expect(mockPrismaService.adminAuditLog.create).not.toHaveBeenCalled();
+    });
+  });
+
+  // ── detectAndRoutePriceConflict (Story 3.16 AC7) ───────────────────────────
+
+  describe('detectAndRoutePriceConflict', () => {
+    const newSubmissionId = '11111111-1111-1111-1111-111111111111';
+    const newUserId = '22222222-2222-2222-2222-222222222222';
+    const stationId = '33333333-3333-3333-3333-333333333333';
+    const newPriceData = [
+      { fuel_type: 'PB_95', price_per_litre: 7.10 },
+      { fuel_type: 'ON', price_per_litre: 7.50 },
+    ];
+    const newPricesHash = 'new-hash-abc';
+
+    beforeEach(() => {
+      mockPrismaService.submission.findFirst.mockReset();
+      mockPrismaService.submission.findUnique.mockReset();
+      mockPrismaService.submission.updateMany.mockReset();
+      mockPrismaService.submission.update.mockReset();
+      mockPrismaService.adminAuditLog.create.mockReset();
+      mockPrismaService.adminAuditLog.create.mockResolvedValue({});
+      mockSubmissionDedupService.liftDedup.mockResolvedValue(undefined);
+      mockPriceService.setVerifiedPrice.mockResolvedValue(undefined);
+      mockPriceCacheService.invalidate.mockResolvedValue(undefined);
+    });
+
+    it('flips new submission FIRST, then partner — order matters for crash safety (P-2)', async () => {
+      // Track call order via the same mock; updateMany is called twice.
+      const callOrder: string[] = [];
+      mockPrismaService.submission.updateMany.mockImplementation((args: { where: { id?: string } }) => {
+        callOrder.push(args.where.id ?? 'unknown');
+        return Promise.resolve({ count: 1 });
+      });
+      mockPrismaService.submission.findFirst.mockResolvedValueOnce({ id: 'previous-sub' });
+
+      await service.detectAndRoutePriceConflict({
+        stationId,
+        newSubmissionId,
+        newSubmissionUserId: newUserId,
+        newPriceData,
+        newPricesHash,
+        prevPricesHash: 'prev-hash',
+      });
+
+      // P-2: new submission flipped before previous.
+      expect(callOrder[0]).toBe(newSubmissionId);
+      expect(callOrder[1]).toBe('previous-sub');
+    });
+
+    it('persists newPriceData + nulls GPS in the same flip (P-3 atomicity)', async () => {
+      mockPrismaService.submission.updateMany.mockResolvedValue({ count: 1 });
+      mockPrismaService.submission.findFirst.mockResolvedValueOnce(null);
+
+      await service.detectAndRoutePriceConflict({
+        stationId,
+        newSubmissionId,
+        newSubmissionUserId: newUserId,
+        newPriceData,
+        newPricesHash,
+        prevPricesHash: null,
+      });
+
+      const newSubFlip = mockPrismaService.submission.updateMany.mock.calls.find(
+        ([args]: [{ where: { id?: string } }]) => args.where.id === newSubmissionId,
+      );
+      expect(newSubFlip).toBeDefined();
+      expect(newSubFlip[0].data).toEqual(
+        expect.objectContaining({
+          status: 'shadow_rejected',
+          flag_reason: 'price_conflict',
+          gps_lat: null,
+          gps_lng: null,
+        }),
+      );
+      expect(newSubFlip[0].data.price_data).toEqual(newPriceData);
+    });
+
+    it('aborts cleanly when new submission is no longer pending (concurrent action)', async () => {
+      mockPrismaService.submission.updateMany.mockResolvedValueOnce({ count: 0 });
+
+      const result = await service.detectAndRoutePriceConflict({
+        stationId,
+        newSubmissionId,
+        newSubmissionUserId: newUserId,
+        newPriceData,
+        newPricesHash,
+        prevPricesHash: 'prev-hash',
+      });
+
+      expect(result.partner_submission_id).toBeNull();
+      // Did NOT proceed to find/flip previous, restore, lift, or audit.
+      expect(mockPrismaService.submission.findFirst).not.toHaveBeenCalled();
+      expect(mockSubmissionDedupService.liftDedup).not.toHaveBeenCalled();
+      expect(mockPrismaService.adminAuditLog.create).not.toHaveBeenCalled();
+    });
+
+    it('proceeds with newer-only routing when no previous verified submission exists', async () => {
+      mockPrismaService.submission.updateMany.mockResolvedValue({ count: 1 });
+      mockPrismaService.submission.findFirst.mockResolvedValueOnce(null); // no previous verified
+      // restorePreviousPrices internal call also needs findFirst → null again
+      mockPrismaService.submission.findFirst.mockResolvedValueOnce(null);
+
+      const result = await service.detectAndRoutePriceConflict({
+        stationId,
+        newSubmissionId,
+        newSubmissionUserId: newUserId,
+        newPriceData,
+        newPricesHash,
+        prevPricesHash: null,
+      });
+
+      expect(result.partner_submission_id).toBeNull();
+      expect(typeof result.conflict_group_id).toBe('string');
+      // Cache invalidated since no previous to restore from.
+      expect(mockPriceCacheService.invalidate).toHaveBeenCalledWith(stationId);
+      // Dedup lifted regardless.
+      expect(mockSubmissionDedupService.liftDedup).toHaveBeenCalledWith(stationId, null);
+    });
+
+    it('pairs both submissions and rolls cache back to a non-pair previous when one exists', async () => {
+      mockPrismaService.submission.updateMany.mockResolvedValue({ count: 1 });
+      // First findFirst: locating the partner (just-flipped)
+      mockPrismaService.submission.findFirst.mockResolvedValueOnce({ id: 'partner-sub' });
+      // Second findFirst: restorePreviousPrices looking past both pair members
+      mockPrismaService.submission.findFirst.mockResolvedValueOnce({
+        id: 'pre-conflict-sub',
+        price_data: [{ fuel_type: 'PB_95', price_per_litre: 6.49 }],
+        created_at: new Date('2026-05-06T10:00:00Z'),
+      });
+
+      const result = await service.detectAndRoutePriceConflict({
+        stationId,
+        newSubmissionId,
+        newSubmissionUserId: newUserId,
+        newPriceData,
+        newPricesHash,
+        prevPricesHash: 'prev-hash',
+      });
+
+      expect(result.partner_submission_id).toBe('partner-sub');
+      // restorePreviousPrices excludes BOTH pair members
+      const restoreCall = mockPrismaService.submission.findFirst.mock.calls[1][0];
+      expect(restoreCall.where.id).toEqual({ notIn: [newSubmissionId, 'partner-sub'] });
+      // Cache restored to the prior verified submission.
+      expect(mockPriceService.setVerifiedPrice).toHaveBeenCalled();
+    });
+
+    it('records audit log with actor_role: system and full notes JSON (P-1 + AC7)', async () => {
+      mockPrismaService.submission.updateMany.mockResolvedValue({ count: 1 });
+      mockPrismaService.submission.findFirst.mockResolvedValueOnce({ id: 'partner-sub' });
+      mockPrismaService.submission.findFirst.mockResolvedValueOnce(null);
+
+      await service.detectAndRoutePriceConflict({
+        stationId,
+        newSubmissionId,
+        newSubmissionUserId: newUserId,
+        newPriceData,
+        newPricesHash,
+        prevPricesHash: 'prev-hash-xyz',
+      });
+
+      const auditCall = mockPrismaService.adminAuditLog.create.mock.calls[0][0];
+      expect(auditCall.data.action).toBe('PRICE_CONFLICT_DETECTED');
+      expect(auditCall.data.submission_id).toBe(newSubmissionId);
+      // P-1: actor's user_id, not the magic 'system' string
+      expect(auditCall.data.admin_user_id).toBe(newUserId);
+      const notes = JSON.parse(auditCall.data.notes);
+      expect(notes).toEqual(
+        expect.objectContaining({
+          actor_role: 'system',
+          partner_submission_id: 'partner-sub',
+          prev_prices_hash: 'prev-hash-xyz',
+          new_prices_hash: newPricesHash,
+        }),
+      );
+      // conflict_group_id is also in notes
+      expect(typeof notes.conflict_group_id).toBe('string');
+    });
+
+    it('does not throw when audit log write fails (best-effort)', async () => {
+      mockPrismaService.submission.updateMany.mockResolvedValue({ count: 1 });
+      mockPrismaService.submission.findFirst.mockResolvedValueOnce(null);
+      mockPrismaService.submission.findFirst.mockResolvedValueOnce(null);
+      mockPrismaService.adminAuditLog.create.mockRejectedValueOnce(new Error('DB hiccup'));
+
+      await expect(
+        service.detectAndRoutePriceConflict({
+          stationId,
+          newSubmissionId,
+          newSubmissionUserId: newUserId,
+          newPriceData,
+          newPricesHash,
+          prevPricesHash: null,
+        }),
+      ).resolves.toEqual(
+        expect.objectContaining({ partner_submission_id: null }),
+      );
+    });
+
+    it('logs and continues when partner row was moved by another actor (count: 0 on partner flip)', async () => {
+      // First updateMany (new submission flip): success
+      mockPrismaService.submission.updateMany.mockResolvedValueOnce({ count: 1 });
+      // Second updateMany (partner flip): count: 0
+      mockPrismaService.submission.updateMany.mockResolvedValueOnce({ count: 0 });
+      mockPrismaService.submission.findFirst.mockResolvedValueOnce({ id: 'partner-sub' });
+      mockPrismaService.submission.findFirst.mockResolvedValueOnce(null);
+
+      const result = await service.detectAndRoutePriceConflict({
+        stationId,
+        newSubmissionId,
+        newSubmissionUserId: newUserId,
+        newPriceData,
+        newPricesHash,
+        prevPricesHash: 'prev-hash',
+      });
+
+      // partner_submission_id is null because the partner flip didn't take.
+      expect(result.partner_submission_id).toBeNull();
+      // The new submission still has the conflict_group_id, dedup is lifted.
+      expect(mockSubmissionDedupService.liftDedup).toHaveBeenCalledWith(stationId, null);
     });
   });
 });

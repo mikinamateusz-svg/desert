@@ -235,6 +235,9 @@ const translations = {
         low_trust: 'Niskie zaufanie',
         pb98_below_pb95: 'PB98 < PB95',
         on_premium_below_on: 'ON Premium < ON',
+        price_conflict: 'Sprzeczne ceny',
+        auto_resolved_by_newer: 'Zastąpione nowszym',
+        admin_marked_unusable: 'Oznaczone jako nieprzydatne',
       },
       columns: {
         station: 'Stacja',
@@ -275,6 +278,15 @@ const translations = {
       stationSearchError: 'Błąd wyszukiwania. Spróbuj ponownie.',
       stationSelected: 'Wybrano:',
       stationClear: 'Wyczyść',
+      // Story 3.16
+      reviewLink: 'Sprawdź',
+      conflictGroupBadge: 'Sprzeczne zgłoszenia',
+      conflictNewerLabel: 'Nowsze',
+      conflictOlderLabel: 'Starsze',
+      conflictApproveNewer: 'Zatwierdź nowsze',
+      conflictNewerUnusable: 'Nowsze nieprzydatne',
+      conflictBothUnusable: 'Oba nieprzydatne',
+      conflictResolveSuccess: 'Sprzeczność rozwiązana.',
     },
     stationClaims: {
       filterAll: 'Wszystkie',
@@ -534,6 +546,9 @@ const translations = {
         low_trust: 'Low trust score',
         pb98_below_pb95: 'PB98 < PB95',
         on_premium_below_on: 'ON Premium < ON',
+        price_conflict: 'Price conflict',
+        auto_resolved_by_newer: 'Superseded by newer',
+        admin_marked_unusable: 'Marked unusable',
       },
       columns: {
         station: 'Station',
@@ -574,6 +589,15 @@ const translations = {
       stationSearchError: 'Search failed. Try again.',
       stationSelected: 'Selected:',
       stationClear: 'Clear',
+      // Story 3.16
+      reviewLink: 'Review',
+      conflictGroupBadge: 'Conflicting submissions',
+      conflictNewerLabel: 'Newer',
+      conflictOlderLabel: 'Older',
+      conflictApproveNewer: 'Approve newer',
+      conflictNewerUnusable: 'Newer unusable',
+      conflictBothUnusable: 'Both unusable',
+      conflictResolveSuccess: 'Conflict resolved.',
     },
     stationClaims: {
       filterAll: 'All',
@@ -833,6 +857,9 @@ const translations = {
         low_trust: 'Низький рейтинг довіри',
         pb98_below_pb95: 'PB98 < PB95',
         on_premium_below_on: 'ON Premium < ON',
+        price_conflict: 'Сирпечні ціни',
+        auto_resolved_by_newer: 'Замінено новішим',
+        admin_marked_unusable: 'Позначено як непридатне',
       },
       columns: {
         station: 'Станція',
@@ -873,6 +900,15 @@ const translations = {
       stationSearchError: 'Помилка пошуку. Спробуйте ще раз.',
       stationSelected: 'Вибрано:',
       stationClear: 'Очистити',
+      reviewLink: 'Перевірити',
+      // Story 3.16
+      conflictGroupBadge: 'Сирпечні заявки',
+      conflictNewerLabel: 'Новіша',
+      conflictOlderLabel: 'Старіша',
+      conflictApproveNewer: 'Затвердити новішу',
+      conflictNewerUnusable: 'Новіша непридатна',
+      conflictBothUnusable: 'Обидві непридатні',
+      conflictResolveSuccess: 'Конфлікт вирішено.',
     },
     stationClaims: {
       filterAll: 'Усі',
@@ -1134,6 +1170,16 @@ export interface Translations {
     stationSearchError: string;
     stationSelected: string;
     stationClear: string;
+    /** Review-row link label ("Review →") on both single and paired cards. */
+    reviewLink: string;
+    // Story 3.16 — paired conflict card on the shadow_rejected queue.
+    conflictGroupBadge: string;
+    conflictNewerLabel: string;
+    conflictOlderLabel: string;
+    conflictApproveNewer: string;
+    conflictNewerUnusable: string;
+    conflictBothUnusable: string;
+    conflictResolveSuccess: string;
   };
   stationClaims: {
     filterAll: string;

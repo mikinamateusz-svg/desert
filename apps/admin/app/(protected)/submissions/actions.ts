@@ -55,6 +55,54 @@ export async function rejectSubmission(
   redirect('/submissions');
 }
 
+// ── Story 3.16: paired-review actions on a price_conflict pair ─────────────
+
+export async function approveNewerInConflict(
+  conflictGroupId: string,
+  newerSubmissionId: string,
+): Promise<ActionResult> {
+  try {
+    await adminFetch(`/v1/admin/submissions/conflict/${conflictGroupId}/approve-newer`, {
+      method: 'POST',
+      body: JSON.stringify({ submission_id: newerSubmissionId }),
+    });
+  } catch (e) {
+    if (e instanceof AdminApiError && e.status === 409) return { error: 'conflict' };
+    return { error: 'generic' };
+  }
+  redirect('/submissions');
+}
+
+export async function markNewerUnusableInConflict(
+  conflictGroupId: string,
+  newerSubmissionId: string,
+): Promise<ActionResult> {
+  try {
+    await adminFetch(`/v1/admin/submissions/conflict/${conflictGroupId}/newer-unusable`, {
+      method: 'POST',
+      body: JSON.stringify({ submission_id: newerSubmissionId }),
+    });
+  } catch (e) {
+    if (e instanceof AdminApiError && e.status === 409) return { error: 'conflict' };
+    return { error: 'generic' };
+  }
+  redirect('/submissions');
+}
+
+export async function markBothUnusableInConflict(
+  conflictGroupId: string,
+): Promise<ActionResult> {
+  try {
+    await adminFetch(`/v1/admin/submissions/conflict/${conflictGroupId}/both-unusable`, {
+      method: 'POST',
+    });
+  } catch (e) {
+    if (e instanceof AdminApiError && e.status === 409) return { error: 'conflict' };
+    return { error: 'generic' };
+  }
+  redirect('/submissions');
+}
+
 export async function detectLocaleAction(): Promise<string> {
   const cookieStore = await cookies();
   return cookieStore.get('locale')?.value ?? 'pl';

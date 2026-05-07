@@ -730,6 +730,40 @@ epics:
           L1 (API intake) + L2 (worker) station dedup via Redis 12h TTL key set after
           successful OCR. Hash dedup (SHA-256, 24h TTL) for exact duplicate photos.
           Both fail-open on Redis error. No new ENV vars — constants only.
+          2026-05-06 addendum: liftDedup method added under Story 3.14 (full key removal,
+          best-effort). Story 3.16 extends this further into a structured consensus record.
+
+      - id: 3.14
+        title: Self-Flag Wrong Prices (Driver-Initiated Withdrawal)
+        file: 3-14-self-flag-wrong-prices.md
+        status: done
+        ready_date: 2026-05-06
+        dev_started: 2026-05-06
+        dev_completed: 2026-05-06
+        review_date: 2026-05-06
+        review_findings: "18 patches applied (P-1..P-17 + BS-1) covering race conditions, stale-price restore, flag_reason allowlist, per-user throttle. 11 deferred items (D-1..D-11) ranging from AdminAuditLog rename to BullMQ-extracted auto-resolve. Spec authored from hand-drafted artifact via bmad-create-story; review via bmad-code-review."
+        patches_applied: "2026-05-06 — backend slice committed as 44f5ef1; review patches + mobile slice committed as a56484b; 1113 API + 31 mobile tests pass, type-check + lint clean."
+        note: >
+          Backend: POST /v1/submissions/:id/flag-wrong endpoint; FlagWrongThrottlerGuard
+          for per-user 5/hr throttle with admin shouldSkip bypass; auto-resolve cascade
+          when same driver re-submits at same station (paired with triggeringCreatedAt
+          to prevent BullMQ retry races). Mobile: confirmation sheet, optimistic UI,
+          thanks screen, reason-aware activity row copy. Preserves Story 4.3 shadow_banned
+          secrecy via explicit DRIVER_VISIBLE_FLAG_REASONS allowlist.
+
+      - id: 3.16
+        title: Consensus-Based Submission Dedup
+        file: 3-16-consensus-based-dedup.md
+        status: ready-for-dev
+        ready_date: 2026-05-06
+        note: >
+          Replaces 3.10's binary 12h dedup with a corroboration-based record:
+          first submission seeds, second corroborates (or conflicts), third+
+          skips OCR. Conflicts beyond ±0.05 PLN/l noise pair both submissions
+          via new conflict_group_id UUID column on Submission and route to
+          admin paired-review (newer-first cascade). Cache rolled back to prior
+          verified per the 3.14 restorePreviousPrices pattern. Backend-only;
+          schema migration is forward-only and additive. Cost ceiling: +$30/mo.
 
   - id: 4
     name: Admin Operations & Data Integrity

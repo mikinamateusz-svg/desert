@@ -9,6 +9,8 @@ export interface FlaggedSubmissionRow {
   created_at: string;
   user_id: string;
   flag_reason: string;
+  /** Story 3.16 — non-null only when this row is part of a price_conflict pair. */
+  conflict_group_id: string | null;
 }
 
 export interface FlaggedSubmissionDetail extends FlaggedSubmissionRow {
@@ -18,8 +20,23 @@ export interface FlaggedSubmissionDetail extends FlaggedSubmissionRow {
   gps_lng: number | null;
 }
 
+/**
+ * Story 3.16 — admin queue entry. `pair` collapses two `shadow_rejected`
+ * submissions sharing a `conflict_group_id` into a single card with both
+ * photos side-by-side and the AC9 actions; `single` matches the legacy
+ * one-row-one-card shape.
+ */
+export type FlaggedListItem =
+  | { kind: 'single'; submission: FlaggedSubmissionRow }
+  | {
+      kind: 'pair';
+      conflict_group_id: string;
+      newer: FlaggedSubmissionRow;
+      older: FlaggedSubmissionRow;
+    };
+
 export interface SubmissionListResult {
-  data: FlaggedSubmissionRow[];
+  data: FlaggedListItem[];
   total: number;
   page: number;
   limit: number;

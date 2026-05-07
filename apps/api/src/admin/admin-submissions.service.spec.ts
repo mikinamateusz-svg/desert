@@ -7,6 +7,7 @@ import { PriceService } from '../price/price.service.js';
 import { StorageService } from '../storage/storage.service.js';
 import { TrustScoreService } from '../user/trust-score.service.js';
 import { PhotoPipelineWorker } from '../photo/photo-pipeline.worker.js';
+import { SubmissionDedupService } from '../photo/submission-dedup.service.js';
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
 
@@ -42,6 +43,12 @@ const mockTrustScoreService = { updateScore: mockUpdateScore };
 
 const mockWorkerRequeue = jest.fn();
 const mockPhotoPipelineWorker = { requeue: mockWorkerRequeue };
+
+// Story 3.16 — admin uses dedup service to seed consensus on approveNewer.
+const mockRecordStationConsensus = jest.fn();
+const mockSubmissionDedupService = {
+  recordStationConsensus: mockRecordStationConsensus,
+};
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -81,6 +88,12 @@ describe('AdminSubmissionsService', () => {
     mockGetPresignedUrl.mockResolvedValue('https://r2.example.com/presigned');
     mockUpdateScore.mockResolvedValue(undefined);
     mockWorkerRequeue.mockResolvedValue(undefined);
+    mockRecordStationConsensus.mockResolvedValue(undefined);
+    // Story 3.16 P-21 — cross-page partner pre-fetch in listFlagged calls
+    // submission.findMany directly (outside the $transaction wrapper). Default
+    // empty so non-conflict listFlagged tests don't need to set this up.
+    mockSubmissionFindMany.mockResolvedValue([]);
+    mockSubmissionUpdateMany.mockResolvedValue({ count: 1 });
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -90,6 +103,7 @@ describe('AdminSubmissionsService', () => {
         { provide: StorageService, useValue: mockStorage },
         { provide: TrustScoreService, useValue: mockTrustScoreService },
         { provide: PhotoPipelineWorker, useValue: mockPhotoPipelineWorker },
+        { provide: SubmissionDedupService, useValue: mockSubmissionDedupService },
       ],
     }).compile();
 
@@ -108,6 +122,7 @@ describe('AdminSubmissionsService', () => {
         created_at: new Date('2026-04-01'),
         user_id: 'user-1',
         flag_reason: 'logo_mismatch',
+        conflict_group_id: null,
         station: { name: 'ORLEN Warszawa' },
       };
       mockTransaction.mockResolvedValue([[sub], 1]);
@@ -115,29 +130,348 @@ describe('AdminSubmissionsService', () => {
       const result = await service.listFlagged(1, 20);
 
       expect(result.data).toHaveLength(1);
-      expect(result.data[0].station_name).toBe('ORLEN Warszawa');
-      expect(result.data[0].flag_reason).toBe('logo_mismatch');
+      const item = result.data[0];
+      if (item.kind !== 'single') throw new Error('expected single');
+      expect(item.submission.station_name).toBe('ORLEN Warszawa');
+      expect(item.submission.flag_reason).toBe('logo_mismatch');
       expect(result.total).toBe(1);
       expect(result.page).toBe(1);
     });
 
     it('falls back to logo_mismatch when flag_reason is null (legacy rows)', async () => {
       mockTransaction.mockResolvedValue([
-        [{ id: SUB_ID, station_id: STATION_ID, price_data: [], ocr_confidence_score: null, created_at: new Date(), user_id: 'u1', flag_reason: null, station: null }],
+        [{ id: SUB_ID, station_id: STATION_ID, price_data: [], ocr_confidence_score: null, created_at: new Date(), user_id: 'u1', flag_reason: null, conflict_group_id: null, station: null }],
         1,
       ]);
       const result = await service.listFlagged(1, 20);
-      expect(result.data[0].flag_reason).toBe('logo_mismatch');
+      const item = result.data[0];
+      if (item.kind !== 'single') throw new Error('expected single');
+      expect(item.submission.flag_reason).toBe('logo_mismatch');
     });
 
     it('maps null station to null station_name', async () => {
       mockTransaction.mockResolvedValue([
-        [{ id: SUB_ID, station_id: null, price_data: [], ocr_confidence_score: null, created_at: new Date(), user_id: 'u1', flag_reason: null, station: null }],
+        [{ id: SUB_ID, station_id: null, price_data: [], ocr_confidence_score: null, created_at: new Date(), user_id: 'u1', flag_reason: null, conflict_group_id: null, station: null }],
         1,
       ]);
 
       const result = await service.listFlagged(1, 20);
-      expect(result.data[0].station_name).toBeNull();
+      const item = result.data[0];
+      if (item.kind !== 'single') throw new Error('expected single');
+      expect(item.submission.station_name).toBeNull();
+    });
+
+    // Story 3.16 — paired-card grouping by conflict_group_id
+
+    it('collapses two rows sharing a conflict_group_id into a single pair (newer-first)', async () => {
+      const groupId = 'group-uuid-1';
+      const older = {
+        id: 'sub-older',
+        station_id: STATION_ID,
+        price_data: [{ fuel_type: 'PB_95', price_per_litre: 6.5 }],
+        ocr_confidence_score: 0.9,
+        created_at: new Date('2026-05-07T10:00:00Z'),
+        user_id: 'user-1',
+        flag_reason: 'price_conflict',
+        conflict_group_id: groupId,
+        station: { name: 'ORLEN' },
+      };
+      const newer = {
+        ...older,
+        id: 'sub-newer',
+        created_at: new Date('2026-05-07T15:00:00Z'),
+        price_data: [{ fuel_type: 'PB_95', price_per_litre: 7.1 }],
+      };
+      // findMany orders ASC by created_at — older first.
+      mockTransaction.mockResolvedValue([[older, newer], 2]);
+
+      const result = await service.listFlagged(1, 20);
+
+      expect(result.data).toHaveLength(1);
+      const item = result.data[0];
+      if (item.kind !== 'pair') throw new Error('expected pair');
+      expect(item.conflict_group_id).toBe(groupId);
+      expect(item.newer.id).toBe('sub-newer');
+      expect(item.older.id).toBe('sub-older');
+    });
+
+    it('renders an orphan partner (only one of the pair on this page) as a single row', async () => {
+      const orphan = {
+        id: 'sub-orphan',
+        station_id: STATION_ID,
+        price_data: [{ fuel_type: 'PB_95', price_per_litre: 6.5 }],
+        ocr_confidence_score: 0.9,
+        created_at: new Date('2026-05-07T10:00:00Z'),
+        user_id: 'user-1',
+        flag_reason: 'price_conflict',
+        conflict_group_id: 'group-orphan',
+        station: { name: 'ORLEN' },
+      };
+      mockTransaction.mockResolvedValue([[orphan], 1]);
+      // Cross-page partner not present (returns empty).
+      mockSubmissionFindMany.mockResolvedValueOnce([]);
+
+      const result = await service.listFlagged(1, 20);
+
+      expect(result.data).toHaveLength(1);
+      const item = result.data[0];
+      if (item.kind !== 'single') throw new Error('expected single fallback for orphan');
+      expect(item.submission.id).toBe('sub-orphan');
+    });
+
+    it('P-21 — collapses pair when partner is on a different page (cross-page lookup)', async () => {
+      const groupId = 'group-uuid-xpage';
+      // Page 1 contains only the older row.
+      const olderInPage = {
+        id: 'sub-older',
+        station_id: STATION_ID,
+        price_data: [{ fuel_type: 'PB_95', price_per_litre: 6.5 }],
+        ocr_confidence_score: 0.9,
+        created_at: new Date('2026-05-07T10:00:00Z'),
+        user_id: 'user-1',
+        flag_reason: 'price_conflict',
+        conflict_group_id: groupId,
+        station: { name: 'ORLEN' },
+      };
+      // Newer row lives on a later page; the cross-page lookup pulls it.
+      const newerCrossPage = {
+        ...olderInPage,
+        id: 'sub-newer',
+        created_at: new Date('2026-05-07T15:00:00Z'),
+        price_data: [{ fuel_type: 'PB_95', price_per_litre: 7.1 }],
+      };
+      mockTransaction.mockResolvedValue([[olderInPage], 1]);
+      // Note: the in-page transaction-wrapped findMany is shadowed by
+      // mockTransaction's canned value — but Prisma's $transaction takes
+      // pre-created promises, so the underlying mock is invoked once for
+      // the in-page query (return value ignored) and once for the cross-
+      // page lookup. Discriminate via the where filter.
+      mockSubmissionFindMany.mockImplementation(
+        (args: { where?: { conflict_group_id?: { in: string[] } } }) =>
+          Promise.resolve(
+            Array.isArray(args?.where?.conflict_group_id?.in) ? [newerCrossPage] : [],
+          ),
+      );
+
+      const result = await service.listFlagged(1, 20);
+
+      expect(result.data).toHaveLength(1);
+      const item = result.data[0];
+      if (item.kind !== 'pair') throw new Error('expected pair from cross-page lookup');
+      expect(item.newer.id).toBe('sub-newer');
+      expect(item.older.id).toBe('sub-older');
+    });
+  });
+
+  // ── Story 3.16: paired-review actions ─────────────────────────────────────
+
+  describe('approveNewer / markNewerUnusable / markBothUnusable', () => {
+    const GROUP_ID = '00000000-0000-4000-8000-000000000001';
+    const NEWER_ID = '00000000-0000-4000-8000-0000000000ne';
+    const OLDER_ID = '00000000-0000-4000-8000-0000000000ol';
+
+    const makeRows = () => [
+      // findMany returns desc by created_at — newer first.
+      {
+        id: NEWER_ID,
+        station_id: STATION_ID,
+        price_data: [{ fuel_type: 'PB_95', price_per_litre: 7.1 }],
+        ocr_confidence_score: 0.9,
+        created_at: new Date('2026-05-07T15:00:00Z'),
+        user_id: 'user-newer',
+        flag_reason: 'price_conflict',
+        conflict_group_id: GROUP_ID,
+        station: { name: 'ORLEN' },
+      },
+      {
+        id: OLDER_ID,
+        station_id: STATION_ID,
+        price_data: [{ fuel_type: 'PB_95', price_per_litre: 6.49 }],
+        ocr_confidence_score: 0.92,
+        created_at: new Date('2026-05-07T10:00:00Z'),
+        user_id: 'user-older',
+        flag_reason: 'price_conflict',
+        conflict_group_id: GROUP_ID,
+        station: { name: 'ORLEN' },
+      },
+    ];
+
+    beforeEach(() => {
+      // P-9 — actions wrap their two updateMany calls in a $transaction
+      // callback. The default beforeEach implementation handles array form;
+      // for callback form we override here.
+      mockTransaction.mockImplementation(async (fn: unknown) => {
+        if (typeof fn === 'function') {
+          // The callback receives a tx with submission.updateMany
+          return await (fn as (tx: typeof mockPrisma) => Promise<unknown>)(mockPrisma);
+        }
+        return Promise.all((fn as Array<Promise<unknown>>).map((f) => f));
+      });
+    });
+
+    describe('approveNewer', () => {
+      it('flips newer→verified, older→rejected with auto_resolved_by_newer, writes cache, seeds consensus (P-9, P-12, P-24)', async () => {
+        mockSubmissionFindMany.mockResolvedValueOnce(makeRows());
+        mockSubmissionUpdateMany.mockResolvedValue({ count: 1 });
+
+        await service.approveNewer(ADMIN_ID, GROUP_ID, NEWER_ID);
+
+        // Both flips ran with status guards.
+        const newerFlip = mockSubmissionUpdateMany.mock.calls.find(
+          ([args]: [{ where: { id: string } }]) => args.where.id === NEWER_ID,
+        );
+        expect(newerFlip[0].data).toEqual({ status: 'verified', flag_reason: null });
+        const olderFlip = mockSubmissionUpdateMany.mock.calls.find(
+          ([args]: [{ where: { id: string } }]) => args.where.id === OLDER_ID,
+        );
+        expect(olderFlip[0].data).toEqual({
+          status: 'rejected',
+          flag_reason: 'auto_resolved_by_newer',
+        });
+        // Cache written with newer prices.
+        expect(mockSetVerifiedPrice).toHaveBeenCalled();
+        // P-24: consensus seeded confirmed=true.
+        expect(mockRecordStationConsensus).toHaveBeenCalledWith(
+          STATION_ID,
+          expect.objectContaining({ count: 2, confirmed: true }),
+        );
+        // P-12: distinct audit actions per row.
+        const auditCalls = mockAuditLogCreate.mock.calls.map(
+          ([{ data }]: [{ data: { action: string; submission_id: string } }]) => ({
+            action: data.action,
+            sub: data.submission_id,
+          }),
+        );
+        expect(auditCalls).toContainEqual({ action: 'APPROVE_NEWER', sub: NEWER_ID });
+        expect(auditCalls).toContainEqual({ action: 'AUTO_RESOLVED_BY_NEWER', sub: OLDER_ID });
+      });
+
+      it('throws ConflictException + rolls back when older flip returns count: 0', async () => {
+        mockSubmissionFindMany.mockResolvedValueOnce(makeRows());
+        // Newer flip succeeds, older flip returns 0 (concurrent action moved it)
+        mockSubmissionUpdateMany
+          .mockResolvedValueOnce({ count: 1 })
+          .mockResolvedValueOnce({ count: 0 });
+
+        await expect(service.approveNewer(ADMIN_ID, GROUP_ID, NEWER_ID)).rejects.toThrow(
+          ConflictException,
+        );
+      });
+
+      it('throws BadRequestException when submitted newerSubmissionId is not the newer half', async () => {
+        mockSubmissionFindMany.mockResolvedValueOnce(makeRows());
+        await expect(
+          service.approveNewer(ADMIN_ID, GROUP_ID, OLDER_ID),
+        ).rejects.toThrow(BadRequestException);
+      });
+
+      it('throws ConflictException when pair is no longer intact (rows < 2)', async () => {
+        mockSubmissionFindMany.mockResolvedValueOnce([makeRows()[0]]);
+        await expect(
+          service.approveNewer(ADMIN_ID, GROUP_ID, NEWER_ID),
+        ).rejects.toThrow(ConflictException);
+      });
+
+      it('throws ConflictException when group has > 2 active members (P-22)', async () => {
+        const rows = makeRows();
+        const third = { ...rows[1], id: 'sub-third', created_at: new Date('2026-05-07T08:00:00Z') };
+        mockSubmissionFindMany.mockResolvedValueOnce([...rows, third]);
+        await expect(
+          service.approveNewer(ADMIN_ID, GROUP_ID, NEWER_ID),
+        ).rejects.toThrow(ConflictException);
+      });
+    });
+
+    describe('markNewerUnusable', () => {
+      it('rejects newer + releases older to single-row review with distinct audit actions', async () => {
+        mockSubmissionFindMany.mockResolvedValueOnce(makeRows());
+        mockSubmissionUpdateMany.mockResolvedValue({ count: 1 });
+
+        await service.markNewerUnusable(ADMIN_ID, GROUP_ID, NEWER_ID);
+
+        const newerFlip = mockSubmissionUpdateMany.mock.calls.find(
+          ([args]: [{ where: { id: string } }]) => args.where.id === NEWER_ID,
+        );
+        expect(newerFlip[0].data).toEqual({
+          status: 'rejected',
+          flag_reason: 'admin_marked_unusable',
+        });
+        const olderFlip = mockSubmissionUpdateMany.mock.calls.find(
+          ([args]: [{ where: { id: string } }]) => args.where.id === OLDER_ID,
+        );
+        expect(olderFlip[0].data).toEqual({
+          flag_reason: null,
+          conflict_group_id: null,
+        });
+        // P-12: distinct audit actions
+        const auditActions = mockAuditLogCreate.mock.calls.map(
+          ([{ data }]: [{ data: { action: string } }]) => data.action,
+        );
+        expect(auditActions).toContain('MARK_NEWER_UNUSABLE');
+        expect(auditActions).toContain('RELEASE_OLDER_TO_SINGLE_REVIEW');
+        // No cache write or consensus seed on the unusable path.
+        expect(mockSetVerifiedPrice).not.toHaveBeenCalled();
+        expect(mockRecordStationConsensus).not.toHaveBeenCalled();
+      });
+
+      it('throws ConflictException + rolls back when older release returns count: 0', async () => {
+        mockSubmissionFindMany.mockResolvedValueOnce(makeRows());
+        mockSubmissionUpdateMany
+          .mockResolvedValueOnce({ count: 1 }) // newer flip ok
+          .mockResolvedValueOnce({ count: 0 }); // older release: 0
+
+        await expect(
+          service.markNewerUnusable(ADMIN_ID, GROUP_ID, NEWER_ID),
+        ).rejects.toThrow(ConflictException);
+      });
+    });
+
+    describe('markBothUnusable', () => {
+      it('rejects both rows + audits only the rows it actually flipped (P-10)', async () => {
+        // First findMany: targets pre-update (capture what we WILL flip).
+        // updateMany returns count: 2.
+        mockSubmissionFindMany.mockResolvedValueOnce([
+          { id: NEWER_ID },
+          { id: OLDER_ID },
+        ]);
+        mockSubmissionUpdateMany.mockResolvedValueOnce({ count: 2 });
+
+        await service.markBothUnusable(ADMIN_ID, GROUP_ID);
+
+        const updateCall = mockSubmissionUpdateMany.mock.calls[0][0];
+        expect(updateCall.where).toEqual(
+          expect.objectContaining({
+            id: { in: [NEWER_ID, OLDER_ID] },
+            status: 'shadow_rejected',
+            flag_reason: 'price_conflict',
+          }),
+        );
+        expect(updateCall.data).toEqual({
+          status: 'rejected',
+          flag_reason: 'admin_marked_unusable',
+        });
+        // P-10: audit only the rows we captured pre-update.
+        expect(mockAuditLogCreate).toHaveBeenCalledTimes(2);
+      });
+
+      it('throws ConflictException when no rows match the price_conflict pre-flip predicate', async () => {
+        mockSubmissionFindMany.mockResolvedValueOnce([]);
+        await expect(service.markBothUnusable(ADMIN_ID, GROUP_ID)).rejects.toThrow(
+          ConflictException,
+        );
+        // No updateMany when targets is empty.
+        expect(mockSubmissionUpdateMany).not.toHaveBeenCalled();
+      });
+
+      it('does NOT throw when an audit log write fails (P-11 best-effort)', async () => {
+        mockSubmissionFindMany.mockResolvedValueOnce([{ id: NEWER_ID }, { id: OLDER_ID }]);
+        mockSubmissionUpdateMany.mockResolvedValueOnce({ count: 2 });
+        mockAuditLogCreate
+          .mockResolvedValueOnce({})
+          .mockRejectedValueOnce(new Error('DB hiccup'));
+
+        await expect(service.markBothUnusable(ADMIN_ID, GROUP_ID)).resolves.toBeUndefined();
+      });
     });
   });
 

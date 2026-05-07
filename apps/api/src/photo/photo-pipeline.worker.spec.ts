@@ -16,6 +16,7 @@ import { PriceService } from '../price/price.service.js';
 import { PriceValidationService } from '../price/price-validation.service.js';
 import { OcrSpendService } from './ocr-spend.service.js';
 import { SubmissionDedupService } from './submission-dedup.service.js';
+import { MetricsCounterService } from '../metrics/metrics-counter.service.js';
 import { TrustScoreService } from '../user/trust-score.service.js';
 import { ResearchRetentionService } from '../research/research-retention.service.js';
 import { Worker, type Job } from 'bullmq';
@@ -58,7 +59,16 @@ jest.mock('ioredis', () =>
 const mockPrismaService = {
   submission: {
     findUnique: jest.fn(),
+    // Story 3.16: findFirst used by the consensus path to fetch the previous
+    // verified submission's price_data when hashes differ but we need to
+    // run compareWithinNoise. Default null = no previous → treated as fresh.
+    findFirst: jest.fn().mockResolvedValue(null),
     update: jest.fn(),
+    // P-23 (3.16 review) — verify-path and rule-based shadow_reject use
+    // updateMany with a status guard to no-op on a BullMQ retry where the
+    // prior attempt already routed the row. Default count: 1 = guard
+    // matched, status flip applied, pipeline continues normally.
+    updateMany: jest.fn().mockResolvedValue({ count: 1 }),
   },
   stationFuelStaleness: {
     deleteMany: jest.fn(),
@@ -106,6 +116,9 @@ const mockSubmissionDedupService = {
   checkHashDedup: jest.fn(),
   recordStationDedup: jest.fn(),
   recordHashDedup: jest.fn(),
+  // Story 3.16 — consensus methods replace the binary station dedup.
+  checkStationConsensus: jest.fn(),
+  recordStationConsensus: jest.fn(),
 };
 
 const mockTrustScoreService = {
@@ -120,6 +133,18 @@ const mockResearchRetention = {
 
 const mockSubmissionsService = {
   autoResolveFlaggedAtStation: jest.fn().mockResolvedValue(undefined),
+  // Story 3.16 — invoked from the verify path when prices disagree beyond noise.
+  detectAndRoutePriceConflict: jest.fn().mockResolvedValue({
+    conflict_group_id: 'mock-group-uuid',
+    partner_submission_id: null,
+  }),
+};
+
+const mockMetricsCounter = {
+  incrementDedupDecision: jest.fn(),
+  incrementMapView: jest.fn(),
+  getDedupDecisionsByDate: jest.fn(),
+  getMapViewsByDate: jest.fn(),
 };
 
 // ── Test fixtures ──────────────────────────────────────────────────────────
@@ -246,11 +271,19 @@ describe('PhotoPipelineWorker', () => {
     mockOcrSpendService.recordSpend.mockResolvedValue(0.5);
     mockOcrSpendService.getSpendCap.mockResolvedValue(20);
 
-    // SubmissionDedupService — default: no duplicates, recording succeeds
+    // SubmissionDedupService — default: no duplicates, recording succeeds.
+    // Story 3.16: checkStationConsensus defaults to 'fresh' so the verify
+    // path runs through the new code without conflict-routing.
     mockSubmissionDedupService.checkStationDedup.mockResolvedValue(false);
     mockSubmissionDedupService.checkHashDedup.mockResolvedValue(false);
     mockSubmissionDedupService.recordStationDedup.mockResolvedValue(undefined);
     mockSubmissionDedupService.recordHashDedup.mockResolvedValue(undefined);
+    mockSubmissionDedupService.checkStationConsensus.mockResolvedValue({
+      skip: false,
+      reason: 'fresh',
+      record: null,
+    });
+    mockSubmissionDedupService.recordStationConsensus.mockResolvedValue(undefined);
 
     // TrustScoreService — default: update succeeds
     mockTrustScoreService.updateScore.mockResolvedValue(undefined);
@@ -280,6 +313,7 @@ describe('PhotoPipelineWorker', () => {
         { provide: TrustScoreService, useValue: mockTrustScoreService },
         { provide: ResearchRetentionService, useValue: mockResearchRetention },
         { provide: SubmissionsService, useValue: mockSubmissionsService },
+        { provide: MetricsCounterService, useValue: mockMetricsCounter },
       ],
     }).compile();
 
@@ -358,6 +392,7 @@ describe('PhotoPipelineWorker', () => {
           { provide: TrustScoreService, useValue: mockTrustScoreService },
           { provide: ResearchRetentionService, useValue: mockResearchRetention },
           { provide: SubmissionsService, useValue: mockSubmissionsService },
+          { provide: MetricsCounterService, useValue: mockMetricsCounter },
         ],
       }).compile();
 
@@ -1672,8 +1707,10 @@ describe('PhotoPipelineWorker', () => {
 
         await capturedProcessor!(makeJob('sub-123'));
 
-        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+        // P-23 (3.16 review) — verify uses updateMany with status guard
+        expect(mockPrismaService.submission.updateMany).toHaveBeenCalledWith(
           expect.objectContaining({
+            where: { id: 'sub-123', status: 'pending' },
             data: expect.objectContaining({ status: 'verified' }),
           }),
         );
@@ -1688,7 +1725,7 @@ describe('PhotoPipelineWorker', () => {
 
         await capturedProcessor!(makeJob('sub-123'));
 
-        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+        expect(mockPrismaService.submission.updateMany).toHaveBeenCalledWith(
           expect.objectContaining({
             data: expect.objectContaining({
               status: 'verified',
@@ -1703,7 +1740,7 @@ describe('PhotoPipelineWorker', () => {
 
         await capturedProcessor!(makeJob('sub-123'));
 
-        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+        expect(mockPrismaService.submission.updateMany).toHaveBeenCalledWith(
           expect.objectContaining({
             data: expect.not.objectContaining({ photo_r2_key: null }),
           }),
@@ -1760,7 +1797,7 @@ describe('PhotoPipelineWorker', () => {
         await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
 
         // Submission is still marked verified despite cache/history write failure
-        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+        expect(mockPrismaService.submission.updateMany).toHaveBeenCalledWith(
           expect.objectContaining({ data: expect.objectContaining({ status: 'verified' }) }),
         );
       });
@@ -1772,7 +1809,7 @@ describe('PhotoPipelineWorker', () => {
         await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
 
         // Submission is still marked verified despite R2 error
-        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+        expect(mockPrismaService.submission.updateMany).toHaveBeenCalledWith(
           expect.objectContaining({ data: expect.objectContaining({ status: 'verified' }) }),
         );
       });
@@ -1885,7 +1922,7 @@ describe('PhotoPipelineWorker', () => {
         expect(outOfBandWarning![0]).toContain('tier3_out_of_range');
 
         // Valid price still goes through
-        expect(mockPrismaService.submission.update).toHaveBeenCalledWith(
+        expect(mockPrismaService.submission.updateMany).toHaveBeenCalledWith(
           expect.objectContaining({ data: expect.objectContaining({ status: 'verified' }) }),
         );
       });
@@ -2035,11 +2072,15 @@ describe('PhotoPipelineWorker', () => {
   // ── Story 3.10: Submission Deduplication ──────────────────────────────────
 
   describe('Story 3.10 — submission deduplication', () => {
-    describe('L2 station dedup', () => {
-      it('rejects with duplicate_submission and skips OCR when station has fresh result', async () => {
+    describe('L2 station consensus (Story 3.16)', () => {
+      it('rejects with duplicate_submission and skips OCR when consensus is confirmed (count: 2)', async () => {
         mockPrismaService.submission.findUnique.mockResolvedValueOnce(pendingSubmission);
         mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
-        mockSubmissionDedupService.checkStationDedup.mockResolvedValueOnce(true);
+        mockSubmissionDedupService.checkStationConsensus.mockResolvedValueOnce({
+          skip: true,
+          reason: 'duplicate',
+          record: { count: 2, confirmed: true, prices_hash: 'abc', last_at: Date.now() },
+        });
 
         await capturedProcessor!(makeJob('sub-123'));
 
@@ -2051,24 +2092,44 @@ describe('PhotoPipelineWorker', () => {
         );
       });
 
-      it('proceeds to OCR when station has no fresh result', async () => {
+      it('proceeds to OCR when consensus is fresh (no record)', async () => {
         mockPrismaService.submission.findUnique
           .mockResolvedValueOnce(pendingSubmission)
           .mockResolvedValueOnce(submissionAfterOcr);
         mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
-        mockSubmissionDedupService.checkStationDedup.mockResolvedValueOnce(false);
+        mockSubmissionDedupService.checkStationConsensus.mockResolvedValueOnce({
+          skip: false,
+          reason: 'fresh',
+          record: null,
+        });
 
         await capturedProcessor!(makeJob('sub-123'));
 
         expect(mockOcrService.extractPrices).toHaveBeenCalled();
       });
 
-      it('proceeds to OCR (fail-open) when station dedup Redis check throws', async () => {
+      it('proceeds to OCR when consensus is corroborate-candidate (count: 1)', async () => {
         mockPrismaService.submission.findUnique
           .mockResolvedValueOnce(pendingSubmission)
           .mockResolvedValueOnce(submissionAfterOcr);
         mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
-        mockSubmissionDedupService.checkStationDedup.mockRejectedValueOnce(new Error('Redis down'));
+        mockSubmissionDedupService.checkStationConsensus.mockResolvedValueOnce({
+          skip: false,
+          reason: 'corroborate-candidate',
+          record: { count: 1, confirmed: false, prices_hash: 'abc', last_at: Date.now() },
+        });
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockOcrService.extractPrices).toHaveBeenCalled();
+      });
+
+      it('proceeds to OCR (fail-open) when consensus Redis check throws', async () => {
+        mockPrismaService.submission.findUnique
+          .mockResolvedValueOnce(pendingSubmission)
+          .mockResolvedValueOnce(submissionAfterOcr);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockSubmissionDedupService.checkStationConsensus.mockRejectedValueOnce(new Error('Redis down'));
 
         await capturedProcessor!(makeJob('sub-123'));
 
@@ -2106,7 +2167,7 @@ describe('PhotoPipelineWorker', () => {
     });
 
     describe('dedup key recording', () => {
-      it('records station and hash dedup keys after successful OCR', async () => {
+      it('records consensus and hash dedup keys after successful verification', async () => {
         mockPrismaService.submission.findUnique
           .mockResolvedValueOnce(pendingSubmission)
           .mockResolvedValueOnce(submissionAfterOcr);
@@ -2114,7 +2175,15 @@ describe('PhotoPipelineWorker', () => {
 
         await capturedProcessor!(makeJob('sub-123'));
 
-        expect(mockSubmissionDedupService.recordStationDedup).toHaveBeenCalledWith('station-abc');
+        // Story 3.16: consensus written from the verify path with count: 1, confirmed: false
+        expect(mockSubmissionDedupService.recordStationConsensus).toHaveBeenCalledWith(
+          'station-abc',
+          expect.objectContaining({
+            count: 1,
+            confirmed: false,
+            prices_hash: expect.stringMatching(/^[0-9a-f]{64}$/),
+          }),
+        );
         expect(mockSubmissionDedupService.recordHashDedup).toHaveBeenCalledWith(
           expect.stringMatching(/^[0-9a-f]{64}$/),
         );
@@ -2133,16 +2202,16 @@ describe('PhotoPipelineWorker', () => {
 
         await capturedProcessor!(makeJob('sub-123'));
 
-        expect(mockSubmissionDedupService.recordStationDedup).not.toHaveBeenCalled();
+        expect(mockSubmissionDedupService.recordStationConsensus).not.toHaveBeenCalled();
         expect(mockSubmissionDedupService.recordHashDedup).not.toHaveBeenCalled();
       });
 
-      it('does not throw when recordStationDedup fails — dedup recording is non-critical', async () => {
+      it('does not throw when recordStationConsensus fails — recording is non-critical', async () => {
         mockPrismaService.submission.findUnique
           .mockResolvedValueOnce(pendingSubmission)
           .mockResolvedValueOnce(submissionAfterOcr);
         mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
-        mockSubmissionDedupService.recordStationDedup.mockRejectedValueOnce(new Error('Redis down'));
+        mockSubmissionDedupService.recordStationConsensus.mockRejectedValueOnce(new Error('Redis down'));
         mockSubmissionDedupService.recordHashDedup.mockRejectedValueOnce(new Error('Redis down'));
 
         await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
@@ -2150,18 +2219,23 @@ describe('PhotoPipelineWorker', () => {
     });
 
     describe('BullMQ retry safety', () => {
-      it('skips L2 station dedup on retry (ocr_confidence_score already set) — prevents false rejection', async () => {
+      it('skips L2 consensus check on retry (ocr_confidence_score already set) — prevents false rejection', async () => {
         mockPrismaService.submission.findUnique
           .mockResolvedValueOnce(retrySubmission)
           .mockResolvedValueOnce(submissionAfterOcr);
         mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
-        // Station dedup would hit (key was set in prior attempt) — but check must be skipped
-        mockSubmissionDedupService.checkStationDedup.mockResolvedValueOnce(true);
+        // Consensus would mark this as duplicate (record was confirmed in prior attempt) —
+        // but the check must be skipped on retry so the OCR'd row still verifies.
+        mockSubmissionDedupService.checkStationConsensus.mockResolvedValueOnce({
+          skip: true,
+          reason: 'duplicate',
+          record: { count: 2, confirmed: true, prices_hash: 'abc', last_at: Date.now() },
+        });
 
         await capturedProcessor!(makeJob('sub-123'));
 
-        // L2 dedup check must NOT have been called
-        expect(mockSubmissionDedupService.checkStationDedup).not.toHaveBeenCalled();
+        // L2 consensus check must NOT have been called
+        expect(mockSubmissionDedupService.checkStationConsensus).not.toHaveBeenCalled();
         // Pipeline must proceed to OCR
         expect(mockOcrService.extractPrices).toHaveBeenCalled();
       });

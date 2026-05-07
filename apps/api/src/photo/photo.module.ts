@@ -12,6 +12,7 @@ import { RedisModule } from '../redis/redis.module.js';
 import { UserModule } from '../user/user.module.js';
 import { ResearchModule } from '../research/research.module.js';
 import { SubmissionsModule } from '../submissions/submissions.module.js';
+import { MetricsModule } from '../metrics/metrics.module.js';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { SubmissionsModule } from '../submissions/submissions.module.js';
     RedisModule,
     UserModule,
     ResearchModule,
+    MetricsModule,
     forwardRef(() => SubmissionsModule),
   ],
   providers: [PhotoPipelineWorker, PhotoCleanupWorker, OcrSpendService, SubmissionDedupService],

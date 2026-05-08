@@ -35,6 +35,12 @@ export interface CreateSubmissionFields {
   gpsLng: number | null;
   manualPrice: number | null;
   preselectedStationId: string | null;
+  // Story 3.20 — capture-screen telemetry. All optional; pre-3.20 clients
+  // omit them (the row stays null on those fields).
+  gpsAcquiredAtCapture?: boolean | null;
+  gpsAcquisitionMs?: number | null;
+  overrideUsed?: boolean | null;
+  nearbyStationsCount?: number | null;
 }
 
 const FLAG_WRONG_WINDOW_MS = 24 * 3600 * 1000;
@@ -252,6 +258,13 @@ export class SubmissionsService {
           gps_lng: fields.gpsLng,
           price_data: [{ fuel_type: fields.fuelType, price_per_litre: fields.manualPrice }],
           status: SubmissionStatus.pending,
+          // Story 3.20 — capture-screen telemetry pass-through. Undefined
+          // becomes null in Prisma; pre-3.20 clients omit these fields and
+          // the row stays null.
+          gps_acquired_at_capture: fields.gpsAcquiredAtCapture ?? null,
+          gps_acquisition_ms: fields.gpsAcquisitionMs ?? null,
+          override_used: fields.overrideUsed ?? null,
+          nearby_stations_count: fields.nearbyStationsCount ?? null,
         },
       });
     } catch (dbErr) {

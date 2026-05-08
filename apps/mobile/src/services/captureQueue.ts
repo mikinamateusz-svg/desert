@@ -18,6 +18,7 @@ export async function enqueueSubmission(result: CaptureResult): Promise<void> {
     gpsLat: result.gpsLat,
     gpsLng: result.gpsLng,
     capturedAt: result.capturedAt,
+    telemetry: result.telemetry,
   });
   // Fire-and-forget — caller does not await the network upload
   void processQueue();

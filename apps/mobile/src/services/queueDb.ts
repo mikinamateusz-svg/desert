@@ -1,5 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 import type { FuelType } from '@desert/types';
+import type { CaptureTelemetry } from '../types/contribution';
 
 const db = SQLite.openDatabaseSync('desert_queue.db');
 
@@ -18,9 +19,25 @@ db.execSync(`
     status TEXT NOT NULL DEFAULT 'pending',
     retry_count INTEGER NOT NULL DEFAULT 0,
     next_retry_at INTEGER,
-    created_at INTEGER NOT NULL DEFAULT (unixepoch('now') * 1000)
+    created_at INTEGER NOT NULL DEFAULT (unixepoch('now') * 1000),
+    telemetry_json TEXT
   )
 `);
+
+// Story 3.20 — additive migration for installs that already have the table.
+// SQLite ALTER TABLE ADD COLUMN throws "duplicate column" if applied twice;
+// catch only that specific error so real schema problems (locked DB, syntax
+// errors after future schema changes, etc.) still surface in console / crash
+// reports rather than being silently swallowed.
+try {
+  db.execSync(`ALTER TABLE capture_queue ADD COLUMN telemetry_json TEXT`);
+} catch (e) {
+  const msg = e instanceof Error ? e.message.toLowerCase() : String(e).toLowerCase();
+  if (!msg.includes('duplicate column')) {
+    throw e;
+  }
+  // duplicate-column case — column already exists, ignore.
+}
 
 /** No-op — table is created at module load. Kept so call sites remain self-documenting. */
 export function initQueueDb(): void {}
@@ -37,6 +54,7 @@ export interface QueueRow {
   status: 'pending' | 'failed';
   retry_count: number;
   next_retry_at: number | null;
+  telemetry_json: string | null;
 }
 
 export function insertQueueEntry(entry: {
@@ -47,10 +65,11 @@ export function insertQueueEntry(entry: {
   gpsLat?: number;
   gpsLng?: number;
   capturedAt: string;
+  telemetry?: CaptureTelemetry;
 }): void {
   db.runSync(
-    `INSERT INTO capture_queue (photo_uri, fuel_type, manual_price, preselected_station_id, gps_lat, gps_lng, captured_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO capture_queue (photo_uri, fuel_type, manual_price, preselected_station_id, gps_lat, gps_lng, captured_at, telemetry_json)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       entry.photoUri,
       entry.fuelType,
@@ -59,6 +78,7 @@ export function insertQueueEntry(entry: {
       entry.gpsLat ?? null,
       entry.gpsLng ?? null,
       entry.capturedAt,
+      entry.telemetry ? JSON.stringify(entry.telemetry) : null,
     ],
   );
 }

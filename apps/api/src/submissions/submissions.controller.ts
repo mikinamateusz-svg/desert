@@ -85,6 +85,13 @@ export class SubmissionsController {
       gpsLng: parseOptionalFloat(fields['gps_lng']),
       manualPrice: parseOptionalFloat(fields['manual_price']),
       preselectedStationId: fields['preselected_station_id'] || null,
+      // Story 3.20 — capture-screen telemetry. All four fields are optional;
+      // pre-3.20 clients omit them and the row stays null. Per-field bounds
+      // reject absurd values (P5 from 3.20 review).
+      gpsAcquiredAtCapture: parseOptionalBool(fields['gps_acquired_at_capture']),
+      gpsAcquisitionMs: parseOptionalInt(fields['gps_acquisition_ms'], GPS_ACQUISITION_MS_MAX),
+      overrideUsed: parseOptionalBool(fields['override_used']),
+      nearbyStationsCount: parseOptionalInt(fields['nearby_stations_count'], NEARBY_COUNT_MAX),
     });
   }
 
@@ -117,4 +124,27 @@ function parseOptionalFloat(val: string | undefined): number | null {
   if (!val || val === '') return null;
   const n = parseFloat(val);
   return isNaN(n) || !isFinite(n) ? null : n;
+}
+
+// Story 3.20 — telemetry parsers. Per-field upper bounds reject absurd
+// values (malicious or buggy clients) before they hit the DB. The mobile
+// client also clamps `nearby_stations_count` at 99 — server-side bounds
+// are defence-in-depth, not the only line.
+const NEARBY_COUNT_MAX = 99;
+const GPS_ACQUISITION_MS_MAX = 10 * 60 * 1000; // 10 minutes
+
+function parseOptionalBool(val: string | undefined): boolean | null {
+  if (val === 'true' || val === '1') return true;
+  if (val === 'false' || val === '0') return false;
+  return null;
+}
+
+// P5 (3.20 review) — accept a per-field max so each numeric telemetry
+// field can have its own ceiling (`gps_acquisition_ms` and
+// `nearby_stations_count` differ by 4 orders of magnitude).
+function parseOptionalInt(val: string | undefined, max: number): number | null {
+  if (!val || val === '') return null;
+  const n = parseInt(val, 10);
+  if (isNaN(n) || !isFinite(n) || n < 0 || n > max) return null;
+  return n;
 }

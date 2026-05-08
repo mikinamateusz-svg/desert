@@ -51,6 +51,13 @@ export interface FlaggedSubmissionDetail extends FlaggedSubmissionRow {
    * is missing, or the notes JSON is malformed.
    */
   restored_from_submission_id: string | null;
+  // Story 3.20 — capture-screen telemetry. All four optional; pre-3.20 rows
+  // are null on every field. Detail page renders the block only when at
+  // least one is non-null.
+  gps_acquired_at_capture: boolean | null;
+  gps_acquisition_ms: number | null;
+  override_used: boolean | null;
+  nearby_stations_count: number | null;
 }
 
 /**
@@ -394,6 +401,11 @@ export class AdminSubmissionsService {
         photo_r2_key: true,
         gps_lat: true,
         gps_lng: true,
+        // Story 3.20 — capture telemetry surfaced on the firehose detail page.
+        gps_acquired_at_capture: true,
+        gps_acquisition_ms: true,
+        override_used: true,
+        nearby_stations_count: true,
         station: { select: { name: true, brand: true } },
       },
     });
@@ -449,6 +461,11 @@ export class AdminSubmissionsService {
       gps_lat: submission.gps_lat != null ? Math.round(submission.gps_lat * 10000) / 10000 : null,
       gps_lng: submission.gps_lng != null ? Math.round(submission.gps_lng * 10000) / 10000 : null,
       restored_from_submission_id,
+      // Story 3.20 — capture-screen telemetry pass-through.
+      gps_acquired_at_capture: submission.gps_acquired_at_capture,
+      gps_acquisition_ms: submission.gps_acquisition_ms,
+      override_used: submission.override_used,
+      nearby_stations_count: submission.nearby_stations_count,
     };
   }
 

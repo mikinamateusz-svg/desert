@@ -27,6 +27,7 @@ import { LocationRequiredScreen } from '../../src/components/contribution/Locati
 import { StationDisambiguationSheet } from '../../src/components/contribution/StationDisambiguationSheet';
 import type { FuelType } from '@desert/types';
 import type { StationDto } from '../../src/api/stations';
+import type { CaptureTelemetry } from '../../src/types/contribution';
 
 const NEARBY_RADIUS_M = 200;
 const MIN_FREE_BYTES = 5 * 1024 * 1024; // 5 MB
@@ -54,6 +55,14 @@ const MAX_AUTO_REMOUNTS = 3;
 // stay stuck on the same broken session.
 const REMOUNT_GAP_MS = 250;
 
+// Story 3.20 — soft GPS gate on the shutter. Disabled until either GPS
+// acquires or this timeout elapses. Tuned for "fast enough not to feel like
+// friction; long enough to catch the common cold-fix case". Median outdoor
+// first-fix on modern phones is ~2-4s, so 6s clears most healthy paths
+// invisibly while bounding the wait for bad-GPS environments. Tune from
+// telemetry post-launch.
+const GPS_GATE_TIMEOUT_MS = 6000;
+
 type ScreenState =
   | 'camera'
   | 'quality-check'
@@ -71,13 +80,16 @@ interface CapturedPhoto {
   gpsLat?: number;
   gpsLng?: number;
   capturedAt: string;
+  // Story 3.20 — captured at shutter-press; threaded through all three
+  // submit paths (happy path, use-anyway from quality check, disambiguation).
+  telemetry: CaptureTelemetry;
 }
 
 export default function CaptureScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { accessToken } = useAuth();
-  const { location, permissionDenied } = useLocation();
+  const { location, permissionDenied, firstFixAtMs, resetFirstFix } = useLocation();
   const { fuelType: storedFuelType } = useFuelTypePreference();
   const [permission, requestPermission] = useCameraPermissions();
 
@@ -127,6 +139,16 @@ export default function CaptureScreen() {
 
   const [selectedFuelType] = useState<FuelType>(storedFuelType);
 
+  // Story 3.20 — GPS gate. The shutter is disabled until either GPS acquires
+  // (`location != null`) or the override timer fires GPS_GATE_TIMEOUT_MS
+  // after the screen mounts/remounts. `gateMountedAtRef` is the screen-mount
+  // timestamp used to compute both the override fire moment and the
+  // `gps_acquisition_ms` telemetry. `overrideActive` flips true when the
+  // timer elapses without a GPS lock; flips back false on subsequent GPS
+  // acquisition or screen remount.
+  const gateMountedAtRef = useRef<number>(Date.now());
+  const [overrideActive, setOverrideActive] = useState(false);
+
   // Reuse nearby stations hook — centre on current GPS while on camera screen
   const { stations } = useNearbyStations(accessToken, location);
 
@@ -137,15 +159,23 @@ export default function CaptureScreen() {
       )
     : [];
 
-  // GPS indicator text
+  // GPS indicator text — Story 3.20 gates this on GPS state + override.
+  // Three rendering states beyond multiple-nearby:
+  //   - no GPS, gate active        → "Locating..." (with caller adding spinner)
+  //   - no GPS, override fired     → "No GPS — review will be manual"
+  //   - GPS, exactly 1 nearby      → "📍 Station · Xm"
+  //   - GPS, 0 nearby              → "No station nearby"
+  //   - GPS, ≥2 nearby             → null (disambiguation handles it post-capture)
   const gpsIndicator: string | null = (() => {
-    if (!location) return t('contribution.gpsLocating');
+    if (!location) {
+      return overrideActive ? t('contribution.gpsOverride') : t('contribution.gpsLocating');
+    }
     if (nearbyStations.length === 1) {
       const s = nearbyStations[0]!;
       const dist = Math.round(haversineMetres(location.lat, location.lng, s.lat, s.lng));
       return `📍 ${s.name} · ${dist}m`;
     }
-    if (nearbyStations.length === 0) return t('contribution.gpsLocating');
+    if (nearbyStations.length === 0) return t('contribution.gpsNoNearby');
     return null; // multiple — show nothing until post-capture disambiguation
   })();
 
@@ -179,8 +209,34 @@ export default function CaptureScreen() {
       setCaptureNearbyStations([]);
       setScreenState(prev => (prev === 'location-required' || prev === 'error' ? prev : 'camera'));
       remountCamera();
-    }, [remountCamera]),
+      // Story 3.20 — reset the GPS gate timer + override state + first-fix
+      // timestamp on every focus. A user who switched apps and came back
+      // gets a fresh 6s window AND a fresh acquisition-time measurement,
+      // measured from this moment — not from the original mount or the
+      // useLocation hook's first-ever fix (which could be minutes earlier
+      // and produce a negative gps_acquisition_ms).
+      gateMountedAtRef.current = Date.now();
+      setOverrideActive(false);
+      resetFirstFix();
+    }, [remountCamera, resetFirstFix]),
   );
+
+  // Story 3.20 — GPS gate timer. Fires GPS_GATE_TIMEOUT_MS after the screen
+  // mount/focus and unlocks the shutter via `overrideActive`. Cleared on
+  // GPS acquisition (effect dep on `location`), on override-already-active
+  // (no-op), and on unmount. Re-arms whenever the screen regains focus.
+  useEffect(() => {
+    if (location) {
+      // GPS acquired — clear any prior override state and skip arming the timer.
+      if (overrideActive) setOverrideActive(false);
+      return;
+    }
+    if (overrideActive) return; // already fired — nothing to arm
+    const id = setTimeout(() => {
+      setOverrideActive(true);
+    }, GPS_GATE_TIMEOUT_MS);
+    return () => clearTimeout(id);
+  }, [location, overrideActive]);
 
   useEffect(() => {
     const sub = AppState.addEventListener('change', (state) => {
@@ -243,6 +299,10 @@ export default function CaptureScreen() {
 
   const handleCapture = useCallback(async () => {
     if (!cameraRef.current || isCapturing) return;
+    // Story 3.20 — gate guard: shutter is disabled in JSX when !location &&
+    // !overrideActive, but defend the handler too against any code path that
+    // bypasses the disabled state (e.g. programmatic trigger).
+    if (!location && !overrideActive) return;
     setIsCapturing(true);
 
     try {
@@ -268,7 +328,6 @@ export default function CaptureScreen() {
       const gpsLng = location?.lng;
       const capturedAt = new Date().toISOString();
 
-      setCapturedPhoto({ uri: compressed.uri, gpsLat, gpsLng, capturedAt });
       // Compute post-capture nearby stations
       const nearbyAtCapture = location
         ? stations.filter(s =>
@@ -276,6 +335,27 @@ export default function CaptureScreen() {
           )
         : [];
       setCaptureNearbyStations(nearbyAtCapture);
+
+      // Story 3.20 — capture-screen telemetry. Computed at the moment the
+      // user pressed the shutter; the queue helper threads it through to
+      // the multipart payload. `gpsAcquisitionMs` is null when GPS never
+      // acquired (override-fired path); `overrideUsed` is the inverse.
+      const telemetry: CaptureTelemetry = {
+        gpsAcquiredAtCapture: location != null,
+        // Defensive Math.max(0, ...) — resetFirstFix() should make negatives
+        // unreachable, but device-clock skew or a race between the focus
+        // reset and an in-flight watch callback could still produce one.
+        // Clamping to 0 preserves "GPS was instantly available" semantics
+        // rather than letting the server filter reject as null.
+        gpsAcquisitionMs:
+          firstFixAtMs != null
+            ? Math.max(0, firstFixAtMs - gateMountedAtRef.current)
+            : null,
+        overrideUsed: overrideActive,
+        nearbyStationsCount: Math.min(nearbyAtCapture.length, 99),
+      };
+
+      setCapturedPhoto({ uri: compressed.uri, gpsLat, gpsLng, capturedAt, telemetry });
 
       // Quality check
       const flag = await runQualityCheck(compressed.uri);
@@ -297,6 +377,7 @@ export default function CaptureScreen() {
             gpsLat,
             gpsLng,
             capturedAt,
+            telemetry,
           });
           router.replace({ pathname: '/(app)/confirm', params: { stationName: matchedName } });
         } catch {
@@ -309,7 +390,7 @@ export default function CaptureScreen() {
     } finally {
       setIsCapturing(false);
     }
-  }, [cameraRef, isCapturing, location, stations, runQualityCheck, t]);
+  }, [cameraRef, isCapturing, location, stations, runQualityCheck, t, overrideActive, firstFixAtMs, selectedFuelType]);
 
   const handleUseAnyway = useCallback(async () => {
     if (captureNearbyStations.length >= 2) {
@@ -329,6 +410,7 @@ export default function CaptureScreen() {
         gpsLat: capturedPhoto.gpsLat,
         gpsLng: capturedPhoto.gpsLng,
         capturedAt: capturedPhoto.capturedAt,
+        telemetry: capturedPhoto.telemetry,
       });
       router.replace({ pathname: '/(app)/confirm', params: { stationName: matchedName } });
     } catch {
@@ -354,6 +436,7 @@ export default function CaptureScreen() {
         gpsLat: capturedPhoto.gpsLat,
         gpsLng: capturedPhoto.gpsLng,
         capturedAt: capturedPhoto.capturedAt,
+        telemetry: capturedPhoto.telemetry,
       });
       router.replace({ pathname: '/(app)/confirm', params: { stationName: matchedStation?.name } });
     } catch {
@@ -430,9 +513,23 @@ export default function CaptureScreen() {
             </View>
           )}
 
-          {/* GPS station indicator — top center */}
+          {/* GPS station indicator — top center.
+              Story 3.20 — adds a small spinner while GPS is acquiring (gate
+              active, neither location nor override) so the user sees progress
+              on a disabled shutter. Override-active state shows a ⚠ glyph
+              instead, complementing the amber shutter border. */}
           {gpsIndicator && (
             <View style={[styles.gpsIndicator, { top: insets.top + 56 }]}>
+              {!location && !overrideActive && (
+                <ActivityIndicator
+                  size="small"
+                  color={tokens.neutral.n0}
+                  style={styles.gpsIndicatorSpinner}
+                />
+              )}
+              {overrideActive && !location && (
+                <Text style={styles.gpsIndicatorWarning}>⚠ </Text>
+              )}
               <Text style={styles.gpsIndicatorText}>{gpsIndicator}</Text>
             </View>
           )}
@@ -478,12 +575,22 @@ export default function CaptureScreen() {
             })}
           </View>
 
-          {/* Capture button — bottom center */}
+          {/* Capture button — bottom center.
+              Story 3.20 — gated until GPS acquires OR the 6s override timer
+              fires. When override is active, render a subtly-different
+              warning style so the user notices they're proceeding without
+              GPS (the indicator copy reinforces this). */}
           <TouchableOpacity
-            style={[styles.captureButton, { bottom: insets.bottom + 32 }]}
+            style={[
+              styles.captureButton,
+              { bottom: insets.bottom + 32 },
+              !location && !overrideActive && styles.captureButtonDisabled,
+              overrideActive && !location && styles.captureButtonOverride,
+            ]}
             onPress={() => void handleCapture()}
-            disabled={isCapturing || !cameraReady}
+            disabled={isCapturing || !cameraReady || (!location && !overrideActive)}
             accessibilityLabel={t('contribution.takePhoto')}
+            accessibilityState={{ disabled: !location && !overrideActive }}
             accessibilityRole="button"
           />
 
@@ -585,6 +692,8 @@ const styles = StyleSheet.create({
   gpsIndicator: {
     position: 'absolute',
     alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.6)',
     borderRadius: tokens.radius.full,
     paddingVertical: 6,
@@ -595,6 +704,17 @@ const styles = StyleSheet.create({
     color: tokens.neutral.n0,
     fontSize: 13,
     fontWeight: '500',
+  },
+  // Story 3.20 — spinner alongside the indicator while GPS is acquiring.
+  gpsIndicatorSpinner: {
+    marginRight: 6,
+    transform: [{ scale: 0.8 }], // visual size ~13px
+  },
+  // Story 3.20 — amber warning glyph when override is active.
+  gpsIndicatorWarning: {
+    color: 'rgb(245, 158, 11)',
+    fontSize: 13,
+    fontWeight: '600',
   },
 
   // Cancel button
@@ -672,6 +792,13 @@ const styles = StyleSheet.create({
     backgroundColor: tokens.neutral.n0,
     borderWidth: 4,
     borderColor: 'rgba(255,255,255,0.5)',
+  },
+  // Story 3.20 — visual states for the GPS gate.
+  captureButtonDisabled: {
+    opacity: 0.4,
+  },
+  captureButtonOverride: {
+    borderColor: 'rgba(245, 158, 11, 0.85)', // amber to telegraph "no GPS"
   },
 
   // Zoom selector

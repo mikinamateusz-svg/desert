@@ -32,6 +32,13 @@ export interface FlaggedSubmissionDetail extends FlaggedSubmissionRow {
    * null when the row isn't `user_flagged_wrong`.
    */
   restored_from_submission_id: string | null;
+  // Story 3.20 — capture-screen telemetry. Optional; pre-3.20 rows have
+  // all four null. Surfaced as a separate detail block when at least one
+  // is non-null.
+  gps_acquired_at_capture: boolean | null;
+  gps_acquisition_ms: number | null;
+  override_used: boolean | null;
+  nearby_stations_count: number | null;
 }
 
 // Story 3.18 — submission status mirrors Prisma enum but stays as a string

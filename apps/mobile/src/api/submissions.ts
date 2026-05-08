@@ -121,6 +121,35 @@ export async function uploadSubmission(
   if (entry.gps_lng != null) formData.append('gps_lng', String(entry.gps_lng));
   formData.append('captured_at', entry.captured_at);
 
+  // Story 3.20 — capture-screen telemetry. Stored as JSON in the queue row;
+  // unpack into individual form fields for the backend (which expects them
+  // flat, not nested). Tolerate malformed JSON silently — telemetry is
+  // diagnostic, must never block an upload.
+  if (entry.telemetry_json) {
+    try {
+      const t = JSON.parse(entry.telemetry_json) as {
+        gpsAcquiredAtCapture?: boolean;
+        gpsAcquisitionMs?: number | null;
+        overrideUsed?: boolean;
+        nearbyStationsCount?: number;
+      };
+      if (typeof t.gpsAcquiredAtCapture === 'boolean') {
+        formData.append('gps_acquired_at_capture', t.gpsAcquiredAtCapture ? 'true' : 'false');
+      }
+      if (typeof t.gpsAcquisitionMs === 'number' && Number.isFinite(t.gpsAcquisitionMs)) {
+        formData.append('gps_acquisition_ms', String(t.gpsAcquisitionMs));
+      }
+      if (typeof t.overrideUsed === 'boolean') {
+        formData.append('override_used', t.overrideUsed ? 'true' : 'false');
+      }
+      if (typeof t.nearbyStationsCount === 'number' && Number.isFinite(t.nearbyStationsCount)) {
+        formData.append('nearby_stations_count', String(t.nearbyStationsCount));
+      }
+    } catch {
+      // malformed telemetry JSON — skip silently
+    }
+  }
+
   // Do NOT set Content-Type — let fetch set multipart/form-data with boundary automatically
   const res = await fetch(`${API_BASE}/v1/submissions`, {
     method: 'POST',

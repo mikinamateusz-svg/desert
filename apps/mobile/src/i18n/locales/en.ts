@@ -271,6 +271,8 @@ export default {
     cameraStuck: "Camera didn't start. Tap to retry.",
     goToSettings: 'Go to Settings',
     gpsLocating: 'Matching station…',
+    gpsNoNearby: 'No station nearby — submission will be reviewed manually',
+    gpsOverride: "No GPS — you can still take a photo, we'll review manually",
     frameHint: 'Point camera at price board',
     takePhoto: 'Take photo',
     cancel: 'Cancel',

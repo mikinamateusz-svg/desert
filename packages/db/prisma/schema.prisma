@@ -153,6 +153,14 @@ model Submission {
   // express partial WHERE in @@index, so the index is intentionally omitted
   // from this schema — runtime queries still use it via the optimizer.
   conflict_group_id    String?          @db.Uuid
+  // Story 3.20 — capture-screen telemetry. Set by the mobile client at
+  // submission time, used to tune the GPS-gate timeout post-launch and to
+  // diagnose why a submission landed unmatched. All four nullable for
+  // forward-compat with pre-3.20 rows.
+  gps_acquired_at_capture Boolean?
+  gps_acquisition_ms      Int?
+  override_used           Boolean?
+  nearby_stations_count   Int?
   created_at           DateTime         @default(now())
   updated_at           DateTime         @updatedAt
   user                 User             @relation(fields: [user_id], references: [id])

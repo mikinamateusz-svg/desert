@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import * as Location from 'expo-location';
 
 export type LocationCoords = { lat: number; lng: number };
@@ -17,15 +17,49 @@ const TIME_INTERVAL_MS = 4000;
  * Previous implementation used `getCurrentPositionAsync` once on mount, which
  * caused the capture screen to show stale matches while moving — see Story 3.11
  * alpha field test.
+ *
+ * Story 3.20 — also exposes `firstFixAtMs` (Date.now() of the first non-null
+ * fix, or null if not yet acquired) so the capture screen can compute
+ * `gps_acquisition_ms` telemetry. Captured once on the first fix per the
+ * "acquisition window" defined by `resetFirstFix()` — callers (capture screen
+ * focus effect) call that to start a new measurement window when the user
+ * returns to the screen, otherwise the prior session's timestamp would carry
+ * over and produce a negative `gps_acquisition_ms` against a fresh mount
+ * timestamp.
  */
 export function useLocation(): {
   location: LocationCoords | null;
   permissionDenied: boolean;
   loading: boolean;
+  firstFixAtMs: number | null;
+  /** Story 3.20 — restart the first-fix measurement window. Capture screen
+   *  calls this from useFocusEffect so the next GPS fix produces a fresh
+   *  `firstFixAtMs` relative to that focus moment. */
+  resetFirstFix: () => void;
 } {
   const [location, setLocation] = useState<LocationCoords | null>(null);
   const [permissionDenied, setPermissionDenied] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [firstFixAtMs, setFirstFixAtMs] = useState<number | null>(null);
+  // Mutable ref tracks whether the *current* acquisition window has already
+  // captured a first fix. resetFirstFix flips it false so the next fix
+  // arriving (or already-current fix being re-emitted on movement) records
+  // a new firstFixAtMs.
+  const firstFixCapturedRef = useRef(false);
+
+  const resetFirstFix = useCallback(() => {
+    firstFixCapturedRef.current = false;
+    setFirstFixAtMs(null);
+    // If GPS is already locked at the moment of reset (re-focus on a
+    // long-mounted hook), record the reset moment itself as the "fix"
+    // timestamp so the caller's gpsAcquisitionMs computes 0 (instant
+    // acquisition) instead of staying null until the next watch event,
+    // which only fires on movement and could be many seconds away.
+    if (location) {
+      firstFixCapturedRef.current = true;
+      setFirstFixAtMs(Date.now());
+    }
+  }, [location]);
 
   useEffect(() => {
     let cancelled = false;
@@ -53,6 +87,10 @@ export function useLocation(): {
           });
           if (!cancelled && !watchHasFired) {
             setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+            if (!firstFixCapturedRef.current) {
+              firstFixCapturedRef.current = true;
+              setFirstFixAtMs(Date.now());
+            }
           }
         } catch {
           // Initial fix failed — watch callbacks will populate once GPS warms up.
@@ -70,6 +108,10 @@ export function useLocation(): {
             if (cancelled) return;
             watchHasFired = true;
             setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+            if (!firstFixCapturedRef.current) {
+              firstFixCapturedRef.current = true;
+              setFirstFixAtMs(Date.now());
+            }
           },
         );
       } catch {
@@ -85,5 +127,5 @@ export function useLocation(): {
     };
   }, []);
 
-  return { location, permissionDenied, loading };
+  return { location, permissionDenied, loading, firstFixAtMs, resetFirstFix };
 }

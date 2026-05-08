@@ -121,6 +121,12 @@ describe('SubmissionsController', () => {
           gpsLng: 21.0122,
           manualPrice: 6.54,
           preselectedStationId: 'station-abc',
+          // Story 3.20 — telemetry fields default to null when omitted by the
+          // mobile client (pre-3.20 callers don't send them).
+          gpsAcquiredAtCapture: null,
+          gpsAcquisitionMs: null,
+          overrideUsed: null,
+          nearbyStationsCount: null,
         },
       );
     });
@@ -151,7 +157,102 @@ describe('SubmissionsController', () => {
           gpsLng: null,
           manualPrice: null,
           preselectedStationId: null,
+          gpsAcquiredAtCapture: null,
+          gpsAcquisitionMs: null,
+          overrideUsed: null,
+          nearbyStationsCount: null,
         },
+      );
+    });
+
+    // Story 3.20 — telemetry fields parsed and forwarded.
+    it('parses capture-screen telemetry fields when provided', async () => {
+      mockSubmissionsService.createSubmission.mockResolvedValueOnce(undefined);
+
+      const req = makeMockReq({
+        parts: [
+          { type: 'file', fieldname: 'photo', toBuffer: async () => photoBuffer },
+          { type: 'field', fieldname: 'fuel_type', value: 'PB_95' },
+          { type: 'field', fieldname: 'gps_acquired_at_capture', value: 'true' },
+          { type: 'field', fieldname: 'gps_acquisition_ms', value: '3200' },
+          { type: 'field', fieldname: 'override_used', value: 'false' },
+          { type: 'field', fieldname: 'nearby_stations_count', value: '2' },
+        ],
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await controller.create(req as any, 'user-uuid');
+
+      expect(mockSubmissionsService.createSubmission).toHaveBeenCalledWith(
+        'user-uuid',
+        photoBuffer,
+        expect.objectContaining({
+          gpsAcquiredAtCapture: true,
+          gpsAcquisitionMs: 3200,
+          overrideUsed: false,
+          nearbyStationsCount: 2,
+        }),
+      );
+    });
+
+    it('rejects absurd telemetry values via the int parser clamp', async () => {
+      mockSubmissionsService.createSubmission.mockResolvedValueOnce(undefined);
+
+      const req = makeMockReq({
+        parts: [
+          { type: 'file', fieldname: 'photo', toBuffer: async () => photoBuffer },
+          { type: 'field', fieldname: 'fuel_type', value: 'PB_95' },
+          // Above GPS_ACQUISITION_MS_MAX (10 minutes) → null
+          { type: 'field', fieldname: 'gps_acquisition_ms', value: '99999999' },
+          // Negative → null
+          { type: 'field', fieldname: 'nearby_stations_count', value: '-5' },
+          // Garbage bool → null
+          { type: 'field', fieldname: 'override_used', value: 'maybe' },
+        ],
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await controller.create(req as any, 'user-uuid');
+
+      expect(mockSubmissionsService.createSubmission).toHaveBeenCalledWith(
+        'user-uuid',
+        photoBuffer,
+        expect.objectContaining({
+          gpsAcquisitionMs: null,
+          nearbyStationsCount: null,
+          overrideUsed: null,
+        }),
+      );
+    });
+
+    // P5 (3.20 review) — field-specific clamps. Previously a shared max
+    // would let nearby_stations_count: 500_000 through (above NEARBY_COUNT_MAX
+    // = 99 but below GPS_ACQUISITION_MS_MAX = 600_000). Verify each field
+    // is rejected against its own upper bound.
+    it('rejects nearby_stations_count above 99 (its field-specific cap)', async () => {
+      mockSubmissionsService.createSubmission.mockResolvedValueOnce(undefined);
+
+      const req = makeMockReq({
+        parts: [
+          { type: 'file', fieldname: 'photo', toBuffer: async () => photoBuffer },
+          { type: 'field', fieldname: 'fuel_type', value: 'PB_95' },
+          // 100 is just over the cap — should be rejected
+          { type: 'field', fieldname: 'nearby_stations_count', value: '100' },
+          // 5_000 is well within GPS_ACQUISITION_MS_MAX — should pass
+          { type: 'field', fieldname: 'gps_acquisition_ms', value: '5000' },
+        ],
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await controller.create(req as any, 'user-uuid');
+
+      expect(mockSubmissionsService.createSubmission).toHaveBeenCalledWith(
+        'user-uuid',
+        photoBuffer,
+        expect.objectContaining({
+          nearbyStationsCount: null,
+          gpsAcquisitionMs: 5000,
+        }),
       );
     });
 

@@ -273,6 +273,8 @@ export default {
     cameraStuck: 'Aparat się nie uruchomił. Dotknij, aby spróbować ponownie.',
     goToSettings: 'Przejdź do ustawień',
     gpsLocating: 'Dopasowywanie stacji…',
+    gpsNoNearby: 'Brak stacji w pobliżu — zdjęcie zostanie sprawdzone ręcznie',
+    gpsOverride: 'Brak GPS — możesz zrobić zdjęcie, sprawdzimy ręcznie',
     frameHint: 'Skieruj aparat na tablicę z cenami',
     takePhoto: 'Zrób zdjęcie',
     cancel: 'Anuluj',

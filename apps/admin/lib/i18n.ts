@@ -320,6 +320,13 @@ const translations = {
       // Story 3.17 — admin detail page for user_flagged_wrong rows
       restoredFromLabel: 'Przywrócono z',
       restoredFromNone: 'brak (cache odświeżony estymatami)',
+      // Story 3.20 — capture-screen telemetry on the firehose detail page
+      captureGpsAtCaptureLabel: 'GPS w momencie zdjęcia',
+      captureGpsAcquisitionMsLabel: 'Czas pozyskania GPS',
+      captureOverrideUsedLabel: 'Użyto obejścia (timeout)',
+      captureNearbyStationsCountLabel: 'Stacje w pobliżu',
+      yes: 'Tak',
+      no: 'Nie',
     },
     stationClaims: {
       filterAll: 'Wszystkie',
@@ -660,6 +667,13 @@ const translations = {
       confirmBothUnusableYes: 'Yes, both unusable',
       restoredFromLabel: 'Restored from',
       restoredFromNone: 'none (cache fell back to estimates)',
+      // Story 3.20
+      captureGpsAtCaptureLabel: 'GPS at capture',
+      captureGpsAcquisitionMsLabel: 'GPS acquisition time',
+      captureOverrideUsedLabel: 'Override used (timeout)',
+      captureNearbyStationsCountLabel: 'Nearby stations',
+      yes: 'Yes',
+      no: 'No',
     },
     stationClaims: {
       filterAll: 'All',
@@ -1000,6 +1014,13 @@ const translations = {
       confirmBothUnusableYes: 'Так, обидві непридатні',
       restoredFromLabel: 'Відновлено з',
       restoredFromNone: 'немає (кеш повернувся до оцінок)',
+      // Story 3.20
+      captureGpsAtCaptureLabel: 'GPS у момент знімка',
+      captureGpsAcquisitionMsLabel: 'Час отримання GPS',
+      captureOverrideUsedLabel: 'Використано обхід (таймаут)',
+      captureNearbyStationsCountLabel: 'Станції поблизу',
+      yes: 'Так',
+      no: 'Ні',
     },
     stationClaims: {
       filterAll: 'Усі',
@@ -1291,6 +1312,13 @@ export interface Translations {
     // Story 3.17 — admin detail page restored_from_submission_id surfacing.
     restoredFromLabel: string;
     restoredFromNone: string;
+    // Story 3.20 — capture-screen telemetry on the firehose detail page.
+    captureGpsAtCaptureLabel: string;
+    captureGpsAcquisitionMsLabel: string;
+    captureOverrideUsedLabel: string;
+    captureNearbyStationsCountLabel: string;
+    yes: string;
+    no: string;
   };
   stationClaims: {
     filterAll: string;

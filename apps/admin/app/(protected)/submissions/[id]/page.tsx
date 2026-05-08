@@ -127,6 +127,40 @@ export default async function SubmissionDetailPage({ params }: Props) {
                 )}
               </DetailRow>
             )}
+            {/* Story 3.20 — capture-screen telemetry. Section omitted entirely
+             * when all four fields are null (pre-3.20 rows). Surfaces the four
+             * diagnostic values used to tune the GPS gate timeout post-launch. */}
+            {(submission.gps_acquired_at_capture != null
+              || submission.gps_acquisition_ms != null
+              || submission.override_used != null
+              || submission.nearby_stations_count != null) && (
+              <>
+                <DetailRow label={t.review.captureGpsAtCaptureLabel}>
+                  {submission.gps_acquired_at_capture == null
+                    ? '—'
+                    : submission.gps_acquired_at_capture
+                      ? t.review.yes
+                      : t.review.no}
+                </DetailRow>
+                <DetailRow label={t.review.captureGpsAcquisitionMsLabel}>
+                  {submission.gps_acquisition_ms == null
+                    ? '—'
+                    : `${submission.gps_acquisition_ms} ms`}
+                </DetailRow>
+                <DetailRow label={t.review.captureOverrideUsedLabel}>
+                  {submission.override_used == null
+                    ? '—'
+                    : submission.override_used
+                      ? t.review.yes
+                      : t.review.no}
+                </DetailRow>
+                <DetailRow label={t.review.captureNearbyStationsCountLabel}>
+                  {submission.nearby_stations_count == null
+                    ? '—'
+                    : String(submission.nearby_stations_count)}
+                </DetailRow>
+              </>
+            )}
           </dl>
 
           {/* Story 3.18 — ReviewActions (approve/reject/requeue) only valid

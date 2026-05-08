@@ -118,7 +118,11 @@ Then it includes a clear line about the alerts loop:
 - If user's pre-submission `premium_alerts_active_until` was null/past: *"Po weryfikacji zdjęcia uruchomimy Twoje alerty premium na 30 dni."*
 - If it was active and contribution will extend it: *"Po weryfikacji zdjęcia przedłużymy Twoje alerty premium do <NEW_DATE>."*
 
+And a small footnote-style line follows the main message: *"Tylko zweryfikowane zdjęcia przedłużają alerty"* (PL canonical) — visually subordinate (smaller / italic / muted), to set honest expectation that a rejected submission (no station match, blur, etc.) won't move the date forward.
+
 The copy is conditional on whether this contribution will *activate* or *extend*. NEW_DATE is computed client-side from `MAX(current_active_until, NOW + 30d)`. PL canonical; copy review is its own pass — the AC just specifies the slot exists and the conditional structure.
+
+(*Note: the disclaimer line is also called out by Story 3.20 AC8. Whichever story ships first owns the copy; the other should verify the line is present and consistent.*)
 
 **AC9 — Activity-screen confirmation banner on first verified-after-submission view:**
 Given the user submits a photo and it eventually transitions to `verified`,

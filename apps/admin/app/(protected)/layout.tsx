@@ -13,6 +13,7 @@ export default async function ProtectedLayout({ children }: { children: React.Re
 
   const navItems: NavItem[] = [
     { href: '/submissions', label: t.nav.submissions },
+    { href: '/submissions/all', label: t.nav.submissionsAll },
     { href: '/users', label: t.nav.users },
     { href: '/dead-letter', label: t.nav.deadLetter },
     { href: '/stations', label: t.nav.stations },

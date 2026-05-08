@@ -20,7 +20,10 @@ export default async function SubmissionDetailPage({ params }: Props) {
   try {
     submission = await adminFetch<FlaggedSubmissionDetail>(`/v1/admin/submissions/${id}`);
   } catch (e) {
-    if (e instanceof AdminApiError && (e.status === 404 || e.status === 409)) {
+    // Story 3.18 — getDetail no longer returns 409 (every status is readable
+    // now that the firehose page links here). Only 404 → notFound; anything
+    // else surfaces as a generic error so the operator can retry.
+    if (e instanceof AdminApiError && e.status === 404) {
       notFound();
     }
     fetchError = t.review.errorGeneric;
@@ -52,7 +55,9 @@ export default async function SubmissionDetailPage({ params }: Props) {
             </DetailRow>
             <DetailRow label={t.review.flagLabel}>
               <span className="inline-flex rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
-                {t.review.flagReason[submission.flag_reason] ?? submission.flag_reason}
+                {submission.flag_reason
+                  ? (t.review.flagReason[submission.flag_reason] ?? submission.flag_reason)
+                  : t.review.unknown}
               </span>
             </DetailRow>
             <DetailRow label={t.review.columns.prices}>
@@ -124,13 +129,18 @@ export default async function SubmissionDetailPage({ params }: Props) {
             )}
           </dl>
 
-          <ReviewActions
-            submissionId={submission.id}
-            initialPrices={submission.price_data}
-            initialStationId={submission.station_id}
-            initialStationName={submission.station_name}
-            t={t.review}
-          />
+          {/* Story 3.18 — ReviewActions (approve/reject/requeue) only valid
+           * for `shadow_rejected`. The detail page is now reachable from the
+           * firehose for every status; non-shadow rows render as read-only. */}
+          {submission.status === 'shadow_rejected' && (
+            <ReviewActions
+              submissionId={submission.id}
+              initialPrices={submission.price_data}
+              initialStationId={submission.station_id}
+              initialStationName={submission.station_name}
+              t={t.review}
+            />
+          )}
         </>
       )}
     </div>

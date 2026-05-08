@@ -267,6 +267,140 @@ describe('AdminSubmissionsService', () => {
     });
   });
 
+  // ── Story 3.18: listAll (firehose) ────────────────────────────────────────
+
+  describe('listAll', () => {
+    const makeRow = (overrides: Record<string, unknown> = {}) => ({
+      id: 'sub-1',
+      station_id: STATION_ID,
+      price_data: [{ fuel_type: 'PB_95', price_per_litre: 6.5 }],
+      ocr_confidence_score: 0.9,
+      created_at: new Date('2026-05-07T12:00:00Z'),
+      user_id: 'user-1',
+      status: SubmissionStatus.verified,
+      flag_reason: null,
+      station: { name: 'ORLEN Warszawa' },
+      ...overrides,
+    });
+
+    it('returns submissions across all statuses by default (no status filter)', async () => {
+      mockTransaction.mockResolvedValue([
+        [
+          makeRow({ id: 'a', status: SubmissionStatus.verified, flag_reason: null }),
+          makeRow({ id: 'b', status: SubmissionStatus.shadow_rejected, flag_reason: 'logo_mismatch' }),
+          makeRow({ id: 'c', status: SubmissionStatus.rejected, flag_reason: 'no_station_match' }),
+          makeRow({ id: 'd', status: SubmissionStatus.pending, flag_reason: null }),
+        ],
+        4,
+      ]);
+
+      const result = await service.listAll(1, 20);
+
+      expect(result.data).toHaveLength(4);
+      expect(result.total).toBe(4);
+      // Verify the where clause omits `status` when no filter is passed.
+      const findManyArgs = mockSubmissionFindMany.mock.calls.at(-1)?.[0];
+      expect(findManyArgs?.where).toEqual({});
+      expect(result.data.map((r) => r.status)).toEqual([
+        SubmissionStatus.verified,
+        SubmissionStatus.shadow_rejected,
+        SubmissionStatus.rejected,
+        SubmissionStatus.pending,
+      ]);
+      expect(result.data[0]!.flag_reason).toBeNull(); // verified rows preserve null
+    });
+
+    it('filters by status when statuses array is non-empty', async () => {
+      mockTransaction.mockResolvedValue([[makeRow({ status: SubmissionStatus.verified })], 1]);
+
+      await service.listAll(1, 20, { statuses: [SubmissionStatus.verified] });
+
+      // The transaction wrapper invokes findMany; assert the where shape.
+      const findManyArgs = mockSubmissionFindMany.mock.calls.at(-1)?.[0];
+      expect(findManyArgs?.where).toEqual({ status: { in: [SubmissionStatus.verified] } });
+    });
+
+    it('omits the status filter entirely when statuses array is empty (no IN ())', async () => {
+      mockTransaction.mockResolvedValue([[makeRow()], 1]);
+
+      await service.listAll(1, 20, { statuses: [] });
+
+      const findManyArgs = mockSubmissionFindMany.mock.calls.at(-1)?.[0];
+      expect(findManyArgs?.where).toEqual({});
+    });
+
+    it('applies date range filter on created_at when from/to provided', async () => {
+      mockTransaction.mockResolvedValue([[makeRow()], 1]);
+
+      const from = new Date('2026-05-01T00:00:00Z');
+      const to = new Date('2026-05-08T23:59:59Z');
+      await service.listAll(1, 20, { from, to });
+
+      const findManyArgs = mockSubmissionFindMany.mock.calls.at(-1)?.[0];
+      expect(findManyArgs?.where).toEqual({ created_at: { gte: from, lte: to } });
+    });
+
+    it('sorts by created_at desc with id desc tiebreaker', async () => {
+      mockTransaction.mockResolvedValue([[makeRow()], 1]);
+
+      await service.listAll(1, 20);
+
+      const findManyArgs = mockSubmissionFindMany.mock.calls.at(-1)?.[0];
+      expect(findManyArgs?.orderBy).toEqual([{ created_at: 'desc' }, { id: 'desc' }]);
+    });
+
+    it('paginates: page 2 with limit 20 skips 20 rows', async () => {
+      mockTransaction.mockResolvedValue([[], 0]);
+
+      await service.listAll(2, 20);
+
+      const findManyArgs = mockSubmissionFindMany.mock.calls.at(-1)?.[0];
+      expect(findManyArgs?.skip).toBe(20);
+      expect(findManyArgs?.take).toBe(20);
+    });
+
+    it('maps null station to null station_name', async () => {
+      mockTransaction.mockResolvedValue([
+        [makeRow({ station_id: null, station: null })],
+        1,
+      ]);
+      const result = await service.listAll(1, 20);
+      expect(result.data[0]!.station_name).toBeNull();
+    });
+
+    it('returns total count matching the filter (not the unfiltered table)', async () => {
+      mockTransaction.mockResolvedValue([[makeRow()], 42]);
+      const result = await service.listAll(1, 20, { statuses: [SubmissionStatus.verified] });
+      expect(result.total).toBe(42);
+    });
+
+    // P8 (3.18 review) — explicit case for all-four-statuses passed (the page
+    // optimises this to "no param", but a script caller could still send
+    // it). Behaviour is documented as "harmless but redundant IN clause".
+    it('applies a non-empty IN clause when all four statuses are passed explicitly', async () => {
+      mockTransaction.mockResolvedValue([[makeRow()], 1]);
+      await service.listAll(1, 20, {
+        statuses: [
+          SubmissionStatus.pending,
+          SubmissionStatus.verified,
+          SubmissionStatus.shadow_rejected,
+          SubmissionStatus.rejected,
+        ],
+      });
+      const findManyArgs = mockSubmissionFindMany.mock.calls.at(-1)?.[0];
+      expect(findManyArgs?.where).toEqual({
+        status: {
+          in: [
+            SubmissionStatus.pending,
+            SubmissionStatus.verified,
+            SubmissionStatus.shadow_rejected,
+            SubmissionStatus.rejected,
+          ],
+        },
+      });
+    });
+  });
+
   // ── Story 3.16: paired-review actions ─────────────────────────────────────
 
   describe('approveNewer / markNewerUnusable / markBothUnusable', () => {
@@ -606,13 +740,41 @@ describe('AdminSubmissionsService', () => {
       await expect(service.getDetail('unknown')).rejects.toThrow(NotFoundException);
     });
 
-    it('throws ConflictException for non-shadow_rejected submission', async () => {
+    // Story 3.18 — getDetail no longer throws on non-shadow_rejected.
+    // Firehose detail page needs read access to verified/pending/rejected
+    // rows; the page itself gates action buttons by status.
+    it('returns detail for verified submission with status field set', async () => {
       mockSubmissionFindUnique.mockResolvedValue({
         ...makeShadowRejected(),
         status: SubmissionStatus.verified,
+        flag_reason: null, // verified rows have null flag_reason in DB
+        station: { name: 'BP Kraków', brand: 'BP' },
+      });
+      const detail = await service.getDetail(SUB_ID);
+      expect(detail.status).toBe(SubmissionStatus.verified);
+      expect(detail.flag_reason).toBeNull();
+    });
+
+    it('returns detail for pending submission', async () => {
+      mockSubmissionFindUnique.mockResolvedValue({
+        ...makeShadowRejected(),
+        status: SubmissionStatus.pending,
+        flag_reason: null,
         station: null,
       });
-      await expect(service.getDetail(SUB_ID)).rejects.toThrow(ConflictException);
+      const detail = await service.getDetail(SUB_ID);
+      expect(detail.status).toBe(SubmissionStatus.pending);
+    });
+
+    it('returns detail for rejected submission preserving flag_reason', async () => {
+      mockSubmissionFindUnique.mockResolvedValue({
+        ...makeShadowRejected({ flag_reason: 'no_station_match' }),
+        status: SubmissionStatus.rejected,
+        station: null,
+      });
+      const detail = await service.getDetail(SUB_ID);
+      expect(detail.status).toBe(SubmissionStatus.rejected);
+      expect(detail.flag_reason).toBe('no_station_match');
     });
 
     it('returns detail for shadow_rejected submission with presigned photo_url', async () => {

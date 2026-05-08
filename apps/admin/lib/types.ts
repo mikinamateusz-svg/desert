@@ -8,12 +8,19 @@ export interface FlaggedSubmissionRow {
   ocr_confidence_score: number | null;
   created_at: string;
   user_id: string;
-  flag_reason: string;
+  // Story 3.18 — widened to nullable so the detail interface (and now the
+  // firehose row) can carry verified rows where `flag_reason` is null.
+  // listFlagged still emits a `?? 'logo_mismatch'` fallback for legacy
+  // shadow_rejected rows so the queue UI sees a non-null string.
+  flag_reason: string | null;
   /** Story 3.16 — non-null only when this row is part of a price_conflict pair. */
   conflict_group_id: string | null;
 }
 
 export interface FlaggedSubmissionDetail extends FlaggedSubmissionRow {
+  // Story 3.18 — explicit submission status so the detail page can gate
+  // action buttons (approve/reject/requeue only valid for shadow_rejected).
+  status: SubmissionStatusValue;
   station_brand: string | null;
   photo_url: string | null;
   gps_lat: number | null;
@@ -25,6 +32,29 @@ export interface FlaggedSubmissionDetail extends FlaggedSubmissionRow {
    * null when the row isn't `user_flagged_wrong`.
    */
   restored_from_submission_id: string | null;
+}
+
+// Story 3.18 — submission status mirrors Prisma enum but stays as a string
+// literal union here (admin UI doesn't import @prisma/client directly).
+export type SubmissionStatusValue = 'pending' | 'verified' | 'shadow_rejected' | 'rejected';
+
+export interface AllSubmissionRow {
+  id: string;
+  station_id: string | null;
+  station_name: string | null;
+  price_data: Array<{ fuel_type: string; price_per_litre: number | null }>;
+  ocr_confidence_score: number | null;
+  created_at: string;
+  user_id: string;
+  status: SubmissionStatusValue;
+  flag_reason: string | null;
+}
+
+export interface AllSubmissionsListResult {
+  data: AllSubmissionRow[];
+  total: number;
+  page: number;
+  limit: number;
 }
 
 /**

@@ -23,7 +23,11 @@ export async function detectLocale(): Promise<Locale> {
 const translations = {
   pl: {
     nav: {
-      submissions: 'Zgłoszenia',
+      // Story 3.18 — `submissions` link now points at the action queue
+      // (label renamed accordingly); `submissionsAll` is the new firehose
+      // view at /submissions/all.
+      submissions: 'Kolejka recenzji',
+      submissionsAll: 'Wszystkie zgłoszenia',
       users: 'Użytkownicy',
       deadLetter: 'Kolejka błędów',
       stations: 'Stacje',
@@ -46,13 +50,24 @@ const translations = {
       comingSoon: 'Wkrótce',
     },
     sections: {
-      submissions: { title: 'Zgłoszenia', description: 'Przeglądaj i moderuj zgłoszenia cen paliw.' },
+      submissions: { title: 'Kolejka recenzji', description: 'Oznaczone i konfliktowe zgłoszenia oczekujące na decyzję.' },
+      allSubmissions: {
+        title: 'Wszystkie zgłoszenia',
+        description: 'Każde zgłoszenie przetworzone przez pipeline, włącznie z auto-zaakceptowanymi.',
+      },
       users: { title: 'Użytkownicy', description: 'Zarządzaj kontami użytkowników.' },
       deadLetter: { title: 'Kolejka błędów', description: 'Przeglądaj nieprzetworzone zadania.' },
       stations: { title: 'Stacje', description: 'Zarządzaj stacjami paliw.' },
       metrics: { title: 'Metryki', description: 'Przegląd operacyjnych wskaźników produktu.' },
       stationSync: { title: 'Synchronizacja stacji', description: 'Wyzwól synchronizację z Google Places i monitoruj status.' },
       stationClaims: { title: 'Wnioski o stację', description: 'Weryfikuj wnioski właścicieli stacji.' },
+    },
+    allSubmissions: {
+      statusFilterLabel: 'Status',
+      statusFilterAll: 'Wszystkie',
+      dateFromLabel: 'Od',
+      dateToLabel: 'Do',
+      noItems: 'Brak zgłoszeń pasujących do filtrów.',
     },
     stationSync: {
       statusLabel: 'Status',
@@ -342,7 +357,8 @@ const translations = {
   },
   en: {
     nav: {
-      submissions: 'Submissions',
+      submissions: 'Review queue',
+      submissionsAll: 'All submissions',
       users: 'Users',
       deadLetter: 'Dead-Letter Queue',
       stations: 'Stations',
@@ -365,13 +381,24 @@ const translations = {
       comingSoon: 'Coming soon',
     },
     sections: {
-      submissions: { title: 'Submissions', description: 'Review and moderate fuel price submissions.' },
+      submissions: { title: 'Review queue', description: 'Flagged and conflicting submissions awaiting decision.' },
+      allSubmissions: {
+        title: 'All submissions',
+        description: 'Every submission processed by the pipeline, including auto-verified ones.',
+      },
       users: { title: 'Users', description: 'Manage user accounts.' },
       deadLetter: { title: 'Dead-Letter Queue', description: 'Review unprocessed jobs.' },
       stations: { title: 'Stations', description: 'Manage fuel stations.' },
       metrics: { title: 'Metrics', description: 'Operational product metrics overview.' },
       stationSync: { title: 'Station Sync', description: 'Trigger a Google Places sync and monitor progress.' },
       stationClaims: { title: 'Station claims', description: 'Verify station owner claim submissions.' },
+    },
+    allSubmissions: {
+      statusFilterLabel: 'Status',
+      statusFilterAll: 'All',
+      dateFromLabel: 'From',
+      dateToLabel: 'To',
+      noItems: 'No submissions match the active filters.',
     },
     stationSync: {
       statusLabel: 'Status',
@@ -660,7 +687,8 @@ const translations = {
   },
   uk: {
     nav: {
-      submissions: 'Заявки',
+      submissions: 'Черга рецензії',
+      submissionsAll: 'Усі заявки',
       users: 'Користувачі',
       deadLetter: 'Черга помилок',
       stations: 'Станції',
@@ -683,13 +711,24 @@ const translations = {
       comingSoon: 'Незабаром',
     },
     sections: {
-      submissions: { title: 'Заявки', description: 'Перегляд та модерація заявок на ціни палива.' },
+      submissions: { title: 'Черга рецензії', description: 'Позначені та конфліктні заявки, що очікують на рішення.' },
+      allSubmissions: {
+        title: 'Усі заявки',
+        description: 'Кожна заявка, оброблена пайплайном, у тому числі авто-схвалені.',
+      },
       users: { title: 'Користувачі', description: 'Управління акаунтами користувачів.' },
       deadLetter: { title: 'Черга помилок', description: 'Перегляд необроблених задач.' },
       stations: { title: 'Станції', description: 'Управління автозаправними станціями.' },
       metrics: { title: 'Метрики', description: 'Огляд операційних показників продукту.' },
       stationSync: { title: 'Синхронізація станцій', description: 'Запустіть синхронізацію з Google Places та відстежуйте статус.' },
       stationClaims: { title: 'Заявки на станцію', description: 'Перевіряйте заявки власників станцій.' },
+    },
+    allSubmissions: {
+      statusFilterLabel: 'Статус',
+      statusFilterAll: 'Усі',
+      dateFromLabel: 'Від',
+      dateToLabel: 'До',
+      noItems: 'Жодна заявка не відповідає активним фільтрам.',
     },
     stationSync: {
       statusLabel: 'Статус',
@@ -1095,7 +1134,7 @@ export interface StationSyncTranslations {
 }
 
 export interface Translations {
-  nav: { submissions: string; users: string; deadLetter: string; stations: string; metrics: string; stationSync: string; stationClaims: string };
+  nav: { submissions: string; submissionsAll: string; users: string; deadLetter: string; stations: string; metrics: string; stationSync: string; stationClaims: string };
   login: {
     title: string;
     emailLabel: string;
@@ -1257,12 +1296,20 @@ export interface Translations {
   };
   sections: {
     submissions: { title: string; description: string };
+    allSubmissions: { title: string; description: string };
     users: { title: string; description: string };
     deadLetter: { title: string; description: string };
     stations: { title: string; description: string };
     metrics: { title: string; description: string };
     stationSync: { title: string; description: string };
     stationClaims: { title: string; description: string };
+  };
+  allSubmissions: {
+    statusFilterLabel: string;
+    statusFilterAll: string;
+    dateFromLabel: string;
+    dateToLabel: string;
+    noItems: string;
   };
 }
 

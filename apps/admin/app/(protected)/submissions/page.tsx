@@ -171,7 +171,9 @@ function SingleRow({
         </div>
         <div className="flex flex-col items-end gap-2">
           <span className="inline-flex rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
-            {t.review.flagReason[row.flag_reason] ?? row.flag_reason}
+            {row.flag_reason
+              ? (t.review.flagReason[row.flag_reason] ?? row.flag_reason)
+              : t.review.unknown}
           </span>
           <Link
             href={`/submissions/${row.id}`}

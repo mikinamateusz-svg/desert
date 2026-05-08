@@ -15,8 +15,45 @@ import { IsOptional, IsString, IsArray, IsUUID, ValidateNested, IsNumber, IsPosi
 import { Type } from 'class-transformer';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 import { CurrentUser } from '../auth/current-user.decorator.js';
-import { UserRole, User } from '@prisma/client';
+import { UserRole, User, SubmissionStatus } from '@prisma/client';
 import { AdminSubmissionsService } from './admin-submissions.service.js';
+
+const VALID_STATUSES = new Set<string>(Object.values(SubmissionStatus));
+
+function parseStatusesParam(raw?: string): SubmissionStatus[] | undefined {
+  if (!raw) return undefined;
+  // P5 (3.18 review) — case-insensitive normalisation so a curl/script caller
+  // using `PENDING` isn't silently dropped against a lowercase enum.
+  const parts = raw
+    .split(',')
+    .map((s) => s.trim().toLowerCase())
+    .filter((s) => s.length > 0);
+  if (parts.length === 0) return undefined;
+  // Silently drop unknown values rather than 400ing — keeps the firehose URL
+  // forward-compatible if the enum gains a value while a stale tab is open.
+  return parts.filter((s) => VALID_STATUSES.has(s)) as SubmissionStatus[];
+}
+
+const DATE_ONLY_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+/**
+ * P1 (3.18 review) — when caller supplies a bare `YYYY-MM-DD`, JS parses it
+ * as UTC midnight. For a `to` boundary that means a 24-hour window of the
+ * intended day is excluded (everything submitted between 00:00 and 23:59
+ * UTC of that day). Normalise date-only `to` inputs to end-of-day UTC so
+ * the inclusive `lte` predicate covers the whole calendar day. `from`
+ * already reads start-of-day UTC from bare-date input, which is the
+ * intended floor.
+ */
+function parseDateParam(raw?: string, endOfDay = false): Date | undefined {
+  if (!raw) return undefined;
+  const d = new Date(raw);
+  if (Number.isNaN(d.getTime())) return undefined;
+  if (endOfDay && DATE_ONLY_RE.test(raw)) {
+    d.setUTCHours(23, 59, 59, 999);
+  }
+  return d;
+}
 
 class PriceEntryDto {
   @IsString()
@@ -68,6 +105,29 @@ export class AdminSubmissionsController {
     const safePage = Math.max(1, page);
     const safeLimit = Math.max(1, Math.min(limit, 100));
     return this.service.listFlagged(safePage, safeLimit, flagReason || undefined);
+  }
+
+  /**
+   * Story 3.18 — firehose endpoint. Returns every submission across all
+   * statuses with optional status / date-range filters. Declared BEFORE
+   * `@Get(':id')` so the literal `/all` path matches as a route, not as
+   * an `:id` parameter.
+   */
+  @Get('all')
+  async listAll(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @Query('statuses') statuses?: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ) {
+    const safePage = Math.max(1, page);
+    const safeLimit = Math.max(1, Math.min(limit, 100));
+    return this.service.listAll(safePage, safeLimit, {
+      statuses: parseStatusesParam(statuses),
+      from: parseDateParam(from),
+      to: parseDateParam(to, true),
+    });
   }
 
   @Get(':id')

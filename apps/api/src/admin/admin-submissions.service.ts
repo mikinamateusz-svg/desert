@@ -24,12 +24,20 @@ export interface FlaggedSubmissionRow {
   ocr_confidence_score: number | null;
   created_at: Date;
   user_id: string;
-  flag_reason: string;
+  // Story 3.18 — widened to `string | null` so the detail interface can be
+  // reused for the firehose (verified rows have null flag_reason in DB).
+  // listFlagged still applies a `?? 'logo_mismatch'` fallback for legacy
+  // shadow_rejected rows so the queue contract is unchanged.
+  flag_reason: string | null;
   /** Story 3.16 — non-null only when this row is part of a price_conflict pair. */
   conflict_group_id: string | null;
 }
 
 export interface FlaggedSubmissionDetail extends FlaggedSubmissionRow {
+  // Story 3.18 — explicit status so the detail page can gate action buttons
+  // (only `shadow_rejected` accepts approve/reject/requeue). Queue context
+  // is implicitly always shadow_rejected; firehose carries every status.
+  status: SubmissionStatus;
   station_brand: string | null;
   photo_url: string | null;
   gps_lat: number | null;
@@ -65,6 +73,37 @@ export interface SubmissionListResult {
   total: number;
   page: number;
   limit: number;
+}
+
+/**
+ * Story 3.18 — firehose row shape. Same fields as `FlaggedSubmissionRow` but
+ * carries the explicit `status` (queue rows are always `shadow_rejected` so
+ * status is implicit) and lets `flag_reason` be `null` (verified rows).
+ * No `conflict_group_id` because firehose has no pair-grouping logic.
+ */
+export interface AllSubmissionRow {
+  id: string;
+  station_id: string | null;
+  station_name: string | null;
+  price_data: Array<{ fuel_type: string; price_per_litre: number | null }>;
+  ocr_confidence_score: number | null;
+  created_at: Date;
+  user_id: string;
+  status: SubmissionStatus;
+  flag_reason: string | null;
+}
+
+export interface AllSubmissionsListResult {
+  data: AllSubmissionRow[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface ListAllFilters {
+  statuses?: SubmissionStatus[];
+  from?: Date;
+  to?: Date;
 }
 
 const AUDIT_ACTION_APPROVE = 'APPROVE';
@@ -194,6 +233,74 @@ export class AdminSubmissionsService {
   }
 
   /**
+   * Story 3.18 — firehose listing of every submission across all statuses.
+   * Unlike `listFlagged` (queue), this returns a flat list with no pair
+   * grouping and no implicit status filter. Sorted most-recent-first because
+   * the operator intent is "what just went through the pipeline".
+   *
+   * Empty `filters.statuses` is treated as "no filter" (Postgres rejects
+   * `IN ()`). When all four enum values are explicitly passed, the IN clause
+   * is harmless but redundant; we still apply it as written rather than
+   * special-casing the all-four case.
+   */
+  async listAll(
+    page: number,
+    limit: number,
+    filters: ListAllFilters = {},
+  ): Promise<AllSubmissionsListResult> {
+    const skip = (page - 1) * limit;
+    const where: Prisma.SubmissionWhereInput = {};
+
+    if (filters.statuses && filters.statuses.length > 0) {
+      where.status = { in: filters.statuses };
+    }
+    if (filters.from || filters.to) {
+      where.created_at = {
+        ...(filters.from ? { gte: filters.from } : {}),
+        ...(filters.to ? { lte: filters.to } : {}),
+      };
+    }
+
+    const [submissions, total] = await this.prisma.$transaction([
+      this.prisma.submission.findMany({
+        where,
+        // P3 (3.18 review) — `id` secondary tiebreaker so submissions sharing
+        // a `created_at` millisecond don't shuffle across pages. Pipeline
+        // batches can produce ties.
+        orderBy: [{ created_at: 'desc' }, { id: 'desc' }],
+        skip,
+        take: limit,
+        select: {
+          id: true,
+          station_id: true,
+          price_data: true,
+          ocr_confidence_score: true,
+          created_at: true,
+          user_id: true,
+          status: true,
+          flag_reason: true,
+          station: { select: { name: true } },
+        },
+      }),
+      this.prisma.submission.count({ where }),
+    ]);
+
+    const data: AllSubmissionRow[] = submissions.map((s) => ({
+      id: s.id,
+      station_id: s.station_id,
+      station_name: s.station?.name ?? null,
+      price_data: s.price_data as Array<{ fuel_type: string; price_per_litre: number | null }>,
+      ocr_confidence_score: s.ocr_confidence_score,
+      created_at: s.created_at,
+      user_id: s.user_id,
+      status: s.status,
+      flag_reason: s.flag_reason,
+    }));
+
+    return { data, total, page, limit };
+  }
+
+  /**
    * Group rows by `conflict_group_id`, emit one `pair` per group with
    * ≥ 2 members, and emit one `single` per non-conflict row.
    *
@@ -292,9 +399,10 @@ export class AdminSubmissionsService {
     });
 
     if (!submission) throw new NotFoundException(`Submission ${id} not found`);
-    if (submission.status !== SubmissionStatus.shadow_rejected) {
-      throw new ConflictException(`Submission ${id} is no longer awaiting review`);
-    }
+    // Story 3.18 — getDetail now serves both the queue (shadow_rejected) and
+    // the firehose (any status) detail pages. Status flows through to the
+    // response so the UI can gate action buttons (approve/reject/requeue
+    // remain valid only for `shadow_rejected`).
 
     let photo_url: string | null = null;
     if (submission.photo_r2_key) {
@@ -327,7 +435,13 @@ export class AdminSubmissionsService {
       ocr_confidence_score: submission.ocr_confidence_score,
       created_at: submission.created_at,
       user_id: submission.user_id,
-      flag_reason: submission.flag_reason ?? 'logo_mismatch',
+      status: submission.status,
+      // Story 3.18 — pass actual DB value through; verified/pending rows have
+      // null. Queue's listFlagged still applies a `?? 'logo_mismatch'`
+      // fallback for shadow_rejected legacy rows, but the detail surface
+      // intentionally preserves null so firehose UI can render "—" for
+      // rows that never had a flag.
+      flag_reason: submission.flag_reason,
       conflict_group_id: submission.conflict_group_id,
       photo_url,
       // Round to 4 decimal places ≈ 10m precision — sufficient to confirm station proximity

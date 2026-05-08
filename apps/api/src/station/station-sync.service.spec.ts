@@ -167,6 +167,25 @@ describe('StationSyncService', () => {
       expect(fullSql).toContain('classification_version');
       expect(fullSql).toContain('IS DISTINCT FROM');
     });
+
+    // Story 3.19 — name override protection: when name_manually_set_at is
+    // non-null on the existing row, the upsert preserves Station.name
+    // instead of overwriting from EXCLUDED.name. Verify the SQL contains
+    // the protective CASE clause; behaviour at the row level is enforced
+    // by Postgres semantics, which we trust at the unit-test layer.
+    it('preserves manually-renamed station names via name_manually_set_at CASE clause (3.19)', async () => {
+      mockPrisma.$executeRaw.mockResolvedValueOnce(1);
+
+      await service.upsertStation(fakePlacesResult);
+
+      const sqlStrings: string[] = mockPrisma.$executeRaw.mock.calls[0][0];
+      const fullSql = sqlStrings.join('?');
+      expect(fullSql).toContain('name_manually_set_at IS NULL');
+      // The classification_version reset must also gate on the override —
+      // when the override blocks the name update, the version comparison
+      // must evaluate the unchanged name vs EXCLUDED accordingly.
+      expect(fullSql).toMatch(/classification_version\s*=\s*CASE/);
+    });
   });
 
   describe('runSync', () => {

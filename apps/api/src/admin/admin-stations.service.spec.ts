@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Logger, NotFoundException } from '@nestjs/common';
+import { Logger, NotFoundException, BadRequestException } from '@nestjs/common';
 import { AdminStationsService } from './admin-stations.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { PriceCacheService } from '../price/price-cache.service.js';
@@ -278,6 +278,150 @@ describe('AdminStationsService', () => {
         select: { id: true, name: true, address: true, brand: true, hidden: true },
         orderBy: { updated_at: 'desc' },
       });
+    });
+  });
+
+  // ── Story 3.19 — renameStation ───────────────────────────────────────────
+
+  describe('renameStation', () => {
+    beforeEach(() => {
+      // getStationDetail (called at the end of renameStation to return the
+      // post-update shape) issues a follow-up findUnique + $queryRaw. Default
+      // both so happy-path tests don't have to repeat the setup.
+      mockQueryRaw.mockResolvedValue([]);
+    });
+
+    it('updates name + sets name_manually_set_at and writes audit log', async () => {
+      const NEW_NAME = 'Orlen — Generalska (north)';
+      // First findUnique: existing-name lookup. Second findUnique: getStationDetail.
+      mockStationFindUnique
+        .mockResolvedValueOnce({ id: STATION_ID, name: 'Orlen — Generalska' })
+        .mockResolvedValueOnce({
+          id: STATION_ID,
+          name: NEW_NAME,
+          address: 'ul. Generalska 12',
+          brand: 'Orlen',
+          hidden: false,
+          name_manually_set_at: new Date('2026-05-08T10:00:00Z'),
+        });
+      mockStationUpdate.mockResolvedValue({});
+
+      const result = await service.renameStation(STATION_ID, NEW_NAME, ADMIN_ID);
+
+      expect(result.name).toBe(NEW_NAME);
+      expect(result.name_manually_set_at).toBeInstanceOf(Date);
+      expect(mockStationUpdate).toHaveBeenCalledWith({
+        where: { id: STATION_ID },
+        data: expect.objectContaining({
+          name: NEW_NAME,
+          name_manually_set_at: expect.any(Date),
+        }),
+      });
+      expect(mockAuditLogCreate).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          admin_user_id: ADMIN_ID,
+          action: 'STATION_RENAME',
+          submission_id: null,
+          notes: expect.stringContaining(NEW_NAME),
+        }),
+      });
+    });
+
+    it('trims whitespace from the new name before validating + storing', async () => {
+      const NEW_NAME_PADDED = '  Renamed Station  ';
+      const NEW_NAME_TRIMMED = 'Renamed Station';
+      mockStationFindUnique
+        .mockResolvedValueOnce({ id: STATION_ID, name: 'Old Name' })
+        .mockResolvedValueOnce({
+          id: STATION_ID,
+          name: NEW_NAME_TRIMMED,
+          address: null,
+          brand: null,
+          hidden: false,
+          name_manually_set_at: new Date(),
+        });
+      mockStationUpdate.mockResolvedValue({});
+
+      await service.renameStation(STATION_ID, NEW_NAME_PADDED, ADMIN_ID);
+
+      expect(mockStationUpdate).toHaveBeenCalledWith({
+        where: { id: STATION_ID },
+        data: expect.objectContaining({ name: NEW_NAME_TRIMMED }),
+      });
+    });
+
+    it('throws BadRequestException for empty/whitespace name (no DB write)', async () => {
+      await expect(service.renameStation(STATION_ID, '   ', ADMIN_ID)).rejects.toThrow(
+        BadRequestException,
+      );
+      expect(mockStationFindUnique).not.toHaveBeenCalled();
+      expect(mockStationUpdate).not.toHaveBeenCalled();
+    });
+
+    it('throws BadRequestException for name longer than 200 chars', async () => {
+      const tooLong = 'x'.repeat(201);
+      await expect(service.renameStation(STATION_ID, tooLong, ADMIN_ID)).rejects.toThrow(
+        BadRequestException,
+      );
+      expect(mockStationFindUnique).not.toHaveBeenCalled();
+      expect(mockStationUpdate).not.toHaveBeenCalled();
+    });
+
+    it('throws NotFoundException when station id does not exist', async () => {
+      mockStationFindUnique.mockResolvedValueOnce(null);
+      await expect(service.renameStation(STATION_ID, 'New', ADMIN_ID)).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(mockStationUpdate).not.toHaveBeenCalled();
+    });
+
+    it('throws BadRequestException when new name equals current name (after trim)', async () => {
+      mockStationFindUnique.mockResolvedValueOnce({ id: STATION_ID, name: 'Same Name' });
+      await expect(service.renameStation(STATION_ID, '  Same Name  ', ADMIN_ID)).rejects.toThrow(
+        BadRequestException,
+      );
+      expect(mockStationUpdate).not.toHaveBeenCalled();
+    });
+
+    it('refreshes name_manually_set_at on every successful rename', async () => {
+      // Repeated rename: existing already has name_manually_set_at set; new
+      // rename should still trigger an update with a fresh timestamp.
+      mockStationFindUnique
+        .mockResolvedValueOnce({ id: STATION_ID, name: 'First Manual Name' })
+        .mockResolvedValueOnce({
+          id: STATION_ID,
+          name: 'Second Manual Name',
+          address: null,
+          brand: null,
+          hidden: false,
+          name_manually_set_at: new Date(),
+        });
+      mockStationUpdate.mockResolvedValue({});
+
+      await service.renameStation(STATION_ID, 'Second Manual Name', ADMIN_ID);
+
+      expect(mockStationUpdate).toHaveBeenCalledWith({
+        where: { id: STATION_ID },
+        data: expect.objectContaining({
+          name: 'Second Manual Name',
+          name_manually_set_at: expect.any(Date),
+        }),
+      });
+    });
+
+    // P7 (3.19 review) — audit-log failure must surface as a rejection.
+    // Prisma's $transaction([...]) rolls back the batch when any operation
+    // throws, so a failing audit write should also roll back the station
+    // update. We can't assert the rollback at the unit-test layer (mocks
+    // don't simulate Postgres), but we can assert the error propagates so
+    // the caller doesn't silently see a "success" with a missing audit row.
+    it('propagates audit-log failure (transactional rollback contract)', async () => {
+      mockStationFindUnique.mockResolvedValueOnce({ id: STATION_ID, name: 'Old Name' });
+      mockTransaction.mockRejectedValueOnce(new Error('audit log down'));
+
+      await expect(
+        service.renameStation(STATION_ID, 'New Name', ADMIN_ID),
+      ).rejects.toThrow('audit log down');
     });
   });
 });

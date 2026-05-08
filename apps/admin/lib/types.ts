@@ -149,6 +149,10 @@ export interface StationPriceRow {
 
 export interface StationDetail extends StationRow {
   prices: StationPriceRow[];
+  // Story 3.19 — non-null when an admin has manually renamed this station.
+  // Detail page renders a "manual override active" badge based on this;
+  // station-sync respects it when re-running.
+  name_manually_set_at: string | null;
 }
 
 export interface UserDetail {

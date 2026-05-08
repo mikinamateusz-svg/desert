@@ -125,13 +125,23 @@ export class StationSyncService {
         NOW()
       )
       ON CONFLICT (google_places_id) DO UPDATE SET
-        name = EXCLUDED.name,
+        -- Story 3.19 — preserve the existing name when an admin has
+        -- manually renamed this station. The classification_version reset
+        -- below compares Station.name to EXCLUDED.name; when the override
+        -- blocks the change Station.name stays the same as before, so the
+        -- IS DISTINCT FROM check naturally evaluates to FALSE and version
+        -- stays put.
+        name = CASE
+          WHEN "Station".name_manually_set_at IS NULL THEN EXCLUDED.name
+          ELSE "Station".name
+        END,
         address = EXCLUDED.address,
         location = EXCLUDED.location,
         last_synced_at = NOW(),
         updated_at = NOW(),
         classification_version = CASE
-          WHEN "Station".name IS DISTINCT FROM EXCLUDED.name
+          WHEN ("Station".name_manually_set_at IS NULL
+                AND "Station".name IS DISTINCT FROM EXCLUDED.name)
             OR "Station".location IS DISTINCT FROM EXCLUDED.location
             OR "Station".address IS DISTINCT FROM EXCLUDED.address
           THEN 0

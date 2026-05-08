@@ -165,6 +165,16 @@ const translations = {
       errorGeneric: 'Błąd. Spróbuj ponownie.',
       errorNotFound: 'Stacja nie została znaleziona.',
       detailAction: 'Szczegóły',
+      renameEditButton: 'Edytuj nazwę',
+      renameSaveButton: 'Zapisz',
+      renameCancelButton: 'Anuluj',
+      renameInputPlaceholder: 'Nazwa stacji…',
+      renameErrorEmpty: 'Nazwa nie może być pusta.',
+      renameErrorTooLong: 'Nazwa nie może przekraczać 200 znaków.',
+      renameErrorUnchanged: 'Nazwa jest taka sama jak obecna.',
+      renameErrorGeneric: 'Nie udało się zmienić nazwy. Spróbuj ponownie.',
+      renameManualOverrideBadge: 'Ręczna nazwa',
+      renameManualOverrideTooltip: 'Nazwa ustawiona ręcznie — synchronizacja z Google Places jej nie nadpisze.',
     },
     metrics: {
       tabs: { pipeline: 'Zdrowie pipeline', funnel: 'Lejek zgłoszeń', product: 'Metryki produktu', cost: 'Koszty API', freshness: 'Świeżość danych' },
@@ -496,6 +506,16 @@ const translations = {
       errorGeneric: 'Something went wrong. Try again.',
       errorNotFound: 'Station not found.',
       detailAction: 'View',
+      renameEditButton: 'Edit name',
+      renameSaveButton: 'Save',
+      renameCancelButton: 'Cancel',
+      renameInputPlaceholder: 'Station name…',
+      renameErrorEmpty: 'Name cannot be empty.',
+      renameErrorTooLong: 'Name cannot exceed 200 characters.',
+      renameErrorUnchanged: 'New name is the same as the current one.',
+      renameErrorGeneric: 'Failed to rename station. Try again.',
+      renameManualOverrideBadge: 'Manual rename',
+      renameManualOverrideTooltip: 'Name set manually — Google Places sync will not overwrite it.',
     },
     metrics: {
       tabs: { pipeline: 'Pipeline Health', funnel: 'Contribution Funnel', product: 'Product Metrics', cost: 'API Cost', freshness: 'Data Freshness' },
@@ -826,6 +846,16 @@ const translations = {
       errorGeneric: 'Помилка. Спробуйте ще раз.',
       errorNotFound: 'Станцію не знайдено.',
       detailAction: 'Деталі',
+      renameEditButton: 'Редагувати назву',
+      renameSaveButton: 'Зберегти',
+      renameCancelButton: 'Скасувати',
+      renameInputPlaceholder: 'Назва станції…',
+      renameErrorEmpty: 'Назва не може бути порожньою.',
+      renameErrorTooLong: 'Назва не може перевищувати 200 символів.',
+      renameErrorUnchanged: 'Назва така сама, як поточна.',
+      renameErrorGeneric: 'Не вдалося перейменувати станцію. Спробуйте ще раз.',
+      renameManualOverrideBadge: 'Ручна назва',
+      renameManualOverrideTooltip: 'Назву встановлено вручну — синхронізація з Google Places її не перезапише.',
     },
     metrics: {
       tabs: { pipeline: 'Здоров\'я pipeline', funnel: 'Воронка внесків', product: 'Метрики продукту', cost: 'Витрати API', freshness: 'Актуальність даних' },
@@ -1115,6 +1145,17 @@ export interface StationsTranslations {
   errorGeneric: string;
   errorNotFound: string;
   detailAction: string;
+  // Story 3.19 — admin station rename
+  renameEditButton: string;
+  renameSaveButton: string;
+  renameCancelButton: string;
+  renameInputPlaceholder: string;
+  renameErrorEmpty: string;
+  renameErrorTooLong: string;
+  renameErrorUnchanged: string;
+  renameErrorGeneric: string;
+  renameManualOverrideBadge: string;
+  renameManualOverrideTooltip: string;
 }
 
 export interface StationSyncTranslations {

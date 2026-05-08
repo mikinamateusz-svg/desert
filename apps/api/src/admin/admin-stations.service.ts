@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { PriceCacheService } from '../price/price-cache.service.js';
 
@@ -26,10 +26,17 @@ export interface StationPriceRow {
 
 export interface StationDetail extends StationRow {
   prices: StationPriceRow[];
+  // Story 3.19 — non-null when an admin has manually renamed this station.
+  // The detail UI uses this to render a "manual override" badge; the
+  // station-sync upsert respects it to avoid clobbering the rename.
+  name_manually_set_at: Date | null;
 }
 
 const AUDIT_ACTION_PRICE_OVERRIDE = 'PRICE_OVERRIDE';
 const AUDIT_ACTION_CACHE_REFRESH = 'CACHE_REFRESH';
+const AUDIT_ACTION_STATION_RENAME = 'STATION_RENAME';
+
+const MAX_STATION_NAME_LENGTH = 200;
 
 const KNOWN_FUEL_TYPES = ['PB_95', 'PB_98', 'ON', 'ON_PREMIUM', 'LPG'];
 
@@ -74,7 +81,14 @@ export class AdminStationsService {
   async getStationDetail(stationId: string): Promise<StationDetail> {
     const station = await this.prisma.station.findUnique({
       where: { id: stationId },
-      select: { id: true, name: true, address: true, brand: true, hidden: true },
+      select: {
+        id: true,
+        name: true,
+        address: true,
+        brand: true,
+        hidden: true,
+        name_manually_set_at: true,
+      },
     });
 
     if (!station) {
@@ -163,6 +177,66 @@ export class AdminStationsService {
       null,
       JSON.stringify({ stationId }),
     );
+  }
+
+  /**
+   * Story 3.19 — admin rename of a station's name with sync-overwrite
+   * protection. Sets `name_manually_set_at` so subsequent station-sync
+   * runs preserve the new name. Trims input, rejects empty / over-length /
+   * unchanged values. Audit row written transactionally with the update.
+   */
+  async renameStation(
+    stationId: string,
+    newName: string,
+    adminId: string,
+  ): Promise<StationDetail> {
+    const trimmed = newName.trim();
+    if (trimmed.length === 0) {
+      throw new BadRequestException('Station name cannot be empty');
+    }
+    if (trimmed.length > MAX_STATION_NAME_LENGTH) {
+      throw new BadRequestException(
+        `Station name cannot exceed ${MAX_STATION_NAME_LENGTH} characters`,
+      );
+    }
+
+    const existing = await this.prisma.station.findUnique({
+      where: { id: stationId },
+      select: { id: true, name: true },
+    });
+    if (!existing) {
+      throw new NotFoundException(`Station ${stationId} not found`);
+    }
+    if (existing.name === trimmed) {
+      throw new BadRequestException('New name is identical to the current name');
+    }
+
+    const now = new Date();
+    await this.prisma.$transaction([
+      this.prisma.station.update({
+        where: { id: stationId },
+        data: { name: trimmed, name_manually_set_at: now },
+      }),
+      this.prisma.adminAuditLog.create({
+        data: {
+          admin_user_id: adminId,
+          action: AUDIT_ACTION_STATION_RENAME,
+          submission_id: null,
+          notes: JSON.stringify({
+            stationId,
+            old_name: existing.name,
+            new_name: trimmed,
+            name_manually_set_at: now.toISOString(),
+          }),
+        },
+      }),
+    ]);
+
+    this.logger.log(
+      `Station renamed by admin ${adminId}: "${existing.name}" → "${trimmed}" (${stationId})`,
+    );
+
+    return this.getStationDetail(stationId);
   }
 
   private async writeAuditLog(

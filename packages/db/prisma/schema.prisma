@@ -119,6 +119,10 @@ model Station {
   is_border_zone_de      Boolean                               @default(false)
   classification_version Int                                   @default(0)
   hidden                 Boolean                               @default(false)
+  // Story 3.19 — non-null when an admin has renamed this station manually.
+  // station-sync's upsert SQL respects this flag and skips the `name`
+  // overwrite so manual disambiguations survive sync runs.
+  name_manually_set_at   DateTime?
   created_at             DateTime                              @default(now())
   updated_at             DateTime                              @updatedAt
   submissions            Submission[]

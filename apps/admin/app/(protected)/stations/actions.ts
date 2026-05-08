@@ -54,3 +54,23 @@ export async function unhideStation(stationId: string): Promise<{ error?: string
     return { error: e instanceof Error ? e.message : 'Failed to unhide station.' };
   }
 }
+
+// Story 3.19 — admin rename of a station. Server action so the form can
+// progressively enhance and so the new name's revalidatePath fires
+// against both the detail and the search list.
+export async function renameStation(
+  stationId: string,
+  newName: string,
+): Promise<{ error?: string }> {
+  try {
+    await adminFetch(`/v1/admin/stations/${stationId}/rename`, {
+      method: 'PATCH',
+      body: JSON.stringify({ name: newName }),
+    });
+    revalidatePath(`/stations/${stationId}`);
+    revalidatePath('/stations');
+    return {};
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Failed to rename station.' };
+  }
+}

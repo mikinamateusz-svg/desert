@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
   Param,
   Query,
   Body,
@@ -11,11 +12,26 @@ import {
   ParseIntPipe,
   ParseUUIDPipe,
 } from '@nestjs/common';
+import { IsString, IsNotEmpty, MaxLength, Matches } from 'class-validator';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 import { CurrentUser } from '../auth/current-user.decorator.js';
 import { UserRole, User } from '@prisma/client';
 import { AdminStationsService } from './admin-stations.service.js';
 import { OverridePriceDto } from './dto/override-price.dto.js';
+
+class RenameStationDto {
+  @IsString()
+  @IsNotEmpty()
+  // P1 (3.19 review) — defence-in-depth: reject obviously over-long bodies at
+  // the validation layer before they reach the service. Service still trims +
+  // re-validates so fast-path rejection here is purely a hot-loop guard.
+  @MaxLength(200)
+  // Reject whitespace-only payloads at the DTO so the service doesn't have to
+  // distinguish "missing key" from "all-whitespace string". Service still
+  // trims and re-checks empty after trim.
+  @Matches(/\S/, { message: 'name must contain at least one non-whitespace character' })
+  name!: string;
+}
 
 @Controller('v1/admin/stations')
 @Roles(UserRole.ADMIN)
@@ -69,5 +85,14 @@ export class AdminStationsController {
   @HttpCode(HttpStatus.OK)
   async unhide(@Param('id', ParseUUIDPipe) id: string) {
     return this.service.unhideStation(id);
+  }
+
+  @Patch(':id/rename')
+  async rename(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: RenameStationDto,
+    @CurrentUser() admin: User,
+  ) {
+    return this.service.renameStation(id, body.name, admin.id);
   }
 }

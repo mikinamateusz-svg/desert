@@ -3,6 +3,7 @@ import { detectLocale, getTranslations } from '../../../../lib/i18n';
 import { adminFetch, AdminApiError } from '../../../../lib/admin-api';
 import type { StationDetail, StationPriceRow } from '../../../../lib/types';
 import { StationActions } from './StationActions';
+import StationRenameForm from './StationRenameForm';
 
 function getSourceBadgeClass(source: string): string {
   switch (source) {
@@ -52,7 +53,23 @@ export default async function StationDetailPage({
         <div className="space-y-6">
           {/* Header */}
           <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h1 className="text-2xl font-semibold text-gray-900">{station.name}</h1>
+            <StationRenameForm
+              stationId={station.id}
+              initialName={station.name}
+              nameManuallySetAt={station.name_manually_set_at}
+              copy={{
+                editButton: t.stations.renameEditButton,
+                saveButton: t.stations.renameSaveButton,
+                cancelButton: t.stations.renameCancelButton,
+                inputPlaceholder: t.stations.renameInputPlaceholder,
+                errorEmpty: t.stations.renameErrorEmpty,
+                errorTooLong: t.stations.renameErrorTooLong,
+                errorUnchanged: t.stations.renameErrorUnchanged,
+                errorGeneric: t.stations.renameErrorGeneric,
+                manualOverrideBadge: t.stations.renameManualOverrideBadge,
+                manualOverrideTooltip: t.stations.renameManualOverrideTooltip,
+              }}
+            />
             {station.address && (
               <p className="text-sm text-gray-500 mt-1">{station.address}</p>
             )}

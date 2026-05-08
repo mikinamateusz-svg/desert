@@ -4,7 +4,7 @@ Status: ready-for-dev
 
 **Trigger:** 2026-05-08 — direct follow-up from Story 6.10. Once the bell icon lands users on `/(app)/alerts`, the destination needs more than a status banner to pay off the tap. Drivers expect an inbox metaphor: list of past alerts with unread state, the ability to scan recent pushes, and the bell badge reflecting unread count when alerts aren't expiring.
 
-**Phase:** 2. Wrap mobile entry points in `flags.phase2` per project memory; backend persistence is additive and dark-safe.
+**Phase:** **1 (launch-week)** — promoted from Phase 2 alongside 6.10 on 2026-05-08. Wrap mobile entry points in the same per-feature runtime flag as 6.10 (`flags.alertsLoop`) per memory `feedback_feature_flags.md`. Default off on prod until the marketing-campaign launch flips it; on for staging. Backend persistence is additive and dark-safe.
 
 **Coupled stories already shipped (or shipping in 6.10):**
 - 6.3 (lite) — `PriceRiseAlertService` produces the pushes that need persistence.
@@ -133,8 +133,8 @@ Given new copy across AC7 (empty state, "Mark all as read", relative time format
 When mobile renders,
 Then PL is canonical, EN/UK translated, present in `Translations` type, type-check fails on missing keys.
 
-**AC12 — Phase 2 feature flag wrap:**
-The inbox UI on `/alerts` is wrapped in `flags.phase2` (matching 6.10's pattern). Backend endpoints are unguarded — additive and harmless.
+**AC12 — Runtime feature flag wrap:**
+The inbox UI on `/alerts` is wrapped in `flags.alertsLoop` (the same per-feature runtime flag 6.10 introduces). Backend endpoints are unguarded — additive and harmless.
 
 ---
 
@@ -240,7 +240,7 @@ The inbox UI on `/alerts` is wrapped in `flags.phase2` (matching 6.10's pattern)
 
 - **Depends on 6.10** — the bell icon and `/alerts` screen scaffold come from 6.10. Don't start this until 6.10 has at least the routing + bell icon merged.
 - **Test data**: at launch the inbox will be mostly empty for most users. Make the empty state polished — it's the experience most early adopters see.
-- **Phase 2 gating** — same pattern as 6.10. Backend endpoints can be unguarded (no driver client calls them when flag is off).
+- **Runtime feature flag** — same `flags.alertsLoop` pattern as 6.10. Backend endpoints can be unguarded (no driver client calls them when flag is off).
 - **Migration applied manually per project memory** (`project_staging_predeploy_broken`).
 - **Re-using existing notifications.controller vs new alerts.controller**: choose based on which keeps the code simpler. The current `notifications.controller` is just prefs (GET/PATCH); spinning up a parallel `alerts.controller` for inbox endpoints reads cleaner. Don't merge them under a single controller unless there's a clear benefit.
 - **`alert_type` as string vs enum**: the spec deliberately keeps it as a string column (not a Prisma enum) so 6.1/6.2/6.5 can add new types via additive code change without schema migrations. Centralise the known values in a TS const + i18n key map; treat unknown values gracefully in the UI (fall through to body text).

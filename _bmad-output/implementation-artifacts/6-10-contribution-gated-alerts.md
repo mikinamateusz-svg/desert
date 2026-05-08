@@ -4,7 +4,7 @@ Status: ready-for-dev
 
 **Trigger:** 2026-05-08 — soft-launch engagement design. Today's `PriceRiseAlertService` (Story 6.3 lite, commit `afd6391`) sends pushes to *every* opted-in driver regardless of whether they contribute photos. Operator wants to use alerts as a reward loop: drivers who submit a photo "earn" a 30-day premium-alert window. Reinforces submission behaviour without taking anything away from drivers who don't (basic alerts — when we add them later — stay universal).
 
-**Phase:** 2 (post-MVP engagement). Wrap the user-visible surface in `flags.phase2` per project memory; backend gating is additive and lives behind the flag's mobile entry points.
+**Phase:** **1 (launch-week engagement loop)** — promoted from Phase 2 on 2026-05-08. The alerts loop is the primary carrot for first-week contributors and is needed at launch to feed the data flywheel. Wrap the user-visible surface in a per-feature runtime flag (e.g. `flags.alertsLoop`) per project memory `feedback_feature_flags.md` — default off on prod until marketing campaign launches, default on for staging. Backend gating is additive and lives behind the mobile flag's entry points.
 
 **Coupled stories already shipped:**
 - 6.3 (lite) — `PriceRiseAlertService` is the target alert this story gates.
@@ -139,14 +139,15 @@ When mobile renders,
 Then PL is canonical and complete; EN/UK are translated and present in the `Translations` type,
 And missing keys (silent runtime failure risk) cause CI type-check to fail.
 
-**AC11 — Phase 2 feature flag wrap:**
-Given `flags.phase2` is the build-time gate per project memory,
+**AC11 — Per-feature runtime flag wrap:**
+Given the project convention `feedback_feature_flags.md` (user-facing changes ship behind a feature flag; default off on prod, on for staging),
 When the bell icon, alerts-screen banner, capture-modal copy, activity banner, and Account "Notifications" link render,
-Then they are wrapped in `flags.phase2`,
-And the prod APK with `flags.phase2 = false` shows none of these affordances,
-And staging / dev builds (`flags.phase2 = true`) expose the full surface.
+Then they are gated by a per-feature runtime flag (e.g. `flags.alertsLoop`),
+And the prod build with the flag off shows none of these affordances,
+And staging builds with the flag on expose the full surface,
+And the flag is intended to flip on for prod at the marketing-campaign launch moment — not before.
 
-Backend (gating, warning worker, premium-window updates) is **not** flag-gated — additive and harmless to ship dark. Mobile is the only flagged surface.
+Backend (gating predicate, warning worker, premium-window updates) is **not** flag-gated — additive and harmless to ship dark; until the mobile flag flips, no client surfaces the feature so backend code is dormant in practice.
 
 ---
 
@@ -187,7 +188,7 @@ Backend (gating, warning worker, premium-window updates) is **not** flag-gated �
 - Renders Ionicons bell variants with token-based colours; warning badge as an overlaid 8×8 dot.
 - Tap → `router.push('/(app)/alerts')`.
 - Wire into `apps/mobile/app/(app)/index.tsx` map header chrome (top-right, above `topBarHeight + 16` so it doesn't collide with fuel selector / location-denied banner).
-- Wrap render in `flags.phase2` check.
+- Wrap render in `flags.alertsLoop` check.
 
 **T6 — `/alerts` screen rebuild as status-only surface:**
 - Rebuild `apps/mobile/app/(app)/alerts.tsx`:
@@ -195,27 +196,27 @@ Backend (gating, warning worker, premium-window updates) is **not** flag-gated �
   - Below: empty space (Story 6.11 fills with inbox).
   - **Remove**: notification permission flow, prefs toggles, FeatureGateSheet — all migrated to T7.
 - Banner is a server component / static render; CTA buttons are minimal client components.
-- Wrap in `flags.phase2` so `/alerts` route is hidden when flag is off.
+- Wrap in `flags.alertsLoop` so `/alerts` route is hidden when flag is off.
 
 **T7 — Prefs UI relocated to `/(app)/notifications`:**
 - New route file `apps/mobile/app/(app)/notifications.tsx`.
 - Move the existing prefs UI from `alerts.tsx` (notification permission flow, prefs API calls, FeatureGateSheet) verbatim to the new route. No logic change.
 - Update Account screen to add a "Notifications" / "Powiadomienia" line item routing to the new route (locate the Account screen's link list and slot it in alongside existing items).
 - Keep the existing notification-permission re-prompt logic intact (the part that uses `apiGetSubmissions` to detect contributors).
-- Wrap in `flags.phase2`.
+- Wrap in `flags.alertsLoop`.
 
 **T8 — Capture-flow thank-you modal copy:**
 - Locate the post-submission confirmation (likely `apps/mobile/app/(app)/confirm.tsx` and/or a modal component in `apps/mobile/src/components/capture/`).
 - Add the conditional alerts-loop line per AC8.
 - Compute `newUntil = MAX(user.premium_alerts_active_until ?? Date.now(), Date.now() + 30d)` client-side; format date locale-aware.
-- Wrap the new line in `flags.phase2` so prod APKs with the flag off see no change.
+- Wrap the new line in `flags.alertsLoop` so prod APKs with the flag off see no change.
 - Copy review pass: defer to a copywriter / native-speaker review before final ship.
 
 **T9 — Activity-screen verified-banner:**
 - Add a banner component to `apps/mobile/app/(app)/activity.tsx` activity-screen list header.
 - AsyncStorage key `desert:lastSeenPremiumAlertsActiveUntil`.
 - On screen mount: read AsyncStorage value + current `user.premium_alerts_active_until`. If current is newer, render banner + update AsyncStorage. Banner has dismiss button (closes immediately) and auto-dismisses on next mount regardless.
-- Wrap in `flags.phase2`.
+- Wrap in `flags.alertsLoop`.
 
 ### i18n (T10)
 
@@ -258,7 +259,7 @@ Backend (gating, warning worker, premium-window updates) is **not** flag-gated �
 
 ## Notes for the implementer
 
-- **Phase 2 gating is critical** — prod APK ships with `flags.phase2 = false` per memory; the entry points must wrap. Backend gating is dark-safe (filters recipients regardless of mobile state).
+- **Runtime feature flag is critical** — prod APK ships with `flags.alertsLoop = false` until the marketing-campaign launch moment per memory `feedback_feature_flags.md`; the entry points must wrap. Backend gating is dark-safe (filters recipients regardless of mobile state).
 - **6.4 collision** — the prefs-panel rebuild is much larger than this story's relocation. T7 deliberately ships a minimal-viable home for the existing UI. When 6.4 lands, that route can be redesigned without breaking anything.
 - **Atomic verification + extension** — if the verification path is split across worker + service, prefer event-driven decoupling over making it a single transaction at the cost of complexity. Idempotent updates (`MAX` arithmetic) are the safety net.
 - **Migration applied manually per project memory** — `project_staging_predeploy_broken`. After merge, run `prisma migrate deploy` against staging then prod.

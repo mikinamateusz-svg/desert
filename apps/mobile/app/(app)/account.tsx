@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -9,6 +9,7 @@ import { apiRequestDataExport } from '../../src/api/user';
 import { changeLanguage, SUPPORTED_LOCALES } from '../../src/i18n';
 import type { SupportedLocale } from '../../src/i18n';
 import { flags } from '../../src/config/flags';
+import { WelcomeCarousel } from '../../src/components/onboarding/WelcomeCarousel';
 
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/);
@@ -21,6 +22,15 @@ export default function AccountScreen() {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language as SupportedLocale;
   const [isExporting, setIsExporting] = useState(false);
+  // Story 1.14 — re-access mode for the welcome carousel.
+  const [welcomeOpen, setWelcomeOpen] = useState(false);
+
+  // P7 (1.14 review) — close the modal on screen unmount so a deep
+  // navigation away doesn't leave an orphaned Modal floating over the
+  // next screen on Android.
+  useEffect(() => {
+    return () => setWelcomeOpen(false);
+  }, []);
 
   async function handleExportData() {
     setIsExporting(true);
@@ -109,6 +119,11 @@ export default function AccountScreen() {
             <Text style={styles.buttonText}>{t('account.sendFeedback')}</Text>
           </TouchableOpacity>
 
+          {/* Story 1.14 — re-access the welcome carousel from any time. */}
+          <TouchableOpacity style={styles.button} onPress={() => setWelcomeOpen(true)}>
+            <Text style={styles.buttonText}>{t('account.howItWorks')}</Text>
+          </TouchableOpacity>
+
           {/* Story 6.10 — notifications/prefs entry. Hidden when flags.alertsLoop is off. */}
           {flags.alertsLoop && (
             <TouchableOpacity style={styles.button} onPress={() => router.push('/(app)/notifications')}>
@@ -145,6 +160,12 @@ export default function AccountScreen() {
         )}
 
       </ScrollView>
+
+      <WelcomeCarousel
+        visible={welcomeOpen}
+        mode="reaccess"
+        onClose={() => setWelcomeOpen(false)}
+      />
     </SafeAreaView>
   );
 }

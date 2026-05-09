@@ -235,6 +235,7 @@ export default {
     privacySettings: 'Privacy settings',
     sendFeedback: 'Send feedback',
     notifications: 'Notifications & alerts',
+    howItWorks: 'How litro works',
     trademarkDisclaimer: 'Brand names and trademarks displayed in this app are the property of their respective owners and are used solely to identify fuel stations. Litro is not affiliated with any fuel station chain.',
     exportDataSuccess: 'Your data export has been prepared. Check your email for the download link.',
     exportDataError: 'Failed to prepare data export. Please try again.',
@@ -615,5 +616,48 @@ export default {
       'Reading must be greater than {{previousKm}} km (your last reading).',
     noVehicleTitle: 'Add a vehicle first',
     noVehicleAction: 'Add my car',
+  },
+  onboarding: {
+    welcome: {
+      card1: {
+        title: 'Welcome to litro',
+        body: "A fuel-price map built by drivers, for drivers. We'll show you how it works.",
+        hint: "It'll only take a moment.",
+      },
+      card2: {
+        title: 'Where do the prices come from?',
+        body: 'Every price comes from a driver who snapped the station price board. We verify each submission automatically.',
+      },
+      card3: {
+        title: 'Pin colours',
+        body: "Green = cheaper than average. Red = more expensive. A \"~\" before the price means it's an estimate — until someone reports the station.",
+        labelCheap: 'Cheap',
+        labelMid: 'Average',
+        labelExpensive: 'Pricey',
+        labelEstimate: 'Estimate',
+      },
+      card4: {
+        title: 'Just snap — we handle the rest',
+        bodyTy: 'You: take a photo of station prices.',
+        bodyMy: "We: read them, verify, and add to the map.",
+        labelTy: 'You',
+        labelMy: 'Us',
+        closing: "That's it. Your job is just that one snap.",
+      },
+      card5: {
+        title: "What's in it for you?",
+        body: 'Every verified photo activates 30 days of premium alerts — we warn you before prices rise. Every new photo extends the alert window.',
+        badge: '+30 days',
+      },
+      buttons: {
+        next: 'Next',
+        back: 'Back',
+        start: "Let's go",
+        close: 'Close',
+      },
+      progress: {
+        stepN: 'Step {{current}} of {{total}}',
+      },
+    },
   },
 } as const;

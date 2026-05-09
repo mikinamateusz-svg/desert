@@ -100,8 +100,8 @@ When they open the Account screen,
 Then a new line item *"Jak działa litro?"* (PL canonical) appears in the standard list-item style,
 And tapping it opens the same carousel component in **freely browseable mode**:
 - Linear forward via "Dalej" / "Zaczynamy" still works.
-- "Wstecz" is allowed on every card including card 1.
-- Tap-outside / hardware-back / on-screen "Zamknij" close the modal **without** modifying the completion flag.
+- "Wstecz" is rendered on every card including card 1 (for visual symmetry with cards 2-5), but on card 1 it is a no-op — there's no card 0 to navigate to. The button shows in a disabled state.
+- Hardware-back / on-screen "Zamknij" close the modal **without** modifying the completion flag. (Tap-outside is not a working dismissal path because the carousel uses `presentationStyle="fullScreen"` to block iOS swipe-down dismissal in first-run mode; same component is reused for re-access. Two working dismiss paths is sufficient.)
 - No "Zaczynamy" treatment on card 5 — instead a "Zamknij" button.
 
 Both modes share the same carousel component; the calling context passes a `mode: 'first-run' | 'reaccess'` prop that toggles the dismissal rules.

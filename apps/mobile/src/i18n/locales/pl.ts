@@ -247,6 +247,7 @@ export default {
     privacySettings: 'Ustawienia prywatności',
     sendFeedback: 'Wyślij opinię',
     notifications: 'Powiadomienia i alerty',
+    howItWorks: 'Jak działa litro?',
     trademarkDisclaimer: 'Nazwy marek i znaki towarowe wyświetlane w aplikacji są własnością ich odpowiednich właścicieli i służą wyłącznie identyfikacji stacji paliw. Litro nie jest powiązane z żadną siecią stacji paliw.',
     exportDataSuccess: 'Eksport danych został przygotowany. Sprawdź swój e-mail, aby pobrać plik.',
     exportDataError: 'Nie udało się przygotować eksportu danych. Spróbuj ponownie.',
@@ -652,5 +653,48 @@ export default {
       'Odczyt musi być większy niż {{previousKm}} km (poprzedni odczyt).',
     noVehicleTitle: 'Najpierw dodaj pojazd',
     noVehicleAction: 'Dodaj moje auto',
+  },
+  onboarding: {
+    welcome: {
+      card1: {
+        title: 'Witaj w litro',
+        body: 'Mapa cen paliw tworzona przez kierowców — dla kierowców. Pokażemy Ci, jak to działa.',
+        hint: 'Zajmie to chwilę.',
+      },
+      card2: {
+        title: 'Skąd biorą się ceny?',
+        body: 'Każda cena pochodzi od kierowcy, który zrobił zdjęcie tablicy ze stacji. Sprawdzamy każde zgłoszenie automatycznie.',
+      },
+      card3: {
+        title: 'Kolory pinezek',
+        body: 'Zielone = tańsze niż średnia. Czerwone = droższe. Znak „~” przy cenie oznacza, że jest ona szacunkowa — dopóki nikt nie zgłosi tej stacji.',
+        labelCheap: 'Tanio',
+        labelMid: 'Średnio',
+        labelExpensive: 'Drogo',
+        labelEstimate: 'Szacunkowa',
+      },
+      card4: {
+        title: 'Tylko zdjęcie — resztą zajmiemy się my',
+        bodyTy: 'Ty: zrób zdjęcie cen na stacji.',
+        bodyMy: 'My: odczytamy je, sprawdzimy i dodamy do mapy.',
+        labelTy: 'Ty',
+        labelMy: 'My',
+        closing: 'Tyle wystarczy. Twój czas to tylko ten jeden snap.',
+      },
+      card5: {
+        title: 'Co Ci to daje?',
+        body: 'Każde zweryfikowane zdjęcie aktywuje Ci alerty premium na 30 dni — uprzedzimy Cię, gdy ceny mają wzrosnąć. Każde kolejne zdjęcie przedłuża okno alertów.',
+        badge: '+30 dni',
+      },
+      buttons: {
+        next: 'Dalej',
+        back: 'Wstecz',
+        start: 'Zaczynamy',
+        close: 'Zamknij',
+      },
+      progress: {
+        stepN: 'Krok {{current}} z {{total}}',
+      },
+    },
   },
 } as const;

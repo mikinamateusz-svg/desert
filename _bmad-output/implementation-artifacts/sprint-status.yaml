@@ -1010,8 +1010,13 @@ epics:
       - id: 6.4
         title: "Alert Preferences & Settings Panel"
         file: 6-4-alert-preferences-settings-panel.md
-        status: ready-for-dev
+        status: review
         ready_date: 2026-04-07
+        dev_started: 2026-05-09
+        dev_completed: 2026-05-09
+        review_date: 2026-05-09
+        review_findings: "Spec drift handled correctly: panel rebuilt at /(app)/notifications, not /(app)/alerts (Story 6.10 had already moved prefs there). Three parallel reviewers (blind/edge/auditor) flagged 30+ items; high/medium fixes applied: (1) locale-aware target_pln hydration handles string|number|null and PL/UK comma display (server returns Decimal as '6.50' regardless of locale; PL/UK keyboards type '6,50' — input parser already accepted both, but display now mirrors locale); (2) defensive ?? defaults at render points (price_drop_mode ?? 'cheaper_than_now', price_drop_fuel_types ?? [], alert_radius_km ?? 10) guard against stale-cache rows that predate the migration — without these, .includes() on undefined would crash the screen; (3) handleModeChange: switching mode → cheaper_than_now also sends price_drop_target_pln: null, mirroring the DTO comment 'Null clears it' (otherwise old target ghosts back when user flips again); (4) Number(num.toFixed(2)) instead of Math.round(num*100)/100 — IEEE-754 trap (1.005 * 100 = 100.4999... rounds DOWN to 1.00 instead of 1.01); (5) AC3 compliance: radius selector lifted out of price_drop_enabled gate, now reachable when ANY alert family is enabled (rise-only users can set it); (6) inline empty-fuel-types hint when price_drop_enabled but list is []; (7) shared-radius caption in rise card so drivers know it's the same value as Price Drop; (8) pillGroup gets flexWrap+rowGap so mode pills don't overflow on iPhone SE. Defers: cross-field DTO validation (target_price mode requires target_pln) — UI enforces, alert pipeline can degrade gracefully when missing; DB CHECK constraints for enum-like columns — DTO already enforces, defence-in-depth not load-bearing; race-condition queueing on rapid sequential updates — MVP single-user low-frequency editing; Phase 1 default flip (price_drops/sharp_rise still default true on new rows, hidden from UI) — separate decision tied to Phase 1 alert pipeline retirement after 6.1/6.2/6.3; AC6 disabled-controls vs replaced-screen interpretation — current denied-state screen is a sensible read of the literal AC; CREATE-path test for upsert (only UPDATE branch exercised) — nice-to-have."
+        patches_applied: "2026-05-09 — all consensus high/medium fixes applied; 1226/1226 api tests pass; tsc + lint clean repo-wide. Phase 2 columns ship with off defaults; Phase 1 alert pipeline keeps reading Phase 1 columns until 6.1/6.2/6.3 retire it. Mobile UI gated behind flags.phase2 — new entry points dark in prod APK builds."
       - id: 6.9
         title: "Guest Conversion Nudges"
         file: 6-9-guest-conversion-nudges.md

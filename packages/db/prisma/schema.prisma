@@ -67,6 +67,10 @@ enum SignalType {
   orlen_rack_pb95
   orlen_rack_on
   orlen_rack_lpg
+  // Story 6.0 — Brent crude in PLN/litre equivalent (USD/bbl × USD/PLN ÷ 158.987).
+  // Directional signal only — not a retail price. A ≥3% upward move triggers
+  // a predictive rise alert (Story 6.3) covering PB_95/PB_98/ON/ON_PREMIUM.
+  brent_crude_pln
 }
 
 enum StationType {
@@ -229,6 +233,11 @@ model MarketSignal {
   value                Float // PLN/litre
   pct_change           Float? // fraction (0.03 = 3%), NOT a percentage — Story 2.8 must read accordingly; null for first ingestion
   significant_movement Boolean    @default(false)
+  /// Story 6.0 — provenance of the USD/PLN rate used to compute the
+  /// brent_crude_pln value: 'live' = fresh NBP fetch this run; 'cached' =
+  /// last-known NBP from Redis (up to 24h stale). Null for ORLEN signals
+  /// (no rate translation).
+  rate_source          String?
   recorded_at          DateTime   @default(now())
   created_at           DateTime   @default(now())
 

@@ -3,6 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { Queue, Worker, type Job } from 'bullmq';
 import Redis from 'ioredis';
 import { OrlenIngestionService } from './orlen-ingestion.service.js';
+import { BrentIngestionService } from './brent-ingestion.service.js';
+import { PriceRiseSignalPublisher } from './price-rise-signal.publisher.js';
+import type { MovementRecord } from './types.js';
 
 export const ORLEN_INGESTION_QUEUE = 'orlen-ingestion';
 export const ORLEN_INGESTION_JOB = 'run-ingestion';
@@ -27,6 +30,11 @@ export class OrlenIngestionWorker implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly ingestionService: OrlenIngestionService,
     private readonly config: ConfigService,
+    // Story 6.0 — Brent crude is non-blocking: if it throws, ORLEN
+    // ingestion is unaffected (AC3). The publisher fans out the
+    // resulting movements to the price-rise-signals queue.
+    private readonly brentIngestionService: BrentIngestionService,
+    private readonly riseSignalPublisher: PriceRiseSignalPublisher,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -73,7 +81,31 @@ export class OrlenIngestionWorker implements OnModuleInit, OnModuleDestroy {
     this.worker = new Worker(
       ORLEN_INGESTION_QUEUE,
       async (_job: Job) => {
-        await this.ingestionService.ingest();
+        // 1. ORLEN rack — required, throws on any failure (BullMQ retries).
+        const orlenMovements = await this.ingestionService.ingest();
+
+        // 2. Brent crude — non-blocking per Story 6.0 AC3. Wrap in
+        //    try/catch so an Alpha Vantage / NBP outage never fails the
+        //    job. Service already logs [OPS-ALERT] internally for hard
+        //    failures; the catch here defends against unexpected throws.
+        let brentMovement: MovementRecord | null = null;
+        try {
+          brentMovement = await this.brentIngestionService.ingest();
+        } catch (err) {
+          this.logger.warn(
+            `[OPS-ALERT] Brent ingestion threw: ${err instanceof Error ? err.message : String(err)}`,
+          );
+        }
+
+        // 3. Publish rise signals from the combined movement set.
+        const allMovements = [
+          ...orlenMovements,
+          ...(brentMovement ? [brentMovement] : []),
+        ];
+        const published = await this.riseSignalPublisher.maybePublish(allMovements);
+        if (published > 0) {
+          this.logger.log(`Published ${published} price-rise-signal event(s)`);
+        }
       },
       {
         connection: workerConnection,

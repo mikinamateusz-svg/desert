@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { BrentIngestionService } from './brent-ingestion.service.js';
+import { PriceRiseSignalPublisher } from './price-rise-signal.publisher.js';
 import {
   OrlenIngestionWorker,
   ORLEN_INGESTION_QUEUE,
@@ -41,8 +43,20 @@ jest.mock('bullmq', () => ({
   ),
 }));
 
-const mockIngestionService = { ingest: jest.fn().mockResolvedValue(undefined) };
+// Story 6.0 — ingest() now returns MovementRecord[] (was void). Default
+// to an empty array so existing tests pass without modification.
+const mockIngestionService = { ingest: jest.fn().mockResolvedValue([]) };
 const mockConfig = { getOrThrow: jest.fn().mockReturnValue('redis://localhost:6379') };
+// Story 6.0 — Brent ingestion + rise-signal publisher are injected
+// alongside Orlen. Defaults: Brent returns null (no movement to publish),
+// publisher reports zero published events. onModuleInit runs against
+// these mocks so the existing module-init assertions still hold.
+const mockBrentIngestionService = { ingest: jest.fn().mockResolvedValue(null) };
+const mockRiseSignalPublisher = {
+  maybePublish: jest.fn().mockResolvedValue(0),
+  onModuleInit: jest.fn().mockResolvedValue(undefined),
+  onModuleDestroy: jest.fn().mockResolvedValue(undefined),
+};
 
 describe('OrlenIngestionWorker', () => {
   let workerService: OrlenIngestionWorker;
@@ -58,6 +72,8 @@ describe('OrlenIngestionWorker', () => {
         OrlenIngestionWorker,
         { provide: OrlenIngestionService, useValue: mockIngestionService },
         { provide: ConfigService, useValue: mockConfig },
+        { provide: BrentIngestionService, useValue: mockBrentIngestionService },
+        { provide: PriceRiseSignalPublisher, useValue: mockRiseSignalPublisher },
       ],
     }).compile();
 
@@ -144,6 +160,58 @@ describe('OrlenIngestionWorker', () => {
       expect(capturedProcessor).toBeDefined();
       await capturedProcessor!({});
       expect(mockIngestionService.ingest).toHaveBeenCalledTimes(1);
+    });
+
+    // ── Story 6.0 — Brent integration ────────────────────────────────────
+
+    it('publishes ORLEN movements to the rise-signal queue after ingest', async () => {
+      mockIngestionService.ingest.mockResolvedValueOnce([
+        { signalType: 'orlen_rack_pb95', pctChange: 0.04, significantMovement: true, recordedAt: new Date() },
+      ]);
+
+      await capturedProcessor!({});
+
+      expect(mockRiseSignalPublisher.maybePublish).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({ signalType: 'orlen_rack_pb95' }),
+        ]),
+      );
+    });
+
+    it('AC3 — Brent ingestion failure does NOT fail the job; ORLEN still publishes', async () => {
+      mockIngestionService.ingest.mockResolvedValueOnce([
+        { signalType: 'orlen_rack_pb95', pctChange: 0.04, significantMovement: true, recordedAt: new Date() },
+      ]);
+      mockBrentIngestionService.ingest.mockRejectedValueOnce(new Error('Alpha Vantage 503'));
+
+      // Job should resolve successfully despite Brent throwing
+      await expect(capturedProcessor!({})).resolves.toBeUndefined();
+
+      // Publisher receives ORLEN movements only (no brent record appended)
+      const call = mockRiseSignalPublisher.maybePublish.mock.calls[0][0];
+      expect(call).toHaveLength(1);
+      expect(call[0].signalType).toBe('orlen_rack_pb95');
+    });
+
+    it('appends Brent movement to the publisher batch when Brent returns a record', async () => {
+      mockIngestionService.ingest.mockResolvedValueOnce([
+        { signalType: 'orlen_rack_pb95', pctChange: 0.01, significantMovement: false, recordedAt: new Date() },
+      ]);
+      mockBrentIngestionService.ingest.mockResolvedValueOnce({
+        signalType: 'brent_crude_pln',
+        pctChange: 0.05,
+        significantMovement: true,
+        recordedAt: new Date(),
+      });
+
+      await capturedProcessor!({});
+
+      const call = mockRiseSignalPublisher.maybePublish.mock.calls[0][0];
+      expect(call).toHaveLength(2);
+      expect(call.map((m: { signalType: string }) => m.signalType)).toEqual([
+        'orlen_rack_pb95',
+        'brent_crude_pln',
+      ]);
     });
   });
 

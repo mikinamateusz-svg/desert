@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
+import type { MovementRecord } from './types.js';
 
 const SIGNIFICANT_MOVEMENT_THRESHOLD = 0.03; // 3%
 const FETCH_TIMEOUT_MS = 15_000;
@@ -68,13 +69,15 @@ export class OrlenIngestionService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async ingest(): Promise<void> {
+  async ingest(): Promise<MovementRecord[]> {
     const [wholesale, autogas] = await Promise.all([
       this.fetchJson<OrlenWholesaleItem[]>(ORLEN_WHOLESALE_URL),
       this.fetchJson<OrlenAutogasItem[]>(ORLEN_AUTOGAS_URL),
     ]);
     const prices = this.parsePrices(wholesale, autogas);
-    await this.storeSignals(prices);
+    // Story 6.0 — returns the per-signal movement records so the worker
+    // can hand them to PriceRiseSignalPublisher alongside Brent.
+    return this.storeSignals(prices);
   }
 
   /**
@@ -140,7 +143,7 @@ export class OrlenIngestionService {
     return response.json() as Promise<T>;
   }
 
-  private async storeSignals(prices: RackPrices): Promise<void> {
+  private async storeSignals(prices: RackPrices): Promise<MovementRecord[]> {
     const entries: SignalEntry[] = [
       { type: 'orlen_rack_pb95', value: prices.pb95 },
       { type: 'orlen_rack_on',   value: prices.on },
@@ -169,6 +172,13 @@ export class OrlenIngestionService {
       return { type, value, pctChange, significantMovement, previous };
     });
 
+    // Single anchor timestamp shared by all 3 signals so the
+    // MovementRecord.recordedAt returned to the publisher MATCHES the
+    // persisted MarketSignal.recorded_at column. Without this, the JS
+    // `new Date()` would drift from the DB's `@default(now())` value
+    // computed inside the transaction (typically 1–10ms, occasionally
+    // hundreds under cold-start load).
+    const writeStartedAt = new Date();
     await this.prisma.$transaction([
       // Existing: MarketSignal for consumers like MarketSignalController and
       // the price rise alert worker.
@@ -179,6 +189,7 @@ export class OrlenIngestionService {
             value,
             pct_change:           pctChange,
             significant_movement: significantMovement,
+            recorded_at:          writeStartedAt,
           },
         }),
       ),
@@ -213,6 +224,17 @@ export class OrlenIngestionService {
       `ORLEN rack prices ingested — PB95: ${prices.pb95.toFixed(4)}, ` +
       `ON: ${prices.on.toFixed(4)}, LPG: ${prices.lpg.toFixed(4)} PLN/l`,
     );
+
+    // Story 6.0 — hand back the per-signal movements so the worker can
+    // ask PriceRiseSignalPublisher to enqueue rise events. recordedAt
+    // uses a single timestamp captured pre-write so all three signals
+    // share an anchor (avoids 0-1ms drift across the transaction).
+    return records.map(({ type, pctChange, significantMovement }) => ({
+      signalType: type,
+      pctChange,
+      significantMovement,
+      recordedAt: writeStartedAt,
+    }));
   }
 }
 

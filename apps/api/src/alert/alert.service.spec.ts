@@ -11,10 +11,12 @@ const mockMarketSignalFindMany = jest.fn();
 const mockNotificationPrefFindMany = jest.fn();
 
 const mockNotificationPrefUpdateMany = jest.fn().mockResolvedValue({ count: 1 });
+const mockDriverAlertCreate = jest.fn();
 
 const mockPrisma = {
   marketSignal: { findMany: mockMarketSignalFindMany },
   notificationPreference: { findMany: mockNotificationPrefFindMany, updateMany: mockNotificationPrefUpdateMany },
+  driverAlert: { create: mockDriverAlertCreate },
 };
 
 const mockRedisGet = jest.fn();
@@ -42,7 +44,7 @@ const makeSignal = (signal_type: string) => ({
   recorded_at: new Date(),
 });
 
-const makePreference = (token: string) => ({ expo_push_token: token });
+const makePreference = (token: string, user_id = 'user-1') => ({ user_id, expo_push_token: token });
 
 const VALID_TOKEN = 'ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]';
 
@@ -64,6 +66,8 @@ describe('PriceRiseAlertService', () => {
     // Default: Redis dedup miss (no prior alert)
     mockRedisGet.mockResolvedValue(null);
     mockRedisSet.mockResolvedValue('OK');
+    // Default: DriverAlert insert succeeds (Story 6.11 — pre-push persistence)
+    mockDriverAlertCreate.mockResolvedValue({ id: 'alert-1' });
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -210,12 +214,97 @@ describe('PriceRiseAlertService', () => {
 
     it('sends messages in chunks', async () => {
       const tokens = ['ExponentPushToken[aaa]', 'ExponentPushToken[bbb]'];
-      mockNotificationPrefFindMany.mockResolvedValue(tokens.map(makePreference));
+      mockNotificationPrefFindMany.mockResolvedValue(tokens.map((t) => makePreference(t)));
       mockChunkMessages.mockReturnValue([[tokens[0]], [tokens[1]]]);
 
       await service.sendRiseAlerts();
 
       expect(mockSendChunk).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  // ── DriverAlert persistence (Story 6.11 AC2) ───────────────────────────────
+
+  describe('DriverAlert persistence', () => {
+    beforeEach(() => {
+      mockMarketSignalFindMany.mockResolvedValue([makeSignal('orlen_rack_pb95')]);
+    });
+
+    it('creates a DriverAlert row per recipient before sending the push', async () => {
+      mockNotificationPrefFindMany.mockResolvedValue([
+        makePreference(VALID_TOKEN, 'user-aaa'),
+      ]);
+
+      await service.sendRiseAlerts();
+
+      expect(mockDriverAlertCreate).toHaveBeenCalledTimes(1);
+      expect(mockDriverAlertCreate).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          user_id: 'user-aaa',
+          alert_type: 'price_rise',
+          title: 'Fuel prices may be rising',
+          body: expect.stringContaining('worth filling up if you can'),
+          payload: expect.objectContaining({
+            signalTypes: ['orlen_rack_pb95'],
+            deepLink: '/',
+          }),
+        }),
+      });
+      expect(mockSendChunk).toHaveBeenCalled();
+    });
+
+    it('skips push for a recipient whose DriverAlert insert fails but continues the batch', async () => {
+      const tokenA = 'ExponentPushToken[aaa]';
+      const tokenB = 'ExponentPushToken[bbb]';
+      mockNotificationPrefFindMany.mockResolvedValue([
+        makePreference(tokenA, 'user-aaa'),
+        makePreference(tokenB, 'user-bbb'),
+      ]);
+      mockDriverAlertCreate
+        .mockRejectedValueOnce(new Error('DB write failed'))
+        .mockResolvedValueOnce({ id: 'alert-bbb' });
+
+      await service.sendRiseAlerts();
+
+      expect(mockDriverAlertCreate).toHaveBeenCalledTimes(2);
+      // Only the second recipient should be in the message batch.
+      const sentMessages = mockSendChunk.mock.calls.flat(2);
+      expect(sentMessages).toHaveLength(1);
+      expect(sentMessages[0]).toMatchObject({ to: tokenB });
+    });
+
+    it('skips dedup when every DriverAlert insert fails — next tick retries', async () => {
+      mockNotificationPrefFindMany.mockResolvedValue([
+        makePreference(VALID_TOKEN, 'user-aaa'),
+      ]);
+      mockDriverAlertCreate.mockRejectedValue(new Error('DB unavailable'));
+
+      await service.sendRiseAlerts();
+
+      expect(mockSendChunk).not.toHaveBeenCalled();
+      // P4 (6.11 review) — total DB outage must NOT silently suppress the
+      // signal type for the 48h dedup window with zero deliveries. The
+      // next tick should retry; only no-recipient cases record dedup.
+      expect(mockRedisSet).not.toHaveBeenCalled();
+    });
+
+    it('still records dedup when no recipients have valid tokens (filtered, not failed)', async () => {
+      mockNotificationPrefFindMany.mockResolvedValue([
+        makePreference('not-a-valid-token', 'user-aaa'),
+      ]);
+
+      await service.sendRiseAlerts();
+
+      expect(mockSendChunk).not.toHaveBeenCalled();
+      expect(mockDriverAlertCreate).not.toHaveBeenCalled();
+      // No valid tokens to begin with → there's nothing to retry; record
+      // dedup so the next tick doesn't repeat the same no-op.
+      expect(mockRedisSet).toHaveBeenCalledWith(
+        'alert:rise:orlen_rack_pb95',
+        '1',
+        'EX',
+        48 * 3600,
+      );
     });
   });
 
@@ -251,7 +340,7 @@ describe('PriceRiseAlertService', () => {
 
     it('continues sending remaining chunks if one chunk throws', async () => {
       const tokens = ['ExponentPushToken[aaa]', 'ExponentPushToken[bbb]'];
-      mockNotificationPrefFindMany.mockResolvedValue(tokens.map(makePreference));
+      mockNotificationPrefFindMany.mockResolvedValue(tokens.map((t) => makePreference(t)));
       mockChunkMessages.mockReturnValue([[tokens[0]], [tokens[1]]]);
       mockSendChunk
         .mockRejectedValueOnce(new Error('Network error'))

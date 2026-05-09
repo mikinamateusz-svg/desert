@@ -91,9 +91,42 @@ export class PremiumExpiryWarningService {
       return;
     }
 
-    this.logger.log(`Sending premium-expiry warnings to ${toWarn.length} user(s)`);
+    // Story 6.11 AC3 — persist a DriverAlert inbox row per recipient
+    // before sending the push. If the insert fails for a user we skip
+    // their push (no orphan push without inbox record) but continue
+    // processing the rest so one failure doesn't block the batch.
+    const persisted: Array<{ userId: string; token: string }> = [];
+    for (const { userId, token } of toWarn) {
+      try {
+        await this.prisma.driverAlert.create({
+          data: {
+            user_id: userId,
+            alert_type: 'premium_expiring_warning',
+            title: PUSH_TITLE,
+            body: PUSH_BODY,
+            payload: {
+              deepLink: PUSH_DEEP_LINK,
+            },
+          },
+        });
+        persisted.push({ userId, token });
+      } catch (e: unknown) {
+        this.logger.warn(
+          `Failed to persist DriverAlert for ${userId} — skipping push: ${
+            e instanceof Error ? e.message : String(e)
+          }`,
+        );
+      }
+    }
 
-    const messages: ExpoPushMessage[] = toWarn.map(({ token }) => ({
+    if (persisted.length === 0) {
+      this.logger.log('All candidates failed to persist — no pushes to send');
+      return;
+    }
+
+    this.logger.log(`Sending premium-expiry warnings to ${persisted.length} user(s)`);
+
+    const messages: ExpoPushMessage[] = persisted.map(({ token }) => ({
       to: token,
       title: PUSH_TITLE,
       body: PUSH_BODY,
@@ -104,8 +137,10 @@ export class PremiumExpiryWarningService {
     await this.sendInChunks(messages);
 
     // Record dedup keys + audit-log entry per user. Best-effort each — a
-    // single failure shouldn't block the rest of the batch.
-    for (const { userId } of toWarn) {
+    // single failure shouldn't block the rest of the batch. Iterates
+    // `persisted` (not `toWarn`) so users whose DriverAlert insert failed
+    // are not deduped — they'll be reconsidered on the next worker tick.
+    for (const { userId } of persisted) {
       try {
         await this.redis.set(this.dedupKey(userId), '1', 'EX', DEDUP_TTL_SECONDS);
       } catch (e: unknown) {

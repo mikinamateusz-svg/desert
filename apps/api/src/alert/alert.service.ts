@@ -71,33 +71,83 @@ export class PriceRiseAlertService {
           deleted_at: null,
         },
       },
-      select: { expo_push_token: true },
+      select: { user_id: true, expo_push_token: true },
     });
 
-    const validTokens = preferences
-      .map((p) => p.expo_push_token as string)
-      .filter((token) => this.expoPush.isValidToken(token));
-
-    if (validTokens.length === 0) {
+    if (preferences.length === 0) {
       this.logger.log('No opted-in users with valid push tokens — recording dedup and exiting');
       await this.recordAlertedTypes(newTypes);
       return;
     }
 
-    this.logger.log(`Sending price rise alerts to ${validTokens.length} device(s)`);
+    // 4. Per-recipient: persist a DriverAlert row first (Story 6.11 AC2 —
+    //    inbox record before push send). If the insert fails we skip the
+    //    push for that user (no orphan pushes without an inbox row) but
+    //    keep processing the rest of the batch so a single bad row never
+    //    blocks alerts for everyone.
+    const messages: ExpoPushMessage[] = [];
+    let validTokenCount = 0;
+    let persistFailures = 0;
+    for (const pref of preferences) {
+      const token = pref.expo_push_token as string;
+      if (!this.expoPush.isValidToken(token)) continue;
+      validTokenCount += 1;
 
-    // 4. Build messages and send in chunks (Expo recommends max 100 per request)
-    const messages: ExpoPushMessage[] = validTokens.map((token) => ({
-      to: token,
-      title: PUSH_TITLE,
-      body: PUSH_BODY,
-      data: { route: '/' },
-      sound: 'default' as const,
-    }));
+      try {
+        await this.prisma.driverAlert.create({
+          data: {
+            user_id: pref.user_id,
+            alert_type: 'price_rise',
+            title: PUSH_TITLE,
+            body: PUSH_BODY,
+            payload: {
+              signalTypes: newTypes,
+              deepLink: '/',
+            },
+          },
+        });
+      } catch (e: unknown) {
+        persistFailures += 1;
+        this.logger.warn(
+          `Failed to persist DriverAlert for ${pref.user_id} — skipping push: ${
+            e instanceof Error ? e.message : String(e)
+          }`,
+        );
+        continue;
+      }
 
+      messages.push({
+        to: token,
+        title: PUSH_TITLE,
+        body: PUSH_BODY,
+        data: { route: '/' },
+        sound: 'default' as const,
+      });
+    }
+
+    if (messages.length === 0) {
+      // P4 (6.11 review) — distinguish "no valid recipients" (record dedup —
+      // there's nothing to retry) from "every persist failed" (don't dedup —
+      // the next worker tick should retry once the DB is healthy). Without
+      // this, a transient DB outage would silently suppress the signal type
+      // for the full 48h dedup window with zero deliveries.
+      if (validTokenCount > 0 && persistFailures === validTokenCount) {
+        this.logger.error(
+          `All ${persistFailures} DriverAlert inserts failed — skipping dedup so the next tick retries`,
+        );
+        return;
+      }
+      this.logger.log('No valid recipients — recording dedup and exiting');
+      await this.recordAlertedTypes(newTypes);
+      return;
+    }
+
+    this.logger.log(`Sending price rise alerts to ${messages.length} device(s)`);
+
+    // 5. Send messages in chunks (Expo recommends max 100 per request).
     await this.sendInChunks(messages);
 
-    // 5. Record dedup keys — prevent re-alerting within 48h per signal type
+    // 6. Record dedup keys — prevent re-alerting within 48h per signal type.
     await this.recordAlertedTypes(newTypes);
   }
 

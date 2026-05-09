@@ -108,6 +108,7 @@ model User {
   fillUps                FillUp[]
   odometerReadings       OdometerReading[]
   stationClaims          StationClaim[]
+  driverAlerts           DriverAlert[]
 }
 
 model Station {
@@ -244,6 +245,30 @@ model NotificationPreference {
   created_at      DateTime @default(now())
   updated_at      DateTime @updatedAt
   user            User     @relation(fields: [user_id], references: [id])
+}
+
+/// Story 6.11 — per-user inbox record for every push the alerts loop sends.
+/// `alert_type` is intentionally a free-form string (not a Prisma enum) so
+/// 6.1 / 6.2 / 6.5 can add new types via additive code change with no
+/// migration. Centralise known values in a TS const + i18n key map; treat
+/// unknown types gracefully in the UI.
+model DriverAlert {
+  id         String    @id @default(uuid())
+  user_id    String
+  alert_type String // 'price_rise' | 'premium_expiring_warning' | future
+  title      String
+  body       String
+  sent_at    DateTime  @default(now())
+  read_at    DateTime?
+  payload    Json?
+  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, sent_at(sort: Desc)])
+  // The unread-count query uses a partial index (`WHERE read_at IS NULL`)
+  // applied via raw SQL in the migration, which Prisma's schema syntax
+  // doesn't express. Don't add `@@index([user_id, read_at])` here — it
+  // would cause `migrate dev` to drift the partial index back to a full
+  // one. See 20260511000000_add_driver_alert.
 }
 
 model StationFuelStaleness {

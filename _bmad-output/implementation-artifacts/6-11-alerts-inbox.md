@@ -60,7 +60,7 @@ The `alert_type` is a string (not a Prisma enum) to keep additive evolution chea
 **AC2 — `PriceRiseAlertService` persists `DriverAlert` rows on send:**
 Given the service is sending a push to a recipient,
 When it submits the Expo push message,
-Then it also creates a `DriverAlert` row with `alert_type: 'price_rise'`, `title` and `body` matching the push, `payload` containing the signal type / fuel types / deep link,
+Then it also creates a `DriverAlert` row with `alert_type: 'price_rise'`, `title` and `body` matching the push, `payload` of shape `{ signalTypes: string[], deepLink: string }` (plural — a single push may aggregate multiple market signals; `fuelTypes` is intentionally omitted because the existing `SignalType` enum already encodes both the source and the fuel — `orlen_rack_pb95` etc. — and there is no separate fuel-types axis to surface yet),
 And the persistence happens *before* the push send (so a successful Expo send corresponds to a row already in the DB),
 And if the persistence fails, the push is **not** sent (atomic intent — no orphan pushes without inbox records),
 And if the push send fails after persistence succeeds, the row is left in place (driver opens inbox and sees the alert; missing push is the lesser failure mode),

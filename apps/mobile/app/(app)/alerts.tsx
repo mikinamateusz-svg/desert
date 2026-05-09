@@ -5,18 +5,18 @@ import { useTranslation } from 'react-i18next';
 import { tokens } from '../../src/theme';
 import { useAuth } from '../../src/store/auth.store';
 import { usePremiumAlertsStatus, bellState } from '../../src/hooks/usePremiumAlertsStatus';
+import { AlertsInbox } from '../../src/components/alerts/AlertsInbox';
+import { flags } from '../../src/config/flags';
 
 /**
- * Story 6.10 — premium-alerts status surface. Tapped from the bell icon
- * on the map header chrome. Renders one of three banner states:
+ * Story 6.10 — premium-alerts status surface.
+ * Story 6.11 — adds the inbox below the status banner.
  *
- *   - inactive: prompt + "Take a photo" CTA → /capture
- *   - active:   informational "active until DATE"
- *   - expiring: warning + "Take a photo to extend" CTA → /capture
+ * The status banner renders one of three states (inactive / active /
+ * expiring) and is the FlatList header so the whole screen scrolls
+ * together with the inbox below.
  *
- * Notification preferences moved to /(app)/notifications (Story 6.10
- * relocation per AC7); this screen no longer carries permission flow or
- * type toggles. Story 6.11 will add the inbox section below the banner.
+ * Notification preferences are at /(app)/notifications.
  */
 export default function AlertsScreen() {
   const { t, i18n } = useTranslation();
@@ -41,12 +41,9 @@ export default function AlertsScreen() {
 
   const handleTakePhoto = () => router.push('/(app)/capture');
 
-  return (
-    <View style={[styles.container, { paddingTop: insets.top + 16 }]}>
+  const banner = (
+    <View style={[styles.bannerWrap, { paddingTop: insets.top + 16 }]}>
       {!accessToken ? (
-        // Unauthenticated users — gentle prompt to sign in. Bell icon
-        // shouldn't reach here in practice (it routes from the map, where
-        // users may not be authed), so guard defensively.
         <View style={styles.banner}>
           <Text style={styles.title}>{t('alerts.statusBanner.signInTitle')}</Text>
           <Text style={styles.body}>{t('alerts.statusBanner.signInBody')}</Text>
@@ -71,7 +68,6 @@ export default function AlertsScreen() {
           </Text>
         </View>
       ) : (
-        // expiring
         <View style={[styles.banner, styles.bannerExpiring]}>
           <Text style={styles.title}>
             {t('alerts.statusBanner.expiringTitle', { count: daysRemaining })}
@@ -84,6 +80,17 @@ export default function AlertsScreen() {
       )}
     </View>
   );
+
+  // Authenticated users see banner + inbox; guests see banner only.
+  if (!accessToken || !flags.alertsLoop) {
+    return <View style={styles.container}>{banner}</View>;
+  }
+
+  return (
+    <View style={styles.containerNoPadding}>
+      <AlertsInbox ListHeader={banner} />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -91,6 +98,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: tokens.surface.page,
     paddingHorizontal: 16,
+  },
+  containerNoPadding: {
+    flex: 1,
+    backgroundColor: tokens.surface.page,
+  },
+  bannerWrap: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   banner: {
     backgroundColor: tokens.surface.card,

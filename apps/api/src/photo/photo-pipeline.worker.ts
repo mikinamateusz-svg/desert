@@ -18,6 +18,7 @@ import { SubmissionsService } from '../submissions/submissions.service.js';
 import { MetricsCounterService } from '../metrics/metrics-counter.service.js';
 import { PremiumAlertsService } from '../alert/premium-alerts.service.js';
 import { PriceDropAlertWorker } from '../alert/price-drop-alert.worker.js';
+import { CommunityRiseAlertWorker } from '../alert/community-rise-alert.worker.js';
 
 export const PHOTO_PIPELINE_QUEUE = 'photo-pipeline';
 export const PHOTO_PIPELINE_JOB = 'process-submission';
@@ -76,6 +77,10 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     // verified price write succeeds. AlertModule exports the worker so
     // PhotoPipelineWorker can publish without touching BullMQ directly.
     private readonly priceDropAlertWorker: PriceDropAlertWorker,
+    // Story 6.2 — enqueue a community-rise threshold evaluation per
+    // verified fuel. BullMQ jobId-dedups bursts of submissions for the
+    // same voivodeship+fuel into a single threshold run.
+    private readonly communityRiseAlertWorker: CommunityRiseAlertWorker,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -968,19 +973,19 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       ),
     );
 
-    // Story 6.1 — enqueue one price-drop-check per verified fuel type.
-    // Best-effort: enqueue failures are logged inside the worker; a missed
-    // enqueue means a single missed alert chance, never a blocked verify.
-    // Voivodeship is resolved up-front so the worker doesn't have to refetch
-    // the station for the cheaper_than_now baseline lookup.
-    // Parallel awaits — enqueueCheck is a Redis round-trip per fuel; running
-    // them serially adds 30-100ms to the verify hot path with 2-3 fuels.
+    // Stories 6.1 + 6.2 — enqueue alert checks per verified fuel type.
+    // Both are best-effort: failures are logged inside their workers;
+    // a missed enqueue means a single missed alert chance, never a
+    // blocked verify. Single voivodeship lookup feeds both pipelines.
+    // Parallel awaits — each enqueueCheck is one Redis round-trip;
+    // running them serially adds 30-100ms to the verify hot path.
     const stationForDrop = await this.prisma.station
       .findUnique({ where: { id: stationId }, select: { voivodeship: true } })
       .catch(() => null);
     const verifiedAt = new Date().toISOString();
-    await Promise.all(
-      valid.map((p) =>
+    const enqueueOps: Promise<void>[] = [];
+    for (const p of valid) {
+      enqueueOps.push(
         this.priceDropAlertWorker.enqueueCheck({
           stationId,
           fuelType: p.fuel_type,
@@ -988,8 +993,22 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
           stationVoivodeship: stationForDrop?.voivodeship ?? null,
           verifiedAt,
         }),
-      ),
-    );
+      );
+      // Community-rise check needs a voivodeship — it IS the geographic
+      // unit. Skip the enqueue when the station has no voivodeship rather
+      // than enqueueing a job that would fail to evaluate.
+      if (stationForDrop?.voivodeship) {
+        enqueueOps.push(
+          this.communityRiseAlertWorker.enqueueCheck({
+            voivodeship: stationForDrop.voivodeship,
+            fuelType: p.fuel_type,
+            triggeredByStationId: stationId,
+            verifiedAt,
+          }),
+        );
+      }
+    }
+    await Promise.all(enqueueOps);
 
     // Story 3.16 — record the consensus state for this station so the next
     // submission within 12h either corroborates, conflicts, or skips OCR.

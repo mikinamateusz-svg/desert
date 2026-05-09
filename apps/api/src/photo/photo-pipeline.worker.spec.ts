@@ -21,6 +21,7 @@ import { TrustScoreService } from '../user/trust-score.service.js';
 import { ResearchRetentionService } from '../research/research-retention.service.js';
 import { PremiumAlertsService } from '../alert/premium-alerts.service.js';
 import { PriceDropAlertWorker } from '../alert/price-drop-alert.worker.js';
+import { CommunityRiseAlertWorker } from '../alert/community-rise-alert.worker.js';
 import { Worker, type Job } from 'bullmq';
 
 // ── BullMQ / Redis mocks ───────────────────────────────────────────────────
@@ -88,6 +89,13 @@ const mockPrismaService = {
 // validated fuel type after the verified-price write succeeds. Tests assert
 // against this in the verify-path test block.
 const mockPriceDropAlertWorker = {
+  enqueueCheck: jest.fn().mockResolvedValue(undefined),
+};
+
+// Story 6.2 — community-rise enqueue mock. enqueueCheck() is called once
+// per validated fuel after verified-price write — but ONLY when the
+// station has a voivodeship (community rise needs a geographic anchor).
+const mockCommunityRiseAlertWorker = {
   enqueueCheck: jest.fn().mockResolvedValue(undefined),
 };
 
@@ -331,6 +339,7 @@ describe('PhotoPipelineWorker', () => {
         // Mock as no-op resolved promise so the awaited call doesn't hang.
         { provide: PremiumAlertsService, useValue: { extendForUser: jest.fn().mockResolvedValue(undefined) } },
         { provide: PriceDropAlertWorker, useValue: mockPriceDropAlertWorker },
+        { provide: CommunityRiseAlertWorker, useValue: mockCommunityRiseAlertWorker },
       ],
     }).compile();
 
@@ -412,6 +421,7 @@ describe('PhotoPipelineWorker', () => {
           { provide: MetricsCounterService, useValue: mockMetricsCounter },
           { provide: PremiumAlertsService, useValue: { extendForUser: jest.fn().mockResolvedValue(undefined) } },
         { provide: PriceDropAlertWorker, useValue: mockPriceDropAlertWorker },
+        { provide: CommunityRiseAlertWorker, useValue: mockCommunityRiseAlertWorker },
         ],
       }).compile();
 
@@ -1897,6 +1907,56 @@ describe('PhotoPipelineWorker', () => {
         await capturedProcessor!(makeJob('sub-123'));
 
         expect(mockPriceDropAlertWorker.enqueueCheck).not.toHaveBeenCalled();
+      });
+
+      // ── Story 6.2 — community-rise enqueue alongside price-drop ───────────
+
+      it('enqueues one community-rise-check per validated fuel when voivodeship is known', async () => {
+        setupHappyPath();
+        mockPriceValidationService.validatePrices.mockResolvedValueOnce({
+          valid: [
+            { fuel_type: 'PB_95', price_per_litre: 6.19, tier: 3 },
+            { fuel_type: 'ON', price_per_litre: 5.89, tier: 3 },
+          ],
+          invalid: [],
+        });
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockCommunityRiseAlertWorker.enqueueCheck).toHaveBeenCalledTimes(2);
+        expect(mockCommunityRiseAlertWorker.enqueueCheck).toHaveBeenCalledWith(
+          expect.objectContaining({
+            voivodeship: 'Mazowieckie',
+            fuelType: 'PB_95',
+            triggeredByStationId: nearbyStation.id,
+            verifiedAt: expect.any(String),
+          }),
+        );
+        expect(mockCommunityRiseAlertWorker.enqueueCheck).toHaveBeenCalledWith(
+          expect.objectContaining({ voivodeship: 'Mazowieckie', fuelType: 'ON' }),
+        );
+      });
+
+      it('does NOT enqueue community-rise-check when station has no voivodeship', async () => {
+        setupHappyPath();
+        // Voivodeship is the geographic unit for community rise alerts;
+        // without it there's no anchor for the threshold evaluation.
+        mockPrismaService.station.findUnique.mockResolvedValueOnce({ voivodeship: null });
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockCommunityRiseAlertWorker.enqueueCheck).not.toHaveBeenCalled();
+        // Price-drop still enqueues (it can degrade to coarse-match even with null voivodeship).
+        expect(mockPriceDropAlertWorker.enqueueCheck).toHaveBeenCalled();
+      });
+
+      it('does NOT enqueue community-rise-check when station lookup fails', async () => {
+        setupHappyPath();
+        mockPrismaService.station.findUnique.mockRejectedValueOnce(new Error('DB timeout'));
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockCommunityRiseAlertWorker.enqueueCheck).not.toHaveBeenCalled();
       });
     });
 

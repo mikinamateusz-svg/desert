@@ -20,6 +20,7 @@ import { MetricsCounterService } from '../metrics/metrics-counter.service.js';
 import { TrustScoreService } from '../user/trust-score.service.js';
 import { ResearchRetentionService } from '../research/research-retention.service.js';
 import { PremiumAlertsService } from '../alert/premium-alerts.service.js';
+import { PriceDropAlertWorker } from '../alert/price-drop-alert.worker.js';
 import { Worker, type Job } from 'bullmq';
 
 // ── BullMQ / Redis mocks ───────────────────────────────────────────────────
@@ -74,9 +75,20 @@ const mockPrismaService = {
   stationFuelStaleness: {
     deleteMany: jest.fn(),
   },
+  // Story 6.1 — voivodeship lookup before enqueueing price-drop-check jobs.
+  station: {
+    findUnique: jest.fn().mockResolvedValue({ voivodeship: 'Mazowieckie' }),
+  },
   user: {
     findUnique: jest.fn(),
   },
+};
+
+// Story 6.1 — drop-alert enqueue mock. enqueueCheck() is called once per
+// validated fuel type after the verified-price write succeeds. Tests assert
+// against this in the verify-path test block.
+const mockPriceDropAlertWorker = {
+  enqueueCheck: jest.fn().mockResolvedValue(undefined),
 };
 
 const mockStationService = {
@@ -318,6 +330,7 @@ describe('PhotoPipelineWorker', () => {
         // Story 6.10 — premium-alerts extension on every verified flip.
         // Mock as no-op resolved promise so the awaited call doesn't hang.
         { provide: PremiumAlertsService, useValue: { extendForUser: jest.fn().mockResolvedValue(undefined) } },
+        { provide: PriceDropAlertWorker, useValue: mockPriceDropAlertWorker },
       ],
     }).compile();
 
@@ -398,6 +411,7 @@ describe('PhotoPipelineWorker', () => {
           { provide: SubmissionsService, useValue: mockSubmissionsService },
           { provide: MetricsCounterService, useValue: mockMetricsCounter },
           { provide: PremiumAlertsService, useValue: { extendForUser: jest.fn().mockResolvedValue(undefined) } },
+        { provide: PriceDropAlertWorker, useValue: mockPriceDropAlertWorker },
         ],
       }).compile();
 
@@ -1826,6 +1840,63 @@ describe('PhotoPipelineWorker', () => {
         );
 
         await expect(capturedProcessor!(makeJob('sub-123'))).resolves.toBeUndefined();
+      });
+
+      // ── Story 6.1 — price-drop enqueue after verified price write ──────────
+
+      it('enqueues one price-drop-check per validated fuel type', async () => {
+        setupHappyPath();
+        mockPriceValidationService.validatePrices.mockResolvedValueOnce({
+          valid: [
+            { fuel_type: 'PB_95', price_per_litre: 6.19, tier: 3 },
+            { fuel_type: 'ON', price_per_litre: 5.89, tier: 3 },
+          ],
+          invalid: [],
+        });
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPriceDropAlertWorker.enqueueCheck).toHaveBeenCalledTimes(2);
+        expect(mockPriceDropAlertWorker.enqueueCheck).toHaveBeenCalledWith(
+          expect.objectContaining({
+            stationId: nearbyStation.id,
+            fuelType: 'PB_95',
+            newPricePln: 6.19,
+            stationVoivodeship: 'Mazowieckie',
+            verifiedAt: expect.any(String),
+          }),
+        );
+        expect(mockPriceDropAlertWorker.enqueueCheck).toHaveBeenCalledWith(
+          expect.objectContaining({ fuelType: 'ON', newPricePln: 5.89 }),
+        );
+      });
+
+      it('passes null voivodeship when station lookup fails (graceful degradation)', async () => {
+        setupHappyPath();
+        mockPrismaService.station.findUnique.mockRejectedValueOnce(new Error('DB timeout'));
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPriceDropAlertWorker.enqueueCheck).toHaveBeenCalledWith(
+          expect.objectContaining({ stationVoivodeship: null }),
+        );
+      });
+
+      it('does NOT enqueue price-drop-checks when no fuels pass validation', async () => {
+        // Verify-path early-return on empty valid set means setVerifiedPrice is
+        // never called — so enqueue must also never fire.
+        mockPrismaService.submission.findUnique
+          .mockResolvedValueOnce(pendingSubmission)
+          .mockResolvedValueOnce(submissionAfterOcr);
+        mockStationService.findNearbyWithDistance.mockResolvedValueOnce([nearbyStation]);
+        mockPriceValidationService.validatePrices.mockResolvedValueOnce({
+          valid: [],
+          invalid: [{ fuel_type: 'PB_95', price_per_litre: 0.5, reason: 'tier3_out_of_range' }],
+        });
+
+        await capturedProcessor!(makeJob('sub-123'));
+
+        expect(mockPriceDropAlertWorker.enqueueCheck).not.toHaveBeenCalled();
       });
     });
 

@@ -17,6 +17,7 @@ import { ResearchRetentionService } from '../research/research-retention.service
 import { SubmissionsService } from '../submissions/submissions.service.js';
 import { MetricsCounterService } from '../metrics/metrics-counter.service.js';
 import { PremiumAlertsService } from '../alert/premium-alerts.service.js';
+import { PriceDropAlertWorker } from '../alert/price-drop-alert.worker.js';
 
 export const PHOTO_PIPELINE_QUEUE = 'photo-pipeline';
 export const PHOTO_PIPELINE_JOB = 'process-submission';
@@ -71,6 +72,10 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     // Story 6.10 — extend the user's premium-alerts window when their
     // submission flips to verified.
     private readonly premiumAlerts: PremiumAlertsService,
+    // Story 6.1 — enqueue a price-drop check per verified fuel after the
+    // verified price write succeeds. AlertModule exports the worker so
+    // PhotoPipelineWorker can publish without touching BullMQ directly.
+    private readonly priceDropAlertWorker: PriceDropAlertWorker,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -960,6 +965,29 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     await this.priceService.setVerifiedPrice(stationId, priceRow).catch((err: Error) =>
       this.logger.error(
         `Failed to write price cache/history for station ${stationId}, submission ${submissionId}: ${err.message}`,
+      ),
+    );
+
+    // Story 6.1 — enqueue one price-drop-check per verified fuel type.
+    // Best-effort: enqueue failures are logged inside the worker; a missed
+    // enqueue means a single missed alert chance, never a blocked verify.
+    // Voivodeship is resolved up-front so the worker doesn't have to refetch
+    // the station for the cheaper_than_now baseline lookup.
+    // Parallel awaits — enqueueCheck is a Redis round-trip per fuel; running
+    // them serially adds 30-100ms to the verify hot path with 2-3 fuels.
+    const stationForDrop = await this.prisma.station
+      .findUnique({ where: { id: stationId }, select: { voivodeship: true } })
+      .catch(() => null);
+    const verifiedAt = new Date().toISOString();
+    await Promise.all(
+      valid.map((p) =>
+        this.priceDropAlertWorker.enqueueCheck({
+          stationId,
+          fuelType: p.fuel_type,
+          newPricePln: p.price_per_litre,
+          stationVoivodeship: stationForDrop?.voivodeship ?? null,
+          verifiedAt,
+        }),
       ),
     );
 

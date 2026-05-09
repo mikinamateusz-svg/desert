@@ -90,6 +90,12 @@ model User {
   fleet_id               String?
   trust_score            Int                     @default(100)
   shadow_banned          Boolean                 @default(false)
+  // Story 6.10 — premium-alerts contribution loop. Set to NOW + 30 days
+  // every time one of this user's submissions transitions to `verified`,
+  // using MAX so a flurry of verifications doesn't shorten an existing
+  // window. PriceRiseAlertService filters recipients to rows where this
+  // is non-null and in the future.
+  premium_alerts_active_until DateTime?
   deleted_at             DateTime?
   deletion_reason        String?
   created_at             DateTime                @default(now())

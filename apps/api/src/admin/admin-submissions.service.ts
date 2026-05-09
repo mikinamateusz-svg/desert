@@ -12,6 +12,7 @@ import { StorageService } from '../storage/storage.service.js';
 import { TrustScoreService } from '../user/trust-score.service.js';
 import { PhotoPipelineWorker } from '../photo/photo-pipeline.worker.js';
 import { SubmissionDedupService } from '../photo/submission-dedup.service.js';
+import { PremiumAlertsService } from '../alert/premium-alerts.service.js';
 
 export interface FlaggedSubmissionRow {
   id: string;
@@ -145,6 +146,10 @@ export class AdminSubmissionsService {
     private readonly trustScoreService: TrustScoreService,
     private readonly photoPipelineWorker: PhotoPipelineWorker,
     private readonly submissionDedupService: SubmissionDedupService,
+    // Story 6.10 — extend the submitter's premium-alerts window when an
+    // admin approves their submission (manual approve / approve-newer /
+    // approve-older paths).
+    private readonly premiumAlerts: PremiumAlertsService,
   ) {}
 
   async listFlagged(page: number, limit: number, flagReason?: string): Promise<SubmissionListResult> {
@@ -595,6 +600,10 @@ export class AdminSubmissionsService {
       throw new ConflictException(`Submission ${submissionId} was already reviewed`);
     }
 
+    // Story 6.10 — extend the submitter's premium-alerts window. Best-effort
+    // (logged + swallowed inside the service); never blocks the approve flow.
+    await this.premiumAlerts.extendForUser(submission.user_id);
+
     // 3. Publish price to cache + history
     const priceRow: StationPriceRow = {
       stationId: effectiveStationId,
@@ -797,6 +806,10 @@ export class AdminSubmissionsService {
       }
     });
 
+    // Story 6.10 — approveNewer flips the newer submission to verified,
+    // so the newer's submitter earns the premium-alerts extension.
+    await this.premiumAlerts.extendForUser(pair.newer.user_id);
+
     // Write the newer submission's prices to the cache + history (best-effort).
     if (pair.newer.station_id) {
       // P-14 (3.16 review) — filter null/non-finite prices before writing
@@ -929,6 +942,10 @@ export class AdminSubmissionsService {
         );
       }
     });
+
+    // Story 6.10 — approveOlder flips the older submission to verified,
+    // so the older's submitter earns the premium-alerts extension.
+    await this.premiumAlerts.extendForUser(pair.older.user_id);
 
     if (pair.older.station_id) {
       const validOlderPrices = pair.older.price_data.filter(

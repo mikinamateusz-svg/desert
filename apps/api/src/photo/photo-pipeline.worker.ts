@@ -16,6 +16,7 @@ import { TrustScoreService } from '../user/trust-score.service.js';
 import { ResearchRetentionService } from '../research/research-retention.service.js';
 import { SubmissionsService } from '../submissions/submissions.service.js';
 import { MetricsCounterService } from '../metrics/metrics-counter.service.js';
+import { PremiumAlertsService } from '../alert/premium-alerts.service.js';
 
 export const PHOTO_PIPELINE_QUEUE = 'photo-pipeline';
 export const PHOTO_PIPELINE_JOB = 'process-submission';
@@ -67,6 +68,9 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     @Inject(forwardRef(() => SubmissionsService))
     private readonly submissionsService: SubmissionsService,
     private readonly metricsCounter: MetricsCounterService,
+    // Story 6.10 — extend the user's premium-alerts window when their
+    // submission flips to verified.
+    private readonly premiumAlerts: PremiumAlertsService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -927,6 +931,11 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       );
       return;
     }
+
+    // Story 6.10 — extend the user's premium-alerts window. Best-effort:
+    // logged + swallowed inside the service so a write failure here doesn't
+    // block the rest of the verify flow.
+    await this.premiumAlerts.extendForUser(updated.user_id);
 
     // Research retention: verified submissions are the high-signal samples for
     // the benchmark corpus — we want rawPrices (what OCR saw) AND validatedPrices

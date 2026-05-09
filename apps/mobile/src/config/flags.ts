@@ -25,4 +25,18 @@ export const flags = {
    * the vehicle setup / edit routes redirect back to the log tab.
    */
   phase2: process.env['EXPO_PUBLIC_PHASE_2'] !== 'false',
+
+  /**
+   * Story 6.10 — contribution-gated premium alerts loop. Gates the bell
+   * icon on the map header, the rebuilt /alerts status surface, the
+   * thank-you-modal alerts-loop copy, the activity-screen verified-banner,
+   * and the Account-screen "Notifications" relocation entry.
+   *
+   * Default OFF unless the env var is explicitly set to 'true' — inverse
+   * of `phase2`'s default-permissive semantics. The intent is that a build
+   * profile must opt in to the loop (the `development` and
+   * `preview-phase2` profiles in eas.json), and any unconfigured / forgot-
+   * to-set scenario stays safe. Per memory `feedback_feature_flags.md`.
+   */
+  alertsLoop: process.env['EXPO_PUBLIC_ALERTS_LOOP'] === 'true',
 } as const;

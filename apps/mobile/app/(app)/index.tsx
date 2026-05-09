@@ -26,6 +26,7 @@ import { computePriceColorMap } from '../../src/utils/priceColor';
 import type { StationDto } from '../../src/api/stations';
 import { flags } from '../../src/config/flags';
 import { TopChrome } from '../../src/components/TopChrome';
+import { BellAlertIcon } from '../../src/components/alerts/BellAlertIcon';
 
 // Mapbox token must be set before any MapView renders.
 // In EAS builds, the token comes from eas.json env. In CI/local builds,
@@ -482,6 +483,9 @@ export default function MapScreen() {
           </TouchableOpacity>
         </View>
       )}
+
+      {/* Story 6.10 — premium-alerts bell icon. Hidden when flags.alertsLoop is off. */}
+      <BellAlertIcon topInset={insets.top} />
 
       {/* Fuel type selector — below top bar */}
       <View style={[styles.fuelSelector, { top: topBarHeight + 16 }]} pointerEvents="box-none">

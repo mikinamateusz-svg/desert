@@ -19,9 +19,10 @@ import { StorageModule } from '../storage/storage.module.js';
 import { UserModule } from '../user/user.module.js';
 import { PhotoModule } from '../photo/photo.module.js';
 import { MetricsModule } from '../metrics/metrics.module.js';
+import { AlertModule } from '../alert/alert.module.js';
 
 @Module({
-  imports: [PrismaModule, PriceModule, StorageModule, UserModule, PhotoModule, MetricsModule],
+  imports: [PrismaModule, PriceModule, StorageModule, UserModule, PhotoModule, MetricsModule, AlertModule],
   controllers: [AdminSubmissionsController, AdminUsersController, AdminDlqController, AdminStationsController, AdminMetricsController, AdminOcrSpendController, AdminPriceRulesController],
   providers: [AdminSubmissionsService, AdminUsersService, AnomalyDetectionService, AdminDlqService, AdminStationsService, AdminMetricsService, AdminPriceRulesService],
 })

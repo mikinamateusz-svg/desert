@@ -55,4 +55,22 @@ export class UserController {
     void this.userService.sendExportEmail(user.email, presignedUrl);
     return { message: 'Export prepared. Check your email.' };
   }
+
+  /**
+   * Story 6.10 — premium-alerts status. Mobile clients fetch this on app
+   * foreground + after submission verification events to drive the bell-icon
+   * state on the map header. Tiny payload; cheap to poll.
+   */
+  @Get('alerts-status')
+  // P7 (6.10 review) — mobile polls on every app foreground. Rate-limit
+  // to cap pathological loops. 60/min generously fits normal usage.
+  @Throttle({ default: { ttl: 60, limit: 60 } })
+  @Roles(...ALL_ROLES)
+  async getAlertsStatus(
+    @CurrentUser() user: User,
+  ): Promise<{ premium_alerts_active_until: string | null }> {
+    return {
+      premium_alerts_active_until: user.premium_alerts_active_until?.toISOString() ?? null,
+    };
+  }
 }

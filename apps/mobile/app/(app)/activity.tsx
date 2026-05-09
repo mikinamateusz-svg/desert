@@ -22,6 +22,7 @@ import { SummaryHeader } from '../../src/components/activity/SummaryHeader';
 import { SubmissionRow } from '../../src/components/activity/SubmissionRow';
 import { deriveSummary } from '../../src/components/activity/deriveSummary';
 import { TopChrome } from '../../src/components/TopChrome';
+import { PremiumActiveBanner } from '../../src/components/alerts/PremiumActiveBanner';
 
 const LIMIT = 20;
 
@@ -218,6 +219,7 @@ export default function ActivityScreen() {
   return (
     <View style={styles.screen}>
       <TopChrome />
+      <PremiumActiveBanner />
       {body}
     </View>
   );

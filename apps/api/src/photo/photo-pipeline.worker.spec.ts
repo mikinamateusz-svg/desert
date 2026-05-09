@@ -19,6 +19,7 @@ import { SubmissionDedupService } from './submission-dedup.service.js';
 import { MetricsCounterService } from '../metrics/metrics-counter.service.js';
 import { TrustScoreService } from '../user/trust-score.service.js';
 import { ResearchRetentionService } from '../research/research-retention.service.js';
+import { PremiumAlertsService } from '../alert/premium-alerts.service.js';
 import { Worker, type Job } from 'bullmq';
 
 // ── BullMQ / Redis mocks ───────────────────────────────────────────────────
@@ -314,6 +315,9 @@ describe('PhotoPipelineWorker', () => {
         { provide: ResearchRetentionService, useValue: mockResearchRetention },
         { provide: SubmissionsService, useValue: mockSubmissionsService },
         { provide: MetricsCounterService, useValue: mockMetricsCounter },
+        // Story 6.10 — premium-alerts extension on every verified flip.
+        // Mock as no-op resolved promise so the awaited call doesn't hang.
+        { provide: PremiumAlertsService, useValue: { extendForUser: jest.fn().mockResolvedValue(undefined) } },
       ],
     }).compile();
 
@@ -393,6 +397,7 @@ describe('PhotoPipelineWorker', () => {
           { provide: ResearchRetentionService, useValue: mockResearchRetention },
           { provide: SubmissionsService, useValue: mockSubmissionsService },
           { provide: MetricsCounterService, useValue: mockMetricsCounter },
+          { provide: PremiumAlertsService, useValue: { extendForUser: jest.fn().mockResolvedValue(undefined) } },
         ],
       }).compile();
 

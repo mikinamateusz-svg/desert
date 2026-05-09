@@ -13,6 +13,7 @@ import { UserModule } from '../user/user.module.js';
 import { ResearchModule } from '../research/research.module.js';
 import { SubmissionsModule } from '../submissions/submissions.module.js';
 import { MetricsModule } from '../metrics/metrics.module.js';
+import { AlertModule } from '../alert/alert.module.js';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MetricsModule } from '../metrics/metrics.module.js';
     UserModule,
     ResearchModule,
     MetricsModule,
+    AlertModule,
     forwardRef(() => SubmissionsModule),
   ],
   providers: [PhotoPipelineWorker, PhotoCleanupWorker, OcrSpendService, SubmissionDedupService],

@@ -8,6 +8,7 @@ import { useAuth } from '../../src/store/auth.store';
 import { apiRequestDataExport } from '../../src/api/user';
 import { changeLanguage, SUPPORTED_LOCALES } from '../../src/i18n';
 import type { SupportedLocale } from '../../src/i18n';
+import { flags } from '../../src/config/flags';
 
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/);
@@ -107,6 +108,13 @@ export default function AccountScreen() {
           <TouchableOpacity style={styles.button} onPress={() => router.push('/(app)/feedback')}>
             <Text style={styles.buttonText}>{t('account.sendFeedback')}</Text>
           </TouchableOpacity>
+
+          {/* Story 6.10 — notifications/prefs entry. Hidden when flags.alertsLoop is off. */}
+          {flags.alertsLoop && (
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/(app)/notifications')}>
+              <Text style={styles.buttonText}>{t('account.notifications')}</Text>
+            </TouchableOpacity>
+          )}
 
           <TouchableOpacity style={styles.button} onPress={() => router.push('/(app)/privacy-settings')}>
             <Text style={styles.buttonText}>{t('account.privacySettings')}</Text>

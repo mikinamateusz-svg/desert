@@ -7,6 +7,7 @@ import { PriceService } from '../price/price.service.js';
 import { StorageService } from '../storage/storage.service.js';
 import { TrustScoreService } from '../user/trust-score.service.js';
 import { PhotoPipelineWorker } from '../photo/photo-pipeline.worker.js';
+import { PremiumAlertsService } from '../alert/premium-alerts.service.js';
 import { SubmissionDedupService } from '../photo/submission-dedup.service.js';
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
@@ -46,6 +47,12 @@ const mockTrustScoreService = { updateScore: mockUpdateScore };
 
 const mockWorkerRequeue = jest.fn();
 const mockPhotoPipelineWorker = { requeue: mockWorkerRequeue };
+
+// Story 6.10 — premium-alerts extension on every approve. Mock as no-op
+// (spy reusable across tests if any want to assert it was called per
+// happy-path). Resolves so the await in approve() doesn't hang.
+const mockPremiumAlertsExtend = jest.fn().mockResolvedValue(undefined);
+const mockPremiumAlerts = { extendForUser: mockPremiumAlertsExtend };
 
 // Story 3.16 — admin uses dedup service to seed consensus on approveNewer.
 const mockRecordStationConsensus = jest.fn();
@@ -108,6 +115,7 @@ describe('AdminSubmissionsService', () => {
         { provide: TrustScoreService, useValue: mockTrustScoreService },
         { provide: PhotoPipelineWorker, useValue: mockPhotoPipelineWorker },
         { provide: SubmissionDedupService, useValue: mockSubmissionDedupService },
+        { provide: PremiumAlertsService, useValue: mockPremiumAlerts },
       ],
     }).compile();
 

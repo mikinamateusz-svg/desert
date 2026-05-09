@@ -80,6 +80,7 @@ export default {
     activity: 'Aktywność',
     log: 'Dziennik',
     alerts: 'Alerty',
+    notifications: 'Powiadomienia',
     account: 'Konto',
     feedback: 'Opinia',
     privacySettings: 'Prywatność',
@@ -127,6 +128,9 @@ export default {
     // Story 3.17 — accessibility hints for tappable activity rows.
     tapHintStation: 'Otwiera szczegóły stacji',
     tapHintExplain: 'Otwiera wyjaśnienie',
+    // Story 6.10 — one-time banner after a verified submission extends premium-alerts window.
+    alertsExtendedBanner: 'Alerty premium aktywne do {{date}}',
+    alertsExtendedDismissA11y: 'Zamknij powiadomienie',
   },
   map: {
     signedInAs: 'Zalogowano jako {{name}}',
@@ -178,6 +182,29 @@ export default {
     contributePrompt: 'Kliknij, aby zgłosić zweryfikowaną cenę.',
     dismiss: 'Rozumiem',
   },
+  // Story 6.10 — premium alerts loop (bell icon + status banner).
+  alerts: {
+    bell: {
+      activeA11y: 'Alerty premium aktywne. Stuknij, aby zobaczyć szczegóły.',
+      expiringA11y: 'Alerty premium wkrótce wygasną. Stuknij, aby przedłużyć.',
+      inactiveA11y: 'Alerty premium nieaktywne. Stuknij, aby je odblokować.',
+    },
+    statusBanner: {
+      loading: 'Ładuję status alertów…',
+      signInTitle: 'Alerty premium',
+      signInBody: 'Zaloguj się, aby uruchomić alerty cenowe.',
+      inactiveTitle: 'Włącz alerty premium',
+      inactiveBody: 'Zrób pierwsze zdjęcie cen na stacji, aby uruchomić powiadomienia o ruchach na rynku.',
+      activeTitle: 'Alerty premium aktywne',
+      activeBody: 'Twoje alerty są aktywne do {{date}}. Uprzedzimy Cię, gdy ceny mają wzrosnąć.',
+      expiringTitle_one: 'Alerty wygasają za {{count}} dzień',
+      expiringTitle_few: 'Alerty wygasają za {{count}} dni',
+      expiringTitle_many: 'Alerty wygasają za {{count}} dni',
+      expiringTitle_other: 'Alerty wygasają za {{count}} dni',
+      expiringBody: 'Zrób zdjęcie cen na stacji, aby przedłużyć alerty o kolejne 30 dni.',
+      takePhoto: 'Zrób zdjęcie',
+    },
+  },
   account: {
     guest: 'Gość',
     languageLabel: 'Język',
@@ -193,6 +220,7 @@ export default {
     exportDataButton: 'Pobierz moje dane',
     privacySettings: 'Ustawienia prywatności',
     sendFeedback: 'Wyślij opinię',
+    notifications: 'Powiadomienia i alerty',
     trademarkDisclaimer: 'Nazwy marek i znaki towarowe wyświetlane w aplikacji są własnością ich odpowiednich właścicieli i służą wyłącznie identyfikacji stacji paliw. Litro nie jest powiązane z żadną siecią stacji paliw.',
     exportDataSuccess: 'Eksport danych został przygotowany. Sprawdź swój e-mail, aby pobrać plik.',
     exportDataError: 'Nie udało się przygotować eksportu danych. Spróbuj ponownie.',
@@ -373,6 +401,10 @@ export default {
     thankYou: 'Dzięki!',
     impactMessage: 'Kierowcy w okolicy zobaczą tę aktualizację',
     done: 'Wróć do mapy',
+    // Story 6.10 — alerts-loop reassurance + verified-only disclaimer.
+    alertsLoopActivate: 'Po weryfikacji uruchomimy Twoje alerty premium na 30 dni.',
+    alertsLoopExtend: 'Po weryfikacji przedłużymy Twoje alerty premium do {{date}}.',
+    alertsVerifiedOnlyDisclaimer: 'Tylko zweryfikowane zdjęcia przedłużają alerty.',
   },
   fillup: {
     logFillupCta: 'Zapisz tankowanie',

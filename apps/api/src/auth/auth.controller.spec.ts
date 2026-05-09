@@ -12,6 +12,7 @@ const mockFullUser = {
   fleet_id: null,
   trust_score: 0,
   shadow_banned: false,
+  premium_alerts_active_until: null,
   deleted_at: null,
   deletion_reason: null,
   created_at: new Date(),

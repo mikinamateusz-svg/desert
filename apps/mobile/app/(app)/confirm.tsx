@@ -4,13 +4,37 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { tokens } from '../../src/theme';
+import { flags } from '../../src/config/flags';
+import { usePremiumAlertsStatus } from '../../src/hooks/usePremiumAlertsStatus';
 
-const AUTO_DISMISS_MS = 4_000;
+const PREMIUM_ALERT_WINDOW_DAYS = 30;
+
+// Story 6.10 — extended from 4s when alerts-loop copy is shown so users
+// have time to read the additional reassurance + disclaimer lines.
+const AUTO_DISMISS_MS = flags.alertsLoop ? 6_000 : 4_000;
 
 export default function ConfirmScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const insets = useSafeAreaInsets();
   const { stationName } = useLocalSearchParams<{ stationName?: string }>();
+  const { activeUntil } = usePremiumAlertsStatus();
+
+  // P1 (6.10 review) — branch the alerts-loop copy: if the user already
+  // has an active premium window, this verification will EXTEND it; if
+  // not, this verification will ACTIVATE it. Compute the projected new-
+  // until client-side via the same MAX(current, NOW + 30d) formula the
+  // backend uses on verify.
+  const projectedNewUntil = (() => {
+    const candidate = Date.now() + PREMIUM_ALERT_WINDOW_DAYS * 86_400_000;
+    if (activeUntil && activeUntil.getTime() > candidate) return activeUntil;
+    return new Date(candidate);
+  })();
+  const isExtension = activeUntil != null && activeUntil.getTime() > Date.now();
+  const formattedNewUntil = projectedNewUntil.toLocaleDateString(i18n.language, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
 
   // Auto-navigate to map after 4 seconds
   useEffect(() => {
@@ -39,6 +63,22 @@ export default function ConfirmScreen() {
       )}
 
       <Text style={styles.subtitle}>{t('confirmation.impactMessage')}</Text>
+
+      {/* Story 6.10 — alerts-loop reassurance + verified-only disclaimer.
+          Activate-vs-extend branch driven by the user's current premium
+          window state (per AC8). Hidden when flags.alertsLoop is off. */}
+      {flags.alertsLoop && (
+        <>
+          <Text style={styles.alertsLoopMessage}>
+            {isExtension
+              ? t('confirmation.alertsLoopExtend', { date: formattedNewUntil })
+              : t('confirmation.alertsLoopActivate')}
+          </Text>
+          <Text style={styles.alertsLoopDisclaimer}>
+            {t('confirmation.alertsVerifiedOnlyDisclaimer')}
+          </Text>
+        </>
+      )}
 
       <TouchableOpacity
         style={styles.doneButton}
@@ -92,7 +132,24 @@ const styles = StyleSheet.create({
     color: tokens.neutral.n400,
     textAlign: 'center',
     lineHeight: 22,
-    marginBottom: 36,
+    marginBottom: 24,
+  },
+  alertsLoopMessage: {
+    fontSize: 14,
+    color: tokens.brand.ink,
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: 8,
+    paddingHorizontal: 12,
+  },
+  alertsLoopDisclaimer: {
+    fontSize: 12,
+    color: tokens.neutral.n500,
+    textAlign: 'center',
+    fontStyle: 'italic',
+    lineHeight: 16,
+    marginBottom: 24,
+    paddingHorizontal: 16,
   },
   doneButton: {
     backgroundColor: tokens.brand.ink,

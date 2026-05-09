@@ -70,6 +70,20 @@ export default function AppLayout() {
           headerTitleStyle: { fontWeight: '600' as const },
         }}
       />
+      {/* Story 6.10 — notifications/prefs route, relocated from /alerts so the
+          alerts route can become the status-banner surface tap-target from
+          the bell icon. Reachable from the Account screen. */}
+      <Tabs.Screen
+        name="notifications"
+        options={{
+          href: null,
+          headerShown: true,
+          title: t('nav.notifications'),
+          headerStyle: hiddenHeaderStyle,
+          headerTintColor: tokens.brand.ink,
+          headerTitleStyle: { fontWeight: '600' as const },
+        }}
+      />
       <Tabs.Screen
         name="account"
         options={{

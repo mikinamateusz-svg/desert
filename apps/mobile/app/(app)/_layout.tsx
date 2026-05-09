@@ -2,6 +2,7 @@ import { Tabs } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { tokens } from '../../src/theme';
+import { MonthlySummaryRepromptTrigger } from '../../src/components/MonthlySummaryRepromptTrigger';
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -23,7 +24,12 @@ export default function AppLayout() {
   const { t } = useTranslation();
 
   return (
-    <Tabs
+    <>
+      {/* Story 6.6 — sibling trigger evaluates the monthly-summary
+          re-prompt on app open. Renders the sheet when conditions are
+          met; renders nothing otherwise. */}
+      <MonthlySummaryRepromptTrigger />
+      <Tabs
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
@@ -169,6 +175,7 @@ export default function AppLayout() {
         options={{ href: null, headerShown: false }}
       />
 
-    </Tabs>
+      </Tabs>
+    </>
   );
 }

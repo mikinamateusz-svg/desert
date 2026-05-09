@@ -290,6 +290,13 @@ export default {
     repromptSubtitle: 'Enable notifications to get alerted without opening the app.',
     repromptEnable: 'Enable',
     repromptDismiss: 'No thanks',
+    // Story 6.6 — monthly-summary smart re-prompt. Title carries the
+    // saved amount when computable; the no-amount fallback is shown when
+    // savings round to 0 PLN or the SQL aggregate returns null.
+    repromptMonthlyTitle: 'You saved {{amount}} PLN last month',
+    repromptMonthlyTitleNoAmount: 'Your monthly fuel summary is ready',
+    repromptMonthlySubtitle: 'Enable notifications to get your monthly summary delivered automatically.',
+    repromptSaveFailedHint: "We couldn't save your notification settings. Open the alerts screen to try again.",
     signInPrompt: 'Sign in to manage your notification preferences',
     errorLoading: 'Failed to load preferences',
     errorSaving: 'Failed to save preferences',

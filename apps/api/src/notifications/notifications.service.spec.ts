@@ -1,13 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotificationsService } from './notifications.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { REDIS_CLIENT } from '../redis/redis.module.js';
 import { UpdateNotificationPreferencesDto } from './dto/update-notification-preferences.dto.js';
 
 const mockPrismaService = {
   notificationPreference: {
     upsert: jest.fn(),
+    findUnique: jest.fn(),
   },
+  $queryRaw: jest.fn(),
 };
+
+// Story 6.6 — Redis read for monthly:summary:calculated:{userId}
+const mockRedisGet = jest.fn();
+const mockRedis = { get: mockRedisGet };
 
 // expo_push_token is excluded from GET/PATCH responses (P7)
 const basePreference = {
@@ -30,6 +37,7 @@ describe('NotificationsService', () => {
       providers: [
         NotificationsService,
         { provide: PrismaService, useValue: mockPrismaService },
+        { provide: REDIS_CLIENT, useValue: mockRedis },
       ],
     }).compile();
 
@@ -263,6 +271,100 @@ describe('NotificationsService', () => {
       });
       // expo_push_token must still be excluded.
       expect(call.select).not.toHaveProperty('expo_push_token');
+    });
+  });
+
+  // ── Story 6.6 — getSummaryReprompt ──────────────────────────────────────────
+
+  describe('getSummaryReprompt', () => {
+    it('returns pending=false when user already has a push token (re-prompt is moot)', async () => {
+      mockPrismaService.notificationPreference.findUnique.mockResolvedValueOnce({
+        expo_push_token: 'ExponentPushToken[xxx]',
+      });
+
+      const result = await service.getSummaryReprompt('user-uuid');
+
+      expect(result).toEqual({ pending: false, savedPln: null });
+      // Did NOT proceed to Redis or savings query
+      expect(mockRedisGet).not.toHaveBeenCalled();
+      expect(mockPrismaService.$queryRaw).not.toHaveBeenCalled();
+    });
+
+    it('returns pending=false when no Story 6.5 Redis key exists', async () => {
+      mockPrismaService.notificationPreference.findUnique.mockResolvedValueOnce({
+        expo_push_token: null,
+      });
+      mockRedisGet.mockResolvedValueOnce(null); // no key set
+
+      const result = await service.getSummaryReprompt('user-uuid');
+
+      expect(result).toEqual({ pending: false, savedPln: null });
+      expect(mockRedisGet).toHaveBeenCalledWith('monthly:summary:calculated:user-uuid');
+      expect(mockPrismaService.$queryRaw).not.toHaveBeenCalled();
+    });
+
+    it('returns pending=true with rounded savedPln when key exists and savings >= 1 PLN', async () => {
+      mockPrismaService.notificationPreference.findUnique.mockResolvedValueOnce({
+        expo_push_token: null,
+      });
+      mockRedisGet.mockResolvedValueOnce('1');
+      mockPrismaService.$queryRaw.mockResolvedValueOnce([{ total_savings: 93.6 }]);
+
+      const result = await service.getSummaryReprompt('user-uuid');
+
+      expect(result).toEqual({ pending: true, savedPln: 94 });
+    });
+
+    it('returns pending=true with savedPln=null when savings round to 0 PLN (avoids "you saved 0 PLN" copy)', async () => {
+      mockPrismaService.notificationPreference.findUnique.mockResolvedValueOnce({
+        expo_push_token: null,
+      });
+      mockRedisGet.mockResolvedValueOnce('1');
+      mockPrismaService.$queryRaw.mockResolvedValueOnce([{ total_savings: 0.3 }]);
+
+      const result = await service.getSummaryReprompt('user-uuid');
+
+      // pending stays true (Story 6.5 calculated something) — UI falls
+      // back to generic copy without the personalised PLN amount.
+      expect(result).toEqual({ pending: true, savedPln: null });
+    });
+
+    it('returns pending=true with savedPln=null when previous month had no fillups', async () => {
+      mockPrismaService.notificationPreference.findUnique.mockResolvedValueOnce({
+        expo_push_token: null,
+      });
+      mockRedisGet.mockResolvedValueOnce('1');
+      mockPrismaService.$queryRaw.mockResolvedValueOnce([{ total_savings: null }]);
+
+      const result = await service.getSummaryReprompt('user-uuid');
+
+      expect(result).toEqual({ pending: true, savedPln: null });
+    });
+
+    it('returns pending=true when user has no NotificationPreference row at all', async () => {
+      // Lazy-create pattern from notifications.service: rows only exist
+      // after first GET/PATCH. Missing row = no token = re-prompt eligible.
+      mockPrismaService.notificationPreference.findUnique.mockResolvedValueOnce(null);
+      mockRedisGet.mockResolvedValueOnce('1');
+      mockPrismaService.$queryRaw.mockResolvedValueOnce([{ total_savings: 50 }]);
+
+      const result = await service.getSummaryReprompt('user-uuid');
+
+      expect(result).toEqual({ pending: true, savedPln: 50 });
+    });
+
+    it('fail-closes (no re-prompt) when Redis read errors', async () => {
+      mockPrismaService.notificationPreference.findUnique.mockResolvedValueOnce({
+        expo_push_token: null,
+      });
+      mockRedisGet.mockRejectedValueOnce(new Error('ECONNREFUSED'));
+
+      const result = await service.getSummaryReprompt('user-uuid');
+
+      // Better to suppress than to surface a stale "you saved X" claim
+      // with no Redis backing.
+      expect(result).toEqual({ pending: false, savedPln: null });
+      expect(mockPrismaService.$queryRaw).not.toHaveBeenCalled();
     });
   });
 });

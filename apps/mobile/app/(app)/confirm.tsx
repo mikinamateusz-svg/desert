@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -6,6 +6,19 @@ import { useTranslation } from 'react-i18next';
 import { tokens } from '../../src/theme';
 import { flags } from '../../src/config/flags';
 import { usePremiumAlertsStatus } from '../../src/hooks/usePremiumAlertsStatus';
+import { useNotificationPermission } from '../../src/hooks/useNotificationPermission';
+import { NotificationRepromptSheet } from '../../src/components/NotificationRepromptSheet';
+import {
+  REPROMPT_PHOTO_KEY,
+  shouldSkipAllReprompts,
+  hasShownReprompt,
+  recordRepromptShown,
+} from '../../src/components/repromptStorage';
+
+// Story 6.6 — short delay before the sheet appears so the "thank you"
+// animation can settle. Kept well below the screen's 4s/6s auto-dismiss
+// so the sheet has time to be readable before the user is bounced home.
+const REPROMPT_DELAY_MS = 1_000;
 
 const PREMIUM_ALERT_WINDOW_DAYS = 30;
 
@@ -18,6 +31,8 @@ export default function ConfirmScreen() {
   const insets = useSafeAreaInsets();
   const { stationName } = useLocalSearchParams<{ stationName?: string }>();
   const { activeUntil } = usePremiumAlertsStatus();
+  const { status: permissionStatus, isChecking: permissionChecking } = useNotificationPermission();
+  const [showReprompt, setShowReprompt] = useState(false);
 
   // P1 (6.10 review) — branch the alerts-loop copy: if the user already
   // has an active premium window, this verification will EXTEND it; if
@@ -36,13 +51,53 @@ export default function ConfirmScreen() {
     year: 'numeric',
   });
 
-  // Auto-navigate to map after 4 seconds
+  // Auto-navigate to map after 4 / 6 seconds — UNLESS the re-prompt
+  // sheet is visible, in which case we'd kick the user away mid-read.
+  // Re-arm the timer when the sheet is dismissed.
   useEffect(() => {
+    if (showReprompt) return;
     const timer = setTimeout(() => {
       router.replace('/(app)/');
     }, AUTO_DISMISS_MS);
     return () => clearTimeout(timer);
-  }, []);
+  }, [showReprompt]);
+
+  // Story 6.6 — photo-trigger smart re-prompt. Only fires when:
+  //   - permission has actually been resolved (avoid flicker on cold mount)
+  //   - permission is UNDETERMINED specifically — not 'denied'. On iOS,
+  //     requestPermissionsAsync() after a prior denial returns 'denied'
+  //     without showing the OS dialog, so the Enable button would dead-
+  //     end. Users in 'denied' state are handled by the re-prompt UI in
+  //     alerts.tsx (with deep-link to OS settings) instead.
+  //   - the photo flag hasn't already been set
+  //   - the two-strike rule isn't already triggered
+  // Sheet appears on a 1s delay so the "thank you" UI has time to settle.
+  useEffect(() => {
+    if (permissionChecking || permissionStatus !== 'undetermined') return;
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      void (async () => {
+        if (cancelled) return;
+        // Re-check live permission — user may have granted via a deep-link
+        // / Settings round-trip during the 1s delay window, in which case
+        // re-prompting would be wasted.
+        if (permissionStatus !== 'undetermined') return;
+        if (await shouldSkipAllReprompts()) return;
+        if (await hasShownReprompt(REPROMPT_PHOTO_KEY)) return;
+        if (cancelled) return;
+        // Record-on-show, not on-dismiss: protects against the screen
+        // auto-navigating away mid-sheet, which would never fire onDismiss
+        // and would re-show the sheet on every subsequent submission.
+        await recordRepromptShown(REPROMPT_PHOTO_KEY);
+        if (cancelled) return;
+        setShowReprompt(true);
+      })();
+    }, REPROMPT_DELAY_MS);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [permissionStatus, permissionChecking]);
 
   return (
     <View
@@ -87,6 +142,12 @@ export default function ConfirmScreen() {
       >
         <Text style={styles.doneText}>{t('confirmation.done')}</Text>
       </TouchableOpacity>
+
+      <NotificationRepromptSheet
+        visible={showReprompt}
+        variant="photo"
+        onDismiss={() => setShowReprompt(false)}
+      />
     </View>
   );
 }

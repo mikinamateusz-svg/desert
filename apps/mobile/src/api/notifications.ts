@@ -96,3 +96,18 @@ export async function apiUpdateNotificationPreferences(
     body: JSON.stringify(payload),
   });
 }
+
+/** Story 6.6 — drives the monthly-summary smart re-prompt sheet shown
+ *  on app open. Returns `pending: true` only when the user has no push
+ *  token AND Story 6.5's monthly cron computed a summary for them. */
+export interface SummaryRepromptStatus {
+  pending: boolean;
+  savedPln: number | null;
+}
+
+export async function apiGetSummaryReprompt(accessToken: string): Promise<SummaryRepromptStatus> {
+  return request<SummaryRepromptStatus>('/v1/me/notifications/summary-reprompt', {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+}

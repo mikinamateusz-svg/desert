@@ -31,4 +31,16 @@ export class NotificationsController {
   ) {
     return this.notificationsService.updatePreferences(userId, dto);
   }
+
+  /**
+   * Story 6.6 — drives the monthly-summary smart re-prompt sheet shown
+   * on app open when the user has no push token but Story 6.5 has
+   * computed a summary for them. Mobile calls this once per session and
+   * suppresses further calls via AsyncStorage two-strike flags.
+   */
+  @Get('summary-reprompt')
+  @Roles(...ALL_ROLES)
+  getSummaryReprompt(@CurrentUser('id') userId: string) {
+    return this.notificationsService.getSummaryReprompt(userId);
+  }
 }

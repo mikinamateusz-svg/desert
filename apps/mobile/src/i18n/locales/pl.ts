@@ -303,6 +303,12 @@ export default {
     repromptSubtitle: 'Włącz powiadomienia, aby być na bieżąco bez otwierania aplikacji.',
     repromptEnable: 'Włącz',
     repromptDismiss: 'Nie, dziękuję',
+    // Gender-neutral phrasing — avoids the masculine-only "Zaoszczędziłeś"
+    // form that excludes female users.
+    repromptMonthlyTitle: 'Oszczędności w zeszłym miesiącu: {{amount}} PLN',
+    repromptMonthlyTitleNoAmount: 'Twoje miesięczne podsumowanie paliwa jest gotowe',
+    repromptMonthlySubtitle: 'Włącz powiadomienia, aby automatycznie otrzymywać miesięczne podsumowanie.',
+    repromptSaveFailedHint: 'Nie udało się zapisać ustawień powiadomień. Otwórz ekran alertów, aby spróbować ponownie.',
     signInPrompt: 'Zaloguj się, aby zarządzać preferencjami powiadomień',
     errorLoading: 'Nie udało się załadować preferencji',
     errorSaving: 'Nie udało się zapisać preferencji',

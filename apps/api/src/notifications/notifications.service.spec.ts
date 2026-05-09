@@ -144,5 +144,125 @@ describe('NotificationsService', () => {
       };
       expect(call.create).toHaveProperty('expo_push_token', 'ExponentPushToken[abc]');
     });
+
+    // ── Story 6.4: Phase 2 alert preferences ─────────────────────────────
+
+    it('updates each Phase 2 field independently — non-provided fields are not overwritten', async () => {
+      mockPrismaService.notificationPreference.upsert.mockResolvedValueOnce(basePreference);
+      const dto: UpdateNotificationPreferencesDto = { price_drop_enabled: true };
+
+      await service.updatePreferences('user-uuid', dto);
+
+      const call = mockPrismaService.notificationPreference.upsert.mock.calls[0][0] as {
+        update: Record<string, unknown>;
+      };
+      expect(call.update).toEqual({ price_drop_enabled: true });
+      // Critical: every Phase 2 sibling stays absent so Prisma doesn't reset it.
+      expect(call.update).not.toHaveProperty('price_drop_mode');
+      expect(call.update).not.toHaveProperty('price_drop_target_pln');
+      expect(call.update).not.toHaveProperty('price_drop_fuel_types');
+      expect(call.update).not.toHaveProperty('alert_radius_km');
+      expect(call.update).not.toHaveProperty('rise_community_enabled');
+      expect(call.update).not.toHaveProperty('rise_predictive_enabled');
+      // And Phase 1 columns also stay untouched.
+      expect(call.update).not.toHaveProperty('price_drops');
+    });
+
+    it('passes price_drop_target_pln number through to Prisma (Decimal column accepts it)', async () => {
+      mockPrismaService.notificationPreference.upsert.mockResolvedValueOnce(basePreference);
+      // 6.50 PLN/L target — common driver expectation.
+      const dto: UpdateNotificationPreferencesDto = {
+        price_drop_mode: 'target_price',
+        price_drop_target_pln: 6.5,
+      };
+
+      await service.updatePreferences('user-uuid', dto);
+
+      const call = mockPrismaService.notificationPreference.upsert.mock.calls[0][0] as {
+        update: Record<string, unknown>;
+      };
+      expect(call.update).toEqual({
+        price_drop_mode: 'target_price',
+        price_drop_target_pln: 6.5,
+      });
+    });
+
+    it('passes price_drop_target_pln: null when user clears the target (mode flip back)', async () => {
+      mockPrismaService.notificationPreference.upsert.mockResolvedValueOnce(basePreference);
+      const dto: UpdateNotificationPreferencesDto = { price_drop_target_pln: null };
+
+      await service.updatePreferences('user-uuid', dto);
+
+      const call = mockPrismaService.notificationPreference.upsert.mock.calls[0][0] as {
+        update: Record<string, unknown>;
+      };
+      // null is a meaningful value here — !== undefined gate must let it through.
+      expect(call.update).toEqual({ price_drop_target_pln: null });
+    });
+
+    it('passes price_drop_fuel_types array through verbatim (multi-select)', async () => {
+      mockPrismaService.notificationPreference.upsert.mockResolvedValueOnce(basePreference);
+      const dto: UpdateNotificationPreferencesDto = {
+        price_drop_fuel_types: ['PB_95', 'ON'],
+      };
+
+      await service.updatePreferences('user-uuid', dto);
+
+      const call = mockPrismaService.notificationPreference.upsert.mock.calls[0][0] as {
+        update: { price_drop_fuel_types?: unknown };
+      };
+      expect(call.update.price_drop_fuel_types).toEqual(['PB_95', 'ON']);
+    });
+
+    it('passes empty fuel_types array through (user de-selected last chip)', async () => {
+      mockPrismaService.notificationPreference.upsert.mockResolvedValueOnce(basePreference);
+      const dto: UpdateNotificationPreferencesDto = { price_drop_fuel_types: [] };
+
+      await service.updatePreferences('user-uuid', dto);
+
+      const call = mockPrismaService.notificationPreference.upsert.mock.calls[0][0] as {
+        update: { price_drop_fuel_types?: unknown };
+      };
+      // Empty array is a real intent — "no fuel types selected" — distinct
+      // from "field not provided." Must reach the DB.
+      expect(call.update.price_drop_fuel_types).toEqual([]);
+    });
+
+    it('updates rise toggles independently of each other and of drop alerts', async () => {
+      mockPrismaService.notificationPreference.upsert.mockResolvedValueOnce(basePreference);
+      const dto: UpdateNotificationPreferencesDto = {
+        rise_community_enabled: true,
+      };
+
+      await service.updatePreferences('user-uuid', dto);
+
+      const call = mockPrismaService.notificationPreference.upsert.mock.calls[0][0] as {
+        update: Record<string, unknown>;
+      };
+      expect(call.update).toEqual({ rise_community_enabled: true });
+      expect(call.update).not.toHaveProperty('rise_predictive_enabled');
+      expect(call.update).not.toHaveProperty('price_drop_enabled');
+    });
+
+    it('SELECT projection includes all Phase 2 columns (UI needs them on every read)', async () => {
+      mockPrismaService.notificationPreference.upsert.mockResolvedValueOnce(basePreference);
+
+      await service.getPreferences('user-uuid');
+
+      const call = mockPrismaService.notificationPreference.upsert.mock.calls[0][0] as {
+        select: Record<string, unknown>;
+      };
+      expect(call.select).toMatchObject({
+        price_drop_enabled: true,
+        price_drop_mode: true,
+        price_drop_target_pln: true,
+        price_drop_fuel_types: true,
+        alert_radius_km: true,
+        rise_community_enabled: true,
+        rise_predictive_enabled: true,
+      });
+      // expo_push_token must still be excluded.
+      expect(call.select).not.toHaveProperty('expo_push_token');
+    });
   });
 });

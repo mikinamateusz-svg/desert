@@ -239,9 +239,38 @@ model NotificationPreference {
   id              String   @id @default(uuid())
   user_id         String   @unique
   expo_push_token String?
+  /// Story 1.7 / Phase 1 alert pipeline. Retained for back-compat; not
+  /// surfaced in the UI after Story 6.4 (drivers manage Phase 2 columns
+  /// instead). Phase 1 alert services still read these.
   price_drops     Boolean  @default(true)
   sharp_rise      Boolean  @default(true)
   monthly_summary Boolean  @default(true)
+
+  /// Story 6.4 — Phase 2 alert preferences. Off by default so the
+  /// existing Phase 1 pipeline (which reads `price_drops` / `sharp_rise`)
+  /// keeps owning delivery until Stories 6.1/6.2/6.3 actually consume
+  /// these columns. UI manages them as the user-visible source of truth.
+  price_drop_enabled       Boolean  @default(false)
+  /// 'cheaper_than_now' | 'target_price' — service-layer enum kept loose
+  /// because Prisma+Postgres enum migrations are heavyweight; DTO
+  /// validator is the gate.
+  price_drop_mode          String   @default("cheaper_than_now")
+  /// PLN/L. Decimal(5,2) caps at 999.99 — fuel never reaches that. Null
+  /// when mode = 'cheaper_than_now'; required by UI when 'target_price'.
+  price_drop_target_pln    Decimal? @db.Decimal(5, 2)
+  /// Subset of 'PB_95' | 'PB_98' | 'ON' | 'ON_PREMIUM' | 'LPG'. Empty
+  /// array = "no preference set yet" (UI shows all chips unselected).
+  /// Defaulting to user's most-used fuel type from fill-up history is
+  /// deferred — see Story 6.4 spec "Fuel type defaulting (deferred)".
+  price_drop_fuel_types    String[] @default([])
+  /// Shared by drop + rise alerts (5 | 10 | 25 km). Spec UI keeps both
+  /// section radii in sync via this single column.
+  alert_radius_km          Int      @default(10)
+  /// Story 6.2 (community-confirmed rises) — independent toggle.
+  rise_community_enabled   Boolean  @default(false)
+  /// Story 6.3 (predictive rises from wholesale signals) — independent toggle.
+  rise_predictive_enabled  Boolean  @default(false)
+
   created_at      DateTime @default(now())
   updated_at      DateTime @updatedAt
   user            User     @relation(fields: [user_id], references: [id])

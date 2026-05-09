@@ -44,26 +44,38 @@ export class PriceRiseAlertWorker implements OnModuleInit, OnModuleDestroy {
       defaultJobOptions: JOB_OPTIONS,
     });
 
-    // Runs at 06:05 and 14:05 Europe/Warsaw — 5 min after ORLEN ingestion (06:00 / 14:00)
-    // Stable jobIds are idempotent on restart
-    await this.queue.add(
-      PRICE_RISE_ALERT_JOB,
-      {},
-      {
-        repeat: { pattern: '5 6 * * *', tz: 'Europe/Warsaw' },
-        jobId: 'price-rise-alert-morning',
-        ...JOB_OPTIONS,
-      },
-    );
-    await this.queue.add(
-      PRICE_RISE_ALERT_JOB,
-      {},
-      {
-        repeat: { pattern: '5 14 * * *', tz: 'Europe/Warsaw' },
-        jobId: 'price-rise-alert-afternoon',
-        ...JOB_OPTIONS,
-      },
-    );
+    // Story 6.3 — Phase 1 scheduled cron jobs DELIBERATELY NOT registered
+    // anymore. PriceRiseAlertService.sendRiseAlerts() polled MarketSignal
+    // for "anything significant in the last 2h"; that role is now played
+    // by the price-rise-signals queue published from Story 6.0's
+    // PriceRiseSignalPublisher and consumed by Story 6.3's
+    // PredictiveRiseAlertWorker. The service class + queue are kept so
+    // the Worker still binds (consuming the queue this worker exposes via
+    // getQueue() for ops tooling), and so manual ops triggers can still
+    // call sendRiseAlerts() if needed during incident response.
+    //
+    // Cleanup of leftover repeat jobs from prior deploys: BullMQ persists
+    // repeatable schedules in Redis even after we stop re-adding them,
+    // so without this cleanup the morning/afternoon Phase 1 alerts would
+    // fire alongside the new predictive worker until a manual ops sweep.
+    // Idempotent — running on a fresh queue is a no-op.
+    try {
+      const repeatables = await this.queue.getRepeatableJobs();
+      const phaseOneJobIds = new Set([
+        'price-rise-alert-morning',
+        'price-rise-alert-afternoon',
+      ]);
+      for (const r of repeatables) {
+        if (r.id && phaseOneJobIds.has(r.id)) {
+          await this.queue.removeRepeatableByKey(r.key);
+          this.logger.log(`Removed leftover Phase 1 repeat job: ${r.id} (key=${r.key})`);
+        }
+      }
+    } catch (e) {
+      this.logger.warn(
+        `Failed to clean up Phase 1 repeat jobs (non-fatal): ${e instanceof Error ? e.message : String(e)}`,
+      );
+    }
 
     this.worker = new Worker(
       PRICE_RISE_ALERT_QUEUE,

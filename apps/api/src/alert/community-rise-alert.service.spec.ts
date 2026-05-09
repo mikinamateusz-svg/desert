@@ -132,6 +132,17 @@ describe('CommunityRiseAlertService', () => {
       expect(await service.checkPredictiveTiming('Mazowieckie', 'PB_95')).toBe('none');
     });
 
+    it('reads the per-fuel key (NO voivodeship) per Story 6.3 contract correction', async () => {
+      // Locks the contract: Story 6.3 corrected the original 6.2 spec
+      // from `alert:rise:predictive:{voivodeship}:{fuelType}` to per-fuel
+      // only — predictive alerts are national. Without this assertion,
+      // a regression to the voivodeship-scoped key would still pass the
+      // behavioural tests because the mocks don't care about the key.
+      mockRedisGet.mockResolvedValueOnce(null);
+      await service.checkPredictiveTiming('Mazowieckie', 'PB_95');
+      expect(mockRedisGet).toHaveBeenCalledWith('alert:rise:predictive:PB_95');
+    });
+
     it('returns "too-soon" when predictive sent <6h ago', async () => {
       const fiveHoursAgo = Date.now() - 5 * 3600 * 1000;
       mockRedisGet.mockResolvedValueOnce(String(fiveHoursAgo));

@@ -105,8 +105,17 @@ export class PriceRiseSignalPublisher implements OnModuleInit, OnModuleDestroy {
         signalType: m.signalType,
         recordedAt: m.recordedAt.toISOString(),
       };
+      // Story 6.3 — Brent crude jobs delayed 60s as a redundant safety
+      // net: even though Story 6.3's PredictiveRiseAlertService now uses
+      // SET NX for atomic dedup (no TOCTOU possible), the delay still
+      // gives ORLEN rack signals headroom to process first under
+      // concurrent load. With SET NX, this is "comfort" rather than the
+      // correctness mechanism. Comparing against the typed source
+      // constant (not a magic string) so a future enum rename surfaces.
+      const BRENT: PriceRiseSignalJobData['signalSource'] = 'brent_crude_pln';
+      const jobOptions = signalSource === BRENT ? { delay: 60_000 } : undefined;
       try {
-        await this.queue.add(PRICE_RISE_SIGNAL_JOB, data);
+        await this.queue.add(PRICE_RISE_SIGNAL_JOB, data, jobOptions);
         published += 1;
       } catch (err) {
         this.logger.warn(

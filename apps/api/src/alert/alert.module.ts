@@ -8,6 +8,8 @@ import { PriceDropAlertService } from './price-drop-alert.service.js';
 import { PriceDropAlertWorker } from './price-drop-alert.worker.js';
 import { CommunityRiseAlertService } from './community-rise-alert.service.js';
 import { CommunityRiseAlertWorker } from './community-rise-alert.worker.js';
+import { PredictiveRiseAlertService } from './predictive-rise-alert.service.js';
+import { PredictiveRiseAlertWorker } from './predictive-rise-alert.worker.js';
 import { AlertsInboxController } from './alerts-inbox.controller.js';
 import { AlertsInboxService } from './alerts-inbox.service.js';
 import { ExpoPushProvider } from './expo-push.provider.js';
@@ -29,6 +31,11 @@ import { RedisModule } from '../redis/redis.module.js';
     PriceDropAlertWorker,
     CommunityRiseAlertService,
     CommunityRiseAlertWorker,
+    // Story 6.3 — predictive rise alerts. Service + worker; the worker
+    // consumes the price-rise-signals queue owned by Story 6.0's
+    // PriceRiseSignalPublisher (registered in MarketSignalModule).
+    PredictiveRiseAlertService,
+    PredictiveRiseAlertWorker,
     AlertsInboxService,
   ],
   // PriceDropAlertWorker + CommunityRiseAlertWorker are exported so

@@ -73,6 +73,9 @@ describe('PriceRiseSignalPublisher', () => {
 
     expect(published).toBe(1);
     expect(mockQueueAdd).toHaveBeenCalledTimes(1);
+    // Story 6.3 — third arg is `undefined` for ORLEN, `{ delay: 60_000 }`
+    // for Brent (added in PriceRiseSignalPublisher to enforce ORLEN
+    // precedence in the predictive-rise dedup race).
     expect(mockQueueAdd).toHaveBeenCalledWith(
       PRICE_RISE_SIGNAL_JOB,
       expect.objectContaining({
@@ -82,6 +85,29 @@ describe('PriceRiseSignalPublisher', () => {
         pctMovement: 0.035,
         recordedAt: at.toISOString(),
       }),
+      undefined,
+    );
+  });
+
+  // ── Story 6.3 — Brent 60s queue delay for predictive-rise dedup race ────
+
+  it('passes a 60s delay option for brent_crude_pln signals', async () => {
+    await publisher.maybePublish([move('brent_crude_pln', 0.05)]);
+
+    expect(mockQueueAdd).toHaveBeenCalledWith(
+      PRICE_RISE_SIGNAL_JOB,
+      expect.objectContaining({ signalSource: 'brent_crude_pln' }),
+      { delay: 60_000 },
+    );
+  });
+
+  it('passes NO delay option for orlen_rack signals', async () => {
+    await publisher.maybePublish([move('orlen_rack_pb95', 0.04)]);
+
+    expect(mockQueueAdd).toHaveBeenCalledWith(
+      PRICE_RISE_SIGNAL_JOB,
+      expect.objectContaining({ signalSource: 'orlen_rack' }),
+      undefined,
     );
   });
 
@@ -114,6 +140,7 @@ describe('PriceRiseSignalPublisher', () => {
     expect(mockQueueAdd).toHaveBeenCalledWith(
       PRICE_RISE_SIGNAL_JOB,
       expect.objectContaining({ fuelTypes: ['ON', 'ON_PREMIUM'] }),
+      undefined,
     );
   });
 
@@ -123,6 +150,7 @@ describe('PriceRiseSignalPublisher', () => {
     expect(mockQueueAdd).toHaveBeenCalledWith(
       PRICE_RISE_SIGNAL_JOB,
       expect.objectContaining({ fuelTypes: ['LPG'] }),
+      undefined,
     );
   });
 
@@ -135,6 +163,7 @@ describe('PriceRiseSignalPublisher', () => {
         signalSource: 'brent_crude_pln',
         fuelTypes: ['PB_95', 'PB_98', 'ON', 'ON_PREMIUM'],
       }),
+      { delay: 60_000 },
     );
   });
 

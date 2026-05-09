@@ -67,22 +67,23 @@ describe('PriceRiseAlertWorker', () => {
     await worker.onModuleDestroy();
   });
 
-  it('schedules morning and afternoon jobs with stable jobIds', () => {
-    expect(mockQueueAdd).toHaveBeenCalledWith(
+  // Story 6.3 — Phase 1 cron schedule REMOVED. The polling-based
+  // PriceRiseAlertWorker is replaced by Story 6.3's
+  // PredictiveRiseAlertWorker which consumes Story 6.0's
+  // price-rise-signals queue. The PriceRiseAlertService class +
+  // queue/worker bindings remain for ops tooling and the leftover
+  // repeat-jobs in Redis from prior deploys (which need manual
+  // queue.removeRepeatable() cleanup).
+  it('does NOT register the morning / afternoon Phase 1 cron schedule (Story 6.3 deprecation)', () => {
+    expect(mockQueueAdd).not.toHaveBeenCalledWith(
       PRICE_RISE_ALERT_JOB,
       {},
-      expect.objectContaining({
-        repeat: { pattern: '5 6 * * *', tz: 'Europe/Warsaw' },
-        jobId: 'price-rise-alert-morning',
-      }),
+      expect.objectContaining({ jobId: 'price-rise-alert-morning' }),
     );
-    expect(mockQueueAdd).toHaveBeenCalledWith(
+    expect(mockQueueAdd).not.toHaveBeenCalledWith(
       PRICE_RISE_ALERT_JOB,
       {},
-      expect.objectContaining({
-        repeat: { pattern: '5 14 * * *', tz: 'Europe/Warsaw' },
-        jobId: 'price-rise-alert-afternoon',
-      }),
+      expect.objectContaining({ jobId: 'price-rise-alert-afternoon' }),
     );
   });
 

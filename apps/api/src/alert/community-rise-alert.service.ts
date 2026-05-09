@@ -179,7 +179,7 @@ export class CommunityRiseAlertService {
 
   /**
    * Reads the predictive-alert timestamp Redis key (Story 6.3 contract):
-   *   key:   alert:rise:predictive:{voivodeship}:{fuelType}
+   *   key:   alert:rise:predictive:{fuelType}
    *   value: Date.now() as string (Unix ms)
    *   ttl:   72h (Story 6.3's dedup window)
    *
@@ -191,10 +191,20 @@ export class CommunityRiseAlertService {
    *
    * Fail-open on Redis errors: treat as 'none' so a Redis outage doesn't
    * block the community alert pipeline.
+   *
+   * NOTE: Story 6.2's original spec had the key per-voivodeship; Story
+   * 6.3's spec correction (line 196) clarified that predictive alerts are
+   * NATIONAL — a single 72h dedup per fuel type, no voivodeship in the
+   * key. The voivodeship parameter is retained for log-line context only.
    */
   async checkPredictiveTiming(voivodeship: string, fuelType: string): Promise<PredictiveTiming> {
     try {
-      const raw = await this.redis.get(`alert:rise:predictive:${voivodeship}:${fuelType}`);
+      // Voivodeship intentionally omitted from the Redis key — predictive
+      // alerts are national. The parameter is retained on the signature
+      // so call sites stay readable (community alerts ARE per-voivodeship,
+      // even though the predictive timing read is national); included in
+      // the warn log below for incident-debugging context.
+      const raw = await this.redis.get(`alert:rise:predictive:${fuelType}`);
       if (!raw) return 'none';
       // Strict numeric parse: parseInt('2026-05-09T...') would return 2026
       // and silently treat it as a 1970 epoch, switching every alert to

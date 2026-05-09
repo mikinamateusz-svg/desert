@@ -246,11 +246,13 @@ model NotificationPreference {
   sharp_rise      Boolean  @default(true)
   monthly_summary Boolean  @default(true)
 
-  /// Story 6.4 — Phase 2 alert preferences. Off by default so the
-  /// existing Phase 1 pipeline (which reads `price_drops` / `sharp_rise`)
-  /// keeps owning delivery until Stories 6.1/6.2/6.3 actually consume
-  /// these columns. UI manages them as the user-visible source of truth.
-  price_drop_enabled       Boolean  @default(false)
+  /// Story 6.4 / 6.12 — Phase 2 alert preference columns; price-drop subset
+  /// promoted to Phase 1 by Story 6.12. Defaults flipped to ON for
+  /// price_drop_enabled and to ['PB_95'] for price_drop_fuel_types so
+  /// premium-active users get drop alerts immediately without configuring.
+  /// rise_community_enabled / rise_predictive_enabled stay false until
+  /// Stories 6.2 / 6.3-full ship and the Phase 2 UI section becomes live.
+  price_drop_enabled       Boolean  @default(true)
   /// 'cheaper_than_now' | 'target_price' — service-layer enum kept loose
   /// because Prisma+Postgres enum migrations are heavyweight; DTO
   /// validator is the gate.
@@ -258,11 +260,11 @@ model NotificationPreference {
   /// PLN/L. Decimal(5,2) caps at 999.99 — fuel never reaches that. Null
   /// when mode = 'cheaper_than_now'; required by UI when 'target_price'.
   price_drop_target_pln    Decimal? @db.Decimal(5, 2)
-  /// Subset of 'PB_95' | 'PB_98' | 'ON' | 'ON_PREMIUM' | 'LPG'. Empty
-  /// array = "no preference set yet" (UI shows all chips unselected).
-  /// Defaulting to user's most-used fuel type from fill-up history is
-  /// deferred — see Story 6.4 spec "Fuel type defaulting (deferred)".
-  price_drop_fuel_types    String[] @default([])
+  /// Subset of 'PB_95' | 'PB_98' | 'ON' | 'ON_PREMIUM' | 'LPG'. 6.12
+  /// promotion default = ['PB_95'] (most common in PL); user can broaden
+  /// in the prefs panel. Defaulting from user's most-used fuel type from
+  /// fill-up history is deferred — see Story 6.4 "Fuel type defaulting".
+  price_drop_fuel_types    String[] @default(["PB_95"])
   /// Shared by drop + rise alerts (5 | 10 | 25 km). Spec UI keeps both
   /// section radii in sync via this single column.
   alert_radius_km          Int      @default(10)

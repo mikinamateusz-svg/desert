@@ -311,8 +311,13 @@ export default {
     sections: {
       priceDrop: 'Alerty: spadek cen',
       priceRise: 'Alerty: wzrost cen',
+      // Story 6.12 — Phase 1 cut: section title for the single sharp_rise toggle.
+      priceRiseSimple: 'Alerty: nagły wzrost cen',
       monthlySummary: 'Miesięczne podsumowanie',
     },
+    // Story 6.12 — Phase 1 sharp_rise opt-out copy.
+    sharpRiseLabel: 'Ostrzegaj o nadchodzących wzrostach',
+    sharpRiseSubLabel: 'Aktywuje się, gdy sygnały hurtowe wskazują, że ceny mają wzrosnąć.',
     priceDropEnabled: 'Alerty o spadkach cen',
     mode: 'Tryb alertu',
     modeCheaperThanNow: 'Taniej niż teraz',
@@ -710,7 +715,7 @@ export default {
       },
       card5: {
         title: 'Co Ci to daje?',
-        body: 'Każde zweryfikowane zdjęcie aktywuje Ci alerty premium na 30 dni — uprzedzimy Cię, gdy ceny mają wzrosnąć. Każde kolejne zdjęcie przedłuża okno alertów.',
+        body: 'Każde zweryfikowane zdjęcie aktywuje Ci alerty premium na 30 dni — damy Ci znać o spadkach na pobliskich stacjach i ostrzeżemy przed nadchodzącymi wzrostami cen. Każde kolejne zdjęcie przedłuża okno alertów.',
         badge: '+30 dni',
       },
       buttons: {

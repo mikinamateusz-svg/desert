@@ -298,8 +298,13 @@ export default {
     sections: {
       priceDrop: 'Price Drop Alerts',
       priceRise: 'Price Rise Alerts',
+      // Story 6.12 — Phase 1 cut: single-toggle section for sharp_rise.
+      priceRiseSimple: 'Sudden Price-Rise Alerts',
       monthlySummary: 'Monthly Summary',
     },
+    // Story 6.12 — Phase 1 sharp_rise opt-out copy.
+    sharpRiseLabel: 'Warn me before prices rise',
+    sharpRiseSubLabel: 'Triggers when wholesale signals suggest prices are about to go up.',
     priceDropEnabled: 'Price drop alerts',
     mode: 'Alert mode',
     modeCheaperThanNow: 'Cheaper than now',
@@ -673,7 +678,7 @@ export default {
       },
       card5: {
         title: "What's in it for you?",
-        body: 'Every verified photo activates 30 days of premium alerts — we warn you before prices rise. Every new photo extends the alert window.',
+        body: "Every verified photo activates 30 days of premium alerts — we'll tell you about price drops at nearby stations and warn you before prices rise. Every new photo extends the alert window.",
         badge: '+30 days',
       },
       buttons: {

@@ -27,6 +27,7 @@ import {
 import { apiGetSubmissions } from '../../src/api/submissions';
 import { useNotificationPermission } from '../../src/hooks/useNotificationPermission';
 import { FeatureGateSheet } from '../../src/components/FeatureGateSheet';
+import { flags } from '../../src/config/flags';
 
 const REPROMPT_KEY = 'desert:notifRepromptShown';
 
@@ -341,9 +342,14 @@ export default function AlertsScreen() {
   }
 
   // Story 6.4 — granted-state rebuild. 3 sections, each in its own card,
-  // optimistic updates everywhere. Phase 1 columns (price_drops + sharp_rise)
-  // are NOT surfaced — Phase 2 controls below own that experience now.
-  // monthly_summary stays as a Phase 1 toggle inside the Monthly Summary section.
+  // optimistic updates everywhere.
+  //
+  // Story 6.12 — Phase 1 cut. Section 1 (Price Drop Alerts) ships in
+  // production via 6.1's promotion. Section 2 (rich rise controls backed
+  // by 6.2 / 6.3-full) and Section 3 (Monthly Summary backed by 6.5) are
+  // flag-gated until those alerts ship. A minimal Phase 1 sharp_rise
+  // toggle replaces Section 2 in non-phase2 builds so users can opt out
+  // of 6.3-lite predictive rises without exposing dead Phase 2 toggles.
   return (
     <ScrollView
       style={styles.container}
@@ -435,35 +441,61 @@ export default function AlertsScreen() {
       </SectionCard>
 
       {/* ── Section 2: Price Rise Alerts ──────────────────────────────── */}
-      <SectionCard title={t('notifications.sections.priceRise')}>
-        <ToggleRow
-          label={t('notifications.riseCommunity')}
-          subLabel={t('notifications.riseCommunityDesc')}
-          value={prefs?.rise_community_enabled ?? false}
-          onChange={(v) => void handleUpdate({ rise_community_enabled: v })}
-        />
-        <Divider />
-        <ToggleRow
-          label={t('notifications.risePredictive')}
-          subLabel={t('notifications.risePredictiveDesc')}
-          value={prefs?.rise_predictive_enabled ?? false}
-          onChange={(v) => void handleUpdate({ rise_predictive_enabled: v })}
-        />
-        {(prefs?.rise_community_enabled || prefs?.rise_predictive_enabled) && (
-          <Text style={styles.fieldHint}>
-            {t('notifications.riseRadiusSharedNote', { km: prefs?.alert_radius_km ?? 10 })}
-          </Text>
-        )}
-      </SectionCard>
+      {/* Story 6.12 — Phase 2 only. The community + predictive toggles map
+          to Stories 6.2 and 6.3-full, neither of which has shipped. In
+          non-phase2 builds we render the minimal sharp_rise toggle below
+          instead so users can still opt out of 6.3-lite. */}
+      {flags.phase2 && (
+        <SectionCard title={t('notifications.sections.priceRise')}>
+          <ToggleRow
+            label={t('notifications.riseCommunity')}
+            subLabel={t('notifications.riseCommunityDesc')}
+            value={prefs?.rise_community_enabled ?? false}
+            onChange={(v) => void handleUpdate({ rise_community_enabled: v })}
+          />
+          <Divider />
+          <ToggleRow
+            label={t('notifications.risePredictive')}
+            subLabel={t('notifications.risePredictiveDesc')}
+            value={prefs?.rise_predictive_enabled ?? false}
+            onChange={(v) => void handleUpdate({ rise_predictive_enabled: v })}
+          />
+          {(prefs?.rise_community_enabled || prefs?.rise_predictive_enabled) && (
+            <Text style={styles.fieldHint}>
+              {t('notifications.riseRadiusSharedNote', { km: prefs?.alert_radius_km ?? 10 })}
+            </Text>
+          )}
+        </SectionCard>
+      )}
 
-      {/* ── Section 3: Monthly Summary (Phase 1 column, surfaced here) ── */}
-      <SectionCard title={t('notifications.sections.monthlySummary')}>
-        <ToggleRow
-          label={t('notifications.monthlySummary')}
-          value={prefs?.monthly_summary ?? true}
-          onChange={(v) => void handleUpdate({ monthly_summary: v })}
-        />
-      </SectionCard>
+      {/* ── Phase 1 sharp_rise toggle (replaces Section 2 in non-phase2) ── */}
+      {/* Story 6.12 — single-toggle control over 6.3-lite (predictive rise
+          via ORLEN rack signal). Bound to the legacy `sharp_rise` column
+          which the existing alert.service.ts pipeline reads. Hidden when
+          flags.phase2 is true since the rich Section 2 above takes over. */}
+      {!flags.phase2 && (
+        <SectionCard title={t('notifications.sections.priceRiseSimple')}>
+          <ToggleRow
+            label={t('notifications.sharpRiseLabel')}
+            subLabel={t('notifications.sharpRiseSubLabel')}
+            value={prefs?.sharp_rise ?? true}
+            onChange={(v) => void handleUpdate({ sharp_rise: v })}
+          />
+        </SectionCard>
+      )}
+
+      {/* ── Section 3: Monthly Summary ────────────────────────────────── */}
+      {/* Story 6.12 — toggle backs 6.5 which hasn't shipped; hide in
+          non-phase2 builds rather than surface a dead control. */}
+      {flags.phase2 && (
+        <SectionCard title={t('notifications.sections.monthlySummary')}>
+          <ToggleRow
+            label={t('notifications.monthlySummary')}
+            value={prefs?.monthly_summary ?? true}
+            onChange={(v) => void handleUpdate({ monthly_summary: v })}
+          />
+        </SectionCard>
+      )}
     </ScrollView>
   );
 }

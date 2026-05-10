@@ -13,6 +13,8 @@ import { AdminMetricsController } from './admin-metrics.controller.js';
 import { AdminOcrSpendController } from './admin-ocr-spend.controller.js';
 import { AdminPriceRulesController } from './admin-price-rules.controller.js';
 import { AdminPriceRulesService } from './admin-price-rules.service.js';
+import { AdminMarketSignalsController } from './admin-market-signals.controller.js';
+import { AdminMarketSignalsService } from './admin-market-signals.service.js';
 import { PrismaModule } from '../prisma/prisma.module.js';
 import { PriceModule } from '../price/price.module.js';
 import { StorageModule } from '../storage/storage.module.js';
@@ -23,7 +25,7 @@ import { AlertModule } from '../alert/alert.module.js';
 
 @Module({
   imports: [PrismaModule, PriceModule, StorageModule, UserModule, PhotoModule, MetricsModule, AlertModule],
-  controllers: [AdminSubmissionsController, AdminUsersController, AdminDlqController, AdminStationsController, AdminMetricsController, AdminOcrSpendController, AdminPriceRulesController],
-  providers: [AdminSubmissionsService, AdminUsersService, AnomalyDetectionService, AdminDlqService, AdminStationsService, AdminMetricsService, AdminPriceRulesService],
+  controllers: [AdminSubmissionsController, AdminUsersController, AdminDlqController, AdminStationsController, AdminMetricsController, AdminOcrSpendController, AdminPriceRulesController, AdminMarketSignalsController],
+  providers: [AdminSubmissionsService, AdminUsersService, AnomalyDetectionService, AdminDlqService, AdminStationsService, AdminMetricsService, AdminPriceRulesService, AdminMarketSignalsService],
 })
 export class AdminModule {}

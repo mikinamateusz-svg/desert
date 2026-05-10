@@ -33,6 +33,7 @@ const translations = {
       stations: 'Stacje',
       metrics: 'Metryki',
       stationSync: 'Synchronizacja stacji',
+      marketSignals: 'Sygnały rynkowe',
       stationClaims: 'Wnioski o stację',
     },
     login: {
@@ -60,6 +61,10 @@ const translations = {
       stations: { title: 'Stacje', description: 'Zarządzaj stacjami paliw.' },
       metrics: { title: 'Metryki', description: 'Przegląd operacyjnych wskaźników produktu.' },
       stationSync: { title: 'Synchronizacja stacji', description: 'Wyzwól synchronizację z Google Places i monitoruj status.' },
+      marketSignals: {
+        title: 'Sygnały rynkowe',
+        description: 'Stan ostatniego pobrania cen ORLEN i Brent crude.',
+      },
       stationClaims: { title: 'Wnioski o stację', description: 'Weryfikuj wnioski właścicieli stacji.' },
     },
     allSubmissions: {
@@ -82,6 +87,33 @@ const translations = {
       alreadyRunningTooltip: 'Synchronizacja już trwa',
       errorBanner: 'Ostatnia synchronizacja nie powiodła się — sprawdź logi Railway.',
       dismissError: 'Zamknij',
+      never: 'Nigdy',
+    },
+    marketSignals: {
+      signalOrlenPb95: 'ORLEN Pb95 (hurt)',
+      signalOrlenOn: 'ORLEN ON (hurt)',
+      signalOrlenLpg: 'ORLEN LPG (hurt)',
+      signalBrentCrude: 'Brent crude (PLN/l)',
+      fresh: 'Świeże',
+      watch: 'Obserwuj',
+      stale: 'Nieaktualne',
+      notConfigured: 'Nie skonfigurowano',
+      notConfiguredHint: 'Ustaw zmienną ALPHA_VANTAGE_API_KEY na Railway, aby aktywować pobieranie Brent crude.',
+      noData: 'Brak danych',
+      lastIngested: 'Ostatnie pobranie',
+      // Story 4.12 — relative time strings used by the freshness display
+      justNow: 'przed chwilą',
+      minutesAgo: '{{count}} min temu',
+      hoursAgo: '{{count}} godz. temu',
+      pctChangeLabel: 'Zmiana',
+      historyTitle: 'Ostatnie {{count}} wpisów',
+      historyTime: 'Czas',
+      historyValue: 'Wartość',
+      historySource: 'Źródło',
+      sourceLive: 'live (NBP)',
+      sourceCached: 'cached (NBP)',
+      significantBadge: 'Istotny ruch',
+      loadError: 'Nie udało się załadować sygnałów rynkowych.',
       never: 'Nigdy',
     },
     users: {
@@ -381,6 +413,7 @@ const translations = {
       stations: 'Stations',
       metrics: 'Metrics',
       stationSync: 'Station Sync',
+      marketSignals: 'Market Signals',
       stationClaims: 'Station claims',
     },
     login: {
@@ -408,6 +441,10 @@ const translations = {
       stations: { title: 'Stations', description: 'Manage fuel stations.' },
       metrics: { title: 'Metrics', description: 'Operational product metrics overview.' },
       stationSync: { title: 'Station Sync', description: 'Trigger a Google Places sync and monitor progress.' },
+      marketSignals: {
+        title: 'Market Signals',
+        description: 'Latest ingested ORLEN rack + Brent crude prices.',
+      },
       stationClaims: { title: 'Station claims', description: 'Verify station owner claim submissions.' },
     },
     allSubmissions: {
@@ -430,6 +467,32 @@ const translations = {
       alreadyRunningTooltip: 'Sync already in progress',
       errorBanner: 'Last sync failed — check Railway logs.',
       dismissError: 'Dismiss',
+      never: 'Never',
+    },
+    marketSignals: {
+      signalOrlenPb95: 'ORLEN Pb95 (rack)',
+      signalOrlenOn: 'ORLEN ON (rack)',
+      signalOrlenLpg: 'ORLEN LPG (rack)',
+      signalBrentCrude: 'Brent crude (PLN/l)',
+      fresh: 'Fresh',
+      watch: 'Watch',
+      stale: 'Stale',
+      notConfigured: 'Not configured',
+      notConfiguredHint: 'Set the ALPHA_VANTAGE_API_KEY env var on Railway to activate Brent crude ingestion.',
+      noData: 'No data',
+      lastIngested: 'Last ingested',
+      justNow: 'just now',
+      minutesAgo: '{{count}}m ago',
+      hoursAgo: '{{count}}h ago',
+      pctChangeLabel: 'Change',
+      historyTitle: 'Last {{count}} entries',
+      historyTime: 'Time',
+      historyValue: 'Value',
+      historySource: 'Source',
+      sourceLive: 'live (NBP)',
+      sourceCached: 'cached (NBP)',
+      significantBadge: 'Significant move',
+      loadError: 'Failed to load market signals.',
       never: 'Never',
     },
     users: {
@@ -728,6 +791,7 @@ const translations = {
       stations: 'Станції',
       metrics: 'Метрики',
       stationSync: 'Синхронізація станцій',
+      marketSignals: 'Ринкові сигнали',
       stationClaims: 'Заявки на станцію',
     },
     login: {
@@ -755,6 +819,10 @@ const translations = {
       stations: { title: 'Станції', description: 'Управління автозаправними станціями.' },
       metrics: { title: 'Метрики', description: 'Огляд операційних показників продукту.' },
       stationSync: { title: 'Синхронізація станцій', description: 'Запустіть синхронізацію з Google Places та відстежуйте статус.' },
+      marketSignals: {
+        title: 'Ринкові сигнали',
+        description: 'Останні отримані ціни ORLEN та Brent crude.',
+      },
       stationClaims: { title: 'Заявки на станцію', description: 'Перевіряйте заявки власників станцій.' },
     },
     allSubmissions: {
@@ -777,6 +845,32 @@ const translations = {
       alreadyRunningTooltip: 'Синхронізація вже виконується',
       errorBanner: 'Остання синхронізація не вдалася — перевірте логи Railway.',
       dismissError: 'Закрити',
+      never: 'Ніколи',
+    },
+    marketSignals: {
+      signalOrlenPb95: 'ORLEN Pb95 (опт)',
+      signalOrlenOn: 'ORLEN ON (опт)',
+      signalOrlenLpg: 'ORLEN LPG (опт)',
+      signalBrentCrude: 'Brent crude (PLN/л)',
+      fresh: 'Свіжі',
+      watch: 'Спостерігати',
+      stale: 'Застарілі',
+      notConfigured: 'Не налаштовано',
+      notConfiguredHint: 'Встановіть змінну середовища ALPHA_VANTAGE_API_KEY на Railway, щоб активувати отримання Brent crude.',
+      noData: 'Немає даних',
+      lastIngested: 'Останнє отримання',
+      justNow: 'щойно',
+      minutesAgo: '{{count}} хв тому',
+      hoursAgo: '{{count}} год тому',
+      pctChangeLabel: 'Зміна',
+      historyTitle: 'Останні {{count}} записів',
+      historyTime: 'Час',
+      historyValue: 'Значення',
+      historySource: 'Джерело',
+      sourceLive: 'live (NBP)',
+      sourceCached: 'cached (NBP)',
+      significantBadge: 'Важливий рух',
+      loadError: 'Не вдалося завантажити ринкові сигнали.',
       never: 'Ніколи',
     },
     users: {
@@ -1195,8 +1289,39 @@ export interface StationSyncTranslations {
   never: string;
 }
 
+// Story 4.12 — Market Signals admin dashboard
+export interface MarketSignalsTranslations {
+  signalOrlenPb95: string;
+  signalOrlenOn: string;
+  signalOrlenLpg: string;
+  signalBrentCrude: string;
+  fresh: string;
+  watch: string;
+  stale: string;
+  notConfigured: string;
+  notConfiguredHint: string;
+  noData: string;
+  lastIngested: string;
+  pctChangeLabel: string;
+  historyTitle: string;
+  historyTime: string;
+  historyValue: string;
+  historySource: string;
+  sourceLive: string;
+  sourceCached: string;
+  significantBadge: string;
+  loadError: string;
+  never: string;
+  // Story 4.12 — relative time strings used by the freshness display.
+  // Substituting {{count}} mirrors the i18next-style pattern used in the
+  // mobile app's own relative-time strings (see notifications inbox copy).
+  justNow: string;
+  minutesAgo: string;
+  hoursAgo: string;
+}
+
 export interface Translations {
-  nav: { submissions: string; submissionsAll: string; users: string; deadLetter: string; stations: string; metrics: string; stationSync: string; stationClaims: string };
+  nav: { submissions: string; submissionsAll: string; users: string; deadLetter: string; stations: string; metrics: string; stationSync: string; marketSignals: string; stationClaims: string };
   login: {
     title: string;
     emailLabel: string;
@@ -1210,6 +1335,7 @@ export interface Translations {
   stations: StationsTranslations;
   metrics: MetricsTranslations;
   stationSync: StationSyncTranslations;
+  marketSignals: MarketSignalsTranslations;
   users: {
     trustScore: string;
     shadowBanned: string;
@@ -1371,6 +1497,7 @@ export interface Translations {
     stations: { title: string; description: string };
     metrics: { title: string; description: string };
     stationSync: { title: string; description: string };
+    marketSignals: { title: string; description: string };
     stationClaims: { title: string; description: string };
   };
   allSubmissions: {

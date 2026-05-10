@@ -19,6 +19,7 @@ export default async function ProtectedLayout({ children }: { children: React.Re
     { href: '/stations', label: t.nav.stations },
     { href: '/station-claims', label: t.nav.stationClaims },
     { href: '/station-sync', label: t.nav.stationSync },
+    { href: '/market-signals', label: t.nav.marketSignals },
     { href: '/metrics', label: t.nav.metrics },
   ];
 

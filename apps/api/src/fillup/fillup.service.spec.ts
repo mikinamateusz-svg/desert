@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma/prisma.service.js';
 import { StationService } from '../station/station.service.js';
 import { RegionalBenchmarkService } from '../regional-benchmark/regional-benchmark.service.js';
 import { VoivodeshipLookupService } from './voivodeship-lookup.service.js';
+import { SavingsRankingService } from './savings-ranking.service.js';
 
 const mockVehicleFindUnique = jest.fn();
 const mockVehicleUpdateMany = jest.fn();
@@ -37,6 +38,8 @@ const mockFindNearestStation = jest.fn();
 const mockGetLatestForStation = jest.fn();
 const mockGetLatestForVoivodeship = jest.fn();
 const mockLookupByGps = jest.fn();
+const mockGetUserPercentile = jest.fn();
+const mockGetBulkPercentilesForMonth = jest.fn();
 
 const USER_ID = 'user-A';
 const OTHER_USER_ID = 'user-B';
@@ -84,6 +87,10 @@ describe('FillupService', () => {
     // station matched).
     mockLookupByGps.mockResolvedValue(null);
     mockGetLatestForVoivodeship.mockResolvedValue(null);
+    // Default: ranking lookup returns null. Tests that exercise the
+    // populated-percentile path override per-call.
+    mockGetUserPercentile.mockResolvedValue(null);
+    mockGetBulkPercentilesForMonth.mockResolvedValue(new Map());
     // listFillups defaults — empty aggregate + zero raw savings so the
     // existing 3 tests that don't override these still get a clean
     // summary block back (instead of undefined-traversal errors).
@@ -107,6 +114,13 @@ describe('FillupService', () => {
           },
         },
         { provide: VoivodeshipLookupService, useValue: { lookupByGps: mockLookupByGps } },
+        {
+          provide: SavingsRankingService,
+          useValue: {
+            getUserPercentile: mockGetUserPercentile,
+            getBulkPercentilesForMonth: mockGetBulkPercentilesForMonth,
+          },
+        },
       ],
     }).compile();
 
@@ -669,8 +683,8 @@ describe('FillupService', () => {
         totalLitres: 140.3,
         avgPricePerLitrePln: 6.718, // 3dp
         totalSavingsPln: 94.12,     // 2dp grosz
-        rankingPercentile: null,
-        rankingVoivodeship: null,
+        rankingPercentile: null,    // ranking mock defaults to null
+        bestSaverSavingsPln: null,  // Story 5.9: also null when ranking returns null
       });
 
       // Verify the aggregate uses a UTC-anchored half-open window
@@ -732,8 +746,107 @@ describe('FillupService', () => {
         avgPricePerLitrePln: null,
         totalSavingsPln: null,
         rankingPercentile: null,
-        rankingVoivodeship: null,
+        bestSaverSavingsPln: null,
       });
+    });
+
+    it('populates rankingPercentile + bestSaverSavingsPln from SavingsRankingService', async () => {
+      mockFillupAggregate.mockResolvedValueOnce({
+        _sum: { total_cost_pln: 500, litres: 80 },
+        _avg: { price_per_litre_pln: 6.25 },
+        _count: { _all: 4 },
+      });
+      mockQueryRaw.mockResolvedValueOnce([{ total_savings: 42.0, counted: BigInt(4) }]);
+      // Story 5.9: ranking service returns both fields in one shape.
+      mockGetUserPercentile.mockResolvedValueOnce({ topPercent: 15, bestSaverSavingsPln: 312 });
+
+      const result = await service.getMonthlySummary(USER_ID, 2026, 3);
+
+      expect(result.rankingPercentile).toBe(15);
+      expect(result.bestSaverSavingsPln).toBe(312);
+      // Sanity: voivodeship NEVER appears in the wire shape, regardless
+      // of whether the cohort scoping found one server-side. AC2.
+      expect(result).not.toHaveProperty('rankingVoivodeship');
+      // Pin the exact UTC half-open bounds passed to the ranking service —
+      // expect.any(Date) wouldn't catch a regression that, say, started
+      // passing rolling-window dates from a different code path.
+      expect(mockGetUserPercentile).toHaveBeenCalledWith(
+        USER_ID,
+        new Date(Date.UTC(2026, 2, 1)),  // 2026-03-01T00:00:00Z
+        new Date(Date.UTC(2026, 3, 1)),  // 2026-04-01T00:00:00Z
+      );
+    });
+
+    it('still calls ranking when savings round to zero but raw sum is positive (sub-grosz path)', async () => {
+      mockFillupAggregate.mockResolvedValueOnce({
+        _sum: { total_cost_pln: 100, litres: 15 },
+        _avg: { price_per_litre_pln: 6.66 },
+        _count: { _all: 1 },
+      });
+      // Raw 0.004 → rounds to 0.00 client-side, but ranking SQL HAVING
+      // > 0 would still admit the user. The skip-when-zero gate must
+      // use the raw sum (not the rounded totalSavingsPln) so the two
+      // definitions of "positive" agree.
+      mockQueryRaw.mockResolvedValueOnce([{ total_savings: 0.004, counted: BigInt(1) }]);
+      mockGetUserPercentile.mockResolvedValueOnce({ topPercent: 30, bestSaverSavingsPln: 200 });
+
+      const result = await service.getMonthlySummary(USER_ID, 2026, 3);
+
+      // totalSavingsPln rounds to 0.00 — but ranking should still fire
+      expect(result.totalSavingsPln).toBe(0);
+      expect(result.rankingPercentile).toBe(30);
+      expect(mockGetUserPercentile).toHaveBeenCalledTimes(1);
+    });
+
+    it('Story 5.9 — bestSaverSavingsPln is null when ranking service applies leak guard', async () => {
+      mockFillupAggregate.mockResolvedValueOnce({
+        _sum: { total_cost_pln: 800, litres: 120 },
+        _avg: { price_per_litre_pln: 6.67 },
+        _count: { _all: 6 },
+      });
+      mockQueryRaw.mockResolvedValueOnce([{ total_savings: 247.6, counted: BigInt(6) }]);
+      // Viewer is the cohort max — service returned topPercent but
+      // null bestSaver. fillup.service must pass that null through
+      // verbatim, not coerce or fabricate a value.
+      mockGetUserPercentile.mockResolvedValueOnce({ topPercent: 5, bestSaverSavingsPln: null });
+
+      const result = await service.getMonthlySummary(USER_ID, 2026, 3);
+
+      expect(result.rankingPercentile).toBe(5);
+      expect(result.bestSaverSavingsPln).toBeNull();
+    });
+
+    it('skips ranking lookup when totalSavingsPln is null (no comparable data)', async () => {
+      mockFillupAggregate.mockResolvedValueOnce({
+        _sum: { total_cost_pln: 100, litres: 15 },
+        _avg: { price_per_litre_pln: 6.66 },
+        _count: { _all: 1 },
+      });
+      // counted=0 → totalSavingsPln will be null, so the ranking lookup
+      // should be short-circuited (saves a roundtrip).
+      mockQueryRaw.mockResolvedValueOnce([{ total_savings: 0, counted: BigInt(0) }]);
+
+      const result = await service.getMonthlySummary(USER_ID, 2026, 3);
+
+      expect(result.totalSavingsPln).toBeNull();
+      expect(result.rankingPercentile).toBeNull();
+      expect(mockGetUserPercentile).not.toHaveBeenCalled();
+    });
+
+    it('skips ranking lookup when totalSavingsPln is zero (broke-even month)', async () => {
+      mockFillupAggregate.mockResolvedValueOnce({
+        _sum: { total_cost_pln: 200, litres: 30 },
+        _avg: { price_per_litre_pln: 6.67 },
+        _count: { _all: 2 },
+      });
+      // counted > 0 but total = 0 → totalSavingsPln resolves to 0
+      mockQueryRaw.mockResolvedValueOnce([{ total_savings: 0, counted: BigInt(2) }]);
+
+      const result = await service.getMonthlySummary(USER_ID, 2026, 3);
+
+      expect(result.totalSavingsPln).toBe(0);
+      expect(result.rankingPercentile).toBeNull();
+      expect(mockGetUserPercentile).not.toHaveBeenCalled();
     });
 
     it('uses ROUND-then-SUM grosz integer math in the savings raw query (matches client SavingsDisplay)', async () => {

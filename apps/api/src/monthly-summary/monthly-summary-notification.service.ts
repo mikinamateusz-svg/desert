@@ -4,6 +4,10 @@ import type Redis from 'ioredis';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { REDIS_CLIENT } from '../redis/redis.module.js';
 import { EXPO_PUSH_CLIENT, type IExpoPushClient } from '../alert/expo-push.token.js';
+import {
+  SavingsRankingService,
+  PERCENTILE_NOTIFICATION_CEILING,
+} from '../fillup/savings-ranking.service.js';
 
 // AC7 — Story 6.6 reads this Redis key to decide whether to surface a
 // notification re-prompt on app open. 45 days survives the gap between
@@ -45,6 +49,7 @@ export class MonthlySummaryNotificationService {
     private readonly prisma: PrismaService,
     @Inject(REDIS_CLIENT) private readonly redis: Redis,
     @Inject(EXPO_PUSH_CLIENT) private readonly expoPush: IExpoPushClient,
+    private readonly savingsRanking: SavingsRankingService,
   ) {}
 
   /**
@@ -93,6 +98,25 @@ export class MonthlySummaryNotificationService {
     });
     const prefMap = new Map(prefs.map((p) => [p.user_id, p]));
 
+    // Story 5.8 — bulk percentile lookup. One SQL pass for every
+    // eligible user across every cohort (≥10 savers per voivodeship).
+    // Users below the privacy floor are absent from the map; their
+    // notifications fall back to the "Great month!" copy.
+    //
+    // Run this AFTER the prefs filter would have narrowed `userIds`,
+    // but BEFORE the per-user loop to keep it a single roundtrip.
+    // Skip entirely when there are no opted-in users (any prefs row
+    // with monthly_summary !== false counts; lazy-create users count
+    // too since the schema default is true) — saves a cohort scan
+    // on a quiet month.
+    const hasOptedInUsers = userIds.some((id) => {
+      const pref = prefMap.get(id);
+      return !pref || pref.monthly_summary !== false;
+    });
+    const percentileMap = hasOptedInUsers
+      ? await this.savingsRanking.getBulkPercentilesForMonth(monthStart, monthEnd)
+      : new Map();
+
     let sent = 0;
     let skipped = 0;
     let noToken = 0;
@@ -129,12 +153,23 @@ export class MonthlySummaryNotificationService {
         continue;
       }
 
-      // rankingPercentile: null until Story 6.7 ships. The payload builder
-      // gracefully degrades to "Great month!" copy (AC3).
+      // Story 5.8 — percentile lookup is a Map; absent entries (below
+      // the privacy floor) fall through the null branch in the payload
+      // builder and the user gets the generic "Great month!" copy.
+      //
+      // Discouraging-copy guard: only enrich the body when the user is
+      // at-or-above median (topPercent <= ceiling). "you're in the top
+      // 100% of savers!" reads as sarcasm — better to fall through to
+      // the generic copy for the bottom half.
+      const rawPercentile = percentileMap.get(row.user_id)?.topPercent ?? null;
+      const percentile =
+        rawPercentile !== null && rawPercentile <= PERCENTILE_NOTIFICATION_CEILING
+          ? rawPercentile
+          : null;
       const { title, body } = this.buildNotificationPayload(
         row.total_savings_pln,
         monthLabel,
-        null,
+        percentile,
       );
       outbound.push({
         userId: row.user_id,
@@ -193,9 +228,11 @@ export class MonthlySummaryNotificationService {
   ): { title: string; body: string } {
     const savingsRounded = Math.round(totalSavingsPln);
     const headline = `You saved ${savingsRounded} PLN on fuel in ${monthLabel}`;
+    // Story 5.8 — drop "in your area" qualifier. The cohort scoping
+    // (voivodeship) stays server-side and never appears in shared text.
     const body =
       rankingPercentile !== null
-        ? `${headline} — you're in the top ${rankingPercentile}% of savers in your area!`
+        ? `${headline} — you're in the top ${rankingPercentile}% of savers!`
         : `${headline}. Great month!`;
     // Title is the OS-shade headline; specific savings live in body so
     // the OS can truncate gracefully on small screens.

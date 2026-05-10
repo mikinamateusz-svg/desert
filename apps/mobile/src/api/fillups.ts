@@ -64,6 +64,11 @@ export interface FillupSummary {
  * Story 5.7: calendar-month summary feeding the savings-summary screen
  * + ShareableCard. Empty months are a valid response (totals at 0,
  * `totalSavingsPln: null`).
+ *
+ * Story 5.8: `rankingPercentile` populated when the user's voivodeship-
+ * scoped cohort has ≥10 drivers with positive savings. Voivodeship is
+ * never exposed in this shape — cohort scoping stays server-side so
+ * the publicly-shared card / notification copy can't leak the region.
  */
 export interface MonthlySummaryDto {
   year: number;
@@ -74,9 +79,11 @@ export interface MonthlySummaryDto {
   totalSpendPln: number;
   totalLitres: number;
   avgPricePerLitrePln: number | null;
-  /** Story 6.7: e.g. 20 = "top 20% in your voivodeship". null until 6.7. */
+  /** 1–100, lower is better. null when cohort <10 or no positive savings. */
   rankingPercentile: number | null;
-  rankingVoivodeship: string | null;
+  /** Story 5.9: integer PLN of the cohort's max savings. null when
+   *  cohort <10 OR when the viewer IS the max (leak guard). */
+  bestSaverSavingsPln: number | null;
 }
 
 export interface CreateFillupPayload {

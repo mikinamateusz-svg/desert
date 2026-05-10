@@ -605,6 +605,13 @@ export default {
   savingsSummary: {
     title: 'Щомісячне зведення',
     savedAmount: 'Ви заощадили {{amount}} PLN',
+    // Story 5.8: percentile segment, no region label. Phrasing matches
+    // the card pill ("водіїв") so the in-app text doesn't drift from
+    // what the user sees on the share image.
+    percentileLine: 'Ви в топ {{pct}}% водіїв',
+    // Story 5.9: cohort max savings — server-side leak guard already
+    // suppressed when the viewer IS the max.
+    bestSaverLine: 'Найкращий у цьому місяці: {{amount}} PLN',
     fillupCount_one: '{{count}} заправка',
     fillupCount_few: '{{count}} заправки',
     fillupCount_many: '{{count}} заправок',
@@ -634,7 +641,10 @@ export default {
     fillupCount_few: '{{count}} заправки',
     fillupCount_many: '{{count}} заправок',
     fillupCount_other: '{{count}} заправок',
-    topPercent: 'топ {{pct}}% у {{region}}',
+    // Story 5.8: pill copy reworded to drop the {{region}} slot.
+    topPercent: 'топ {{pct}}% водіїв',
+    // Story 5.9: shorter wording for the card pill.
+    bestSaverLine: 'Найкращий у регіоні: {{amount}} PLN',
     brandTagline: 'desert · відстеження цін на паливо',
   },
   odometer: {

@@ -594,6 +594,14 @@ export default {
   savingsSummary: {
     title: 'Monthly Summary',
     savedAmount: 'You saved {{amount}} PLN',
+    // Story 5.8: shown only when the user's voivodeship cohort cleared
+    // the ≥10-driver privacy floor. No region label — matches the
+    // shareable card so a screenshot can't leak region either.
+    percentileLine: "You're in the top {{pct}}% of savers",
+    // Story 5.9: cohort max savings — server-side leak guard already
+    // suppressed when the viewer IS the max, so non-null is safe to
+    // render. Integer PLN, no decimals.
+    bestSaverLine: 'Best saver this month: {{amount}} PLN',
     fillupCount_one: '{{count}} fill-up',
     fillupCount_other: '{{count}} fill-ups',
     spendLine: '{{amount}} PLN spent',
@@ -620,7 +628,14 @@ export default {
     fillups: 'fill-ups',
     fillupCount_one: '{{count}} fill-up',
     fillupCount_other: '{{count}} fill-ups',
-    topPercent: 'top {{pct}}% in {{region}}',
+    // Story 5.8: pill copy reworded to drop the {{region}} slot. The
+    // cohort scoping (voivodeship) stays server-side so the captured
+    // PNG can't leak the user's region to share recipients.
+    topPercent: 'top {{pct}}% of savers',
+    // Story 5.9: optional secondary line on the shareable card. Only
+    // rendered when server returns a non-null bestSaverSavingsPln
+    // (leak guard suppresses for the cohort max themselves).
+    bestSaverLine: 'Best in your area: {{amount}} PLN',
     brandTagline: 'desert · fuel price tracker',
   },
   odometer: {

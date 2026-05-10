@@ -1,19 +1,25 @@
 # Story 6.7: Savings Leaderboard
 
-Status: ready-for-dev
+Status: cancelled (2026-05-10)
 
-> **Pre-implementation note from Story 5.7 review (2026-05-03):**
-> When this story populates `rankingPercentile` and `rankingVoivodeship`
-> on the `MonthlySummaryDto` (consumed by the Story 5.7 ShareableCard),
-> the captured PNG will leak the user's voivodeship + savings amount to
-> every share recipient — currently rendered without any consent prompt.
-> The card wiring (`ShareableCard.tsx` + `savings-summary.tsx`) is
-> already in place; lighting up the ranking pill needs an opt-in or a
-> "hide region from share image" toggle.
-> Surfaces in: `apps/mobile/src/components/ShareableCard.tsx` (the
-> conditional `rankingPercentile !== null && rankingVoivodeship` block).
-> AC to add: explicit consent before the first ranking-bearing share,
-> OR a per-share toggle to omit the region pill.
+> **Cancelled 2026-05-10.** The privacy concern flagged in 5.7 review
+> (shared PNG would leak voivodeship + savings to every recipient) was
+> never resolvable inside a "leaderboard" framing without a consent
+> prompt or per-share toggle — both of which compound the UX cost while
+> still publishing the comparison cohort. Reformulated and split into:
+>
+> - **Story 5.8 — Savings Percentile** (`_bmad-output/implementation-artifacts/5-8-savings-percentile.md`)
+>   Renders "Top X%" without a geographic qualifier; voivodeship
+>   stays server-side as the cohort scope but never appears in any
+>   rendered text or share artifact.
+> - **Story 5.9 — Best-Saver Stat** (`_bmad-output/implementation-artifacts/5-9-best-saver-stat.md`)
+>   Aggregate cohort max; suppressed when the viewer IS the max
+>   (otherwise the share trivially identifies them).
+>
+> The ranked-list / Driver #XXXX anonymisation surface is dropped
+> entirely — there's no list to render. The original spec below is
+> retained for historical context only; no implementation work should
+> reference it.
 
 ## Story
 

@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { tokens } from '../theme';
+import { formatIntegerForLocale } from '../utils/formatNumber';
 
 export interface ShareableCardProps {
   /** Pre-formatted month label, e.g. "March 2026" or "marzec 2026". */
@@ -9,11 +10,15 @@ export interface ShareableCardProps {
    *  guarded at the screen level — never share negative outcomes). */
   totalSavingsPln: number;
   fillupCount: number;
-  /** null when Story 6.7 hasn't shipped or the user has no ranking yet —
-   *  ranking pill is omitted gracefully (AC3). */
+  /** Story 5.8: 1–100, lower is better. null when cohort <10 (privacy
+   *  floor) or the user has no positive savings — ranking pill is
+   *  omitted gracefully. */
   rankingPercentile: number | null;
-  /** Voivodeship slug for the ranking pill, e.g. "mazowieckie". */
-  rankingVoivodeship: string | null;
+  /** Story 5.9: integer PLN of the cohort's best saver. null when
+   *  the cohort threshold isn't met OR when the viewer IS the max
+   *  (leak guard at the service boundary — the recipient could
+   *  otherwise infer the viewer's own savings from this amount). */
+  bestSaverSavingsPln: number | null;
   /** Locale tag (e.g. 'pl', 'en') — used to format the savings amount
    *  with locale-correct decimal separator (PL/UK = comma). */
   locale: string;
@@ -44,7 +49,7 @@ export function ShareableCard({
   totalSavingsPln,
   fillupCount,
   rankingPercentile,
-  rankingVoivodeship,
+  bestSaverSavingsPln,
   locale,
 }: ShareableCardProps) {
   const { t } = useTranslation();
@@ -84,17 +89,34 @@ export function ShareableCard({
           {t('savingsCard.fillupCount', { count: fillupCount })}
         </Text>
 
-        {/* Ranking pill — only when Story 6.7 has populated the data.
-            Conditional render so layout has no visible gap when null. */}
-        {rankingPercentile !== null && rankingVoivodeship && (
+        {/* Story 5.8 ranking pill — region-free copy ("top X% of savers").
+            Conditional render so layout has no visible gap when null.
+            Voivodeship is intentionally NEVER passed in or rendered —
+            the cohort scoping stays server-side so the captured PNG
+            can't leak the user's region to share recipients. */}
+        {rankingPercentile !== null && (
           <View style={styles.rankingPill}>
             <Text style={styles.rankingText}>
-              {t('savingsCard.topPercent', {
-                pct: rankingPercentile,
-                region: rankingVoivodeship,
-              })}
+              {t('savingsCard.topPercent', { pct: rankingPercentile })}
             </Text>
           </View>
+        )}
+
+        {/* Story 5.9 best-saver line — visually subordinate to the pill
+            so it reads as context, not the headline. Server-side leak
+            guard already suppressed the value when the viewer IS the
+            max; if it arrives non-null here it's safe to render.
+            Gated on rankingPercentile too so an inconsistently-shaped
+            server response (e.g. a stale cache returning bestSaver
+            without percentile) can't render an orphaned line that
+            looks like an unanchored "this number you don't know about
+            in some unspecified cohort". */}
+        {rankingPercentile !== null && bestSaverSavingsPln !== null && (
+          <Text style={styles.bestSaverLine} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.85}>
+            {t('savingsCard.bestSaverLine', {
+              amount: formatIntegerForLocale(bestSaverSavingsPln, locale),
+            })}
+          </Text>
         )}
       </View>
 
@@ -221,7 +243,13 @@ const styles = StyleSheet.create({
     width: 60,
     height: 1,
     backgroundColor: tokens.neutral.n200,
-    marginVertical: 14,
+    // Story 5.9: tightened from 14 → 10 to absorb the added best-saver
+    // line height without risking vertical clipping at the bottom of
+    // the 320×320 card. Body usable height ≈ 170px; with all sections
+    // populated (savedLabel + amount + subline + divider + fillupCount
+    // + rankingPill + bestSaverLine) the stacked content is right at
+    // the limit on Hermes Android with taller Cyrillic line metrics.
+    marginVertical: 10,
   },
   fillupCount: {
     fontSize: 14,
@@ -241,6 +269,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: tokens.brand.accent,
     fontWeight: '600',
+  },
+  bestSaverLine: {
+    fontSize: 11,
+    color: tokens.neutral.n500,
+    marginTop: 8,
+    textAlign: 'center',
   },
   bottomStripe: {
     height: STRIPE_BOTTOM,

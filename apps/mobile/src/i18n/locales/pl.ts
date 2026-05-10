@@ -625,6 +625,14 @@ export default {
     // Impersonal "Zaoszczędzono" per the prior Story 5.3 decision —
     // gendered "Zaoszczędziłeś" excludes female-identifying users.
     savedAmount: 'Zaoszczędzono {{amount}} PLN',
+    // Story 5.8: gender-neutral "Jesteś" works for any user. Region
+    // intentionally absent — same privacy rule as the shareable card.
+    // Phrasing matches the card pill ("kierowców") so the in-app text
+    // doesn't drift from what the user sees on the share image.
+    percentileLine: 'Jesteś w top {{pct}}% kierowców',
+    // Story 5.9: cohort max savings — server-side leak guard already
+    // suppressed when the viewer IS the max.
+    bestSaverLine: 'Najlepszy oszczędzający w tym miesiącu: {{amount}} PLN',
     fillupCount_one: '{{count}} tankowanie',
     fillupCount_few: '{{count}} tankowania',
     fillupCount_many: '{{count}} tankowań',
@@ -656,7 +664,12 @@ export default {
     fillupCount_few: '{{count}} tankowania',
     fillupCount_many: '{{count}} tankowań',
     fillupCount_other: '{{count}} tankowań',
-    topPercent: 'top {{pct}}% w {{region}}',
+    // Story 5.8: pill copy reworded to drop the {{region}} slot.
+    topPercent: 'top {{pct}}% kierowców',
+    // Story 5.9: shorter wording for the card pill — full sentence
+    // would crowd the 320×320 layout. Same data point as the screen
+    // line, condensed.
+    bestSaverLine: 'Najlepszy w okolicy: {{amount}} PLN',
     brandTagline: 'desert · tracker cen paliwa',
   },
   odometer: {

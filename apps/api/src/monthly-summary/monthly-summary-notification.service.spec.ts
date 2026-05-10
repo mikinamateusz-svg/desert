@@ -4,6 +4,7 @@ import { MonthlySummaryNotificationService } from './monthly-summary-notificatio
 import { PrismaService } from '../prisma/prisma.service.js';
 import { REDIS_CLIENT } from '../redis/redis.module.js';
 import { EXPO_PUSH_CLIENT } from '../alert/expo-push.token.js';
+import { SavingsRankingService } from '../fillup/savings-ranking.service.js';
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
 
@@ -31,10 +32,38 @@ const mockExpoPush = {
   sendChunk: mockSendChunk,
 };
 
+const mockGetBulkPercentilesForMonth = jest.fn();
+const mockSavingsRanking = {
+  getBulkPercentilesForMonth: mockGetBulkPercentilesForMonth,
+};
+
 // ── Fixtures ──────────────────────────────────────────────────────────────────
 
 const VALID_TOKEN = 'ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]';
 const VALID_TOKEN_2 = 'ExponentPushToken[yyyyyyyyyyyyyyyyyyyyyy]';
+
+// Story 5.8 privacy canary — the notification body MUST NOT contain
+// any voivodeship slug. Catches a future regression where someone
+// adds "in {{region}}" / "w {{region}}" back to the copy. Lowercased
+// so the assertion is case-insensitive.
+const POLISH_VOIVODESHIP_SLUGS = [
+  'dolnoslaskie',
+  'kujawsko-pomorskie',
+  'lubelskie',
+  'lubuskie',
+  'lodzkie',
+  'malopolskie',
+  'mazowieckie',
+  'opolskie',
+  'podkarpackie',
+  'podlaskie',
+  'pomorskie',
+  'slaskie',
+  'swietokrzyskie',
+  'warminsko-mazurskie',
+  'wielkopolskie',
+  'zachodniopomorskie',
+];
 
 const makePref = (
   overrides: Partial<{
@@ -74,6 +103,9 @@ describe('MonthlySummaryNotificationService', () => {
     mockRedisSet.mockResolvedValue('OK');
     mockChunkMessages.mockImplementation((msgs: unknown[]) => [msgs]);
     mockSendChunk.mockResolvedValue([{ status: 'ok', id: 'ticket-1' }]);
+    // Default: empty percentile map (cohort threshold not met for any
+    // user). Tests that exercise the populated-percentile path override.
+    mockGetBulkPercentilesForMonth.mockResolvedValue(new Map());
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -81,6 +113,7 @@ describe('MonthlySummaryNotificationService', () => {
         { provide: PrismaService, useValue: mockPrisma },
         { provide: REDIS_CLIENT, useValue: mockRedis },
         { provide: EXPO_PUSH_CLIENT, useValue: mockExpoPush },
+        { provide: SavingsRankingService, useValue: mockSavingsRanking },
       ],
     }).compile();
 
@@ -207,7 +240,7 @@ describe('MonthlySummaryNotificationService', () => {
     });
   });
 
-  // ── Leaderboard percentile copy variant (AC2) ───────────────────────────────
+  // ── Percentile copy variant (Story 5.8) ─────────────────────────────────────
 
   describe('buildNotificationPayload', () => {
     it('includes top-percent line when rankingPercentile is provided', () => {
@@ -217,11 +250,130 @@ describe('MonthlySummaryNotificationService', () => {
       expect(body).toContain("you're in the top 20%");
     });
 
+    it('Story 5.8 — drops "in your area" qualifier (no geographic leak)', () => {
+      const { body } = service.buildNotificationPayload(94, 'March 2026', 20);
+
+      // The cohort scoping (voivodeship) MUST stay server-side. These
+      // assertions are the canary against a future regression that adds
+      // "in your area" / "in {voivodeship}" / a slug name back to the
+      // body. Keeping them as negative assertions (rather than an
+      // exact-match) lets harmless copy tweaks pass while still
+      // catching the privacy regression.
+      expect(body).not.toContain('your area');
+      expect(body).not.toContain('voivodeship');
+      for (const slug of POLISH_VOIVODESHIP_SLUGS) {
+        expect(body.toLowerCase()).not.toContain(slug);
+      }
+      expect(body).toContain("top 20% of savers");
+    });
+
     it('falls back to "Great month!" copy when rankingPercentile is null', () => {
       const { body } = service.buildNotificationPayload(94, 'March 2026', null);
 
       expect(body).toMatch(/Great month/);
       expect(body).not.toContain('top');
+    });
+  });
+
+  // ── SavingsRankingService wiring (Story 5.8) ────────────────────────────────
+
+  describe('Story 5.8 — bulk percentile lookup', () => {
+    it('enriches notification body with looked-up percentile when user is in the map', async () => {
+      mockQueryRaw.mockResolvedValueOnce([makeSavingsRow()]);
+      mockNotificationPrefFindMany.mockResolvedValueOnce([makePref()]);
+      mockGetBulkPercentilesForMonth.mockResolvedValueOnce(
+        new Map([['user-1', { topPercent: 12 }]]),
+      );
+
+      await service.runForMonth(2026, 3);
+
+      expect(mockGetBulkPercentilesForMonth).toHaveBeenCalledTimes(1);
+      const sentBody = mockSendChunk.mock.calls[0][0][0].body as string;
+      expect(sentBody).toContain('top 12% of savers');
+      // Privacy canary on the live notification path (post-bulk-lookup),
+      // not just buildNotificationPayload — closes the gap where a
+      // future regression in the for-loop could re-introduce a region
+      // label without tripping the unit-level test.
+      expect(sentBody).not.toContain('your area');
+      for (const slug of POLISH_VOIVODESHIP_SLUGS) {
+        expect(sentBody.toLowerCase()).not.toContain(slug);
+      }
+    });
+
+    it('Story 5.8 — suppresses percentile in body when user is below median (topPercent > ceiling)', async () => {
+      mockQueryRaw.mockResolvedValueOnce([makeSavingsRow()]);
+      mockNotificationPrefFindMany.mockResolvedValueOnce([makePref()]);
+      // 75th percentile (below median) → "you're in the top 75% of
+      // savers!" reads as discouraging. Should fall through to
+      // generic copy instead.
+      mockGetBulkPercentilesForMonth.mockResolvedValueOnce(
+        new Map([['user-1', { topPercent: 75 }]]),
+      );
+
+      await service.runForMonth(2026, 3);
+
+      const sentBody = mockSendChunk.mock.calls[0][0][0].body as string;
+      expect(sentBody).toMatch(/Great month/);
+      expect(sentBody).not.toContain('top 75%');
+    });
+
+    it('Story 5.8 — emits percentile copy at the ceiling boundary (topPercent === 50)', async () => {
+      mockQueryRaw.mockResolvedValueOnce([makeSavingsRow()]);
+      mockNotificationPrefFindMany.mockResolvedValueOnce([makePref()]);
+      // Exact 50th — at-or-above-median is acceptable, so fire the
+      // percentile copy (matches the `<=` boundary in the gate).
+      mockGetBulkPercentilesForMonth.mockResolvedValueOnce(
+        new Map([['user-1', { topPercent: 50 }]]),
+      );
+
+      await service.runForMonth(2026, 3);
+
+      const sentBody = mockSendChunk.mock.calls[0][0][0].body as string;
+      expect(sentBody).toContain('top 50% of savers');
+    });
+
+    it('Story 5.8 — skips bulk lookup entirely when no opted-in users (efficiency)', async () => {
+      mockQueryRaw.mockResolvedValueOnce([makeSavingsRow()]);
+      // Single user with monthly_summary explicitly disabled — no
+      // opted-in users → bulk cohort scan is wasted DB work, skip it.
+      mockNotificationPrefFindMany.mockResolvedValueOnce([
+        makePref({ monthly_summary: false }),
+      ]);
+
+      await service.runForMonth(2026, 3);
+
+      expect(mockGetBulkPercentilesForMonth).not.toHaveBeenCalled();
+      expect(mockSendChunk).not.toHaveBeenCalled();
+    });
+
+    it('falls back to "Great month!" copy when user is absent from the percentile map', async () => {
+      mockQueryRaw.mockResolvedValueOnce([makeSavingsRow()]);
+      mockNotificationPrefFindMany.mockResolvedValueOnce([makePref()]);
+      // Empty map — user-1 didn't make the cohort cut.
+      mockGetBulkPercentilesForMonth.mockResolvedValueOnce(new Map());
+
+      await service.runForMonth(2026, 3);
+
+      const sentBody = mockSendChunk.mock.calls[0][0][0].body as string;
+      expect(sentBody).toMatch(/Great month/);
+      expect(sentBody).not.toContain('top');
+    });
+
+    it('calls bulk lookup once per run, not per user (efficiency)', async () => {
+      mockQueryRaw.mockResolvedValueOnce([
+        makeSavingsRow({ user_id: 'user-1' }),
+        makeSavingsRow({ user_id: 'user-2' }),
+        makeSavingsRow({ user_id: 'user-3' }),
+      ]);
+      mockNotificationPrefFindMany.mockResolvedValueOnce([
+        makePref({ user_id: 'user-1' }),
+        makePref({ user_id: 'user-2', expo_push_token: VALID_TOKEN_2 }),
+        makePref({ user_id: 'user-3' }),
+      ]);
+
+      await service.runForMonth(2026, 3);
+
+      expect(mockGetBulkPercentilesForMonth).toHaveBeenCalledTimes(1);
     });
   });
 

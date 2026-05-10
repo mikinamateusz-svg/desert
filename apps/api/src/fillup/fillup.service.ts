@@ -11,6 +11,7 @@ import { RegionalBenchmarkService } from '../regional-benchmark/regional-benchma
 import { PRICE_BANDS } from '../ocr/ocr.service.js';
 import { CreateFillupDto } from './dto/create-fillup.dto.js';
 import { VoivodeshipLookupService } from './voivodeship-lookup.service.js';
+import { SavingsRankingService } from './savings-ranking.service.js';
 
 export type FillupPeriod = '30d' | '3m' | '12m' | 'all';
 
@@ -85,9 +86,16 @@ export interface ListFillupsResult {
  * exact calendar month rather than a rolling window. Used as the data
  * source for the shareable monthly card.
  *
- * Ranking fields are placeholders for Story 6.7 (savings leaderboard) —
- * always null in this story; the mobile card omits the ranking pill
- * gracefully when null per AC3.
+ * `rankingPercentile` populated by Story 5.8 (Savings Percentile) when
+ * the user's voivodeship-scoped cohort has ≥10 drivers with positive
+ * savings. The voivodeship name is intentionally NOT exposed in this
+ * shape — the cohort scope is server-side only so a future regression
+ * can't accidentally render the region in a publicly-shared artifact.
+ *
+ * `bestSaverSavingsPln` populated by Story 5.9 (Best-Saver Stat). Same
+ * cohort + threshold as 5.8; suppressed when the viewer IS the max
+ * (leak guard — otherwise the share recipient could infer the viewer's
+ * own savings from the displayed amount).
  */
 export interface MonthlySummary {
   year: number;
@@ -99,10 +107,11 @@ export interface MonthlySummary {
   totalSpendPln: number;
   totalLitres: number;
   avgPricePerLitrePln: number | null;
-  /** Story 6.7: e.g. 20 means "top 20% in your voivodeship". null until 6.7 ships. */
+  /** 1–100, lower is better. null when cohort <10 or no savings. */
   rankingPercentile: number | null;
-  /** Story 6.7: voivodeship slug for the ranking. null until 6.7 ships. */
-  rankingVoivodeship: string | null;
+  /** Integer PLN of the cohort's max savings. null when cohort <10
+   *  OR when the viewer IS the max (leak guard). */
+  bestSaverSavingsPln: number | null;
 }
 
 const STATION_MATCH_RADIUS_METRES = 200;
@@ -149,6 +158,7 @@ export class FillupService {
     private readonly stations: StationService,
     private readonly benchmarks: RegionalBenchmarkService,
     private readonly voivodeshipLookup: VoivodeshipLookupService,
+    private readonly savingsRanking: SavingsRankingService,
   ) {}
 
   async createFillup(userId: string, dto: CreateFillupDto): Promise<CreateFillupResult> {
@@ -517,6 +527,21 @@ export class FillupService {
         ? Math.round((savingsRowFirst.total_savings ?? 0) * 100) / 100
         : null;
 
+    // Percentile is independent of the savings aggregate — runs against
+    // the same window but joins the wider cohort. Skip the lookup when
+    // the user has no positive savings in the month (the ranking SQL
+    // would return null anyway, but skipping saves a roundtrip).
+    //
+    // Gate on the UNROUNDED raw sum (matches the ranking SQL's HAVING
+    // clause). Without this a user with sub-grosz positive savings
+    // (e.g. 0.005 PLN that rounds to 0.00) would skip the ranking
+    // lookup despite qualifying server-side.
+    const rawSavings = savingsRowFirst?.total_savings ?? 0;
+    const ranking =
+      rawSavings > 0
+        ? await this.savingsRanking.getUserPercentile(userId, start, end)
+        : null;
+
     return {
       year,
       month,
@@ -528,8 +553,8 @@ export class FillupService {
           ? Math.round(aggregate._avg.price_per_litre_pln * 1000) / 1000
           : null,
       totalSavingsPln,
-      rankingPercentile: null,   // populated by Story 6.7
-      rankingVoivodeship: null,  // populated by Story 6.7
+      rankingPercentile: ranking?.topPercent ?? null,
+      bestSaverSavingsPln: ranking?.bestSaverSavingsPln ?? null,
     };
   }
 }

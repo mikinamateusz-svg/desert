@@ -500,6 +500,13 @@ model FillUp {
 
   @@index([user_id, filled_at(sort: Desc)])
   @@index([vehicle_id, filled_at(sort: Desc)])
+  /// Story 5.8: cohort scan for SavingsRankingService — both queries
+  /// filter `WHERE filled_at >= ? AND voivodeship IS NOT NULL`.
+  /// Without this index the bulk monthly cron does a sequential scan
+  /// once FillUp grows past a few hundred thousand rows. Voivodeship
+  /// first because the equality predicate is more selective than the
+  /// range scan on filled_at.
+  @@index([voivodeship, filled_at])
 }
 
 /// Story 5.4: per-vehicle odometer snapshot. Created from dashboard-OCR or

@@ -17,6 +17,7 @@ import { useAuth } from '../../src/store/auth.store';
 import { apiGetMonthlySummary, type MonthlySummaryDto } from '../../src/api/fillups';
 import { ShareableCard } from '../../src/components/ShareableCard';
 import { flags } from '../../src/config/flags';
+import { formatIntegerForLocale } from '../../src/utils/formatNumber';
 
 // Phase 2 gate at the entry point — keeps the inner component (with hooks)
 // out of production builds. Pattern matches the rest of Phase 2 screens.
@@ -250,6 +251,28 @@ function SavingsSummaryContent() {
                   amount: formatNum(summary.totalSavingsPln!, 2),
                 })}
               </Text>
+              {/* Story 5.8 percentile segment — shows only when the
+                  user's voivodeship cohort cleared the privacy floor
+                  (≥10 drivers). No region label — same rule as the
+                  shareable card so the screenshot can't leak region
+                  either. */}
+              {summary.rankingPercentile !== null && (
+                <Text style={styles.percentileLine}>
+                  {t('savingsSummary.percentileLine', { pct: summary.rankingPercentile })}
+                </Text>
+              )}
+              {/* Story 5.9 best-saver segment. Server-side leak guard
+                  has already nulled the value when the viewer IS the
+                  max — non-null here is safe to render. Gated on the
+                  percentile too so an inconsistently-shaped server
+                  response can't render an orphaned line. */}
+              {summary.rankingPercentile !== null && summary.bestSaverSavingsPln !== null && (
+                <Text style={styles.bestSaverLine}>
+                  {t('savingsSummary.bestSaverLine', {
+                    amount: formatIntegerForLocale(summary.bestSaverSavingsPln, i18n.language),
+                  })}
+                </Text>
+              )}
               <Text style={styles.fillupCountLine}>
                 {t('savingsSummary.fillupCount', { count: summary.fillupCount })}
               </Text>
@@ -280,7 +303,7 @@ function SavingsSummaryContent() {
                   totalSavingsPln={summary.totalSavingsPln!}
                   fillupCount={summary.fillupCount}
                   rankingPercentile={summary.rankingPercentile}
-                  rankingVoivodeship={summary.rankingVoivodeship}
+                  bestSaverSavingsPln={summary.bestSaverSavingsPln}
                   locale={i18n.language}
                 />
               </ViewShot>
@@ -419,6 +442,19 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: tokens.brand.ink,
     marginBottom: 4,
+  },
+  percentileLine: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: tokens.brand.accent,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  bestSaverLine: {
+    fontSize: 13,
+    color: tokens.neutral.n500,
+    marginBottom: 8,
+    textAlign: 'center',
   },
   statSubline: { fontSize: 13, color: tokens.neutral.n500, marginTop: 2 },
 

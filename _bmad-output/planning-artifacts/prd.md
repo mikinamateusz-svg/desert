@@ -1,5 +1,5 @@
 ---
-stepsCompleted: ['step-01-init', 'step-02-discovery', 'step-02b-vision', 'step-02c-executive-summary', 'step-03-success', 'step-04-journeys', 'step-05-domain', 'step-06-innovation', 'step-07-project-type', 'step-08-scoping', 'step-09-functional', 'step-10-nonfunctional', 'step-11-polish']
+stepsCompleted: ['step-01-init', 'step-02-discovery', 'step-02b-vision', 'step-02c-executive-summary', 'step-03-success', 'step-04-journeys', 'step-05-domain', 'step-06-innovation', 'step-07-project-type', 'step-08-scoping', 'step-09-functional', 'step-10-nonfunctional', 'step-11-polish', 'edit-2026-05-10-positioning-sharpening']
 inputDocuments: []
 workflowType: 'prd'
 classification:
@@ -26,9 +26,16 @@ projectDocsCount: 0
 
 ## Executive Summary
 
-A community-powered mobile platform that gives drivers real-time, crowdsourced fuel prices at stations around them — with zero manual effort. Drivers contribute price data by photographing price boards at stations; AI reads the prices, geolocates the photo against the nearest station (confirmed via logo recognition), and instantly updates a shared database. The result: every driver always knows they're paying a fair price, and never feels like the sucker at an expensive station.
+A community-powered mobile platform that gives drivers **photo-verified, real-time fuel prices** at stations around them — every published price backed by a timestamped, GPS-stamped image, never typed by hand. Drivers contribute by photographing price boards, pump displays, odometers, or fuel receipts; AI reads the data, geolocates the photo against the nearest station, and instantly updates a shared database. The result: every driver knows they're paying a fair price, and the data they're trusting is provably real.
 
-Targeting Polish drivers first — a market with record-high fuel prices, strong deal-seeking culture, and no established competitor — before expanding globally on a proven playbook. Free forever for drivers, who feed the system with data in exchange for always-current prices, personalised price alerts, monthly savings summaries, and a social leaderboard to compete against fellow drivers.
+The platform is built on **four positioning pillars that no Polish competitor currently combines**:
+
+1. **Photo-verified data quality** — no typed-in prices; every submission carries timestamped, GPS-stamped photo evidence
+2. **Zero-effort capture** — point and shoot in under 10 seconds; AI and async processing handle the rest
+3. **Integrated personal fuel-spend log** — every fill-up tracked, savings vs. local average calculated automatically, consumption monitored — without leaving the app
+4. **Predictive price alerts** — proactive "fill up tomorrow before prices rise" notifications fed by crude oil markets, regional submission patterns, and macroeconomic signals — at user level, not just macro forecasts
+
+Targeting Polish drivers first — a market with record-high fuel prices and a strong deal-seeking culture. The market is contested but structurally underserved: existing apps (Yanosik, Fuelio, TuTankuj, Paliwko) all rely on manually typed prices entered via map taps, and none combines verified data quality with personal spend management and per-user predictive alerts. Free forever for drivers, who feed the system with data in exchange for always-current prices, personalised price alerts, monthly savings summaries, and a social leaderboard to compete against fellow drivers.
 
 The platform serves three distinct categories of actors, each deriving different value:
 - **Drivers** — free access to real-time prices, proactive alerts, and savings intelligence in exchange for community data contributions. Optional progressive capture unlocks deeper value: price board photo alone grants community access and leaderboard; adding a pump meter photo unlocks personal savings summaries; adding an odometer photo unlocks consumption tracking and history.
@@ -39,17 +46,19 @@ This multi-sided model creates a genuinely diversified and resilient business: d
 
 ### What Makes This Special
 
-**Zero-effort contribution:** One photo, 10 seconds, done. AI and geolocation handle everything async — the user is back on the road before processing completes.
+**Pillar 1 — Photo-verified data quality:** Every published price carries timestamped, GPS-stamped photographic proof. No typed-in numbers, no fake submissions, no fraud-friendly map-tap entry. Verified-by-photo is the trust differentiator competitors can't replicate without rebuilding their pipelines. Three independent capture sources cross-validate each other: price board (advertised price), pump display (paid price), and receipt (pre-discount unit price + post-discount total).
 
-**Feels like a friend, not a tool:** Price drop notifications alert drivers when a nearby station gets cheaper — a personal tip, not a generic update. Sharp-rise alerts prompt action before prices climb further. The app works for drivers even when they're not actively using it.
+**Pillar 2 — Zero-effort contribution:** One photo, 10 seconds, done. AI and geolocation handle everything async — the user is back on the road before processing completes. Compare to the manual tap-locate-type-save flow every existing PL fuel app demands.
+
+**Pillar 3 — Integrated personal fuel-spend log:** Every fill-up tracked automatically through OCR. Savings vs. local average calculated per fill-up; consumption (l/100km) tracked from odometer captures; monthly summaries surface where the driver actually loses money. Existing apps split the value: Yanosik shows prices but doesn't track your spending; Fuelio tracks spending but with weaker price data. Litro is the first PL app to combine both with photo-verified prices.
+
+**Pillar 4 — Predictive price alerts at user level:** Proactive "fill up tomorrow before prices rise" notifications fed by crude oil markets, regional submission patterns, and macroeconomic signals — delivered as personalised push, not generic blog forecasts. TuTankuj offers macro-level forecasts (national/regional via e-petrol); Reflex Plus is paid pro-tier. **No PL consumer app delivers user-level, location-personalised price prediction alerts.** Unique insight = unique value = stickiness.
+
+**Feels like a friend, not a tool:** Price drop notifications alert drivers when a nearby station gets cheaper — a personal tip, not a generic update. The app works for drivers even when they're not actively using it.
 
 **The right psychological hooks:** Per-litre price pain is disproportionately felt even when the absolute saving is small. Loss aversion, monthly savings summaries, and a social leaderboard ("you're in the top 15% of savers in Warsaw this month") turn rational frugality into an identity and a competition — a very Polish one.
 
-**Proactive intelligence, not just a lookup tool:** Predictive pricing fed by crude oil markets, seasonal patterns, and geopolitical signals delivers a "fuel price weather forecast" no Polish competitor currently offers. Unique insight = unique value = stickiness.
-
-**Build to differentiate, integrate everything else:** OCR via existing vision APIs, maps via Google Maps Places, auth and push notifications off the shelf. Engineering effort concentrated on community flywheel, AI matching logic, and data layer — the actual moat.
-
-**First-mover in Poland:** No established competitor. Community-driven apps compound with density — getting there first is the advantage.
+**Build to differentiate, integrate everything else:** OCR via existing vision APIs, maps via Google Maps Places, auth and push notifications off the shelf. Engineering effort concentrated on community flywheel, AI matching logic, predictive forecasting, and data layer — the actual moat.
 
 ## Success Criteria
 
@@ -291,6 +300,10 @@ The product succeeds for users when drivers instinctively consult the app before
 | OCR accuracy insufficient in poor conditions | Human review queue for low-confidence extractions; community self-correction over time |
 | B2B data monetisation takes longer than expected | Tiered fallback: in-app ads → data portal advertising → station promotions → B2B licensing — each tier independently viable |
 | Data portal distracts from app focus | Portal scoped separately from core app — complementary SEO acquisition funnel and ad revenue stream |
+| Fuelio (or other established competitor) pivots into pylon-OCR + per-user predictive alerts | Closest competitor on personal fillup tracking; receipt OCR already in their product. Mitigation: aggressive execution on the four-pillar combination at launch; build brand and topical authority through SEO/programmatic data pages while moat exists; B2B data licensing as parallel revenue stream less exposed to consumer-app competition; track Fuelio release notes as a standing competitive watch |
+| Yanosik adds integrated spend log + photo verification | Yanosik already adding expense tracking ("wszystkie wydatki kierowcy") — moat on Pillar 3 may erode within 12–24 months. Mitigation: differentiation cannot rest on any single pillar; the four-pillar combination + brand positioning is the durable moat; predictive alerts are hardest for Yanosik to bolt on (requires forecasting expertise outside their core competency) |
+| Pylon OCR field accuracy below positioning threshold (≥85% target) | Photo-verification claim collapses below ~85% real-world accuracy in field conditions (weather, glare, angle). Mitigation: small field benchmark before launch lock-in; if accuracy insufficient, reposition Pillar 1 around receipt + pump OCR (clean printed text, validated at 100%) and treat pylon as best-effort secondary contribution path |
+| Predictive alert accuracy damages user trust | Wrong forecast notifications erode trust faster than right ones build it. Mitigation: closed-loop accuracy validation period before user-facing alerts ship; transparent forecast scoring published in-app; conservative thresholds to fire only on high-confidence movements |
 
 ## Innovation & Novel Patterns
 
@@ -317,9 +330,23 @@ Consumer data contributions generate a commercially valuable anonymous dataset (
 **Proactive staleness intelligence**
 Rather than waiting for prices to be corrected reactively, the platform detects market-wide price movement signals (crude oil prices, regional submission patterns, market news) and proactively flags affected stations as "prices may have changed" — managing driver expectations before arrival and nudging contributors to update.
 
+**Per-user predictive price alerts (positioning pillar)**
+The same forecasting infrastructure that powers staleness intelligence drives a user-level predictive alert layer: location-personalised push notifications recommending action ("fill up tomorrow before prices rise") fed by Brent crude movements, ORLEN rack prices, regional submission patterns, and macroeconomic signals. **No PL consumer fuel app currently delivers user-level, location-personalised predictive alerts** — TuTankuj surfaces only macro/national e-petrol forecasts; Reflex Plus is a paid pro-tier tool. Forecast accuracy is tracked transparently as an E-E-A-T trust signal: published validation reports ("our predictions: what we got right") become recurring SEO/PR content and demonstrate expertise that pure-AI competitor content cannot replicate. Wrong predictions hurt trust faster than right ones build it, so the alert layer ships only after a closed-loop accuracy validation period.
+
 ### Market Context & Competitive Landscape
 
-No established community-driven fuel price platform exists in Poland. The market has record-high fuel prices and a strong deal-seeking cultural disposition — conditions that maximise the perceived value of accurate, real-time pricing. First-mover advantage compounds with community density; the dataset becomes more defensible as it grows.
+The Polish fuel price app market is **contested but structurally underserved**. Multiple crowdsourced players exist, but each has a narrow positioning that leaves the four-pillar combination (photo-verified data + zero-effort capture + integrated spend log + per-user predictive alerts) unoccupied:
+
+- **Yanosik** — dominant via its navigation/speed-cam app footprint (~1M user-typed price entries per year, ~one update every 26 seconds). Treats fuel prices as a side feature; manually typed; no photo verification; no per-user predictive alerts; recently added expense tracking but core product is navigation, not fuel finance.
+- **Fuelio** — strongest personal fillup tracker (Polish-origin, Sygic-backed). Crowdsourced prices + spend log overlap closely with Litro's territory; recently added receipt OCR for fillup tracking. Manually typed for crowd prices; no per-user predictive alerts; no pylon-OCR.
+- **TuTankuj** — crowdsourced + macro-level price forecasts from e-petrol analysts (national/regional, not user-level). Manually typed; rate-limited to one update per station per user per day; gamified contributor rewards.
+- **Paliwko** — crowdsourced with aggressive contributor cash incentives (100 PLN/week + 300 PLN per six months for top contributors). Claims largest station database in PL; data quality reportedly mixed.
+- **Pistacje** — crowdsourced, Android-only, not actively maintained; coverage gaps especially in smaller towns.
+- **Loyalty apps** (Orlen Vitay, Circle K) — first-party single-brand discount programmes; cannot compare across networks.
+
+**Litro's defensible position is the four-pillar combination.** Each pillar individually has at least one credible competitor; no competitor combines all four. The closest threat is Fuelio, which already overlaps on personal fillup tracking and receipt OCR — Fuelio adding pylon-OCR or per-user predictive alerts would narrow Litro's moat materially and is treated as a tracked competitive risk.
+
+The market has record-high fuel prices and a strong deal-seeking cultural disposition — conditions that maximise the perceived value of verified, real-time pricing. Community density compounds defensibility as the dataset grows.
 
 ### Monetisation Fallback Stack
 
@@ -447,7 +474,9 @@ A planned post-MVP capability allowing users to activate an explicit navigation 
 
 ### Phase 1 — MVP Feature Set
 
-**Core User Journeys Supported:** Marek (casual driver discovering and using prices), partial Kasia (price board contribution without savings features), partial Piotr (station data visible on platform — self-update portal comes in Phase 2), Ops team (admin tooling from day one).
+**Core User Journeys Supported:** Marek (casual driver discovering and using prices), Kasia (price board + pump meter contribution with savings calculation), partial Zofia (consumption tracking via odometer + receipt OCR), partial Piotr (station data visible on platform — self-update portal comes in Phase 2), Ops team (admin tooling from day one).
+
+**Phase 1 must ship the four positioning pillars to differentiate at launch.** A price-only MVP would put Litro in head-to-head competition with Yanosik on Yanosik's home turf and lose. The integrated spend log + predictive alerts + photo verification are what carve out the defensible lane.
 
 **Must-Have Capabilities:**
 
@@ -455,8 +484,25 @@ A planned post-MVP capability allowing users to activate an explicit navigation 
   - Map view with nearby stations, colour-coded by price
   - Station detail screen with current prices by fuel type
   - Seeded voivodeship-level price estimates at launch, clearly marked as estimates
-  - Price board photo capture → OCR → GPS-to-POI matching → database update
+  - **Photo-verified contribution paths (Pillar 1+2):**
+    - Price board photo capture → OCR → GPS-to-POI matching → database update
+    - Pump display photo capture → OCR → fuel type confirmation → price + volume contribution
+    - Odometer photo capture → OCR → consumption tracking
+    - Receipt photo capture → OCR → pre-discount unit price (public feed) + post-discount total (personal log)
+    - Batch-import flow for historical receipts to bootstrap spend log
+    - Camera-only capture with EXIF/GPS validation enforced for all paths
   - Immediate "Thank you" confirmation on photo submission (async processing behind the scenes)
+  - **Personal fuel-spend log (Pillar 3):**
+    - Personal fillup history with pre/post-discount price breakdown
+    - Savings vs. area average per fill-up and aggregated monthly
+    - Consumption history (l/100km) with trends
+    - Monthly cost trends and per-vehicle breakdown
+    - Monthly savings summary notification
+  - **Predictive price alerts (Pillar 4):**
+    - Crude oil price feed (Brent + ORLEN rack) ingestion
+    - Predictive forecast model (regional submission patterns + macro signals)
+    - User-level "fill up before prices rise" push notifications, location-personalised
+    - Forecast accuracy tracking for E-E-A-T transparency
   - Basic user accounts
   - Offline-first: cached map and prices available without connectivity; photo submissions queued and retried automatically
 - Admin web app (internal ops)
@@ -470,15 +516,12 @@ A planned post-MVP capability allowing users to activate an explicit navigation 
 
 ### Phase 2 — Growth Features
 
-**Expanded contribution model:**
-- Pump photo lazy contribution path — photo of pump display, user confirms fuel type (pre-suggested from history and price context), captures one price point without walking to price board
-- Pump meter photo → personal savings summaries vs. area average
-- Odometer photo → fuel consumption tracking and history (l/100km)
+**Note on scope:** Pump-meter, odometer, and receipt OCR contribution paths, the personal spend log, and per-user predictive price alerts have been moved to Phase 1 MVP as load-bearing differentiation pillars. Phase 2 focuses on engagement layers, station-side products, and the public data/SEO acquisition channel that compound on top of the MVP foundation.
 
 **Engagement and retention:**
-- Price drop and sharp-rise push notifications (value-first opt-in strategy)
+- Price drop and sharp-rise push notifications for non-personalised events (value-first opt-in strategy) — complements the personalised predictive alerts shipped in Phase 1
 - Social leaderboard with geographic segmentation (savings ranking among nearby drivers)
-- Monthly savings summary with social sharing
+- Social sharing of monthly savings summary (the summary itself ships in Phase 1; external sharing graduates here)
 
 **Station and monetisation:**
 - Station owner self-update flow
@@ -486,7 +529,7 @@ A planned post-MVP capability allowing users to activate an explicit navigation 
 - Station promoted placement — enhanced map visibility (larger pin, badge) for a flat daily/weekly fee; Phase 2 first monetisation from stations
 - Station deal advertising — structured text offers (headline + conditions + dates) displayed in station sheet; ops-moderated; billed by active days; chain-level buyers primary target
 - In-app advertising (early revenue, no sales cycle required)
-- Public data portal — fuel price trends, consumption benchmarks, ad-monetised, SEO acquisition channel
+- Public data portal — fuel price trends, consumption benchmarks, ad-monetised, SEO acquisition channel anchored on the four-pillar positioning (programmatic city/voivodeship pages + editorial Poradnik)
 
 ### Phase 3 — Fleet Tier *(deprioritised from Phase 2)*
 
@@ -506,7 +549,6 @@ A planned post-MVP capability allowing users to activate an explicit navigation 
 
 - **Station Picker ("Pick for me")** — driver requests a recommendation; app surfaces top 2 stations ranked by a disclosed algorithm (price, distance, data freshness, active deals); active deal promotions that influenced the result are transparently labelled ("Has active offer"); driver can navigate to either result. Promotions act as a declared commercial tie-breaker — trust preserved through full transparency.
 - B2B data licensing API (navigation platforms, logistics, insurers, automotive, financial analysts, regulators)
-- Predictive pricing — fuel price forecasting fed by crude oil markets, seasonal patterns, geopolitical signals
 - Search Mode — user-triggered active navigation session recommending optimal refuelling stops en route
 - EV + ICE route planning mode — proactive stop optimisation along a planned route; EV as primary use case (range-constrained), ICE as secondary (cost optimisation)
 - Enterprise fleet contracts and integrations (ERP, telematics, fleet management platforms)
@@ -519,7 +561,7 @@ A planned post-MVP capability allowing users to activate an explicit navigation 
 
 **Market risks:**
 - Cold start (no community data at launch) mitigated by seeded voivodeship-level estimates. Community self-corrects over time — any data is better than no data.
-- No established Polish competitor de-risks market entry; first-mover community density compounds defensibility.
+- Polish market is contested but structurally underserved on the four-pillar combination (photo-verified data + zero-effort capture + integrated spend log + per-user predictive price alerts). Direct competitors (Yanosik, Fuelio, TuTankuj, Paliwko) cover individual pillars but not the combined positioning — see Market Context section. Defensibility comes from execution on the combination, not from market emptiness.
 
 **Resource risks:**
 - MVP scope is deliberately minimal — two engineers could build it. Third-party APIs (OCR, maps, auth, push) eliminate the need to build commodity infrastructure.
@@ -531,6 +573,9 @@ A planned post-MVP capability allowing users to activate an explicit navigation 
 
 - **FR1:** Driver can view a map of nearby fuel stations with current prices
 - **FR2:** Driver can filter or identify stations by fuel type
+- **FR2a:** Driver can see a chain/brand badge (Orlen, Lotos, BP, Shell, Circle K, MOYA, AMIC, Avia, independent, etc.) on each station pin and in station detail view, so drivers locked into specific networks via loyalty cards (Vitay, BPme, Shell ClubSmart) or fleet fuel cards can identify usable stations at a glance *(Phase 1 MVP — relies on `Station.brand` field already populated via Story 2.14 classification pipeline)*
+- **FR2b:** Driver can filter the map view to show only stations from selected chains (multi-select). Filter persists across sessions per user. *(Phase 1 MVP)*
+- **FR2c:** Brand classification covers all major PL chains (Orlen, Lotos, BP, Shell, Circle K, MOYA, AMIC, Avia, Auchan, Tesco, Huzar, Pieprzyk, plus "independent" fallback). The brand pattern config in `apps/api/src/station/config/brand-patterns.ts` is the source of truth and must be reviewed for completeness before launch. *(Phase 1 MVP)*
 - **FR3:** Driver can view detailed price information for a specific station
 - **FR4:** Driver can visually compare prices across nearby stations (colour-coded by relative price)
 - **FR5:** Driver can see data freshness indicators on station prices
@@ -547,6 +592,9 @@ A planned post-MVP capability allowing users to activate an explicit navigation 
 - **FR13:** Driver can submit a pump display photo to contribute a single fuel type price
 - **FR14:** Driver can confirm or correct the system-suggested fuel type on a pump photo submission
 - **FR15:** Driver can queue photo submissions locally for automatic retry when offline or connectivity is poor
+- **FR76:** Driver can submit a fuel receipt photo to record a fill-up; system extracts pre-discount unit price (zł/L), post-discount total, dispensed volume, fuel type, and station name from the receipt
+- **FR77:** System tags receipt-OCR data with provenance: pre-discount unit price contributes to the public market price feed (alongside price board / pump submissions); post-discount total feeds the personal spend log only — discount-driven prices never pollute aggregate market data
+- **FR78:** Driver can batch-import multiple historical receipts in a single capture flow to bootstrap personal spend log from prior fill-ups
 
 ### User Management
 
@@ -557,21 +605,29 @@ A planned post-MVP capability allowing users to activate an explicit navigation 
 - **FR20:** Driver can manage their notification preferences
 - **FR21:** Driver can withdraw consent for specific data uses independently of account deletion
 
-### Notifications & Alerts *(Phase 2)*
+### Notifications & Alerts
 
-- **FR22:** Driver can opt in to price drop alerts for nearby or saved stations
-- **FR23:** Driver can opt in to sharp price rise alerts
-- **FR24:** Driver receives a monthly savings summary notification
-- **FR25:** System re-prompts drivers to enable notifications at high-value contextual moments (first photo submission, first savings summary generated)
+- **FR22:** Driver can opt in to price drop alerts for nearby or saved stations *(Phase 2)*
+- **FR23:** Driver can opt in to sharp price rise alerts *(Phase 2)*
+- **FR24:** Driver receives a monthly savings summary notification *(Phase 1 MVP — anchors the spend log positioning pillar)*
+- **FR25:** System re-prompts drivers to enable notifications at high-value contextual moments (first photo submission, first savings summary generated) *(Phase 1 MVP)*
+- **FR79:** Driver receives location-personalised predictive price alerts ("fill up before prices rise") generated from crude oil signals, ORLEN rack prices, and regional submission patterns *(Phase 1 MVP — anchors the predictive alerts positioning pillar)*
+- **FR80:** System publishes forecast accuracy metrics in-app (recent forecast → actual outcome comparison) as a transparent trust signal *(Phase 1 MVP)*
+- **FR81:** Predictive alerts fire only above a confidence threshold; below threshold, no notification is sent (avoids eroding trust with low-confidence forecasts) *(Phase 1 MVP)*
+- **FR82:** First verified photo submission unlocks predictive price alerts for the contributing user for 30 days. Alerts are free for everyone — gated by contribution (a verified photo), never by payment. No "premium" tier exists for alerts. *(Phase 1 MVP — anchors the alerts gating mechanic that closes the contribution flywheel without monetisation friction)*
+- **FR83:** Predictive alerts auto-expire 30 days after the user's most recent verified photo submission. The user receives a pre-expiry re-engagement notification 3 days before expiry, prompting them to submit a new photo to renew. *(Phase 1 MVP)*
+- **FR84:** Each new verified photo submission renews the 30-day alert window from the date of submission (rolling, not stacking — submitting two photos in one day still results in a 30-day window from the latest, not 60 days). *(Phase 1 MVP)*
 
-### Personal Analytics *(Phase 2)*
+### Personal Analytics
 
-- **FR26:** Driver can submit a pump meter photo to record a fill-up with volume and cost
-- **FR27:** System calculates and displays driver savings vs. area average from pump meter data
-- **FR28:** Driver can submit an odometer photo to enable fuel consumption tracking
-- **FR29:** Driver can view their personal fuel consumption history (l/100km over time)
-- **FR30:** Driver can view their personal fuel cost history and trends
-- **FR31:** Driver can share their savings summary externally
+**Phase 1 (MVP):** Personal fuel-spend log is a Phase-1 differentiation pillar — must ship at launch to deliver the integrated-spend-log positioning that distinguishes Litro from price-only competitors. New users migrating from Fuelio (the closest competitor on this axis) must experience no degradation of personal-tracking capability.
+
+- **FR26:** Driver can submit a pump meter photo to record a fill-up with volume and cost *(Phase 1 MVP)*
+- **FR27:** System calculates and displays driver savings vs. area average from pump meter data *(Phase 1 MVP)*
+- **FR28:** Driver can submit an odometer photo to enable fuel consumption tracking *(Phase 1 MVP)*
+- **FR29:** Driver can view their personal fuel consumption history (l/100km over time) *(Phase 1 MVP)*
+- **FR30:** Driver can view their personal fuel cost history and trends *(Phase 1 MVP)*
+- **FR31:** Driver can share their savings summary externally *(Phase 2)*
 
 ### Community & Engagement *(Phase 2)*
 

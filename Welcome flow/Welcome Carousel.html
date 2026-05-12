@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>litro · Welcome carousel</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #f0eee9; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  /* Style-guide block */
+  .sg-card { background: #fff; border-radius: 14px; padding: 18px; box-shadow: 0 1px 0 rgba(0,0,0,0.04); }
+  .sg-card h4 { margin: 0 0 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase; color: #6b7280; }
+  .sg-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #2a2a2a; }
+  .sg-row + .sg-row { margin-top: 8px; }
+  .sg-swatch { width: 28px; height: 28px; border-radius: 6px; flex: 0 0 28px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05); }
+  .sg-mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: #6b7280; margin-left: auto; }
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<!-- React + Babel -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="illustrations.jsx"></script>
+<script type="text/babel" src="carousel.jsx"></script>
+
+<script type="text/babel">
+  const { DesignCanvas, DCSection, DCArtboard, DCNote } = window;
+  const { IOSDevice } = window;
+  const {
+    Illustration1, Illustration2, Illustration3, Illustration4, Illustration4Alt, Illustration5, Pin, TOKENS,
+  } = window.LitroIllustrations;
+  const { WelcomeCarousel, StaticCard, CARDS, WelcomeCard, Dots, PrimaryBtn, SecondaryBtn } = window.LitroCarousel;
+
+  // The iOS frame's content area: device is 402×874; status bar/dynamic island sits absolute at top.
+  // We render full-bleed white and let our card handle its own top padding.
+  function PhoneShell({ children, label }) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} data-screen-label={label}>
+        <IOSDevice width={402} height={840}>
+          <div style={{ height: '100%', background: '#fff' }}>{children}</div>
+        </IOSDevice>
+      </div>
+    );
+  }
+
+  // Static card (no interactive buttons; used for the "all 5" grid)
+  function StaticPhone({ index }) {
+    return (
+      <PhoneShell label={`Card ${index + 1}`}>
+        <StaticCard index={index} />
+      </PhoneShell>
+    );
+  }
+
+  // Card 4 ALTERNATE — same copy hierarchy, alternate fork illustration (vertical stack)
+  function Card4AltStatic() {
+    const card = {
+      ...CARDS[3],
+      Illo: Illustration4Alt,
+    };
+    return (
+      <PhoneShell label="Card 4 alt">
+        <WelcomeCard card={card} index={3} total={CARDS.length} onNext={()=>{}} onBack={()=>{}} onFinish={()=>{}} />
+      </PhoneShell>
+    );
+  }
+
+  // Illustration export card — illustration alone on a soft cream card
+  function IlloPlate({ Illo, label }) {
+    return (
+      <div style={{
+        width: '100%', height: '100%', display: 'flex', flexDirection: 'column',
+        background: '#fff', borderRadius: 0,
+      }}>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+          <Illo width={300} />
+        </div>
+        <div style={{
+          padding: '10px 14px',
+          borderTop: '1px solid rgba(0,0,0,0.06)',
+          fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+          fontSize: 11, color: '#6b7280', display: 'flex', justifyContent: 'space-between',
+        }}>
+          <span>{label}</span>
+          <span>SVG · 280×180</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Style-guide artboard contents
+  function StyleGuide() {
+    const swatches = [
+      { name: 'brand.accent (amber)', hex: '#f59e0b' },
+      { name: 'brand.ink',            hex: '#1a1a1a' },
+      { name: 'neutral.n700 (body)',  hex: '#2a2a2a' },
+      { name: 'neutral.n500 (hint)',  hex: '#6b7280' },
+      { name: 'surface.warmPage',     hex: '#fdf6ee' },
+      { name: 'price.cheapest',       hex: '#1a9641' },
+      { name: 'price.mid',            hex: '#f5c542' },
+      { name: 'price.expensive',      hex: '#d7191c' },
+    ];
+    return (
+      <div style={{
+        width: '100%', height: '100%', padding: 22, boxSizing: 'border-box',
+        background: '#fafafa', display: 'grid',
+        gridTemplateColumns: '1fr 1fr', gap: 14,
+        gridAutoRows: 'min-content',
+        overflow: 'auto',
+      }}>
+        {/* Type */}
+        <div className="sg-card" style={{ gridColumn: 'span 2' }}>
+          <h4>Typografia</h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ fontSize: 24, fontWeight: 700, color: TOKENS.ink, letterSpacing: -0.5, lineHeight: '30px' }}>
+              Tytuł karty <span className="sg-mono" style={{ marginLeft: 12 }}>24 / 700 · −0.5</span>
+            </div>
+            <div style={{ fontSize: 16, fontWeight: 400, color: TOKENS.ink70, lineHeight: '24px' }}>
+              Tekst opisu — czytelny, średniej długości, balansowany. <span className="sg-mono" style={{ marginLeft: 4 }}>16 / 400 · 24</span>
+            </div>
+            <div style={{ fontSize: 13, fontWeight: 500, color: TOKENS.soft }}>
+              Hint / podpis pomocniczy. <span className="sg-mono" style={{ marginLeft: 4 }}>13 / 500</span>
+            </div>
+            <div style={{ fontSize: 17, fontWeight: 600, color: '#fff', background: TOKENS.amber, display: 'inline-block', padding: '6px 14px', borderRadius: 999, alignSelf: 'flex-start', marginTop: 4 }}>
+              Dalej <span style={{ marginLeft: 8, opacity: 0.85, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', fontSize: 11 }}>17 / 600</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Colors */}
+        <div className="sg-card">
+          <h4>Kolory</h4>
+          {swatches.map(s => (
+            <div key={s.hex} className="sg-row">
+              <div className="sg-swatch" style={{ background: s.hex }} />
+              <span>{s.name}</span>
+              <span className="sg-mono">{s.hex}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Illustration rules */}
+        <div className="sg-card">
+          <h4>Ilustracje</h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 13, color: '#2a2a2a', lineHeight: 1.55 }}>
+            <div><strong>Stroke:</strong> 1.5px primary · 1px fine detail. <code style={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>round</code> caps + joins.</div>
+            <div><strong>Fill:</strong> warm cream (<code style={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>#fdf6ee</code>) for grouped shapes; white for objects in front; amber only as accent.</div>
+            <div><strong>Viewbox:</strong> 280×180 — render area ~290×200 in card.</div>
+            <div><strong>Subject test:</strong> a glance reads the literal subject (phone, pin, bell), no decorative blobs.</div>
+            <div><strong>One accent:</strong> a single amber element per illustration is the rule (Card 3 is the documented exception — it teaches the price spectrum).</div>
+          </div>
+        </div>
+
+        {/* Spacing & radius */}
+        <div className="sg-card">
+          <h4>Przestrzeń & promień</h4>
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 10 }}>
+            {[6, 10, 16, 20].map(r => (
+              <div key={r} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                <div style={{ width: 48, height: 48, background: TOKENS.amber, opacity: 0.18, borderRadius: r, border: '1.5px dashed rgba(245,158,11,0.6)' }} />
+                <div style={{ fontSize: 11, color: TOKENS.soft, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>{r}px</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: 14, fontSize: 13, color: '#2a2a2a' }}>
+            Modal corners: <strong>20</strong>. Spacing: 4 · 8 · 12 · 16 · 24 · 32.
+          </div>
+        </div>
+
+        {/* Pin glyph */}
+        <div className="sg-card">
+          <h4>Pin (legenda)</h4>
+          <svg width="100%" viewBox="0 0 240 80">
+            <Pin x={30}  y={56} fill={TOKENS.green}     scale={1.6} />
+            <Pin x={90}  y={56} fill={TOKENS.gold}      scale={1.6} />
+            <Pin x={150} y={56} fill={TOKENS.red}       scale={1.6} />
+            <Pin x={210} y={56} estimate                 scale={1.6} />
+          </svg>
+          <div style={{ fontSize: 12, color: TOKENS.soft, marginTop: -6 }}>
+            zielony · żółty · czerwony · szacunek (~)
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ─────────── Page ───────────
+  function App() {
+    return (
+      <DesignCanvas>
+        <DCSection
+          id="prototype"
+          title="Welcome carousel · interaktywny prototyp"
+          subtitle="Dotknij „Dalej”, aby przejść między 5 kartami. Działa też „Wstecz”, „Zaczynamy” kończy onboarding.">
+          <DCArtboard id="proto-linear" label="Linear flow (Dalej / Wstecz)" width={402} height={840}>
+            <PhoneShell label="Welcome carousel — interactive">
+              <WelcomeCarousel />
+            </PhoneShell>
+          </DCArtboard>
+          <DCArtboard id="proto-account" label="Re-access from Account (free pagination)" width={402} height={840}>
+            <PhoneShell label="Welcome carousel — free paginate">
+              <WelcomeCarousel free />
+            </PhoneShell>
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection
+          id="cards"
+          title="Wszystkie karty (1–5)"
+          subtitle="Pełne kompozycje karty po karcie — w pionowej proporcji urządzenia.">
+          {CARDS.map((c, i) => (
+            <DCArtboard key={c.id} id={`card-${c.id}`} label={`Card ${c.id} · ${c.title}`} width={402} height={840}>
+              <StaticPhone index={i} />
+            </DCArtboard>
+          ))}
+        </DCSection>
+
+        <DCSection
+          id="card4-alt"
+          title="Card 4 — wariant alternatywny"
+          subtitle="Zgodnie z briefem: drugi układ podziału „Ty / My” — pionowa oś z dwoma punktami zamiast dwóch paneli.">
+          <DCArtboard id="c4-orig" label="Original · two panels" width={402} height={840}>
+            <StaticPhone index={3} />
+          </DCArtboard>
+          <DCArtboard id="c4-alt" label="Alternate · vertical timeline" width={402} height={840}>
+            <Card4AltStatic />
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection
+          id="illustrations"
+          title="Zestaw ilustracji (eksport)"
+          subtitle="Każda ilustracja to samodzielny SVG, 280×180, jeden akcent (amber). Linia 1.5px, rounded caps.">
+          <DCArtboard id="il-1" label="01 · Witaj"             width={340} height={240}><IlloPlate Illo={Illustration1} label="welcome.svg" /></DCArtboard>
+          <DCArtboard id="il-2" label="02 · Skąd ceny"         width={340} height={240}><IlloPlate Illo={Illustration2} label="capture.svg" /></DCArtboard>
+          <DCArtboard id="il-3" label="03 · Kolory pinezek"    width={340} height={240}><IlloPlate Illo={Illustration3} label="pins.svg" /></DCArtboard>
+          <DCArtboard id="il-4" label="04 · Ty / My"           width={340} height={240}><IlloPlate Illo={Illustration4} label="you-we.svg" /></DCArtboard>
+          <DCArtboard id="il-4a" label="04 · alt"               width={340} height={240}><IlloPlate Illo={Illustration4Alt} label="you-we-alt.svg" /></DCArtboard>
+          <DCArtboard id="il-5" label="05 · Reward"             width={340} height={240}><IlloPlate Illo={Illustration5} label="reward.svg" /></DCArtboard>
+        </DCSection>
+
+        <DCSection
+          id="style"
+          title="Style guide — krótka notatka dla zestawu"
+          subtitle="Tokeny + zasady, których trzymamy się przy tworzeniu kolejnych ilustracji (np. Story 7).">
+          <DCArtboard id="sg" label="Style notes" width={760} height={520}>
+            <StyleGuide />
+          </DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

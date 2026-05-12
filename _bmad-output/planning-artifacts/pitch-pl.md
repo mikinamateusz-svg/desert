@@ -78,7 +78,14 @@ Moduł flotowy to subskrypcja B2B. Decyzja zakupowa leży po stronie managera fl
 
 Około 33 miliony zarejestrowanych pojazdów. Wysoka gęstość infrastruktury paliwowej — ponad 8 000 stacji w stosunkowo małym obszarze geograficznym. Ceny paliw są tu realnym tematem społecznym — medialnym, politycznym, codziennym. Polacy są na to wrażliwi bardziej niż wiele innych narodów w Europie.
 
-A jednocześnie: **rynek jest pusty**. Nie ma lokalnego gracza z aktualną, zwalidowaną bazą cen. Są aplikacje — niekompletne, nieaktualne, oparte na manualnym raportowaniu które działa przez dwa tygodnie i potem umiera. Desert to rozwiązuje mechanizmem, nie apelami do obywatelskości.
+A jednocześnie: **rynek jest sporny, ale strukturalnie nieobsadzony.** Aplikacje istnieją — Yanosik (dominacja w nawigacji + crowdsourcing cen jako funkcja poboczna, ~1 mln wpisów rocznie), Fuelio (najsilniejszy tracker tankowań, świeżo dodał OCR paragonów), TuTankuj (crowdsourcing + makro-prognozy z e-petrol), Paliwko (agresywne nagrody dla kontrybutorów). Każda z nich obsługuje pojedynczy filar. Żadna nie łączy czterech jednocześnie:
+
+1. **Jakość danych potwierdzona zdjęciem** — żadnych ręcznie wpisanych cen
+2. **Zero wysiłku przy wkładzie** — pstryk, gotowe, 10 sekund
+3. **Zintegrowany dziennik wydatków** — każde tankowanie zapisane automatycznie
+4. **Spersonalizowane alerty cenowe** — uprzedzimy kierowcę, zanim ceny pójdą w górę
+
+Litro buduje pozycję na kombinacji tych czterech filarów — to przestrzeń, której żaden z istniejących graczy dziś nie zajmuje. Mechanizm zamiast manualnych zgłoszeń, zdjęcia zamiast wpisywania na ślepo, alerty cenowe zamiast samego widoku mapy.
 
 **Okno technologiczne jest teraz.**
 

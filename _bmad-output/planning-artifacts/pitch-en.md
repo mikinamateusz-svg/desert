@@ -78,7 +78,14 @@ The fleet module is a B2B subscription. Purchase decision sits with a fleet mana
 
 Roughly 33 million registered vehicles. High infrastructure density — over 8,000 stations in a geographically compact country. Fuel prices are a genuine cultural touchpoint — a media topic, a political topic, a daily conversation. Polish drivers are more price-sensitive about fuel than almost any comparable market in Europe.
 
-And yet: **the market is empty.** There's no local player with a current, validated price database. There are apps — incomplete, stale, built on manual reporting that works for two weeks and then collapses. Desert solves this with a mechanism, not an appeal to civic virtue.
+And yet: **the market is contested but structurally underserved.** Apps exist — Yanosik (dominant via its navigation + speed-cam footprint, with crowdsourced fuel prices as a side feature, ~1M entries/year), Fuelio (strongest personal fillup tracker, recently added receipt OCR), TuTankuj (crowdsourced + macro-level forecasts from e-petrol analysts), Paliwko (aggressive contributor cash rewards). Each occupies one pillar. **None combines all four:**
+
+1. **Photo-verified data quality** — no typed-in prices, every submission backed by a timestamped, GPS-stamped image
+2. **Zero-effort capture** — point and shoot, 10 seconds, AI handles the rest
+3. **Integrated personal fuel-spend log** — every fill-up tracked automatically, savings vs. local average computed without leaving the app
+4. **Per-user predictive price alerts** — proactive "fill up tomorrow" notifications fed by crude oil markets and regional submission patterns
+
+Litro's defensibility comes from this four-pillar combination — empty space no incumbent currently occupies. Mechanism over manual reporting, photographs over guess-typing, predictive alerts over passive lookup.
 
 **The technology window is open right now.**
 

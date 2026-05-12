@@ -16,6 +16,9 @@ This document provides the complete epic and story breakdown for desert, decompo
 **Price Discovery**
 FR1: Driver can view a map of nearby fuel stations with current prices
 FR2: Driver can filter or identify stations by fuel type
+FR2a: Driver can see a chain/brand badge (Orlen, Lotos, BP, Shell, Circle K, MOYA, AMIC, Avia, independent, etc.) on each station pin and in station detail view, supporting drivers locked into specific networks via loyalty cards (Vitay, BPme, Shell ClubSmart) or fleet fuel cards
+FR2b: Driver can filter the map view to show only stations from selected chains (multi-select). Filter persists across sessions per user.
+FR2c: Brand classification covers all major PL chains. The brand pattern config in `apps/api/src/station/config/brand-patterns.ts` is the source of truth and must be reviewed for completeness before launch.
 FR3: Driver can view detailed price information for a specific station
 FR4: Driver can visually compare prices across nearby stations (colour-coded by relative price)
 FR5: Driver can see data freshness indicators on station prices
@@ -28,9 +31,12 @@ FR9: System automatically extracts fuel prices from a submitted price board phot
 FR10: System matches a submitted photo to the correct station using GPS location (PostGIS, 200m radius)
 FR11: System uses logo recognition as a secondary signal to confirm station identity
 FR12: Driver receives immediate submission confirmation regardless of backend processing status
-FR13: Driver can submit a pump display photo to contribute a single fuel type price *(Phase 2)*
-FR14: Driver can confirm or correct the system-suggested fuel type on a pump photo submission *(Phase 2)*
+FR13: Driver can submit a pump display photo to contribute a single fuel type price
+FR14: Driver can confirm or correct the system-suggested fuel type on a pump photo submission
 FR15: Driver can queue photo submissions locally for automatic retry when offline or connectivity is poor
+FR76: Driver can submit a fuel receipt photo to record a fill-up; system extracts pre-discount unit price (zł/L), post-discount total, dispensed volume, fuel type, and station name from the receipt
+FR77: System tags receipt-OCR data: pre-discount unit price contributes to the public market price feed; post-discount total feeds the personal spend log only — discount-driven prices never pollute aggregate market data
+FR78: Driver can batch-import multiple historical receipts in a single capture flow to bootstrap personal spend log from prior fill-ups
 
 **User Management**
 FR16: Driver can create an account at first launch via social sign-in (Google, Apple) or email/password — account creation is required to use the app, framed as joining the community
@@ -40,19 +46,25 @@ FR19: Driver can export their personal data
 FR20: Driver can manage their notification preferences
 FR21: Driver can withdraw consent for specific data uses independently of account deletion
 
-**Notifications & Alerts** *(Phase 2)*
-FR22: Driver can opt in to price drop alerts for nearby or saved stations
-FR23: Driver can opt in to sharp price rise alerts
+**Notifications & Alerts**
+FR22: Driver can opt in to price drop alerts for nearby or saved stations *(Phase 2)*
+FR23: Driver can opt in to sharp price rise alerts (community-confirmed) *(Phase 2)*
 FR24: Driver receives a monthly savings summary notification
 FR25: System re-prompts drivers to enable notifications at high-value contextual moments (first photo submission, first savings summary generated)
+FR79: Driver receives location-personalised predictive price alerts ("fill up before prices rise") generated from crude oil signals, ORLEN rack prices, and regional submission patterns
+FR80: System publishes forecast accuracy metrics in-app (recent forecast → actual outcome comparison) as a transparent trust signal
+FR81: Predictive alerts fire only above a confidence threshold; below threshold, no notification is sent (avoids eroding trust with low-confidence forecasts)
+FR82: First verified photo submission unlocks predictive price alerts for the contributing user for 30 days. Alerts are free for everyone — gated by contribution (a verified photo), never by payment. No "premium" tier exists for alerts.
+FR83: Predictive alerts auto-expire 30 days after the user's most recent verified photo submission. Pre-expiry re-engagement notification fires 3 days before expiry, prompting submission to renew.
+FR84: Each new verified photo submission renews the 30-day alert window from the date of submission (rolling, not stacking).
 
-**Personal Analytics** *(Phase 2)*
+**Personal Analytics**
 FR26: Driver can submit a pump meter photo to record a fill-up with volume and cost
 FR27: System calculates and displays driver savings vs. area average from pump meter data
 FR28: Driver can submit an odometer photo to enable fuel consumption tracking
 FR29: Driver can view their personal fuel consumption history (l/100km over time)
 FR30: Driver can view their personal fuel cost history and trends
-FR31: Driver can share their savings summary externally
+FR31: Driver can share their savings summary externally *(Phase 2)*
 
 **Community & Engagement** *(Phase 2)*
 FR32: Driver can view a leaderboard of savings rankings segmented by geographic area
@@ -96,14 +108,14 @@ FR50: System provides regional fuel price aggregations by fuel type and geograph
 FR51: Public users can view regional fuel price trends and consumption benchmarks via a web portal *(Phase 2)*
 FR52: External data buyers can access licensed anonymous datasets via API *(Phase 3)*
 
-**Fleet Tier** *(Phase 2)*
+**Fleet Tier** *(Phase 3 — moved from Phase 2 on 2026-03-20 per PRD decision)*
 FR53: Fleet manager can create a fleet account and add vehicles (by registration plate or vehicle name)
 FR54: Fleet manager can invite and assign drivers to vehicles
 FR55: Fleet dashboard displays per-vehicle fuel cost history, consumption (l/100km), and spend vs. regional average
 FR56: Fleet manager can generate and export fuel expense reports by vehicle, driver, or time period (CSV, PDF)
 FR57: Fleet manager can configure price alerts per vehicle or fleet-wide; alerts delivered via push and email
-FR58: System provides route-optimised refuelling suggestions — cheapest station within acceptable detour on a planned route *(Phase 2)*
-FR59: Fleet tier provides API access to price data and fleet analytics for integration with external systems *(Phase 2)*
+FR58: System provides route-optimised refuelling suggestions — cheapest station within acceptable detour on a planned route
+FR59: Fleet tier provides API access to price data and fleet analytics for integration with external systems
 FR60: Fleet subscription managed via self-serve billing portal (upgrade, downgrade, cancel, invoice history)
 
 **Analytics & Operational Monitoring**

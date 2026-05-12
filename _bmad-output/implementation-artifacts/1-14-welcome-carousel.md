@@ -2,9 +2,11 @@
 
 Status: ready-for-dev
 
-**Trigger:** 2026-05-09 — pre-launch UX design pass. New users opening litro for the first time arrive on a coloured-pin map with no context for what the app does, where prices come from, what role they play, or what they get out of it. Today's flow (Story 1.4 first-open onboarding + soft sign-up card) handles "don't force registration" but does **not** explain the app's value prop, the community model, or the alerts-loop reward. Without a clear introduction, users either bounce ("what is this for?") or use the app passively (drop the contribution flywheel that the data freshness depends on).
+**Trigger:** 2026-05-09 — pre-launch UX design pass. **Amended 2026-05-10** following four-pillar positioning lock-in (see PRD Executive Summary + `_design/welcome-flow-brief.md`). Earlier draft of this story used "alerty premium" framing which has been retired — alerts are core to the product, gated by contribution but never paid. The card structure has been reorganised so each of the four positioning pillars gets a dedicated card, plus a community contribution invitation. The first-photo "delight" unlock for predictive alerts now lands **in-app at first verified photo**, NOT in the welcome carousel — the carousel only teases the alerts pillar as a feature.
 
-This story adds a **5-step welcome carousel** shown on first launch (before the soft sign-up card), explaining what litro is, how prices get there, how to read the map, the user's role, and the reward. Linear progression, not skippable, no force-read timer (users can click through at their pace). Re-accessible from the Account screen.
+New users opening litro for the first time arrive on a coloured-pin map with no context for what the app does, where prices come from, what they can do, or what they get out of it. Today's flow (Story 1.4 first-open onboarding + soft sign-up card) handles "don't force registration" but does **not** establish the four positioning pillars or the contribution loop. Without a clear introduction, users either bounce ("what is this for?") or use the app passively (drop the contribution flywheel that data freshness depends on).
+
+This story adds a **5-step welcome carousel** shown on first launch (before the soft sign-up card). Each card maps to one of the four positioning pillars (verified data, predictive alerts, spend log, zero-effort) plus a community contribution invitation. Linear forward progression with optional "Pomiń" (skip) affordance for passive users; users can click through at their pace. Re-accessible from the Account screen.
 
 **Phase:** 1 (pre-launch). **Land after** Stories 6.10 and 2.17, since card 5 references the alerts loop and card 3 references the freshness/estimate visual cues those stories introduce.
 
@@ -12,9 +14,9 @@ This story adds a **5-step welcome carousel** shown on first launch (before the 
 - 1.4 — First-Open Onboarding & Guest Mode (handles soft sign-up card; this story slots in BEFORE that flow).
 
 **Coupled stories to land before 1.14:**
-- 6.10 — Contribution-gated alerts (card 5's "30 dni alertów premium" copy must point at a real shipped feature).
-- 2.17 — Dynamic freshness UI (card 3's "~" tilde reference matches the actual rendered UI).
-- 6.11 (optional) — Alerts inbox; nice-to-have but card 5 doesn't reference inbox specifically.
+- 6.10 — Contribution-gated alerts (NOTE: this story name still says "premium" but is being renamed in a coordinated rename pass — see `project_litro_followups_2026_05_10.md`. Mechanic unchanged. This carousel does NOT depend on the rename completing — it never references the gating mechanic explicitly. The first-photo unlock is its own in-app moment.)
+- 2.17 — Dynamic freshness UI (card 4's "~" tilde reference matches the actual rendered UI).
+- 6.11 (optional) — Alerts inbox; nice-to-have but no card references inbox specifically.
 
 **Coupled stories not blocking but adjacent:**
 - 2.18 — Community-grid estimates (card 3 mentions estimates without explaining mechanics — won't conflict whether 2.18 has shipped or not).
@@ -133,71 +135,65 @@ And missing keys cause CI type-check to fail.
 
 ## Card Content
 
-### Card 1 — Welcome / Identity
+### Card 1 — Pillar 1: Real prices, no fakes
 
-**Visual concept**: app logo/wordmark centered. Background: abstract / generic stylised map illustration (NOT Łódź-specific) — could be an abstract street-grid pattern with 4-5 illustrative coloured pins (green/yellow/red) floating around, or an abstract "compass + direction" composition. The point is to suggest "fuel-price map" without referencing real geography.
+**Visual concept**: map fragment with a few colour-coded pins (green/red), with a soft check-mark or "verified" mark anchoring one of them. Communicates "real, trustworthy prices." Avoid showing a camera/photo — that's mechanism, not promise.
 
 **Copy (PL canonical):**
-- Title: *"Witaj w litro"*
-- Body: *"Mapa cen paliw tworzona przez kierowców — dla kierowców. Pokażemy Ci, jak to działa."*
-- Subtle hint at bottom: *"Zajmie to chwilę."*
+- Title: *"Tankuj taniej. Prawdziwe ceny."*
+- Body: *"Sprawdź, gdzie naprawdę najtaniej. Bez fałszywek, bez zgadywania."*
 
-**Buttons:** "Dalej" (primary, only visible button on card 1).
-
----
-
-### Card 2 — Where the data comes from
-
-**Visual concept**: stylised phone outline with a camera viewfinder inside, pointing at a fuel-price board (rectangular shape with a few price-style marks). Arrow from photo → cloud → checkmark. Communicates "you snap → we process → it lands".
-
-**Copy:**
-- Title: *"Skąd biorą się ceny?"*
-- Body: *"Każda cena pochodzi od kierowcy, który zrobił zdjęcie tablicy ze stacji. Sprawdzamy każde zgłoszenie automatycznie."*
-
-**Buttons:** "Wstecz" (secondary), "Dalej" (primary).
+**Buttons:** "Dalej" (primary, only visible primary on card 1). "Pomiń" (skip) tertiary action available top-right of every card except Card 5.
 
 ---
 
-### Card 3 — How to read the map
+### Card 2 — Pillar 4: Predictive price alerts
 
-**Visual concept**: three teardrop pins side-by-side — green, yellow, red — with quick text labels under each ("Tanio" / "Średnio" / "Drogo"). Optionally a fourth pin in grey-bordered/tilde style with a "~" label below (subtle introduction of the estimate marker).
+**Visual concept**: simple bell or notification glyph paired with a subtle upward-trend line or arrow, hinting at "we anticipate price changes." Clean, minimal. **Do NOT show "+30 dni" badge or "premium" framing** — alerts are core, not a tier; the unlock mechanic surfaces in-app at first verified photo, NOT here.
 
 **Copy:**
-- Title: *"Kolory pinezek"*
-- Body: *"Zielone = tańsze niż średnia. Czerwone = droższe. Znak '~' przy cenie oznacza, że jest ona szacunkowa — dopóki nikt nie zgłosi tej stacji."*
+- Title: *"Wiemy, kiedy ceny pójdą w górę."*
+- Body: *"Powiadomimy Cię, zanim podrożeje. Zatankuj dziś, oszczędź jutro."*
+
+**Buttons:** "Wstecz", "Dalej". "Pomiń" top-right.
+
+---
+
+### Card 3 — Pillar 3: Personal spend log
+
+**Visual concept**: simple receipt or fillup-card iconography with a subtle savings-up indicator. Could be a small chart-style mini-block showing month-to-month trend. Avoid being too "fintech" — keep it utilitarian.
+
+**Copy:**
+- Title: *"Zobacz, ile naprawdę wydajesz na paliwo."*
+- Body: *"Każde tankowanie zapisane automatycznie. Spalanie, oszczędności, koszty — wszystko w jednym miejscu."*
+
+**Buttons:** "Wstecz", "Dalej". "Pomiń" top-right.
+
+---
+
+### Card 4 — Pillar 2: Easy to use + map-colour orientation
+
+**Visual concept**: three teardrop pins side-by-side — green, yellow, red — with quick text labels under each. Optional fourth pin in grey-bordered/tilde style with a "~" label below (estimate marker). Same composition as the original Card 3 — earns a slot here by combining the colour explainer with the zero-effort framing.
+
+**Copy:**
+- Title: *"Otwórz. Sprawdź. Oszczędzaj."*
+- Body: *"Zielone = taniej niż średnia. Czerwone = drożej. Znak ~ = cena szacunkowa, dopóki ktoś jej nie zgłosi."*
 
 The estimate **mechanics are NOT explained** (per design discussion — "the less we bother the user with mechanics, the better. it's our know-how"). The tilde is acknowledged so users don't wonder when they see it; the meaning ("szacunkowa") is intuitive enough.
 
-**Buttons:** "Wstecz", "Dalej".
+**Buttons:** "Wstecz", "Dalej". "Pomiń" top-right.
 
 ---
 
-### Card 4 — Your role
+### Card 5 — Community contribution + final CTA
 
-**Visual concept**: two-section "Ty / My" composition. Left/top: person with a phone, taking a photo of a fuel pump or a price board. Right/bottom: cloud + checkmark + map pin (the system handling the rest). An arrow between them shows the handoff. Visually communicates "your job is small; ours is the rest".
-
-**Copy:**
-- Title: *"Tylko zdjęcie — resztą zajmiemy się my"*
-- Structured body with a "Ty / My" split (rendered as two visual blocks alongside the illustration):
-  - *"**Ty:** zrób zdjęcie cen na stacji."*
-  - *"**My:** odczytamy je, sprawdzimy i dodamy do mapy."*
-- Closing line: *"Tyle wystarczy. Twój czas to tylko ten jeden snap."*
-
-The "Ty / My" structure addresses the user-feedback gap ("right now, I would be like — I take photo and then what??") by explicitly bounding user effort and reassuring on the system side.
-
-**Buttons:** "Wstecz", "Dalej".
-
----
-
-### Card 5 — The reward
-
-**Visual concept**: bell icon (matching the same bell that 6.10's alerts surface uses on the map header) with a small "+30 dni" badge floating next to it. Subtle clock or calendar element suggesting the renewal cycle. Use the same accent colour as the rest of the carousel illustrations.
+**Visual concept**: a phone in hand framing a price board, with a soft success indicator. Communicates the contribution moment without showing a complete OCR pipeline. The "i Tobie również" hint plants reciprocation; **the alerts unlock is NOT explained in this card** — it lands as a delight moment in-app at first verified photo.
 
 **Copy:**
-- Title: *"Co Ci to daje?"*
-- Body: *"Każde zweryfikowane zdjęcie aktywuje Ci alerty premium na 30 dni — uprzedzimy Cię, gdy ceny mają wzrosnąć. Każde kolejne zdjęcie przedłuża okno alertów."*
+- Title: *"Pomóż innym kierowcom."*
+- Body: *"Mijasz stację? Zrób zdjęcie tablicy z cenami. Reszta dzieje się sama. Twoje zdjęcia trafiają na mapę i pomagają wszystkim — w tym Tobie."*
 
-**Buttons:** "Wstecz" (secondary), **"Zaczynamy"** (primary, replaces "Dalej").
+**Buttons:** "Wstecz" (secondary), **"Zaczynamy"** (primary, replaces "Dalej"). No "Pomiń" on the final card — by this point the user either commits or has already used the skip on a prior card.
 
 ---
 
@@ -243,14 +239,15 @@ The "Ty / My" structure addresses the user-feedback gap ("right now, I would be 
 
 **T6 — Translations + Translations type updates:**
 - New keys under an `onboarding.welcome` block in `apps/mobile/src/i18n/locales/{pl,en,uk}.ts`:
-  - `card1.title`, `card1.body`, `card1.hint`
-  - `card2.title`, `card2.body`
-  - `card3.title`, `card3.body` (with the tilde mention; verify special-character handling in i18next)
-  - `card4.title`, `card4.bodyTy`, `card4.bodyMy`, `card4.closing`
-  - `card5.title`, `card5.body`
-  - `buttons.next` ("Dalej"), `buttons.back` ("Wstecz"), `buttons.start` ("Zaczynamy"), `buttons.close` ("Zamknij")
+  - `card1.title`, `card1.body` (Pillar 1 — verified data)
+  - `card2.title`, `card2.body` (Pillar 4 — predictive alerts)
+  - `card3.title`, `card3.body` (Pillar 3 — spend log)
+  - `card4.title`, `card4.body` (Pillar 2 — easy + map orientation, with the tilde mention; verify special-character handling in i18next)
+  - `card5.title`, `card5.body` (community contribution)
+  - `buttons.next` ("Dalej"), `buttons.back` ("Wstecz"), `buttons.start` ("Zaczynamy"), `buttons.close` ("Zamknij"), `buttons.skip` ("Pomiń")
   - `progress.stepN` — accessibility label for progress dots ("Krok {{current}} z {{total}}")
   - `account.howItWorks` — Account screen line item *"Jak działa litro?"* (PL) / *"How litro works"* (EN) / *"Як працює litro"* (UK)
+- **Old keys to remove:** `card1.hint`, `card4.bodyTy`, `card4.bodyMy`, `card4.closing` (deprecated — old "Ty / My" structure replaced by single body lines per pillar).
 - Type definitions updated.
 
 ### Code review (T7)
@@ -286,8 +283,9 @@ The "Ty / My" structure addresses the user-feedback gap ("right now, I would be 
 
 - **The carousel is the FIRST thing a user sees** after splash. Polish this. It carries the entire first-impression weight.
 - **Don't be clever with timing / animation**. The cards are linear, the buttons are simple, the illustrations are static. No fancy transitions; the standard `<Modal>` slide-up is enough.
-- **Card 5's copy specifically references the alerts loop** — this story must land AFTER 6.10/6.11. If 6.10 is delayed, either delay 1.14 too or revise the copy to anticipate (riskier).
-- **Card 3's tilde reference** — the actual UI displays "~" only when 2.17 + 2.18 ship. If they're delayed, card 3's body line about the tilde could be confusing to users who don't see it. Coordinate the launch order: 2.17 + 2.18 + 6.10 → 6.11 → 1.14.
+- **Card 2 teases predictive alerts but does NOT explain the unlock mechanic.** The "first verified photo unlocks 30 days" reveal is an in-app delight moment after the first photo — coordinated with the alerts/notifications work (current 6.10 + future renaming pass per `project_litro_followups_2026_05_10.md`). The carousel should remain stable across the rename.
+- **Card 4's tilde reference** — the actual UI displays "~" only when 2.17 + 2.18 ship. If they're delayed, card 4's body line about the tilde could be confusing to users who don't see it. Coordinate the launch order: 2.17 + 2.18 → 1.14.
+- **"Pomiń" (skip) affordance** — required on cards 1–4, top-right tertiary text button, distinct from primary CTA. Tapping it sets the completion flag (carousel marked done; user does not return on next launch). This unblocks passive users (Marek/Zofia journey types) who don't want a contribution narrative.
 - **No code changes outside the new component + Account-screen wiring + app-root flow**. This is a self-contained UI story.
 - **No backend changes. No migration. No new API endpoints.**
 - **Reading 1.4 first is helpful** — confirms the "soft sign-up card" surface this story precedes.

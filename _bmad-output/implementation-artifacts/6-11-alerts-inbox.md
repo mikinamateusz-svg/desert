@@ -1,6 +1,10 @@
 # Story 6.11: Alerts Inbox + Read/Unread State
 
-Status: ready-for-dev
+Status: needs-rework
+
+> **⚠️ NEEDS REWORK 2026-05-10:** Alerts inbox UI references "premium" framing in copy and component naming (per Story 6.10 dependency). Naming retired per four-pillar positioning lock-in — see Story 6.13 for coordinated rename scope. Story 6.11's mechanic and AC are correct; only naming changes.
+
+Status (historical): ready-for-dev
 
 **Trigger:** 2026-05-08 — direct follow-up from Story 6.10. Once the bell icon lands users on `/(app)/alerts`, the destination needs more than a status banner to pay off the tap. Drivers expect an inbox metaphor: list of past alerts with unread state, the ability to scan recent pushes, and the bell badge reflecting unread count when alerts aren't expiring.
 

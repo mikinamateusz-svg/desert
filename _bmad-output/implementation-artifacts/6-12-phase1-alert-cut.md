@@ -1,6 +1,10 @@
 # Story 6.12: Phase 1 Alert Cut — Promote Price-Drop UX
 
-**Status:** ready-for-dev (this artifact + implementation in same session)
+**Status:** needs-rework
+
+> **⚠️ NEEDS REWORK 2026-05-10:** Same naming issue as Story 6.10 — references *"premium alerts"* throughout. Mechanic and decisions are correct; only naming changes. Covered by coordinated rename in Story 6.13.
+
+**Status (historical):** ready-for-dev (this artifact + implementation in same session)
 **Date:** 2026-05-09
 **Trigger:** scope sanity-check before launch — Phase 1 alerts must deliver on the contribution loop's promise
 

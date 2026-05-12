@@ -1,6 +1,10 @@
-# Story 6.10: Contribution-Gated Premium Alerts + Bell + Status
+# Story 6.10: Contribution-Gated Price Alerts + Bell + Status
 
-Status: ready-for-dev
+Status: needs-rework
+
+> **⚠️ NEEDS REWORK 2026-05-10:** This story's MECHANIC remains correct (verified photo → 30-day alert window → renew). The NAMING is wrong throughout — "premium alerts" framing has been retired per four-pillar positioning lock-in (see `project_litro_positioning.md`). Alerts are core to the product, gated by contribution but never paid; "premium" implies a paid tier, which is not the model. **Story 6.13 (Premium → Price Alerts Rename)** carries the coordinated rework: DB column rename, service rename, component rename, ~30 i18n strings, this spec rename, line 35 rationale rewrite. Do NOT undo Story 6.10's behaviour — only the names change. PL canonical: *alerty cenowe*; EN: *price alerts*; UK: *цінові сповіщення*.
+
+Status (historical): ready-for-dev
 
 **Trigger:** 2026-05-08 — soft-launch engagement design. Today's `PriceRiseAlertService` (Story 6.3 lite, commit `afd6391`) sends pushes to *every* opted-in driver regardless of whether they contribute photos. Operator wants to use alerts as a reward loop: drivers who submit a photo "earn" a 30-day premium-alert window. Reinforces submission behaviour without taking anything away from drivers who don't (basic alerts — when we add them later — stay universal).
 

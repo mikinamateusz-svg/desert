@@ -607,8 +607,8 @@ A planned post-MVP capability allowing users to activate an explicit navigation 
 
 ### Notifications & Alerts
 
-- **FR22:** Driver can opt in to price drop alerts for nearby or saved stations *(Phase 2)*
-- **FR23:** Driver can opt in to sharp price rise alerts *(Phase 2)*
+- **FR22:** Driver can opt in to price drop alerts for nearby or saved stations *(Phase 1 — promoted from Phase 2 on 2026-05-08 with the alerts-loop strategy lock-in)*
+- **FR23:** Driver can opt in to sharp price rise alerts *(Phase 1 — promoted with FR22)*
 - **FR24:** Driver receives a monthly savings summary notification *(Phase 1 MVP — anchors the spend log positioning pillar)*
 - **FR25:** System re-prompts drivers to enable notifications at high-value contextual moments (first photo submission, first savings summary generated) *(Phase 1 MVP)*
 - **FR79:** Driver receives location-personalised predictive price alerts ("fill up before prices rise") generated from crude oil signals, ORLEN rack prices, and regional submission patterns *(Phase 1 MVP — anchors the predictive alerts positioning pillar)*

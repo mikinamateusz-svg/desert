@@ -47,8 +47,8 @@ FR20: Driver can manage their notification preferences
 FR21: Driver can withdraw consent for specific data uses independently of account deletion
 
 **Notifications & Alerts**
-FR22: Driver can opt in to price drop alerts for nearby or saved stations *(Phase 2)*
-FR23: Driver can opt in to sharp price rise alerts (community-confirmed) *(Phase 2)*
+FR22: Driver can opt in to price drop alerts for nearby or saved stations
+FR23: Driver can opt in to sharp price rise alerts (community-confirmed)
 FR24: Driver receives a monthly savings summary notification
 FR25: System re-prompts drivers to enable notifications at high-value contextual moments (first photo submission, first savings summary generated)
 FR79: Driver receives location-personalised predictive price alerts ("fill up before prices rise") generated from crude oil signals, ORLEN rack prices, and regional submission patterns
@@ -246,10 +246,10 @@ Drivers who contribute pump meter and odometer photos unlock personal savings su
 **FRs covered:** FR13, FR14, FR26, FR27, FR28, FR29, FR30, FR31
 **Phase:** 2
 
-### Epic 6: Community, Alerts & Engagement *(Phase 2)*
-Drivers receive proactive price drop and sharp-rise alerts, earn a spot on the regional savings leaderboard, and can share monthly savings achievements.
-**FRs covered:** FR22, FR23, FR24, FR25, FR32, FR33
-**Phase:** 2
+### Epic 6: Community, Alerts & Engagement *(Phase 1 alerts loop + Phase 2 leaderboard/engagement)*
+Drivers receive proactive price drop and sharp-rise alerts (Phase 1, alerts loop), earn a spot on the regional savings leaderboard (Phase 2), and can share monthly savings achievements.
+**FRs covered:** FR22, FR23, FR24, FR25, FR79-FR84 (Phase 1); FR32, FR33 (Phase 2)
+**Phase:** 1 (alerts loop, monthly summary, re-prompt, predictive alerts) + 2 (leaderboard, engagement analytics)
 
 ### Epic 7: Station Partner Portal *(Phase 2)*
 Station owners claim and verify their station, self-update prices, and view performance metrics — becoming active, invested data contributors.
@@ -2609,12 +2609,12 @@ So that I can show off how much I saved on fuel and bring other drivers into the
 
 ---
 
-## Epic 6: Community, Alerts & Engagement *(Phase 2)*
+## Epic 6: Community, Alerts & Engagement *(Phase 1 alerts loop + Phase 2 leaderboard/engagement)*
 
-Drivers receive proactive price drop and sharp-rise alerts, earn a spot on the regional savings leaderboard, and can share monthly savings achievements.
+Drivers receive proactive price drop and sharp-rise alerts (Phase 1, alerts loop), earn a spot on the regional savings leaderboard (Phase 2), and can share monthly savings achievements.
 
-**FRs covered:** FR22, FR23, FR24, FR25, FR32, FR33
-**Phase:** 2
+**FRs covered:** FR22, FR23, FR24, FR25, FR79-FR84 (Phase 1); FR32, FR33 (Phase 2)
+**Phase:** 1 (alerts loop, monthly summary, re-prompt, predictive alerts) + 2 (leaderboard, engagement analytics)
 
 ### Story 6.0: Fuel Price Feed Ingestion
 

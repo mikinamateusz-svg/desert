@@ -14,7 +14,7 @@ Most of the app is React Native, so it works the same on both platforms. The ris
 |---|---|
 | **Safe-area insets** (notch, dynamic island, home indicator) | Every screen that uses absolute positioning, especially welcome carousel and map header |
 | **Modal `presentationStyle`** | Welcome carousel, soft sign-up sheet, all bottom sheets |
-| **Push-notification certs + permissions** | Premium-alerts loop (price-rise + expiry warnings) — needs APNs cert wired correctly |
+| **Push-notification certs + permissions** | Price-alerts loop (price-rise + expiry warnings) — needs APNs cert wired correctly |
 | **Camera + photo library permissions** | The contribution flow; camera and library prompts have different UX on iOS vs Android |
 | **Location permissions** | Map screen — iOS permission dialog text + "Allow Once" semantic differ |
 | **Status bar styling** | Per-screen `<StatusBar>` config; iOS doesn't have a backgroundColor concept |
@@ -101,7 +101,7 @@ For a solo / small-team launch:
 ## What needs to happen first
 
 1. **Apple Developer enrollment** — currently deferred per `project_deferred.md`. Without it, no TestFlight, no .ipa builds, no App Store. €99/year. Ideally enroll the company entity (DUNS number required) rather than personal — but personal is faster if speed wins.
-2. **APNs certificate** for push notifications — generated through Apple Developer console; EAS Build pulls it during iOS builds. Premium-alerts loop won't work on iOS without this.
+2. **APNs certificate** for push notifications — generated through Apple Developer console; EAS Build pulls it during iOS builds. Price-alerts loop won't work on iOS without this.
 3. **`Info.plist` privacy strings** — every iOS permission (camera, photo library, location, notifications) needs a human-readable purpose string. Expo `app.json` handles most of these but worth auditing before submission.
 4. **iOS-specific UX audit** of welcome carousel, map header, modals, FABs — once we can run the app on iOS, walk every screen and note safe-area / status-bar issues.
 

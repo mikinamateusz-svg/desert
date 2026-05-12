@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Queue, Worker, type Job } from 'bullmq';
 import Redis from 'ioredis';
 import { ConsumptionBenchmarkService } from './consumption-benchmark.service.js';
-import { REDIS_CLIENT } from '../redis/redis.module.js';
+import { REDIS_QUEUE_CLIENT } from '../redis/redis.module.js';
 
 export const CONSUMPTION_BENCHMARK_QUEUE = 'consumption-benchmark';
 export const CONSUMPTION_BENCHMARK_JOB = 'calculate-consumption-benchmarks';
@@ -43,7 +43,7 @@ export class ConsumptionBenchmarkWorker implements OnModuleInit, OnModuleDestroy
   constructor(
     private readonly benchmarkService: ConsumptionBenchmarkService,
     private readonly config: ConfigService,
-    @Inject(REDIS_CLIENT) private readonly redisShared: Redis,
+    @Inject(REDIS_QUEUE_CLIENT) private readonly redisQueueClient: Redis,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -56,7 +56,7 @@ export class ConsumptionBenchmarkWorker implements OnModuleInit, OnModuleDestroy
     this.redisForBlocking = new Redis(redisUrl, { maxRetriesPerRequest: null });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const queueConnection = this.redisShared as any;
+    const queueConnection = this.redisQueueClient as any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const workerConnection = this.redisForBlocking as any;
 

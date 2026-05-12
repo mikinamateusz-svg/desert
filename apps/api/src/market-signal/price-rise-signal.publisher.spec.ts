@@ -6,13 +6,13 @@ import {
   PRICE_RISE_SIGNALS_QUEUE,
   type MovementRecord,
 } from './types.js';
-import { REDIS_CLIENT } from '../redis/redis.module.js';
+import { REDIS_QUEUE_CLIENT } from '../redis/redis.module.js';
 
-// Hardening-2: the publisher injects the shared REDIS_CLIENT and uses it
+// Hardening-2: the publisher injects the shared REDIS_QUEUE_CLIENT and uses it
 // as the Queue's connection. Stub is intentionally minimal — the
 // bullmq mock above already replaces Queue so it never actually reads
 // the connection's methods.
-const mockRedisShared = {} as never;
+const mockRedisQueueClient = {} as never;
 
 // ── Mocks ────────────────────────────────────────────────────────────────────
 
@@ -56,7 +56,7 @@ describe('PriceRiseSignalPublisher', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PriceRiseSignalPublisher,
-        { provide: REDIS_CLIENT, useValue: mockRedisShared },
+        { provide: REDIS_QUEUE_CLIENT, useValue: mockRedisQueueClient },
       ],
     }).compile();
 

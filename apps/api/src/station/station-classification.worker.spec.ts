@@ -8,10 +8,10 @@ import {
 } from './station-classification.worker.js';
 import { StationClassificationService } from './station-classification.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
-import { REDIS_CLIENT } from '../redis/redis.module.js';
+import { REDIS_QUEUE_CLIENT } from '../redis/redis.module.js';
 
-// Hardening-2: shared REDIS_CLIENT stub for the Queue's non-blocking side.
-const mockRedisShared = {} as never;
+// Hardening-2: shared REDIS_QUEUE_CLIENT stub for the Queue's non-blocking side.
+const mockRedisQueueClient = {} as never;
 
 // ─── BullMQ mock ─────────────────────────────────────────────────────────────
 
@@ -100,7 +100,7 @@ describe('StationClassificationWorker', () => {
         { provide: StationClassificationService, useValue: mockClassificationService },
         { provide: PrismaService, useValue: mockPrisma },
         { provide: ConfigService, useValue: mockConfig },
-        { provide: REDIS_CLIENT, useValue: mockRedisShared },
+        { provide: REDIS_QUEUE_CLIENT, useValue: mockRedisQueueClient },
       ],
     }).compile();
 

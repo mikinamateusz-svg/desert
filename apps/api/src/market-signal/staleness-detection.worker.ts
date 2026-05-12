@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Queue, Worker, type Job } from 'bullmq';
 import Redis from 'ioredis';
 import { StalenessDetectionService } from './staleness-detection.service.js';
-import { REDIS_CLIENT } from '../redis/redis.module.js';
+import { REDIS_QUEUE_CLIENT } from '../redis/redis.module.js';
 
 export const STALENESS_DETECTION_QUEUE = 'staleness-detection';
 export const STALENESS_DETECTION_JOB = 'run-detection';
@@ -27,7 +27,7 @@ export class StalenessDetectionWorker implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly detectionService: StalenessDetectionService,
     private readonly config: ConfigService,
-    @Inject(REDIS_CLIENT) private readonly redisShared: Redis,
+    @Inject(REDIS_QUEUE_CLIENT) private readonly redisQueueClient: Redis,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -40,7 +40,7 @@ export class StalenessDetectionWorker implements OnModuleInit, OnModuleDestroy {
     this.redisForBlocking = new Redis(redisUrl, { maxRetriesPerRequest: null });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const queueConnection = this.redisShared as any;
+    const queueConnection = this.redisQueueClient as any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const workerConnection = this.redisForBlocking as any;
 
@@ -114,7 +114,7 @@ export class StalenessDetectionWorker implements OnModuleInit, OnModuleDestroy {
   async onModuleDestroy(): Promise<void> {
     await this.worker?.close();
     await this.queue?.close();
-    // redisShared lives in RedisModule's lifecycle; don't quit it here.
+    // redisQueueClient lives in RedisModule's lifecycle; don't quit it here.
     await this.redisForBlocking?.quit().catch(() => undefined);
   }
 

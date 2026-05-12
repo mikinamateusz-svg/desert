@@ -7,15 +7,15 @@ import {
   STALENESS_DETECTION_JOB,
 } from './staleness-detection.worker.js';
 import { StalenessDetectionService } from './staleness-detection.service.js';
-import { REDIS_CLIENT } from '../redis/redis.module.js';
+import { REDIS_QUEUE_CLIENT } from '../redis/redis.module.js';
 
 // Mock ioredis — no real Redis connection
 const mockRedisQuit = jest.fn().mockResolvedValue('OK');
 const mockRedisInstance = { quit: mockRedisQuit };
 jest.mock('ioredis', () => jest.fn().mockImplementation(() => mockRedisInstance));
 
-// Hardening-2: shared REDIS_CLIENT stub for the Queue's non-blocking side.
-const mockRedisShared = {} as never;
+// Hardening-2: shared REDIS_QUEUE_CLIENT stub for the Queue's non-blocking side.
+const mockRedisQueueClient = {} as never;
 
 // Mock BullMQ
 const mockQueueAdd = jest.fn().mockResolvedValue(undefined);
@@ -66,7 +66,7 @@ describe('StalenessDetectionWorker', () => {
         StalenessDetectionWorker,
         { provide: StalenessDetectionService, useValue: mockDetectionService },
         { provide: ConfigService, useValue: mockConfig },
-        { provide: REDIS_CLIENT, useValue: mockRedisShared },
+        { provide: REDIS_QUEUE_CLIENT, useValue: mockRedisQueueClient },
       ],
     }).compile();
 

@@ -5,7 +5,7 @@ import { PriceRiseAlertWorker } from '../alert/alert.worker.js';
 import { PriceRiseAlertService } from '../alert/alert.service.js';
 import { PremiumExpiryWarningWorker } from '../alert/premium-expiry-warning.worker.js';
 import { PremiumExpiryWarningService } from '../alert/premium-expiry-warning.service.js';
-import { REDIS_CLIENT } from './redis.module.js';
+import { REDIS_QUEUE_CLIENT } from './redis.module.js';
 
 /**
  * Hardening-2 — cross-worker invariants verified at one place:
@@ -17,7 +17,7 @@ import { REDIS_CLIENT } from './redis.module.js';
  *         workers locks one out while the other waits for a job.
  *
  *   AC4 — onModuleDestroy on a worker closes only its OWN blocking
- *         ioredis. The shared `REDIS_CLIENT` (provided by RedisModule)
+ *         ioredis. The shared `REDIS_QUEUE_CLIENT` (provided by RedisModule)
  *         stays alive for other workers + services.
  *
  * The 15 per-worker specs each verify their own Queue uses the shared
@@ -69,10 +69,10 @@ jest.mock('ioredis', () =>
 // AND has a `quit` spy so AC4 can assert .quit() was NOT called rather
 // than relying on the absence of the property (a tautology — a stub
 // without `quit` would always satisfy `not.toHaveProperty`).
-const mockSharedClientQuit = jest.fn();
-const mockSharedClient = {
-  __id: 'shared-redis-client',
-  quit: mockSharedClientQuit,
+const mockQueueClientQuitSpy = jest.fn();
+const mockQueueClient = {
+  __id: 'shared-queue-client',
+  quit: mockQueueClientQuitSpy,
 } as never;
 
 // ── Service stubs ─────────────────────────────────────────────────────────
@@ -98,7 +98,7 @@ async function buildWorker(WorkerClass: any, serviceToken: unknown, serviceMock:
       WorkerClass,
       { provide: serviceToken as never, useValue: serviceMock },
       { provide: ConfigService, useValue: mockConfig },
-      { provide: REDIS_CLIENT, useValue: mockSharedClient },
+      { provide: REDIS_QUEUE_CLIENT, useValue: mockQueueClient },
     ],
   }).compile();
   const w = module.get(WorkerClass);
@@ -113,13 +113,13 @@ describe('Hardening-2 cross-worker invariants', () => {
     workerConnections.length = 0;
     ioredisQuits.length = 0;
     redisInstanceCounter = 0;
-    mockSharedClientQuit.mockReset();
+    mockQueueClientQuitSpy.mockReset();
     jest.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
     jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
     jest.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
   });
 
-  it('AC1 — Queue constructors receive the SHARED REDIS_CLIENT (not a per-worker fresh instance)', async () => {
+  it('AC1 — Queue constructors receive the SHARED REDIS_QUEUE_CLIENT (not a per-worker fresh instance)', async () => {
     await buildWorker(PriceRiseAlertWorker, PriceRiseAlertService, mockPriceRiseAlertService);
     await buildWorker(PremiumExpiryWarningWorker, PremiumExpiryWarningService, mockPremiumExpiryWarningService);
 
@@ -127,8 +127,8 @@ describe('Hardening-2 cross-worker invariants', () => {
     // SAME shared client (reference equality), proving no per-worker
     // ioredis was opened on the queue side.
     expect(queueConnections).toHaveLength(2);
-    expect(queueConnections[0]).toBe(mockSharedClient);
-    expect(queueConnections[1]).toBe(mockSharedClient);
+    expect(queueConnections[0]).toBe(mockQueueClient);
+    expect(queueConnections[1]).toBe(mockQueueClient);
   });
 
   it('AC3 — each worker gets a DEDICATED blocking ioredis (never the shared client; never the same as another worker)', async () => {
@@ -142,8 +142,8 @@ describe('Hardening-2 cross-worker invariants', () => {
     expect(workerConnections).toHaveLength(2);
     expect(workerConnections[0]).not.toBe(workerConnections[1]);
     // Neither blocking connection is the shared client.
-    expect(workerConnections[0]).not.toBe(mockSharedClient);
-    expect(workerConnections[1]).not.toBe(mockSharedClient);
+    expect(workerConnections[0]).not.toBe(mockQueueClient);
+    expect(workerConnections[1]).not.toBe(mockQueueClient);
   });
 
   it('Hardening-2 invariant — no worker re-introduces a per-worker Queue-side ioredis (`redisForQueue`)', () => {
@@ -154,7 +154,7 @@ describe('Hardening-2 cross-worker invariants', () => {
     // pairs and assert they're not co-located. The grep is dumb, but
     // catches the only regression shape that matters: someone re-opens
     // a fresh ioredis for the Queue side instead of reusing the
-    // injected REDIS_CLIENT. A worker that legitimately needs a
+    // injected REDIS_QUEUE_CLIENT. A worker that legitimately needs a
     // dedicated Queue connection (e.g. future cache/queue Redis split)
     // can rename the field or update this assertion explicitly.
     // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -189,7 +189,7 @@ describe('Hardening-2 cross-worker invariants', () => {
     expect(offenders).toEqual([]);
   });
 
-  it('AC4 — onModuleDestroy quits only the per-worker blocking ioredis, never the shared REDIS_CLIENT', async () => {
+  it('AC4 — onModuleDestroy quits only the per-worker blocking ioredis, never the shared REDIS_QUEUE_CLIENT', async () => {
     const w1 = await buildWorker(PriceRiseAlertWorker, PriceRiseAlertService, mockPriceRiseAlertService);
     const w2 = await buildWorker(PremiumExpiryWarningWorker, PremiumExpiryWarningService, mockPremiumExpiryWarningService);
 
@@ -205,6 +205,6 @@ describe('Hardening-2 cross-worker invariants', () => {
 
     // Shared client's .quit was NEVER called by either worker —
     // closing it is RedisModule's responsibility, not the workers'.
-    expect(mockSharedClientQuit).not.toHaveBeenCalled();
+    expect(mockQueueClientQuitSpy).not.toHaveBeenCalled();
   });
 });

@@ -3,12 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
 import { PriceRiseAlertWorker, PRICE_RISE_ALERT_QUEUE, PRICE_RISE_ALERT_JOB } from './alert.worker.js';
 import { PriceRiseAlertService } from './alert.service.js';
-import { REDIS_CLIENT } from '../redis/redis.module.js';
+import { REDIS_QUEUE_CLIENT } from '../redis/redis.module.js';
 
-// Hardening-2: worker injects the shared REDIS_CLIENT for the Queue's
+// Hardening-2: worker injects the shared REDIS_QUEUE_CLIENT for the Queue's
 // non-blocking side. Stub is minimal because the bullmq mock above
 // replaces Queue so the connection is never actually used.
-const mockRedisShared = {} as never;
+const mockRedisQueueClient = {} as never;
 
 // ── Mock BullMQ and ioredis ───────────────────────────────────────────────────
 
@@ -64,7 +64,7 @@ describe('PriceRiseAlertWorker', () => {
         PriceRiseAlertWorker,
         { provide: PriceRiseAlertService, useValue: mockAlertService },
         { provide: ConfigService, useValue: mockConfig },
-        { provide: REDIS_CLIENT, useValue: mockRedisShared },
+        { provide: REDIS_QUEUE_CLIENT, useValue: mockRedisQueueClient },
       ],
     }).compile();
 
@@ -109,7 +109,7 @@ describe('PriceRiseAlertWorker', () => {
 
   it('closes worker, queue, and Redis on destroy', async () => {
     // Hardening-2: only ONE per-worker blocking ioredis is owned by
-    // this class (queue side reuses the shared REDIS_CLIENT, which
+    // this class (queue side reuses the shared REDIS_QUEUE_CLIENT, which
     // is RedisModule's responsibility to close). Asserting exactly
     // 1 quit catches a regression that re-introduces redisForQueue.
     mockRedisQuit.mockClear();

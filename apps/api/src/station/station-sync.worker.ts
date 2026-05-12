@@ -7,7 +7,7 @@ import {
   StationClassificationWorker,
   STATION_CLASSIFICATION_JOB,
 } from './station-classification.worker.js';
-import { REDIS_CLIENT } from '../redis/redis.module.js';
+import { REDIS_QUEUE_CLIENT } from '../redis/redis.module.js';
 
 export const STATION_SYNC_QUEUE = 'station-sync';
 export const STATION_SYNC_JOB = 'run-sync';
@@ -36,7 +36,7 @@ export class StationSyncWorker implements OnModuleInit, OnModuleDestroy {
     private readonly syncService: StationSyncService,
     private readonly config: ConfigService,
     private readonly classificationWorker: StationClassificationWorker,
-    @Inject(REDIS_CLIENT) private readonly redisShared: Redis,
+    @Inject(REDIS_QUEUE_CLIENT) private readonly redisQueueClient: Redis,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -49,7 +49,7 @@ export class StationSyncWorker implements OnModuleInit, OnModuleDestroy {
     this.redisForBlocking = new Redis(redisUrl, { maxRetriesPerRequest: null });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const queueConnection = this.redisShared as any;
+    const queueConnection = this.redisQueueClient as any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const workerConnection = this.redisForBlocking as any;
 
@@ -119,7 +119,7 @@ export class StationSyncWorker implements OnModuleInit, OnModuleDestroy {
   async onModuleDestroy(): Promise<void> {
     await this.worker?.close();
     await this.queue?.close();
-    // redisShared lives in RedisModule's lifecycle; don't quit it here.
+    // redisQueueClient lives in RedisModule's lifecycle; don't quit it here.
     await this.redisForBlocking?.quit().catch(() => undefined);
   }
 

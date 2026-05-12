@@ -8,7 +8,7 @@ import {
   type MovementRecord,
   type PriceRiseSignalJobData,
 } from './types.js';
-import { REDIS_CLIENT } from '../redis/redis.module.js';
+import { REDIS_QUEUE_CLIENT } from '../redis/redis.module.js';
 
 // Explicit signal-type → signalSource map. Replaces a fragile
 // `startsWith('orlen_rack')` derivation that would silently mis-tag any
@@ -45,11 +45,11 @@ export class PriceRiseSignalPublisher implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PriceRiseSignalPublisher.name);
   private queue!: Queue;
 
-  constructor(@Inject(REDIS_CLIENT) private readonly redisShared: Redis) {}
+  constructor(@Inject(REDIS_QUEUE_CLIENT) private readonly redisQueueClient: Redis) {}
 
   async onModuleInit(): Promise<void> {
     // Hardening-2: publisher only needs the non-blocking (Queue) side,
-    // so it reuses the shared REDIS_CLIENT — saves 1 connection. No
+    // so it reuses the shared REDIS_QUEUE_CLIENT — saves 1 connection. No
     // per-worker blocking instance because consumers (e.g. 6.3's
     // PredictiveRiseAlertWorker) own their own blocking connection.
     //
@@ -58,7 +58,7 @@ export class PriceRiseSignalPublisher implements OnModuleInit, OnModuleDestroy {
     // REDIS_URL. No env-var read needed here.)
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const queueConnection = this.redisShared as any;
+    const queueConnection = this.redisQueueClient as any;
 
     this.queue = new Queue(PRICE_RISE_SIGNALS_QUEUE, {
       connection: queueConnection,
@@ -70,7 +70,7 @@ export class PriceRiseSignalPublisher implements OnModuleInit, OnModuleDestroy {
 
   async onModuleDestroy(): Promise<void> {
     await this.queue?.close();
-    // redisShared lives in RedisModule's lifecycle; don't quit it here.
+    // redisQueueClient lives in RedisModule's lifecycle; don't quit it here.
   }
 
   /**

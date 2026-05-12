@@ -5,7 +5,7 @@ import Redis from 'ioredis';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
 import { ResearchRetentionService } from '../research/research-retention.service.js';
-import { REDIS_CLIENT } from '../redis/redis.module.js';
+import { REDIS_QUEUE_CLIENT } from '../redis/redis.module.js';
 
 const QUEUE_NAME = 'photo-cleanup';
 const CLEANUP_JOB = 'cleanup-old-photos';
@@ -28,7 +28,7 @@ export class PhotoCleanupWorker implements OnModuleInit {
     private readonly storage: StorageService,
     private readonly config: ConfigService,
     private readonly researchRetention: ResearchRetentionService,
-    @Inject(REDIS_CLIENT) private readonly redisShared: Redis,
+    @Inject(REDIS_QUEUE_CLIENT) private readonly redisQueueClient: Redis,
   ) {}
 
   async onModuleInit() {
@@ -47,7 +47,7 @@ export class PhotoCleanupWorker implements OnModuleInit {
     const workerRedis = new Redis(redisUrl, { maxRetriesPerRequest: null });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.queue = new Queue(QUEUE_NAME, { connection: this.redisShared as any });
+    this.queue = new Queue(QUEUE_NAME, { connection: this.redisQueueClient as any });
 
     const worker = new Worker(
       QUEUE_NAME,

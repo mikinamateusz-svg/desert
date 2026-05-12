@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Queue, Worker, type Job } from 'bullmq';
 import Redis from 'ioredis';
 import { PriceRiseAlertService } from './alert.service.js';
-import { REDIS_CLIENT } from '../redis/redis.module.js';
+import { REDIS_QUEUE_CLIENT } from '../redis/redis.module.js';
 
 export const PRICE_RISE_ALERT_QUEUE = 'price-rise-alert';
 export const PRICE_RISE_ALERT_JOB = 'send-rise-alerts';
@@ -23,14 +23,14 @@ export class PriceRiseAlertWorker implements OnModuleInit, OnModuleDestroy {
   private worker!: Worker;
   // Hardening-2: only the blocking (Worker) side gets a dedicated
   // ioredis instance. The non-blocking (Queue) side reuses the shared
-  // REDIS_CLIENT from RedisModule. Cuts Redis connection count
+  // REDIS_QUEUE_CLIENT from RedisModule. Cuts Redis connection count
   // per-worker from 2 → 1.
   private redisForBlocking!: Redis;
 
   constructor(
     private readonly alertService: PriceRiseAlertService,
     private readonly config: ConfigService,
-    @Inject(REDIS_CLIENT) private readonly redisShared: Redis,
+    @Inject(REDIS_QUEUE_CLIENT) private readonly redisQueueClient: Redis,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -38,7 +38,7 @@ export class PriceRiseAlertWorker implements OnModuleInit, OnModuleDestroy {
     this.redisForBlocking = new Redis(redisUrl, { maxRetriesPerRequest: null });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const queueConnection = this.redisShared as any;
+    const queueConnection = this.redisQueueClient as any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const workerConnection = this.redisForBlocking as any;
 
@@ -123,7 +123,7 @@ export class PriceRiseAlertWorker implements OnModuleInit, OnModuleDestroy {
     await this.worker?.close();
     await this.queue?.close();
     // Only the per-worker blocking instance is owned by this class —
-    // redisShared lives in RedisModule's lifecycle.
+    // redisQueueClient lives in RedisModule's lifecycle.
     await this.redisForBlocking?.quit().catch(() => undefined);
   }
 

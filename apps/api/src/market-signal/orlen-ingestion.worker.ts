@@ -6,7 +6,7 @@ import { OrlenIngestionService } from './orlen-ingestion.service.js';
 import { BrentIngestionService } from './brent-ingestion.service.js';
 import { PriceRiseSignalPublisher } from './price-rise-signal.publisher.js';
 import type { MovementRecord } from './types.js';
-import { REDIS_CLIENT } from '../redis/redis.module.js';
+import { REDIS_QUEUE_CLIENT } from '../redis/redis.module.js';
 
 export const ORLEN_INGESTION_QUEUE = 'orlen-ingestion';
 export const ORLEN_INGESTION_JOB = 'run-ingestion';
@@ -35,7 +35,7 @@ export class OrlenIngestionWorker implements OnModuleInit, OnModuleDestroy {
     // resulting movements to the price-rise-signals queue.
     private readonly brentIngestionService: BrentIngestionService,
     private readonly riseSignalPublisher: PriceRiseSignalPublisher,
-    @Inject(REDIS_CLIENT) private readonly redisShared: Redis,
+    @Inject(REDIS_QUEUE_CLIENT) private readonly redisQueueClient: Redis,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -48,7 +48,7 @@ export class OrlenIngestionWorker implements OnModuleInit, OnModuleDestroy {
     this.redisForBlocking = new Redis(redisUrl, { maxRetriesPerRequest: null });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const queueConnection = this.redisShared as any;
+    const queueConnection = this.redisQueueClient as any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const workerConnection = this.redisForBlocking as any;
 
@@ -146,7 +146,7 @@ export class OrlenIngestionWorker implements OnModuleInit, OnModuleDestroy {
   async onModuleDestroy(): Promise<void> {
     await this.worker?.close();
     await this.queue?.close();
-    // redisShared lives in RedisModule's lifecycle; don't quit it here.
+    // redisQueueClient lives in RedisModule's lifecycle; don't quit it here.
     await this.redisForBlocking?.quit().catch(() => undefined);
   }
 

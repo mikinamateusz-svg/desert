@@ -23,10 +23,10 @@ import { PremiumAlertsService } from '../alert/premium-alerts.service.js';
 import { PriceDropAlertWorker } from '../alert/price-drop-alert.worker.js';
 import { CommunityRiseAlertWorker } from '../alert/community-rise-alert.worker.js';
 import { Worker, type Job } from 'bullmq';
-import { REDIS_CLIENT } from '../redis/redis.module.js';
+import { REDIS_QUEUE_CLIENT } from '../redis/redis.module.js';
 
-// Hardening-2: shared REDIS_CLIENT stub for the Queue's non-blocking side.
-const mockRedisShared = {} as never;
+// Hardening-2: shared REDIS_QUEUE_CLIENT stub for the Queue's non-blocking side.
+const mockRedisQueueClient = {} as never;
 
 // ── BullMQ / Redis mocks ───────────────────────────────────────────────────
 
@@ -350,7 +350,7 @@ describe('PhotoPipelineWorker', () => {
         { provide: PremiumAlertsService, useValue: { extendForUser: jest.fn().mockResolvedValue(undefined) } },
         { provide: PriceDropAlertWorker, useValue: mockPriceDropAlertWorker },
         { provide: CommunityRiseAlertWorker, useValue: mockCommunityRiseAlertWorker },
-        { provide: REDIS_CLIENT, useValue: mockRedisShared },
+        { provide: REDIS_QUEUE_CLIENT, useValue: mockRedisQueueClient },
       ],
     }).compile();
 
@@ -433,7 +433,7 @@ describe('PhotoPipelineWorker', () => {
           { provide: PremiumAlertsService, useValue: { extendForUser: jest.fn().mockResolvedValue(undefined) } },
         { provide: PriceDropAlertWorker, useValue: mockPriceDropAlertWorker },
         { provide: CommunityRiseAlertWorker, useValue: mockCommunityRiseAlertWorker },
-        { provide: REDIS_CLIENT, useValue: mockRedisShared },
+        { provide: REDIS_QUEUE_CLIENT, useValue: mockRedisQueueClient },
         ],
       }).compile();
 
@@ -453,7 +453,7 @@ describe('PhotoPipelineWorker', () => {
   describe('onModuleDestroy', () => {
     it('closes worker, queue, and redis connection', async () => {
       // Hardening-2: only ONE per-worker blocking ioredis is owned by
-      // this class (queue side reuses the shared REDIS_CLIENT). Asserting
+      // this class (queue side reuses the shared REDIS_QUEUE_CLIENT). Asserting
       // exactly 1 quit catches a regression that re-introduces a
       // dedicated queue-side connection.
       mockRedisQuit.mockClear();

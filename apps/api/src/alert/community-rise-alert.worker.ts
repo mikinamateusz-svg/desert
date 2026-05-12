@@ -1,8 +1,9 @@
-import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Queue, Worker, type Job } from 'bullmq';
 import Redis from 'ioredis';
 import { CommunityRiseAlertService } from './community-rise-alert.service.js';
+import { REDIS_CLIENT } from '../redis/redis.module.js';
 import {
   COMMUNITY_RISE_CHECKS_QUEUE,
   COMMUNITY_RISE_CHECK_JOB,
@@ -28,23 +29,23 @@ export class CommunityRiseAlertWorker implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(CommunityRiseAlertWorker.name);
   private queue!: Queue;
   private worker!: Worker;
-  private redisForQueue!: Redis;
-  private redisForWorker!: Redis;
+  // Hardening-2: shared non-blocking client + per-worker blocking instance.
+  private redisForBlocking!: Redis;
 
   constructor(
     private readonly alertService: CommunityRiseAlertService,
     private readonly config: ConfigService,
+    @Inject(REDIS_CLIENT) private readonly redisShared: Redis,
   ) {}
 
   async onModuleInit(): Promise<void> {
     const redisUrl = this.config.getOrThrow<string>('BULL_REDIS_URL');
-    this.redisForQueue = new Redis(redisUrl, { maxRetriesPerRequest: null });
-    this.redisForWorker = new Redis(redisUrl, { maxRetriesPerRequest: null });
+    this.redisForBlocking = new Redis(redisUrl, { maxRetriesPerRequest: null });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const queueConnection = this.redisForQueue as any;
+    const queueConnection = this.redisShared as any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const workerConnection = this.redisForWorker as any;
+    const workerConnection = this.redisForBlocking as any;
 
     this.queue = new Queue(COMMUNITY_RISE_CHECKS_QUEUE, {
       connection: queueConnection,
@@ -96,7 +97,8 @@ export class CommunityRiseAlertWorker implements OnModuleInit, OnModuleDestroy {
   async onModuleDestroy(): Promise<void> {
     await this.worker?.close();
     await this.queue?.close();
-    await Promise.allSettled([this.redisForQueue?.quit(), this.redisForWorker?.quit()]);
+    // redisShared lives in RedisModule's lifecycle; don't quit it here.
+    await this.redisForBlocking?.quit().catch(() => undefined);
   }
 
   /**

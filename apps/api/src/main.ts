@@ -24,6 +24,15 @@ async function bootstrap() {
     }),
   );
 
+  // Hardening-2: enable SIGTERM → graceful onModuleDestroy chain so
+  // RedisModule's destroy actually fires the shared client's QUIT,
+  // and every BullMQ worker's destroy gets to close its Queue/Worker
+  // + per-worker blocking ioredis. Without this, the entire chain of
+  // "X lives in RedisModule's lifecycle" comments across the worker
+  // files is aspirational. NestJS destroys in reverse-dependency
+  // order, so workers tear down before RedisModule.
+  app.enableShutdownHooks();
+
   const port = process.env['PORT'] ? parseInt(process.env['PORT'], 10) : 3001;
 
   await app.listen(port, '0.0.0.0');

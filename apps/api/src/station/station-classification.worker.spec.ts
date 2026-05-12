@@ -8,6 +8,10 @@ import {
 } from './station-classification.worker.js';
 import { StationClassificationService } from './station-classification.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { REDIS_CLIENT } from '../redis/redis.module.js';
+
+// Hardening-2: shared REDIS_CLIENT stub for the Queue's non-blocking side.
+const mockRedisShared = {} as never;
 
 // ─── BullMQ mock ─────────────────────────────────────────────────────────────
 
@@ -96,6 +100,7 @@ describe('StationClassificationWorker', () => {
         { provide: StationClassificationService, useValue: mockClassificationService },
         { provide: PrismaService, useValue: mockPrisma },
         { provide: ConfigService, useValue: mockConfig },
+        { provide: REDIS_CLIENT, useValue: mockRedisShared },
       ],
     }).compile();
 
@@ -136,7 +141,8 @@ describe('StationClassificationWorker', () => {
     await workerInstance.onModuleDestroy();
     expect(mockWorkerClose).toHaveBeenCalledTimes(1);
     expect(mockQueueClose).toHaveBeenCalledTimes(1);
-    expect(mockRedisQuit).toHaveBeenCalledTimes(2);
+    // Hardening-2: only the per-worker blocking ioredis is owned here.
+    expect(mockRedisQuit).toHaveBeenCalledTimes(1);
   });
 
   it('logs error on job failure', () => {

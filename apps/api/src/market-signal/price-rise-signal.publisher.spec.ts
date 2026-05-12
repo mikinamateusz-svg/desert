@@ -1,12 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { PriceRiseSignalPublisher } from './price-rise-signal.publisher.js';
 import {
   PRICE_RISE_SIGNAL_JOB,
   PRICE_RISE_SIGNALS_QUEUE,
   type MovementRecord,
 } from './types.js';
+import { REDIS_CLIENT } from '../redis/redis.module.js';
+
+// Hardening-2: the publisher injects the shared REDIS_CLIENT and uses it
+// as the Queue's connection. Stub is intentionally minimal — the
+// bullmq mock above already replaces Queue so it never actually reads
+// the connection's methods.
+const mockRedisShared = {} as never;
 
 // ── Mocks ────────────────────────────────────────────────────────────────────
 
@@ -25,10 +31,6 @@ jest.mock('ioredis', () =>
     quit: jest.fn().mockResolvedValue(undefined),
   })),
 );
-
-const mockConfig = {
-  getOrThrow: jest.fn().mockReturnValue('redis://localhost:6379'),
-};
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -54,7 +56,7 @@ describe('PriceRiseSignalPublisher', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PriceRiseSignalPublisher,
-        { provide: ConfigService, useValue: mockConfig },
+        { provide: REDIS_CLIENT, useValue: mockRedisShared },
       ],
     }).compile();
 

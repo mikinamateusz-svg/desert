@@ -20,7 +20,7 @@ import {
 export class PredictiveRiseAlertWorker implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PredictiveRiseAlertWorker.name);
   private worker!: Worker;
-  private redisForWorker!: Redis;
+  private redisForBlocking!: Redis;
 
   constructor(
     private readonly alertService: PredictiveRiseAlertService,
@@ -34,9 +34,9 @@ export class PredictiveRiseAlertWorker implements OnModuleInit, OnModuleDestroy 
     }
 
     const redisUrl = this.config.getOrThrow<string>('BULL_REDIS_URL');
-    this.redisForWorker = new Redis(redisUrl, { maxRetriesPerRequest: null });
+    this.redisForBlocking = new Redis(redisUrl, { maxRetriesPerRequest: null });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const workerConnection = this.redisForWorker as any;
+    const workerConnection = this.redisForBlocking as any;
 
     this.worker = new Worker<PriceRiseSignalJobData>(
       PRICE_RISE_SIGNALS_QUEUE,
@@ -82,6 +82,6 @@ export class PredictiveRiseAlertWorker implements OnModuleInit, OnModuleDestroy 
 
   async onModuleDestroy(): Promise<void> {
     await this.worker?.close();
-    await this.redisForWorker?.quit().catch(() => undefined);
+    await this.redisForBlocking?.quit().catch(() => undefined);
   }
 }

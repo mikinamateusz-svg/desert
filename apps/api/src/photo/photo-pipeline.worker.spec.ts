@@ -23,6 +23,10 @@ import { PremiumAlertsService } from '../alert/premium-alerts.service.js';
 import { PriceDropAlertWorker } from '../alert/price-drop-alert.worker.js';
 import { CommunityRiseAlertWorker } from '../alert/community-rise-alert.worker.js';
 import { Worker, type Job } from 'bullmq';
+import { REDIS_CLIENT } from '../redis/redis.module.js';
+
+// Hardening-2: shared REDIS_CLIENT stub for the Queue's non-blocking side.
+const mockRedisShared = {} as never;
 
 // ── BullMQ / Redis mocks ───────────────────────────────────────────────────
 
@@ -53,8 +57,14 @@ jest.mock('bullmq', () => ({
   ),
 }));
 
+// Hardening-2: shared quit mock so tests can assert it was called
+// exactly once on destroy. quit() must return a Promise — worker code
+// now uses `.quit().catch(...)` rather than the previous
+// Promise.allSettled wrapper, so a non-Promise return crashes
+// onModuleDestroy.
+const mockRedisQuit = jest.fn().mockResolvedValue(undefined);
 jest.mock('ioredis', () =>
-  jest.fn().mockImplementation(() => ({ quit: jest.fn() })),
+  jest.fn().mockImplementation(() => ({ quit: mockRedisQuit })),
 );
 
 // ── Service mocks ──────────────────────────────────────────────────────────
@@ -340,6 +350,7 @@ describe('PhotoPipelineWorker', () => {
         { provide: PremiumAlertsService, useValue: { extendForUser: jest.fn().mockResolvedValue(undefined) } },
         { provide: PriceDropAlertWorker, useValue: mockPriceDropAlertWorker },
         { provide: CommunityRiseAlertWorker, useValue: mockCommunityRiseAlertWorker },
+        { provide: REDIS_CLIENT, useValue: mockRedisShared },
       ],
     }).compile();
 
@@ -422,6 +433,7 @@ describe('PhotoPipelineWorker', () => {
           { provide: PremiumAlertsService, useValue: { extendForUser: jest.fn().mockResolvedValue(undefined) } },
         { provide: PriceDropAlertWorker, useValue: mockPriceDropAlertWorker },
         { provide: CommunityRiseAlertWorker, useValue: mockCommunityRiseAlertWorker },
+        { provide: REDIS_CLIENT, useValue: mockRedisShared },
         ],
       }).compile();
 
@@ -440,9 +452,15 @@ describe('PhotoPipelineWorker', () => {
 
   describe('onModuleDestroy', () => {
     it('closes worker, queue, and redis connection', async () => {
+      // Hardening-2: only ONE per-worker blocking ioredis is owned by
+      // this class (queue side reuses the shared REDIS_CLIENT). Asserting
+      // exactly 1 quit catches a regression that re-introduces a
+      // dedicated queue-side connection.
+      mockRedisQuit.mockClear();
       await worker.onModuleDestroy();
       expect(mockWorkerClose).toHaveBeenCalled();
       expect(mockQueueClose).toHaveBeenCalled();
+      expect(mockRedisQuit).toHaveBeenCalledTimes(1);
     });
   });
 

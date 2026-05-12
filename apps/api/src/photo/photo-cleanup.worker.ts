@@ -1,10 +1,11 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Queue, Worker } from 'bullmq';
 import Redis from 'ioredis';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
 import { ResearchRetentionService } from '../research/research-retention.service.js';
+import { REDIS_CLIENT } from '../redis/redis.module.js';
 
 const QUEUE_NAME = 'photo-cleanup';
 const CLEANUP_JOB = 'cleanup-old-photos';
@@ -27,6 +28,7 @@ export class PhotoCleanupWorker implements OnModuleInit {
     private readonly storage: StorageService,
     private readonly config: ConfigService,
     private readonly researchRetention: ResearchRetentionService,
+    @Inject(REDIS_CLIENT) private readonly redisShared: Redis,
   ) {}
 
   async onModuleInit() {
@@ -40,11 +42,12 @@ export class PhotoCleanupWorker implements OnModuleInit {
     this.rejectedRetentionDays = Number.isFinite(parsed) && parsed > 0 ? parsed : 2;
 
     const redisUrl = this.config.getOrThrow<string>('BULL_REDIS_URL');
-    const queueRedis = new Redis(redisUrl, { maxRetriesPerRequest: null });
+    // Hardening-2: shared non-blocking client for the Queue; per-worker
+    // blocking instance for the Worker.
     const workerRedis = new Redis(redisUrl, { maxRetriesPerRequest: null });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.queue = new Queue(QUEUE_NAME, { connection: queueRedis as any });
+    this.queue = new Queue(QUEUE_NAME, { connection: this.redisShared as any });
 
     const worker = new Worker(
       QUEUE_NAME,

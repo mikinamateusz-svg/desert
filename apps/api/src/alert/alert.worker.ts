@@ -1,8 +1,9 @@
-import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Queue, Worker, type Job } from 'bullmq';
 import Redis from 'ioredis';
 import { PriceRiseAlertService } from './alert.service.js';
+import { REDIS_CLIENT } from '../redis/redis.module.js';
 
 export const PRICE_RISE_ALERT_QUEUE = 'price-rise-alert';
 export const PRICE_RISE_ALERT_JOB = 'send-rise-alerts';
@@ -20,24 +21,26 @@ export class PriceRiseAlertWorker implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PriceRiseAlertWorker.name);
   private queue!: Queue;
   private worker!: Worker;
-  // BullMQ requires separate Redis connections for Queue and Worker
-  private redisForQueue!: Redis;
-  private redisForWorker!: Redis;
+  // Hardening-2: only the blocking (Worker) side gets a dedicated
+  // ioredis instance. The non-blocking (Queue) side reuses the shared
+  // REDIS_CLIENT from RedisModule. Cuts Redis connection count
+  // per-worker from 2 → 1.
+  private redisForBlocking!: Redis;
 
   constructor(
     private readonly alertService: PriceRiseAlertService,
     private readonly config: ConfigService,
+    @Inject(REDIS_CLIENT) private readonly redisShared: Redis,
   ) {}
 
   async onModuleInit(): Promise<void> {
     const redisUrl = this.config.getOrThrow<string>('BULL_REDIS_URL');
-    this.redisForQueue = new Redis(redisUrl, { maxRetriesPerRequest: null });
-    this.redisForWorker = new Redis(redisUrl, { maxRetriesPerRequest: null });
+    this.redisForBlocking = new Redis(redisUrl, { maxRetriesPerRequest: null });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const queueConnection = this.redisForQueue as any;
+    const queueConnection = this.redisShared as any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const workerConnection = this.redisForWorker as any;
+    const workerConnection = this.redisForBlocking as any;
 
     this.queue = new Queue(PRICE_RISE_ALERT_QUEUE, {
       connection: queueConnection,
@@ -119,7 +122,9 @@ export class PriceRiseAlertWorker implements OnModuleInit, OnModuleDestroy {
   async onModuleDestroy(): Promise<void> {
     await this.worker?.close();
     await this.queue?.close();
-    await Promise.allSettled([this.redisForQueue?.quit(), this.redisForWorker?.quit()]);
+    // Only the per-worker blocking instance is owned by this class —
+    // redisShared lives in RedisModule's lifecycle.
+    await this.redisForBlocking?.quit().catch(() => undefined);
   }
 
   /** Exposed for integration tests and manual ops trigger */

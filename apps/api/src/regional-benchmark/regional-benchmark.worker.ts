@@ -1,8 +1,9 @@
-import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Queue, Worker, type Job } from 'bullmq';
 import Redis from 'ioredis';
 import { RegionalBenchmarkService } from './regional-benchmark.service.js';
+import { REDIS_CLIENT } from '../redis/redis.module.js';
 
 export const REGIONAL_BENCHMARK_QUEUE = 'regional-benchmark';
 export const REGIONAL_BENCHMARK_JOB = 'calculate-regional-benchmarks';
@@ -32,13 +33,13 @@ export class RegionalBenchmarkWorker implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(RegionalBenchmarkWorker.name);
   private queue!: Queue;
   private worker!: Worker;
-  // BullMQ requires separate Redis connections for Queue and Worker (per BullMQ docs).
-  private redisForQueue!: Redis;
-  private redisForWorker!: Redis;
+  // Hardening-2: shared non-blocking client + per-worker blocking instance.
+  private redisForBlocking!: Redis;
 
   constructor(
     private readonly benchmarkService: RegionalBenchmarkService,
     private readonly config: ConfigService,
+    @Inject(REDIS_CLIENT) private readonly redisShared: Redis,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -48,13 +49,12 @@ export class RegionalBenchmarkWorker implements OnModuleInit, OnModuleDestroy {
     }
 
     const redisUrl = this.config.getOrThrow<string>('BULL_REDIS_URL');
-    this.redisForQueue = new Redis(redisUrl, { maxRetriesPerRequest: null });
-    this.redisForWorker = new Redis(redisUrl, { maxRetriesPerRequest: null });
+    this.redisForBlocking = new Redis(redisUrl, { maxRetriesPerRequest: null });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const queueConnection = this.redisForQueue as any;
+    const queueConnection = this.redisShared as any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const workerConnection = this.redisForWorker as any;
+    const workerConnection = this.redisForBlocking as any;
 
     this.queue = new Queue(REGIONAL_BENCHMARK_QUEUE, {
       connection: queueConnection,
@@ -117,7 +117,8 @@ export class RegionalBenchmarkWorker implements OnModuleInit, OnModuleDestroy {
   async onModuleDestroy(): Promise<void> {
     await this.worker?.close();
     await this.queue?.close();
-    await Promise.allSettled([this.redisForQueue?.quit(), this.redisForWorker?.quit()]);
+    // redisShared lives in RedisModule's lifecycle; don't quit it here.
+    await this.redisForBlocking?.quit().catch(() => undefined);
   }
 
   /** Exposed for integration tests + manual ops trigger if needed. */

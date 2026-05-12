@@ -9,11 +9,17 @@ import {
   ORLEN_INGESTION_JOB,
 } from './orlen-ingestion.worker.js';
 import { OrlenIngestionService } from './orlen-ingestion.service.js';
+import { REDIS_CLIENT } from '../redis/redis.module.js';
 
 // Mock ioredis — no real Redis connection
 const mockRedisQuit = jest.fn().mockResolvedValue('OK');
 const mockRedisInstance = { quit: mockRedisQuit };
 jest.mock('ioredis', () => jest.fn().mockImplementation(() => mockRedisInstance));
+
+// Hardening-2: worker injects the shared REDIS_CLIENT for the Queue's
+// non-blocking side. Stub is minimal — the bullmq mock above replaces
+// Queue so the connection's methods are never called.
+const mockRedisShared = {} as never;
 
 // Mock BullMQ
 const mockQueueAdd = jest.fn().mockResolvedValue(undefined);
@@ -74,6 +80,7 @@ describe('OrlenIngestionWorker', () => {
         { provide: ConfigService, useValue: mockConfig },
         { provide: BrentIngestionService, useValue: mockBrentIngestionService },
         { provide: PriceRiseSignalPublisher, useValue: mockRiseSignalPublisher },
+        { provide: REDIS_CLIENT, useValue: mockRedisShared },
       ],
     }).compile();
 
@@ -280,7 +287,10 @@ describe('OrlenIngestionWorker', () => {
       await workerService.onModuleDestroy();
       expect(mockWorkerClose).toHaveBeenCalledTimes(1);
       expect(mockQueueClose).toHaveBeenCalledTimes(1);
-      expect(mockRedisQuit).toHaveBeenCalledTimes(2);
+      // Hardening-2: only ONE per-worker blocking ioredis is owned by
+      // this class (was 2 — queue + worker). Shared REDIS_CLIENT lives
+      // in RedisModule's lifecycle, not closed here.
+      expect(mockRedisQuit).toHaveBeenCalledTimes(1);
     });
   });
 });

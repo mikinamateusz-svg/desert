@@ -1,5 +1,4 @@
-import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Inject, Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { Queue } from 'bullmq';
 import Redis from 'ioredis';
 import {
@@ -9,6 +8,7 @@ import {
   type MovementRecord,
   type PriceRiseSignalJobData,
 } from './types.js';
+import { REDIS_CLIENT } from '../redis/redis.module.js';
 
 // Explicit signal-type → signalSource map. Replaces a fragile
 // `startsWith('orlen_rack')` derivation that would silently mis-tag any
@@ -44,15 +44,21 @@ const JOB_OPTIONS = {
 export class PriceRiseSignalPublisher implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PriceRiseSignalPublisher.name);
   private queue!: Queue;
-  private redisForQueue!: Redis;
 
-  constructor(private readonly config: ConfigService) {}
+  constructor(@Inject(REDIS_CLIENT) private readonly redisShared: Redis) {}
 
   async onModuleInit(): Promise<void> {
-    const redisUrl = this.config.getOrThrow<string>('BULL_REDIS_URL');
-    this.redisForQueue = new Redis(redisUrl, { maxRetriesPerRequest: null });
+    // Hardening-2: publisher only needs the non-blocking (Queue) side,
+    // so it reuses the shared REDIS_CLIENT — saves 1 connection. No
+    // per-worker blocking instance because consumers (e.g. 6.3's
+    // PredictiveRiseAlertWorker) own their own blocking connection.
+    //
+    // (BULL_REDIS_URL is still required for every other worker in the
+    // app — RedisModule's boot-time assertion enforces it matches
+    // REDIS_URL. No env-var read needed here.)
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const queueConnection = this.redisForQueue as any;
+    const queueConnection = this.redisShared as any;
 
     this.queue = new Queue(PRICE_RISE_SIGNALS_QUEUE, {
       connection: queueConnection,
@@ -64,7 +70,7 @@ export class PriceRiseSignalPublisher implements OnModuleInit, OnModuleDestroy {
 
   async onModuleDestroy(): Promise<void> {
     await this.queue?.close();
-    await this.redisForQueue?.quit().catch(() => undefined);
+    // redisShared lives in RedisModule's lifecycle; don't quit it here.
   }
 
   /**

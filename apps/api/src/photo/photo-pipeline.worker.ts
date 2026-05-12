@@ -2,6 +2,7 @@ import { Inject, Injectable, Logger, OnModuleInit, OnModuleDestroy, forwardRef }
 import { ConfigService } from '@nestjs/config';
 import { Queue, Worker, type Job } from 'bullmq';
 import Redis from 'ioredis';
+import { REDIS_CLIENT } from '../redis/redis.module.js';
 import { SubmissionStatus, UserRole, type Submission, type Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StorageService } from '../storage/storage.service.js';
@@ -44,9 +45,8 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PhotoPipelineWorker.name);
   private queue!: Queue;
   private worker!: Worker;
-  // BullMQ requires separate Redis connections for Queue and Worker
-  private redisForQueue!: Redis;
-  private redisForWorker!: Redis;
+  // Hardening-2: shared non-blocking client + per-worker blocking instance.
+  private redisForBlocking!: Redis;
   // Story 3.9: true when worker has been paused due to daily spend cap
   private pausedForSpendCap = false;
   // Operational safety net (2026-05-07 hotfix): timer for the periodic
@@ -81,16 +81,16 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     // verified fuel. BullMQ jobId-dedups bursts of submissions for the
     // same voivodeship+fuel into a single threshold run.
     private readonly communityRiseAlertWorker: CommunityRiseAlertWorker,
+    @Inject(REDIS_CLIENT) private readonly redisShared: Redis,
   ) {}
 
   async onModuleInit(): Promise<void> {
     const redisUrl = this.config.getOrThrow<string>('BULL_REDIS_URL');
-    this.redisForQueue = new Redis(redisUrl, { maxRetriesPerRequest: null });
-    this.redisForWorker = new Redis(redisUrl, { maxRetriesPerRequest: null });
+    this.redisForBlocking = new Redis(redisUrl, { maxRetriesPerRequest: null });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const queueConnection = this.redisForQueue as any;
+    const queueConnection = this.redisShared as any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const workerConnection = this.redisForWorker as any;
+    const workerConnection = this.redisForBlocking as any;
 
     this.queue = new Queue(PHOTO_PIPELINE_QUEUE, {
       connection: queueConnection,
@@ -149,7 +149,8 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     if (this.stalePendingSweepTimer) clearInterval(this.stalePendingSweepTimer);
     await this.worker?.close();
     await this.queue?.close();
-    await Promise.allSettled([this.redisForQueue?.quit(), this.redisForWorker?.quit()]);
+    // redisShared lives in RedisModule's lifecycle; don't quit it here.
+    await this.redisForBlocking?.quit().catch(() => undefined);
   }
 
   async enqueue(submissionId: string): Promise<void> {

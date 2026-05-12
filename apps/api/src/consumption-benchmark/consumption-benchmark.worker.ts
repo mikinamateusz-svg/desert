@@ -1,8 +1,9 @@
-import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Queue, Worker, type Job } from 'bullmq';
 import Redis from 'ioredis';
 import { ConsumptionBenchmarkService } from './consumption-benchmark.service.js';
+import { REDIS_CLIENT } from '../redis/redis.module.js';
 
 export const CONSUMPTION_BENCHMARK_QUEUE = 'consumption-benchmark';
 export const CONSUMPTION_BENCHMARK_JOB = 'calculate-consumption-benchmarks';
@@ -36,13 +37,13 @@ export class ConsumptionBenchmarkWorker implements OnModuleInit, OnModuleDestroy
   private readonly logger = new Logger(ConsumptionBenchmarkWorker.name);
   private queue!: Queue;
   private worker!: Worker;
-  // BullMQ requires separate Redis connections for Queue and Worker.
-  private redisForQueue!: Redis;
-  private redisForWorker!: Redis;
+  // Hardening-2: shared non-blocking client + per-worker blocking instance.
+  private redisForBlocking!: Redis;
 
   constructor(
     private readonly benchmarkService: ConsumptionBenchmarkService,
     private readonly config: ConfigService,
+    @Inject(REDIS_CLIENT) private readonly redisShared: Redis,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -52,13 +53,12 @@ export class ConsumptionBenchmarkWorker implements OnModuleInit, OnModuleDestroy
     }
 
     const redisUrl = this.config.getOrThrow<string>('BULL_REDIS_URL');
-    this.redisForQueue = new Redis(redisUrl, { maxRetriesPerRequest: null });
-    this.redisForWorker = new Redis(redisUrl, { maxRetriesPerRequest: null });
+    this.redisForBlocking = new Redis(redisUrl, { maxRetriesPerRequest: null });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const queueConnection = this.redisForQueue as any;
+    const queueConnection = this.redisShared as any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const workerConnection = this.redisForWorker as any;
+    const workerConnection = this.redisForBlocking as any;
 
     this.queue = new Queue(CONSUMPTION_BENCHMARK_QUEUE, {
       connection: queueConnection,
@@ -123,19 +123,18 @@ export class ConsumptionBenchmarkWorker implements OnModuleInit, OnModuleDestroy
   async onModuleDestroy(): Promise<void> {
     await this.worker?.close();
     await this.queue?.close();
+    // Hardening-2: only the per-worker blocking instance is owned here.
+    // RedisModule closes the shared client in its own destroy hook.
     // P11: log Redis quit failures instead of swallowing them — if a
     // graceful shutdown is hanging because Redis won't ack the QUIT,
     // we need that visibility.
-    const results = await Promise.allSettled([
-      this.redisForQueue?.quit(),
-      this.redisForWorker?.quit(),
-    ]);
-    for (const [i, r] of results.entries()) {
-      if (r.status === 'rejected') {
-        const which = i === 0 ? 'redisForQueue' : 'redisForWorker';
-        this.logger.warn(`[ConsumptionBenchmarkWorker] ${which}.quit() failed: ${r.reason}`);
-      }
-    }
+    await this.redisForBlocking?.quit().catch((e: unknown) =>
+      this.logger.warn(
+        `[ConsumptionBenchmarkWorker] redisForBlocking.quit() failed: ${
+          e instanceof Error ? e.message : String(e)
+        }`,
+      ),
+    );
   }
 
   /**

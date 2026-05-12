@@ -7,11 +7,15 @@ import {
   StationClassificationWorker,
   STATION_CLASSIFICATION_JOB,
 } from './station-classification.worker.js';
+import { REDIS_CLIENT } from '../redis/redis.module.js';
 
 // P5: mock ioredis so no real Redis connection is created
 const mockRedisQuit = jest.fn().mockResolvedValue('OK');
 const mockRedisInstance = { quit: mockRedisQuit };
 jest.mock('ioredis', () => jest.fn().mockImplementation(() => mockRedisInstance));
+
+// Hardening-2: shared REDIS_CLIENT stub for the Queue's non-blocking side.
+const mockRedisShared = {} as never;
 
 // Mock BullMQ entirely
 const mockQueueAdd = jest.fn().mockResolvedValue(undefined);
@@ -64,6 +68,7 @@ describe('StationSyncWorker', () => {
         { provide: StationSyncService, useValue: mockSyncService },
         { provide: ConfigService, useValue: mockConfig },
         { provide: StationClassificationWorker, useValue: mockClassificationWorker },
+        { provide: REDIS_CLIENT, useValue: mockRedisShared },
       ],
     }).compile();
 
@@ -244,7 +249,8 @@ describe('StationSyncWorker', () => {
       await workerService.onModuleDestroy();
       expect(mockWorkerClose).toHaveBeenCalledTimes(1);
       expect(mockQueueClose).toHaveBeenCalledTimes(1);
-      expect(mockRedisQuit).toHaveBeenCalledTimes(2);
+      // Hardening-2: only the per-worker blocking ioredis is owned here.
+      expect(mockRedisQuit).toHaveBeenCalledTimes(1);
     });
   });
 });

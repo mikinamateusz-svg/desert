@@ -3,6 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
 import { PriceRiseAlertWorker, PRICE_RISE_ALERT_QUEUE, PRICE_RISE_ALERT_JOB } from './alert.worker.js';
 import { PriceRiseAlertService } from './alert.service.js';
+import { REDIS_CLIENT } from '../redis/redis.module.js';
+
+// Hardening-2: worker injects the shared REDIS_CLIENT for the Queue's
+// non-blocking side. Stub is minimal because the bullmq mock above
+// replaces Queue so the connection is never actually used.
+const mockRedisShared = {} as never;
 
 // ── Mock BullMQ and ioredis ───────────────────────────────────────────────────
 
@@ -26,10 +32,12 @@ jest.mock('bullmq', () => ({
   }),
 }));
 
+// Hardening-2: shared quit mock so tests can assert it was called
+// exactly once on destroy (proves the queue-side ioredis was NOT also
+// opened and closed alongside it).
+const mockRedisQuit = jest.fn().mockResolvedValue(undefined);
 jest.mock('ioredis', () =>
-  jest.fn().mockImplementation(() => ({
-    quit: jest.fn().mockResolvedValue(undefined),
-  })),
+  jest.fn().mockImplementation(() => ({ quit: mockRedisQuit })),
 );
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
@@ -56,6 +64,7 @@ describe('PriceRiseAlertWorker', () => {
         PriceRiseAlertWorker,
         { provide: PriceRiseAlertService, useValue: mockAlertService },
         { provide: ConfigService, useValue: mockConfig },
+        { provide: REDIS_CLIENT, useValue: mockRedisShared },
       ],
     }).compile();
 
@@ -99,9 +108,15 @@ describe('PriceRiseAlertWorker', () => {
   });
 
   it('closes worker, queue, and Redis on destroy', async () => {
+    // Hardening-2: only ONE per-worker blocking ioredis is owned by
+    // this class (queue side reuses the shared REDIS_CLIENT, which
+    // is RedisModule's responsibility to close). Asserting exactly
+    // 1 quit catches a regression that re-introduces redisForQueue.
+    mockRedisQuit.mockClear();
     await worker.onModuleDestroy();
     expect(mockWorkerClose).toHaveBeenCalled();
     expect(mockQueueClose).toHaveBeenCalled();
+    expect(mockRedisQuit).toHaveBeenCalledTimes(1);
   });
 
   it('uses queue name ' + PRICE_RISE_ALERT_QUEUE, () => {

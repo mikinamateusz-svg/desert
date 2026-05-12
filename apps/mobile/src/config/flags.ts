@@ -27,7 +27,7 @@ export const flags = {
   phase2: process.env['EXPO_PUBLIC_PHASE_2'] !== 'false',
 
   /**
-   * Story 6.10 — contribution-gated premium alerts loop. Gates the bell
+   * Story 6.10 / 6.13 — contribution-gated price alerts loop. Gates the bell
    * icon on the map header, the rebuilt /alerts status surface, the
    * thank-you-modal alerts-loop copy, the activity-screen verified-banner,
    * and the Account-screen "Notifications" relocation entry.

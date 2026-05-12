@@ -1,21 +1,22 @@
 /**
- * Story 6.10 — premium alerts status fetch. Tiny payload; safe to poll on
- * app foreground and after submission verification events. Server-side
- * value comes from the User row's `premium_alerts_active_until` column —
- * extended +30d on every verified submission.
+ * Story 6.10 / 6.13 — price alerts status fetch. Tiny payload; safe to
+ * poll on app foreground and after submission verification events.
+ * Server-side value comes from the User row's `alerts_active_until`
+ * column — extended +30d on every verified submission.
  *
  * Story 6.11 — alerts inbox endpoints + types.
  */
 const API_BASE = process.env['EXPO_PUBLIC_API_URL'] ?? 'http://localhost:3000';
 
-export interface PremiumAlertsStatus {
-  /** ISO timestamp string, or null when the user has never earned a premium window. */
-  premiumAlertsActiveUntil: string | null;
+export interface AlertsStatus {
+  /** ISO timestamp string, or null when the user has never earned an
+   *  active price-alerts window. */
+  alertsActiveUntil: string | null;
 }
 
-export async function apiGetPremiumAlertsStatus(
+export async function apiGetAlertsStatus(
   accessToken: string,
-): Promise<PremiumAlertsStatus> {
+): Promise<AlertsStatus> {
   const res = await fetch(`${API_BASE}/v1/me/alerts-status`, {
     method: 'GET',
     headers: { Authorization: `Bearer ${accessToken}` },
@@ -23,8 +24,8 @@ export async function apiGetPremiumAlertsStatus(
   if (!res.ok) {
     throw new Error(`alerts-status fetch failed: ${res.status}`);
   }
-  const json = (await res.json()) as { premium_alerts_active_until: string | null };
-  return { premiumAlertsActiveUntil: json.premium_alerts_active_until };
+  const json = (await res.json()) as { alerts_active_until: string | null };
+  return { alertsActiveUntil: json.alerts_active_until };
 }
 
 // ── Story 6.11 inbox ────────────────────────────────────────────────────────
@@ -32,7 +33,7 @@ export async function apiGetPremiumAlertsStatus(
 /** Known alert types. The backend stores `alert_type` as free-form text so
  * future stories (6.1 / 6.2 / 6.5) can add new types via additive code
  * change with no migration. The UI treats unknown types gracefully. */
-export type KnownAlertType = 'price_rise' | 'premium_expiring_warning';
+export type KnownAlertType = 'price_rise' | 'alerts_expiring_warning';
 
 export interface AlertRow {
   id: string;

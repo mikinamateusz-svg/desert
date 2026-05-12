@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { tokens } from '../../src/theme';
 import { flags } from '../../src/config/flags';
-import { usePremiumAlertsStatus } from '../../src/hooks/usePremiumAlertsStatus';
+import { useAlertsStatus } from '../../src/hooks/useAlertsStatus';
 import { useNotificationPermission } from '../../src/hooks/useNotificationPermission';
 import { NotificationRepromptSheet } from '../../src/components/NotificationRepromptSheet';
 import {
@@ -20,7 +20,7 @@ import {
 // so the sheet has time to be readable before the user is bounced home.
 const REPROMPT_DELAY_MS = 1_000;
 
-const PREMIUM_ALERT_WINDOW_DAYS = 30;
+const ALERT_WINDOW_DAYS = 30;
 
 // Story 6.10 — extended from 4s when alerts-loop copy is shown so users
 // have time to read the additional reassurance + disclaimer lines.
@@ -30,17 +30,17 @@ export default function ConfirmScreen() {
   const { t, i18n } = useTranslation();
   const insets = useSafeAreaInsets();
   const { stationName } = useLocalSearchParams<{ stationName?: string }>();
-  const { activeUntil } = usePremiumAlertsStatus();
+  const { activeUntil } = useAlertsStatus();
   const { status: permissionStatus, isChecking: permissionChecking } = useNotificationPermission();
   const [showReprompt, setShowReprompt] = useState(false);
 
   // P1 (6.10 review) — branch the alerts-loop copy: if the user already
-  // has an active premium window, this verification will EXTEND it; if
+  // has an active alerts window, this verification will EXTEND it; if
   // not, this verification will ACTIVATE it. Compute the projected new-
   // until client-side via the same MAX(current, NOW + 30d) formula the
   // backend uses on verify.
   const projectedNewUntil = (() => {
-    const candidate = Date.now() + PREMIUM_ALERT_WINDOW_DAYS * 86_400_000;
+    const candidate = Date.now() + ALERT_WINDOW_DAYS * 86_400_000;
     if (activeUntil && activeUntil.getTime() > candidate) return activeUntil;
     return new Date(candidate);
   })();
@@ -120,7 +120,7 @@ export default function ConfirmScreen() {
       <Text style={styles.subtitle}>{t('confirmation.impactMessage')}</Text>
 
       {/* Story 6.10 — alerts-loop reassurance + verified-only disclaimer.
-          Activate-vs-extend branch driven by the user's current premium
+          Activate-vs-extend branch driven by the user's current alerts
           window state (per AC8). Hidden when flags.alertsLoop is off. */}
       {flags.alertsLoop && (
         <>

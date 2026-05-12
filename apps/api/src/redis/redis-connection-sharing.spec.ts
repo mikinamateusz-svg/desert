@@ -3,8 +3,8 @@ import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PriceRiseAlertWorker } from '../alert/alert.worker.js';
 import { PriceRiseAlertService } from '../alert/alert.service.js';
-import { PremiumExpiryWarningWorker } from '../alert/premium-expiry-warning.worker.js';
-import { PremiumExpiryWarningService } from '../alert/premium-expiry-warning.service.js';
+import { AlertsExpiryWarningWorker } from '../alert/alerts-expiry-warning.worker.js';
+import { AlertsExpiryWarningService } from '../alert/alerts-expiry-warning.service.js';
 import { REDIS_QUEUE_CLIENT } from './redis.module.js';
 
 /**
@@ -81,7 +81,7 @@ const mockPriceRiseAlertService: jest.Mocked<Partial<PriceRiseAlertService>> = {
   sendRiseAlerts: jest.fn().mockResolvedValue(undefined),
 };
 
-const mockPremiumExpiryWarningService = {
+const mockAlertsExpiryWarningService = {
   sendExpiryWarnings: jest.fn().mockResolvedValue(undefined),
 };
 
@@ -121,19 +121,25 @@ describe('Hardening-2 cross-worker invariants', () => {
 
   it('AC1 — Queue constructors receive the SHARED REDIS_QUEUE_CLIENT (not a per-worker fresh instance)', async () => {
     await buildWorker(PriceRiseAlertWorker, PriceRiseAlertService, mockPriceRiseAlertService);
-    await buildWorker(PremiumExpiryWarningWorker, PremiumExpiryWarningService, mockPremiumExpiryWarningService);
+    await buildWorker(AlertsExpiryWarningWorker, AlertsExpiryWarningService, mockAlertsExpiryWarningService);
 
-    // Two workers booted → two Queue() constructions. Both received the
-    // SAME shared client (reference equality), proving no per-worker
-    // ioredis was opened on the queue side.
-    expect(queueConnections).toHaveLength(2);
-    expect(queueConnections[0]).toBe(mockQueueClient);
-    expect(queueConnections[1]).toBe(mockQueueClient);
+    // Two workers booted → at least two Queue() constructions. The
+    // AlertsExpiryWarningWorker opens a third, transient Queue under the
+    // legacy `premium-expiry-warning` name as part of its 6.13 startup
+    // cleanup of the pre-rename repeatable cron — that one is closed
+    // immediately after `obliterate({ force: true })`. Hardening-2's
+    // load-bearing invariant is that EVERY Queue construction reuses
+    // the shared client — count >= 2 is fine, but every entry must be
+    // reference-equal to `mockQueueClient`.
+    expect(queueConnections.length).toBeGreaterThanOrEqual(2);
+    for (const conn of queueConnections) {
+      expect(conn).toBe(mockQueueClient);
+    }
   });
 
   it('AC3 — each worker gets a DEDICATED blocking ioredis (never the shared client; never the same as another worker)', async () => {
     await buildWorker(PriceRiseAlertWorker, PriceRiseAlertService, mockPriceRiseAlertService);
-    await buildWorker(PremiumExpiryWarningWorker, PremiumExpiryWarningService, mockPremiumExpiryWarningService);
+    await buildWorker(AlertsExpiryWarningWorker, AlertsExpiryWarningService, mockAlertsExpiryWarningService);
 
     // Two workers → two Worker() constructions. Each got a distinct
     // blocking ioredis instance. Critical: blocking BRPOPLPUSH locks
@@ -191,7 +197,7 @@ describe('Hardening-2 cross-worker invariants', () => {
 
   it('AC4 — onModuleDestroy quits only the per-worker blocking ioredis, never the shared REDIS_QUEUE_CLIENT', async () => {
     const w1 = await buildWorker(PriceRiseAlertWorker, PriceRiseAlertService, mockPriceRiseAlertService);
-    const w2 = await buildWorker(PremiumExpiryWarningWorker, PremiumExpiryWarningService, mockPremiumExpiryWarningService);
+    const w2 = await buildWorker(AlertsExpiryWarningWorker, AlertsExpiryWarningService, mockAlertsExpiryWarningService);
 
     // 2 workers booted → 2 ioredis instances created → 2 quit fns recorded.
     expect(ioredisQuits).toHaveLength(2);

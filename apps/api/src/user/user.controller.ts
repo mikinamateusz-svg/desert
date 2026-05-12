@@ -57,9 +57,9 @@ export class UserController {
   }
 
   /**
-   * Story 6.10 — premium-alerts status. Mobile clients fetch this on app
-   * foreground + after submission verification events to drive the bell-icon
-   * state on the map header. Tiny payload; cheap to poll.
+   * Story 6.10 / 6.13 — price-alerts status. Mobile clients fetch this
+   * on app foreground + after submission verification events to drive
+   * the bell-icon state on the map header. Tiny payload; cheap to poll.
    */
   @Get('alerts-status')
   // P7 (6.10 review) — mobile polls on every app foreground. Rate-limit
@@ -68,9 +68,9 @@ export class UserController {
   @Roles(...ALL_ROLES)
   async getAlertsStatus(
     @CurrentUser() user: User,
-  ): Promise<{ premium_alerts_active_until: string | null }> {
+  ): Promise<{ alerts_active_until: string | null }> {
     return {
-      premium_alerts_active_until: user.premium_alerts_active_until?.toISOString() ?? null,
+      alerts_active_until: user.alerts_active_until?.toISOString() ?? null,
     };
   }
 }

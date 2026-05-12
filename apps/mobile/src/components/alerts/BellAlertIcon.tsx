@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { tokens } from '../../theme';
 import { useTranslation } from 'react-i18next';
-import { usePremiumAlertsStatus, bellState } from '../../hooks/usePremiumAlertsStatus';
+import { useAlertsStatus, bellState } from '../../hooks/useAlertsStatus';
 import {
   useAlertsUnreadCount,
   useAlertsUnreadCountAutoRefresh,
@@ -11,11 +11,11 @@ import {
 import { flags } from '../../config/flags';
 
 /**
- * Story 6.10 — premium alerts bell icon for the map header chrome.
+ * Story 6.10 / 6.13 — price-alerts bell icon for the map header chrome.
  * Story 6.11 — adds the unread-count numeric badge with the expiring-state
  * override.
  *
- * Three premium states driven by the user's `premium_alerts_active_until`:
+ * Three states driven by the user's `alerts_active_until`:
  *   - `inactive` — null or in the past → outline bell, neutral grey
  *   - `active`   — > 3 days remaining → filled bell, brand amber
  *   - `expiring` — ≤ 3 days remaining → filled bell + warning dot badge
@@ -35,7 +35,7 @@ interface Props {
 
 export function BellAlertIcon({ topInset }: Props) {
   const { t } = useTranslation();
-  const { activeUntil } = usePremiumAlertsStatus();
+  const { activeUntil } = useAlertsStatus();
   // Owns the unread-count fetch lifecycle (mount + foreground); mutators
   // from the alerts screen update the same store optimistically.
   useAlertsUnreadCountAutoRefresh();

@@ -54,9 +54,9 @@ export class PriceRiseAlertService {
     this.logger.log(`New signal types to alert on: ${newTypes.join(', ')}`);
 
     // 3. Query opted-in users with valid Expo push tokens AND an active
-    //    premium-alerts window (Story 6.10). The contribution-gated alerts
-    //    loop means the price-rise push is reserved for users who have a
-    //    non-null `premium_alerts_active_until` in the future — earned by
+    //    price-alerts window (Story 6.10 / 6.13). The contribution-gated
+    //    alerts loop means the price-rise push is reserved for users who
+    //    have a non-null `alerts_active_until` in the future — earned by
     //    each verified submission. SQL-level predicate to avoid fetching
     //    the full opted-in set into app memory.
     const now = new Date();
@@ -65,7 +65,7 @@ export class PriceRiseAlertService {
         sharp_rise: true,
         expo_push_token: { not: null },
         user: {
-          premium_alerts_active_until: { gt: now },
+          alerts_active_until: { gt: now },
           // P6 (6.10 review) — exclude soft-deleted users so we don't
           // push to abandoned accounts that retained their token.
           deleted_at: null,

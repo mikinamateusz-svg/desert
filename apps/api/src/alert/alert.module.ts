@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { PriceRiseAlertService } from './alert.service.js';
 import { PriceRiseAlertWorker } from './alert.worker.js';
-import { PremiumAlertsService } from './premium-alerts.service.js';
-import { PremiumExpiryWarningService } from './premium-expiry-warning.service.js';
-import { PremiumExpiryWarningWorker } from './premium-expiry-warning.worker.js';
+import { AlertsActivationService } from './alerts-activation.service.js';
+import { AlertsExpiryWarningService } from './alerts-expiry-warning.service.js';
+import { AlertsExpiryWarningWorker } from './alerts-expiry-warning.worker.js';
 import { PriceDropAlertService } from './price-drop-alert.service.js';
 import { PriceDropAlertWorker } from './price-drop-alert.worker.js';
 import { CommunityRiseAlertService } from './community-rise-alert.service.js';
@@ -24,9 +24,10 @@ import { RedisModule } from '../redis/redis.module.js';
     { provide: EXPO_PUSH_CLIENT, useClass: ExpoPushProvider },
     PriceRiseAlertService,
     PriceRiseAlertWorker,
-    PremiumAlertsService,
-    PremiumExpiryWarningService,
-    PremiumExpiryWarningWorker,
+    // Story 6.10 / 6.13 — price-alerts contribution loop.
+    AlertsActivationService,
+    AlertsExpiryWarningService,
+    AlertsExpiryWarningWorker,
     PriceDropAlertService,
     PriceDropAlertWorker,
     CommunityRiseAlertService,
@@ -45,7 +46,7 @@ import { RedisModule } from '../redis/redis.module.js';
   // can read the predictive-sent Redis key contract via the same module.
   exports: [
     PriceRiseAlertService,
-    PremiumAlertsService,
+    AlertsActivationService,
     PriceDropAlertWorker,
     CommunityRiseAlertService,
     CommunityRiseAlertWorker,

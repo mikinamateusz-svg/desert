@@ -17,7 +17,7 @@ import { TrustScoreService } from '../user/trust-score.service.js';
 import { ResearchRetentionService } from '../research/research-retention.service.js';
 import { SubmissionsService } from '../submissions/submissions.service.js';
 import { MetricsCounterService } from '../metrics/metrics-counter.service.js';
-import { PremiumAlertsService } from '../alert/premium-alerts.service.js';
+import { AlertsActivationService } from '../alert/alerts-activation.service.js';
 import { PriceDropAlertWorker } from '../alert/price-drop-alert.worker.js';
 import { CommunityRiseAlertWorker } from '../alert/community-rise-alert.worker.js';
 
@@ -70,9 +70,9 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
     @Inject(forwardRef(() => SubmissionsService))
     private readonly submissionsService: SubmissionsService,
     private readonly metricsCounter: MetricsCounterService,
-    // Story 6.10 — extend the user's premium-alerts window when their
-    // submission flips to verified.
-    private readonly premiumAlerts: PremiumAlertsService,
+    // Story 6.10 / 6.13 — extend the user's price-alerts window when
+    // their submission flips to verified.
+    private readonly alertsActivation: AlertsActivationService,
     // Story 6.1 — enqueue a price-drop check per verified fuel after the
     // verified price write succeeds. AlertModule exports the worker so
     // PhotoPipelineWorker can publish without touching BullMQ directly.
@@ -943,10 +943,10 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       return;
     }
 
-    // Story 6.10 — extend the user's premium-alerts window. Best-effort:
-    // logged + swallowed inside the service so a write failure here doesn't
-    // block the rest of the verify flow.
-    await this.premiumAlerts.extendForUser(updated.user_id);
+    // Story 6.10 / 6.13 — extend the user's price-alerts window.
+    // Best-effort: logged + swallowed inside the service so a write
+    // failure here doesn't block the rest of the verify flow.
+    await this.alertsActivation.extendForUser(updated.user_id);
 
     // Research retention: verified submissions are the high-signal samples for
     // the benchmark corpus — we want rawPrices (what OCR saw) AND validatedPrices

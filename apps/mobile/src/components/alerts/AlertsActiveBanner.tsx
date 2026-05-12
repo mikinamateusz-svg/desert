@@ -5,34 +5,42 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { tokens } from '../../theme';
 import { useAuth } from '../../store/auth.store';
-import { usePremiumAlertsStatus } from '../../hooks/usePremiumAlertsStatus';
+import { useAlertsStatus } from '../../hooks/useAlertsStatus';
 import { flags } from '../../config/flags';
 
 // P5 (6.10 review) — namespace by user id so account-switching on the
 // same device doesn't suppress the banner for the new user (or replay
 // it inappropriately). Falls back to a generic key when unauthenticated
 // (the banner won't render anyway in that case).
+//
+// AsyncStorage key kept on the legacy `desert:premium-alerts:` namespace
+// across the 6.13 rename. Changing it would silently re-fire the banner
+// once for every existing user (the new key has no prior value, so the
+// "current > lastSeen" check trivially passes). The legacy namespace is
+// internal — there is no consumer-facing reference to it.
 const lastSeenKeyFor = (userId: string | null) =>
   userId ? `desert:premium-alerts:lastSeenActiveUntil:${userId}` : 'desert:premium-alerts:lastSeenActiveUntil:_anon';
 
 /**
- * Story 6.10 AC9 — activity-screen banner that fires once after a
- * verified submission extends the user's premium-alerts window. Reads
- * the current `premium_alerts_active_until` via the shared hook,
- * compares against the last-seen value in AsyncStorage, and renders the
- * banner only when the current value is strictly newer (i.e., something
- * has extended the window since the user last opened this surface).
+ * Story 6.10 AC9 / 6.13 — activity-screen banner that fires once after
+ * a verified submission extends the user's price-alerts window. Reads
+ * the current `alerts_active_until` via the shared hook, compares
+ * against the last-seen value in AsyncStorage, and renders the banner
+ * only when the current value is strictly newer (i.e., something has
+ * extended the window since the user last opened this surface).
  *
  * Auto-dismisses on next mount (we update AsyncStorage on render), so
  * a user who returns to activity later doesn't see the same banner
  * twice. Manual dismiss button gives an immediate exit.
  *
  * Hidden when `flags.alertsLoop` is off.
+ *
+ * Naming: was `PremiumActiveBanner` until Story 6.13.
  */
-export function PremiumActiveBanner() {
+export function AlertsActiveBanner() {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
-  const { activeUntil } = usePremiumAlertsStatus();
+  const { activeUntil } = useAlertsStatus();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {

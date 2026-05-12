@@ -94,12 +94,15 @@ model User {
   fleet_id               String?
   trust_score            Int                     @default(100)
   shadow_banned          Boolean                 @default(false)
-  // Story 6.10 — premium-alerts contribution loop. Set to NOW + 30 days
-  // every time one of this user's submissions transitions to `verified`,
-  // using MAX so a flurry of verifications doesn't shorten an existing
-  // window. PriceRiseAlertService filters recipients to rows where this
-  // is non-null and in the future.
-  premium_alerts_active_until DateTime?
+  // Story 6.10 / 6.13 — price-alerts contribution loop. Set to NOW + 30
+  // days every time one of this user's submissions transitions to
+  // `verified`, using MAX so a flurry of verifications doesn't shorten
+  // an existing window. PriceRiseAlertService filters recipients to
+  // rows where this is non-null and in the future. (Was
+  // `premium_alerts_active_until` until 6.13 — the "premium" framing
+  // was retired in the 2026-05-10 positioning lock-in; alerts are
+  // core + contribution-gated, never paid.)
+  alerts_active_until    DateTime?
   deleted_at             DateTime?
   deletion_reason        String?
   created_at             DateTime                @default(now())
@@ -295,7 +298,7 @@ model NotificationPreference {
 model DriverAlert {
   id         String    @id @default(uuid())
   user_id    String
-  alert_type String // 'price_rise' | 'premium_expiring_warning' | future
+  alert_type String // 'price_rise' | 'alerts_expiring_warning' | future
   title      String
   body       String
   sent_at    DateTime  @default(now())

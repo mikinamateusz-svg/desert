@@ -1,10 +1,8 @@
 # Story 6.10: Contribution-Gated Price Alerts + Bell + Status
 
-Status: needs-rework
+Status: done
 
-> **⚠️ NEEDS REWORK 2026-05-10:** This story's MECHANIC remains correct (verified photo → 30-day alert window → renew). The NAMING is wrong throughout — "premium alerts" framing has been retired per four-pillar positioning lock-in (see `project_litro_positioning.md`). Alerts are core to the product, gated by contribution but never paid; "premium" implies a paid tier, which is not the model. **Story 6.13 (Premium → Price Alerts Rename)** carries the coordinated rework: DB column rename, service rename, component rename, ~30 i18n strings, this spec rename, line 35 rationale rewrite. Do NOT undo Story 6.10's behaviour — only the names change. PL canonical: *alerty cenowe*; EN: *price alerts*; UK: *цінові сповіщення*.
-
-Status (historical): ready-for-dev
+> **Renamed 2026-05-10 via Story 6.13** — "premium alerts" framing retired per four-pillar positioning lock-in (`project_litro_positioning.md`). Alerts are core to the product, gated by contribution but never paid; "premium" implied a paid tier, which is not the model. The MECHANIC (verified photo → 30-day alert window → renew) is unchanged. PL canonical: *alerty cenowe*; EN: *price alerts*; UK: *цінові сповіщення*. Identifiers in this spec still mention `premium_alerts_active_until` etc. for historical accuracy — the actual code now uses `alerts_active_until`, `AlertsActivationService`, `ALERT_WINDOW_DAYS`. See Story 6.13 spec for the rename receipt.
 
 **Trigger:** 2026-05-08 — soft-launch engagement design. Today's `PriceRiseAlertService` (Story 6.3 lite, commit `afd6391`) sends pushes to *every* opted-in driver regardless of whether they contribute photos. Operator wants to use alerts as a reward loop: drivers who submit a photo "earn" a 30-day premium-alert window. Reinforces submission behaviour without taking anything away from drivers who don't (basic alerts — when we add them later — stay universal).
 
@@ -36,7 +34,7 @@ Push notifications are one of the highest-value attention surfaces in a mobile a
 
 Crucially: this is *additive*, not subtractive. We're not taking alerts away from drivers who already had them. We're framing alerts as a *bonus* contributors enjoy. Non-contributors still get every other app feature. A driver who never enables notifications never sees a difference.
 
-The premium tier's value drives a tighter feedback loop than abstract appeals to civic participation, and it gives the marketing campaign a concrete "what do I get?" answer.
+A concrete reciprocal reward ("photo today → alerts for 30 days") drives a tighter feedback loop than abstract appeals to civic participation, and it gives the marketing campaign a concrete "what do I get?" answer. Alerts remain a *free* product feature — never a paid tier — and 6.13 retired the "premium" label that previously muddied that framing.
 
 ---
 

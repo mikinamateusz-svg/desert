@@ -6,7 +6,7 @@ import { PrismaService } from '../prisma/prisma.service.js';
  * Story 6.11 — driver-facing alerts inbox. Renders past pushes as a
  * persistent, read/unread-tracked list so drivers can recover alerts
  * that scrolled out of their notification tray. Backend is shared by
- * all alert types (`price_rise`, `premium_expiring_warning`, future
+ * all alert types (`price_rise`, `alerts_expiring_warning`, future
  * 6.1 / 6.2 / 6.5 alerts) — `alert_type` is a free-form string column
  * so new types ship via additive code change with no migration.
  */

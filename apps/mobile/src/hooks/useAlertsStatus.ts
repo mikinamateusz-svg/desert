@@ -1,13 +1,13 @@
 import { useEffect, useState, useCallback } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 import { useAuth } from '../store/auth.store';
-import { apiGetPremiumAlertsStatus } from '../api/alerts';
+import { apiGetAlertsStatus } from '../api/alerts';
 import { flags } from '../config/flags';
 
 /**
- * Story 6.10 — fetches and tracks the user's premium-alerts status so the
- * bell icon on the map header can render its three states (inactive /
- * active / expiring). Refetches:
+ * Story 6.10 / 6.13 — fetches and tracks the user's price-alerts status
+ * so the bell icon on the map header can render its three states
+ * (inactive / active / expiring). Refetches:
  *   - on mount + on accessToken change
  *   - whenever the app returns from background to foreground
  *
@@ -18,8 +18,10 @@ import { flags } from '../config/flags';
  *
  * The hook is a no-op when `flags.alertsLoop` is off — saves the network
  * call entirely on prod APKs that haven't flipped the flag.
+ *
+ * Naming: was `usePremiumAlertsStatus` until Story 6.13.
  */
-export interface PremiumAlertsState {
+export interface AlertsState {
   /** Parsed Date or null. Null = no active window (inactive state). */
   activeUntil: Date | null;
   /** True while the very first fetch is in flight. */
@@ -28,7 +30,7 @@ export interface PremiumAlertsState {
   refetch: () => void;
 }
 
-export function usePremiumAlertsStatus(): PremiumAlertsState {
+export function useAlertsStatus(): AlertsState {
   const { accessToken } = useAuth();
   const [activeUntil, setActiveUntil] = useState<Date | null>(null);
   const [loading, setLoading] = useState(true);
@@ -45,13 +47,13 @@ export function usePremiumAlertsStatus(): PremiumAlertsState {
       return;
     }
     try {
-      const { premiumAlertsActiveUntil } = await apiGetPremiumAlertsStatus(accessToken);
-      if (premiumAlertsActiveUntil) {
-        const parsed = new Date(premiumAlertsActiveUntil);
+      const { alertsActiveUntil } = await apiGetAlertsStatus(accessToken);
+      if (alertsActiveUntil) {
+        const parsed = new Date(alertsActiveUntil);
         // P9 (6.10 review) — NaN guard on malformed ISO. Treat invalid
-        // server data as "no premium" rather than letting NaN flow into
-        // bellState comparisons (NaN <= 0 is false; NaN < window is false;
-        // an invalid Date would silently classify as 'active').
+        // server data as "no active window" rather than letting NaN flow
+        // into bellState comparisons (NaN <= 0 is false; NaN < window
+        // is false; an invalid Date would silently classify as 'active').
         setActiveUntil(Number.isNaN(parsed.getTime()) ? null : parsed);
       } else {
         setActiveUntil(null);

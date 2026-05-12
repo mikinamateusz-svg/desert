@@ -127,7 +127,7 @@ export default {
     pendingShort: 'Processing',
     tapHintStation: 'Opens station details',
     tapHintExplain: 'Opens explanation',
-    alertsExtendedBanner: 'Premium alerts active until {{date}}',
+    alertsExtendedBanner: 'Price alerts active until {{date}}',
     alertsExtendedDismissA11y: 'Dismiss notice',
   },
   map: {
@@ -180,12 +180,12 @@ export default {
     contributePrompt: 'Tap to contribute a verified price.',
     dismiss: 'Got it',
   },
-  // Story 6.10 — premium alerts loop.
+  // Story 6.10 / 6.13 — price alerts loop.
   alerts: {
     bell: {
-      activeA11y: 'Premium alerts active. Tap for details.',
-      expiringA11y: 'Premium alerts expiring soon. Tap to extend.',
-      inactiveA11y: 'Premium alerts inactive. Tap to unlock.',
+      activeA11y: 'Price alerts active. Tap for details.',
+      expiringA11y: 'Price alerts expiring soon. Tap to extend.',
+      inactiveA11y: 'Price alerts inactive. Tap to unlock.',
       unreadCountA11y_one: '{{count}} unread alert',
       unreadCountA11y_other: '{{count}} unread alerts',
     },
@@ -207,11 +207,11 @@ export default {
     },
     statusBanner: {
       loading: 'Loading alert status…',
-      signInTitle: 'Premium alerts',
+      signInTitle: 'Price alerts',
       signInBody: 'Sign in to enable price alerts.',
-      inactiveTitle: 'Unlock premium alerts',
+      inactiveTitle: 'Unlock price alerts',
       inactiveBody: 'Take your first photo of fuel prices at a station to enable market-movement notifications.',
-      activeTitle: 'Premium alerts active',
+      activeTitle: 'Price alerts active',
       activeBody: "Your alerts are active until {{date}}. We'll warn you when prices are about to rise.",
       expiringTitle_one: 'Alerts expire in {{count}} day',
       expiringTitle_other: 'Alerts expire in {{count}} days',
@@ -442,8 +442,8 @@ export default {
     thankYou: 'Thank you!',
     impactMessage: 'Drivers nearby will see this update',
     done: 'Back to map',
-    alertsLoopActivate: 'Once verified, this unlocks premium alerts for 30 days.',
-    alertsLoopExtend: 'Once verified, this extends your premium alerts to {{date}}.',
+    alertsLoopActivate: 'Once verified, this unlocks price alerts for 30 days.',
+    alertsLoopExtend: 'Once verified, this extends your price alerts to {{date}}.',
     alertsVerifiedOnlyDisclaimer: 'Only verified photos extend your alerts.',
   },
   fillup: {
@@ -700,7 +700,7 @@ export default {
       },
       card5: {
         title: "What's in it for you?",
-        body: "Every verified photo activates 30 days of premium alerts — we'll tell you about price drops at nearby stations and warn you before prices rise. Every new photo extends the alert window.",
+        body: "Every verified photo activates 30 days of price alerts — we'll tell you about price drops at nearby stations and warn you before prices rise. Every new photo extends the alert window.",
         badge: '+30 days',
       },
       buttons: {

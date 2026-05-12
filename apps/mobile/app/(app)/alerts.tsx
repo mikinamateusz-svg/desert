@@ -4,12 +4,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { tokens } from '../../src/theme';
 import { useAuth } from '../../src/store/auth.store';
-import { usePremiumAlertsStatus, bellState } from '../../src/hooks/usePremiumAlertsStatus';
+import { useAlertsStatus, bellState } from '../../src/hooks/useAlertsStatus';
 import { AlertsInbox } from '../../src/components/alerts/AlertsInbox';
 import { flags } from '../../src/config/flags';
 
 /**
- * Story 6.10 — premium-alerts status surface.
+ * Story 6.10 / 6.13 — price-alerts status surface.
  * Story 6.11 — adds the inbox below the status banner.
  *
  * The status banner renders one of three states (inactive / active /
@@ -22,7 +22,7 @@ export default function AlertsScreen() {
   const { t, i18n } = useTranslation();
   const insets = useSafeAreaInsets();
   const { accessToken } = useAuth();
-  const { activeUntil, loading } = usePremiumAlertsStatus();
+  const { activeUntil, loading } = useAlertsStatus();
 
   const state = bellState(activeUntil);
 

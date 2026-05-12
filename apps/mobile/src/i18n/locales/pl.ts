@@ -128,8 +128,8 @@ export default {
     // Story 3.17 — accessibility hints for tappable activity rows.
     tapHintStation: 'Otwiera szczegóły stacji',
     tapHintExplain: 'Otwiera wyjaśnienie',
-    // Story 6.10 — one-time banner after a verified submission extends premium-alerts window.
-    alertsExtendedBanner: 'Alerty premium aktywne do {{date}}',
+    // Story 6.10 / 6.13 — one-time banner after a verified submission extends price-alerts window.
+    alertsExtendedBanner: 'Alerty cenowe aktywne do {{date}}',
     alertsExtendedDismissA11y: 'Zamknij powiadomienie',
   },
   map: {
@@ -182,12 +182,12 @@ export default {
     contributePrompt: 'Kliknij, aby zgłosić zweryfikowaną cenę.',
     dismiss: 'Rozumiem',
   },
-  // Story 6.10 — premium alerts loop (bell icon + status banner).
+  // Story 6.10 / 6.13 — price alerts loop (bell icon + status banner).
   alerts: {
     bell: {
-      activeA11y: 'Alerty premium aktywne. Stuknij, aby zobaczyć szczegóły.',
-      expiringA11y: 'Alerty premium wkrótce wygasną. Stuknij, aby przedłużyć.',
-      inactiveA11y: 'Alerty premium nieaktywne. Stuknij, aby je odblokować.',
+      activeA11y: 'Alerty cenowe aktywne. Stuknij, aby zobaczyć szczegóły.',
+      expiringA11y: 'Alerty cenowe wkrótce wygasną. Stuknij, aby przedłużyć.',
+      inactiveA11y: 'Alerty cenowe nieaktywne. Stuknij, aby je odblokować.',
       unreadCountA11y_one: '{{count}} nieprzeczytany alert',
       unreadCountA11y_few: '{{count}} nieprzeczytane alerty',
       unreadCountA11y_many: '{{count}} nieprzeczytanych alertów',
@@ -217,11 +217,11 @@ export default {
     },
     statusBanner: {
       loading: 'Ładuję status alertów…',
-      signInTitle: 'Alerty premium',
+      signInTitle: 'Alerty cenowe',
       signInBody: 'Zaloguj się, aby uruchomić alerty cenowe.',
-      inactiveTitle: 'Włącz alerty premium',
+      inactiveTitle: 'Włącz alerty cenowe',
       inactiveBody: 'Zrób pierwsze zdjęcie cen na stacji, aby uruchomić powiadomienia o ruchach na rynku.',
-      activeTitle: 'Alerty premium aktywne',
+      activeTitle: 'Alerty cenowe aktywne',
       activeBody: 'Twoje alerty są aktywne do {{date}}. Uprzedzimy Cię, gdy ceny mają wzrosnąć.',
       expiringTitle_one: 'Alerty wygasają za {{count}} dzień',
       expiringTitle_few: 'Alerty wygasają za {{count}} dni',
@@ -467,8 +467,8 @@ export default {
     impactMessage: 'Kierowcy w okolicy zobaczą tę aktualizację',
     done: 'Wróć do mapy',
     // Story 6.10 — alerts-loop reassurance + verified-only disclaimer.
-    alertsLoopActivate: 'Po weryfikacji uruchomimy Twoje alerty premium na 30 dni.',
-    alertsLoopExtend: 'Po weryfikacji przedłużymy Twoje alerty premium do {{date}}.',
+    alertsLoopActivate: 'Po weryfikacji uruchomimy Twoje alerty cenowe na 30 dni.',
+    alertsLoopExtend: 'Po weryfikacji przedłużymy Twoje alerty cenowe do {{date}}.',
     alertsVerifiedOnlyDisclaimer: 'Tylko zweryfikowane zdjęcia przedłużają alerty.',
   },
   fillup: {
@@ -734,7 +734,7 @@ export default {
       },
       card5: {
         title: 'Co Ci to daje?',
-        body: 'Każde zweryfikowane zdjęcie aktywuje Ci alerty premium na 30 dni — damy Ci znać o spadkach na pobliskich stacjach i ostrzeżemy przed nadchodzącymi wzrostami cen. Każde kolejne zdjęcie przedłuża okno alertów.',
+        body: 'Każde zweryfikowane zdjęcie aktywuje Ci alerty cenowe na 30 dni — damy Ci znać o spadkach na pobliskich stacjach i ostrzeżemy przed nadchodzącymi wzrostami cen. Każde kolejne zdjęcie przedłuża okno alertów.',
         badge: '+30 dni',
       },
       buttons: {

@@ -58,3 +58,42 @@ Spec said "09:00 UTC". Implementation uses `Europe/Warsaw` (line in `premium-exp
 ## Triage record
 
 This list captures the `defer` bucket from the 6-10 bmad-code-review. The `patch` bucket (P1–P9: confirm-modal activate-vs-extend conditional copy + NEW_DATE, AdminAuditLog writes for warning pushes, dedup key prefix rename to spec, flags.alertsLoop default-off semantics, LAST_SEEN_KEY per-user namespacing, exclude soft-deleted users from recipient queries, rate-limit `/alerts-status`, partial index on `premium_alerts_active_until`, NaN guards in bellState) was applied in the same commit. The `bad_spec` bucket flagged the worker timezone (UTC vs Warsaw) and AC8 conditional copy wording — both fixed by patching the implementation, not amending the spec. The `reject` bucket (migration timestamp post-dating, build-time `AUTO_DISMISS_MS` constant) was discarded as noise.
+
+---
+
+## Re-surfaced during 6.13 code review (2026-05-12)
+
+The 6.13 rename review re-flagged a set of pre-existing 6.10 design points that 6.13 did not introduce or modify but that the new reviewers caught independently. Logging here so they don't get lost a second time. None are blockers; all are inherited design choices.
+
+### `extendForUser` swallows DB errors as warn-only
+The service writes via raw `$executeRaw` and logs a `warn` on failure without retry, dead-letter, or metric. Pre-existing 6.10 "best-effort" design (next verified submission catches up). Worth at least a counter increment + structured error log if alerts-loop traction grows.
+
+### Raw SQL casts `${newUntil}::timestamp` instead of `::timestamptz`
+The Prisma column is `DateTime` (which Prisma maps to `timestamp(3)` without time zone, per the original `add_user_premium_alerts_active_until` migration). The cast is technically consistent with the column type — but it relies on session `TimeZone` being UTC for the JS-Date round trip to be lossless. Worth a fixture test that asserts the stored value matches NOW + 30d ± 1s regardless of session TZ.
+
+### `extendForUser` doesn't check row-count
+A typo in `userId`, a deleted user (the service doesn't filter `deleted_at: null` — only the warning service does), or a missing row all silently succeed with zero updates. Counter + log on `affectedRows === 0` would surface the failure shape.
+
+### `PUSH_TITLE` / `PUSH_BODY` hardcoded in Polish
+The service hardcodes Polish copy for the expiry-warning push. EN/UK users with `sharp_rise: true` receive Polish push. Pre-existing 6.10 — the warning is the only push surface that doesn't go through i18n. Resolve via `user.preferred_language` lookup + server-side i18n table when the user surface grows beyond PL.
+
+### DriverAlert insert before push; dedup write after push
+Current ordering is: write DriverAlert row → send Expo push chunk → set dedup key. A push failure mid-chunk leaves users with an inbox row but no push, and the worker re-processes them on the next tick (no dedup yet) — producing a *second* DriverAlert row from the same event. Spec'd at 6.10; worth a "lease then act" rewrite eventually.
+
+### Worker's blocking ioredis has no `.on('error')` handler
+Unhandled `error` events on ioredis crash the Node process. Combined with `maxRetriesPerRequest: null` (correct for BullMQ blocking commands) the worker will retry forever silently if Redis is partitioned, then die hard on the next emitted error. Pre-existing across all hardening-2 workers — fold into the redis-pipelining observability story (memory `project_redis_pipelining_observability.md`).
+
+### `attempts: 2` with flat 30-min backoff for daily cron
+A transient Redis blip → one retry 30 min later → if both fail, the day's nudges are lost with no escalation. Pre-existing 6.10. Worth bumping to `attempts: 4` with exponential backoff once alerts-loop is past launch-week.
+
+### `bellState` not periodically re-evaluated while foregrounded
+The hook refetches on app foreground; a long-lived session crossing the expiry boundary mid-foreground shows stale `expiring` for up to one foreground cycle. Same finding as the original 6.10 deferred list. Cheap fix: 1-minute `setInterval` in the hook.
+
+### `AdminAuditLog.admin_user_id` stores push-recipient userId
+Schema abuse — the column semantically means "admin who took an action", not "user the action targeted". Pre-existing 6.10 workaround acknowledged in code comments. Any analytics or RBAC query that groups by admin will incorrectly count push recipients as admin actors. Proper fix is a new `SystemAuditLog` table or a nullable `actor_admin_id` + `target_user_id` split.
+
+### `useAlertsStatus` collapses 401/403 to "no active window"
+A stale token causes the bell to silently flip to inactive even if the user has an active window. Pre-existing 6.10 hook design. Surface differently from the empty-state — at least a one-time refresh-token attempt before falling back.
+
+### Multi-pod race on BullMQ repeatable-job add
+Two API replicas booting in parallel both call `queue.add(..., { jobId: 'alerts-expiry-warning-daily', repeat })`. BullMQ dedupes by jobId so the second add is a no-op, but the race window is real. Currently safe per `project_cron_worker_multipod.md` — single-replica MVP — but must be gated by `WORKER_ENABLED` env before scaling.

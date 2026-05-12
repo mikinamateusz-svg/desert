@@ -484,7 +484,7 @@ export default function MapScreen() {
         </View>
       )}
 
-      {/* Story 6.10 — premium-alerts bell icon. Hidden when flags.alertsLoop is off. */}
+      {/* Story 6.10 / 6.13 — price-alerts bell icon. Hidden when flags.alertsLoop is off. */}
       <BellAlertIcon topInset={insets.top} />
 
       {/* Fuel type selector — below top bar */}

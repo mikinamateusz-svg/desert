@@ -6,25 +6,28 @@ import { REDIS_CLIENT } from '../redis/redis.module.js';
 import { EXPO_PUSH_CLIENT, type IExpoPushClient } from './expo-push.token.js';
 
 /**
- * Story 6.10 — pre-expiry warning push for the contribution-gated alerts
- * loop. Runs daily; finds users whose `premium_alerts_active_until` is
+ * Story 6.10 / 6.13 — pre-expiry warning push for the contribution-gated
+ * alerts loop. Runs daily; finds users whose `alerts_active_until` is
  * between NOW + 2d and NOW + 4d (the "≤ 3 days remaining" window) and
  * pushes a renewal nudge to take another photo. Per-user dedup at 14d
- * prevents repeat warnings for the same expiry cycle when a user contributes
- * irregularly. Best-effort throughout — every failure is logged but never
- * propagates.
+ * prevents repeat warnings for the same expiry cycle when a user
+ * contributes irregularly. Best-effort throughout — every failure is
+ * logged but never propagates.
+ *
+ * Naming: was `PremiumExpiryWarningService` until Story 6.13 retired the
+ * "premium" framing.
  */
 const WARNING_WINDOW_MIN_DAYS = 2;
 const WARNING_WINDOW_MAX_DAYS = 4;
 const DEDUP_TTL_SECONDS = 14 * 86_400;
 
-const PUSH_TITLE = 'Twoje alerty premium wygasają wkrótce';
+const PUSH_TITLE = 'Twoje alerty cenowe wygasają wkrótce';
 const PUSH_BODY = 'Zrób zdjęcie cen paliw, aby przedłużyć alerty o kolejne 30 dni.';
 const PUSH_DEEP_LINK = '/(app)/alerts';
 
 @Injectable()
-export class PremiumExpiryWarningService {
-  private readonly logger = new Logger(PremiumExpiryWarningService.name);
+export class AlertsExpiryWarningService {
+  private readonly logger = new Logger(AlertsExpiryWarningService.name);
 
   constructor(
     private readonly prisma: PrismaService,
@@ -33,7 +36,7 @@ export class PremiumExpiryWarningService {
   ) {}
 
   /**
-   * Find users whose premium-alerts window is between 2 and 4 days away
+   * Find users whose price-alerts window is between 2 and 4 days away
    * from expiry and push a renewal nudge to each. Per-user dedup at 14d
    * via Redis. Skip silently when a user has no opted-in `sharp_rise`
    * preference or no Expo token (alerts only flow to push-enabled users).
@@ -48,7 +51,7 @@ export class PremiumExpiryWarningService {
         sharp_rise: true,
         expo_push_token: { not: null },
         user: {
-          premium_alerts_active_until: { gte: windowStart, lte: windowEnd },
+          alerts_active_until: { gte: windowStart, lte: windowEnd },
           // P6 (6.10 review) — exclude soft-deleted users.
           deleted_at: null,
         },
@@ -101,7 +104,7 @@ export class PremiumExpiryWarningService {
         await this.prisma.driverAlert.create({
           data: {
             user_id: userId,
-            alert_type: 'premium_expiring_warning',
+            alert_type: 'alerts_expiring_warning',
             title: PUSH_TITLE,
             body: PUSH_BODY,
             payload: {
@@ -124,7 +127,7 @@ export class PremiumExpiryWarningService {
       return;
     }
 
-    this.logger.log(`Sending premium-expiry warnings to ${persisted.length} user(s)`);
+    this.logger.log(`Sending alerts-expiry warnings to ${persisted.length} user(s)`);
 
     const messages: ExpoPushMessage[] = persisted.map(({ token }) => ({
       to: token,
@@ -158,7 +161,7 @@ export class PremiumExpiryWarningService {
         await this.prisma.adminAuditLog.create({
           data: {
             admin_user_id: userId,
-            action: 'PREMIUM_EXPIRING_WARNING_SENT',
+            action: 'ALERTS_EXPIRING_WARNING_SENT',
             submission_id: null,
             notes: JSON.stringify({
               warned_at: new Date().toISOString(),
@@ -176,8 +179,8 @@ export class PremiumExpiryWarningService {
   }
 
   private dedupKey(userId: string): string {
-    // Spec AC4 — `premium_expiring_warning:{user_id}` namespace.
-    return `premium_expiring_warning:${userId}`;
+    // Story 6.13 AC2 — renamed from `premium_expiring_warning:` namespace.
+    return `alerts_expiring_warning:${userId}`;
   }
 
   private async sendInChunks(messages: ExpoPushMessage[]): Promise<void> {

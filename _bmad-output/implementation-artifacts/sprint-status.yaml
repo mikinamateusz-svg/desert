@@ -1120,32 +1120,33 @@ epics:
         ready_date: 2026-04-07
 
       - id: 6.10
-        title: "Contribution-Gated Price Alerts + Bell + Status (was: Premium Alerts)"
+        title: "Contribution-Gated Price Alerts + Bell + Status"
         file: 6-10-contribution-gated-alerts.md
-        status: needs-rework
+        status: done
         ready_date: 2026-05-08
-        note: "Mechanic correct (verified photo → 30-day alert window → renew). Naming wrong throughout — 'premium alerts' framing retired 2026-05-10 per four-pillar positioning lock-in. Rework carried in Story 6.13."
+        note: "Original ship 2026-05-09; 'premium alerts' naming retired 2026-05-10 via Story 6.13 rename. Mechanic unchanged."
 
       - id: 6.11
         title: "Alerts Inbox + Read/Unread State"
         file: 6-11-alerts-inbox.md
-        status: needs-rework
+        status: done
         ready_date: 2026-05-08
-        note: "Inherits premium-naming rework from Story 6.10 dependency. Mechanic and AC are correct; only naming changes. Rework carried in Story 6.13."
+        note: "Original ship 2026-05-09; 'premium alerts' naming retired 2026-05-10 via Story 6.13 rename. Mechanic + AC unchanged."
 
       - id: 6.12
         title: "Phase 1 Alert Cut — Promote Price-Drop UX"
         file: 6-12-phase1-alert-cut.md
-        status: needs-rework
+        status: done
         ready_date: 2026-05-09
-        note: "Same naming issue as 6.10/6.11 — premium framing throughout. Mechanic and decisions correct; rework carried in Story 6.13."
+        note: "Original ship 2026-05-09; 'premium alerts' naming retired 2026-05-10 via Story 6.13 rename. Mechanic + decisions unchanged."
 
       - id: 6.13
         title: "Premium → Price Alerts Rename (DB + Code + i18n)"
         file: 6-13-premium-to-price-alerts-rename.md
-        status: ready-for-dev
+        status: review
         ready_date: 2026-05-10
-        note: "NEW 2026-05-10. Coordinated rename across DB column (User.premium_alerts_active_until → alerts_active_until), backend services (PremiumAlertsService → AlertsActivationService etc.), API response field, mobile components, ~30 i18n strings (PL: 'alerty cenowe'; EN: 'price alerts'; UK: 'цінові сповіщення'). Restores Story 6.10 / 6.11 to done/review status when shipped. DO NOT touch ON_PREMIUM fuel-type identifier (legitimate diesel grade, unrelated)."
+        review_date: 2026-05-12
+        note: "Coordinated rename across DB column (User.premium_alerts_active_until → alerts_active_until), backend services (PremiumAlertsService → AlertsActivationService etc.), API response field, mobile components, ~30 i18n strings (PL: 'alerty cenowe'; EN: 'price alerts'; UK: 'цінові сповіщення'). 6.10/6.11/6.12 restored to done. ON_PREMIUM fuel-type identifier left untouched (legitimate diesel grade). Patches applied 2026-05-12 from code review: migration also renames `User_premium_alerts_active_until_idx` and backfills DriverAlert.alert_type + AdminAuditLog.action literals; worker bootstrap obliterates legacy `premium-expiry-warning` queue + `premium_expiring_warning:*` dedup keys."
 
   - epic: 7
     stories:

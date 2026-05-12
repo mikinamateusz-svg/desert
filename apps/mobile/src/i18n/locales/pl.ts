@@ -707,41 +707,43 @@ export default {
   },
   onboarding: {
     welcome: {
+      // Story 1.14 (amended 2026-05-10) — four-pillar mapping. PL canonical.
+      // Card 1: Pillar 1 — verified data quality.
       card1: {
-        title: 'Witaj w litro',
-        body: 'Mapa cen paliw tworzona przez kierowców — dla kierowców. Pokażemy Ci, jak to działa.',
-        hint: 'Zajmie to chwilę.',
+        title: 'Tankuj taniej. Prawdziwe ceny.',
+        body: 'Sprawdź, gdzie naprawdę najtaniej. Bez fałszywek, bez zgadywania.',
       },
+      // Card 2: Pillar 4 — predictive alerts (no premium framing).
       card2: {
-        title: 'Skąd biorą się ceny?',
-        body: 'Każda cena pochodzi od kierowcy, który zrobił zdjęcie tablicy ze stacji. Sprawdzamy każde zgłoszenie automatycznie.',
+        title: 'Wiemy, kiedy ceny pójdą w górę.',
+        body: 'Powiadomimy Cię, zanim podrożeje. Zatankuj dziś, oszczędź jutro.',
       },
+      // Card 3: Pillar 3 — personal spend log.
       card3: {
-        title: 'Kolory pinezek',
-        body: 'Zielone = tańsze niż średnia. Czerwone = droższe. Znak „~” przy cenie oznacza, że jest ona szacunkowa — dopóki nikt nie zgłosi tej stacji.',
+        title: 'Zobacz, ile naprawdę wydajesz na paliwo.',
+        body: 'Każde tankowanie zapisane automatycznie. Spalanie, oszczędności, koszty — wszystko w jednym miejscu.',
+      },
+      // Card 4: Pillar 2 — easy + map-colour orientation.
+      card4: {
+        title: 'Otwórz. Sprawdź. Oszczędzaj.',
+        body: 'Zielone = taniej niż średnia. Czerwone = drożej. Znak „~” = cena szacunkowa, dopóki ktoś jej nie zgłosi.',
         labelCheap: 'Tanio',
         labelMid: 'Średnio',
         labelExpensive: 'Drogo',
         labelEstimate: 'Szacunkowa',
       },
-      card4: {
-        title: 'Tylko zdjęcie — resztą zajmiemy się my',
-        bodyTy: 'Ty: zrób zdjęcie cen na stacji.',
-        bodyMy: 'My: odczytamy je, sprawdzimy i dodamy do mapy.',
-        labelTy: 'Ty',
-        labelMy: 'My',
-        closing: 'Tyle wystarczy. Twój czas to tylko ten jeden snap.',
-      },
+      // Card 5: Community contribution + final CTA. No badge, no "+30 dni"
+      // — the alerts unlock surfaces in-app at first verified photo.
       card5: {
-        title: 'Co Ci to daje?',
-        body: 'Każde zweryfikowane zdjęcie aktywuje Ci alerty cenowe na 30 dni — damy Ci znać o spadkach na pobliskich stacjach i ostrzeżemy przed nadchodzącymi wzrostami cen. Każde kolejne zdjęcie przedłuża okno alertów.',
-        badge: '+30 dni',
+        title: 'Pomóż innym kierowcom.',
+        body: 'Mijasz stację? Zrób zdjęcie tablicy z cenami. Reszta dzieje się sama. Twoje zdjęcia trafiają na mapę i pomagają wszystkim — w tym Tobie.',
       },
       buttons: {
         next: 'Dalej',
         back: 'Wstecz',
         start: 'Zaczynamy',
         close: 'Zamknij',
+        skip: 'Pomiń',
       },
       progress: {
         stepN: 'Krok {{current}} z {{total}}',

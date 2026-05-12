@@ -94,3 +94,47 @@ This list captures the `defer` and `bad_spec` buckets from the 1-14 bmad-code-re
 The `bad_spec` bucket (S1: AC7 "Wstecz on card 1" wording) was applied by amending the spec inline — the wording was ambiguous between "rendered" and "functional"; clarified that the button is rendered in disabled state for visual symmetry. The spec's "tap-outside" dismissal path was also softened to acknowledge the `fullScreen` Modal limitation; deferred for a clean fix per the deferred items above.
 
 The `reject` bucket (~20 items: defensive flag-format checks against our own writer, per-user vs per-device AsyncStorage scoping that contradicts spec AC5, "force-quit at card 5 strands user" claim ignoring that Wstecz still works, mode-switching mid-flow that's structurally impossible, type-imports already passing, cosmetic-styling design-call disagreements, and several dupes across layers) was discarded as noise.
+
+---
+
+## Re-surfaced during 1.14 four-pillar rewrite code review (2026-05-12)
+
+The four-pillar amendment (spec amended 2026-05-10, implementation 2026-05-12) re-ran the bmad-code-review on the rewritten cards. The four `patch` findings (Card 1 AC9 colour palette, VoiceOver focus trap on headerRow, BackHandler during in-flight completion, defensive `currentCard < TOTAL_CARDS` gate on handleSkip) were applied in the same commit. The rest:
+
+### Card 3 multi-token palette (receipt visual)
+The new Card 3 receipt uses `tokens.surface.card` + `tokens.brand.ink` + `tokens.neutral.n400` + `tokens.neutral.n200` + `tokens.brand.accent` to render a recognisable receipt with line items, separator, total, and an ascending mini-bar chart. AC9 reads "monochrome with one brand-accent colour" — strict reading flags multi-token line tones as a violation; pragmatic reading accepts that line illustrations of a receipt need ink + line tones to be legible.
+
+**How to apply**: revisit when v2 commissioned illustrations land (per `_design/welcome-flow-brief.md`). The v2 designer brief can specify a tighter palette; v1 prioritises recognisability over strict palette discipline.
+
+### Illustration viewBox dimensions inconsistent across cards
+Cards 1, 2, 5 use 160×160; Card 3 uses 200×140; Card 4 uses 200×120. All centre inside a fixed-height illustrationWrap (180), but horizontal width visibly differs across cards. Creates a minor vertical-rhythm wobble on the static preview.
+
+**How to apply**: normalise viewBoxes when v2 commissioned art lands; the v2 designer can define a single canvas size.
+
+### Card 2 arrowhead is open polyline
+The trend-line apex arrow is drawn with `stroke` only (V-shape), not a closed filled triangle. Looks slightly weaker as a directional cue than a filled arrowhead would.
+
+**How to apply**: swap to a filled `<Path>` with `Z` close + `fill={brand.accent}` when next touched. Aesthetic only.
+
+### Card 1 hero pin + verified-check badge overlap
+The badge at `(98, 74) r=14` partially covers the upper-right of the hero pin's 9-radius head. Visually intentional ("badge anchored to top-right") but the pin's white inner dot is partly obscured.
+
+**How to apply**: micro-adjust pin/badge positions when v2 commissioned art lands, or after on-device visual QA reports.
+
+### `CARDS[currentCard - 1]!` non-null assertion
+`clampCard()` guarantees in-range, so the non-null is safe today. Future "jump to card N" features that bypass clamp would crash silently.
+
+**How to apply**: when next touched, swap `CARDS[currentCard - 1]!` → `CARDS[currentCard - 1] ?? CARDS[0]`. Defensive only.
+
+### TouchableOpacity `disabled` doesn't visually dim
+Both the primary CTA and Pomiń set `disabled={completing}` but don't add `opacity: 0.5` or branch text colour. The buttons appear fully enabled during the brief completion-write window.
+
+**How to apply**: add an `opacity: 0.6` style when disabled. Tiny polish; not user-visible if completion writes finish in <100ms (typical AsyncStorage latency).
+
+### sprint-status `ready_date: 2026-05-09` is meta-cosmetic
+The new 1.14 entry uses `ready_date: 2026-05-09` (original ship date) — strictly the four-pillar rewrite became "ready for dev" on 2026-05-10 (spec amend date). Schema doesn't have an `amended_date` field; using the original date matches the file's convention.
+
+**How to apply**: add an `amended_date` field to the sprint-status schema if churn is expected; otherwise leave the convention as-is.
+
+### Tests still deferred (RNTL not set up)
+RNTL ramp-up still scoped to a dedicated story. Same defer as the original 1.14 ship.

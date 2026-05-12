@@ -1,77 +1,81 @@
-import Svg, { Circle, Line, Path, Rect, Text as SvgText } from 'react-native-svg';
+import Svg, { Circle, Line, Path, Rect } from 'react-native-svg';
 import { tokens } from '../../../theme';
 
 /**
- * Story 1.14 Card 5 — The reward.
+ * Story 1.14 Card 5 — Community contribution + final CTA.
  *
- * Visual: bell icon (matching the same bell that 6.10's alerts surface
- * uses on the map header) with a small "+30 dni" badge floating next
- * to it. A subtle clock/calendar element conveying the renewal cycle.
+ * Visual concept (per amended spec 2026-05-10): phone in hand framing
+ * a price board, with a soft success indicator (small checkmark). The
+ * "i Tobie również" framing in the body copy carries the reciprocation
+ * point; the alerts-unlock is NOT explained here — it lands as an
+ * in-app delight moment at first verified photo (see Story 6.13).
  *
- * P9 (1.14 review) — badge text is now localised via the `badge` prop
- * (passed from WelcomeCarousel using the `card5.badge` i18n key) instead
- * of the previous hardcoded "+30". Adapts to PL/EN/UK + future locales
- * without an SVG edit.
+ * Deliberately omits any "+30 dni" badge, cloud/pipeline glyphs, or
+ * other mechanism cues — communicates the contribution moment without
+ * teaching the OCR pipeline.
  *
  * v1 placeholder — see Card1Illustration for the swap-pattern note.
  */
 const SIZE = 160;
 
-interface Card5Props {
-  /** Localised badge text (e.g. "+30 dni" / "+30 days"). */
-  badge: string;
-}
-
-export function Card5Illustration({ badge }: Card5Props) {
+export function Card5Illustration() {
   return (
     <Svg width={SIZE} height={SIZE} viewBox="0 0 160 160" fill="none">
-      {/* ── Bell ───────────────────────────────────────────────────────── */}
-      {/* Bell body */}
+      {/* ── Hand outline framing the bottom of the phone ────────────── */}
+      {/* Simple curved hand shape — soft, abstract, no fingers */}
       <Path
-        d="M 50 90 Q 50 56 80 56 Q 110 56 110 90 L 116 100 L 44 100 Z"
-        fill={tokens.brand.accent}
-      />
-      {/* Bell top knob */}
-      <Rect x="76" y="48" width="8" height="10" rx="2" fill={tokens.brand.accent} />
-      {/* Bell clapper */}
-      <Circle cx="80" cy="106" r="6" fill={tokens.brand.accent} />
-
-      {/* ── +30 dni badge floating top-right ───────────────────────────── */}
-      <Circle cx="120" cy="60" r="22" fill={tokens.surface.card} stroke={tokens.brand.accent} strokeWidth="2.5" />
-      <SvgText
-        x="120"
-        y="64"
-        fontSize="11"
-        fontWeight="700"
-        fill={tokens.brand.accent}
-        textAnchor="middle"
-      >
-        {badge}
-      </SvgText>
-
-      {/* ── Subtle clock arc beneath the bell suggesting renewal ───────── */}
-      <Path
-        d="M 56 130 A 28 28 0 0 0 104 130"
-        stroke={tokens.brand.accent}
+        d="M 30 130 Q 40 152 80 152 Q 120 152 130 130 L 30 130 Z"
+        fill={tokens.neutral.n200}
+        stroke={tokens.brand.ink}
         strokeWidth="2"
-        strokeDasharray="3 3"
+      />
+
+      {/* ── Phone outline ───────────────────────────────────────────── */}
+      <Rect
+        x="46"
+        y="20"
+        width="68"
+        height="118"
+        rx="10"
+        ry="10"
+        stroke={tokens.brand.ink}
+        strokeWidth="2.5"
+        fill={tokens.neutral.n0}
+      />
+      {/* Phone speaker dot */}
+      <Rect x="74" y="26" width="12" height="2.5" rx="1.25" fill={tokens.neutral.n400} />
+
+      {/* ── Price board inside the phone screen ─────────────────────── */}
+      <Rect
+        x="56"
+        y="36"
+        width="48"
+        height="78"
+        rx="3"
+        fill={tokens.surface.warmPage}
+        stroke={tokens.neutral.n400}
+        strokeWidth="1"
+      />
+
+      {/* Fuel rows on the price board — 4 horizontal price marks */}
+      <Line x1="62" y1="48" x2="98" y2="48" stroke={tokens.brand.ink} strokeWidth="2.5" />
+      <Line x1="62" y1="62" x2="92" y2="62" stroke={tokens.brand.ink} strokeWidth="2.5" />
+      <Line x1="62" y1="76" x2="98" y2="76" stroke={tokens.brand.ink} strokeWidth="2.5" />
+      <Line x1="62" y1="90" x2="88" y2="90" stroke={tokens.brand.ink} strokeWidth="2.5" />
+
+      {/* Camera button at the bottom of the phone screen */}
+      <Circle cx="80" cy="124" r="6" fill="none" stroke={tokens.brand.ink} strokeWidth="2" />
+      <Circle cx="80" cy="124" r="2.5" fill={tokens.brand.ink} />
+
+      {/* ── Soft success badge at top-right of the phone ────────────── */}
+      <Circle cx="118" cy="28" r="11" fill={tokens.surface.card} stroke={tokens.brand.accent} strokeWidth="2.5" />
+      <Path
+        d="M 113 28 L 117 32 L 123 24"
+        stroke={tokens.brand.accent}
+        strokeWidth="2.5"
         fill="none"
-      />
-      <Line
-        x1="80"
-        y1="124"
-        x2="80"
-        y2="116"
-        stroke={tokens.brand.accent}
-        strokeWidth="2"
-      />
-      <Line
-        x1="80"
-        y1="124"
-        x2="88"
-        y2="124"
-        stroke={tokens.brand.accent}
-        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </Svg>
   );

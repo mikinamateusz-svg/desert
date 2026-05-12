@@ -21,29 +21,39 @@ import { Card4Illustration } from './illustrations/Card4Illustration';
 import { Card5Illustration } from './illustrations/Card5Illustration';
 
 /**
- * Story 1.14 — Welcome carousel.
+ * Story 1.14 — Welcome carousel (four-pillar rewrite, amended 2026-05-10).
  *
  * Two modes share the same component:
  *   - `first-run`: shown once on first app launch, blocks all dismissal
- *     paths except "Zaczynamy" on card 5. Persists `welcomeLastCard` for
- *     resume-on-force-quit and writes `welcomeCompleted` when finished.
+ *     paths except "Zaczynamy" on card 5 and the "Pomiń" skip affordance
+ *     on cards 1-4. Persists `welcomeLastCard` for resume-on-force-quit
+ *     and writes `welcomeCompleted` on finish or skip.
  *   - `reaccess`: opened from Account → "Jak działa litro?". All
  *     dismissal paths work (tap-outside, hardware-back, "Zamknij"); no
- *     completion-flag side-effects.
+ *     completion-flag side-effects. The "Pomiń" affordance is hidden in
+ *     re-access mode — already-completed users have no need for it.
  *
- * Cards are linear-only. No swipe gesture, no auto-advance, no force-
- * read timer — natural reading pace + 5 cards delivers the spec's
- * "20-30s through it" target without disabling buttons.
+ * Cards map 1:1 to positioning pillars + a community CTA:
+ *   1 — Pillar 1: Real prices, no fakes
+ *   2 — Pillar 4: Predictive price alerts
+ *   3 — Pillar 3: Personal spend log
+ *   4 — Pillar 2: Easy + map-colour orientation
+ *   5 — Community contribution + final CTA
+ *
+ * Linear-only navigation. No swipe, no auto-advance, no force-read
+ * timer — natural reading pace + 5 cards delivers the spec's "20-30s
+ * through it" target without disabling buttons. Passive users can opt
+ * out via "Pomiń" on any of the first four cards.
  */
 export const WELCOME_COMPLETED_KEY = 'desert:onboarding:welcomeCompleted';
-// P5 (1.14 review) — internal-only; root layout doesn't need this key.
+// Internal-only resume key — root layout doesn't need to read this.
 const WELCOME_LAST_CARD_KEY = 'desert:onboarding:welcomeLastCard';
 
 const TOTAL_CARDS = 5;
 
-// P4 (1.14 review) — defensive clamp: callers passing initialCard outside
-// 1..TOTAL_CARDS would otherwise produce an undefined CARDS lookup and a
-// runtime crash on titleKey access.
+// Defensive clamp: callers passing initialCard outside 1..TOTAL_CARDS
+// would otherwise produce an undefined CARDS lookup and a runtime crash
+// on titleKey access.
 const clampCard = (n: number): number =>
   Math.min(TOTAL_CARDS, Math.max(1, Number.isFinite(n) ? n : 1));
 
@@ -52,10 +62,11 @@ export type WelcomeCarouselMode = 'first-run' | 'reaccess';
 export interface WelcomeCarouselProps {
   visible: boolean;
   mode: WelcomeCarouselMode;
-  /** First-run: called when the user finishes card 5 (after the flag write).
-   *  Re-access: not used; pass undefined or the close handler. */
+  /** First-run: called when the user finishes card 5 or taps "Pomiń"
+   *  (after the flag write). Re-access: not used; pass undefined or
+   *  the close handler. */
   onComplete?: () => void;
-  /** Re-access: called for any dismissal (tap-outside / back / Zamknij).
+  /** Re-access: called for any dismissal (hardware-back / "Zamknij").
    *  First-run: called only as a no-op on Android-back-on-card-1 attempts. */
   onClose?: () => void;
   /** Initial card. First-run reads from AsyncStorage on mount and ignores
@@ -72,19 +83,19 @@ export function WelcomeCarousel({
 }: WelcomeCarouselProps) {
   const { t } = useTranslation();
   const [currentCard, setCurrentCard] = useState(clampCard(initialCard));
-  // P1 (1.14 review) — gate the persistence effect until the resume read
-  // has resolved. Without this, the persistence effect fires synchronously
-  // on mount with the initial value `1` and overwrites a legitimate stored
+  // Gate the persistence effect until the resume read completes;
+  // without this, the persistence effect fires synchronously on mount
+  // with the initial value `1` and overwrites a legitimate stored
   // resume value (e.g. `4`) before the read completes.
   const restoredRef = useRef(false);
-  // P2 (1.14 review) — block double-taps on Zaczynamy while the completion
-  // write is in flight; a fast second tap would otherwise fire onComplete
+  // Block double-taps on Zaczynamy / Pomiń while the completion write
+  // is in flight; a fast second tap would otherwise fire onComplete
   // twice and queue a duplicate AsyncStorage write.
   const [completing, setCompleting] = useState(false);
 
-  // First-run mount: restore last-seen card from AsyncStorage so a force-quit
-  // mid-carousel resumes where the user left off. Re-access mode is purely
-  // local and starts at the requested initial card.
+  // First-run mount: restore last-seen card from AsyncStorage so a
+  // force-quit mid-carousel resumes where the user left off. Re-access
+  // mode is purely local and starts at the requested initial card.
   useEffect(() => {
     if (!visible) {
       restoredRef.current = false;
@@ -119,9 +130,9 @@ export function WelcomeCarousel({
     };
   }, [mode, visible, initialCard]);
 
-  // Persist the current card every time it changes in first-run mode so
-  // a force-quit / crash mid-carousel resumes accurately. Skipped until
-  // the restore read completes (P1) — otherwise the synchronous mount
+  // Persist the current card every time it changes in first-run mode
+  // so a force-quit / crash mid-carousel resumes accurately. Skipped
+  // until the restore read completes — otherwise the synchronous mount
   // write would clobber the stored value with the initial `1`.
   useEffect(() => {
     if (!visible || mode !== 'first-run') return;
@@ -131,6 +142,18 @@ export function WelcomeCarousel({
       // recoverable degradation, not a crash.
     });
   }, [currentCard, mode, visible]);
+
+  const writeCompletion = useCallback(async () => {
+    try {
+      await AsyncStorage.setItem(WELCOME_COMPLETED_KEY, 'true');
+      // Clear the resume key so a future flag-reset resumes from card
+      // 1 rather than landing back on the last-seen card.
+      await AsyncStorage.removeItem(WELCOME_LAST_CARD_KEY);
+    } catch {
+      // Write failed → user re-sees the carousel next launch. Better
+      // than crashing or blocking the UI on a recoverable issue.
+    }
+  }, []);
 
   const handleNext = useCallback(() => {
     if (completing) return;
@@ -142,22 +165,13 @@ export function WelcomeCarousel({
     if (mode === 'first-run') {
       setCompleting(true);
       void (async () => {
-        try {
-          await AsyncStorage.setItem(WELCOME_COMPLETED_KEY, 'true');
-          // P3 (1.14 review) — clear the resume key so a future flag-reset
-          // (debug, account-reset, future "show me again" feature) resumes
-          // from card 1 rather than landing back on card 5.
-          await AsyncStorage.removeItem(WELCOME_LAST_CARD_KEY);
-        } catch {
-          // Write failed → the user will re-see the carousel next launch.
-          // Better than crashing or blocking the UI on a recoverable issue.
-        }
+        await writeCompletion();
         onComplete?.();
       })();
       return;
     }
     onClose?.();
-  }, [completing, currentCard, mode, onComplete, onClose]);
+  }, [completing, currentCard, mode, onComplete, onClose, writeCompletion]);
 
   const handleBack = useCallback(() => {
     if (currentCard > 1) {
@@ -169,14 +183,39 @@ export function WelcomeCarousel({
     if (mode === 'reaccess') onClose?.();
   }, [mode, onClose]);
 
+  // "Pomiń" — first-run only, cards 1-4. Writes the completion flag
+  // and exits the carousel for passive users who don't want the full
+  // contribution narrative. Reuses the same completion path as
+  // "Zaczynamy" so the user re-sees the carousel only if they reinstall.
+  //
+  // Defensive `currentCard < TOTAL_CARDS` guard — the button is hidden
+  // on card 5 via `showSkipButton`, but the handler can fire via a11y
+  // custom actions or test harnesses that bypass the button's hidden
+  // state. Spec line 196 explicitly: "no Pomiń on the final card".
+  const handleSkip = useCallback(() => {
+    if (completing || mode !== 'first-run' || currentCard === TOTAL_CARDS) return;
+    setCompleting(true);
+    void (async () => {
+      await writeCompletion();
+      onComplete?.();
+    })();
+  }, [completing, currentCard, mode, onComplete, writeCompletion]);
+
   // Android hardware-back. First-run: navigate back; on card 1, swallow
   // (block dismissal). Re-access: same back-navigation, except on card 1
   // the back button closes the modal.
+  //
+  // While a completion write is in flight (`completing`), swallow the
+  // back event entirely — otherwise a fast back-press after Pomiń /
+  // Zaczynamy decrements `currentCard`, the persist effect writes the
+  // new value to LAST_CARD after writeCompletion already removed it,
+  // and a debug/flag-reset flow resumes at the wrong card.
   useEffect(() => {
     if (!visible) return;
     const sub: NativeEventSubscription = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {
+        if (completing) return true;
         if (currentCard > 1) {
           handleBack();
           return true;
@@ -190,12 +229,16 @@ export function WelcomeCarousel({
       },
     );
     return () => sub.remove();
-  }, [currentCard, handleBack, handleClose, mode, visible]);
+  }, [completing, currentCard, handleBack, handleClose, mode, visible]);
 
-  const cards = buildCards(t);
-  const currentCardData = cards[currentCard - 1]!;
+  const currentCardData = CARDS[currentCard - 1]!;
   const isLastCard = currentCard === TOTAL_CARDS;
   const showBackButton = currentCard > 1 || mode === 'reaccess';
+  // Pomiń appears on cards 1-4 in first-run mode only. Final card has
+  // no skip — by then the user either commits or has already opted out
+  // earlier; re-access mode hides it (already-completed users don't
+  // need to re-skip).
+  const showSkipButton = mode === 'first-run' && !isLastCard;
   const primaryLabel = isLastCard
     ? mode === 'first-run'
       ? t('onboarding.welcome.buttons.start')
@@ -220,26 +263,43 @@ export function WelcomeCarousel({
     >
       <StatusBar barStyle="dark-content" backgroundColor={tokens.surface.page} />
       <SafeAreaView style={styles.safeArea}>
-        <View
-          style={styles.progressRow}
-          // P14 (1.14 review) — single accessible region for the dot row
-          // with the "Step N of M" announcement; child dots are decorative
-          // shapes hidden from the a11y tree.
-          accessible
-          accessibilityRole="progressbar"
-          accessibilityLabel={t('onboarding.welcome.progress.stepN', {
-            current: currentCard,
-            total: TOTAL_CARDS,
-          })}
-        >
-          {Array.from({ length: TOTAL_CARDS }).map((_, i) => (
-            <View
-              key={i}
-              style={[styles.progressDot, i === currentCard - 1 && styles.progressDotActive]}
-              importantForAccessibility="no-hide-descendants"
-              accessibilityElementsHidden
-            />
-          ))}
+        {/* Header row: progress-dots wrapper + skip/close buttons are
+            siblings so iOS VoiceOver doesn't collapse the Touchables
+            under the accessible-progressbar parent. (Setting
+            `accessible={true}` on a parent View hides interactive
+            children from VoiceOver entirely on iOS.) */}
+        <View style={styles.headerRow}>
+          <View
+            style={styles.progressDots}
+            accessible
+            accessibilityRole="progressbar"
+            accessibilityLabel={t('onboarding.welcome.progress.stepN', {
+              current: currentCard,
+              total: TOTAL_CARDS,
+            })}
+          >
+            {Array.from({ length: TOTAL_CARDS }).map((_, i) => (
+              <View
+                key={i}
+                style={[styles.progressDot, i === currentCard - 1 && styles.progressDotActive]}
+                importantForAccessibility="no-hide-descendants"
+                accessibilityElementsHidden
+              />
+            ))}
+          </View>
+          {showSkipButton && (
+            <TouchableOpacity
+              style={styles.skipButton}
+              onPress={handleSkip}
+              disabled={completing}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+              accessibilityRole="button"
+              accessibilityLabel={t('onboarding.welcome.buttons.skip')}
+              accessibilityState={{ disabled: completing }}
+            >
+              <Text style={styles.skipButtonText}>{t('onboarding.welcome.buttons.skip')}</Text>
+            </TouchableOpacity>
+          )}
           {mode === 'reaccess' && (
             <TouchableOpacity
               style={styles.closeButton}
@@ -259,25 +319,17 @@ export function WelcomeCarousel({
         >
           <View style={styles.illustrationWrap}>{currentCardData.illustration}</View>
 
-          {/* P13 (1.14 review) — drop the redundant `accessibilityLabel`;
-              the visible <Text> auto-supplies the label and avoids stale-
-              key edge cases on i18n updates. */}
           <Text style={styles.title} accessibilityRole="header">
             {t(currentCardData.titleKey)}
           </Text>
 
-          {currentCard === 4 ? (
-            <Card4Body t={t} />
-          ) : (
-            currentCardData.bodyKey && (
-              <Text style={styles.body}>{t(currentCardData.bodyKey)}</Text>
-            )
-          )}
+          <Text style={styles.body}>{t(currentCardData.bodyKey)}</Text>
 
-          {currentCard === 1 && (
-            <Text style={styles.hint}>{t('onboarding.welcome.card1.hint')}</Text>
-          )}
-          {currentCard === 3 && <Card3Legend t={t} />}
+          {/* Colour-pin legend is the supporting visual for card 4
+              (Pillar 2). It used to live under card 3 before the
+              four-pillar rewrite — moved here so the labels sit next
+              to the pin illustration above. */}
+          {currentCard === 4 && <Card4Legend t={t} />}
         </ScrollView>
 
         <View style={styles.buttonRow}>
@@ -309,8 +361,10 @@ export function WelcomeCarousel({
           <TouchableOpacity
             style={styles.primaryButton}
             onPress={handleNext}
+            disabled={completing}
             accessibilityRole="button"
             accessibilityLabel={primaryLabel}
+            accessibilityState={{ disabled: completing }}
           >
             <Text style={styles.primaryButtonText}>{primaryLabel}</Text>
           </TouchableOpacity>
@@ -322,21 +376,13 @@ export function WelcomeCarousel({
 
 // ── Card metadata ────────────────────────────────────────────────────────
 
-// P11 (1.14 review) — bodyKey is null for card 4 because Card4Body renders
-// a structured "Ty / My / closing" layout instead of a single body string.
-// Future cards with structured layouts should follow the same pattern.
-//
-// P9 (1.14 review) — illustration is built per-render so we can pass the
-// localised Card 5 badge string in. Cards 1-4 ignore translation context.
-function buildCards(t: (key: string) => string) {
-  return [
-    { illustration: <Card1Illustration />, titleKey: 'onboarding.welcome.card1.title', bodyKey: 'onboarding.welcome.card1.body' as const },
-    { illustration: <Card2Illustration />, titleKey: 'onboarding.welcome.card2.title', bodyKey: 'onboarding.welcome.card2.body' as const },
-    { illustration: <Card3Illustration />, titleKey: 'onboarding.welcome.card3.title', bodyKey: 'onboarding.welcome.card3.body' as const },
-    { illustration: <Card4Illustration />, titleKey: 'onboarding.welcome.card4.title', bodyKey: null },
-    { illustration: <Card5Illustration badge={t('onboarding.welcome.card5.badge')} />, titleKey: 'onboarding.welcome.card5.title', bodyKey: 'onboarding.welcome.card5.body' as const },
-  ];
-}
+const CARDS = [
+  { illustration: <Card1Illustration />, titleKey: 'onboarding.welcome.card1.title', bodyKey: 'onboarding.welcome.card1.body' },
+  { illustration: <Card2Illustration />, titleKey: 'onboarding.welcome.card2.title', bodyKey: 'onboarding.welcome.card2.body' },
+  { illustration: <Card3Illustration />, titleKey: 'onboarding.welcome.card3.title', bodyKey: 'onboarding.welcome.card3.body' },
+  { illustration: <Card4Illustration />, titleKey: 'onboarding.welcome.card4.title', bodyKey: 'onboarding.welcome.card4.body' },
+  { illustration: <Card5Illustration />, titleKey: 'onboarding.welcome.card5.title', bodyKey: 'onboarding.welcome.card5.body' },
+] as const;
 
 // ── Card-specific subviews ───────────────────────────────────────────────
 
@@ -344,13 +390,13 @@ interface BodyProps {
   t: (key: string, opts?: Record<string, unknown>) => string;
 }
 
-function Card3Legend({ t }: BodyProps) {
+function Card4Legend({ t }: BodyProps) {
   return (
     <View style={styles.legendRow}>
-      <Legend label={t('onboarding.welcome.card3.labelCheap')} color={tokens.price.cheap} />
-      <Legend label={t('onboarding.welcome.card3.labelMid')} color={tokens.price.mid} />
-      <Legend label={t('onboarding.welcome.card3.labelExpensive')} color={tokens.price.expensive} />
-      <Legend label={t('onboarding.welcome.card3.labelEstimate')} color={tokens.price.noData} dashed />
+      <Legend label={t('onboarding.welcome.card4.labelCheap')} color={tokens.price.cheap} />
+      <Legend label={t('onboarding.welcome.card4.labelMid')} color={tokens.price.mid} />
+      <Legend label={t('onboarding.welcome.card4.labelExpensive')} color={tokens.price.expensive} />
+      <Legend label={t('onboarding.welcome.card4.labelEstimate')} color={tokens.price.noData} dashed />
     </View>
   );
 }
@@ -370,22 +416,6 @@ function Legend({ label, color, dashed }: { label: string; color: string; dashed
   );
 }
 
-function Card4Body({ t }: BodyProps) {
-  return (
-    <View style={styles.tymyContainer}>
-      <View style={styles.tymyBlock}>
-        <Text style={styles.tymyLabel}>{t('onboarding.welcome.card4.labelTy')}</Text>
-        <Text style={styles.tymyText}>{t('onboarding.welcome.card4.bodyTy')}</Text>
-      </View>
-      <View style={[styles.tymyBlock, styles.tymyBlockMy]}>
-        <Text style={styles.tymyLabel}>{t('onboarding.welcome.card4.labelMy')}</Text>
-        <Text style={styles.tymyText}>{t('onboarding.welcome.card4.bodyMy')}</Text>
-      </View>
-      <Text style={styles.tymyClosing}>{t('onboarding.welcome.card4.closing')}</Text>
-    </View>
-  );
-}
-
 // ── Styles ───────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
@@ -393,14 +423,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: tokens.surface.page,
   },
-  progressRow: {
+  headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    gap: 8,
     position: 'relative',
+  },
+  progressDots: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   progressDot: {
     width: 8,
@@ -411,6 +445,18 @@ const styles = StyleSheet.create({
   progressDotActive: {
     width: 24,
     backgroundColor: tokens.brand.accent,
+  },
+  skipButton: {
+    position: 'absolute',
+    right: 16,
+    top: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+  },
+  skipButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: tokens.neutral.n500,
   },
   closeButton: {
     position: 'absolute',
@@ -452,13 +498,6 @@ const styles = StyleSheet.create({
     color: tokens.neutral.n500,
     textAlign: 'center',
   },
-  hint: {
-    fontSize: 13,
-    color: tokens.neutral.n400,
-    textAlign: 'center',
-    marginTop: 16,
-    fontStyle: 'italic',
-  },
   legendRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -480,42 +519,6 @@ const styles = StyleSheet.create({
   legendLabel: {
     fontSize: 12,
     color: tokens.neutral.n500,
-  },
-  tymyContainer: {
-    width: '100%',
-    marginTop: 8,
-    gap: 10,
-  },
-  tymyBlock: {
-    backgroundColor: tokens.surface.card,
-    borderRadius: tokens.radius.lg,
-    padding: 14,
-    borderLeftWidth: 4,
-    borderLeftColor: tokens.brand.accent,
-  },
-  tymyBlockMy: {
-    borderLeftColor: tokens.price.cheap,
-  },
-  tymyLabel: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: tokens.neutral.n400,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginBottom: 4,
-  },
-  tymyText: {
-    fontSize: 14,
-    color: tokens.brand.ink,
-    lineHeight: 20,
-  },
-  tymyClosing: {
-    fontSize: 14,
-    color: tokens.neutral.n500,
-    textAlign: 'center',
-    marginTop: 12,
-    lineHeight: 20,
-    fontStyle: 'italic',
   },
   buttonRow: {
     flexDirection: 'row',

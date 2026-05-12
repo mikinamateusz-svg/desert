@@ -1,6 +1,6 @@
 # Story 1.14: Welcome Carousel — First-Run App Explainer
 
-Status: ready-for-dev
+Status: review
 
 **Trigger:** 2026-05-09 — pre-launch UX design pass. **Amended 2026-05-10** following four-pillar positioning lock-in (see PRD Executive Summary + `_design/welcome-flow-brief.md`). Earlier draft of this story used "alerty premium" framing which has been retired — alerts are core to the product, gated by contribution but never paid. The card structure has been reorganised so each of the four positioning pillars gets a dedicated card, plus a community contribution invitation. The first-photo "delight" unlock for predictive alerts now lands **in-app at first verified photo**, NOT in the welcome carousel — the carousel only teases the alerts pillar as a feature.
 

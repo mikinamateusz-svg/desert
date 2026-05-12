@@ -673,41 +673,43 @@ export default {
   },
   onboarding: {
     welcome: {
+      // Story 1.14 (amended 2026-05-10) — four-pillar mapping.
+      // Card 1: Pillar 1 — verified data quality.
       card1: {
-        title: 'Welcome to litro',
-        body: "A fuel-price map built by drivers, for drivers. We'll show you how it works.",
-        hint: "It'll only take a moment.",
+        title: 'Real fuel prices. No guesswork.',
+        body: "See where it's actually cheaper. No fakes, no rumours.",
       },
+      // Card 2: Pillar 4 — predictive alerts (no premium framing).
       card2: {
-        title: 'Where do the prices come from?',
-        body: 'Every price comes from a driver who snapped the station price board. We verify each submission automatically.',
+        title: 'We know when prices will rise.',
+        body: "We'll warn you before they do. Fill up today, save tomorrow.",
       },
+      // Card 3: Pillar 3 — personal spend log.
       card3: {
-        title: 'Pin colours',
-        body: "Green = cheaper than average. Red = more expensive. A \"~\" before the price means it's an estimate — until someone reports the station.",
+        title: 'See where your fuel money actually goes.',
+        body: 'Every fill-up logged automatically. Consumption, savings, costs — all in one place.',
+      },
+      // Card 4: Pillar 2 — easy + map-colour orientation.
+      card4: {
+        title: 'Open. Check. Save.',
+        body: "Green = cheaper than average. Red = pricier. A \"~\" means it's an estimate, until someone reports the station.",
         labelCheap: 'Cheap',
         labelMid: 'Average',
         labelExpensive: 'Pricey',
         labelEstimate: 'Estimate',
       },
-      card4: {
-        title: 'Just snap — we handle the rest',
-        bodyTy: 'You: take a photo of station prices.',
-        bodyMy: "We: read them, verify, and add to the map.",
-        labelTy: 'You',
-        labelMy: 'Us',
-        closing: "That's it. Your job is just that one snap.",
-      },
+      // Card 5: Community contribution + final CTA. No badge, no "+30
+      // days" — the alerts unlock surfaces in-app at first verified photo.
       card5: {
-        title: "What's in it for you?",
-        body: "Every verified photo activates 30 days of price alerts — we'll tell you about price drops at nearby stations and warn you before prices rise. Every new photo extends the alert window.",
-        badge: '+30 days',
+        title: 'Help other drivers.',
+        body: 'Passing a station? Snap the price board. The rest happens by itself. Your photos land on the map and help everyone — including you.',
       },
       buttons: {
         next: 'Next',
         back: 'Back',
         start: "Let's go",
         close: 'Close',
+        skip: 'Skip',
       },
       progress: {
         stepN: 'Step {{current}} of {{total}}',

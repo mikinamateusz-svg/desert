@@ -187,6 +187,20 @@ export default {
     contributePrompt: 'Tap to contribute a verified price.',
     dismiss: 'Got it',
   },
+  // Story 2.18 — community-grid estimate confidence-aware source copy.
+  // Replaces `freshness.marketEstimate` when the estimate is derived
+  // from K-nearest IDW interpolation (the new default UI path).
+  //
+  // P3 (2.18 review) — i18next requires _one / _other variants on count
+  // keys to pick the right form per locale. EN only distinguishes
+  // singular vs plural; PL and UK have richer plural classes (see
+  // pl.ts / uk.ts for the _one / _few / _many forms).
+  estimate: {
+    sourceWithCount_one:   'Estimated (based on {{count}} nearby station)',
+    sourceWithCount_other: 'Estimated (based on {{count}} nearby stations)',
+    // K = 1: single-neighbour, low-confidence framing.
+    sourceLowConfidence: 'Estimated (rough — 1 nearby station)',
+  },
   // Story 6.10 / 6.13 — price alerts loop.
   alerts: {
     bell: {

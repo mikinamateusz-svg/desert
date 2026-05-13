@@ -169,6 +169,18 @@ export class PriceService {
     await this.priceCache.setAtomic(stationId, data);
   }
 
+  /**
+   * Story 2.18 AC5 — passthrough to `EstimatedPriceService.propagateToNearbyStations`
+   * so the 3 verification call-sites (photo pipeline / admin / fillup)
+   * don't need a separate injection of EstimatedPriceService. Best-effort
+   * by design: callers fire-and-forget (`.catch(...)`) since propagation
+   * is a freshness optimisation and a single failed neighbour recompute
+   * shouldn't break the original verify flow.
+   */
+  async propagateEstimatesToNearbyStations(originStationId: string, fuelType: string): Promise<void> {
+    return this.estimatedPriceService.propagateToNearbyStations(originStationId, fuelType);
+  }
+
   // ── Private helpers ─────────────────────────────────────────────────────────
 
   /**
@@ -224,6 +236,9 @@ export class PriceService {
         // Merge: community prices + estimated prices for missing estimable fuels.
         // Staleness flags from both rows are merged — community flags
         // win on overlap (they reflect actual verified-price freshness).
+        // Story 2.18 — `referenceStationCount` only comes from the
+        // estimated row (community-verified fuels are not estimates and
+        // carry no K count). Pass it through directly.
         const mergedFlags = mergeFlags(estimatedRow.stalenessFlags, communityRow.stalenessFlags);
         result.push({
           stationId: station.id,
@@ -232,6 +247,9 @@ export class PriceService {
           estimateLabel: estimatedRow.estimateLabel,
           sources:      { ...communityRow.sources, ...estimatedRow.sources },
           stalenessFlags: mergedFlags,
+          ...(estimatedRow.referenceStationCount
+            ? { referenceStationCount: estimatedRow.referenceStationCount }
+            : {}),
           updatedAt:    communityRow.updatedAt,
         });
       } else if (communityRow) {

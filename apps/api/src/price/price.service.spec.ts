@@ -16,6 +16,10 @@ const mockPriceCache = {
 
 const mockEstimatedPriceService = {
   computeEstimatesForStations: jest.fn(),
+  // Story 2.18 — passthrough delegate; PriceService.propagateEstimatesToNearbyStations
+  // forwards into this. Default returns void resolved promise; per-test mocks
+  // can override to assert call shape.
+  propagateToNearbyStations: jest.fn().mockResolvedValue(undefined),
 };
 
 const mockPriceHistory = {

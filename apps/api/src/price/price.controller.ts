@@ -31,13 +31,16 @@ export class PriceController {
     return rows.map(r => ({
       stationId: r.stationId,
       prices: r.prices,
-      ...(r.priceRanges     ? { priceRanges:     r.priceRanges     } : {}),
-      ...(r.estimateLabel   ? { estimateLabel:   r.estimateLabel   } : {}),
+      ...(r.priceRanges            ? { priceRanges:            r.priceRanges            } : {}),
+      ...(r.estimateLabel          ? { estimateLabel:          r.estimateLabel          } : {}),
       sources: r.sources,
       // Story 2.17 — propagate the per-fuel staleness flag through to
       // the wire response. Omit entirely when absent to keep the
       // serialised payload small.
-      ...(r.stalenessFlags  ? { stalenessFlags:  r.stalenessFlags  } : {}),
+      ...(r.stalenessFlags         ? { stalenessFlags:         r.stalenessFlags         } : {}),
+      // Story 2.18 — propagate per-fuel K (reference station count) so
+      // the mobile detail-sheet can render confidence-aware copy.
+      ...(r.referenceStationCount  ? { referenceStationCount:  r.referenceStationCount  } : {}),
       updatedAt: new Date(r.updatedAt).toISOString(),
     }));
   }

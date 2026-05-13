@@ -7,6 +7,7 @@ import { SavingsRankingService } from './savings-ranking.service.js';
 import { StationModule } from '../station/station.module.js';
 import { RegionalBenchmarkModule } from '../regional-benchmark/regional-benchmark.module.js';
 import { PhotoModule } from '../photo/photo.module.js';
+import { PriceModule } from '../price/price.module.js';
 import { RedisModule } from '../redis/redis.module.js';
 
 @Module({
@@ -15,9 +16,12 @@ import { RedisModule } from '../redis/redis.module.js';
   //                            getLatestForVoivodeship (area_avg snapshot, both paths)
   // PhotoModule             → OcrSpendService.recordSpend (Haiku spend tracking,
   //                            shares the daily cap with Gemini OCR per spec T2c)
+  // PriceModule             → PriceService.propagateEstimatesToNearbyStations
+  //                            (Story 2.18 — eager community-grid recompute
+  //                            for neighbours after fillup advances baseline)
   // RedisModule             → REDIS_CLIENT injected into VoivodeshipLookupService
   //                            for the 24h GPS→voivodeship cache (Story 5.3)
-  imports: [StationModule, RegionalBenchmarkModule, PhotoModule, RedisModule],
+  imports: [StationModule, RegionalBenchmarkModule, PhotoModule, PriceModule, RedisModule],
   controllers: [FillupController],
   providers: [FillupService, FillupOcrService, VoivodeshipLookupService, SavingsRankingService],
   // FillupService — Story 5.3 (savings vs area average) and Story 5.5 (history)

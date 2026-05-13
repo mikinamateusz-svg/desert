@@ -36,7 +36,13 @@ const mockPrisma = {
 };
 
 const mockSetVerifiedPrice = jest.fn();
-const mockPriceService = { setVerifiedPrice: mockSetVerifiedPrice };
+// Story 2.18 — passthrough to EstimatedPriceService.propagateToNearbyStations;
+// default no-op so existing tests aren't affected.
+const mockPropagateEstimates = jest.fn().mockResolvedValue(undefined);
+const mockPriceService = {
+  setVerifiedPrice: mockSetVerifiedPrice,
+  propagateEstimatesToNearbyStations: mockPropagateEstimates,
+};
 
 const mockDeleteObject = jest.fn();
 const mockGetPresignedUrl = jest.fn();

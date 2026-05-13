@@ -509,6 +509,16 @@ epics:
         patches_applied: "2026-04-15 — P-1/P-2/P-3/P-4 applied to both useNearbyStations and useNearbyPrices"
         note: "Field-test driven: debounce 500→250ms, in-memory coord cache (skip refetch on pan-back), priceColorMap anchor priority swap (fetchCenter ?? location) so visible viewport drives colour comparison when panning >20km from GPS. Bundled /v1/map/nearby endpoint deferred (logged in memory)."
 
+      - id: 2.18
+        title: Community-Grid Estimates (K-Nearest Spatial Interpolation)
+        file: 2-18-community-grid-estimates.md
+        status: review
+        ready_date: 2026-05-09
+        dev_started: 2026-05-13
+        dev_completed: 2026-05-13
+        review_date: 2026-05-13
+        note: "Pre-launch companion to 2.17 — replaces rack-formula UI estimate path with K-nearest IDW spatial interpolation (10km radius, max 5 neighbours, same-brand boost ×2.0). Confidence tiers map to band width (K=5 ±0.05, K=2 ±0.15, K=1 ±0.30). K=0 → no data (rack-formula retained behind ENABLE_RACK_FORMULA_FALLBACK env flag, default off). Eager recompute on every verified submission propagates new prices to ~50 neighbours' caches. Honours AC5/AC8 staleness propagation contract that 2.17 documented. No new schema. Patches applied 2026-05-13 from code review: P1 swap propagation/staleness-clear order in photo-pipeline + admin (was poisoning neighbour estimates with inherited-stale from just-verified origin); P2 NULL/NaN guard on JSON price_litre (one bad row would otherwise NaN the entire IDW midpoint); P3 i18next plural forms _one/_few/_many on PL/UK/EN for grammatical correctness; P4 DISTINCT ON tiebreak by sub.id DESC; P5 case-insensitive brand match for same-brand boost; P6 NULL target.location early-return with warn log."
+
       - id: 2.17
         title: Dynamic Freshness UI (Rack-Aware)
         file: 2-17-dynamic-freshness-ui.md

@@ -71,6 +71,20 @@ export function StationDetailSheet({ station, prices, selectedFuel, onDismiss }:
     ft => prices?.estimateLabel?.[ft as FuelType] === 'estimated',
   ) ? 'estimated' : 'market_estimate';
 
+  // Story 2.18 — confidence-aware source-line copy. When the estimate
+  // path is `market_estimate` (community-grid IDW per 2.18 — the new
+  // default), prefer the count-based copy. If any estimated fuel was
+  // computed from a single neighbour (K=1), demote the whole label to
+  // "orientacyjnie, 1 stacja w pobliżu" — a single low-confidence input
+  // is the most honest signal for the sheet's aggregate header.
+  // `estimated` (national fallback) still uses the original copy.
+  const referenceStationCount = prices?.referenceStationCount ?? {};
+  const estimatedKCounts = estimatedFuels
+    .map(ft => referenceStationCount[ft as FuelType])
+    .filter((k): k is number => typeof k === 'number' && k > 0);
+  const anyLowConfidence = estimatedKCounts.some(k => k === 1);
+  const minK = estimatedKCounts.length > 0 ? Math.min(...estimatedKCounts) : 0;
+
   // Fuel ordering: highlighted first → available secondaries → unavailable (∅) at end
   const highlightedFuel = selectedFuel && prices?.prices[selectedFuel] !== undefined
     ? selectedFuel
@@ -240,9 +254,13 @@ export function StationDetailSheet({ station, prices, selectedFuel, onDismiss }:
                 {hasAnyEstimate && (
                   <TouchableOpacity onPress={() => setShowExplain(true)}>
                     <Text style={styles.estimatedLabel}>
-                      {overallEstimateLabel === 'market_estimate'
-                        ? t('freshness.marketEstimate')
-                        : t('freshness.estimated')}
+                      {overallEstimateLabel === 'estimated'
+                        ? t('freshness.estimated')
+                        : anyLowConfidence
+                          ? t('estimate.sourceLowConfidence')
+                          : minK >= 2
+                            ? t('estimate.sourceWithCount', { count: minK })
+                            : t('freshness.marketEstimate')}
                     </Text>
                   </TouchableOpacity>
                 )}

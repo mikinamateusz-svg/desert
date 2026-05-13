@@ -43,6 +43,15 @@ export type StationPriceDto = {
    * false rather than unknown).
    */
   stalenessFlags?: Partial<Record<FuelType, boolean>>;
+  /**
+   * Story 2.18 — per-fuel count of verified-neighbour stations used in
+   * the K-nearest IDW community-grid estimate. Drives detail-sheet
+   * source-line copy:
+   *   - K=1 → "orientacyjnie, 1 stacja w pobliżu" (low confidence)
+   *   - K≥2 → "Szacowana cena (na podstawie {{count}} stacji w pobliżu)"
+   * Absent / 0 → not an estimate (community-verified or admin-override).
+   */
+  referenceStationCount?: Partial<Record<FuelType, number>>;
   updatedAt: string;
 };
 

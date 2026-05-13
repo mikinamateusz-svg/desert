@@ -13,5 +13,13 @@ export class StationPriceDto {
    * for the service-side shape.
    */
   stalenessFlags?: Record<string, boolean>;
+  /**
+   * Story 2.18 — per-fuel count of verified-neighbour stations used in
+   * the K-nearest IDW estimate. Drives the detail-sheet confidence copy:
+   *  - K=1 → "orientacyjnie, 1 stacja w pobliżu" (low confidence)
+   *  - K≥2 → "na podstawie {{count}} stacji w pobliżu"
+   * Absent on community-verified / admin-override rows.
+   */
+  referenceStationCount?: Record<string, number>;
   updatedAt!: string; // ISO string
 }

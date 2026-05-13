@@ -1,6 +1,6 @@
 # Story 2.18: Community-Grid Estimates (K-Nearest Spatial Interpolation)
 
-Status: ready-for-dev
+Status: review
 
 **Trigger:** 2026-05-09 — pre-launch design pass on the volatile-pricing problem. With 50 stations to be seeded in Łódź on day -1 of launch, those verified reports form a meaningful spatial grid; the remaining ~50-100 unseeded stations should derive their estimates from nearby community reports rather than the existing rack-formula. The current `EstimatedPriceService` ([estimated-price.service.ts](apps/api/src/price/estimated-price.service.ts)) computes estimates as `rack_price + voivodeship_margin + station_type + brand + border + settlement_tier modifiers` — dynamic on the rack input but blind to actual community prices. Operator feedback: rack-formula estimates diverge meaningfully from reported prices, especially at city level where voivodeship-average can't capture hyperlocal patterns.
 

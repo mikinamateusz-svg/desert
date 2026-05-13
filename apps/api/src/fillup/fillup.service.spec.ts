@@ -3,6 +3,7 @@ import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { FillupService } from './fillup.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StationService } from '../station/station.service.js';
+import { PriceService } from '../price/price.service.js';
 import { RegionalBenchmarkService } from '../regional-benchmark/regional-benchmark.service.js';
 import { VoivodeshipLookupService } from './voivodeship-lookup.service.js';
 import { SavingsRankingService } from './savings-ranking.service.js';
@@ -119,6 +120,15 @@ describe('FillupService', () => {
           useValue: {
             getUserPercentile: mockGetUserPercentile,
             getBulkPercentilesForMonth: mockGetBulkPercentilesForMonth,
+          },
+        },
+        // Story 2.18 — propagateEstimatesToNearbyStations fires after every
+        // fillup that advances a community-price baseline. Default no-op so
+        // existing fillup tests don't need per-test setup.
+        {
+          provide: PriceService,
+          useValue: {
+            propagateEstimatesToNearbyStations: jest.fn().mockResolvedValue(undefined),
           },
         },
       ],

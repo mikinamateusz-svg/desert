@@ -17,6 +17,15 @@ export interface StationPriceRow {
    * written before 2.17 (deserialiser defaults to `undefined` then).
    */
   stalenessFlags?: Record<string, boolean>;
+  /**
+   * Story 2.18 — per-fuel count of verified-neighbour stations used in
+   * the K-nearest IDW community-grid estimate. K=5/3-4 → high
+   * confidence (±0.05 band), K=2 → medium (±0.15), K=1 → low (±0.30).
+   * Absent / 0 → this is not an estimate (community-verified or
+   * admin-override). Mobile detail-sheet uses this to vary copy
+   * ("based on N nearby stations" vs "orientacyjnie, 1 stacja").
+   */
+  referenceStationCount?: Record<string, number>;
   updatedAt: Date;
 }
 
@@ -128,6 +137,9 @@ export class PriceCacheService {
       // Story 2.17 — optional, omitted on pre-2.17 cache entries; the
       // worker-driven cache invalidation rebuilds them on next fetch.
       stalenessFlags: parsed['stalenessFlags'] as StationPriceRow['stalenessFlags'],
+      // Story 2.18 — optional; old cache entries simply lack it. The
+      // detail-sheet treats absent ≡ not-an-estimate (community price).
+      referenceStationCount: parsed['referenceStationCount'] as StationPriceRow['referenceStationCount'],
       updatedAt,
     };
   }

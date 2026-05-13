@@ -130,6 +130,9 @@ const mockLogoService = {
 
 const mockPriceService = {
   setVerifiedPrice: jest.fn(),
+  // Story 2.18 — eager community-grid recompute hook; passthrough to
+  // EstimatedPriceService.propagateToNearbyStations. Default no-op.
+  propagateEstimatesToNearbyStations: jest.fn().mockResolvedValue(undefined),
 };
 
 const mockPriceValidationService = {

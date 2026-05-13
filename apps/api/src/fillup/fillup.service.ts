@@ -7,6 +7,7 @@ import {
 import { FillUp, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { StationService } from '../station/station.service.js';
+import { PriceService } from '../price/price.service.js';
 import { RegionalBenchmarkService } from '../regional-benchmark/regional-benchmark.service.js';
 import { PRICE_BANDS } from '../ocr/ocr.service.js';
 import { CreateFillupDto } from './dto/create-fillup.dto.js';
@@ -159,6 +160,9 @@ export class FillupService {
     private readonly benchmarks: RegionalBenchmarkService,
     private readonly voivodeshipLookup: VoivodeshipLookupService,
     private readonly savingsRanking: SavingsRankingService,
+    // Story 2.18 — used to propagate community-grid estimates to nearby
+    // stations after a fillup advances a community price baseline.
+    private readonly priceService: PriceService,
   ) {}
 
   async createFillup(userId: string, dto: CreateFillupDto): Promise<CreateFillupResult> {
@@ -310,6 +314,18 @@ export class FillupService {
           `Staleness clear failed for fill-up ${fillUp.id} → station ${stationId}/${dto.fuelType}: ${e instanceof Error ? e.message : String(e)}`,
         );
       }
+
+      // Story 2.18 AC5 — eager community-grid recompute. Only fires when
+      // the fillup actually advances the community price baseline
+      // (`eligibleForCommunityWrite`); single-fuel propagation per the
+      // fillup shape.
+      this.priceService
+        .propagateEstimatesToNearbyStations(stationId, dto.fuelType)
+        .catch((err: Error) =>
+          this.logger.warn(
+            `Story 2.18 propagation failed for ${stationId}/${dto.fuelType}: ${err.message}`,
+          ),
+        );
     }
 
     // Lock the vehicle identity if not already locked. updateMany with

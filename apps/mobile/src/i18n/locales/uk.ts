@@ -182,6 +182,18 @@ export default {
     contributePrompt: 'Натисніть, щоб вказати перевірену ціну.',
     dismiss: 'Зрозуміло',
   },
+  // Story 2.18 — confidence-aware copy for community-grid estimates.
+  // P3 (2.18 review) — UK grammar requires three forms for станція:
+  //   1, 21, 31...  → 1 станція       (one)
+  //   2-4, 22-24…   → 2 станції       (few)
+  //   5+, 11-14…    → 5 станцій       (many)
+  estimate: {
+    sourceWithCount_one:  'Орієнтовна ціна (на основі {{count}} станції поблизу)',
+    sourceWithCount_few:  'Орієнтовна ціна (на основі {{count}} станцій поблизу)',
+    sourceWithCount_many: 'Орієнтовна ціна (на основі {{count}} станцій поблизу)',
+    sourceWithCount_other: 'Орієнтовна ціна (на основі {{count}} станцій поблизу)',
+    sourceLowConfidence: 'Орієнтовна ціна (приблизно, 1 станція поблизу)',
+  },
   // Story 6.10 / 6.13 — price alerts loop.
   alerts: {
     bell: {

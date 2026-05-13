@@ -622,7 +622,10 @@ export class AdminSubmissionsService {
       );
     }
 
-    // 4. Clear staleness flags for this station's fuel types (best-effort)
+    // 4. Clear staleness flags for this station's fuel types (best-effort).
+    // Story 2.18 P1 — must run BEFORE propagation; otherwise the K-nearest
+    // run inside propagation sees the origin as still rack-stale and stamps
+    // neighbour estimates with inherited-stale (AC8 propagation).
     const fuelTypes = priceData.map((p) => p.fuel_type);
     await this.prisma.stationFuelStaleness
       .deleteMany({ where: { station_id: effectiveStationId, fuel_type: { in: fuelTypes } } })
@@ -631,6 +634,19 @@ export class AdminSubmissionsService {
           `Approve ${submissionId}: staleness clear failed: ${e instanceof Error ? e.message : String(e)}`,
         ),
       );
+
+    // Story 2.18 AC5 — eager community-grid recompute for nearby
+    // unverified stations. Per-fuel, fire-and-forget. Runs AFTER the
+    // staleness clear above per P1.
+    for (const p of priceData) {
+      this.priceService
+        .propagateEstimatesToNearbyStations(effectiveStationId, p.fuel_type)
+        .catch((err: Error) =>
+          this.logger.warn(
+            `Story 2.18 propagation failed for ${effectiveStationId}/${p.fuel_type}: ${err.message}`,
+          ),
+        );
+    }
 
     // 5. Write audit log
     await this.writeAuditLog(adminUserId, AUDIT_ACTION_APPROVE, submissionId, null);
@@ -844,6 +860,34 @@ export class AdminSubmissionsService {
           ),
         );
 
+        // Story 2.18 P1 — clear staleness BEFORE propagation so AC8
+        // doesn't stamp neighbour estimates with inherited-stale from
+        // the just-verified origin.
+        await this.prisma.stationFuelStaleness
+          .deleteMany({
+            where: {
+              station_id: pair.newer.station_id,
+              fuel_type: { in: validNewerPrices.map(p => p.fuel_type) },
+            },
+          })
+          .catch((err: Error) =>
+            this.logger.warn(
+              `approveNewer: staleness clear failed for station ${pair.newer.station_id}: ${err.message}`,
+            ),
+          );
+
+        // Story 2.18 AC5 — eager community-grid recompute (per-fuel,
+        // fire-and-forget).
+        for (const p of validNewerPrices) {
+          this.priceService
+            .propagateEstimatesToNearbyStations(pair.newer.station_id, p.fuel_type)
+            .catch((err: Error) =>
+              this.logger.warn(
+                `Story 2.18 propagation failed for ${pair.newer.station_id}/${p.fuel_type}: ${err.message}`,
+              ),
+            );
+        }
+
         // P-24 — seed a confirmed consensus record so the next driver
         // within 12h skips OCR. Best-effort; admin already approved, so
         // we don't block the response on Redis. Hash uses the same
@@ -978,6 +1022,33 @@ export class AdminSubmissionsService {
             `approveOlder: setVerifiedPrice failed for station ${pair.older.station_id}: ${err.message}`,
           ),
         );
+
+        // Story 2.18 P1 — clear staleness BEFORE propagation; see
+        // approveNewer for rationale.
+        await this.prisma.stationFuelStaleness
+          .deleteMany({
+            where: {
+              station_id: pair.older.station_id,
+              fuel_type: { in: validOlderPrices.map(p => p.fuel_type) },
+            },
+          })
+          .catch((err: Error) =>
+            this.logger.warn(
+              `approveOlder: staleness clear failed for station ${pair.older.station_id}: ${err.message}`,
+            ),
+          );
+
+        // Story 2.18 AC5 — eager community-grid recompute (per-fuel,
+        // fire-and-forget).
+        for (const p of validOlderPrices) {
+          this.priceService
+            .propagateEstimatesToNearbyStations(pair.older.station_id, p.fuel_type)
+            .catch((err: Error) =>
+              this.logger.warn(
+                `Story 2.18 propagation failed for ${pair.older.station_id}/${p.fuel_type}: ${err.message}`,
+              ),
+            );
+        }
 
         const olderHash = SubmissionDedupService.hashPriceData(validOlderPrices);
         await this.submissionDedupService

@@ -185,6 +185,23 @@ export default {
     contributePrompt: 'Kliknij, aby zgłosić zweryfikowaną cenę.',
     dismiss: 'Rozumiem',
   },
+  // Story 2.18 — szacunek z siatki społeczności (confidence-aware copy).
+  // PL canonical per spec AC11.
+  //
+  // P3 (2.18 review) — PL grammar requires three forms for stacja:
+  //   1     → 1 stacja          (nominative singular)
+  //   2-4   → 2 stacje           (few — nominative plural)
+  //   5+    → 5 stacji           (many — genitive plural)
+  // i18next picks _one / _few / _many automatically based on count.
+  // The sourceLowConfidence variant is fixed at K=1 so no plural logic
+  // needed there.
+  estimate: {
+    sourceWithCount_one:  'Szacowana cena (na podstawie {{count}} stacji w pobliżu)',
+    sourceWithCount_few:  'Szacowana cena (na podstawie {{count}} stacje w pobliżu)',
+    sourceWithCount_many: 'Szacowana cena (na podstawie {{count}} stacji w pobliżu)',
+    sourceWithCount_other: 'Szacowana cena (na podstawie {{count}} stacji w pobliżu)',
+    sourceLowConfidence: 'Szacowana cena (orientacyjnie, 1 stacja w pobliżu)',
+  },
   // Story 6.10 / 6.13 — price alerts loop (bell icon + status banner).
   alerts: {
     bell: {

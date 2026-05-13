@@ -974,6 +974,33 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
       ),
     );
 
+    // Story 2.18 P1 — clear staleness flags FIRST, then fire neighbour
+    // propagation. Otherwise the K-nearest run inside propagation reads
+    // the origin's still-set stale flag (via AC8 staleness propagation)
+    // and incorrectly stamps neighbour estimates as inherited-stale.
+    // The staleness clear at line ~1094 below would still run, but the
+    // neighbours' caches would already be poisoned with isFromStaleInput.
+    await this.prisma.stationFuelStaleness
+      .deleteMany({ where: { station_id: stationId, fuel_type: { in: Object.keys(priceRow.prices) } } })
+      .catch((err: Error) =>
+        this.logger.warn(
+          `Pre-propagation staleness clear failed for ${stationId}: ${err.message}`,
+        ),
+      );
+
+    // Story 2.18 AC5 — eager community-grid recompute for nearby stations
+    // that don't yet have a verified price for any fuel we just verified.
+    // Per-fuel granularity (AC7). Fire-and-forget: caller doesn't await.
+    for (const fuelType of Object.keys(priceRow.prices)) {
+      this.priceService
+        .propagateEstimatesToNearbyStations(stationId, fuelType)
+        .catch((err: Error) =>
+          this.logger.warn(
+            `Story 2.18 propagation failed for ${stationId}/${fuelType}: ${err.message}`,
+          ),
+        );
+    }
+
     // Stories 6.1 + 6.2 — enqueue alert checks per verified fuel type.
     // Both are best-effort: failures are logged inside their workers;
     // a missed enqueue means a single missed alert chance, never a
@@ -1076,15 +1103,10 @@ export class PhotoPipelineWorker implements OnModuleInit, OnModuleDestroy {
         );
     }
 
-    // Clear staleness flags for all verified fuel types in a single batch query (best-effort)
-    const validFuelTypes = valid.map(p => p.fuel_type);
-    await this.prisma.stationFuelStaleness
-      .deleteMany({ where: { station_id: stationId, fuel_type: { in: validFuelTypes } } })
-      .catch((err: Error) =>
-        this.logger.warn(
-          `Failed to clear staleness for station ${stationId}: ${err.message}`,
-        ),
-      );
+    // Story 2.18 P1 — staleness clear is now performed earlier in the
+    // verify flow (above, before the propagation hook) so the K-nearest
+    // run during propagation doesn't see the origin as still rack-stale.
+    // The original deleteMany that lived here is now redundant.
 
     // Story 4.3: increment trust score for auto-verified submission (fail-open)
     await this.trustScoreService

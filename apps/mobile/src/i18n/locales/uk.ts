@@ -173,6 +173,8 @@ export default {
     fresh:         'Щойно оновлено',
     recent:        'Нещодавно оновлено',
     mayBeOutdated: 'Ціна може бути застарілою',
+    // Story 2.17 — full-sentence tooltip for StationDetailSheet.
+    maybeOutdatedSimple: 'Ціна може бути неактуальною — перевірте, якщо можете.',
     estimated:     'Орієнтовна',
     marketEstimate: 'Ринкова оцінка',
     marketEstimateExplain: 'Ми ще не маємо актуальної ціни від спільноти. Цей діапазон базується на поточних оптових цінах.',

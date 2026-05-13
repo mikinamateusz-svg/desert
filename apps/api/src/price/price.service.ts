@@ -4,9 +4,26 @@ import { PrismaService } from '../prisma/prisma.service.js';
 import { PriceCacheService, StationPriceRow } from './price-cache.service.js';
 import { EstimatedPriceService, StationClassificationRow } from './estimated-price.service.js';
 import { PriceHistoryService } from './price-history.service.js';
+import { StalenessDetectionService } from '../market-signal/staleness-detection.service.js';
 import { ESTIMABLE_FUEL_TYPES } from './config/price-modifiers.js';
 
 export type { StationPriceRow };
+
+/**
+ * Story 2.17 — merge two optional staleness-flag maps. Returns
+ * undefined when both are absent/empty so we keep the API payload
+ * minimal. On overlap the second argument (community-row flags)
+ * wins, since community flags reflect actual verified-price
+ * freshness vs estimated-row flags which are derived per AC5/AC8.
+ */
+function mergeFlags(
+  a: Record<string, boolean> | undefined,
+  b: Record<string, boolean> | undefined,
+): Record<string, boolean> | undefined {
+  if (!a && !b) return undefined;
+  const merged: Record<string, boolean> = { ...(a ?? {}), ...(b ?? {}) };
+  return Object.keys(merged).length > 0 ? merged : undefined;
+}
 
 @Injectable()
 export class PriceService {
@@ -17,6 +34,10 @@ export class PriceService {
     private readonly priceCache: PriceCacheService,
     private readonly estimatedPriceService: EstimatedPriceService,
     private readonly priceHistory: PriceHistoryService,
+    // Story 2.17 — batched per-request staleness lookup; folded into
+    // every assembled StationPriceRow before the result leaves this
+    // service (and before cache-write so cache hits also carry flags).
+    private readonly stalenessService: StalenessDetectionService,
   ) {}
 
   /**
@@ -49,19 +70,35 @@ export class PriceService {
       // Redis unavailable — fall back to DB for all stations
       this.logger.warn('Redis unavailable during price fetch — falling back to DB', err);
       const communityFallback = await this.findPricesByStationIds(stationIds);
-      return this.appendEstimated(communityFallback, stations);
+      const stalenessMap = await this.stalenessService.getStaleFuelsForStations(stationIds);
+      const withFlags = this.applyStalenessFlags(communityFallback, stalenessMap);
+      return this.appendEstimated(withFlags, stations, stalenessMap);
     }
 
-    // Step 3 — fill misses from DB and populate cache
+    // Step 3 — fill misses from DB.
+    // Story 2.17: for fresh DB rows we fold stalenessFlags BEFORE cache-write
+    // so cache hits also carry the flags. The cache invalidation hook in
+    // StalenessDetectionService rebuilds these entries when rack moves.
     let missPrices: StationPriceRow[] = [];
     if (missIds.length > 0) {
       missPrices = await this.findPricesByStationIds(missIds);
-      for (const row of missPrices) {
-        this.priceCache.set(row.stationId, row).catch(() => {});
-      }
     }
 
-    // Step 4 — combine: cache hits + DB-fetched misses
+    // Step 4 — batched staleness lookup for the whole result set
+    // (cache hits + DB-fetched misses + stations that will get estimates).
+    // Single query rather than N round-trips.
+    const stalenessMap = await this.stalenessService.getStaleFuelsForStations(stationIds);
+
+    // Apply flags to DB-fetched misses then cache them. Cache write
+    // captures the flags so a cache hit can serve them even if Step 6
+    // is skipped for any reason; the re-application below is the
+    // canonical, always-fresh source.
+    const missPricesWithFlags = this.applyStalenessFlags(missPrices, stalenessMap);
+    for (const row of missPricesWithFlags) {
+      this.priceCache.set(row.stationId, row).catch(() => {});
+    }
+
+    // Step 5 — combine: cache hits + DB-fetched misses
     const communityPrices: StationPriceRow[] = [];
     for (const id of stationIds) {
       const cached = cachedMap.get(id);
@@ -69,10 +106,53 @@ export class PriceService {
         communityPrices.push(cached);
       }
     }
-    communityPrices.push(...missPrices);
+    communityPrices.push(...missPricesWithFlags);
 
-    // Step 5 — fill estimated ranges for any estimable fuel gaps
-    return this.appendEstimated(communityPrices, stations);
+    // Step 6 — re-apply staleness flags to the combined array. This
+    // covers cache-hit rows too, so that even when the cache-invalidation
+    // hook on the worker missed (Redis transient failure) or a cached
+    // entry pre-dates 2.17, every response carries the current per-fuel
+    // staleness state. Per-row mutation is intentional — `applyStalenessFlags`
+    // overwrites `row.stalenessFlags` from a single, freshly-queried
+    // source (`stalenessMap`), so correctness no longer depends on the
+    // cache hook being reliable. The hook remains as a freshness
+    // optimisation (next DB-miss rebuild captures the new state into
+    // the cache too) but is no longer load-bearing for correctness.
+    this.applyStalenessFlags(communityPrices, stalenessMap);
+
+    // Step 7 — fill estimated ranges for any estimable fuel gaps.
+    // AC5 propagation contract (stale neighbour inputs → stale estimate)
+    // is honoured by 2.18; for 2.17 the estimated rows pick up flags
+    // for their own station ID if any exist (rack moved against a
+    // station that has no community price yet).
+    return this.appendEstimated(communityPrices, stations, stalenessMap);
+  }
+
+  /**
+   * Story 2.17 — fold the batched staleness lookup into each row's
+   * `stalenessFlags`. Only fuel types the station actually carries a
+   * price for get an entry (true if rack-stale, false otherwise) — we
+   * don't emit flags for fuels the station doesn't price.
+   * Mutates the input row in-place and returns the same array.
+   */
+  private applyStalenessFlags(
+    rows: StationPriceRow[],
+    stalenessMap: Map<string, Set<string>>,
+  ): StationPriceRow[] {
+    for (const row of rows) {
+      const staleFuels = stalenessMap.get(row.stationId);
+      if (!staleFuels || staleFuels.size === 0) {
+        // No flags for this station — leave field undefined to keep the
+        // serialised payload small (mobile treats absent === all-false).
+        continue;
+      }
+      const flags: Record<string, boolean> = {};
+      for (const fuel of Object.keys(row.prices)) {
+        flags[fuel] = staleFuels.has(fuel);
+      }
+      row.stalenessFlags = flags;
+    }
+    return rows;
   }
 
   /**
@@ -99,6 +179,7 @@ export class PriceService {
   private async appendEstimated(
     communityPrices: StationPriceRow[],
     stations: StationClassificationRow[],
+    stalenessMap?: Map<string, Set<string>>,
   ): Promise<StationPriceRow[]> {
     const communityMap = new Map(communityPrices.map(r => [r.stationId, r]));
 
@@ -126,19 +207,31 @@ export class PriceService {
       coveredFuelsPerStation,
     );
 
+    // Story 2.17 — fold stalenessFlags into the estimated rows too.
+    // For 2.17 the rack-formula path is still in use, so the flag
+    // applies directly to the station's own ID. 2.18 will extend
+    // propagation to "inherited from neighbours" per AC5/AC8 contract.
+    if (stalenessMap) {
+      this.applyStalenessFlags(Array.from(estimatedMap.values()), stalenessMap);
+    }
+
     const result: StationPriceRow[] = [];
     for (const station of stations) {
       const communityRow = communityMap.get(station.id);
       const estimatedRow = estimatedMap.get(station.id);
 
       if (communityRow && estimatedRow) {
-        // Merge: community prices + estimated prices for missing estimable fuels
+        // Merge: community prices + estimated prices for missing estimable fuels.
+        // Staleness flags from both rows are merged — community flags
+        // win on overlap (they reflect actual verified-price freshness).
+        const mergedFlags = mergeFlags(estimatedRow.stalenessFlags, communityRow.stalenessFlags);
         result.push({
           stationId: station.id,
           prices:       { ...communityRow.prices, ...estimatedRow.prices },
           priceRanges:  estimatedRow.priceRanges,
           estimateLabel: estimatedRow.estimateLabel,
           sources:      { ...communityRow.sources, ...estimatedRow.sources },
+          stalenessFlags: mergedFlags,
           updatedAt:    communityRow.updatedAt,
         });
       } else if (communityRow) {

@@ -58,7 +58,12 @@ export function StationDetailSheet({ station, prices, selectedFuel, onDismiss }:
     }
   }, []);
 
-  const band = prices ? freshnessBand(prices.updatedAt) : 'unknown';
+  // Story 2.17 — band aggregates: stale iff (any per-fuel rack-stale)
+  // OR (time-based stale per the updatedAt). Tooltip shows "verify if
+  // you can" when any fuel needs checking, without per-fuel timestamps.
+  const stalenessFlags = prices?.stalenessFlags ?? {};
+  const hasAnyStaleFuel = Object.values(stalenessFlags).some((v) => v === true);
+  const band = prices ? freshnessBand(prices.updatedAt, hasAnyStaleFuel) : 'unknown';
 
   const estimatedFuels = Object.keys(prices?.estimateLabel ?? {});
   const hasAnyEstimate = estimatedFuels.length > 0;
@@ -229,8 +234,8 @@ export function StationDetailSheet({ station, prices, selectedFuel, onDismiss }:
                   );
                 })}
 
-                {band === 'stale' && estimatedFuels.length === 0 && availableFuels.length > 0 && (
-                  <Text style={styles.staleWarning}>{t('freshness.mayBeOutdated')}</Text>
+                {band === 'stale' && availableFuels.length > 0 && (
+                  <Text style={styles.staleWarning}>{t('freshness.maybeOutdatedSimple')}</Text>
                 )}
                 {hasAnyEstimate && (
                   <TouchableOpacity onPress={() => setShowExplain(true)}>

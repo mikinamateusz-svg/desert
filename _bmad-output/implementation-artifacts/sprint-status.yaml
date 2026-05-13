@@ -509,6 +509,16 @@ epics:
         patches_applied: "2026-04-15 — P-1/P-2/P-3/P-4 applied to both useNearbyStations and useNearbyPrices"
         note: "Field-test driven: debounce 500→250ms, in-memory coord cache (skip refetch on pan-back), priceColorMap anchor priority swap (fetchCenter ?? location) so visible viewport drives colour comparison when panning >20km from GPS. Bundled /v1/map/nearby endpoint deferred (logged in memory)."
 
+      - id: 2.17
+        title: Dynamic Freshness UI (Rack-Aware)
+        file: 2-17-dynamic-freshness-ui.md
+        status: review
+        ready_date: 2026-05-09
+        dev_started: 2026-05-13
+        dev_completed: 2026-05-13
+        review_date: 2026-05-13
+        note: "Pre-launch companion to 2.18. Replaces purely time-based freshness with time + rack-event signal — surfaces StationFuelStaleness flags through to mobile pin (small grey dot) + detail-sheet tooltip. Recalibrates time thresholds to 3d/7d. Plumbs the existing StationFuelStaleness signal into the price API response and adds cache invalidation on staleness flag creation. No new schema. AC5 documents the staleness-propagation contract for 2.18. Patches applied 2026-05-13 from code review: P1 controller + DTO propagation of stalenessFlags (silent drop bug that would have killed the entire mobile-side work); P2 cache-hit rows re-apply staleness flags (correctness fix — was reading old flags from cache up to 24h after rack moved); P3 DEL chunking at 500 keys/call (avoids ioredis arg limits when rack-detection flags ~7k stations)."
+
   - id: web
     name: Web App — Public Site & Content
     stories:

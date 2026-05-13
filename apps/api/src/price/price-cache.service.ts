@@ -8,10 +8,24 @@ export interface StationPriceRow {
   priceRanges?: Record<string, { low: number; high: number }>;
   estimateLabel?: Record<string, 'market_estimate' | 'estimated'>;
   sources: Record<string, 'community' | 'seeded' | 'admin_override'>; // per-fuel
+  /**
+   * Story 2.17 — per-fuel staleness flag derived from the rack-movement
+   * signal (`StationFuelStaleness` table). `true` means the rack has
+   * moved since the last verified price for this station × fuel; the
+   * mobile UI surfaces this as a grey dot + warning tooltip.
+   * Field is optional for backward compatibility with cached entries
+   * written before 2.17 (deserialiser defaults to `undefined` then).
+   */
+  stalenessFlags?: Record<string, boolean>;
   updatedAt: Date;
 }
 
-const KEY_PREFIX = 'price:station:';
+// Exported so StalenessDetectionService can invalidate cache entries
+// without depending on PriceCacheService (avoids module circular dep —
+// MarketSignalModule already imports RedisModule, and PriceModule
+// imports MarketSignalModule for StalenessDetectionService).
+export const PRICE_CACHE_KEY_PREFIX = 'price:station:';
+const KEY_PREFIX = PRICE_CACHE_KEY_PREFIX;
 const PRICE_TTL_SECONDS = 86400; // 24 hours — safety fallback, primary freshness via invalidation
 
 @Injectable()
@@ -111,6 +125,9 @@ export class PriceCacheService {
       priceRanges: parsed['priceRanges'] as StationPriceRow['priceRanges'],
       estimateLabel: parsed['estimateLabel'] as StationPriceRow['estimateLabel'],
       sources,
+      // Story 2.17 — optional, omitted on pre-2.17 cache entries; the
+      // worker-driven cache invalidation rebuilds them on next fetch.
+      stalenessFlags: parsed['stalenessFlags'] as StationPriceRow['stalenessFlags'],
       updatedAt,
     };
   }

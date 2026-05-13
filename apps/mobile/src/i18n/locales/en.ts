@@ -172,7 +172,14 @@ export default {
   freshness: {
     fresh:         'Just updated',
     recent:        'Updated recently',
+    // Short form, used as an a11y label on the FreshnessIndicator dot
+    // (paired with the timestamp). Pre-2.17.
     mayBeOutdated: 'Price may be outdated',
+    // Story 2.17 — full-sentence tooltip surfaced in StationDetailSheet
+    // whenever the freshness band resolves to stale (either time-based
+    // or rack-event triggered). Distinct from `mayBeOutdated` because
+    // the longer form is meant for visible body copy, not an a11y dot.
+    maybeOutdatedSimple: 'Price may be outdated — verify if you can.',
     estimated:     'Estimated',
     marketEstimate: 'Market estimate',
     marketEstimateExplain: "We don't have a recent community price here yet. This range is based on current wholesale market data.",

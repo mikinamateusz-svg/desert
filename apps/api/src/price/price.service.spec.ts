@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service.js';
 import { PriceCacheService } from './price-cache.service.js';
 import { EstimatedPriceService } from './estimated-price.service.js';
 import { PriceHistoryService } from './price-history.service.js';
+import { StalenessDetectionService } from '../market-signal/staleness-detection.service.js';
 
 const mockPrisma = { $queryRaw: jest.fn() };
 
@@ -19,6 +20,12 @@ const mockEstimatedPriceService = {
 
 const mockPriceHistory = {
   recordPrices: jest.fn().mockResolvedValue(undefined),
+};
+
+// Story 2.17 — default: no stale flags for anything. Per-test mocks can
+// override to assert the per-fuel fold is correct.
+const mockStalenessService = {
+  getStaleFuelsForStations: jest.fn().mockResolvedValue(new Map()),
 };
 
 const now = new Date('2026-01-15T12:00:00.000Z');
@@ -61,6 +68,11 @@ describe('PriceService', () => {
     // Default: no estimated prices (empty map)
     mockEstimatedPriceService.computeEstimatesForStations.mockResolvedValue(new Map());
 
+    // Story 2.17 — reset the staleness mock default to "no flags" so
+    // tests that don't set it explicitly get the existing pre-2.17
+    // behaviour.
+    mockStalenessService.getStaleFuelsForStations.mockResolvedValue(new Map());
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PriceService,
@@ -68,6 +80,7 @@ describe('PriceService', () => {
         { provide: PriceCacheService, useValue: mockPriceCache },
         { provide: EstimatedPriceService, useValue: mockEstimatedPriceService },
         { provide: PriceHistoryService, useValue: mockPriceHistory },
+        { provide: StalenessDetectionService, useValue: mockStalenessService },
       ],
     }).compile();
 
@@ -334,6 +347,101 @@ describe('PriceService', () => {
       const row = makeRow('station-1');
 
       await expect(service.setVerifiedPrice('station-1', row)).rejects.toThrow('EXEC failed');
+    });
+  });
+
+  // ── Story 2.17: stalenessFlags fold (AC1, AC6) ──────────────────────────
+
+  describe('findPricesInArea — stalenessFlags fold (2.17)', () => {
+    it('folds per-fuel staleness flags into DB-fetched (cache-miss) rows', async () => {
+      mockPrisma.$queryRaw.mockResolvedValueOnce([makeStation('station-1')]);
+      mockPriceCache.getMany.mockResolvedValueOnce(new Map([['station-1', null]]));
+      mockPrisma.$queryRaw.mockResolvedValueOnce([makeDbRow('station-1')]);
+      mockPrisma.$queryRaw.mockResolvedValueOnce([]); // admin_override query
+
+      // PB_95 + ON flagged stale; LPG is not
+      mockStalenessService.getStaleFuelsForStations.mockResolvedValueOnce(
+        new Map([['station-1', new Set(['PB_95', 'ON'])]]),
+      );
+
+      const result = await service.findPricesInArea(52.23, 21.01, 25000);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].stalenessFlags).toEqual({
+        PB_95: true,
+        ON: true,
+        LPG: false,
+      });
+    });
+
+    it('writes stalenessFlags into cache (so subsequent hits include them)', async () => {
+      mockPrisma.$queryRaw.mockResolvedValueOnce([makeStation('station-2')]);
+      mockPriceCache.getMany.mockResolvedValueOnce(new Map([['station-2', null]]));
+      mockPrisma.$queryRaw.mockResolvedValueOnce([makeDbRow('station-2')]);
+      mockPrisma.$queryRaw.mockResolvedValueOnce([]);
+
+      mockStalenessService.getStaleFuelsForStations.mockResolvedValueOnce(
+        new Map([['station-2', new Set(['LPG'])]]),
+      );
+
+      await service.findPricesInArea(52.23, 21.01, 25000);
+
+      expect(mockPriceCache.set).toHaveBeenCalledWith(
+        'station-2',
+        expect.objectContaining({
+          stalenessFlags: { PB_95: false, ON: false, LPG: true },
+        }),
+      );
+    });
+
+    it('omits stalenessFlags entirely when no fuel is stale for that station', async () => {
+      mockPrisma.$queryRaw.mockResolvedValueOnce([makeStation('station-3')]);
+      mockPriceCache.getMany.mockResolvedValueOnce(new Map([['station-3', null]]));
+      mockPrisma.$queryRaw.mockResolvedValueOnce([makeDbRow('station-3')]);
+      mockPrisma.$queryRaw.mockResolvedValueOnce([]);
+
+      mockStalenessService.getStaleFuelsForStations.mockResolvedValueOnce(new Map());
+
+      const result = await service.findPricesInArea(52.23, 21.01, 25000);
+
+      // No flags for this station → field is omitted (keeps payload small)
+      expect(result[0].stalenessFlags).toBeUndefined();
+    });
+
+    it('issues a single batched staleness lookup for all stations in the result set', async () => {
+      mockPrisma.$queryRaw.mockResolvedValueOnce([
+        makeStation('station-1'),
+        makeStation('station-2'),
+        makeStation('station-3'),
+      ]);
+      mockPriceCache.getMany.mockResolvedValueOnce(
+        new Map([
+          ['station-1', makeRow('station-1')], // cache hit
+          ['station-2', null], // cache miss
+          ['station-3', null], // cache miss
+        ]),
+      );
+      mockPrisma.$queryRaw.mockResolvedValueOnce([
+        makeDbRow('station-2'),
+        makeDbRow('station-3'),
+      ]);
+      mockPrisma.$queryRaw.mockResolvedValueOnce([]);
+
+      await service.findPricesInArea(52.23, 21.01, 25000);
+
+      // Single call, all 3 station IDs in one batch — N+1 guard
+      expect(mockStalenessService.getStaleFuelsForStations).toHaveBeenCalledTimes(1);
+      expect(mockStalenessService.getStaleFuelsForStations).toHaveBeenCalledWith([
+        'station-1',
+        'station-2',
+        'station-3',
+      ]);
+    });
+
+    it('does not invoke staleness lookup when no stations are in the area', async () => {
+      mockPrisma.$queryRaw.mockResolvedValueOnce([]);
+      await service.findPricesInArea(52.23, 21.01, 25000);
+      expect(mockStalenessService.getStaleFuelsForStations).not.toHaveBeenCalled();
     });
   });
 });

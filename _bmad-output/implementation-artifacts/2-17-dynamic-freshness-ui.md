@@ -1,6 +1,6 @@
 # Story 2.17: Dynamic Freshness UI (Rack-Aware)
 
-Status: ready-for-dev
+Status: review
 
 **Trigger:** 2026-05-09 — pre-launch design pass on the volatile-pricing problem. In a market where Orlen wholesale moves daily, a price verified yesterday may already be wrong by 5–10 groszy. Today's freshness UI uses purely time-based bands (fresh <2d / recent 2-7d / stale >7d, [freshnessBand](apps/mobile/src/utils/freshnessBand.ts)) and a "may be outdated" warning at the stale boundary. That's too lenient and time-only — a price one day old can be stale because rack just moved, and a price a week old can still be representative if rack has been flat. We have the signal (`StationFuelStaleness` table — server flags fuels as stale on rack movement, clears on fresh community submission) but it's not yet plumbed into the price API or surfaced in mobile UI.
 

@@ -439,6 +439,10 @@ export default function MapScreen() {
           const range = priceData?.priceRanges?.[selectedFuelType];
           const reported = priceData?.prices[selectedFuelType];
           const isEstimated = range !== undefined || priceData?.estimateLabel?.[selectedFuelType] !== undefined;
+          // Story 2.17 — flag is per-fuel; for the pin we only care about
+          // the currently selected fuel (which is what the label shows).
+          // The detail sheet handles the multi-fuel view separately.
+          const isStale = priceData?.stalenessFlags?.[selectedFuelType] === true;
           let label: string;
           if (range) {
             label = `~${((range.low + range.high) / 2).toFixed(2)}`;
@@ -457,6 +461,7 @@ export default function MapScreen() {
                 priceColor={priceColor}
                 label={label}
                 isEstimated={isEstimated}
+                isStale={isStale}
                 isSelected={station.id === selectedStation?.id}
                 onPress={() => handlePinPress(station.id)}
               />

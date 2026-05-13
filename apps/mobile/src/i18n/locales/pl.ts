@@ -175,6 +175,9 @@ export default {
     fresh:         'Właśnie zaktualizowano',
     recent:        'Zaktualizowano niedawno',
     mayBeOutdated: 'Cena może być nieaktualna',
+    // Story 2.17 — full-sentence tooltip dla StationDetailSheet, gdy
+    // freshness band == stale. Krócej i bezpośrednio: PL canonical.
+    maybeOutdatedSimple: 'Cena może być nieaktualna — zweryfikuj, jeśli możesz.',
     estimated:     'Szacowana',
     marketEstimate: 'Szacunek rynkowy',
     marketEstimateExplain: 'Nie mamy jeszcze aktualnej ceny zgłoszonej przez społeczność. Ten zakres opiera się na bieżących cenach hurtowych.',

@@ -33,13 +33,38 @@ interface StationPinProps {
   /** Short price string e.g. "6.42", "~6.40", "?" */
   label: string;
   isEstimated: boolean;
+  /**
+   * Story 2.17 — rack-stale marker. When true, a small neutral-grey dot
+   * is drawn at the top-right corner to signal "this price may be
+   * outdated even if the timestamp looks fresh". Aggregation across
+   * multiple fuels happens in the caller — pin shows the dot if ANY
+   * fuel relevant to the displayed price is stale (per AC3).
+   * Distinct from the GPS-override amber dot used by Story 3.20.
+   */
+  isStale?: boolean;
   isSelected?: boolean;
   onPress: () => void;
 }
 
-export function StationPin({ priceColor, label, isEstimated, isSelected = false, onPress }: StationPinProps) {
+// Story 2.17 — small neutral-grey decoration. 8×8 with a thin white
+// outline so it reads against any pin colour (including the no-data
+// grey). Anchored absolutely at top-right of the pin container.
+const STALE_DOT_SIZE = 8;
+const STALE_DOT_COLOR = '#94a3b8'; // slate-400 — neutral, NOT the warning amber
+
+export function StationPin({
+  priceColor,
+  label,
+  isEstimated,
+  isStale = false,
+  isSelected = false,
+  onPress,
+}: StationPinProps) {
   const color = FILL[priceColor];
   const showEstimated = isEstimated && priceColor !== 'nodata';
+  // Don't draw the stale dot on no-data pins — the pin already says
+  // "no signal", layering a stale dot adds noise without information.
+  const showStaleDot = isStale && priceColor !== 'nodata';
   const size = isSelected ? PIN_SIZE_SELECTED : PIN_SIZE;
   const radius = size / 2;
   // Container height leaves room for the rotated tip (≈ size * 1.207)
@@ -89,6 +114,23 @@ export function StationPin({ priceColor, label, isEstimated, isSelected = false,
           {label}
         </Text>
       </View>
+      {showStaleDot && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            width: STALE_DOT_SIZE,
+            height: STALE_DOT_SIZE,
+            borderRadius: STALE_DOT_SIZE / 2,
+            backgroundColor: STALE_DOT_COLOR,
+            borderWidth: 1,
+            borderColor: '#ffffff',
+          }}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+        />
+      )}
     </View>
   );
 }

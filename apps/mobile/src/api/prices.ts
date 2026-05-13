@@ -34,6 +34,15 @@ export type StationPriceDto = {
   priceRanges?: Partial<Record<FuelType, { low: number; high: number }>>;
   estimateLabel?: Partial<Record<FuelType, 'market_estimate' | 'estimated'>>;
   sources: Partial<Record<FuelType, 'community' | 'seeded'>>; // per-fuel
+  /**
+   * Story 2.17 — per-fuel staleness flag derived server-side from the
+   * rack-movement signal (`StationFuelStaleness` table). `true` for a
+   * fuel means the rack has moved against this station × fuel since
+   * the last verified price. Field is optional — pre-2.17 backends and
+   * stations with no stale fuels omit it entirely (treat absent ≡ all
+   * false rather than unknown).
+   */
+  stalenessFlags?: Partial<Record<FuelType, boolean>>;
   updatedAt: string;
 };
 

@@ -5,6 +5,7 @@ import {
   SIGNAL_TO_FUEL_TYPE,
 } from './staleness-detection.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { REDIS_CLIENT } from '../redis/redis.module.js';
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
 
@@ -26,6 +27,12 @@ const mockPrisma = {
   },
 };
 
+// Story 2.17 — Redis client mock for cache invalidation after createMany.
+// Default returns resolved 0-deletions so the .catch chain doesn't fire
+// in tests that don't exercise the failure path.
+const mockRedisDel = jest.fn().mockResolvedValue(0);
+const mockRedis = { del: mockRedisDel };
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const makeSignal = (signal_type: string) => ({
@@ -43,10 +50,12 @@ describe('StalenessDetectionService', () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
+    mockRedisDel.mockResolvedValue(0);
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         StalenessDetectionService,
         { provide: PrismaService, useValue: mockPrisma },
+        { provide: REDIS_CLIENT, useValue: mockRedis },
       ],
     }).compile();
     service = module.get<StalenessDetectionService>(StalenessDetectionService);
@@ -276,6 +285,91 @@ describe('StalenessDetectionService', () => {
         expect(String(call[0]).toLowerCase()).not.toContain('notification');
       }
       logSpy.mockRestore();
+    });
+  });
+
+  // ── Story 2.17: getStaleFuelsForStations (batched lookup) ────────────────
+
+  describe('getStaleFuelsForStations', () => {
+    it('returns an empty map when no station IDs are passed', async () => {
+      const result = await service.getStaleFuelsForStations([]);
+      expect(result.size).toBe(0);
+      expect(mockStaleFindMany).not.toHaveBeenCalled();
+    });
+
+    it('groups stale fuel types by station ID', async () => {
+      mockStaleFindMany.mockResolvedValue([
+        { station_id: 's-1', fuel_type: 'PB_95' },
+        { station_id: 's-1', fuel_type: 'ON' },
+        { station_id: 's-2', fuel_type: 'LPG' },
+      ]);
+
+      const result = await service.getStaleFuelsForStations(['s-1', 's-2', 's-3']);
+
+      expect(result.size).toBe(2);
+      expect(result.get('s-1')).toEqual(new Set(['PB_95', 'ON']));
+      expect(result.get('s-2')).toEqual(new Set(['LPG']));
+      expect(result.has('s-3')).toBe(false); // no records, absent from map (not empty set)
+    });
+
+    it('passes the 7-day TTL cutoff and an IN clause through to Prisma', async () => {
+      mockStaleFindMany.mockResolvedValue([]);
+      await service.getStaleFuelsForStations(['s-1', 's-2']);
+
+      expect(mockStaleFindMany).toHaveBeenCalledWith({
+        where: {
+          station_id: { in: ['s-1', 's-2'] },
+          flagged_at: { gte: expect.any(Date) },
+        },
+        select: { station_id: true, fuel_type: true },
+      });
+    });
+  });
+
+  // ── Story 2.17: cache invalidation after createMany ──────────────────────
+
+  describe('detectStaleness — cache invalidation after flagging', () => {
+    it('issues a batched Redis DEL for the affected stations after createMany', async () => {
+      mockFindMany.mockResolvedValue([makeSignal('orlen_rack_pb95')]);
+      mockQueryRaw.mockResolvedValue(makeStationRows(['station-a', 'station-b']));
+      mockCreateMany.mockResolvedValue({ count: 2 });
+
+      await service.detectStaleness();
+
+      expect(mockRedisDel).toHaveBeenCalledTimes(1);
+      expect(mockRedisDel).toHaveBeenCalledWith(
+        'price:station:station-a',
+        'price:station:station-b',
+      );
+    });
+
+    it('does not DEL when no stations were flagged (queryRaw returned empty)', async () => {
+      mockFindMany.mockResolvedValue([makeSignal('orlen_rack_pb95')]);
+      mockQueryRaw.mockResolvedValue([]); // all stations already had fresh submissions
+
+      await service.detectStaleness();
+
+      expect(mockCreateMany).not.toHaveBeenCalled();
+      expect(mockRedisDel).not.toHaveBeenCalled();
+    });
+
+    it('swallows Redis DEL failures so the detection flow does not break', async () => {
+      const warnSpy = jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+      mockFindMany.mockResolvedValue([makeSignal('orlen_rack_pb95')]);
+      mockQueryRaw.mockResolvedValue(makeStationRows(['station-a']));
+      mockCreateMany.mockResolvedValue({ count: 1 });
+      mockRedisDel.mockRejectedValueOnce(new Error('Redis down'));
+
+      // Should not throw — best-effort cache invalidation
+      await expect(service.detectStaleness()).resolves.toBeUndefined();
+
+      // Give the fire-and-forget .catch handler a tick to run
+      await new Promise((resolve) => setImmediate(resolve));
+
+      // The warn handler should have logged something about cache invalidation
+      const warnMessages = warnSpy.mock.calls.map((c) => String(c[0]));
+      expect(warnMessages.some((m) => m.toLowerCase().includes('cache invalidation'))).toBe(true);
+      warnSpy.mockRestore();
     });
   });
 });

@@ -1,5 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
+import type Redis from 'ioredis';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { REDIS_CLIENT } from '../redis/redis.module.js';
+import { PRICE_CACHE_KEY_PREFIX } from '../price/price-cache.service.js';
 
 /** Maps ORLEN rack signal types to app fuel type strings */
 export const SIGNAL_TO_FUEL_TYPE: Readonly<Record<string, string>> = {
@@ -14,7 +17,14 @@ const STALENESS_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
 export class StalenessDetectionService {
   private readonly logger = new Logger(StalenessDetectionService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    // Story 2.17 — used to invalidate cache entries after we flag new
+    // staleness rows so the next price fetch rebuilds StationPriceRow
+    // with the updated stalenessFlags. Best-effort: cache-invalidation
+    // failure logs a warn but doesn't fail the detection flow.
+    @Inject(REDIS_CLIENT) private readonly redis: Redis,
+  ) {}
 
   /**
    * Reads MarketSignal records with significant_movement: true in the last 24h,
@@ -95,6 +105,31 @@ export class StalenessDetectionService {
     this.logger.log(
       `Flagged ${result.count} (station × fuel_type) combinations as stale for ${fuelType}`,
     );
+
+    // Story 2.17 — invalidate the price cache for every affected
+    // station so the next fetch rebuilds StationPriceRow with the new
+    // stalenessFlags. Fire-and-forget; failures log but don't break
+    // the detection flow (PriceService.findPricesInArea also re-applies
+    // staleness flags on cache-hit rows so this hook is a freshness
+    // optimisation, not a correctness invariant).
+    //
+    // Chunked at 500 keys/call to stay under ioredis arg limits and
+    // Upstash REST per-call thresholds — `flagStaleStationsForFuelType`
+    // can produce one row per Polish station (~7k at MVP scale) when
+    // an entire fuel goes silent.
+    if (rows.length > 0) {
+      const keys = rows.map((r) => `${PRICE_CACHE_KEY_PREFIX}${r.id}`);
+      const CHUNK_SIZE = 500;
+      for (let i = 0; i < keys.length; i += CHUNK_SIZE) {
+        const chunk = keys.slice(i, i + CHUNK_SIZE);
+        this.redis.del(...chunk).catch((err) => {
+          this.logger.warn(
+            `Cache invalidation failed for chunk of ${chunk.length} stations after staleness flag — next fetch will re-apply flags from DB`,
+            err,
+          );
+        });
+      }
+    }
   }
 
   /**
@@ -121,5 +156,33 @@ export class StalenessDetectionService {
       select: { fuel_type: true },
     });
     return records.map((r) => r.fuel_type);
+  }
+
+  /**
+   * Story 2.17 — batched lookup used by the price API to fold per-fuel
+   * staleness flags into each `StationPriceRow`. Single query over a
+   * list of station IDs rather than N round-trips. Returns a map keyed
+   * by stationId with a set of stale fuel types for that station.
+   * Stations with no stale flags are simply absent from the map.
+   */
+  async getStaleFuelsForStations(stationIds: string[]): Promise<Map<string, Set<string>>> {
+    const result = new Map<string, Set<string>>();
+    if (stationIds.length === 0) return result;
+
+    const cutoff = new Date(Date.now() - StalenessDetectionService.STALE_FLAG_TTL_MS);
+    const records = await this.prisma.stationFuelStaleness.findMany({
+      where: { station_id: { in: stationIds }, flagged_at: { gte: cutoff } },
+      select: { station_id: true, fuel_type: true },
+    });
+
+    for (const r of records) {
+      let set = result.get(r.station_id);
+      if (!set) {
+        set = new Set<string>();
+        result.set(r.station_id, set);
+      }
+      set.add(r.fuel_type);
+    }
+    return result;
   }
 }

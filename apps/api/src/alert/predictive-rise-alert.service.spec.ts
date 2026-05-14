@@ -4,6 +4,7 @@ import { PredictiveRiseAlertService } from './predictive-rise-alert.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { REDIS_CLIENT } from '../redis/redis.module.js';
 import { EXPO_PUSH_CLIENT } from './expo-push.token.js';
+import { NotificationSendLogService } from './notification-send-log.service.js';
 import type { PriceRiseSignalJobData } from '../market-signal/types.js';
 
 // ── Mocks ────────────────────────────────────────────────────────────────────
@@ -82,6 +83,9 @@ describe('PredictiveRiseAlertService', () => {
         { provide: PrismaService, useValue: mockPrisma },
         { provide: REDIS_CLIENT, useValue: mockRedis },
         { provide: EXPO_PUSH_CLIENT, useValue: mockExpoPush },
+        // Story 6.8 — service injected for per-send telemetry; no-op
+        // stub keeps the existing test surface unchanged.
+        { provide: NotificationSendLogService, useValue: { recordSend: jest.fn() } },
       ],
     }).compile();
 
@@ -104,7 +108,8 @@ describe('PredictiveRiseAlertService', () => {
       expect(sent[0].title).toBe('Fuel prices may be rising');
       expect(sent[0].body).toMatch(/may rise soon/);
       // AC2 — deep-link to map root, source data not surfaced
-      expect(sent[0].data).toEqual({ route: '/' });
+      // Story 6.8 — alertType added for notification_opened labelling.
+      expect(sent[0].data).toEqual({ route: '/', alertType: 'predictive_rise' });
     });
 
     it('sends for a brent_crude_pln signal with the same copy as ORLEN (AC2)', async () => {

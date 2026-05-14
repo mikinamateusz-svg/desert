@@ -111,3 +111,38 @@ export async function apiGetSummaryReprompt(accessToken: string): Promise<Summar
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 }
+
+// ── Story 6.8 — analytics event sink ─────────────────────────────────────
+
+/** Authenticated-user event types the backend allowlist accepts. */
+export type NotificationEventType =
+  | 'reprompt_shown'
+  | 'reprompt_dismissed'
+  | 'reprompt_granted'
+  | 'notification_opened';
+
+/**
+ * Best-effort fire-and-forget post to record a notification analytics
+ * event. The 6.8 admin panel aggregates these for reprompt conversion +
+ * notification engagement metrics. Callers should NEVER await this and
+ * NEVER block on errors — `.catch(() => {})` is the typical pattern.
+ */
+export async function apiRecordNotificationEvent(
+  accessToken: string,
+  eventType: NotificationEventType,
+  trigger?: string | null,
+  alertType?: string | null,
+): Promise<void> {
+  await fetch(`${API_BASE}/v1/me/notifications/events`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      eventType,
+      trigger: trigger ?? null,
+      alertType: alertType ?? null,
+    }),
+  });
+}

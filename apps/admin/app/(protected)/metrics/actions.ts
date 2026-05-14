@@ -14,6 +14,7 @@ import type {
   FreshnessDashboardDto,
   FreshnessSortBy,
   FreshnessSortOrder,
+  NotificationAnalyticsDto,
 } from './types';
 
 export async function fetchPipelineHealth(): Promise<{ data?: PipelineHealthDto; error?: string }> {
@@ -68,6 +69,19 @@ export async function fetchApiCostMetrics(): Promise<{ data?: ApiCostMetricsDto;
     return { data };
   } catch (e) {
     return { error: e instanceof Error ? e.message : 'Failed to load API cost metrics.' };
+  }
+}
+
+export async function fetchNotificationsMetrics(
+  period: string,
+): Promise<{ data?: NotificationAnalyticsDto; error?: string }> {
+  try {
+    const data = await adminFetch<NotificationAnalyticsDto>(
+      `/v1/admin/metrics/notifications?period=${period}`,
+    );
+    return { data };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Failed to load notifications metrics.' };
   }
 }
 

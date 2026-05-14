@@ -10,6 +10,7 @@ import { AdminStationsService } from './admin-stations.service.js';
 import { AdminStationsController } from './admin-stations.controller.js';
 import { AdminMetricsService } from './admin-metrics.service.js';
 import { AdminMetricsController } from './admin-metrics.controller.js';
+import { AdminNotificationAnalyticsService } from './admin-notification-analytics.service.js';
 import { AdminOcrSpendController } from './admin-ocr-spend.controller.js';
 import { AdminPriceRulesController } from './admin-price-rules.controller.js';
 import { AdminPriceRulesService } from './admin-price-rules.service.js';
@@ -26,6 +27,6 @@ import { AlertModule } from '../alert/alert.module.js';
 @Module({
   imports: [PrismaModule, PriceModule, StorageModule, UserModule, PhotoModule, MetricsModule, AlertModule],
   controllers: [AdminSubmissionsController, AdminUsersController, AdminDlqController, AdminStationsController, AdminMetricsController, AdminOcrSpendController, AdminPriceRulesController, AdminMarketSignalsController],
-  providers: [AdminSubmissionsService, AdminUsersService, AnomalyDetectionService, AdminDlqService, AdminStationsService, AdminMetricsService, AdminPriceRulesService, AdminMarketSignalsService],
+  providers: [AdminSubmissionsService, AdminUsersService, AnomalyDetectionService, AdminDlqService, AdminStationsService, AdminMetricsService, AdminNotificationAnalyticsService, AdminPriceRulesService, AdminMarketSignalsService],
 })
 export class AdminModule {}

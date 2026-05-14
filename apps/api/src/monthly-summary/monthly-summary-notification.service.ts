@@ -4,6 +4,7 @@ import type Redis from 'ioredis';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { REDIS_CLIENT } from '../redis/redis.module.js';
 import { EXPO_PUSH_CLIENT, type IExpoPushClient } from '../alert/expo-push.token.js';
+import { NotificationSendLogService } from '../alert/notification-send-log.service.js';
 import {
   SavingsRankingService,
   PERCENTILE_NOTIFICATION_CEILING,
@@ -50,6 +51,7 @@ export class MonthlySummaryNotificationService {
     @Inject(REDIS_CLIENT) private readonly redis: Redis,
     @Inject(EXPO_PUSH_CLIENT) private readonly expoPush: IExpoPushClient,
     private readonly savingsRanking: SavingsRankingService,
+    private readonly sendLog: NotificationSendLogService,
   ) {}
 
   /**
@@ -244,7 +246,8 @@ export class MonthlySummaryNotificationService {
       to: m.token,
       title: m.title,
       body: m.body,
-      data: { route: m.deepLink },
+      // Story 6.8 — alertType labels notification_opened events.
+      data: { route: m.deepLink, alertType: 'monthly_summary' },
       sound: 'default' as const,
     }));
 
@@ -290,6 +293,9 @@ export class MonthlySummaryNotificationService {
       }
       cursor += chunk.length;
     }
+
+    // Story 6.8 — one row per batch for admin analytics.
+    await this.sendLog.recordSend('monthly_summary', messages.length);
   }
 
   /**

@@ -1,10 +1,14 @@
+import { useEffect } from 'react';
 import { Alert, Modal, View, Text, TouchableOpacity, Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { tokens } from '../theme';
 import { useAuth } from '../store/auth.store';
 import { useNotificationPermission } from '../hooks/useNotificationPermission';
-import { apiUpdateNotificationPreferences } from '../api/notifications';
+import {
+  apiUpdateNotificationPreferences,
+  apiRecordNotificationEvent,
+} from '../api/notifications';
 
 interface Props {
   visible: boolean;
@@ -35,9 +39,21 @@ export function NotificationRepromptSheet({ visible, variant, savedPln, onDismis
   const { accessToken } = useAuth();
   const router = useRouter();
 
+  // Story 6.8 — fire `reprompt_shown` whenever the sheet becomes visible.
+  // Best-effort; analytics breakage must never block the UX.
+  useEffect(() => {
+    if (!visible || !accessToken) return;
+    apiRecordNotificationEvent(accessToken, 'reprompt_shown', variant).catch(() => {});
+  }, [visible, accessToken, variant]);
+
   async function handleEnable() {
     const status = await requestPermission();
     if (status === 'granted') {
+      // Story 6.8 — fire grant event whether or not the token save lands;
+      // the OS permission is the meaningful conversion signal.
+      if (accessToken) {
+        apiRecordNotificationEvent(accessToken, 'reprompt_granted', variant).catch(() => {});
+      }
       const token = await getExpoPushToken();
       let saveFailed = false;
       if (token && accessToken) {
@@ -67,8 +83,20 @@ export function NotificationRepromptSheet({ visible, variant, savedPln, onDismis
       router.push('/(app)/notifications');
     } else {
       // Denied or undetermined — record as shown so we don't pester again.
+      // Story 6.8 — treat as a dismiss (the user actively rejected the OS prompt).
+      if (accessToken) {
+        apiRecordNotificationEvent(accessToken, 'reprompt_dismissed', variant).catch(() => {});
+      }
       onDismiss();
     }
+  }
+
+  function handleDismiss() {
+    // Story 6.8 — fire dismiss event before propagating to the parent.
+    if (accessToken) {
+      apiRecordNotificationEvent(accessToken, 'reprompt_dismissed', variant).catch(() => {});
+    }
+    onDismiss();
   }
 
   const title =
@@ -84,8 +112,8 @@ export function NotificationRepromptSheet({ visible, variant, savedPln, onDismis
       : t('notifications.repromptMonthlySubtitle');
 
   return (
-    <Modal transparent visible={visible} animationType="slide" onRequestClose={onDismiss}>
-      <Pressable style={styles.overlay} onPress={onDismiss} />
+    <Modal transparent visible={visible} animationType="slide" onRequestClose={handleDismiss}>
+      <Pressable style={styles.overlay} onPress={handleDismiss} />
       <View style={styles.sheet}>
         <View style={styles.handle} />
         <Text style={styles.title}>{title}</Text>
@@ -99,7 +127,7 @@ export function NotificationRepromptSheet({ visible, variant, savedPln, onDismis
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.dismissButton}
-          onPress={onDismiss}
+          onPress={handleDismiss}
           accessibilityRole="button"
         >
           <Text style={styles.dismissText}>{t('notifications.repromptDismiss')}</Text>

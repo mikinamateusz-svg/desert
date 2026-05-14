@@ -1,8 +1,12 @@
+import { useEffect } from 'react';
 import { Tabs } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import * as Notifications from 'expo-notifications';
 import { tokens } from '../../src/theme';
 import { MonthlySummaryRepromptTrigger } from '../../src/components/MonthlySummaryRepromptTrigger';
+import { useAuth } from '../../src/store/auth.store';
+import { apiRecordNotificationEvent } from '../../src/api/notifications';
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -22,6 +26,26 @@ const hiddenHeaderStyle = {
 
 export default function AppLayout() {
   const { t } = useTranslation();
+  const { accessToken } = useAuth();
+
+  // Story 6.8 — record `notification_opened` events when the user taps a
+  // push notification and lands in the app. The alert services tag each
+  // push with `alertType` in the `data` payload; we forward that to the
+  // analytics endpoint so admin engagement metrics can compute
+  // opened/sent per alert family. Best-effort, swallowed errors.
+  useEffect(() => {
+    if (!accessToken) return;
+    const sub = Notifications.addNotificationResponseReceivedListener((response) => {
+      const data = response.notification.request.content.data as { alertType?: unknown } | null;
+      const alertType =
+        data && typeof data.alertType === 'string' ? data.alertType : null;
+      if (!alertType) return;
+      apiRecordNotificationEvent(accessToken, 'notification_opened', null, alertType).catch(
+        () => {},
+      );
+    });
+    return () => sub.remove();
+  }, [accessToken]);
 
   return (
     <>

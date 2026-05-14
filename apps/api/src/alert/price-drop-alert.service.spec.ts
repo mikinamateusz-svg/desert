@@ -4,6 +4,7 @@ import { PriceDropAlertService } from './price-drop-alert.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { REDIS_CLIENT } from '../redis/redis.module.js';
 import { EXPO_PUSH_CLIENT } from './expo-push.token.js';
+import { NotificationSendLogService } from './notification-send-log.service.js';
 import type { PriceDropCheckJobData } from './price-drop-alert.constants.js';
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
@@ -109,6 +110,8 @@ describe('PriceDropAlertService', () => {
         { provide: PrismaService, useValue: mockPrisma },
         { provide: REDIS_CLIENT, useValue: mockRedis },
         { provide: EXPO_PUSH_CLIENT, useValue: mockExpoPush },
+        // Story 6.8 — per-send telemetry; no-op stub for unit tests.
+        { provide: NotificationSendLogService, useValue: { recordSend: jest.fn() } },
       ],
     }).compile();
 
@@ -147,7 +150,11 @@ describe('PriceDropAlertService', () => {
       expect(sentMessages[0].to).toBe(VALID_TOKEN);
       expect(sentMessages[0].body).toContain('6.14');
       expect(sentMessages[0].body).toContain('PB95');
-      expect(sentMessages[0].data).toEqual({ route: '/station/station-1' });
+      // Story 6.8 — alertType added for notification_opened labelling.
+      expect(sentMessages[0].data).toEqual({
+        route: '/station/station-1',
+        alertType: 'price_drop',
+      });
     });
 
     it('does NOT notify when newPrice >= area min', async () => {
@@ -433,7 +440,8 @@ describe('PriceDropAlertService', () => {
       const message = mockSendChunk.mock.calls[0][0][0];
       expect(message.title).toMatch(/Prices dropped at 3 stations near you/);
       // Cheapest deep-link (station-3 at 5.99)
-      expect(message.data).toEqual({ route: '/station/station-3' });
+      // Story 6.8 — alertType added for notification_opened labelling.
+      expect(message.data).toEqual({ route: '/station/station-3', alertType: 'price_drop' });
       expect(message.body).toContain('5.99');
     });
 

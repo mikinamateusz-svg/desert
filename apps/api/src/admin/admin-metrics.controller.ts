@@ -7,13 +7,22 @@ import {
   type FreshnessSortBy,
   type FreshnessSortOrder,
 } from './admin-metrics.service.js';
+import {
+  AdminNotificationAnalyticsService,
+  type NotifPeriod,
+} from './admin-notification-analytics.service.js';
 import { isValidVoivodeship } from '../station/config/voivodeship-slugs.js';
 
 const VALID_PERIODS: MetricsPeriod[] = ['today', '7d', '30d'];
 const VALID_FRESHNESS_SORTS: FreshnessSortBy[] = ['lastPriceAt', 'voivodeship', 'priceSource'];
+const VALID_NOTIF_PERIODS: NotifPeriod[] = ['7d', '30d', '90d', 'all'];
 
 function parsePeriod(raw: string | undefined): MetricsPeriod {
   return VALID_PERIODS.includes(raw as MetricsPeriod) ? (raw as MetricsPeriod) : 'today';
+}
+
+function parseNotifPeriod(raw: string | undefined): NotifPeriod {
+  return VALID_NOTIF_PERIODS.includes(raw as NotifPeriod) ? (raw as NotifPeriod) : '30d';
 }
 
 function parseFreshnessSort(raw: string | undefined): FreshnessSortBy {
@@ -29,7 +38,10 @@ function parseOrder(raw: string | undefined): FreshnessSortOrder {
 @Controller('v1/admin/metrics')
 @Roles(UserRole.ADMIN)
 export class AdminMetricsController {
-  constructor(private readonly service: AdminMetricsService) {}
+  constructor(
+    private readonly service: AdminMetricsService,
+    private readonly notificationAnalytics: AdminNotificationAnalyticsService,
+  ) {}
 
   /** Real-time pipeline health — refreshed every 60 s from the admin UI. */
   @Get('pipeline')
@@ -70,6 +82,16 @@ export class AdminMetricsController {
   @Get('cost')
   async cost() {
     return this.service.getApiCostMetrics();
+  }
+
+  /**
+   * Story 6.8 — notification + alert engagement metrics. Period filter
+   * applies to reprompt events, send logs and open events; permission +
+   * opt-in figures are a current-state snapshot regardless of period.
+   */
+  @Get('notifications')
+  async notifications(@Query('period') period?: string) {
+    return this.notificationAnalytics.getMetrics(parseNotifPeriod(period));
   }
 
   /**

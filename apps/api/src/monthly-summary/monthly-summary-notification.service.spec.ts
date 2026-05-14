@@ -4,6 +4,7 @@ import { MonthlySummaryNotificationService } from './monthly-summary-notificatio
 import { PrismaService } from '../prisma/prisma.service.js';
 import { REDIS_CLIENT } from '../redis/redis.module.js';
 import { EXPO_PUSH_CLIENT } from '../alert/expo-push.token.js';
+import { NotificationSendLogService } from '../alert/notification-send-log.service.js';
 import { SavingsRankingService } from '../fillup/savings-ranking.service.js';
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
@@ -114,6 +115,8 @@ describe('MonthlySummaryNotificationService', () => {
         { provide: REDIS_CLIENT, useValue: mockRedis },
         { provide: EXPO_PUSH_CLIENT, useValue: mockExpoPush },
         { provide: SavingsRankingService, useValue: mockSavingsRanking },
+        // Story 6.8 — per-send telemetry; no-op stub for unit tests.
+        { provide: NotificationSendLogService, useValue: { recordSend: jest.fn() } },
       ],
     }).compile();
 
@@ -225,8 +228,10 @@ describe('MonthlySummaryNotificationService', () => {
       expect(sent[0].body).toContain('March 2026');
       expect(sent[0].body).toMatch(/Great month/);
       // AC2 — deep link to savings-summary screen with year + month
+      // Story 6.8 — alertType added for notification_opened labelling.
       expect(sent[0].data).toEqual({
         route: '/(app)/savings-summary?year=2026&month=3',
+        alertType: 'monthly_summary',
       });
     });
 

@@ -4,6 +4,7 @@ import type Redis from 'ioredis';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { REDIS_CLIENT } from '../redis/redis.module.js';
 import { EXPO_PUSH_CLIENT, type IExpoPushClient } from './expo-push.token.js';
+import { NotificationSendLogService } from './notification-send-log.service.js';
 import type { PriceRiseSignalJobData } from '../market-signal/types.js';
 
 // AC4 — one alert per fuel type per 72h window. Long enough to span the
@@ -33,6 +34,7 @@ export class PredictiveRiseAlertService {
     private readonly prisma: PrismaService,
     @Inject(REDIS_CLIENT) private readonly redis: Redis,
     @Inject(EXPO_PUSH_CLIENT) private readonly expoPush: IExpoPushClient,
+    private readonly sendLog: NotificationSendLogService,
   ) {}
 
   /**
@@ -116,7 +118,9 @@ export class PredictiveRiseAlertService {
       body: PUSH_BODY,
       // AC2 — deep-link to map view. Source data (ORLEN / Brent) is
       // never surfaced to the driver, only the directional intent.
-      data: { route: '/' },
+      // Story 6.8 — alertType in payload so the mobile client can label
+      // `notification_opened` events with the alert family.
+      data: { route: '/', alertType: 'predictive_rise' },
       sound: 'default' as const,
     }));
 
@@ -165,6 +169,10 @@ export class PredictiveRiseAlertService {
       }
       cursor += chunk.length;
     }
+
+    // Story 6.8 — record one row per send batch (admin analytics aggregates
+    // these for the per-alert-type "sent" count).
+    await this.sendLog.recordSend('predictive_rise', messages.length);
   }
 
   /**

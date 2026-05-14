@@ -314,6 +314,35 @@ model DriverAlert {
   // one. See 20260511000000_add_driver_alert.
 }
 
+/// Story 6.8 — analytics events fired from the mobile client (re-prompts,
+/// notification taps) and the API (reserved for future server-side events).
+/// `user_id` nullable so Story 6.9 guest events can land in the same table
+/// (`user_id: null`). Free-form `event_type` to keep new event types cheap
+/// to add — validator at the controller is the gate.
+model NotificationEvent {
+  id         String   @id @default(uuid())
+  user_id    String?
+  event_type String // 'reprompt_shown' | 'reprompt_dismissed' | 'reprompt_granted' | 'notification_opened' | 'guest_nudge_*'
+  trigger    String? // 'photo' | 'monthly' (for reprompt events) or 'engagement' | 'market_event' (guest nudges)
+  alert_type String? // 'price_drop' | 'community_rise' | 'predictive_rise' | 'monthly_summary' (for notification_opened)
+  created_at DateTime @default(now())
+
+  @@index([event_type, created_at])
+  @@index([user_id, created_at])
+}
+
+/// Story 6.8 — one row per alert SEND batch (not per recipient). The
+/// per-recipient cost would be high write volume; this keeps the table
+/// small while still giving us per-type sent counts for engagement metrics.
+model NotificationSendLog {
+  id              String   @id @default(uuid())
+  alert_type      String // 'price_drop' | 'community_rise' | 'predictive_rise' | 'monthly_summary'
+  recipient_count Int
+  created_at      DateTime @default(now())
+
+  @@index([alert_type, created_at])
+}
+
 model StationFuelStaleness {
   id         String   @id @default(uuid())
   station_id String

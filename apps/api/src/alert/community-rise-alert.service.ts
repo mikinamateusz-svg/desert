@@ -4,6 +4,7 @@ import type Redis from 'ioredis';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { REDIS_CLIENT } from '../redis/redis.module.js';
 import { EXPO_PUSH_CLIENT, type IExpoPushClient } from './expo-push.token.js';
+import { NotificationSendLogService } from './notification-send-log.service.js';
 import type { CommunityRiseCheckJobData } from './price-drop-alert.constants.js';
 
 // AC4 — one alert per voivodeship × fuel type per 48h window.
@@ -46,6 +47,7 @@ export class CommunityRiseAlertService {
     private readonly prisma: PrismaService,
     @Inject(REDIS_CLIENT) private readonly redis: Redis,
     @Inject(EXPO_PUSH_CLIENT) private readonly expoPush: IExpoPushClient,
+    private readonly sendLog: NotificationSendLogService,
   ) {}
 
   async evaluateAndNotify(job: CommunityRiseCheckJobData): Promise<void> {
@@ -298,7 +300,8 @@ export class CommunityRiseAlertService {
       to: u.pushToken,
       title,
       body,
-      data: { route: deepLink },
+      // Story 6.8 — alertType labels notification_opened events.
+      data: { route: deepLink, alertType: 'community_rise' },
       sound: 'default' as const,
     }));
 
@@ -343,6 +346,9 @@ export class CommunityRiseAlertService {
       }
       cursor += chunk.length;
     }
+
+    // Story 6.8 — one send-log row per batch for admin analytics.
+    await this.sendLog.recordSend('community_rise', messages.length);
   }
 
   private async checkDedup(key: string): Promise<boolean> {

@@ -209,8 +209,8 @@ const translations = {
       renameManualOverrideTooltip: 'Nazwa ustawiona ręcznie — synchronizacja z Google Places jej nie nadpisze.',
     },
     metrics: {
-      tabs: { pipeline: 'Zdrowie pipeline', funnel: 'Lejek zgłoszeń', product: 'Metryki produktu', cost: 'Koszty API', freshness: 'Świeżość danych' },
-      period: { today: 'Dziś', '7d': 'Ostatnie 7 dni', '30d': 'Ostatnie 30 dni' },
+      tabs: { pipeline: 'Zdrowie pipeline', funnel: 'Lejek zgłoszeń', product: 'Metryki produktu', cost: 'Koszty API', freshness: 'Świeżość danych', notifications: 'Powiadomienia' },
+      period: { today: 'Dziś', '7d': 'Ostatnie 7 dni', '30d': 'Ostatnie 30 dni', '90d': 'Ostatnie 90 dni', all: 'Cały czas' },
       pipeline: {
         successRate: 'Skuteczność (ostatnia godz.)',
         processingP50: 'Czas przetwarzania p50',
@@ -256,6 +256,43 @@ const translations = {
         gps_no_match: 'Brak dopasowania GPS',
         low_confidence: 'Niska pewność OCR',
         dead_letter_discarded: 'Odrzucone z DLQ',
+      },
+      notifications: {
+        sectionPermissions: 'Uprawnienia i zgody',
+        sectionConfig: 'Konfiguracja alertów',
+        sectionReprompt: 'Skuteczność re-promptów',
+        sectionEngagement: 'Zaangażowanie alertów',
+        sectionTrend: 'Trend nowych zgód',
+        pushGrantRate: 'Wskaźnik zgody na push',
+        pushGranted: 'Push przyznany',
+        optInPriceDrop: 'Spadek cen',
+        optInCommunityRise: 'Wzrosty potwierdzone',
+        optInPredictiveRise: 'Wzrosty predykcyjne',
+        optInMonthlySummary: 'Miesięczne podsumowanie',
+        radiusBreakdown: 'Zasięg alertów',
+        dropModeBreakdown: 'Tryb spadku cen',
+        cheaperThanNow: 'Taniej niż teraz',
+        targetPrice: 'Cena docelowa',
+        triggerPhoto: 'Po zdjęciu',
+        triggerMonthly: 'Po podsumowaniu',
+        repromptShown: 'Pokazany',
+        repromptDismissed: 'Odrzucony',
+        repromptGranted: 'Zaakceptowany',
+        conversionRate: 'Współczynnik konwersji',
+        alertType: 'Typ alertu',
+        sent: 'Wysłane',
+        opened: 'Otwarte',
+        engagementRate: 'Współczynnik otwarć',
+        alertTypeNames: {
+          price_drop: 'Spadek cen',
+          community_rise: 'Wzrost potwierdzony',
+          predictive_rise: 'Wzrost predykcyjny',
+          monthly_summary: 'Podsumowanie miesięczne',
+        },
+        date: 'Data',
+        grants: 'Nowe zgody',
+        noTrendData: 'Brak danych w wybranym okresie.',
+        snapshotNote: 'Liczby uprawnień i zgód pokazują stan bieżący; re-prompty i zaangażowanie odzwierciedlają wybrany okres.',
       },
       cost: {
         today: 'Dziś',
@@ -588,8 +625,8 @@ const translations = {
       renameManualOverrideTooltip: 'Name set manually — Google Places sync will not overwrite it.',
     },
     metrics: {
-      tabs: { pipeline: 'Pipeline Health', funnel: 'Contribution Funnel', product: 'Product Metrics', cost: 'API Cost', freshness: 'Data Freshness' },
-      period: { today: 'Today', '7d': 'Last 7 days', '30d': 'Last 30 days' },
+      tabs: { pipeline: 'Pipeline Health', funnel: 'Contribution Funnel', product: 'Product Metrics', cost: 'API Cost', freshness: 'Data Freshness', notifications: 'Notifications' },
+      period: { today: 'Today', '7d': 'Last 7 days', '30d': 'Last 30 days', '90d': 'Last 90 days', all: 'All time' },
       pipeline: {
         successRate: 'Success rate (last 1h)',
         processingP50: 'Processing time p50',
@@ -635,6 +672,43 @@ const translations = {
         gps_no_match: 'GPS no match',
         low_confidence: 'Low OCR confidence',
         dead_letter_discarded: 'Discarded from DLQ',
+      },
+      notifications: {
+        sectionPermissions: 'Permissions & opt-in',
+        sectionConfig: 'Alert configuration',
+        sectionReprompt: 'Reprompt conversion',
+        sectionEngagement: 'Alert engagement',
+        sectionTrend: 'Grant trend',
+        pushGrantRate: 'Push grant rate',
+        pushGranted: 'Push granted',
+        optInPriceDrop: 'Price drop',
+        optInCommunityRise: 'Community rise',
+        optInPredictiveRise: 'Predictive rise',
+        optInMonthlySummary: 'Monthly summary',
+        radiusBreakdown: 'Alert radius',
+        dropModeBreakdown: 'Drop mode',
+        cheaperThanNow: 'Cheaper than now',
+        targetPrice: 'Target price',
+        triggerPhoto: 'After photo',
+        triggerMonthly: 'After summary',
+        repromptShown: 'Shown',
+        repromptDismissed: 'Dismissed',
+        repromptGranted: 'Granted',
+        conversionRate: 'Conversion rate',
+        alertType: 'Alert type',
+        sent: 'Sent',
+        opened: 'Opened',
+        engagementRate: 'Engagement rate',
+        alertTypeNames: {
+          price_drop: 'Price drop',
+          community_rise: 'Community rise',
+          predictive_rise: 'Predictive rise',
+          monthly_summary: 'Monthly summary',
+        },
+        date: 'Date',
+        grants: 'New grants',
+        noTrendData: 'No data in selected period.',
+        snapshotNote: 'Permission and opt-in figures show current state; reprompt and engagement figures reflect the selected period.',
       },
       cost: {
         today: 'Today',
@@ -966,8 +1040,8 @@ const translations = {
       renameManualOverrideTooltip: 'Назву встановлено вручну — синхронізація з Google Places її не перезапише.',
     },
     metrics: {
-      tabs: { pipeline: 'Здоров\'я pipeline', funnel: 'Воронка внесків', product: 'Метрики продукту', cost: 'Витрати API', freshness: 'Актуальність даних' },
-      period: { today: 'Сьогодні', '7d': 'Останні 7 днів', '30d': 'Останні 30 днів' },
+      tabs: { pipeline: 'Здоров\'я pipeline', funnel: 'Воронка внесків', product: 'Метрики продукту', cost: 'Витрати API', freshness: 'Актуальність даних', notifications: 'Сповіщення' },
+      period: { today: 'Сьогодні', '7d': 'Останні 7 днів', '30d': 'Останні 30 днів', '90d': 'Останні 90 днів', all: 'За весь час' },
       pipeline: {
         successRate: 'Ефективність (остання год.)',
         processingP50: 'Час обробки p50',
@@ -1013,6 +1087,43 @@ const translations = {
         gps_no_match: 'Немає збігу GPS',
         low_confidence: 'Низька точність OCR',
         dead_letter_discarded: 'Відхилено з DLQ',
+      },
+      notifications: {
+        sectionPermissions: 'Дозволи та згоди',
+        sectionConfig: 'Конфігурація сповіщень',
+        sectionReprompt: 'Конверсія re-промптів',
+        sectionEngagement: 'Залученість до сповіщень',
+        sectionTrend: 'Тренд нових згод',
+        pushGrantRate: 'Рівень згоди на push',
+        pushGranted: 'Push надано',
+        optInPriceDrop: 'Падіння цін',
+        optInCommunityRise: 'Підтверджені зростання',
+        optInPredictiveRise: 'Прогностичні зростання',
+        optInMonthlySummary: 'Щомісячне зведення',
+        radiusBreakdown: 'Радіус сповіщень',
+        dropModeBreakdown: 'Режим падіння цін',
+        cheaperThanNow: 'Дешевше ніж зараз',
+        targetPrice: 'Цільова ціна',
+        triggerPhoto: 'Після фото',
+        triggerMonthly: 'Після зведення',
+        repromptShown: 'Показано',
+        repromptDismissed: 'Відхилено',
+        repromptGranted: 'Прийнято',
+        conversionRate: 'Конверсія',
+        alertType: 'Тип сповіщення',
+        sent: 'Надіслано',
+        opened: 'Відкрито',
+        engagementRate: 'Рівень відкриттів',
+        alertTypeNames: {
+          price_drop: 'Падіння цін',
+          community_rise: 'Підтверджене зростання',
+          predictive_rise: 'Прогностичне зростання',
+          monthly_summary: 'Щомісячне зведення',
+        },
+        date: 'Дата',
+        grants: 'Нові згоди',
+        noTrendData: 'Немає даних у вибраному періоді.',
+        snapshotNote: 'Цифри дозволів та згод показують поточний стан; re-промпти та залученість відображають вибраний період.',
       },
       cost: {
         today: 'Сьогодні',
@@ -1163,8 +1274,10 @@ const translations = {
 } as const;
 
 export interface MetricsTranslations {
-  tabs: { pipeline: string; funnel: string; product: string; cost: string; freshness: string };
-  period: { today: string; '7d': string; '30d': string };
+  tabs: { pipeline: string; funnel: string; product: string; cost: string; freshness: string; notifications: string };
+  // Story 6.8 — period union widened to include '90d' and 'all' so the
+  // notifications tab can reuse the same MetricsTranslations.period block.
+  period: { today: string; '7d': string; '30d': string; '90d': string; all: string };
   pipeline: {
     successRate: string;
     processingP50: string;
@@ -1204,6 +1317,38 @@ export interface MetricsTranslations {
     newRegs: string;
   };
   flagReasons: Record<string, string>;
+  notifications: {
+    sectionPermissions: string;
+    sectionConfig: string;
+    sectionReprompt: string;
+    sectionEngagement: string;
+    sectionTrend: string;
+    pushGrantRate: string;
+    pushGranted: string;
+    optInPriceDrop: string;
+    optInCommunityRise: string;
+    optInPredictiveRise: string;
+    optInMonthlySummary: string;
+    radiusBreakdown: string;
+    dropModeBreakdown: string;
+    cheaperThanNow: string;
+    targetPrice: string;
+    triggerPhoto: string;
+    triggerMonthly: string;
+    repromptShown: string;
+    repromptDismissed: string;
+    repromptGranted: string;
+    conversionRate: string;
+    alertType: string;
+    sent: string;
+    opened: string;
+    engagementRate: string;
+    alertTypeNames: { price_drop: string; community_rise: string; predictive_rise: string; monthly_summary: string };
+    date: string;
+    grants: string;
+    noTrendData: string;
+    snapshotNote: string;
+  };
   cost: {
     today: string;
     currentWeek: string;

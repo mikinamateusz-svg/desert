@@ -91,3 +91,47 @@ export interface FreshnessDashboardDto {
   limit: number;
   staleCount: number;
 }
+
+// ── Story 6.8 — Notifications & Alert Engagement Analytics ─────────────────
+
+export type NotifPeriod = '7d' | '30d' | '90d' | 'all';
+
+export interface RepromptStats {
+  trigger: 'photo' | 'monthly';
+  shown: number;
+  dismissed: number;
+  granted: number;
+  conversionRate: number;
+}
+
+export interface AlertEngagementStats {
+  alertType: string;
+  sent: number;
+  opened: number;
+  engagementRate: number;
+}
+
+export interface TrendPoint {
+  date: string;
+  value: number;
+}
+
+export interface NotificationAnalyticsDto {
+  period: NotifPeriod;
+  totalUsers: number;
+  pushGrantedUsers: number;
+  pushGrantRate: number;
+  optInRates: {
+    priceDrop: number;
+    communityRise: number;
+    predictiveRise: number;
+    monthlySummary: number;
+  };
+  configBreakdown: {
+    radius: { km5: number; km10: number; km25: number };
+    dropMode: { cheaperThanNow: number; targetPrice: number };
+  };
+  repromptStats: RepromptStats[];
+  alertEngagement: AlertEngagementStats[];
+  pushGrantTrend: TrendPoint[];
+}

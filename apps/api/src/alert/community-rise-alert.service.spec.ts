@@ -4,6 +4,7 @@ import { CommunityRiseAlertService } from './community-rise-alert.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { REDIS_CLIENT } from '../redis/redis.module.js';
 import { EXPO_PUSH_CLIENT } from './expo-push.token.js';
+import { NotificationSendLogService } from './notification-send-log.service.js';
 import type { CommunityRiseCheckJobData } from './price-drop-alert.constants.js';
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
@@ -81,6 +82,8 @@ describe('CommunityRiseAlertService', () => {
         { provide: PrismaService, useValue: mockPrisma },
         { provide: REDIS_CLIENT, useValue: mockRedis },
         { provide: EXPO_PUSH_CLIENT, useValue: mockExpoPush },
+        // Story 6.8 — per-send telemetry; no-op stub for unit tests.
+        { provide: NotificationSendLogService, useValue: { recordSend: jest.fn() } },
       ],
     }).compile();
 
@@ -194,7 +197,11 @@ describe('CommunityRiseAlertService', () => {
       expect(sent[0].to).toBe(VALID_TOKEN);
       expect(sent[0].title).toMatch(/PB95 prices rising near you/);
       expect(sent[0].body).toMatch(/consider filling up soon/);
-      expect(sent[0].data).toEqual({ route: '/map?fuelType=PB_95' });
+      // Story 6.8 — alertType added for notification_opened labelling.
+      expect(sent[0].data).toEqual({
+        route: '/map?fuelType=PB_95',
+        alertType: 'community_rise',
+      });
     });
 
     it('sends "as-expected" copy when predictive alert ≥6h ago', async () => {

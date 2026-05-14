@@ -168,4 +168,32 @@ export class NotificationsService {
     const savedPln = rounded !== null && rounded >= 1 ? rounded : null;
     return { pending: true, savedPln };
   }
+
+  /**
+   * Story 6.8 — persist a notification analytics event. Controller has
+   * already sanitised + allowlisted the `eventType`; this method just
+   * writes the row. Best-effort: swallow DB failures so an outage of
+   * the analytics table never blocks the rest of the request flow.
+   */
+  async recordEvent(
+    userId: string,
+    payload: { eventType: string; trigger: string | null; alertType: string | null },
+  ): Promise<void> {
+    try {
+      await this.prisma.notificationEvent.create({
+        data: {
+          user_id: userId,
+          event_type: payload.eventType,
+          trigger: payload.trigger,
+          alert_type: payload.alertType,
+        },
+      });
+    } catch (e: unknown) {
+      this.logger.warn(
+        `Failed to record NotificationEvent (user=${userId} type=${payload.eventType}): ${
+          e instanceof Error ? e.message : String(e)
+        }`,
+      );
+    }
+  }
 }

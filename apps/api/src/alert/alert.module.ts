@@ -12,6 +12,7 @@ import { PredictiveRiseAlertService } from './predictive-rise-alert.service.js';
 import { PredictiveRiseAlertWorker } from './predictive-rise-alert.worker.js';
 import { AlertsInboxController } from './alerts-inbox.controller.js';
 import { AlertsInboxService } from './alerts-inbox.service.js';
+import { NotificationSendLogService } from './notification-send-log.service.js';
 import { ExpoPushProvider } from './expo-push.provider.js';
 import { EXPO_PUSH_CLIENT } from './expo-push.token.js';
 import { PrismaModule } from '../prisma/prisma.module.js';
@@ -38,18 +39,24 @@ import { RedisModule } from '../redis/redis.module.js';
     PredictiveRiseAlertService,
     PredictiveRiseAlertWorker,
     AlertsInboxService,
+    // Story 6.8 — exported so MonthlySummaryModule (which imports AlertModule)
+    // can inject it into MonthlySummaryNotificationService.
+    NotificationSendLogService,
   ],
   // PriceDropAlertWorker + CommunityRiseAlertWorker are exported so
   // PhotoPipelineWorker (in PhotoModule) can call enqueueCheck() on each
   // after a verified price lands. PhotoModule already imports AlertModule.
   // CommunityRiseAlertService is exported so Story 6.3 (predictive rise)
   // can read the predictive-sent Redis key contract via the same module.
+  // NotificationSendLogService is exported for cross-module injection
+  // into MonthlySummaryNotificationService (Story 6.8).
   exports: [
     PriceRiseAlertService,
     AlertsActivationService,
     PriceDropAlertWorker,
     CommunityRiseAlertService,
     CommunityRiseAlertWorker,
+    NotificationSendLogService,
   ],
 })
 export class AlertModule {}

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MonthlySummaryNotificationService } from './monthly-summary-notification.service.js';
 import { MonthlySummaryNotificationWorker } from './monthly-summary-notification.worker.js';
+import { AlertModule } from '../alert/alert.module.js';
 import { ExpoPushProvider } from '../alert/expo-push.provider.js';
 import { EXPO_PUSH_CLIENT } from '../alert/expo-push.token.js';
 import { PrismaModule } from '../prisma/prisma.module.js';
@@ -15,11 +16,15 @@ import { FillupModule } from '../fillup/fillup.module.js';
  * pipeline-specific). Keeps this module independent of the alert
  * subsystem's lifecycle.
  *
+ * Story 6.8 — also imports AlertModule for NotificationSendLogService
+ * injection into MonthlySummaryNotificationService (one row per send
+ * batch for admin engagement metrics).
+ *
  * FillupModule imported for SavingsRankingService (Story 5.8 bulk
  * percentile lookup used to enrich the notification body).
  */
 @Module({
-  imports: [PrismaModule, RedisModule, FillupModule],
+  imports: [PrismaModule, RedisModule, FillupModule, AlertModule],
   providers: [
     { provide: EXPO_PUSH_CLIENT, useClass: ExpoPushProvider },
     MonthlySummaryNotificationService,

@@ -39,6 +39,57 @@ jobs:
       - name: Test
         run: pnpm test
 
+  # Real-DB integration tests for the API. Catches the class of bug that
+  # took prod offline on 2026-05-14 (CROSS JOIN LATERAL ... ON true was
+  # a Postgres syntax error invisible to mocked `$queryRaw` unit tests).
+  # Spins up a PostGIS container, applies the Prisma migrations, runs
+  # the `*.integration.spec.ts` suite. Required to pass before any
+  # deploy.
+  integration-api:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: desert_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      INTEGRATION_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/desert_test
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/desert_test
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Apply Prisma migrations to test database
+        run: pnpm --filter @desert/db db:migrate:deploy
+
+      - name: Run API integration tests
+        run: pnpm --filter @desert/api test:integration
+
   e2e-web:
     needs: ci
     runs-on: ubuntu-latest
@@ -146,7 +197,7 @@ jobs:
           script: npx detox test --configuration android.emu.debug --headless
 
   deploy-staging:
-    needs: ci
+    needs: [ci, integration-api]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
@@ -177,7 +228,7 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_ADMIN_STAGING_PROJECT_ID }}
 
   deploy-production:
-    needs: ci
+    needs: [ci, integration-api]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/prod' && github.event_name == 'push'
     steps:

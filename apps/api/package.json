@@ -12,6 +12,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
+    "test:integration": "jest --config jest.integration.config.cjs",
     "promote-admin": "ts-node -r tsconfig-paths/register scripts/promote-admin.ts",
     "change-password": "ts-node -r tsconfig-paths/register scripts/change-password.ts",
     "build-vehicle-dict": "ts-node -r tsconfig-paths/register scripts/build-vehicle-dictionary-makes-models.ts",
@@ -65,7 +66,7 @@
       "ts"
     ],
     "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
+    "testRegex": ".*(?<!\\.integration)\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },

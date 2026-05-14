@@ -25,6 +25,7 @@ import { OdometerModule } from './odometer/odometer.module.js';
 import { ConsumptionBenchmarkModule } from './consumption-benchmark/consumption-benchmark.module.js';
 import { StationClaimModule } from './station-claim/station-claim.module.js';
 import { MonthlySummaryModule } from './monthly-summary/monthly-summary.module.js';
+import { GuestNudgeModule } from './guest-nudge/guest-nudge.module.js';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { JwtAuthGuard } from './auth/jwt-auth.guard.js';
 import { RolesGuard } from './auth/guards/roles.guard.js';
@@ -59,6 +60,7 @@ import { RolesGuard } from './auth/guards/roles.guard.js';
     ConsumptionBenchmarkModule,
     StationClaimModule,
     MonthlySummaryModule,
+    GuestNudgeModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

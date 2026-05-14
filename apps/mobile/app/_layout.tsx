@@ -10,6 +10,7 @@ import {
   WelcomeCarousel,
   WELCOME_COMPLETED_KEY,
 } from '../src/components/onboarding/WelcomeCarousel';
+import { GuestPushTokenRegistration } from '../src/components/GuestPushTokenRegistration';
 
 export default function RootLayout() {
   const [i18nReady, setI18nReady] = useState(false);
@@ -53,7 +54,13 @@ export default function RootLayout() {
           <ActivityIndicator size="large" />
         </View>
       ) : welcomeCompleted === true ? (
-        <Slot />
+        <>
+          {/* Story 6.9 — registers the guest's Expo push token so the
+              market-event nudge can reach them. Side-effect mount only;
+              re-runs when isGuest flips. */}
+          <GuestPushTokenRegistration />
+          <Slot />
+        </>
       ) : (
         // P6 (1.14 review) — defer mounting <Slot /> until the carousel
         // completes. Otherwise the map screen mounts behind the Modal and

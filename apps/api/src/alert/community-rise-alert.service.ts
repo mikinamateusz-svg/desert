@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma/prisma.service.js';
 import { REDIS_CLIENT } from '../redis/redis.module.js';
 import { EXPO_PUSH_CLIENT, type IExpoPushClient } from './expo-push.token.js';
 import { NotificationSendLogService } from './notification-send-log.service.js';
+import { GuestNudgeService } from '../guest-nudge/guest-nudge.service.js';
 import type { CommunityRiseCheckJobData } from './price-drop-alert.constants.js';
 
 // AC4 — one alert per voivodeship × fuel type per 48h window.
@@ -48,6 +49,7 @@ export class CommunityRiseAlertService {
     @Inject(REDIS_CLIENT) private readonly redis: Redis,
     @Inject(EXPO_PUSH_CLIENT) private readonly expoPush: IExpoPushClient,
     private readonly sendLog: NotificationSendLogService,
+    private readonly guestNudge: GuestNudgeService,
   ) {}
 
   async evaluateAndNotify(job: CommunityRiseCheckJobData): Promise<void> {
@@ -114,6 +116,19 @@ export class CommunityRiseAlertService {
     await this.recordDedup(dedupKey);
     this.logger.log(
       `Community rise alert sent to ${users.length} user(s) for ${voivodeship}:${fuelType} (${copyVariant})`,
+    );
+
+    // 7. Story 6.9 — fire-and-forget guest conversion nudge. Atomic 48h
+    //    SET NX EX inside the service guards against re-spam; failures
+    //    are swallowed so the authenticated alert pipeline never blocks
+    //    on guest analytics. Note: there's no per-voivodeship guest
+    //    targeting yet (we lack location for guests), so the nudge fires
+    //    on the FIRST community confirmation in any voivodeship within
+    //    a 48h window — matches the spec's generic-copy intent.
+    void this.guestNudge.maybeNotifyGuests().catch((e) =>
+      this.logger.warn(
+        `Guest nudge fire-and-forget failed: ${e instanceof Error ? e.message : String(e)}`,
+      ),
     );
   }
 

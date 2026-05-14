@@ -692,6 +692,20 @@ export default {
     noVehicleTitle: 'Add a vehicle first',
     noVehicleAction: 'Add my car',
   },
+  // Story 6.9 — guest conversion nudges (engagement card + market event banner).
+  guestNudge: {
+    engagement: {
+      title: "You've been checking prices regularly",
+      subtitle: 'Sign in to get automatic alerts — so the app does the checking for you.',
+      dismiss: 'Not now',
+      useEmail: 'Use Email',
+    },
+    marketEvent: {
+      banner: 'Fuel prices moved today. Sign in to get a heads-up next time.',
+      signIn: 'Sign in',
+      dismissA11y: 'Dismiss',
+    },
+  },
   onboarding: {
     welcome: {
       // Story 1.14 (amended 2026-05-10) — four-pillar mapping.

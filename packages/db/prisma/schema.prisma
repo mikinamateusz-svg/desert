@@ -343,6 +343,18 @@ model NotificationSendLog {
   @@index([alert_type, created_at])
 }
 
+/// Story 6.9 — Expo push tokens registered by guest users (unauthenticated).
+/// `token` is the natural key (one row per device). When a guest signs up
+/// the row becomes orphaned; a future cleanup job can sweep rows older
+/// than ~90 days. At MVP scale orphan volume is negligible.
+model GuestPushToken {
+  id         String   @id @default(uuid())
+  token      String   @unique
+  created_at DateTime @default(now())
+
+  @@index([created_at])
+}
+
 model StationFuelStaleness {
   id         String   @id @default(uuid())
   station_id String

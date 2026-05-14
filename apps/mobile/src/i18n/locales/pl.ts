@@ -725,6 +725,20 @@ export default {
     noVehicleTitle: 'Najpierw dodaj pojazd',
     noVehicleAction: 'Dodaj moje auto',
   },
+  // Story 6.9 — guest conversion nudges (engagement card + market event banner).
+  guestNudge: {
+    engagement: {
+      title: 'Regularnie sprawdzasz ceny',
+      subtitle: 'Zaloguj się, aby otrzymywać automatyczne alerty — aplikacja sama będzie ich pilnować.',
+      dismiss: 'Nie teraz',
+      useEmail: 'Użyj e-maila',
+    },
+    marketEvent: {
+      banner: 'Ceny paliwa zmieniły się dziś. Zaloguj się, aby być na bieżąco.',
+      signIn: 'Zaloguj się',
+      dismissA11y: 'Zamknij',
+    },
+  },
   onboarding: {
     welcome: {
       // Story 1.14 (amended 2026-05-10) — four-pillar mapping. PL canonical.

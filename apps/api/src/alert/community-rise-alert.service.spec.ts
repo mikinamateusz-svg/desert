@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma/prisma.service.js';
 import { REDIS_CLIENT } from '../redis/redis.module.js';
 import { EXPO_PUSH_CLIENT } from './expo-push.token.js';
 import { NotificationSendLogService } from './notification-send-log.service.js';
+import { GuestNudgeService } from '../guest-nudge/guest-nudge.service.js';
 import type { CommunityRiseCheckJobData } from './price-drop-alert.constants.js';
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
@@ -84,6 +85,14 @@ describe('CommunityRiseAlertService', () => {
         { provide: EXPO_PUSH_CLIENT, useValue: mockExpoPush },
         // Story 6.8 — per-send telemetry; no-op stub for unit tests.
         { provide: NotificationSendLogService, useValue: { recordSend: jest.fn() } },
+        // Story 6.9 — guest market-event nudge fired post-confirmation;
+        // no-op stub. Real wiring covered by guest-nudge.service.spec.
+        {
+          provide: GuestNudgeService,
+          useValue: {
+            maybeNotifyGuests: jest.fn().mockResolvedValue(undefined),
+          },
+        },
       ],
     }).compile();
 

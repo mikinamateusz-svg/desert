@@ -16,6 +16,11 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
 import { LoadingScreen, type LoadingStage } from '../../src/components/LoadingScreen';
 import { SoftSignUpSheet } from '../../src/components/SoftSignUpSheet';
+import { GuestEngagementCard } from '../../src/components/GuestEngagementCard';
+import { MarketEventBanner } from '../../src/components/MarketEventBanner';
+import { useGuestSessionCounter } from '../../src/hooks/useGuestSessionCounter';
+import { apiGetMarketEventNudge } from '../../src/api/guest-nudge';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FuelTypePickerSheet } from '../../src/components/FuelTypePickerSheet';
 import { StationDetailSheet } from '../../src/components/StationDetailSheet';
 import { useFuelTypePreference, VALID_FUEL_TYPES } from '../../src/hooks/useFuelTypePreference';
@@ -40,7 +45,16 @@ const WARSAW: LocationCoords = { lat: 52.2297, lng: 21.0122 };
 
 export default function MapScreen() {
   const { t } = useTranslation();
-  const { accessToken, hasSeenOnboarding } = useAuth();
+  const { accessToken, hasSeenOnboarding, isGuest } = useAuth();
+  // Story 6.9 — engagement card gate. Counter is mount-once; sessionCount
+  // includes this open. AC1 threshold is 3+ sessions in a rolling 7d.
+  const { sessionCount: guestSessionCount } = useGuestSessionCounter();
+  const [marketEventNudge, setMarketEventNudge] = useState<{
+    eventId: string;
+  } | null>(null);
+  const [engagementCardVisible, setEngagementCardVisible] = useState(false);
+  const [engagementShownFlagLoaded, setEngagementShownFlagLoaded] = useState(false);
+  const [engagementShownPersisted, setEngagementShownPersisted] = useState(false);
   // Story 3.12 AC6: Activity screen pushes /(app)?stationId=<id> to open a station
   // sheet. We handle it once per id via handledStationIdRef so the effect doesn't
   // re-fire on every stations/prices re-render.
@@ -374,6 +388,107 @@ export default function MapScreen() {
     handlePinPress(cheapest.id);
   }, [stations, priceMap, selectedFuelType, handlePinPress]);
 
+  // ── Story 6.9 — guest conversion nudges ───────────────────────────────
+  //
+  // Two surfaces with precedence rules:
+  //   - market event banner (AC6): fires within 48h of a community-rise
+  //     event when the guest didn't get the push. Takes priority.
+  //   - engagement card (AC1–AC3): fires after 3+ sessions in 7 days,
+  //     once per device, deferred 2s after map load. Suppressed when
+  //     the market banner is present.
+
+  // Read the engagement-card one-time flag once per mount.
+  useEffect(() => {
+    if (!isGuest) return;
+    let cancelled = false;
+    void (async () => {
+      try {
+        const seen = await AsyncStorage.getItem('@guest:nudge:engagement:shown');
+        if (!cancelled) setEngagementShownPersisted(seen === 'true');
+      } catch {
+        // Default to "seen" on storage failure so we don't pester the
+        // user when state is uncertain.
+        if (!cancelled) setEngagementShownPersisted(true);
+      } finally {
+        if (!cancelled) setEngagementShownFlagLoaded(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isGuest]);
+
+  // Fetch market-event nudge state once per mount, gated by isGuest.
+  // The banner shows only when (a) the Redis dedup key is alive AND
+  // (b) the guest hasn't already dismissed this exact eventId.
+  useEffect(() => {
+    if (!isGuest) return;
+    let cancelled = false;
+    void (async () => {
+      try {
+        const nudge = await apiGetMarketEventNudge();
+        if (cancelled || !nudge.active || !nudge.eventId) return;
+        const perEventKey = `@guest:nudge:market:${nudge.eventId}`;
+        const seen = await AsyncStorage.getItem(perEventKey);
+        if (!cancelled && seen !== 'true') {
+          setMarketEventNudge({ eventId: nudge.eventId });
+        }
+      } catch {
+        // Silent — banner just won't show.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isGuest]);
+
+  // Engagement card timer: deferred 2s after the splash clears so the
+  // card doesn't interrupt initial map load. Suppressed when a market
+  // banner is showing (AC3 — banner takes precedence) or when the
+  // user has already seen the card on this device (AC2 — one-time).
+  useEffect(() => {
+    if (!isGuest) return;
+    if (splashVisible) return;
+    if (!engagementShownFlagLoaded) return;
+    if (engagementShownPersisted) return;
+    if (marketEventNudge !== null) return;
+    if (guestSessionCount < 3) return;
+    const timer = setTimeout(() => setEngagementCardVisible(true), 2000);
+    return () => clearTimeout(timer);
+  }, [
+    isGuest,
+    splashVisible,
+    engagementShownFlagLoaded,
+    engagementShownPersisted,
+    marketEventNudge,
+    guestSessionCount,
+  ]);
+
+  const dismissEngagementCard = useCallback(() => {
+    setEngagementCardVisible(false);
+    setEngagementShownPersisted(true);
+    void AsyncStorage.setItem('@guest:nudge:engagement:shown', 'true').catch(() => {});
+  }, []);
+
+  const dismissMarketBanner = useCallback(() => {
+    if (!marketEventNudge) return;
+    const perEventKey = `@guest:nudge:market:${marketEventNudge.eventId}`;
+    setMarketEventNudge(null);
+    void AsyncStorage.setItem(perEventKey, 'true').catch(() => {});
+  }, [marketEventNudge]);
+
+  const handleMarketBannerSignIn = useCallback(() => {
+    // Mark this event as seen so we don't re-show on return from the
+    // auth flow if the user cancels mid-signup. AsyncStorage write is
+    // fire-and-forget; the in-component navigation is handled inside
+    // MarketEventBanner.
+    if (marketEventNudge) {
+      const perEventKey = `@guest:nudge:market:${marketEventNudge.eventId}`;
+      void AsyncStorage.setItem(perEventKey, 'true').catch(() => {});
+    }
+    setMarketEventNudge(null);
+  }, [marketEventNudge]);
+
   const showSheet = !accessToken && !hasSeenOnboarding && !sheetDismissed;
   // Show first-launch fuel picker once splash is gone, preference loaded, and prompt not yet seen
   const showFuelPicker = fuelTypeLoaded && !hasSeenFuelPrompt && !splashVisible && !showSheet;
@@ -559,6 +674,25 @@ export default function MapScreen() {
         context="contribution"
       />
 
+      {/* Story 6.9 — market-event banner. Floats above the map without
+          blocking interaction; positioned below the top chrome. */}
+      {marketEventNudge && (
+        <View style={[styles.marketBannerHost, { top: topBarHeight + 8 }]} pointerEvents="box-none">
+          <MarketEventBanner
+            eventId={marketEventNudge.eventId}
+            onDismiss={dismissMarketBanner}
+            onSignIn={handleMarketBannerSignIn}
+          />
+        </View>
+      )}
+
+      {/* Story 6.9 — engagement card (AC1). Suppressed when the market
+          banner is present (AC3) or the user has previously seen it. */}
+      <GuestEngagementCard
+        visible={engagementCardVisible}
+        onDismiss={dismissEngagementCard}
+      />
+
       <FuelTypePickerSheet
         visible={showFuelPicker}
         onSelect={handleFuelPickerSelect}
@@ -582,6 +716,15 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
+  },
+  // Story 6.9 — host for the market-event banner. Absolute-positioned
+  // above the map; pointerEvents='box-none' on the host so taps pass
+  // through everywhere except the banner itself.
+  marketBannerHost: {
+    position: 'absolute',
+    left: 16,
+    right: 16,
+    zIndex: 5,
   },
 
   // Cluster bubble — amber brand-matching style

@@ -694,6 +694,20 @@ export default {
     noVehicleTitle: 'Спочатку додайте автомобіль',
     noVehicleAction: 'Додати моє авто',
   },
+  // Story 6.9 — guest conversion nudges (engagement card + market event banner).
+  guestNudge: {
+    engagement: {
+      title: 'Ви регулярно перевіряєте ціни',
+      subtitle: 'Увійдіть, щоб отримувати автоматичні сповіщення — застосунок сам стежитиме.',
+      dismiss: 'Не зараз',
+      useEmail: 'Використати e-mail',
+    },
+    marketEvent: {
+      banner: 'Ціни на пальне змінились сьогодні. Увійдіть, щоб отримувати сповіщення.',
+      signIn: 'Увійти',
+      dismissA11y: 'Закрити',
+    },
+  },
   onboarding: {
     welcome: {
       // Story 1.14 (amended 2026-05-10) — four-pillar mapping.

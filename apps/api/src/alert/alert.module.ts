@@ -17,9 +17,15 @@ import { ExpoPushProvider } from './expo-push.provider.js';
 import { EXPO_PUSH_CLIENT } from './expo-push.token.js';
 import { PrismaModule } from '../prisma/prisma.module.js';
 import { RedisModule } from '../redis/redis.module.js';
+import { GuestNudgeModule } from '../guest-nudge/guest-nudge.module.js';
 
 @Module({
-  imports: [PrismaModule, RedisModule],
+  // Story 6.9 — AlertModule imports GuestNudgeModule so
+  // CommunityRiseAlertService can inject GuestNudgeService and fire
+  // the guest market-event nudge after threshold confirmation. One-way
+  // dependency (GuestNudgeModule does not import AlertModule) — no
+  // circular import risk.
+  imports: [PrismaModule, RedisModule, GuestNudgeModule],
   controllers: [AlertsInboxController],
   providers: [
     { provide: EXPO_PUSH_CLIENT, useClass: ExpoPushProvider },

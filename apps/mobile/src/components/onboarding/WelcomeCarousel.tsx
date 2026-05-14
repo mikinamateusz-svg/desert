@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   BackHandler,
   Modal,
-  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -11,6 +10,7 @@ import {
   View,
   type NativeEventSubscription,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
 import { tokens } from '../../theme';
@@ -82,6 +82,11 @@ export function WelcomeCarousel({
   initialCard = 1,
 }: WelcomeCarouselProps) {
   const { t } = useTranslation();
+  // Hotfix 2026-05-14: SafeAreaView from react-native doesn't honor the
+  // Android navigation-bar inset, so the button row was sliding under
+  // the system controls on Android. Switch to useSafeAreaInsets +
+  // explicit top/bottom padding via plain Views.
+  const insets = useSafeAreaInsets();
   const [currentCard, setCurrentCard] = useState(clampCard(initialCard));
   // Gate the persistence effect until the resume read completes;
   // without this, the persistence effect fires synchronously on mount
@@ -262,7 +267,7 @@ export function WelcomeCarousel({
       }}
     >
       <StatusBar barStyle="dark-content" backgroundColor={tokens.surface.page} />
-      <SafeAreaView style={styles.safeArea}>
+      <View style={[styles.safeArea, { paddingTop: insets.top }]}>
         {/* Header row: progress-dots wrapper + skip/close buttons are
             siblings so iOS VoiceOver doesn't collapse the Touchables
             under the accessible-progressbar parent. (Setting
@@ -332,7 +337,16 @@ export function WelcomeCarousel({
           {currentCard === 4 && <Card4Legend t={t} />}
         </ScrollView>
 
-        <View style={styles.buttonRow}>
+        <View
+          style={[
+            styles.buttonRow,
+            // Lift the buttons clear of the Android nav bar / iOS home
+            // indicator. 16dp is a comfortable minimum gap when the OS
+            // doesn't report a bottom inset (older Android, edge-to-edge
+            // off).
+            { paddingBottom: Math.max(16, insets.bottom + 12) },
+          ]}
+        >
           {showBackButton ? (
             <TouchableOpacity
               style={styles.secondaryButton}
@@ -369,7 +383,7 @@ export function WelcomeCarousel({
             <Text style={styles.primaryButtonText}>{primaryLabel}</Text>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      </View>
     </Modal>
   );
 }
@@ -475,6 +489,11 @@ const styles = StyleSheet.create({
   cardScroll: {
     flexGrow: 1,
     alignItems: 'center',
+    // Centre the illustration + title + body vertically in the available
+    // space between the header row and the button row. Previous layout
+    // pinned everything to the top of the scroll view which left a big
+    // empty band above the buttons.
+    justifyContent: 'center',
     paddingHorizontal: 24,
     paddingTop: 8,
     paddingBottom: 32,

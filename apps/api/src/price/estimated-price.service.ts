@@ -319,7 +319,14 @@ export class EstimatedPriceService {
         latest.price_per_litre      AS "priceLitre",
         ST_Distance(s.location, target.location) AS "distanceMeters"
       FROM "Station" target
-      CROSS JOIN LATERAL (
+      -- Hotfix 2026-05-14: was CROSS JOIN LATERAL (...) ON true which
+      -- Postgres rejects (42601: syntax error at or near "ON") — CROSS
+      -- JOIN does not accept an ON clause. LEFT JOIN LATERAL ... ON true
+      -- has equivalent semantics here (when the subquery returns no
+      -- rows, the inner JOIN to Station s drops the resulting null row,
+      -- so the final result still yields zero rows for stations with no
+      -- qualifying neighbours).
+      LEFT JOIN LATERAL (
         SELECT DISTINCT ON (sub.station_id)
           sub.station_id,
           (elem->>'price_per_litre')::float8 AS price_per_litre

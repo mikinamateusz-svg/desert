@@ -828,9 +828,19 @@ epics:
       - id: 3.17
         title: Activity Row Status Polish + Admin Cleanup
         file: 3-17-activity-row-status-polish.md
-        status: ready-for-dev
+        status: done
         ready_date: 2026-05-07
+        dev_started: 2026-05-07
+        dev_completed: 2026-05-07
+        review_date: 2026-05-07
+        commit: dab4dd2
+        review_findings: "17 patches applied (P-1..P-17), 5 deferred items, 1 spec deviation (BAD-SPEC-1 button styling). Critical: P-1 UUID validation on restored_from_submission_id (closes Link href injection vector), P-3 empty-prices guard on approveNewer/approveOlder (would have wiped existing verified prices), P-4/P-5 tappable predicate tightening (Story 4.3 shadow_banned secrecy invariant defense). Full details in spec Dev Agent Record."
+        patches_applied: "2026-05-07 — all 17 applied; API 1180/1180 (was 1177, +3 net), mobile 50/50."
         note: >
+          Status corrected 2026-05-15 from stale `ready-for-dev` to `done` —
+          the spec's Dev Agent Record was filled in at ship time but the
+          status line at the top of the spec + this entry never got bumped.
+          Original note follows:
           Replaces the generic "Under review" fallback with deterministic
           per-reason inline copy for the full flag_reason taxonomy + adds a
           tap-to-explain bottom sheet with reason-aware CTA (retake / dismiss /

@@ -1,6 +1,7 @@
 # Story 3.17: Activity Row Status Polish + Admin Cleanup
 
-Status: ready-for-dev
+Status: done
+Shipped: 2026-05-07 (commit dab4dd2)
 
 **Trigger:** 2026-05-07 — 3.14 (commit `a56484b`) and 3.16 (commit `8ffc266`) just shipped. Both stories left the activity-row UX deliberately minimal ("Under review" generic fallback, no tap-to-explain) and deferred several admin-side polish items to here. This story closes those loops before launch — using the deterministic `flag_reason` taxonomy we already have in code, not waiting 30 days for frequency data (a richer copy revision based on real usage is explicitly tracked as a future iteration in Out of Scope below).
 

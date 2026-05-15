@@ -85,6 +85,47 @@ describe('StationClassificationService', () => {
       expect(service.extractBrand('Lotos Stacja')).toBe('lotos');
     });
 
+    // Story 2.19 — new brand coverage
+    it('matches pieprzyk (PL independent network) with word boundary', () => {
+      expect(service.extractBrand('Pieprzyk Stacja')).toBe('pieprzyk');
+      expect(service.extractBrand('Stacja Pieprzyk Łódź')).toBe('pieprzyk');
+    });
+
+    it('does NOT match pieprzyk when embedded in another word', () => {
+      // Defends the \bpieprzyk\b boundary added in the 2.19 review patch.
+      // Synthetic Polish examples "Pieprzykowo" / "Pieprzykarnia" must NOT
+      // collide with the brand match.
+      expect(service.extractBrand('Stacja Pieprzykowo')).toBe('independent');
+      expect(service.extractBrand('Pieprzykarnia Wschód')).toBe('independent');
+    });
+
+    it('matches avia with word boundary', () => {
+      expect(service.extractBrand('Avia Stacja')).toBe('avia');
+      expect(service.extractBrand('AVIA Warszawa')).toBe('avia');
+    });
+
+    it('does NOT match avia when embedded in another word', () => {
+      // Defends the \bavia\b boundary — false positives would mis-classify
+      // unrelated names. "Aviapark", "Saviano", "aviaria" must NOT match.
+      expect(service.extractBrand('Stacja Aviapark')).toBe('independent');
+      expect(service.extractBrand('Saviano Fuel')).toBe('independent');
+    });
+
+    // Story 2.19 AC11 audit — verify orlen stylings beyond plain "ORLEN".
+    it('matches orlen with PKN prefix and Stacja prefix variants', () => {
+      expect(service.extractBrand('PKN ORLEN Warszawa')).toBe('orlen');
+      expect(service.extractBrand('Stacja Orlen Łódź ul. Piotrkowska')).toBe('orlen');
+    });
+
+    // Story 2.19 AC11 audit — recognised PL chains not covered by an explicit
+    // pattern must fall through to independent (per existing brand-patterns
+    // behaviour). Bliska / OKTAN / Anwim are the documented fall-throughs.
+    it('falls through to independent for Bliska / OKTAN / Anwim', () => {
+      expect(service.extractBrand('Stacja Bliska')).toBe('independent');
+      expect(service.extractBrand('OKTAN Stacja Paliw')).toBe('independent');
+      expect(service.extractBrand('Anwim Paliwa')).toBe('independent');
+    });
+
     it('returns independent for unrecognised name', () => {
       expect(service.extractBrand('Stacja u Kowalskiego')).toBe('independent');
     });

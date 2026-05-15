@@ -168,6 +168,48 @@ export default {
     navigate: 'Navigate →',
     close: 'Close station details',
     notAvailable: 'Not available',
+    // Story 2.19 — non-match hint when station is outside the active chain filter.
+    notInChainFilter: 'Outside your chain filter',
+  },
+  // Story 2.19 — chain filter UI.
+  mapFilters: {
+    fuelPillPrefix: 'Fuel',
+    fuelPillA11y: 'Select fuel. Currently: {{fuel}}.',
+    chainPillInactive: 'Chains',
+    chainPillInactiveA11y: 'Filter chains. Showing all.',
+    chainPillActive_one: '{{count}} chain',
+    chainPillActive_other: '{{count}} chains',
+    chainPillActiveA11y_one: '{{count}} chain selected. Tap to change filter.',
+    chainPillActiveA11y_other: '{{count}} chains selected. Tap to change filter.',
+    banner: {
+      body_one: '{{activeCount}} chain active · {{demotedCount}} others muted',
+      body_other: '{{activeCount}} chains active · {{demotedCount}} others muted',
+      a11y: 'Chain filter active: {{activeCount}}. Muted stations: {{demotedCount}}. Tap to change.',
+      clear: 'Clear',
+    },
+  },
+  chainFilter: {
+    title: 'Your chains',
+    subtitle: "We'll show them in full colour. Other stations stay visible but muted — so you don't miss a cheaper option.",
+    allChains: 'All chains',
+    // EN "Apply" doesn't inflect with count — single key is fine.
+    applyButton: 'Apply ({{count}})',
+    applyButtonAll: 'Apply',
+  },
+  chainNames: {
+    orlen: 'Orlen',
+    bp: 'BP',
+    shell: 'Shell',
+    lotos: 'Lotos',
+    circle_k: 'Circle K',
+    moya: 'MOYA',
+    amic: 'AMIC',
+    avia: 'Avia',
+    auchan: 'Auchan',
+    pieprzyk: 'Pieprzyk',
+    huzar: 'Huzar',
+    carrefour: 'Carrefour',
+    independent: 'Independent station',
   },
   freshness: {
     fresh:         'Just updated',

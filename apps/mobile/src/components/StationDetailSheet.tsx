@@ -25,10 +25,31 @@ interface Props {
   station: StationDto | null;
   prices: StationPriceDto | null;
   selectedFuel: FuelType | null;
+  /**
+   * Story 2.19 — chain filter state. When `chainFilterActive` is true
+   * and `selectedChainBrands` does NOT include the station's brand, the
+   * sheet shows a muted info line ("Niezgodna z twoim filtrem sieci")
+   * above the price table.
+   *
+   * Review patch F14 — the sheet computes the membership check itself
+   * (rather than receiving an already-computed boolean) so it can use
+   * `displayStation` (which preserves the previous station through the
+   * slide-out animation). Otherwise the hint flickers off mid-dismiss
+   * because the caller's `selectedStation` flips to null first.
+   */
+  chainFilterActive?: boolean;
+  selectedChainBrands?: readonly string[];
   onDismiss: () => void;
 }
 
-export function StationDetailSheet({ station, prices, selectedFuel, onDismiss }: Props) {
+export function StationDetailSheet({
+  station,
+  prices,
+  selectedFuel,
+  chainFilterActive = false,
+  selectedChainBrands = [],
+  onDismiss,
+}: Props) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const [showExplain, setShowExplain] = useState(false);
@@ -151,12 +172,37 @@ export function StationDetailSheet({ station, prices, selectedFuel, onDismiss }:
               <Text style={styles.closeBtnText}>✕</Text>
             </TouchableOpacity>
 
-            {/* Header: brand logo + station name + address */}
+            {/* Header: brand logo + station name + chain name + address */}
             <View style={styles.header}>
               <BrandLogo brand={displayStation?.brand ?? null} />
               <View style={styles.headerText}>
                 <Text style={styles.stationName} numberOfLines={2}>
                   {displayStation?.name ?? ''}
+                </Text>
+                {/* Story 2.19 AC2 — chain name as second line. Falls back
+                    to localised "Stacja niezależna" when brand is null
+                    or doesn't have a chainNames key.
+                    Review patch F10 — in dev, warn when the fallback
+                    fires for a non-null brand so missing translations
+                    surface during development instead of silently
+                    rendering as "Stacja niezależna". */}
+                <Text style={styles.chainName} numberOfLines={1}>
+                  {(() => {
+                    const rawBrand = displayStation?.brand ?? null;
+                    const brand = (rawBrand ?? 'independent').toLowerCase();
+                    const key = `chainNames.${brand}`;
+                    const translated = t([key, 'chainNames.independent']);
+                    if (__DEV__ && rawBrand && brand !== 'independent') {
+                      const direct = t(key, { defaultValue: '__MISSING__' });
+                      if (direct === '__MISSING__') {
+                        // eslint-disable-next-line no-console
+                        console.warn(
+                          `[StationDetailSheet] Missing i18n key for brand "${brand}" — falling back to "independent"`,
+                        );
+                      }
+                    }
+                    return translated;
+                  })()}
                 </Text>
                 {displayStation?.address ? (
                   <Text style={styles.address} numberOfLines={1}>
@@ -165,6 +211,25 @@ export function StationDetailSheet({ station, prices, selectedFuel, onDismiss }:
                 ) : null}
               </View>
             </View>
+
+            {/* Story 2.19 AC7 — non-match hint when the station is outside
+                the active chain filter. Computes membership from
+                `displayStation` (review patch F14) so the hint stays
+                visible during the sheet's slide-out animation; otherwise
+                the caller's `selectedStation` flips to null first and
+                the hint flickers off mid-dismiss. */}
+            {chainFilterActive
+              && selectedChainBrands.length > 0
+              && displayStation
+              && !selectedChainBrands.includes(
+                (displayStation.brand ?? 'independent').toLowerCase(),
+              ) && (
+              <View style={styles.nonMatchRow}>
+                <Text style={styles.nonMatchText}>
+                  {t('stationDetail.notInChainFilter')}
+                </Text>
+              </View>
+            )}
 
             {/* Price list — shown whenever prices object exists */}
             {prices !== null ? (
@@ -376,10 +441,29 @@ const styles = StyleSheet.create({
     color: tokens.brand.ink,
     lineHeight: 22,
   },
+  chainName: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: tokens.neutral.n500,
+    marginTop: 2,
+  },
   address: {
     fontSize: 12,
     color: tokens.neutral.n500,
     marginTop: 2,
+  },
+  // Story 2.19 — non-match hint row
+  nonMatchRow: {
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    backgroundColor: tokens.neutral.n100,
+    borderRadius: tokens.radius.sm,
+    marginBottom: 12,
+  },
+  nonMatchText: {
+    fontSize: 12,
+    color: tokens.neutral.n500,
+    fontStyle: 'italic',
   },
 
   // Price list

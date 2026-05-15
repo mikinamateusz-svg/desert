@@ -39,4 +39,17 @@ export const flags = {
    * to-set scenario stays safe. Per memory `feedback_feature_flags.md`.
    */
   alertsLoop: process.env['EXPO_PUBLIC_ALERTS_LOOP'] === 'true',
+
+  /**
+   * Story 2.19 — chain badge on pins + chain filter pill. When false,
+   * pins render with no monogram badge, the `Sieci` pill is hidden,
+   * the chain filter sheet never opens, and the demote banner / detail-
+   * sheet non-match hint are inert. The fuel pill (also from 2.19) is
+   * NOT behind this flag — it's a UX refactor that ships unconditionally.
+   *
+   * Default OFF unless the env var is explicitly set to 'true' (matches
+   * alertsLoop's opt-in posture). Production stays OFF until the brand-
+   * pattern coverage audit (AC11) is verified against prod station data.
+   */
+  chainFilter: process.env['EXPO_PUBLIC_CHAIN_FILTER'] === 'true',
 } as const;

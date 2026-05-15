@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView, Linking, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar, Linking, Alert } from 'react-native';
 import Mapbox, { MapView, Camera, MarkerView } from '@rnmapbox/maps';
 import Supercluster from 'supercluster';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
@@ -7,11 +7,12 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { tokens } from '../../src/theme';
 import type GeoJSON from 'geojson';
-import type { FuelType } from '@desert/types';
 import { MapFABGroup } from '../../src/components/contribution/MapFABGroup';
 import { useCameraPermission } from '../../src/hooks/useCameraPermission';
 import { haversineMetres } from '../../src/utils/haversine';
 import { StationPin } from '../../src/components/map/StationPin';
+import { FuelFilterPill, ChainFilterPill } from '../../src/components/map/MapFilterPills';
+import { ChainFilterDemoteBanner } from '../../src/components/map/ChainFilterDemoteBanner';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
 import { LoadingScreen, type LoadingStage } from '../../src/components/LoadingScreen';
@@ -22,8 +23,11 @@ import { useGuestSessionCounter } from '../../src/hooks/useGuestSessionCounter';
 import { apiGetMarketEventNudge } from '../../src/api/guest-nudge';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FuelTypePickerSheet } from '../../src/components/FuelTypePickerSheet';
+import { ChainFilterSheet } from '../../src/components/ChainFilterSheet';
 import { StationDetailSheet } from '../../src/components/StationDetailSheet';
-import { useFuelTypePreference, VALID_FUEL_TYPES } from '../../src/hooks/useFuelTypePreference';
+import { useFuelTypePreference } from '../../src/hooks/useFuelTypePreference';
+import { useChainFilterPreference, isStationInFilter } from '../../src/hooks/useChainFilterPreference';
+import { brandMonogram } from '../../src/utils/brandMonogram';
 import { useLocation, type LocationCoords } from '../../src/hooks/useLocation';
 import { useNearbyStations } from '../../src/hooks/useNearbyStations';
 import { useNearbyPrices } from '../../src/hooks/useNearbyPrices';
@@ -97,6 +101,29 @@ export default function MapScreen() {
     markPromptSeen,
     loaded: fuelTypeLoaded,
   } = useFuelTypePreference();
+
+  // Story 2.19 — chain filter state. Loaded async from AsyncStorage;
+  // until it's loaded we treat the filter as inactive (no demotion).
+  // `chainFilterChangeKey` bumps every time the selection changes so
+  // the demote banner re-arms. Review patch F1 — consume the hook's
+  // `loaded` flag and gate the demote pass with it; otherwise pins
+  // render full-colour on cold start and flash demoted once storage
+  // resolves.
+  const {
+    selectedBrands,
+    toggleBrand,
+    clearFilter: clearChainFilter,
+    isFilterActive: isChainFilterActive,
+    loaded: chainFilterLoaded,
+  } = useChainFilterPreference();
+  const [chainFilterChangeKey, setChainFilterChangeKey] = useState(0);
+  const [chainSheetVisible, setChainSheetVisible] = useState(false);
+  const [fuelSheetFromPillVisible, setFuelSheetFromPillVisible] = useState(false);
+  // Review patch F25 — extract layout constants so the banner's topOffset
+  // and the pill row's static top stay in sync if either changes.
+  const PILL_ROW_TOP_GAP = 16;
+  const PILL_ROW_HEIGHT = 40;
+  const BANNER_GAP = 8;
 
   // Clean up timers on unmount
   useEffect(() => () => {
@@ -196,6 +223,20 @@ export default function MapScreen() {
     () => new Map(prices.map(p => [p.stationId, p])),
     [prices],
   );
+
+  // Story 2.19 — demoted station count for the banner copy. Only matters
+  // when the chain filter is active; otherwise the banner is hidden and
+  // the count isn't read. Counted against `stations` (all in radius), NOT
+  // the clustered set, so the count is stable across zoom levels.
+  // Review patch F1 — gate on chainFilterLoaded to avoid computing
+  // against the initial-empty selection before storage resolves.
+  const demotedStationCount = useMemo(() => {
+    if (!flags.chainFilter || !chainFilterLoaded || !isChainFilterActive) return 0;
+    return stations.reduce(
+      (n, s) => (isStationInFilter(s.brand, selectedBrands) ? n : n + 1),
+      0,
+    );
+  }, [stations, selectedBrands, isChainFilterActive, chainFilterLoaded]);
 
   // Build cluster index from stations — recomputes when station list changes
   const clusterIndex = useMemo(() => {
@@ -558,6 +599,16 @@ export default function MapScreen() {
           // the currently selected fuel (which is what the label shows).
           // The detail sheet handles the multi-fuel view separately.
           const isStale = priceData?.stalenessFlags?.[selectedFuelType] === true;
+          // Story 2.19 — chain monogram + demote state. Monogram is only
+          // rendered when the chain filter feature is enabled; demote is
+          // only computed when the filter is active (selection non-empty).
+          // Review patch F1 — gate isDemoted on chainFilterLoaded so cold
+          // start doesn't render full-colour and then flash demoted.
+          const monogram = flags.chainFilter ? brandMonogram(station.brand) : null;
+          const isDemoted = flags.chainFilter
+            && chainFilterLoaded
+            && isChainFilterActive
+            && !isStationInFilter(station.brand, selectedBrands);
           let label: string;
           if (range) {
             label = `~${((range.low + range.high) / 2).toFixed(2)}`;
@@ -566,6 +617,15 @@ export default function MapScreen() {
           } else {
             label = '?';
           }
+          // Review patch F6 — a11y label: "<Chain>, <Fuel> <price> zł/l"
+          // for screen readers. Falls through to localised
+          // "Stacja niezależna" when brand is null/unknown.
+          const brandKey = (station.brand ?? 'independent').toLowerCase();
+          const chainName = t([`chainNames.${brandKey}`, 'chainNames.independent']);
+          const fuelLabel = t(`fuelTypes.${selectedFuelType}`);
+          const a11yLabel = label === '?'
+            ? `${chainName}, ${fuelLabel} ${t('stationDetail.notAvailable')}`
+            : `${chainName}, ${fuelLabel} ${label} zł/l`;
           return (
             <MarkerView
               key={station.id}
@@ -578,6 +638,9 @@ export default function MapScreen() {
                 isEstimated={isEstimated}
                 isStale={isStale}
                 isSelected={station.id === selectedStation?.id}
+                monogram={monogram}
+                isDemoted={isDemoted}
+                accessibilityLabel={a11yLabel}
                 onPress={() => handlePinPress(station.id)}
               />
             </MarkerView>
@@ -607,22 +670,50 @@ export default function MapScreen() {
       {/* Story 6.10 / 6.13 — price-alerts bell icon. Hidden when flags.alertsLoop is off. */}
       <BellAlertIcon topInset={insets.top} />
 
-      {/* Fuel type selector — below top bar */}
-      <View style={[styles.fuelSelector, { top: topBarHeight + 16 }]} pointerEvents="box-none">
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.fuelSelectorContent}>
-          {(VALID_FUEL_TYPES as FuelType[]).map(ft => (
-            <TouchableOpacity
-              key={ft}
-              style={[styles.fuelPill, selectedFuelType === ft && styles.fuelPillActive]}
-              onPress={() => setSelectedFuelType(ft)}
-            >
-              <Text style={[styles.fuelPillText, selectedFuelType === ft && styles.fuelPillTextActive]}>
-                {t(`fuelTypes.${ft}`)}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+      {/* Story 2.19 — two-pill filter row. Supersedes the scrolled fuel
+          chip row from Story 2.4 / UI-8. Fuel pill is always rendered;
+          chain pill is gated by flags.chainFilter. */}
+      <View style={[styles.filterPillRow, { top: topBarHeight + PILL_ROW_TOP_GAP }]} pointerEvents="box-none">
+        <FuelFilterPill
+          fuelType={selectedFuelType}
+          onPress={() => setFuelSheetFromPillVisible(true)}
+        />
+        {flags.chainFilter && (
+          <ChainFilterPill
+            selectedCount={selectedBrands.length}
+            onPress={() => {
+              // Review patch F20 — bump triggerKey on every pill re-tap
+              // so the demote banner re-summons (AC6 letter). Without
+              // this, the banner only re-appears on actual selection
+              // change, not on a "remind me what's filtered" tap.
+              setChainFilterChangeKey((k) => k + 1);
+              setChainSheetVisible(true);
+            }}
+          />
+        )}
       </View>
+
+      {/* Story 2.19 — demote banner. Appears below the pill row each
+          time the chain filter changes; auto-dismisses after 4s.
+          Review patch F27 — skip banner render when no nearby stations
+          are loaded yet; "N sieci aktywne · 0 wyciszonych" reads oddly
+          when the map is mid-fetch. */}
+      {flags.chainFilter && stations.length > 0 && (
+        <ChainFilterDemoteBanner
+          activeChainCount={selectedBrands.length}
+          demotedStationCount={demotedStationCount}
+          triggerKey={chainFilterChangeKey}
+          onClear={() => {
+            clearChainFilter();
+            setChainFilterChangeKey((k) => k + 1);
+          }}
+          onTap={() => {
+            setChainFilterChangeKey((k) => k + 1);
+            setChainSheetVisible(true);
+          }}
+          topOffset={topBarHeight + PILL_ROW_TOP_GAP + PILL_ROW_HEIGHT + BANNER_GAP}
+        />
+      )}
 
       {/* Shared TopChrome — extracted so Activity + Log get the same wordmark
           + menu without duplicating the JSX. `overlay` mode positions it
@@ -699,10 +790,46 @@ export default function MapScreen() {
         onDismiss={handleFuelPickerDismiss}
       />
 
+      {/* Story 2.19 — fuel sheet opened from the fuel pill (change-mode).
+          Distinct from the first-launch picker above: this one persists
+          the selection but does NOT default to PB_95 on dismiss; tapping
+          outside simply closes without changing the current fuel.
+          Review patch F15 — only render when the first-launch picker is
+          NOT visible; otherwise both modals could mount simultaneously
+          and Android's animation gets confused. */}
+      <FuelTypePickerSheet
+        visible={fuelSheetFromPillVisible && !showFuelPicker}
+        onSelect={(ft) => {
+          setSelectedFuelType(ft);
+          setFuelSheetFromPillVisible(false);
+        }}
+        onDismiss={() => setFuelSheetFromPillVisible(false)}
+      />
+
+      {/* Story 2.19 — chain filter sheet. Gated by flags.chainFilter so
+          the modal subtree is dead code when the flag is off. */}
+      {flags.chainFilter && (
+        <ChainFilterSheet
+          visible={chainSheetVisible}
+          selectedBrands={selectedBrands}
+          onToggle={(b) => {
+            toggleBrand(b);
+            setChainFilterChangeKey((k) => k + 1);
+          }}
+          onClearAll={() => {
+            clearChainFilter();
+            setChainFilterChangeKey((k) => k + 1);
+          }}
+          onDismiss={() => setChainSheetVisible(false)}
+        />
+      )}
+
       <StationDetailSheet
         station={selectedStation}
         prices={selectedStationPrices}
         selectedFuel={selectedFuelType}
+        chainFilterActive={flags.chainFilter && isChainFilterActive}
+        selectedChainBrands={selectedBrands}
         onDismiss={() => setSelectedStation(null)}
       />
     </View>
@@ -749,39 +876,18 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
 
-  // Fuel type selector
-  fuelSelector: {
+  // Story 2.19 — two-pill filter row (fuel + chain). Replaces the
+  // scrolled fuel chip row from Story 2.4 / UI-8.
+  filterPillRow: {
     position: 'absolute',
     left: 0,
     right: 0,
     zIndex: 10,
-  },
-  fuelSelectorContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 16,
-    gap: 8,
     flexDirection: 'row',
-  },
-  fuelPill: {
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: tokens.radius.full,
-    backgroundColor: 'rgba(26,26,26,0.85)', // semi-transparent ink — no token equivalent for rgba
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.15)',   // semi-transparent white — no token equivalent for rgba
-  },
-  fuelPillActive: {
-    backgroundColor: tokens.brand.accent,
-    borderColor: tokens.brand.accent,
-  },
-  fuelPillText: {
-    color: tokens.neutral.n200,
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  fuelPillTextActive: {
-    color: tokens.brand.ink,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+    paddingHorizontal: 16,
   },
 
   // Location denied banner (card, below top bar + fuel selector)

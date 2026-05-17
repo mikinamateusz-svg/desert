@@ -442,6 +442,14 @@ export default {
     gpsLocating: 'Dopasowywanie stacji…',
     gpsNoNearby: 'Brak stacji w pobliżu — zdjęcie zostanie sprawdzone ręcznie',
     gpsOverride: 'Brak GPS — możesz zrobić zdjęcie, sprawdzimy ręcznie',
+    // Shown when ≥2 stations sit within the match radius. The count is
+    // always ≥2 in practice; _one entry is included only as an i18next
+    // safety fallback. PL plural rules: 1 → "stacja" (one), 2-4 →
+    // "stacje" (few), 5+ → "stacji" (many).
+    gpsMultiNearby_one: '📍 {{count}} stacja w pobliżu — wybierzesz po zdjęciu',
+    gpsMultiNearby_few: '📍 {{count}} stacje w pobliżu — wybierzesz po zdjęciu',
+    gpsMultiNearby_many: '📍 {{count}} stacji w pobliżu — wybierzesz po zdjęciu',
+    gpsMultiNearby_other: '📍 {{count}} stacji w pobliżu — wybierzesz po zdjęciu',
     frameHint: 'Skieruj aparat na tablicę z cenami',
     takePhoto: 'Zrób zdjęcie',
     cancel: 'Anuluj',

@@ -431,6 +431,12 @@ export default {
     gpsLocating: 'Пошук станції…',
     gpsNoNearby: 'Немає станцій поблизу — заявку буде розглянуто вручну',
     gpsOverride: 'Немає GPS — можете зробити знімок, перевіримо вручну',
+    // UK plural rules: 1 → "станція" (one), 2-4 → "станції" (few),
+    // 5+ → "станцій" (many). Count is always ≥2 in practice.
+    gpsMultiNearby_one: '📍 {{count}} станція поруч — оберете після фото',
+    gpsMultiNearby_few: '📍 {{count}} станції поруч — оберете після фото',
+    gpsMultiNearby_many: '📍 {{count}} станцій поруч — оберете після фото',
+    gpsMultiNearby_other: '📍 {{count}} станцій поруч — оберете після фото',
     frameHint: 'Наведіть камеру на табло з цінами',
     takePhoto: 'Зробити знімок',
     cancel: 'Скасувати',

@@ -159,13 +159,19 @@ export default function CaptureScreen() {
       )
     : [];
 
-  // GPS indicator text — Story 3.20 gates this on GPS state + override.
-  // Three rendering states beyond multiple-nearby:
+  // GPS indicator text. Five rendering states:
   //   - no GPS, gate active        → "Locating..." (with caller adding spinner)
   //   - no GPS, override fired     → "No GPS — review will be manual"
   //   - GPS, exactly 1 nearby      → "📍 Station · Xm"
   //   - GPS, 0 nearby              → "No station nearby"
-  //   - GPS, ≥2 nearby             → null (disambiguation handles it post-capture)
+  //   - GPS, ≥2 nearby             → "📍 N stations nearby — pick after the photo"
+  //
+  // The multi-nearby branch used to render nothing (silent). Field feedback:
+  // user can't tell whether "no indicator" means "still locating" or
+  // "ambiguous match". The count tells them how much disambiguation work
+  // is coming after the shutter; copy sets the expectation that they
+  // pick the right station post-capture (which the existing
+  // StationDisambiguationSheet already handles).
   const gpsIndicator: string | null = (() => {
     if (!location) {
       return overrideActive ? t('contribution.gpsOverride') : t('contribution.gpsLocating');
@@ -176,7 +182,7 @@ export default function CaptureScreen() {
       return `📍 ${s.name} · ${dist}m`;
     }
     if (nearbyStations.length === 0) return t('contribution.gpsNoNearby');
-    return null; // multiple — show nothing until post-capture disambiguation
+    return t('contribution.gpsMultiNearby', { count: nearbyStations.length });
   })();
 
   // Post-capture stations — filtered from the same hook output at capture time

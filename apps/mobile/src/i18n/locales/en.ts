@@ -423,6 +423,8 @@ export default {
     gpsLocating: 'Matching station…',
     gpsNoNearby: 'No station nearby — submission will be reviewed manually',
     gpsOverride: "No GPS — you can still take a photo, we'll review manually",
+    gpsMultiNearby_one: '📍 {{count}} station nearby — pick after the photo',
+    gpsMultiNearby_other: '📍 {{count}} stations nearby — pick after the photo',
     frameHint: 'Point camera at price board',
     takePhoto: 'Take photo',
     cancel: 'Cancel',

@@ -141,6 +141,10 @@ export default {
     openMenu: 'Open menu',
     recentre: 'Re-centre map',
     cheapestButton: 'Cheapest in view',
+    refreshA11y: 'Refresh stations and prices',
+    pricesErrorBody: "Couldn't load prices.",
+    pricesErrorRetry: 'Try again',
+    pricesErrorA11y: 'Prices failed to load. Tap to try again.',
     cheapestNone: 'No priced stations in view',
   },
   loading: {

@@ -143,6 +143,12 @@ export default {
     openMenu: 'Otwórz menu',
     recentre: 'Wróć do mojej lokalizacji',
     cheapestButton: 'Najtańsza w widoku',
+    // Manual refresh affordance in the top chrome (story 2.19 follow-up).
+    refreshA11y: 'Odśwież stacje i ceny',
+    // Prices-error banner — shown when the prices fetch keeps failing.
+    pricesErrorBody: 'Nie udało się załadować cen.',
+    pricesErrorRetry: 'Spróbuj ponownie',
+    pricesErrorA11y: 'Błąd ładowania cen. Stuknij, aby spróbować ponownie.',
     cheapestNone: 'Brak stacji z cenami w widoku',
   },
   loading: {

@@ -100,5 +100,29 @@ export function useNearbyPrices(
     };
   }, [accessToken, center?.lat, center?.lng, refreshTick]);
 
+  // Exponential-backoff retry on persistent error. Bridges the gap between
+  // the user-visible failure and the next scheduled focus-effect poll (60s).
+  // Sequence: 2s, 4s, 8s, 16s, 32s, capped at 60s thereafter. Resets to 0
+  // on the next successful fetch.
+  //
+  // Why this works even when `error` doesn't toggle between consecutive
+  // failures: `retryAttempt` is bumped on each timer fire, which forces
+  // the effect to re-run and schedule the next backoff. setError(true)
+  // on already-true is a no-op React skips, so we can't rely on `error`
+  // alone to chain retries.
+  const [retryAttempt, setRetryAttempt] = useState(0);
+  useEffect(() => {
+    if (!error) {
+      if (retryAttempt !== 0) setRetryAttempt(0);
+      return;
+    }
+    const delayMs = Math.min(2_000 * (1 << retryAttempt), 60_000);
+    const timer = setTimeout(() => {
+      setRetryAttempt((a) => a + 1);
+      refresh();
+    }, delayMs);
+    return () => clearTimeout(timer);
+  }, [error, retryAttempt, refresh]);
+
   return { prices, loading, error, refresh };
 }

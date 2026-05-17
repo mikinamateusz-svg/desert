@@ -113,5 +113,23 @@ export function useNearbyStations(
     };
   }, [accessToken, center?.lat, center?.lng, refreshTick]);
 
+  // Exponential-backoff retry on persistent error — same pattern as
+  // useNearbyPrices. Bridges the gap between a user-visible failure
+  // and the next focus-effect poll (60s). 2s → 4s → 8s → 16s → 32s →
+  // capped at 60s. Reset on the next successful fetch.
+  const [retryAttempt, setRetryAttempt] = useState(0);
+  useEffect(() => {
+    if (!error) {
+      if (retryAttempt !== 0) setRetryAttempt(0);
+      return;
+    }
+    const delayMs = Math.min(2_000 * (1 << retryAttempt), 60_000);
+    const timer = setTimeout(() => {
+      setRetryAttempt((a) => a + 1);
+      refresh();
+    }, delayMs);
+    return () => clearTimeout(timer);
+  }, [error, retryAttempt, refresh]);
+
   return { stations, loading, error, refresh };
 }

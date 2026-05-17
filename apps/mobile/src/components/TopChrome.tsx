@@ -13,6 +13,13 @@ interface Props {
    * for the map case.
    */
   overlay?: boolean;
+  /**
+   * Optional manual-refresh handler. When provided, renders a small
+   * circular arrow icon to the left of the menu button. Only the map
+   * screen passes this — Activity / Log have nothing to refresh from
+   * the chrome.
+   */
+  onRefresh?: () => void;
 }
 
 /**
@@ -28,7 +35,7 @@ interface Props {
  * The bell icon (alerts) is intentionally hidden for Phase 1 — alerts are
  * Epic 6. Re-enable when alert preferences and push notifications ship.
  */
-export function TopChrome({ overlay = false }: Props) {
+export function TopChrome({ overlay = false, onRefresh }: Props) {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
 
@@ -44,6 +51,16 @@ export function TopChrome({ overlay = false }: Props) {
         litr<Text style={styles.wordmarkAccent}>o</Text>
       </Text>
       <View style={styles.actions}>
+        {onRefresh && (
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={onRefresh}
+            accessibilityLabel={t('map.refreshA11y')}
+            accessibilityRole="button"
+          >
+            <Ionicons name="refresh-outline" size={22} color={tokens.brand.ink} />
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           style={styles.actionButton}
           onPress={() => router.push('/(app)/account')}

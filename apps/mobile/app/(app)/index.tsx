@@ -13,6 +13,7 @@ import { haversineMetres } from '../../src/utils/haversine';
 import { StationPin } from '../../src/components/map/StationPin';
 import { FuelFilterPill, ChainFilterPill } from '../../src/components/map/MapFilterPills';
 import { ChainFilterDemoteBanner } from '../../src/components/map/ChainFilterDemoteBanner';
+import { PricesErrorBanner } from '../../src/components/map/PricesErrorBanner';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/store/auth.store';
 import { LoadingScreen, type LoadingStage } from '../../src/components/LoadingScreen';
@@ -697,8 +698,9 @@ export default function MapScreen() {
           time the chain filter changes; auto-dismisses after 4s.
           Review patch F27 — skip banner render when no nearby stations
           are loaded yet; "N sieci aktywne · 0 wyciszonych" reads oddly
-          when the map is mid-fetch. */}
-      {flags.chainFilter && stations.length > 0 && (
+          when the map is mid-fetch. Also suppressed while the prices-
+          error banner is visible — error UX takes priority. */}
+      {flags.chainFilter && stations.length > 0 && !pricesError && (
         <ChainFilterDemoteBanner
           activeChainCount={selectedBrands.length}
           demotedStationCount={demotedStationCount}
@@ -715,11 +717,32 @@ export default function MapScreen() {
         />
       )}
 
+      {/* Prices-error banner — visible when `useNearbyPrices` is in a
+          sustained error state. The hook's exponential-backoff retry
+          runs underneath, but the user gets an explicit signal + a
+          tap-to-retry path instead of staring at "?" pins with no
+          recovery. Slots into the same position as the demote banner
+          (which is suppressed when this is shown). */}
+      <PricesErrorBanner
+        visible={pricesError}
+        onRetry={refreshPrices}
+        topOffset={topBarHeight + PILL_ROW_TOP_GAP + PILL_ROW_HEIGHT + BANNER_GAP}
+      />
+
       {/* Shared TopChrome — extracted so Activity + Log get the same wordmark
           + menu without duplicating the JSX. `overlay` mode positions it
           absolutely over the map canvas; tab screens use the default
-          flex-flow mode. */}
-      <TopChrome overlay />
+          flex-flow mode. The map passes `onRefresh` to render a small
+          refresh icon that re-fetches stations + prices (bypasses the
+          coord cache) — manual recovery path for users who hit a stale
+          state or just want the freshest data after submitting a price. */}
+      <TopChrome
+        overlay
+        onRefresh={() => {
+          refreshStations();
+          refreshPrices();
+        }}
+      />
 
       <MapFABGroup
         onAddPrice={() => void handleAddPrice()}

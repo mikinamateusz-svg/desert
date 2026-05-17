@@ -141,6 +141,10 @@ export default {
     openMenu: 'Відкрити меню',
     recentre: 'Повернутися до моєї локації',
     cheapestButton: 'Найдешевша у видимій зоні',
+    refreshA11y: 'Оновити станції та ціни',
+    pricesErrorBody: 'Не вдалося завантажити ціни.',
+    pricesErrorRetry: 'Спробувати ще раз',
+    pricesErrorA11y: 'Не вдалося завантажити ціни. Натисніть, щоб спробувати ще раз.',
     cheapestNone: 'Немає станцій з цінами у видимій зоні',
   },
   loading: {

@@ -205,7 +205,13 @@ export function StationPin({
         >
           <Text
             style={{
-              fontSize: isSelected ? 8 : 7,
+              // Bumped from 7/8 to 10/12 after the original sizes were
+              // confirmed unreadable on-device. The 32×32 pin (rotated
+              // -45°) has ~11px of headroom for a 5-char "~x.xx" label
+              // at its widest horizontal slice; 10 sits comfortably
+              // inside that bound. Selected pin (38×38, 3px border)
+              // gets 12 to keep the size hierarchy.
+              fontSize: isSelected ? 12 : 10,
               fontWeight: '800',
               color: showEstimated ? '#ffffff' : TEXT_COLOR[priceColor],
               transform: [{ rotate: '45deg' }],

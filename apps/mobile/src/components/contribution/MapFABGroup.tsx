@@ -75,7 +75,13 @@ export function MapFABGroup({
   const { pending, failed } = useQueueCount();
 
   return (
-    <View style={[styles.container, { bottom: insets.bottom + 12 }]}>
+    // FAB row sits flush against the safe-area boundary — the system gesture
+    // handle / home indicator stays untouched BELOW the inset. Removed the
+    // 12pt cushion that used to sit between the inset and the FAB row: it
+    // was wasted space on modern phones (gesture nav / home indicator
+    // already cleared by the safe-area inset itself) and pushed the
+    // buttons further from comfortable thumb reach on one-handed use.
+    <View style={[styles.container, { bottom: insets.bottom }]}>
       {(pending > 0 || failed > 0) && (
         <View style={styles.badgeRow}>
           <QueueBadge pending={pending} failed={failed} />

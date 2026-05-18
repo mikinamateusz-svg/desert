@@ -25,10 +25,23 @@ epics:
       - id: hardening-1
         title: "Pre-Launch Technical Hardening"
         file: 0-1-pre-launch-hardening.md
-        status: ready-for-dev
+        status: done
         ready_date: 2026-04-08
-        rollout_gate: "Must complete AFTER Step 1 (solo testing) and BEFORE Step 2 (friends & family beta)"
-        note: "Bundles 8 deferred fixes: ThrottlerGuard global registration, Submission+PriceHistory DB indexes, updated_at DB defaults, stale push token cleanup, market-signal rate limit, BullMQ separate Redis connections, StationFuelStaleness 7-day TTL."
+        dev_completed: 2026-05-18
+        rollout_gate: "Was the gate to Step 2 (friends & family beta). Gate now open."
+        note: >
+          Closed 2026-05-18 after audit revealed 7/8 fixes had already
+          landed incrementally across other story reviews (Fixes 1, 2,
+          4, 5, 7, 8 all in code; Fix 3 done for 6 models). Fix 6 was
+          SUPERSEDED by hardening-2 (2026-05-12) which solved Redis
+          connection sharing differently (architectural split rather
+          than per-worker doubling — fits Redis Cloud's 30-conn cap).
+          Phase 2 model extension to Fix 3 added 2026-05-18 in migration
+          20260518000000_add_updated_at_defaults_phase2 (covers
+          ResearchPhoto, PriceValidationRule, SystemConfig, Vehicle,
+          FillUp, StationClaim, DailyApiCost). Spec status now reflects
+          the actual functional state — same pattern as 3.17 closeout
+          on 2026-05-15.
 
       - id: hardening-2
         title: "BullMQ Connection Sharing"

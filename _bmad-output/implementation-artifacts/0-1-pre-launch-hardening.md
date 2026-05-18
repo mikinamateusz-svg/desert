@@ -2,8 +2,38 @@
 
 **Epic:** 0 (cross-cutting)
 **Story ID:** hardening-1
-**Status:** ready-for-dev
+**Status:** done
+**Closed:** 2026-05-18
 **Depends on:** Stories 1.9, 1.12, 2.3, 2.8, 3.x pipeline, 6.3, web-5
+
+## Status note (2026-05-18 audit)
+
+All 8 originally-specced fixes either completed incrementally across
+other story reviews OR explicitly superseded by a later architecture
+decision. Final closeout breakdown:
+
+| Fix | Resolution | Evidence |
+|---|---|---|
+| 1 — ThrottlerGuard global APP_GUARD | done incrementally | `apps/api/src/app.module.ts` providers array |
+| 2 — Submission partial verified index | done | migration `20260408000001_add_submission_price_index` |
+| 3 — DB-level DEFAULT now() on `updated_at` | done — original 6 models + Phase 2 extension on 2026-05-18 | migrations `20260408000002_add_updated_at_defaults` + `20260518000000_add_updated_at_defaults_phase2` |
+| 4 — DeviceNotRegistered token cleanup | done incrementally | `apps/api/src/alert/alert.service.ts` lines ~193-207 |
+| 5 — market-signal `/summary` throttle | done incrementally | `apps/api/src/market-signal/market-signal.controller.ts` line 18 |
+| 6 — Separate BullMQ Queue/Worker connections | **SUPERSEDED** by hardening-2 (2026-05-12) | Hardening-2 went the opposite direction: shared `REDIS_QUEUE_CLIENT` for all Queue ops, per-worker dedicated blocking connection ONLY for Worker. Net 31→16 connections, fits Redis Cloud's 30-conn cap. Applying Fix 6 as originally specced would re-inflate the count. |
+| 7 — StationFuelStaleness 7-day TTL filter | done incrementally | `apps/api/src/market-signal/staleness-detection.service.ts` line 150 |
+| 8 — PriceHistory composite index | done | migration `20260328000000_add_price_history` includes `PriceHistory_station_id_fuel_type_recorded_at_idx` |
+
+Same "spec status didn't get bumped while incremental fixes shipped"
+pattern as Story 3.17 (closed 2026-05-15). The Phase 2 extension
+migration on 2026-05-18 is the one piece of new work this closeout
+introduced: it adds DEFAULT NOW() to `updated_at` on the 7 Phase 2
+models (ResearchPhoto, PriceValidationRule, SystemConfig, Vehicle,
+FillUp, StationClaim, DailyApiCost) that were added after the April
+Fix 3 migration. The original 6-model migration remains canonical;
+the extension is purely additive.
+
+This story was the formal gate to Step 2 (friends & family beta) per
+the sprint-status rollout phases. Gate now open.
 
 ---
 

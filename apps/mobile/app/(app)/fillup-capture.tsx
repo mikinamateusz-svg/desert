@@ -26,6 +26,7 @@ import { apiRunFillupOcr, apiCreateFillup } from '../../src/api/fillups';
 import type { FillupFuelType, FillupOcrResult } from '../../src/api/fillups';
 import { apiListVehicles } from '../../src/api/vehicles';
 import type { Vehicle } from '../../src/api/vehicles';
+import { formatVehicleDisplayName } from '../../src/utils/formatVehicle';
 import { apiRunOdometerOcr, apiCreateOdometer, OdometerApiError } from '../../src/api/odometer';
 import type { ConsumptionResult } from '../../src/api/odometer';
 import { flags } from '../../src/config/flags';
@@ -648,7 +649,7 @@ function FillupCaptureContent() {
                       selectedVehicleId === v.id && styles.fuelChipTextActive,
                     ]}
                   >
-                    {v.nickname?.trim() || `${v.year} ${v.make} ${v.model}`}
+                    {formatVehicleDisplayName(v)}
                   </Text>
                 </TouchableOpacity>
               ))}

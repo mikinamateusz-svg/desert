@@ -152,6 +152,17 @@ async function request<T>(path: string, options: RequestInit): Promise<T> {
   return body as T;
 }
 
+// AbortError detector — different RN runtimes report aborts under
+// different names (DOMException with `AbortError`, generic Error with
+// the same name, or a node-style code). Caller uses this to skip error
+// state when the abort was intentional.
+export function isAbortError(err: unknown): boolean {
+  if (err && typeof err === 'object' && 'name' in err) {
+    return (err as { name: string }).name === 'AbortError';
+  }
+  return false;
+}
+
 /**
  * Synchronous pump-meter OCR. Server uses Claude Haiku with a 10s wall-clock
  * cap and never throws — even on timeout / parse failure / API error the
@@ -205,19 +216,28 @@ export interface ListFillupsParams {
   period?: FillupPeriod;
   page?: number;
   limit?: number;
+  /**
+   * Optional AbortSignal. Caller-supplied so rapid scope/period toggles
+   * can abort the previous in-flight request and prevent stacked requests
+   * (which were causing intermittent "load failed" toasts when the latest
+   * fetch lost to back-pressure on the server-side). Same pattern as the
+   * map's useNearbyStations / useNearbyPrices hooks.
+   */
+  signal?: AbortSignal;
 }
 
 export async function apiListFillups(
   accessToken: string,
   params: ListFillupsParams = {},
 ): Promise<ListFillupsResponse> {
-  const { vehicleId, period, page = 1, limit = 20 } = params;
+  const { vehicleId, period, page = 1, limit = 20, signal } = params;
   const qs = new URLSearchParams({ page: String(page), limit: String(limit) });
   if (vehicleId) qs.set('vehicleId', vehicleId);
   if (period) qs.set('period', period);
   return request<ListFillupsResponse>(`/v1/me/fillups?${qs.toString()}`, {
     method: 'GET',
     headers: { Authorization: `Bearer ${accessToken}` },
+    signal,
   });
 }
 

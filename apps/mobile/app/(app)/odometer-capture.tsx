@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { tokens } from '../../src/theme';
 import { useAuth } from '../../src/store/auth.store';
 import { apiListVehicles, type Vehicle } from '../../src/api/vehicles';
+import { formatVehicleDisplayName, formatVehicleSubtitle } from '../../src/utils/formatVehicle';
 import {
   apiRunOdometerOcr,
   apiCreateOdometer,
@@ -251,8 +252,8 @@ function OdometerCaptureContent() {
       >
         <Text style={styles.subtitle}>{t('odometer.selectVehicleSubtitle')}</Text>
         {vehicles.map((v) => {
-          const nickname = v.nickname?.trim();
-          const identity = `${v.year} ${v.make} ${v.model}`;
+          const displayName = formatVehicleDisplayName(v);
+          const subtitle = formatVehicleSubtitle(v);
           return (
             <TouchableOpacity
               key={v.id}
@@ -267,10 +268,10 @@ function OdometerCaptureContent() {
               accessibilityRole="button"
               accessibilityState={{ selected: selectedVehicleId === v.id }}
             >
-              <Text style={styles.vehicleNickname}>{nickname || identity}</Text>
-              <Text style={styles.vehicleSubtitle}>
-                {identity}{v.engine_variant ? ` · ${v.engine_variant}` : ''}
-              </Text>
+              <Text style={styles.vehicleNickname}>{displayName}</Text>
+              {subtitle ? (
+                <Text style={styles.vehicleSubtitle}>{subtitle}</Text>
+              ) : null}
             </TouchableOpacity>
           );
         })}

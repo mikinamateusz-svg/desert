@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   FlatList,
   RefreshControl,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -21,12 +20,16 @@ import {
 } from '../../src/api/vehicles';
 import {
   apiListFillups,
+  isAbortError,
   type FillupListItem,
   type FillupPeriod,
   type FillupSummary,
 } from '../../src/api/fillups';
 import { calculateSavings } from '../../src/utils/savings';
 import { SavingsDisplay } from '../../src/components/SavingsDisplay';
+import { PeriodPickerSheet } from '../../src/components/PeriodPickerSheet';
+import { VehiclePickerSheet, ALL_VEHICLES_SCOPE } from '../../src/components/VehiclePickerSheet';
+import { formatVehicleDisplayName } from '../../src/utils/formatVehicle';
 import { flags } from '../../src/config/flags';
 import { TopChrome } from '../../src/components/TopChrome';
 
@@ -51,14 +54,14 @@ function ComingSoonScreen() {
   );
 }
 
-const ALL_VEHICLES = 'all' as const;
+// Re-exported from VehiclePickerSheet so the rest of the screen has the
+// same name to compare against — the picker is the source of truth for
+// the sentinel value.
+const ALL_VEHICLES = ALL_VEHICLES_SCOPE;
 type VehicleScope = string; // vehicle UUID, OR the literal 'all'
-const PERIOD_OPTIONS: FillupPeriod[] = ['30d', '3m', '12m', 'all'];
 const PERIOD_DEFAULT: FillupPeriod = '3m';
 const PAGE_LIMIT = 20;
 
-// P4: simple lookup map replaces the convoluted ternary chain that picked
-// a key with a capitalised 'All' suffix while everything else stayed lower.
 const PERIOD_I18N_KEY: Record<FillupPeriod, string> = {
   '30d': 'history.period30d',
   '3m':  'history.period3m',
@@ -119,6 +122,18 @@ function LogScreenContent() {
   //   - onEndReached firing twice before the first setHistoryLoading commits
   //   - blur/focus jitter where the cancelled flag toggles mid-request
   const historyGenRef = useRef(0);
+  // Active fetch's AbortController. Set at the start of every loadHistory,
+  // aborted at the start of the next. Without this, rapid period/scope
+  // toggles fired multiple in-flight fetches and the latest one could lose
+  // to back-pressure on the server side — producing the "history load
+  // failed" toast the user reported even though logically only the latest
+  // request mattered.
+  const historyAbortRef = useRef<AbortController | null>(null);
+  // Dropdown sheet visibility state. New in 2.19-follow-up — replaces the
+  // segmented control + horizontal chip row with bottom-sheet pickers
+  // matching the map filter pattern.
+  const [vehicleSheetVisible, setVehicleSheetVisible] = useState(false);
+  const [periodSheetVisible, setPeriodSheetVisible] = useState(false);
 
   // ── Vehicle list ─────────────────────────────────────────────────────────
 
@@ -197,6 +212,17 @@ function LogScreenContent() {
       const effectivePage = mode === 'reload' ? 1 : page + 1;
       const myGen = mode === 'reload' ? ++historyGenRef.current : historyGenRef.current;
 
+      // Abort any previous fetch BEFORE starting a new one. Without this,
+      // rapid period toggles produced 3-4 in-flight requests racing for
+      // the same socket pool — the latest one would sometimes fail under
+      // back-pressure, tripping the "history load failed" toast. The gen
+      // counter still serves as the "ignore stale responses" guard, but
+      // aborting kills the wasted requests outright and prevents their
+      // error paths from firing.
+      historyAbortRef.current?.abort();
+      const controller = new AbortController();
+      historyAbortRef.current = controller;
+
       setHistoryLoading(true);
       setHistoryError(null);
       try {
@@ -205,6 +231,7 @@ function LogScreenContent() {
           period: effectivePeriod,
           page: effectivePage,
           limit: PAGE_LIMIT,
+          signal: controller.signal,
         });
         if (cancelledRef.current || myGen !== historyGenRef.current) return;
         setFillups((prev) => {
@@ -222,6 +249,8 @@ function LogScreenContent() {
         setHistoryTotal(response.total);
         setPage(effectivePage);
       } catch (e) {
+        // Abort is expected when the user toggles — don't surface as error.
+        if (isAbortError(e)) return;
         // eslint-disable-next-line no-console
         console.warn('history load failed', e);
         if (!cancelledRef.current && myGen === historyGenRef.current) {
@@ -327,9 +356,9 @@ function LogScreenContent() {
             vehiclesError={vehiclesError}
             vehiclesLoading={vehiclesLoading}
             scope={scope}
-            onScopeChange={setScope}
             period={period}
-            onPeriodChange={setPeriod}
+            onOpenVehicleSheet={() => setVehicleSheetVisible(true)}
+            onOpenPeriodSheet={() => setPeriodSheetVisible(true)}
             summary={summary}
             historyError={historyError}
           />
@@ -356,20 +385,44 @@ function LogScreenContent() {
           ) : null
         }
       />
+
+      {/* Vehicle picker sheet — only mount when there are 2+ cars,
+          otherwise the dropdown pill is hidden too (single-car users
+          have nothing to pick). */}
+      <VehiclePickerSheet
+        visible={vehicleSheetVisible}
+        vehicles={vehicles ?? []}
+        selected={scope}
+        onSelect={(s) => {
+          setScope(s);
+          setVehicleSheetVisible(false);
+        }}
+        onDismiss={() => setVehicleSheetVisible(false)}
+      />
+
+      <PeriodPickerSheet
+        visible={periodSheetVisible}
+        selected={period}
+        onSelect={(p) => {
+          setPeriod(p);
+          setPeriodSheetVisible(false);
+        }}
+        onDismiss={() => setPeriodSheetVisible(false)}
+      />
     </View>
   );
 }
 
-// ── ListHeader (vehicles section + selector + filter + summary) ────────────
+// ── ListHeader (vehicle/period dropdowns + summary) ────────────────────────
 
 interface ListHeaderProps {
   vehicles: Vehicle[] | null;
   vehiclesError: string | null;
   vehiclesLoading: boolean;
   scope: VehicleScope;
-  onScopeChange: (scope: VehicleScope) => void;
   period: FillupPeriod;
-  onPeriodChange: (period: FillupPeriod) => void;
+  onOpenVehicleSheet: () => void;
+  onOpenPeriodSheet: () => void;
   summary: FillupSummary | null;
   historyError: string | null;
 }
@@ -379,32 +432,44 @@ function ListHeader({
   vehiclesError,
   vehiclesLoading,
   scope,
-  onScopeChange,
   period,
-  onPeriodChange,
+  onOpenVehicleSheet,
+  onOpenPeriodSheet,
   summary,
   historyError,
 }: ListHeaderProps) {
   const { t } = useTranslation();
 
+  // Resolve the label displayed on the vehicle pill. "Wszystkie" is the
+  // 'all' sentinel; otherwise the formatVehicleDisplayName helper returns
+  // nickname-or-brand+model.
+  const scopedVehicle = scope === ALL_VEHICLES
+    ? null
+    : vehicles?.find((v) => v.id === scope) ?? null;
+  const vehiclePillLabel = scope === ALL_VEHICLES
+    ? t('history.vehicleSelectorAll')
+    : scopedVehicle
+      ? formatVehicleDisplayName(scopedVehicle)
+      : t('history.vehicleSelectorPlaceholder');
+
+  // Show the vehicle dropdown only when 2+ cars exist. Single-car users
+  // have nothing to switch between — the implicit one-car view is the
+  // only meaningful state, so the pill would be inert clutter.
+  const showVehicleSelector = (vehicles?.length ?? 0) >= 2;
+
   return (
     <View>
-      {/* P10: initial-load spinner sits at the TOP of the header so the
-          user sees activity rather than rendered-but-empty chrome while
-          the first vehicle list resolves. */}
+      {/* Initial-load spinner sits at the TOP of the header so the user
+          sees activity rather than rendered-but-empty chrome while the
+          first vehicle list resolves. */}
       {vehiclesLoading && !vehicles && (
         <View style={styles.center}>
           <ActivityIndicator color={tokens.brand.accent} />
         </View>
       )}
 
-      {/* Vehicles section preserved from Story 5.1 — entry point for adding
-          and inspecting cars. The history section below it is the new 5.5 surface. */}
-      <Text style={styles.sectionTitle}>{t('log.vehiclesTitle')}</Text>
-      <Text style={styles.sectionSubtitle}>{t('log.vehiclesSubtitle')}</Text>
-
-      {vehiclesError && <Text style={styles.errorText}>{vehiclesError}</Text>}
-
+      {/* Empty state — zero vehicles → onboarding card. The Tankowania
+          section is suppressed until at least one vehicle exists. */}
       {vehicles && vehicles.length === 0 ? (
         <View style={styles.emptyCard}>
           <Text style={styles.emptyTitle}>{t('log.emptyTitle')}</Text>
@@ -416,109 +481,43 @@ function ListHeader({
             <Text style={styles.primaryButtonText}>{t('log.addVehicle')}</Text>
           </TouchableOpacity>
         </View>
-      ) : (
-        <>
-          {vehicles?.map((v) => {
-            const nickname = v.nickname?.trim();
-            const identity = `${v.year} ${v.make} ${v.model}`;
-            const a11yLabel = nickname
-              ? `${nickname}, ${identity}${v.engine_variant ? `, ${v.engine_variant}` : ''}`
-              : `${identity}${v.engine_variant ? `, ${v.engine_variant}` : ''}`;
-            return (
-              <TouchableOpacity
-                key={v.id}
-                style={styles.vehicleCard}
-                onPress={() =>
-                  router.push({
-                    pathname: '/(app)/vehicle/[id]',
-                    params: { id: v.id },
-                  })
-                }
-                accessibilityRole="button"
-                accessibilityLabel={a11yLabel}
-              >
-                <View style={styles.vehicleCardBody}>
-                  <Text style={styles.vehicleNickname}>{nickname || identity}</Text>
-                  <Text style={styles.vehicleSubtitle}>
-                    {identity}
-                    {v.engine_variant ? ` · ${v.engine_variant}` : ''}
-                  </Text>
-                </View>
-                <Text style={styles.vehicleChevron}>›</Text>
-              </TouchableOpacity>
-            );
-          })}
-          <TouchableOpacity
-            style={styles.recordOdometerButton}
-            onPress={() => router.push('/(app)/odometer-capture')}
-            accessibilityRole="button"
-          >
-            <Text style={styles.recordOdometerText}>{t('log.recordOdometer')}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => router.push('/(app)/vehicle-setup')}
-            accessibilityRole="button"
-          >
-            <Text style={styles.addButtonText}>+ {t('log.addVehicle')}</Text>
-          </TouchableOpacity>
-        </>
-      )}
+      ) : null}
 
-      {/* History section — only render the controls + summary when the user
-          actually has at least one vehicle. With zero vehicles there's
-          definitionally no history to show. */}
+      {vehiclesError && <Text style={styles.errorText}>{vehiclesError}</Text>}
+
+      {/* History section. Vehicle management lives on /vehicles now —
+          accessed via the "Pojazdy →" link in the section header. */}
       {vehicles && vehicles.length > 0 && (
         <>
-          <View style={styles.divider} />
-          <Text style={styles.sectionTitle}>{t('history.fillups')}</Text>
+          <View style={styles.sectionHeaderRow}>
+            <Text style={styles.sectionTitle}>{t('history.fillups')}</Text>
+            <TouchableOpacity
+              onPress={() => router.push('/(app)/vehicles')}
+              accessibilityRole="button"
+              accessibilityLabel={t('log.manageVehiclesA11y')}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            >
+              <Text style={styles.manageLink}>{t('log.manageVehiclesLink')} ›</Text>
+            </TouchableOpacity>
+          </View>
 
-          {/* Vehicle chip row — horizontal scrollable. "All vehicles" chip
-              first, then one chip per vehicle. We don't paginate this row;
-              users with 50 vehicles are out of scope. */}
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.chipRow}
-          >
-            <Chip
-              label={t('history.vehicleSelectorAll')}
-              active={scope === ALL_VEHICLES}
-              onPress={() => onScopeChange(ALL_VEHICLES)}
+          {/* Filter dropdown row — vehicle (when 2+ cars) + period. Both
+              use the same dropdown-pill pattern shipped on the map in
+              Story 2.19 for fuel + chain filters. */}
+          <View style={styles.filterRow}>
+            {showVehicleSelector && (
+              <FilterPill
+                label={vehiclePillLabel}
+                onPress={onOpenVehicleSheet}
+                a11yLabel={t('history.vehiclePillA11y', { current: vehiclePillLabel })}
+                primary
+              />
+            )}
+            <FilterPill
+              label={t(PERIOD_I18N_KEY[period])}
+              onPress={onOpenPeriodSheet}
+              a11yLabel={t('history.periodPillA11y', { current: t(PERIOD_I18N_KEY[period]) })}
             />
-            {vehicles.map((v) => {
-              const label = v.nickname?.trim() || `${v.make} ${v.model}`;
-              return (
-                <Chip
-                  key={v.id}
-                  label={label}
-                  active={scope === v.id}
-                  onPress={() => onScopeChange(v.id)}
-                />
-              );
-            })}
-          </ScrollView>
-
-          {/* Period segmented control — fixed 4 options, full-width split. */}
-          <View style={styles.segmentedControl}>
-            {PERIOD_OPTIONS.map((p) => (
-              <TouchableOpacity
-                key={p}
-                style={[styles.segment, period === p && styles.segmentActive]}
-                onPress={() => onPeriodChange(p)}
-                accessibilityRole="button"
-                accessibilityState={{ selected: period === p }}
-              >
-                <Text
-                  style={[
-                    styles.segmentText,
-                    period === p && styles.segmentTextActive,
-                  ]}
-                >
-                  {t(PERIOD_I18N_KEY[p])}
-                </Text>
-              </TouchableOpacity>
-            ))}
           </View>
 
           {summary && <SummaryCards summary={summary} />}
@@ -561,17 +560,31 @@ function ListHeader({
   );
 }
 
-// ── Chip ───────────────────────────────────────────────────────────────────
+// ── FilterPill ─────────────────────────────────────────────────────────────
 
-function Chip({ label, active, onPress }: { label: string; active: boolean; onPress: () => void }) {
+interface FilterPillProps {
+  label: string;
+  onPress: () => void;
+  a11yLabel: string;
+  /** Primary pill renders with the brand-accent fill (matches active fuel
+   *  pill on the map). Period pill stays neutral until explicitly active. */
+  primary?: boolean;
+}
+
+function FilterPill({ label, onPress, a11yLabel, primary }: FilterPillProps) {
   return (
     <TouchableOpacity
-      style={[styles.chip, active && styles.chipActive]}
+      style={[styles.filterPill, primary && styles.filterPillPrimary]}
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityState={{ selected: active }}
+      accessibilityLabel={a11yLabel}
     >
-      <Text style={[styles.chipText, active && styles.chipTextActive]}>{label}</Text>
+      <Text style={[styles.filterPillText, primary && styles.filterPillTextPrimary]}>
+        {label}
+      </Text>
+      <Text style={[styles.filterPillChevron, primary && styles.filterPillChevronPrimary]}>
+        ▾
+      </Text>
     </TouchableOpacity>
   );
 }
@@ -748,8 +761,7 @@ function FillUpCard({ fillUp, showVehicleLabel, locale }: FillUpCardProps) {
     fillUp.litres,
   );
 
-  const vehicleLabel = fillUp.vehicle.nickname?.trim()
-    || `${fillUp.vehicle.make} ${fillUp.vehicle.model}`;
+  const vehicleLabel = formatVehicleDisplayName(fillUp.vehicle);
 
   return (
     <View style={styles.card}>
@@ -847,24 +859,68 @@ const styles = StyleSheet.create({
     color: tokens.brand.ink,
     marginBottom: 4,
   },
-  sectionSubtitle: {
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    marginBottom: 16,
+  },
+  manageLink: {
     fontSize: 14,
-    color: tokens.neutral.n500,
-    marginBottom: 24,
-    lineHeight: 20,
+    fontWeight: '600',
+    color: tokens.brand.accent,
   },
   errorText: {
     fontSize: 14,
     color: tokens.price.expensive,
     marginBottom: 12,
   },
-  divider: {
-    height: 1,
-    backgroundColor: tokens.neutral.n200,
-    marginVertical: 24,
+
+  // Filter row — two dropdown pills (vehicle + period). Replaces the
+  // horizontal chip row + segmented control from Story 5.5 with a
+  // consistent dropdown pattern matching the map's fuel + chain
+  // filters (Story 2.19).
+  filterRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 16,
+    flexWrap: 'wrap',
+  },
+  filterPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: tokens.radius.full,
+    borderWidth: 1,
+    borderColor: tokens.neutral.n200,
+    backgroundColor: tokens.surface.card,
+  },
+  filterPillPrimary: {
+    backgroundColor: tokens.brand.accent,
+    borderColor: tokens.brand.accent,
+  },
+  filterPillText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: tokens.brand.ink,
+  },
+  filterPillTextPrimary: {
+    color: tokens.brand.ink,
+    fontWeight: '700',
+  },
+  filterPillChevron: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: tokens.neutral.n500,
+  },
+  filterPillChevronPrimary: {
+    color: tokens.brand.ink,
+    fontWeight: '700',
   },
 
-  // Vehicle list (preserved from Story 5.1)
+  // Zero-vehicles empty state (vehicle card list moved to /vehicles screen).
   emptyCard: {
     padding: 24,
     borderRadius: tokens.radius.md,
@@ -872,6 +928,7 @@ const styles = StyleSheet.create({
     borderColor: tokens.neutral.n200,
     backgroundColor: tokens.surface.card,
     alignItems: 'center',
+    marginBottom: 24,
   },
   emptyTitle: {
     fontSize: 16,
@@ -885,61 +942,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
   },
-  vehicleCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderRadius: tokens.radius.md,
-    borderWidth: 1,
-    borderColor: tokens.neutral.n200,
-    backgroundColor: tokens.surface.card,
-    marginBottom: 12,
-  },
-  vehicleCardBody: { flex: 1 },
-  vehicleNickname: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: tokens.brand.ink,
-    marginBottom: 2,
-  },
-  vehicleSubtitle: {
-    fontSize: 13,
-    color: tokens.neutral.n500,
-  },
-  vehicleChevron: {
-    fontSize: 24,
-    color: tokens.neutral.n400,
-    marginLeft: 8,
-  },
-  addButton: {
-    marginTop: 8,
-    paddingVertical: 14,
-    borderRadius: tokens.radius.md,
-    borderWidth: 1,
-    borderColor: tokens.brand.accent,
-    alignItems: 'center',
-    backgroundColor: tokens.surface.card,
-  },
-  addButtonText: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: tokens.brand.accent,
-  },
-  recordOdometerButton: {
-    marginTop: 8,
-    paddingVertical: 14,
-    borderRadius: tokens.radius.md,
-    borderWidth: 1,
-    borderColor: tokens.neutral.n200,
-    alignItems: 'center',
-    backgroundColor: tokens.surface.card,
-  },
-  recordOdometerText: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: tokens.neutral.n500,
-  },
   primaryButton: {
     paddingVertical: 14,
     paddingHorizontal: 24,
@@ -950,62 +952,6 @@ const styles = StyleSheet.create({
   primaryButtonText: {
     fontSize: 15,
     fontWeight: '700',
-    color: tokens.neutral.n0,
-  },
-
-  // Vehicle chip row
-  chipRow: {
-    paddingVertical: 8,
-    gap: 8,
-  },
-  chip: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: tokens.radius.full,
-    borderWidth: 1,
-    borderColor: tokens.neutral.n200,
-    backgroundColor: tokens.surface.card,
-  },
-  chipActive: {
-    borderColor: tokens.brand.accent,
-    backgroundColor: '#fffbeb',
-  },
-  chipText: {
-    fontSize: 13,
-    color: tokens.neutral.n500,
-    fontWeight: '500',
-  },
-  chipTextActive: {
-    color: tokens.brand.accent,
-    fontWeight: '700',
-  },
-
-  // Period segmented control
-  segmentedControl: {
-    flexDirection: 'row',
-    marginTop: 12,
-    marginBottom: 16,
-    borderRadius: tokens.radius.md,
-    borderWidth: 1,
-    borderColor: tokens.neutral.n200,
-    backgroundColor: tokens.surface.card,
-    overflow: 'hidden',
-  },
-  segment: {
-    flex: 1,
-    paddingVertical: 10,
-    alignItems: 'center',
-    backgroundColor: tokens.surface.card,
-  },
-  segmentActive: {
-    backgroundColor: tokens.brand.accent,
-  },
-  segmentText: {
-    fontSize: 12,
-    color: tokens.neutral.n500,
-    fontWeight: '600',
-  },
-  segmentTextActive: {
     color: tokens.neutral.n0,
   },
 

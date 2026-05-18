@@ -20,6 +20,7 @@ import {
   apiUpdateVehicle,
   type Vehicle,
 } from '../../../src/api/vehicles';
+import { formatVehicleBrandModel, formatVehicleSubtitle } from '../../../src/utils/formatVehicle';
 import { flags } from '../../../src/config/flags';
 
 // Phase 2 gate at the entry point — see vehicle-setup.tsx for rationale.
@@ -186,14 +187,20 @@ function VehicleEditScreenContent() {
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
-        {/* Identity (read-only when locked) */}
+        {/* Identity (read-only when locked) — display name uses the
+            cleaned brand+model format (drops Wikidata chassis code +
+            de-duplicates make). Year + engine_variant kept in the
+            subtitle line so this detail page still surfaces them; the
+            primary identity line is the user-recognisable brand+model. */}
         <View style={styles.identityCard}>
           <Text style={styles.identityLine}>
-            {vehicle.year} {vehicle.make} {vehicle.model}
+            {formatVehicleBrandModel(vehicle.make, vehicle.model)}
           </Text>
-          {vehicle.engine_variant && (
-            <Text style={styles.identitySublabel}>{vehicle.engine_variant}</Text>
-          )}
+          {formatVehicleSubtitle(vehicle) ? (
+            <Text style={styles.identitySublabel}>
+              {formatVehicleSubtitle(vehicle)}
+            </Text>
+          ) : null}
           {vehicle.is_locked && (
             <Text style={styles.lockedNote}>{t('vehicles.edit.lockedNote')}</Text>
           )}

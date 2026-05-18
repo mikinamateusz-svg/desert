@@ -100,6 +100,10 @@ export default {
     emptySubtitle: 'Dodaj swój pierwszy pojazd, aby zacząć śledzić tankowania.',
     addVehicle: 'Dodaj pojazd',
     recordOdometer: 'Zapisz stan licznika',
+    // Link from the Log screen to the dedicated /vehicles screen
+    // (vehicle management lives there now; Log focuses on history).
+    manageVehiclesLink: 'Pojazdy',
+    manageVehiclesA11y: 'Zarządzaj pojazdami',
     guestTitle: 'Zaloguj się, aby śledzić pojazdy',
     guestSubtitle: 'Zapisuj tankowania i zużycie — wszystko prywatnie.',
     guestSignIn: 'Zaloguj się',
@@ -681,6 +685,11 @@ export default {
   },
   history: {
     vehicleSelectorAll: 'Wszystkie pojazdy',
+    vehicleSelectorPlaceholder: 'Wybierz pojazd',
+    vehicleSheetTitle: 'Wybierz pojazd',
+    vehiclePillA11y: 'Filtr pojazdu. Obecnie: {{current}}. Stuknij, aby zmienić.',
+    periodSheetTitle: 'Wybierz okres',
+    periodPillA11y: 'Filtr okresu. Obecnie: {{current}}. Stuknij, aby zmienić.',
     period30d: 'Ostatnie 30 dni',
     period3m: 'Ostatnie 3 miesiące',
     period12m: 'Ostatnie 12 miesięcy',
